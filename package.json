@@ -1,0 +1,27 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:webmappsrl/webmapp-app.git"
+  },
+  "license": "Check the license in the LICENSE.md",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-json-editor": "^2.5.5",
+    "gulp-replace": "^1.1.2",
+    "gulp-streamify": "^1.0.2",
+    "gulp-symlink": "^2.1.4",
+    "request": "^2.88.2",
+    "shelljs": "^0.8.4",
+    "vinyl-source-stream": "^2.0.0",
+    "yargs": "^16.2.0"
+  },
+  "name": "webmapp-app",
+  "version": "0.0.1",
+  "author": "Webmapp S.r.l.",
+  "homepage": "https://webmapp.it/",
+  "scripts": {
+    "test": "cd core && npm run test"
+  }
+}
