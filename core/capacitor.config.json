@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "core",
+  "appId": "it.webmapp.webmapp",
+  "appName": "Webmapp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

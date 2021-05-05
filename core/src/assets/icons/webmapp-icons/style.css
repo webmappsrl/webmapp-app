@@ -1,0 +1,213 @@
+@font-face {
+  font-family: 'webmapp-icons';
+  src:  url('fonts/webmapp-icons.eot?qqtz6t');
+  src:  url('fonts/webmapp-icons.eot?qqtz6t#iefix') format('embedded-opentype'),
+    url('fonts/webmapp-icons.ttf?qqtz6t') format('truetype'),
+    url('fonts/webmapp-icons.woff?qqtz6t') format('woff'),
+    url('fonts/webmapp-icons.svg?qqtz6t#webmapp-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="webmapp-icon-"], [class*=" webmapp-icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'webmapp-icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.webmapp-icon-add-user:before {
+  content: "\e923";
+}
+.webmapp-icon-baby-backpack:before {
+  content: "\e924";
+}
+.webmapp-icon-baby-carriage:before {
+  content: "\e925";
+}
+.webmapp-icon-basket:before {
+  content: "\e926";
+}
+.webmapp-icon-bell:before {
+  content: "\e927";
+}
+.webmapp-icon-bike:before {
+  content: "\e928";
+}
+.webmapp-icon-camera:before {
+  content: "\e929";
+}
+.webmapp-icon-directions:before {
+  content: "\e92a";
+}
+.webmapp-icon-edit:before {
+  content: "\e92b";
+}
+.webmapp-icon-filters:before {
+  content: "\e92c";
+}
+.webmapp-icon-heart:before {
+  content: "\e92d";
+}
+.webmapp-icon-home:before {
+  content: "\e92e";
+}
+.webmapp-icon-horse:before {
+  content: "\e92f";
+}
+.webmapp-icon-info:before {
+  content: "\e930";
+}
+.webmapp-icon-kebab:before {
+  content: "\e931";
+}
+.webmapp-icon-layers:before {
+  content: "\e932";
+}
+.webmapp-icon-map:before {
+  content: "\e933";
+}
+.webmapp-icon-nav:before {
+  content: "\e934";
+}
+.webmapp-icon-search:before {
+  content: "\e935";
+}
+.webmapp-icon-setting:before {
+  content: "\e936";
+}
+.webmapp-icon-share:before {
+  content: "\e937";
+}
+.webmapp-icon-star:before {
+  content: "\e938";
+}
+.webmapp-icon-trekking:before {
+  content: "\e939";
+}
+.webmapp-icon-user:before {
+  content: "\e93a";
+}
+.webmapp-icon-users:before {
+  content: "\e93b";
+}
+.webmapp-icon-pin:before {
+  content: "\e93c";
+}
+.webmapp-icon-ski:before {
+  content: "\e93d";
+}
+.webmapp-icon-recording:before {
+  content: "\e91b";
+}
+.webmapp-icon-arrow-left:before {
+  content: "\e907";
+}
+.webmapp-icon-check:before {
+  content: "\e900";
+}
+.webmapp-icon-chevron-down:before {
+  content: "\e901";
+}
+.webmapp-icon-chevron-left:before {
+  content: "\e902";
+}
+.webmapp-icon-chevron-right:before {
+  content: "\e903";
+}
+.webmapp-icon-chevron-up:before {
+  content: "\e904";
+}
+.webmapp-icon-close:before {
+  content: "\e905";
+}
+.webmapp-icon-ski-outline:before {
+  content: "\e90c";
+}
+.webmapp-icon-add-user-outline:before {
+  content: "\e906";
+}
+.webmapp-icon-baby-backpack-outline:before {
+  content: "\e908";
+}
+.webmapp-icon-baby-carriage-outline:before {
+  content: "\e909";
+}
+.webmapp-icon-basket-outline:before {
+  content: "\e90a";
+}
+.webmapp-icon-bell-outline:before {
+  content: "\e90b";
+}
+.webmapp-icon-camera-outline:before {
+  content: "\e90d";
+}
+.webmapp-icon-directions-outline:before {
+  content: "\e90e";
+}
+.webmapp-icon-download-outline:before {
+  content: "\e90f";
+}
+.webmapp-icon-edit-outline:before {
+  content: "\e910";
+}
+.webmapp-icon-filters-outline:before {
+  content: "\e911";
+}
+.webmapp-icon-heart-outline:before {
+  content: "\e912";
+}
+.webmapp-icon-home-outline:before {
+  content: "\e913";
+}
+.webmapp-icon-horse-outline:before {
+  content: "\e914";
+}
+.webmapp-icon-info-outline:before {
+  content: "\e915";
+}
+.webmapp-icon-kebab-outline:before {
+  content: "\e916";
+}
+.webmapp-icon-layers-outline:before {
+  content: "\e917";
+}
+.webmapp-icon-map-outline:before {
+  content: "\e918";
+}
+.webmapp-icon-nav-outline:before {
+  content: "\e919";
+}
+.webmapp-icon-pin-outline:before {
+  content: "\e91a";
+}
+.webmapp-icon-search-outline:before {
+  content: "\e91c";
+}
+.webmapp-icon-settings-outline:before {
+  content: "\e91d";
+}
+.webmapp-icon-share-outline:before {
+  content: "\e91e";
+}
+.webmapp-icon-star-outline:before {
+  content: "\e91f";
+}
+.webmapp-icon-trekking-outline:before {
+  content: "\e920";
+}
+.webmapp-icon-user-outline:before {
+  content: "\e921";
+}
+.webmapp-icon-users-outline:before {
+  content: "\e922";
+}
