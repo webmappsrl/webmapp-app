@@ -2,7 +2,6 @@
 
 const gulp = require("gulp"),
   fs = require("graceful-fs"),
-  symlink = require("gulp-symlink"),
   jeditor = require("gulp-json-editor"),
   replace = require("gulp-replace"),
   request = require("request"),
@@ -109,6 +108,13 @@ const argv = yargs(hideBin(process.argv)).options({
     describe: "Set the instance to work with",
     type: "string",
   },
+  a: {
+    alias: "alias",
+    demandOption: true,
+    default: "",
+    describe: "Set the alias of the android key",
+    type: "string",
+  },
 }).argv;
 
 const instancesDir = "instances/",
@@ -132,10 +138,8 @@ function copy(src, dest, options, force) {
 
     var toSkip = [];
     toSkip.push(src + "/**");
-    if (!force) {
-      toSkip.push("!" + src + "/node_modules");
-      toSkip.push("!" + src + "/node_modules/**");
-    }
+    toSkip.push("!" + src + "/node_modules");
+    toSkip.push("!" + src + "/node_modules/**");
     toSkip.push("!" + src + "/platforms");
     toSkip.push("!" + src + "/platforms/**");
     toSkip.push("!" + src + "/www");
@@ -184,6 +188,11 @@ function getUrlFile(file, src, dest) {
       .on("end", resolve)
       .on("error", reject);
   });
+}
+
+function abort(err) {
+  error(err);
+  error("------------------------- Aborting -------------------------");
 }
 
 function updateCapacitorConfigJson(instanceName, id, name) {
@@ -363,7 +372,121 @@ function abort(err) {
   error("------------------------- Aborting -------------------------");
 }
 
-function build(instanceName, force) {
+function checkBuildsFolder() {
+  if (!fs.existsSync("builds/")) {
+    if (verbose) debug("Creating builds folder...");
+    sh.exec("mkdir builds");
+  }
+}
+
+function updateResources(instanceName, platform) {
+  if (platform === "ios" || platform === "android") {
+    if (verbose)
+      debug("Generating splash screen and icon for platform " + platform);
+    sh.exec(
+      "cordova-res " +
+        platform +
+        " --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
+        outputRedirect,
+      {
+        cwd: instancesDir + instanceName,
+      }
+    );
+  } else {
+    if (verbose) debug("Generating splash screen and icon for all platforms");
+    if (fs.existsSync(instancesDir + instanceName + "/android")) {
+      sh.exec(
+        "cordova-res android --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
+    if (fs.existsSync(instancesDir + instanceName + "/ios")) {
+      sh.exec(
+        "cordova-res ios --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
+  }
+  if (verbose) debug("Splash screen and icon generation completed");
+}
+
+function initCapacitor(instanceName, id, name) {
+  if (verbose) debug("Initializing capacitor project");
+  sh.exec("npx cap init --npm-client npm " + name + " " + id + outputRedirect, {
+    cwd: instancesDir + instanceName,
+  });
+  if (verbose) debug("Capacitor project initialized");
+}
+
+function runIonicBuild(instanceName) {
+  if (verbose) debug("Running ionic build");
+  sh.exec("ionic build" + outputRedirect, {
+    cwd: instancesDir + instanceName,
+  });
+  if (verbose) debug("Ionic build completed");
+}
+
+function addAndroidPlatform(instanceName, force) {
+  if (force) {
+    if (verbose) debug("Forcing android platform installation");
+    sh.exec("rm -rf android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+  }
+  if (!fs.existsSync(instancesDir + instanceName + "/www"))
+    runIonicBuild(instanceName);
+  if (!fs.existsSync(instancesDir + instanceName + "/android")) {
+    if (verbose) debug("Adding android platform");
+    sh.exec("npx cap add android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+    if (verbose) debug("Android platform added successfully");
+  }
+}
+
+function updateAndroidPlatform(instanceName) {
+  return new Promise((resolve, reject) => {
+    runIonicBuild(instanceName);
+    if (!fs.existsSync(instancesDir + instanceName + "/android"))
+      addAndroidPlatform(instanceName);
+
+    if (verbose) debug("Updating android platform");
+    sh.exec("npx cap copy android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+
+    if (verbose) debug("Updating android version number");
+    var split = version.version.split("."),
+      versionCode = "";
+    for (var i in split) {
+      if (parseInt(split[i]) < 10) versionCode += "0";
+      versionCode += split[i];
+    }
+    gulp
+      .src(instancesDir + instanceName + "/android/app/build.gradle")
+      .pipe(replace(/versionCode ([0-9]*)/g, "versionCode " + versionCode))
+      .pipe(
+        replace(
+          /versionName "([0-9\.]*)"/g,
+          'versionName "' + version.version + '"'
+        )
+      )
+      .pipe(gulp.dest(instancesDir + instanceName + "/android/app/"))
+      .on("end", () => {
+        if (verbose) debug("Android platform updated successfully");
+        resolve();
+      })
+      .on("error", reject);
+  });
+}
+
+function build(instanceName) {
   return new Promise((resolve, reject) => {
     if (verbose) debug("Starting `build(" + instanceName + ")`");
     if (verbose) debug("`build()`- running `create()`");
@@ -388,6 +511,205 @@ function build(instanceName, force) {
       },
       function (err) {
         if (verbose) debug("Error running `create()` in `build()`");
+        reject(err);
+      }
+    );
+  });
+}
+
+function buildAndroid(instanceName) {
+  return new Promise((resolve, reject) => {
+    build(instanceName).then(
+      () => {
+        initCapacitor(instanceName, "it.webmapp.webmapp", "Webmapp");
+        updateAndroidPlatform(instanceName);
+        updateResources(instanceName, "android");
+        resolve();
+      },
+      (err) => {
+        error(err);
+        reject(err);
+      }
+    );
+  });
+}
+
+function buildAndroidApk(instanceName, type) {
+  return new Promise((resolve, reject) => {
+    if (type !== "Debug" && type !== "Release") {
+      error("Cannot build " + type + " apk");
+      reject("Cannot build " + type + " apk");
+    }
+
+    buildAndroid(instanceName).then(
+      () => {
+        if (verbose) debug("Assembling the debug apk");
+        sh.exec("./gradlew tasks app:assemble" + type + outputRedirect, {
+          cwd: instancesDir + instanceName + "/android",
+        });
+        if (verbose)
+          debug(
+            "Debug apk built in " +
+              instancesDir +
+              instanceName +
+              "/android/app/build/outputs/apk/" +
+              type.toLowerCase() +
+              "/app-" +
+              type.toLowerCase() +
+              ".apk"
+          );
+        resolve();
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
+}
+
+function signAndroidApk(instanceName, alias) {
+  info("Signing release apk...");
+  if (
+    fs.existsSync(
+      "builds/" +
+        instanceName +
+        "/android/" +
+        instanceName +
+        "_" +
+        version.version +
+        ".apk"
+    )
+  ) {
+    if (verbose) debug("Removing old existing incompatible builds");
+    sh.exec(
+      "rm builds/" +
+        instanceName +
+        "/android/" +
+        instanceName +
+        "_" +
+        version.version +
+        ".apk" +
+        outputRedirect
+    );
+  }
+  if (verbose) debug("Moving release apk to builds directory");
+  sh.exec(
+    "cp " +
+      instancesDir +
+      instanceName +
+      "/android/app/build/outputs/apk/release/app-release-unsigned.apk builds/tmp/app-release-unsigned.apk"
+  );
+  if (verbose) debug("Signing the release apk");
+  sh.exec(
+    "jarsigner -sigalg SHA1withRSA -digestalg SHA1 --keystore builds/keys/" +
+      alias +
+      ".keystore builds/tmp/app-release-unsigned.apk " +
+      alias +
+      " -storepass T1tup4awmA!" +
+      outputRedirect
+  );
+  if (verbose) debug("Checking instance in builds directory");
+  if (!fs.existsSync("builds/" + instanceName))
+    sh.exec("mkdir builds/" + instanceName);
+  if (!fs.existsSync("builds/" + instanceName + "/android"))
+    sh.exec("mkdir builds/" + instanceName + "/android");
+  if (verbose) debug("Completing the apk sign");
+  sh.exec(
+    "zipalign -v 4 builds/tmp/app-release-unsigned.apk builds/" +
+      instanceName +
+      "/android/" +
+      instanceName +
+      "_" +
+      version.version +
+      ".apk" +
+      outputRedirect
+  );
+  info("OK");
+
+  return (
+    "builds/" +
+    instanceName +
+    "/android/" +
+    instanceName +
+    "_" +
+    version.version +
+    ".apk"
+  );
+}
+
+function checkKeystore(alias) {
+  if (!fs.existsSync("builds/keys")) {
+    abort("Missing keys folder. Please add it in the builds/ directory");
+    return false;
+  } else if (!fs.existsSync("builds/keys/" + alias + ".keystore")) {
+    abort("Missing key in builds/keys directory. Please add it and try again");
+    return false;
+  }
+  return true;
+}
+
+function buildSignedApk(instanceName) {
+  return new Promise((resolve, reject) => {
+    var alias = argv.alias ? argv.alias : instanceName;
+
+    if (!checkKeystore(alias)) return;
+
+    if (verbose)
+      debug(
+        "Deploying the android debug apk for instance " +
+          instanceName +
+          " to an available device"
+      );
+    buildAndroidApk(instanceName, "Release").then(
+      () => {
+        checkBuildsFolder();
+
+        if (fs.existsSync("builds/tmp")) sh.exec("rm -r builds/tmp");
+        sh.exec("mkdir builds/tmp");
+
+        var relativePath = signAndroidApk(instanceName, alias);
+
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
+
+        resolve(relativePath);
+      },
+      (err) => {
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
+        reject(err);
+      }
+    );
+  });
+}
+
+function buildAndroidBundle(instanceName, type) {
+  return new Promise((resolve, reject) => {
+    if (type !== "Debug" && type !== "Release") {
+      error("Cannot build " + type + " apk");
+      reject("Cannot build " + type + " apk");
+    }
+
+    buildAndroid(instanceName).then(
+      () => {
+        if (verbose) debug("Assembling the debug apk");
+        sh.exec("./gradlew tasks app:bundle" + type + outputRedirect, {
+          cwd: instancesDir + instanceName + "/android",
+        });
+        if (verbose)
+          debug(
+            "Debug apk built in " +
+              instancesDir +
+              instanceName +
+              "/android/app/build/outputs/bundle/" +
+              type.toLowerCase() +
+              "/app-" +
+              type.toLowerCase() +
+              ".aab"
+          );
+        resolve();
+      },
+      (err) => {
         reject(err);
       }
     );
@@ -442,6 +764,120 @@ gulp.task("build", function (done) {
     },
     (err) => {
       abort(err);
+      done();
+    }
+  );
+});
+
+/**
+ * Build the android platform for the given instance
+ */
+gulp.task("build-android", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose) debug("Building android platform for instance " + instanceName);
+  buildAndroid(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build an android apk to use for debugging purposes
+ */
+gulp.task("build-android-apk-debug", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android debug apk for instance " + instanceName);
+  buildAndroidApk(instanceName, "Debug").then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build and deploy an android apk to use for debugging purposes in a device/simulator
+ */
+gulp.task("deploy-android-apk-debug", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug(
+      "Deploying the android debug apk for instance " +
+        instanceName +
+        " to an available device"
+    );
+  buildAndroidApk(instanceName, "Debug").then(
+    () => {
+      if (verbose) debug("Deploying the apk to the device/simulator");
+      sh.exec("adb install app/build/outputs/apk/debug/app-debug.apk", {
+        cwd: instancesDir + instanceName + "/android",
+      });
+      if (verbose) debug("deploy completed");
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+gulp.task("build-android-apk", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android release apk for instance " + instanceName);
+  buildSignedApk(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+gulp.task("deploy-android-apk", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug(
+      "Deploying the android release apk for instance " +
+        instanceName +
+        " to an available device/simulator"
+    );
+  buildSignedApk(instanceName).then(
+    (relativePath) => {
+      if (verbose) debug("Deploying the apk to the device/simulator");
+      sh.exec("adb install " + relativePath);
+      if (verbose) debug("Deploy completed");
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+gulp.task("release", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android release apk for instance " + instanceName);
+  buildSignedApk(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
       done();
     }
   );
