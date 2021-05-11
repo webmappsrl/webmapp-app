@@ -8,3 +8,7 @@ i[class^="webmapp-icon-"] {
     text-transform: capitalize;
   }
 }
+
+ion-tab-button {
+  --color-selected: var(--wm-color-red);
+}

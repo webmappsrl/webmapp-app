@@ -338,6 +338,11 @@ function update(instanceName) {
                   dir + "/src/assets/icon/"
                 ),
                 getUrlFile(
+                  "homepage-logo.svg",
+                  resources + "homepage-logo.svg",
+                  dir + "/src/assets/images/"
+                ),
+                getUrlFile(
                   "splash.png",
                   resources + "splash.png",
                   dir + "/resources/"
