@@ -1,7 +1,16 @@
-<ion-content>
+<ion-content class="webmapp-home-content">
   <div class="wm-home-header-container">
     <div class="wm-home-logo-container">
       <img id="wm-home-logo" src="assets/images/homepage-logo.svg" />
     </div>
   </div>
+
+  <webmapp-card-slider
+    [title]="'home.mostViewedTracks' | translate"
+    [data]="ids"
+  ></webmapp-card-slider>
+  <webmapp-card-slider
+    [title]="'home.closerTracks' | translate"
+    [data]="ids2"
+  ></webmapp-card-slider>
 </ion-content>

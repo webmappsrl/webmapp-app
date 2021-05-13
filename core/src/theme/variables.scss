@@ -6,12 +6,15 @@
   /**
    * Palette Webmapp
    **/
-  --wm-color-red: #d27786;
-  --wm-color-blue: #508aa8;
-  --wm-color-yellow: #ffb100;
+
+  --wm-color-primary: #d27786;
+  --wm-color-secondary: #508aa8;
+  --wm-color-tertiary: #ffb100;
   --wm-color-dark: #323031;
   --wm-color-light: #ffffff;
   --wm-color-lightgray: #f5f3f6;
+
+  --wm-color-skeleton: #dddddd;
 
   /** primary **/
   --ion-color-primary: #3880ff;

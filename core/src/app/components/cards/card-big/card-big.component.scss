@@ -1,0 +1,55 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-card-big-container {
+  overflow: hidden;
+  width: 225px;
+  height: 185px;
+  border-radius: 15px;
+  margin: 0;
+  @include box-shadow-light;
+
+  .webmapp-card-big-image-container {
+    display: block;
+    height: 49.95%;
+    background-color: var(--wm-color-skeleton);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .webmapp-card-big-header {
+    padding: 0 15px;
+    text-align: left;
+    .webmapp-card-big-subtitle {
+      text-align: left;
+      color: var(--wm-color-primary);
+      text-transform: uppercase;
+      margin: 0;
+      padding: 15px 0 0;
+      font-size: var(--font-xsm);
+      font-weight: var(--font-weight-light);
+    }
+    .webmapp-card-big-title {
+      text-align: left;
+      color: var(--wm-color-dark);
+      margin: 0;
+      padding: 5px 0 0;
+      font-size: var(--font-md);
+      font-weight: var(--font-weight-normal);
+      &::first-letter {
+        text-transform: uppercase;
+      }
+    }
+
+    .webmapp-card-big-subtitle-skeleton {
+      margin: 15px 0 0;
+      height: var(--font-xsm);
+      width: 50%;
+    }
+    .webmapp-card-big-title-skeleton {
+      margin: 5px 0 0;
+      height: var(--font-md);
+      width: 70%;
+    }
+  }
+}

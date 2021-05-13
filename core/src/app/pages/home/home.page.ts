@@ -6,7 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  public ids: Array<string>;
+  public ids2: Array<string>;
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    setTimeout(() => {
+      this.ids = ['1', '2', '3'];
+    }, 2500);
+    setTimeout(() => {
+      this.ids2 = ['1', '2', '3'];
+    }, 4000);
+  }
 }

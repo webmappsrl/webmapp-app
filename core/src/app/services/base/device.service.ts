@@ -23,6 +23,8 @@ export class DeviceService {
   private _isAndroid: boolean;
   private _isIos: boolean;
   private _isLocalServer: boolean;
+  private _width: number;
+  private _height: number;
   private _onResize: ReplaySubject<{
     width: number;
     height: number;
@@ -30,9 +32,11 @@ export class DeviceService {
 
   constructor(private _platform: Platform) {
     this._onResize = new ReplaySubject(1);
+    this._width = window.innerWidth;
+    this._height = window.innerHeight;
     this._onResize.next({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: this._width,
+      height: this._height,
     });
     this.onResize = this._onResize;
 
@@ -45,9 +49,11 @@ export class DeviceService {
     this._isLocalServer = window.location.href.indexOf('localhost') !== -1;
 
     window.addEventListener('resize', () => {
+      this._width = +window.innerWidth;
+      this._height = +window.innerHeight;
       this._onResize.next({
-        width: +window.innerWidth,
-        height: +window.innerHeight,
+        width: this._width,
+        height: this._height,
       });
     });
   }
@@ -66,5 +72,13 @@ export class DeviceService {
 
   get isLocalServer(): boolean {
     return this._isLocalServer;
+  }
+
+  get width(): number {
+    return this._width;
+  }
+
+  get height(): number {
+    return this._height;
   }
 }
