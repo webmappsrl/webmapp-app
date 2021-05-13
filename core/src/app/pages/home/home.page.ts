@@ -12,10 +12,10 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this.ids = ['1', '2', '3'];
+      this.ids = ['1', '2', '3', '4', '5'];
     }, 2500);
     setTimeout(() => {
-      this.ids2 = ['1', '2', '3'];
+      this.ids2 = ['1', '2', '3', '4', '5'];
     }, 4000);
   }
 }
