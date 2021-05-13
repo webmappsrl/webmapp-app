@@ -24,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "app",
+            "prefix": "webmapp",
             "style": "kebab-case"
           }
         ],
@@ -32,12 +32,16 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
+            "prefix": "webmapp",
             "style": "camelCase"
           }
         ],
         "no-underscore-dangle": "off",
-        "curly": "off"
+        "curly": "off",
+        "one-var": "off",
+        "arrow-body-style": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@angular-eslint/no-input-rename": "off"
       }
     },
     {

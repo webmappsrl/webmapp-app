@@ -22,6 +22,7 @@
   "author": "Webmapp S.r.l.",
   "homepage": "https://webmapp.it/",
   "scripts": {
+    "setup": "cd core && npm i",
     "test": "cd core && npm run test"
   }
 }

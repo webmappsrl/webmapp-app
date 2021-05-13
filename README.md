@@ -9,7 +9,7 @@ Firstly you need to clone the repo
 
 `git clone git@github.com:webmappsrl/wm-app.git`
 
-### 1 Prerequisites
+### Prerequisites
 
 To run this project you need:
 
@@ -34,9 +34,10 @@ The documentation on how to configure the created app/webapp can be found under 
 
 ## Built With
 
-- MacOS Mojave 10.14.x | MacOS Catalina 10.15.x | MacOS Big Sur 11.2.x
+- MacOS Big Sur 11.2.x
 - [Ionic](https://ionicframework.com/docs) - The cross-platform framework to build hybrid mobile app
 - [Angular](https://angular.io/docs) - The framework used to develop the app
+- [Capacitor](https://capacitorjs.com/docs) - Cross-platform Native Runtime for Web Apps
 - [OpenLayers](https://openlayers.org/en/latest/doc/) - The map library
 - [Gulp](https://gulpjs.com/) - Used to build apps and automate stuff
 

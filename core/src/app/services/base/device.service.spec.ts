@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DeviceService } from './device.service';
 
 xdescribe('DeviceService', () => {

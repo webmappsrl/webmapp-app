@@ -1,0 +1,42 @@
+webmapp-app-root {
+  font-size: 16px;
+  --font-xxxlg-multiplier: 1.625;
+  --font-xxxlg: calc(var(--font-xxxlg-multiplier) * 1rem);
+  --font-xxlg-multiplier: 1.437;
+  --font-xxlg: calc(var(--font-xxlg-multiplier) * 1rem);
+  --font-xlg-multiplier: 1.312;
+  --font-xlg: calc(var(--font-xlg-multiplier) * 1rem);
+  --font-lg-multiplier: 1.125;
+  --font-lg: calc(var(--font-lg-multiplier) * 1rem);
+  --font-md-multiplier: 1;
+  --font-md: calc(var(--font-md-multiplier) * 1rem);
+  --font-sm-multiplier: 0.875;
+  --font-sm: calc(var(--font-sm-multiplier) * 1rem);
+  --font-xsm-multiplier: 0.75;
+  --font-xsm: calc(var(--font-xsm-multiplier) * 1rem);
+
+  --font-weight-light: 300;
+  --font-weight-normal: 500;
+  --font-weight-bold: 700;
+}
+
+h1 {
+  font-size: var(--font-xxxlg);
+}
+h2 {
+  font-size: var(--font-xxlg);
+}
+h3 {
+  font-size: var(--font-xlg);
+}
+h4 {
+  font-size: var(--font-lg);
+}
+
+p {
+  font-size: var(--font-md);
+}
+
+i[class^="webmapp-icon-"] {
+  font-size: calc(var(--font-lg-multiplier) * 1em);
+}

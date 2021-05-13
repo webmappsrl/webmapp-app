@@ -2,7 +2,6 @@
 
 const gulp = require("gulp"),
   fs = require("graceful-fs"),
-  symlink = require("gulp-symlink"),
   jeditor = require("gulp-json-editor"),
   replace = require("gulp-replace"),
   request = require("request"),
@@ -55,7 +54,7 @@ function info(message) {
 function title(message) {
   console.info(
     CONSOLE_COLORS.FgMagenta +
-      "[INFO]    " +
+      "[TITLE]   " +
       CONSOLE_COLORS.Reset +
       " " +
       message
@@ -109,85 +108,82 @@ const argv = yargs(hideBin(process.argv)).options({
     describe: "Set the instance to work with",
     type: "string",
   },
+  a: {
+    alias: "alias",
+    demandOption: true,
+    default: "",
+    describe: "Set the alias of the android key",
+    type: "string",
+  },
+  b: {
+    alias: "bundle",
+    demandOption: true,
+    default: "1",
+    describe: "Set the bundle version for the ios build",
+    type: "string",
+  },
 }).argv;
 
 const instancesDir = "instances/",
   verbose = argv.verbose ? true : false,
   outputRedirect = verbose ? "" : " > /dev/null";
 
-function node_modules_link(dest) {
+function copy(src, dest, options, force) {
   return new Promise((resolve, reject) => {
-    if (verbose) debug("Running node_modules_link(" + dest + ")");
+    if (verbose)
+      debug(
+        "Running copy(" +
+          src +
+          ", " +
+          dest +
+          ", " +
+          options +
+          ", " +
+          force +
+          ")"
+      );
 
-    return gulp
-      .src("core/node_modules")
-      .pipe(
-        symlink(dest + "/node_modules", {
-          force: true,
-        })
-      )
+    var toSkip = [];
+    toSkip.push(src + "/**");
+    toSkip.push("!" + src + "/node_modules");
+    toSkip.push("!" + src + "/node_modules/**");
+    toSkip.push("!" + src + "/platforms");
+    toSkip.push("!" + src + "/platforms/**");
+    toSkip.push("!" + src + "/www");
+    toSkip.push("!" + src + "/www/**");
+    toSkip.push("!" + src + "/plugins");
+    toSkip.push("!" + src + "/plugins/**");
+
+    for (let i = 0; i < options.length; i++) {
+      toSkip.push(options[i]);
+    }
+
+    if (verbose) debug("Starting copy from " + src + " to " + dest);
+
+    gulp
+      .src(toSkip)
+      .pipe(gulp.dest(dest))
       .on("end", () => {
-        if (verbose) debug("node_modules link created");
+        if (force) {
+          if (verbose) debug("Installing npm");
+          sh.exec("npm install" + outputRedirect, {
+            cwd: dest,
+          });
+        }
+        if (verbose) debug("Copy completed from " + src + " to " + dest);
         resolve();
       })
-      .on("error", (err) => {
-        if (verbose) debug(err);
-        reject();
+      .on("error", (error) => {
+        if (verbose) debug("Error copying " + src + " to " + dest);
+        reject(error);
       })
       .on("data", () => {}); // Needed to make the stream continue correctly
   });
 }
 
-function copy(src, dest, options) {
-  return new Promise((resolve, reject) => {
-    if (verbose)
-      debug("Running copy(" + src + ", " + dest + ", " + options + ")");
-
-    node_modules_link(dest).then(
-      () => {
-        if (verbose) debug("node_modules_link done");
-
-        var toSkip = [];
-        toSkip.push(src + "/**");
-        toSkip.push("!" + src + "/node_modules");
-        toSkip.push("!" + src + "/node_modules/**");
-        toSkip.push("!" + src + "/platforms");
-        toSkip.push("!" + src + "/platforms/**");
-        toSkip.push("!" + src + "/www");
-        toSkip.push("!" + src + "/www/**");
-        toSkip.push("!" + src + "/plugins");
-        toSkip.push("!" + src + "/plugins/**");
-
-        for (let i = 0; i < options.length; i++) {
-          toSkip.push(options[i]);
-        }
-
-        if (verbose) debug("Starting copy from " + src + " to " + dest);
-
-        gulp
-          .src(toSkip)
-          .pipe(gulp.dest(dest))
-          .on("end", () => {
-            if (verbose) debug("Copy completed from " + src + " to " + dest);
-            resolve();
-          })
-          .on("error", (error) => {
-            if (verbose) debug("Error copying " + src + " to " + dest);
-            reject(error);
-          })
-          .on("data", () => {}); // Needed to make the stream continue correctly
-      },
-      (err) => {
-        if (verbose) debug("Error in node_modules_link");
-        reject(err);
-      }
-    );
-  });
-}
-
 function getUrlFile(file, src, dest) {
   return new Promise((resolve, reject) => {
-    if (verbose) debug("Downloading " + src + file + " to " + dest + file);
+    if (verbose) debug("Downloading " + src + " to " + dest + file);
     request({
       url: src,
       headers: {
@@ -201,7 +197,12 @@ function getUrlFile(file, src, dest) {
   });
 }
 
-function updateConfigXML(instanceName, id, name, host) {
+function abort(err) {
+  error(err);
+  error("------------------------- Aborting -------------------------");
+}
+
+function updateCapacitorConfigJson(instanceName, id, name) {
   return new Promise((resolve, reject) => {
     var dir = "";
 
@@ -211,44 +212,14 @@ function updateConfigXML(instanceName, id, name, host) {
       return;
     }
 
-    var config = dir + "/config.xml";
-
-    var edit_widget =
-        '<widget id="' + id + '" version="' + version.version + '"',
-      edit_name = "<name>" + name + "</name>",
-      deeplinks_capabilities = host
-        ? `<config-file parent="com.apple.developer.associated-domains" target="*-Debug.plist">
-            <array>
-                <string>applinks:` +
-          host +
-          `</string>
-            </array>
-        </config-file>
-        <config-file parent="com.apple.developer.associated-domains" target="*-Release.plist">
-            <array>
-                <string>applinks:` +
-          host +
-          `</string>
-            </array>
-        </config-file>`
-        : undefined;
+    var config = dir + "/capacitor.config.json";
 
     gulp
       .src(config)
       .pipe(
-        replace(
-          /<widget (id=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(") (version=")([a-zA-Z0-9:;\.\s\(\)\-\,]*)(")/i,
-          edit_widget
-        )
+        replace(/\"appId\": *\"it.webmapp.webmapp\"/i, '"appId": "' + id + '"')
       )
-      .pipe(replace(/(<name\b[^>]*>)[^<>]*(<\/name>)/i, edit_name))
-      .pipe(
-        replace(
-          /<platform name="ios">/i,
-          `<platform name="ios">
-      ` + deeplinks_capabilities
-        )
-      )
+      .pipe(replace(/\"appName\": *\"Webmapp\"/i, '"appName": "' + name + '"'))
       .pipe(gulp.dest(dir))
       .on("end", resolve)
       .on("error", reject);
@@ -278,7 +249,7 @@ function updateIndex(instanceName, name) {
   });
 }
 
-function create(instanceName) {
+function create(instanceName, force) {
   return new Promise((resolve, reject) => {
     if (verbose) debug("Starting `create(" + instanceName + ")`");
     if (!instanceName) {
@@ -297,7 +268,7 @@ function create(instanceName) {
     if (fs.existsSync(instancesDir + instanceName + "/resources"))
       skip = ["!core/resources", "!core/resources/**"];
 
-    copy("core", instancesDir + instanceName, skip).then(
+    copy("core", instancesDir + instanceName, skip, force).then(
       function () {
         if (verbose) debug("Copy completed");
         resolve();
@@ -310,7 +281,7 @@ function create(instanceName) {
   });
 }
 
-function update(instanceName, postInstall) {
+function update(instanceName) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
       reject("Instance name required. See gulp --help");
@@ -320,9 +291,8 @@ function update(instanceName, postInstall) {
     var dir = instancesDir + instanceName,
       url = "";
 
-    if (argv.url) {
-      url = argv.url;
-    } else {
+    if (argv.url) url = argv.url;
+    else {
       url = "https://k.webmapp.it/" + instanceName + "/";
       if (verbose) debug("Using default url: " + url);
     }
@@ -355,89 +325,6 @@ function update(instanceName, postInstall) {
                 return;
               }
 
-              var split = configJson.APP.id.split(".");
-              split.splice(0, 2);
-              var deeplinkName = split.join(".").toLowerCase(),
-                host =
-                  configJson.SHARE && configJson.SHARE.deeplinksHost
-                    ? configJson.SHARE.deeplinksHost
-                    : undefined;
-              if (postInstall) {
-                if (verbose) debug("Performing post install operations");
-                if (host) {
-                  if (verbose) debug("Installing deeplinks plugin");
-                  sh.exec(
-                    "ionic cordova plugin add ionic-plugin-deeplinks@1.0.22 --variable URL_SCHEME=" +
-                      deeplinkName +
-                      " --variable DEEPLINK_SCHEME=https --variable DEEPLINK_HOST=" +
-                      host +
-                      " --variable ANDROID_PATH_PREFIX=/" +
-                      outputRedirect,
-                    {
-                      cwd: dir,
-                    }
-                  );
-                  if (verbose) debug("Deeplinks plugin installed successfully");
-                }
-
-                if (configJson.AUTH) {
-                  if (
-                    configJson.AUTH.facebook &&
-                    configJson.AUTH.facebook.id &&
-                    configJson.AUTH.facebook.name
-                  ) {
-                    if (verbose) debug("Installing facebook plugin");
-                    var facebookId = configJson.AUTH.facebook.id,
-                      appName = configJson.AUTH.facebook.name;
-                    sh.exec(
-                      'ionic cordova plugin add cordova-plugin-facebook4 --variable APP_ID="' +
-                        facebookId +
-                        '" --variable APP_NAME="' +
-                        appName +
-                        '"' +
-                        outputRedirect,
-                      {
-                        cwd: dir,
-                      }
-                    );
-                    if (verbose)
-                      debug("Facebook plugin installed successfully");
-                  }
-                  if (
-                    configJson.AUTH.google &&
-                    configJson.AUTH.google.id &&
-                    configJson.AUTH.google.name
-                  ) {
-                    if (verbose) debug("Installing googleplus plugin");
-                    var webAppId = configJson.AUTH.google.id,
-                      clientId = configJson.AUTH.google.iosId
-                        ? configJson.AUTH.google.iosId
-                        : configJson.AUTH.google.id,
-                      appName = configJson.AUTH.google.name;
-                    clientId = clientId.split(".").reverse().join(".");
-                    sh.exec(
-                      'ionic cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID="' +
-                        clientId +
-                        '" --variable WEB_APPLICATION_CLIENT_ID="' +
-                        webAppId +
-                        '"' +
-                        outputRedirect,
-                      {
-                        cwd: dir,
-                      }
-                    );
-                    if (verbose)
-                      debug("Googleplus plugin installed successfully");
-                  }
-                }
-              }
-
-              getUrlFile(
-                "logo.png",
-                resources + "logo.png",
-                dir + "/src/assets/images/"
-              );
-
               promises = [
                 getUrlFile("config.json", config, dir + "/"),
                 getUrlFile(
@@ -446,25 +333,34 @@ function update(instanceName, postInstall) {
                   dir + "/resources/"
                 ),
                 getUrlFile(
-                  "favicon.png",
+                  "icon.png",
                   resources + "icon.png",
                   dir + "/src/assets/icon/"
+                ),
+                getUrlFile(
+                  "homepage-logo.svg",
+                  resources + "homepage-logo.svg",
+                  dir + "/src/assets/images/"
                 ),
                 getUrlFile(
                   "splash.png",
                   resources + "splash.png",
                   dir + "/resources/"
                 ),
-                updateConfigXML(
+                updateCapacitorConfigJson(
                   instanceName,
                   configJson.APP.id,
-                  configJson.APP.name,
-                  host
+                  configJson.APP.name
                 ),
                 updateIndex(instanceName, configJson.APP.name),
               ];
 
-              Promise.all(promises).then(resolve, reject);
+              Promise.all(promises).then(() => {
+                resolve({
+                  id: configJson.APP.id,
+                  name: configJson.APP.name,
+                });
+              }, reject);
             })
           )
         )
@@ -487,117 +383,252 @@ function clearInstance(instanceName) {
   }
 }
 
-function fixInAppBrowser() {
-  return new Promise((resolve, reject) => {
-    gulp
-      .src(
-        "core/platforms/browser/www/plugins/cordova-plugin-inappbrowser/www/inappbrowser.js"
-      )
-      .pipe(
-        replace(
-          "if (window.parent && !!window.parent.ripple) {",
-          "{ // if (window.parent && !!window.parent.ripple) {"
-        )
-      )
-      .pipe(
-        replace(
-          "module.exports = window.open.bind(window);",
-          "// module.exports = window.open.bind(window);"
-        )
-      )
-      .pipe(replace("return;", "// return;"))
-      .pipe(
-        gulp.dest(
-          "core/platforms/browser/www/plugins/cordova-plugin-inappbrowser/www/"
-        )
-      )
-      .on("end", resolve)
-      .on("error", reject);
-  });
-}
-
-function createExportOptionsPlist(instanceName, appId, provisioningProfile) {
-  return new Promise((resolve, reject) => {
-    if (!instanceName) {
-      reject("Instance name required. See gulp --help");
-      return;
-    }
-
-    gulp
-      .src("core/exportOptions.plist")
-      .pipe(replace("{{WM_APP_ID}}", appId))
-      .pipe(replace("{{WM_PROVISIONING_PROFILE}}", provisioningProfile))
-      .pipe(gulp.dest("builds/" + instanceName + "/ios/tmp/"))
-      .on("end", () => {
-        if (verbose) debug("exportOptions.plist updated");
-        resolve();
-      })
-      .on("error", reject)
-      .on("data", () => {});
-  });
-}
-
-function updateBundleVersion(instanceName, appVersion, bundleVersion, appName) {
-  return new Promise((resolve, reject) => {
-    gulp
-      .src(
-        "instances/" +
-          instanceName +
-          "/platforms/ios/" +
-          appName +
-          "/" +
-          appName +
-          "-Info.plist"
-      )
-      .pipe(
-        replace(
-          /<key>CFBundleVersion<\/key>[\n\s]+<string>[0-9\.]*<\/string>/gm,
-          "<key>CFBundleVersion</key>\n    <string>" +
-            appVersion +
-            "." +
-            bundleVersion +
-            "</string>"
-        )
-      )
-      .pipe(
-        gulp.dest(
-          "instances/" + instanceName + "/platforms/ios/" + appName + "/"
-        )
-      )
-      .on("end", resolve)
-      .on("error", reject);
-  });
-}
-
 function abort(err) {
   error(err);
   error("------------------------- Aborting -------------------------");
+}
+
+function checkBuildsFolder() {
+  if (!fs.existsSync("builds/")) {
+    if (verbose) debug("Creating builds folder...");
+    sh.exec("mkdir builds");
+  }
+}
+
+function updateResources(instanceName, platform) {
+  if (platform === "ios" || platform === "android") {
+    if (verbose)
+      debug("Generating splash screen and icon for platform " + platform);
+
+    sh.exec(
+      "cordova-res " +
+        platform +
+        " --skip-config --copy" +
+        (platform === "android"
+          ? " --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png"
+          : "") +
+        outputRedirect,
+      {
+        cwd: instancesDir + instanceName,
+      }
+    );
+  } else {
+    if (verbose) debug("Generating splash screen and icon for all platforms");
+    if (fs.existsSync(instancesDir + instanceName + "/android")) {
+      sh.exec(
+        "cordova-res android --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
+    if (fs.existsSync(instancesDir + instanceName + "/ios")) {
+      sh.exec(
+        "cordova-res ios --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
+  }
+  if (verbose) debug("Splash screen and icon generation completed");
+}
+
+function initCapacitor(instanceName, id, name) {
+  if (verbose) debug("Initializing capacitor project");
+  sh.exec("npx cap init --npm-client npm " + name + " " + id + outputRedirect, {
+    cwd: instancesDir + instanceName,
+  });
+  if (verbose) debug("Capacitor project initialized");
+}
+
+function runIonicBuild(instanceName) {
+  if (verbose) debug("Running ionic build");
+  sh.exec("ionic build" + outputRedirect, {
+    cwd: instancesDir + instanceName,
+  });
+  if (verbose) debug("Ionic build completed");
+}
+
+function addAndroidPlatform(instanceName, force) {
+  if (force) {
+    if (verbose) debug("Forcing android platform installation");
+    sh.exec("rm -rf android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+  }
+  if (!fs.existsSync(instancesDir + instanceName + "/www"))
+    runIonicBuild(instanceName);
+  if (!fs.existsSync(instancesDir + instanceName + "/android")) {
+    if (verbose) debug("Adding android platform");
+    sh.exec("npx cap add android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+    if (verbose) debug("Android platform added successfully");
+  }
+}
+
+function updateAndroidPlatform(instanceName, appId, appName) {
+  return new Promise((resolve, reject) => {
+    runIonicBuild(instanceName);
+    if (!fs.existsSync(instancesDir + instanceName + "/android")) {
+      console.log(
+        "-----------------------------------------------------------------asd"
+      );
+      addAndroidPlatform(instanceName);
+    }
+
+    if (verbose) debug("Updating android platform");
+    sh.exec("npx cap copy android" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+
+    var split = version.version.split("."),
+      versionCode = "";
+    for (var i in split) {
+      if (parseInt(split[i]) < 10) versionCode += "0";
+      versionCode += split[i];
+    }
+
+    var promises = [];
+
+    // build.gradle
+    promises.push(
+      new Promise((resolve, reject) => {
+        gulp
+          .src(instancesDir + instanceName + "/android/app/build.gradle")
+          .pipe(replace(/versionCode ([0-9]*)/g, "versionCode " + versionCode))
+          .pipe(
+            replace(
+              /versionName "([0-9\.]*)"/g,
+              'versionName "' + version.version + '"'
+            )
+          )
+          .pipe(gulp.dest(instancesDir + instanceName + "/android/app/"))
+          .on("end", () => {
+            if (verbose) debug("build.gradle updated successfully");
+            resolve();
+          })
+          .on("error", reject);
+      })
+    );
+
+    // AndroidManifest.xml
+    promises.push(
+      new Promise((resolve, reject) => {
+        gulp
+          .src(
+            instancesDir +
+              instanceName +
+              "/android/app/src/main/AndroidManifest.xml"
+          )
+          .pipe(
+            replace(
+              /<manifest ([^>]*) package="([^"]*)"/g,
+              '<manifest $1 package="' + appId + '"'
+            )
+          )
+          .pipe(
+            replace(
+              /android:name="[^"]*.MainActivity"/g,
+              'android:name="' + appId + '.MainActivity"'
+            )
+          )
+          .pipe(
+            gulp.dest(instancesDir + instanceName + "/android/app/src/main/")
+          )
+          .on("end", () => {
+            if (verbose) debug("AndroidManifest.xml updated successfully");
+            resolve();
+          })
+          .on("error", reject);
+      })
+    );
+
+    // strings.xml
+    promises.push(
+      new Promise((resolve, reject) => {
+        gulp
+          .src(
+            instancesDir +
+              instanceName +
+              "/android/app/src/main/res/values/strings.xml"
+          )
+          .pipe(
+            replace(
+              /<string name="app_name">[^<]*<\/string>/g,
+              '<string name="app_name">' + appName + "</string>"
+            )
+          )
+          .pipe(
+            replace(
+              /<string name="title_activity_main">[^<]*<\/string>/g,
+              '<string name="title_activity_main">' + appName + "</string>"
+            )
+          )
+          .pipe(
+            replace(
+              /<string name="package_name">[^<]*<\/string>/g,
+              '<string name="package_name">' + appId + "</string>"
+            )
+          )
+          .pipe(
+            replace(
+              /<string name="custom_url_scheme">[^<]*<\/string>/g,
+              '<string name="custom_url_scheme">' + appId + "</string>"
+            )
+          )
+          .pipe(
+            gulp.dest(
+              instancesDir + instanceName + "/android/app/src/main/res/values/"
+            )
+          )
+          .on("end", () => {
+            if (verbose) debug("strings.xml updated successfully");
+            resolve();
+          })
+          .on("error", reject);
+      })
+    );
+
+    Promise.all(promises).then(
+      (res) => {
+        if (verbose) debug("Android platform updated successfully");
+        resolve();
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
 }
 
 function build(instanceName) {
   return new Promise((resolve, reject) => {
     if (verbose) debug("Starting `build(" + instanceName + ")`");
     if (verbose) debug("`build()`- running `create()`");
-    var postInstall = false;
+    var force = false;
     if (!!argv.force || !fs.existsSync(instancesDir + instanceName))
-      postInstall = true;
-    create(instanceName).then(
+      force = true;
+    create(instanceName, force).then(
       function () {
         if (verbose) debug("`build()` - create completed");
         if (verbose) debug("`build()`- running `update()`");
-        update(instanceName, postInstall).then(
-          function () {
+        update(instanceName, force).then(
+          (result) => {
             if (verbose) debug("`build()` - update completed");
             if (verbose) debug("`build()` completed");
-            resolve();
+            resolve(result);
           },
-          function (err) {
+          (err) => {
             if (verbose) debug("Error running `update()` in `build()`");
             reject(err);
           }
         );
       },
-      function (err) {
+      (err) => {
         if (verbose) debug("Error running `create()` in `build()`");
         reject(err);
       }
@@ -605,222 +636,61 @@ function build(instanceName) {
   });
 }
 
-function addAndroid(instanceName) {
-  if (!fs.existsSync("instances/" + instanceName + "/platforms/android")) {
-    info("Adding platform android...");
-    sh.exec("ionic cordova platform add android" + outputRedirect, {
-      cwd: "instances/" + instanceName,
-    });
-    /**
-     * Make sure the npm installation is still valid. Sometimes plugins installation
-     * break the npm installation for to me unknown reasons
-     */
-    if (verbose)
-      debug("Reinstalling npm to fix npm installation breaking plugins");
-    sh.exec("npm install" + outputRedirect, {
-      cwd: "core/",
-    });
-    info("OK");
-  }
-}
-
-function addIos(instanceName) {
-  if (!fs.existsSync("instances/" + instanceName + "/platforms/ios")) {
-    info("Adding platform ios...");
-    sh.exec("ionic cordova platform add ios" + outputRedirect, {
-      cwd: "instances/" + instanceName,
-    });
-    /**
-     * Make sure the npm installation is still valid. Sometimes plugins installation
-     * break the npm installation for to me unknown reasons
-     */
-    if (verbose)
-      debug("Reinstalling npm to fix npm installation breaking plugins");
-    sh.exec("npm install" + outputRedirect, {
-      cwd: "core/",
-    });
-    info("OK");
-  }
-}
-
-function addBrowser() {
-  if (!fs.existsSync("core/platforms/browser")) {
-    if (verbose) debug("Adding platform android...");
-    sh.exec("ionic cordova platform add browser", {
-      cwd: "core/",
-    });
-    /**
-     * Make sure the npm installation is still valid. Sometimes plugins installation
-     * break the npm installation for to me unknown reasons
-     */
-    if (verbose)
-      debug("Reinstalling npm to fix npm installation breaking plugins");
-    sh.exec("npm install" + outputRedirect, {
-      cwd: "core/",
-    });
-  }
-}
-
 function buildAndroid(instanceName) {
-  info("Building android...");
-  sh.exec("ionic cordova build android --prod --release" + outputRedirect, {
-    cwd: "instances/" + instanceName,
-  });
-  info("OK");
-}
-
-function prepareIos(instanceName) {
-  if (verbose) debug("Starting `prepareIos()`");
-  sh.exec("ionic cordova prepare ios --prod" + outputRedirect, {
-    cwd: "instances/" + instanceName,
-  });
-  if (verbose) debug("`prepareIos()` completed");
-}
-
-function fixPodfile(instanceName) {
-  if (fs.existsSync("instances/" + instanceName + "/platforms/ios/Podfile")) {
-    if (verbose) debug("Fixing podfile");
-    if (verbose) debug("Adding fix code to podfile");
-    var podfile = fs.readFileSync(
-      "instances/" + instanceName + "/platforms/ios/Podfile",
-      "utf8"
-    );
-    var check = `post_install do |installer| 
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
-      config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
-      config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"
-    end
-  end
-end
-`;
-    if (podfile.indexOf("post_install do |installer|") === -1)
-      podfile = check + "\n" + podfile;
-    fs.writeFileSync(
-      "instances/" + instanceName + "/platforms/ios/Podfile",
-      podfile
-    );
-    if (verbose) debug("Podfile now has the code");
-    if (verbose) debug("Rerunning pod install");
-    sh.exec("pod install" + outputRedirect, {
-      cwd: "instances/" + instanceName + "/platforms/ios/",
-    });
-    if (verbose) debug("Pod reinstalled");
-  }
-}
-
-function buildIos(
-  instanceName,
-  appName,
-  appId,
-  useWorkspace,
-  useSpecificProvisioningProfile
-) {
   return new Promise((resolve, reject) => {
-    var provisioningProfile = useSpecificProvisioningProfile
-      ? appId.split(".").pop() + "_distribution"
-      : "webmapp_distribution";
-    if (useWorkspace) {
-      if (verbose) debug("Using workspace");
-      if (verbose) debug("Cleaning workspace");
-      sh.exec(
-        'xcodebuild -workspace "' +
-          appName +
-          '.xcworkspace" -scheme "' +
-          appName +
-          '" -sdk iphoneos -configuration Release clean' +
-          outputRedirect,
-        {
-          cwd: "instances/" + instanceName + "/platforms/ios",
+    build(instanceName).then(
+      (result) => {
+        if (!result.id) {
+          abort("The app id could not be found");
+          return;
         }
-      );
-      if (verbose) debug("Workspace cleaned");
-      if (verbose) debug("Editing podfile to prevent archive errors");
-      fixPodfile(instanceName);
-      if (verbose) debug("Podfile edited succesfully");
-      if (verbose) debug("Creating workspace archive");
-      sh.exec(
-        'xcodebuild -workspace "' +
-          appName +
-          '.xcworkspace" -scheme "' +
-          appName +
-          '" -sdk iphoneos -configuration Release archive -archivePath "../../../../builds/' +
-          instanceName +
-          "/ios/" +
-          appName +
-          "_" +
-          version.version +
-          '.xcarchive" CODE_SIGN_STYLE="Manual" DEVELOPMENT_TEAM="BSTW6XXE23" PROVISIONING_PROFILE_SPECIFIER="' +
-          provisioningProfile +
-          '" CODE_SIGN_IDENTITY="Apple Distribution: WEBMAPP SRL (BSTW6XXE23)"' +
-          outputRedirect,
-        {
-          cwd: "instances/" + instanceName + "/platforms/ios",
+        if (!result.name) {
+          abort("The app name could not be found");
+          return;
         }
-      );
-    } else {
-      if (verbose) debug("Using project");
-      if (verbose) debug("Cleaning project");
-      sh.exec(
-        'xcodebuild -project "' +
-          appName +
-          '.xcodeproj" -scheme "' +
-          appName +
-          '" -sdk iphoneos -configuration Release clean' +
-          outputRedirect,
-        {
-          cwd: "instances/" + instanceName + "/platforms/ios",
-        }
-      );
-      if (verbose) debug("Project cleaned");
-      if (verbose) debug("Creating project archive");
-      sh.exec(
-        'xcodebuild -project "' +
-          appName +
-          '.xcodeproj" -scheme "' +
-          appName +
-          '" -sdk iphoneos -configuration Release archive -archivePath "../../../../builds/' +
-          instanceName +
-          "/ios/" +
-          appName +
-          "_" +
-          version.version +
-          '.xcarchive" CODE_SIGN_STYLE="Manual" DEVELOPMENT_TEAM="BSTW6XXE23" PROVISIONING_PROFILE_SPECIFIER="' +
-          provisioningProfile +
-          '" CODE_SIGN_IDENTITY="Apple Distribution: WEBMAPP SRL (BSTW6XXE23)"' +
-          outputRedirect,
-        {
-          cwd: "instances/" + instanceName + "/platforms/ios",
-        }
-      );
+        initCapacitor(instanceName, result.id, result.name);
+        updateAndroidPlatform(instanceName, result.id, result.name).then(
+          () => {
+            updateResources(instanceName, "android");
+            resolve();
+          },
+          (err) => {
+            reject(err);
+          }
+        );
+      },
+      (err) => {
+        error(err);
+        reject(err);
+      }
+    );
+  });
+}
+
+function buildAndroidApk(instanceName, type) {
+  return new Promise((resolve, reject) => {
+    if (type !== "Debug" && type !== "Release") {
+      error("Cannot build " + type + " apk");
+      reject("Cannot build " + type + " apk");
     }
-    if (verbose) debug("Archive created");
-    if (verbose) debug("Exporting the .ipa");
-    createExportOptionsPlist(instanceName, appId, provisioningProfile).then(
+
+    buildAndroid(instanceName).then(
       () => {
-        sh.exec(
-          'xcodebuild -exportArchive -archivePath "./' +
-            appName +
-            "_" +
-            version.version +
-            '.xcarchive" -exportOptionsPlist "./tmp/exportOptions.plist" -exportPath "./tmp/" -allowProvisioningUpdates',
-          {
-            cwd: "builds/" + instanceName + "/ios/",
-          }
-        );
-        if (verbose) debug(".ipa exported");
-        if (verbose) debug("Uploading exported .ipa");
-        sh.exec(
-          'xcrun altool --upload-app --type ios --file "./' +
-            appName +
-            '.ipa" --apiKey PT5L38QV2W --apiIssuer "69a6de8e-f769-47e3-e053-5b8c7c11a4d1"' +
-            (verbose ? " --verbose" : ""),
-          {
-            cwd: "builds/" + instanceName + "/ios/tmp/",
-          }
-        );
-        info("Upload completed");
+        if (verbose) debug("Assembling the debug apk");
+        sh.exec("./gradlew tasks app:assemble" + type + outputRedirect, {
+          cwd: instancesDir + instanceName + "/android",
+        });
+        if (verbose)
+          debug(
+            "Debug apk built in " +
+              instancesDir +
+              instanceName +
+              "/android/app/build/outputs/apk/" +
+              type.toLowerCase() +
+              "/app-" +
+              type.toLowerCase() +
+              ".apk"
+          );
         resolve();
       },
       (err) => {
@@ -857,9 +727,10 @@ function signAndroidApk(instanceName, alias) {
   }
   if (verbose) debug("Moving release apk to builds directory");
   sh.exec(
-    "cp instances/" +
+    "cp " +
+      instancesDir +
       instanceName +
-      "/platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk builds/tmp/app-release-unsigned.apk"
+      "/android/app/build/outputs/apk/release/app-release-unsigned.apk builds/tmp/app-release-unsigned.apk"
   );
   if (verbose) debug("Signing the release apk");
   sh.exec(
@@ -877,7 +748,7 @@ function signAndroidApk(instanceName, alias) {
     sh.exec("mkdir builds/" + instanceName + "/android");
   if (verbose) debug("Completing the apk sign");
   sh.exec(
-    "~/Library/Android/sdk/build-tools/29.0.0/zipalign -v 4 builds/tmp/app-release-unsigned.apk builds/" +
+    "zipalign -v 4 builds/tmp/app-release-unsigned.apk builds/" +
       instanceName +
       "/android/" +
       instanceName +
@@ -887,162 +758,347 @@ function signAndroidApk(instanceName, alias) {
       outputRedirect
   );
   info("OK");
+
+  return (
+    "builds/" +
+    instanceName +
+    "/android/" +
+    instanceName +
+    "_" +
+    version.version +
+    ".apk"
+  );
 }
 
-function checkBuildsFolder() {
-  if (!fs.existsSync("builds/")) {
-    if (verbose) debug("Creating builds folder...");
-    sh.exec("mkdir builds");
+function checkKeystore(alias) {
+  if (!fs.existsSync("builds/keys")) {
+    abort("Missing keys folder. Please add it in the builds/ directory");
+    return false;
+  } else if (!fs.existsSync("builds/keys/" + alias + ".keystore")) {
+    abort("Missing key in builds/keys directory. Please add it and try again");
+    return false;
   }
+  return true;
 }
 
-function buildAndroidTask(instanceName, alias) {
+function buildSignedApk(instanceName) {
   return new Promise((resolve, reject) => {
-    if (!alias) alias = instanceName;
-    checkBuildsFolder();
+    var alias = argv.alias ? argv.alias : instanceName;
 
-    if (!fs.existsSync("builds/android_keys"))
-      abort("Missing key folder. Please add it in the builds/ directory");
-    else if (!fs.existsSync("builds/android_keys/" + alias + ".keystore"))
-      abort(
-        "Missing key in builds/android_keys directory. Please add it and try again"
+    if (!checkKeystore(alias)) return;
+
+    if (verbose)
+      debug(
+        "Deploying the android debug apk for instance " +
+          instanceName +
+          " to an available device"
       );
-    else {
-      if (fs.existsSync("builds/tmp")) sh.exec("rm -r builds/tmp");
-      sh.exec("mkdir builds/tmp");
-
-      info("Updating instance...");
-      build(instanceName).then(
-        () => {
-          info("OK");
-
-          addAndroid(instanceName);
-          buildAndroid(instanceName);
-          signAndroidApk(instanceName, alias);
-
-          if (verbose) debug("Cleaning temp files");
-          sh.exec("rm -rf builds/tmp");
-
-          resolve();
-        },
-        (err) => {
-          if (verbose) debug("Cleaning temp files");
-          sh.exec("rm -rf builds/tmp");
-          reject(err);
-        }
-      );
-    }
-  });
-}
-
-function buildIosTask(instanceName, bundleVersion) {
-  return new Promise((resolve, reject) => {
-    var clean = () => {
-      if (verbose) debug("Cleaning temp folders...");
-      if (fs.existsSync("builds/" + instanceName + "/ios/tmp"))
-        sh.exec("rm -r builds/" + instanceName + "/ios/tmp");
-    };
-
-    info("Building ios...");
-    if (verbose) debug("`build()`");
-    build(instanceName).then(
+    buildAndroidApk(instanceName, "Release").then(
       () => {
-        if (verbose) debug("`addIos()`");
-        addIos(instanceName);
-        if (verbose) debug("`prepareIos()`");
-        prepareIos(instanceName);
-
         checkBuildsFolder();
-        if (!fs.existsSync("builds/" + instanceName))
-          sh.exec("mkdir builds/" + instanceName);
-        if (!fs.existsSync("builds/" + instanceName + "/ios"))
-          sh.exec("mkdir builds/" + instanceName + "/ios");
-        if (!fs.existsSync("builds/" + instanceName + "/ios/tmp"))
-          sh.exec("mkdir builds/" + instanceName + "/ios/tmp");
-        info("OK");
 
-        info("Retrieving app informations...");
-        var config = require("./instances/" + instanceName + "/config.json");
-        if (config && config.APP && config.APP.name && config.APP.id) {
-          var appName = config.APP.name,
-            appId = config.APP.id,
-            useSpecificProvisioningProfile =
-              config.SHARE && !!config.SHARE.deeplinksHost ? true : false,
-            promise,
-            useWorkspace = false;
+        if (fs.existsSync("builds/tmp")) sh.exec("rm -r builds/tmp");
+        sh.exec("mkdir builds/tmp");
 
-          if (
-            config.AUTH &&
-            ((config.AUTH.facebook &&
-              config.AUTH.facebook.id &&
-              config.AUTH.facebook.name) ||
-              (config.AUTH.google &&
-                config.AUTH.google.id &&
-                config.AUTH.google.name))
-          )
-            useWorkspace = true;
+        var relativePath = signAndroidApk(instanceName, alias);
 
-          if (bundleVersion) {
-            promise = updateBundleVersion(
-              instanceName,
-              version.version,
-              bundleVersion,
-              appName
-            );
-          } else promise = Promise.resolve();
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
 
-          promise.then(
-            () => {
-              info("OK");
-              info("Building and uploading ios...");
-              buildIos(
-                instanceName,
-                appName,
-                appId,
-                useWorkspace,
-                useSpecificProvisioningProfile
-              ).then(() => {
-                clean();
-                info("OK");
-                resolve();
-              });
-            },
-            (err) => {
-              clean();
-              reject(err);
-            }
-          );
-        } else {
-          clean();
-          reject("No app info found. Please check the app configuration");
-        }
+        resolve(relativePath);
       },
       (err) => {
-        clean();
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
         reject(err);
       }
     );
   });
 }
 
-/**
- * Update the core and the configuration for the specified instance
- */
-gulp.task("build", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
-
-  if (verbose) debug("Running build function for " + instanceName);
-
-  build(instanceName).then(
-    () => {
-      done();
-    },
-    (err) => {
-      abort(err);
-      done();
+function buildAndroidBundle(instanceName, type) {
+  return new Promise((resolve, reject) => {
+    if (type !== "Debug" && type !== "Release") {
+      error("Cannot build " + type + " apk");
+      reject("Cannot build " + type + " apk");
     }
-  );
-});
+
+    buildAndroid(instanceName).then(
+      () => {
+        if (verbose) debug("Assembling the debug apk");
+        sh.exec("./gradlew tasks app:bundle" + type + outputRedirect, {
+          cwd: instancesDir + instanceName + "/android",
+        });
+        if (verbose)
+          debug(
+            "Debug apk built in " +
+              instancesDir +
+              instanceName +
+              "/android/app/build/outputs/bundle/" +
+              type.toLowerCase() +
+              "/app-" +
+              type.toLowerCase() +
+              ".aab"
+          );
+        resolve();
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
+}
+
+function addIosPlatform(instanceName, force) {
+  if (force) {
+    if (verbose) debug("Forcing ios platform installation");
+    sh.exec("rm -rf ios" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+  }
+  if (!fs.existsSync(instancesDir + instanceName + "/www"))
+    runIonicBuild(instanceName);
+  if (!fs.existsSync(instancesDir + instanceName + "/ios")) {
+    if (verbose) debug("Adding ios platform");
+    sh.exec("npx cap add ios" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+    if (verbose) debug("Ios platform added successfully");
+  }
+}
+
+function updateIosPlatform(instanceName, appId, appName) {
+  return new Promise((resolve, reject) => {
+    runIonicBuild(instanceName);
+    if (!fs.existsSync(instancesDir + instanceName + "/ios"))
+      addIosPlatform(instanceName);
+
+    if (verbose) debug("Updating ios platform");
+    sh.exec("npx cap copy ios" + outputRedirect, {
+      cwd: instancesDir + instanceName,
+    });
+
+    var promises = [];
+
+    // Info.plist
+    promises.push(
+      new Promise((resolve, reject) => {
+        gulp
+          .src(instancesDir + instanceName + "/ios/App/App/Info.plist")
+          .pipe(
+            replace(
+              /<key>CFBundleDisplayName<\/key>([^<]*)<string>[^<]*<\/string>/g,
+              "<key>CFBundleDisplayName</key>$1<string>" + appName + "</string>"
+            )
+          )
+          .pipe(
+            replace(
+              /<key>CFBundleShortVersionString<\/key>([^<]*)<string>[^<]*<\/string>/g,
+              "<key>CFBundleShortVersionString</key>$1<string>" +
+                version.version +
+                "</string>"
+            )
+          )
+          .pipe(
+            replace(
+              /<key>CFBundleVersion<\/key>([^<]*)<string>[^<]*<\/string>/g,
+              "<key>CFBundleVersion</key>$1<string>" + argv.bundle + "</string>"
+            )
+          )
+          .pipe(gulp.dest(instancesDir + instanceName + "/ios/App/App/"))
+          .on("end", () => {
+            if (verbose) debug("Info.plist updated successfully");
+            resolve();
+          })
+          .on("error", reject);
+      })
+    );
+
+    Promise.all(promises).then(
+      (res) => {
+        if (verbose) debug("Ios platform updated successfully");
+        resolve();
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
+}
+
+function buildIos(instanceName) {
+  return new Promise((resolve, reject) => {
+    build(instanceName).then(
+      (result) => {
+        if (!result.id) {
+          abort("The app id could not be found");
+          return;
+        }
+        if (!result.name) {
+          abort("The app name could not be found");
+          return;
+        }
+        initCapacitor(instanceName, result.id, result.name);
+        updateIosPlatform(instanceName, result.id, result.name).then(
+          () => {
+            updateResources(instanceName, "ios");
+            resolve(result);
+          },
+          (err) => {
+            rejext(err);
+          }
+        );
+      },
+      (err) => {
+        error(err);
+        reject(err);
+      }
+    );
+  });
+}
+
+function createExportOptionsPlist(instanceName, appId, provisioningProfile) {
+  return new Promise((resolve, reject) => {
+    if (!instanceName) {
+      reject("Instance name required. See gulp --help");
+      return;
+    }
+
+    gulp
+      .src("core/exportOptions.plist")
+      .pipe(replace("{{WM_APP_ID}}", appId))
+      .pipe(replace("{{WM_PROVISIONING_PROFILE}}", provisioningProfile))
+      .pipe(gulp.dest("builds/" + instanceName + "/ios/tmp/"))
+      .on("end", () => {
+        if (verbose) debug("exportOptions.plist updated");
+        resolve();
+      })
+      .on("error", reject)
+      .on("data", () => {});
+  });
+}
+
+function fixPodfile(instanceName) {
+  if (fs.existsSync("instances/" + instanceName + "/ios/App/Podfile")) {
+    if (verbose) debug("Adding fix code to podfile");
+    var podfile = fs.readFileSync(
+      "instances/" + instanceName + "/ios/App/Podfile",
+      "utf8"
+    );
+    var check = `post_install do |installer| 
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""
+      config.build_settings['CODE_SIGNING_REQUIRED'] = "NO"
+      config.build_settings['CODE_SIGNING_ALLOWED'] = "NO"
+    end
+  end
+end
+`;
+    if (podfile.indexOf("post_install do |installer|") === -1)
+      podfile = check + "\n" + podfile;
+    fs.writeFileSync("instances/" + instanceName + "/ios/App/Podfile", podfile);
+    if (verbose) debug("Podfile now has the code");
+    if (verbose) debug("Rerunning pod install");
+    sh.exec("pod install" + outputRedirect, {
+      cwd: "instances/" + instanceName + "/ios/App",
+    });
+    if (verbose) debug("Pod reinstalled");
+  }
+}
+
+function buildAndUploadIos(
+  instanceName,
+  appName,
+  appId,
+  useSpecificProvisioningProfile
+) {
+  return new Promise((resolve, reject) => {
+    var provisioningProfile = useSpecificProvisioningProfile
+      ? appId.split(".").pop() + "_distribution"
+      : "webmapp_distribution";
+
+    if (verbose) debug("Cleaning workspace");
+    sh.exec(
+      'xcodebuild -workspace "App.xcworkspace" -scheme App -sdk iphoneos -configuration Release clean' +
+        outputRedirect,
+      {
+        cwd: "instances/" + instanceName + "/ios/App",
+      }
+    );
+    if (verbose) debug("Workspace cleaned");
+    if (verbose) debug("Editing podfile to prevent archive errors");
+    fixPodfile(instanceName);
+    if (verbose) debug("Podfile edited succesfully");
+    if (verbose) debug("Creating workspace archive");
+    sh.exec(
+      'xcodebuild -workspace "App.xcworkspace" -scheme App -sdk iphoneos -configuration Release archive -archivePath "../../../../builds/' +
+        instanceName +
+        "/ios/" +
+        appName +
+        "_" +
+        version.version +
+        '.xcarchive" CODE_SIGN_STYLE="Manual" DEVELOPMENT_TEAM="BSTW6XXE23" PROVISIONING_PROFILE_SPECIFIER="' +
+        provisioningProfile +
+        '" CODE_SIGN_IDENTITY="Apple Distribution: WEBMAPP SRL (BSTW6XXE23)"' +
+        outputRedirect,
+      {
+        cwd: "instances/" + instanceName + "/ios/App",
+      }
+    );
+    if (verbose) debug("Archive created");
+    if (verbose) debug("Exporting the .ipa");
+    createExportOptionsPlist(instanceName, appId, provisioningProfile).then(
+      () => {
+        sh.exec(
+          'xcodebuild -exportArchive -archivePath "./' +
+            appName +
+            "_" +
+            version.version +
+            '.xcarchive" -exportOptionsPlist "./tmp/exportOptions.plist" -exportPath "./tmp/" -allowProvisioningUpdates',
+          {
+            cwd: "builds/" + instanceName + "/ios/",
+          }
+        );
+        if (verbose) debug(".ipa exported");
+        if (verbose) debug("Uploading exported .ipa");
+        sh.exec(
+          'xcrun altool --upload-app --type ios --file "./App.ipa" --apiKey PT5L38QV2W --apiIssuer "69a6de8e-f769-47e3-e053-5b8c7c11a4d1"' +
+            (verbose ? " --verbose" : ""),
+          {
+            cwd: "builds/" + instanceName + "/ios/tmp/",
+          }
+        );
+        info("Upload completed");
+        resolve();
+      },
+      (err) => {
+        reject(err);
+      }
+    );
+  });
+}
+
+function uploadIos(instanceName) {
+  return new Promise((resolve, reject) => {
+    buildIos(instanceName).then(
+      (result) => {
+        buildAndUploadIos(instanceName, result.name, result.id, false).then(
+          () => {
+            resolve();
+          },
+          (err) => {
+            reject();
+          }
+        );
+      },
+      (err) => {
+        error(err);
+        reject(err);
+      }
+    );
+  });
+}
 
 /**
  * Update the configuration in the core for development purposes
@@ -1079,161 +1135,189 @@ gulp.task("set", function (done) {
 });
 
 /**
- * Build the webapp production zip file
+ * Update the core and the configuration for the specified instance
  */
-gulp.task("build-webapp", function (done) {
-  addBrowser();
+gulp.task("build", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
 
-  info("Cleaning old builds...");
-  sh.exec("rm -rf www" + outputRedirect, {
-    cwd: "core/platforms/browser",
-  });
-  sh.exec("rm -rf www" + outputRedirect, {
-    cwd: "core/",
-  });
-  info("OK");
-  info("Building browser...");
-  sh.exec("ionic cordova build browser --prod --release" + outputRedirect, {
-    cwd: "core/",
-  });
-  info("OK");
+  if (verbose) debug("Running build function for " + instanceName);
 
-  info("Removing inappbrowser problematic code...");
-  fixInAppBrowser().then(
-    function () {
-      info("OK");
-
-      info("Removing old zip...");
-      sh.exec("rm builds/core.zip" + outputRedirect);
-      info("OK");
-
-      info("Creating zip...");
-      sh.exec("cp -r www core" + outputRedirect, {
-        cwd: "core/platforms/browser/",
-      });
-      sh.exec("zip -r core.zip core" + outputRedirect, {
-        cwd: "core/platforms/browser/",
-      });
-      sh.exec(
-        "mv core/platforms/browser/core.zip builds/core.zip" + outputRedirect
-      );
-      info("OK");
-
-      info("Cleaning temp files...");
-      sh.exec("rm -rf core log" + outputRedirect, {
-        cwd: "core/platforms/browser/",
-      });
-      info("OK");
-      done();
-    },
-    function (err) {
-      abort("\nAn error occurred while fixing inAppBrowser plugin\n" + err);
-      done();
-    }
-  );
-});
-
-/**
- * Update the specified instance and build the production android apk in builds/[instance]_[version].apk
- */
-gulp.task("build-android", function (done) {
-  var instanceName = argv.instance ? argv.instance : undefined,
-    alias = argv.keycode ? argv.keycode : instanceName;
-
-  if (!instanceName) {
-    abort("Missing instance name. See gulp --help");
-    return;
-  }
-
-  if (instanceName.indexOf("test") !== -1) alias = "test";
-
-  buildAndroidTask(instanceName, alias).then(
+  build(instanceName).then(
     () => {
       done();
     },
     (err) => {
-      error(err);
+      abort(err);
       done();
     }
   );
 });
 
 /**
- * Update the specified instance, build the ios in production mode and upload the build to appstoreconnect
+ * Build the android platform for the given instance
+ */
+gulp.task("build-android", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose) debug("Building android platform for instance " + instanceName);
+  buildAndroid(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build an android apk to use for debugging purposes
+ */
+gulp.task("build-android-apk-debug", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android debug apk for instance " + instanceName);
+  buildAndroidApk(instanceName, "Debug").then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build and deploy an android apk to use for debugging purposes in a device/simulator
+ */
+gulp.task("deploy-android-apk-debug", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug(
+      "Deploying the android debug apk for instance " +
+        instanceName +
+        " to an available device"
+    );
+  buildAndroidApk(instanceName, "Debug").then(
+    () => {
+      if (verbose) debug("Deploying the apk to the device/simulator");
+      sh.exec("adb install app/build/outputs/apk/debug/app-debug.apk", {
+        cwd: instancesDir + instanceName + "/android",
+      });
+      if (verbose) debug("deploy completed");
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build the android apk to use when testing a prerelease version
+ */
+gulp.task("build-android-apk", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android release apk for instance " + instanceName);
+  buildSignedApk(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build and deploy the android apk to use when testing a prerelease version
+ */
+gulp.task("deploy-android-apk", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug(
+      "Deploying the android release apk for instance " +
+        instanceName +
+        " to an available device/simulator"
+    );
+  buildSignedApk(instanceName).then(
+    (relativePath) => {
+      if (verbose) debug("Deploying the apk to the device/simulator");
+      sh.exec("adb install " + relativePath);
+      if (verbose) debug("Deploy completed");
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
+ * Build the ios platform for the given instance
  */
 gulp.task("build-ios", function (done) {
   var instanceName = argv.instance ? argv.instance : "";
 
-  if (!instanceName) {
-    error("Missing instance name. See gulp --help");
-    done();
-    return;
-  }
-
-  buildIosTask(instanceName, argv.bundleVersion).then(
+  if (verbose) debug("Building iOS platform for instance " + instanceName);
+  buildIos(instanceName).then(
     () => {
       done();
     },
     (err) => {
-      error(err);
       done();
     }
   );
 });
 
 /**
- * Build the apk and deploy the ios version for the specified instances
+ * Build the ios platform for the given instance
  */
-gulp.task("deploy", async function (done) {
-  var instanceNames = argv.instance ? argv.instance : "",
-    bundleVersion = argv.bundleVersion ? argv.bundleVersion : "";
+gulp.task("upload-ios", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
 
-  if (!instanceNames) {
-    error("Missing instance name. See gulp --help");
-    done();
-    return;
-  }
-
-  checkBuildsFolder();
-
-  var instances = instanceNames.split(",");
-
-  for (var i in instances) {
-    title("Processing " + instances[i] + "...");
-    title("Processing android platform...");
-    await buildIosTask(instances[i], bundleVersion);
-    title("Android platform done");
-    title("Processing Android platform...");
-    await buildAndroidTask(instances[i]);
-    title("Android platform done");
-    success(instances[i] + " done!");
-  }
-
-  success(
-    "Operation completed sucessfully: " + instances.length + " deploys done"
+  if (verbose)
+    debug(
+      "Building and uploading the iOS version for instance " + instanceName
+    );
+  uploadIos(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
   );
-  done();
 });
 
-gulp.task("test", function (done) {
-  // <h1>Unit Test Results</h1>;
-  title("Running tests...");
-  sh.exec("npm run test");
-  gulp
-    .src("unit_tests/index.html")
-    .pipe(
-      replace(
-        /(<h1>Unit Test Results<\/h1>)/gi,
-        '$1<h2><a href="coverage/index.html">Coverage status</a></h2>'
-      )
-    )
-    .pipe(gulp.dest("unit_tests/"))
-    .on("end", () => {
+/**
+ * Perform all the needed operation to release the ios and android version of the specified app
+ */
+gulp.task("release", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  title("Building and uploading the iOS version for instance " + instanceName);
+  uploadIos(instanceName).then(
+    () => {
+      success(instanceName + " ios version uploaded successfully");
+      title("Building the android release apk for instance " + instanceName);
+      buildSignedApk(instanceName).then(
+        () => {
+          success(instanceName + " android version built successfully");
+          done();
+        },
+        (err) => {
+          done();
+        }
+      );
+    },
+    (err) => {
       done();
-      success("Unit tests completed");
-    })
-    .on("error", (err) => {
-      error(err);
-      done();
-    });
+    }
+  );
 });

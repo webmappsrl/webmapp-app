@@ -1,4 +1,8 @@
 {
+  "home": {
+    "mostViewedTracks": "Percorsi più visti",
+    "closerTracks": "Percorsi nelle vicinanze"
+  },
   "tabs": {
     "home": "home",
     "map": "mappa",

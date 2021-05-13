@@ -7,14 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
+import { CardsModule } from 'src/app/components/cards/cards.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    CardsModule,
+    HomePageRoutingModule,
+    TranslateModule,
   ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  entryComponents: [],
 })
 export class HomePageModule {}
