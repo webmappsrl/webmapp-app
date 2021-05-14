@@ -1,9 +1,9 @@
 i[class^="webmapp-icon-"] {
-  font-size: calc(var(--font-xxxlg-multiplier) * 1em);
+  font-size: calc(var(--wm-font-xxxlg-multiplier) * 1em);
 }
 
 .webmapp-tabs-label {
-  font-size: var(--font-xsm);
+  font-size: var(--wm-font-xsm);
   &::first-letter {
     text-transform: capitalize;
   }

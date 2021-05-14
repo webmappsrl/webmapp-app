@@ -1,7 +1,20 @@
 {
-  "home": {
-    "mostViewedTracks": "Percorsi più visti",
-    "closerTracks": "Percorsi nelle vicinanze"
+  "pages": {
+    "home": {
+      "mostViewedTracks": "Percorsi più visti",
+      "closerTracks": "Percorsi nelle vicinanze"
+    },
+    "profile": {
+      "title": "Profilo",
+      "loggedOut": {
+        "slides": {
+          "0": "Accedi e scarica i tuoi percorsi preferiti",
+          "1": "Puoi anche condividerli con i tuoi compagni di viaggio"
+        },
+        "login": "Accedi",
+        "signup": "Registrati"
+      }
+    }
   },
   "tabs": {
     "home": "home",

@@ -4,10 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { ProfilePageRoutingModule } from './profile-routing.module';
 
-import { HomePage } from './home.page';
-import { CardsModule } from 'src/app/components/cards/cards.module';
+import { ProfilePage } from './profile.page';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
@@ -15,11 +14,9 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     FormsModule,
     IonicModule,
-    CardsModule,
-    HomePageRoutingModule,
+    ProfilePageRoutingModule,
     TranslateModule.forChild(),
   ],
-  declarations: [HomePage],
-  entryComponents: [],
+  declarations: [ProfilePage],
 })
-export class HomePageModule {}
+export class ProfilePageModule {}
