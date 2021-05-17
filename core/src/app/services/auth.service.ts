@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { GEOHUB_BASE_URL, GEOHUB_LOGIN_ENDPOINT } from '../constants/geohub';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
 

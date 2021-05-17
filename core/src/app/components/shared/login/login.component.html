@@ -1,0 +1,70 @@
+<webmapp-modal-header
+  class="webmapp-login-header"
+  [title]="'modals.login.title' | translate"
+  (dismiss)="dismiss()"
+>
+</webmapp-modal-header>
+<ion-content scrollY="false">
+  <form class="webmapp-login-form" (ngSubmit)="login()">
+    <h1>
+      {{ "modals.login.welcome" | translate }}
+    </h1>
+    <p>
+      {{ "modals.login.message" | translate }}
+    </p>
+    <ion-label class="webmapp-login-label">
+      {{ "modals.login.email" | translate }}
+    </ion-label>
+    <ion-item class="webmapp-login-field">
+      <ion-input
+        type="text"
+        inputmode="email"
+        pattern="email"
+        required
+        #username
+        class="webmapp-login-input"
+      ></ion-input>
+    </ion-item>
+    <ion-label class="webmapp-login-label">
+      {{ "modals.login.password" | translate }}
+    </ion-label>
+    <ion-item class="webmapp-login-field">
+      <ion-input
+        [type]="showPassword ? 'text' : 'password'"
+        required="true"
+        #password
+        class="webmapp-login-input"
+      ></ion-input>
+      <ion-button
+        class="webmapp-login-input-button"
+        slot="end"
+        (click)="togglePasswordVisibility()"
+      >
+        <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'">
+        </ion-icon>
+      </ion-button>
+    </ion-item>
+    <div class="webmapp-login-toggle-container">
+      <ion-toggle
+        #remember
+        mode="ios"
+        class="webmapp-login-toggle"
+      ></ion-toggle>
+      <ion-label class="webmapp-login-toggle-label">
+        {{ "modals.login.rememberLogin" | translate }}
+      </ion-label>
+    </div>
+    <div class="webmapp-login-buttons-container">
+      <button type="submit" class="webmapp-login-submit-button">
+        {{ "modals.login.login" | translate }}
+      </button>
+      <button
+        type="button"
+        (click)="forgotPassword()"
+        class="webmapp-login-forgot-password-button"
+      >
+        {{ "modals.login.forgotPassword" | translate }}
+      </button>
+    </div>
+  </form>
+</ion-content>

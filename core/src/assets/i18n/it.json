@@ -1,4 +1,24 @@
 {
+  "generic": {
+    "error": "Si è verificato un errore. Riprova più tardi",
+    "warning": "Attenzione",
+    "ok": "ok",
+    "cancel": "annulla",
+    "delete": "cancella",
+    "retry": "riprova"
+  },
+  "modals": {
+    "login": {
+      "title": "Accedi",
+      "welcome": "Bentornato!",
+      "message": "Accedi con le tue credenziali per continuare.",
+      "email": "E-mail",
+      "password": "Password",
+      "rememberLogin": "Ricorda le credenziali",
+      "forgotPassword": "Hai dimenticato la password?",
+      "login": "Accedi"
+    }
+  },
   "pages": {
     "home": {
       "mostViewedTracks": "Percorsi più visti",

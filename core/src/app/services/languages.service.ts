@@ -98,16 +98,18 @@ export class LanguagesService {
   /**
    * Return the translation for the specifiedkey using the specified object
    *
-   * @param object the object containing the key and eventually the translations
    * @param key the key
-   * @param key the fallback key. Used if there is no translation of the key
+   * @param object the object containing the key and eventually the translations
+   * @param fallbackKey the fallback key. Used if there is no translation of the key
    */
-  translate(object: any, key: string, fallbackKey?: string): string {
+  translate(key: string, object?: any, fallbackKey?: string): string {
     let value: string;
 
-    if (!object) return undefined;
+    if (!key) return undefined;
 
-    if (
+    if (key && (!object || this._translateService.instant(key) !== key))
+      value = this._translateService.instant(key);
+    else if (
       object[key] &&
       this._translateService.instant(object[key]) !== object[key]
     )

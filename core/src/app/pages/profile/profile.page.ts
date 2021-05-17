@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { LoginComponent } from 'src/app/components/shared/login/login.component';
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -9,7 +11,7 @@ export class ProfilePage implements OnInit {
   public loggedIn: boolean;
   public loggedOutSliderOptions: any;
 
-  constructor() {
+  constructor(private _modalController: ModalController) {
     this.loggedOutSliderOptions = {
       initialSlide: 0,
       speed: 400,
@@ -21,4 +23,19 @@ export class ProfilePage implements OnInit {
   }
 
   ngOnInit() {}
+
+  login(): void {
+    this._modalController
+      .create({
+        component: LoginComponent,
+        swipeToClose: true,
+        mode: 'ios',
+        id: 'webmapp-login-modal',
+      })
+      .then((modal) => {
+        modal.present();
+      });
+  }
+
+  signup(): void {}
 }

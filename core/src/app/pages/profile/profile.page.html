@@ -42,10 +42,13 @@
       </ion-slides>
     </div>
     <div class="webmapp-profile-logged-out-login-buttons-container">
-      <button class="webmapp-profile-logged-out-login-button">
+      <button class="webmapp-profile-logged-out-login-button" (click)="login()">
         {{'pages.profile.loggedOut.login' | translate}}
       </button>
-      <button class="webmapp-profile-logged-out-signup-button">
+      <button
+        class="webmapp-profile-logged-out-signup-button"
+        (click)="signup()"
+      >
         {{'pages.profile.loggedOut.signup' | translate}}
       </button>
     </div>

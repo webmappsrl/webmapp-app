@@ -13,6 +13,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './services/config.service';
+import { SharedModule } from './components/shared/shared.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -29,8 +30,12 @@ import { ConfigService } from './services/config.service';
         deps: [HttpClient],
       },
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: 'webmapp_app_storage',
+      driverOrder: ['indexeddb', 'sqlite', 'websql', 'localstorage'],
+    }),
     AppRoutingModule,
+    SharedModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
