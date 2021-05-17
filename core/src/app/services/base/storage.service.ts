@@ -1,13 +1,19 @@
 /**
  * Storage Service
  *
- * It provides access to the offline storage for json data
+ * It provides access to the application storage for any data
  * */
 
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { ReplaySubject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+import {
+  CONFIG_JSON_STORAGE_KEY,
+  INITIALIZED_FLAG_STORAGE_KEY,
+  LANGUAGE_STORAGE_KEY,
+  USER_STORAGE_KEY,
+} from 'src/app/constants/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -34,40 +40,52 @@ export class StorageService {
     );
   }
 
-  setConfig(value: IConfig): Promise<any> {
-    return this._set('wm-config_json', value);
+  setConfig(value: IConfig): Promise<void> {
+    return this._set(CONFIG_JSON_STORAGE_KEY, value);
   }
 
   getConfig(): Promise<any> {
-    return this._get('wm-config_json');
+    return this._get(CONFIG_JSON_STORAGE_KEY);
   }
 
-  removeConfig(): Promise<any> {
-    return this._remove('wm-config_json');
+  removeConfig(): Promise<void> {
+    return this._remove(CONFIG_JSON_STORAGE_KEY);
   }
 
-  setLanguage(value: string): Promise<any> {
-    return this._set('wm-lang', value);
+  setLanguage(value: string): Promise<void> {
+    return this._set(LANGUAGE_STORAGE_KEY, value);
   }
 
   getLanguage(): Promise<any> {
-    return this._get('wm-lang');
+    return this._get(LANGUAGE_STORAGE_KEY);
   }
 
-  removeLanguage(): Promise<any> {
-    return this._remove('wm-lang');
+  removeLanguage(): Promise<void> {
+    return this._remove(LANGUAGE_STORAGE_KEY);
   }
 
-  setInitializedFlag(): Promise<any> {
-    return this._set('wm-initialized', true);
+  setInitializedFlag(): Promise<void> {
+    return this._set(INITIALIZED_FLAG_STORAGE_KEY, true);
   }
 
   getInitializedFlag(): Promise<any> {
-    return this._get('wm-initialized');
+    return this._get(INITIALIZED_FLAG_STORAGE_KEY);
   }
 
-  removeInitializedFlag(): Promise<any> {
-    return this._remove('wm-initialized');
+  removeInitializedFlag(): Promise<void> {
+    return this._remove(INITIALIZED_FLAG_STORAGE_KEY);
+  }
+
+  setUser(user: IUser): Promise<void> {
+    return this._set(USER_STORAGE_KEY, user);
+  }
+
+  getUser(): Promise<any> {
+    return this._get(USER_STORAGE_KEY);
+  }
+
+  removeUser(): Promise<void> {
+    return this._remove(USER_STORAGE_KEY);
   }
 
   /**
@@ -103,6 +121,13 @@ export class StorageService {
     }
   }
 
+  /**
+   * Perform the get operation directly from the storage. This function must be called once the storage is ready
+   *
+   * @param key the key to get from the store
+   *
+   * @returns a promise that resolve when the key is retrieved
+   */
   private _storeGet(key: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this._store.get(key).then(

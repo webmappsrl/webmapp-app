@@ -1,0 +1,53 @@
+<ion-header class="webmapp-profile-header">
+  <ion-toolbar mode="md" class="webmapp-profile-header-toolbar">
+    <ion-title mode="md" class="webmapp-profile-header-toolbar-title">
+      {{'pages.profile.title' | translate}}
+    </ion-title>
+    <ion-fab-button slot="end" class="webmapp-profile-header-toolbar-button">
+      <i class="webmapp-icon-settings-outline"></i>
+    </ion-fab-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <ng-container>
+    <div class="webmapp-profile-logged-out-slider-container">
+      <ion-slides
+        class="webmapp-profile-logged-out-slider"
+        [options]="loggedOutSliderOptions"
+        pager="true"
+      >
+        <ion-slide class="webmapp-profile-logged-out-slide">
+          <div class="webmapp-profile-logged-out-slide-content">
+            <img
+              class="webmapp-profile-logged-out-slide-image"
+              src="assets/images/profile/logged_out_slide_1.svg"
+            />
+            <div class="webmapp-profile-logged-out-slide-text">
+              {{'pages.profile.loggedOut.slides.0' | translate}}
+            </div>
+          </div>
+        </ion-slide>
+        <ion-slide class="webmapp-profile-logged-out-slide">
+          <div class="webmapp-profile-logged-out-slide-content">
+            <img
+              class="webmapp-profile-logged-out-slide-image"
+              src="assets/images/profile/logged_out_slide_2.svg"
+            />
+            <div class="webmapp-profile-logged-out-slide-text">
+              {{'pages.profile.loggedOut.slides.1' | translate}}
+            </div>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+    <div class="webmapp-profile-logged-out-login-buttons-container">
+      <button class="webmapp-profile-logged-out-login-button">
+        {{'pages.profile.loggedOut.login' | translate}}
+      </button>
+      <button class="webmapp-profile-logged-out-signup-button">
+        {{'pages.profile.loggedOut.signup' | translate}}
+      </button>
+    </div>
+  </ng-container>
+</ion-content>
