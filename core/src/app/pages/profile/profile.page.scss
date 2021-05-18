@@ -9,7 +9,8 @@
     .webmapp-profile-header-toolbar-button {
       font-size: 24px;
       --background: var(--wm-color-light);
-      --color: var(--wm-color-primary);
+      // --color: var(--wm-color-primary);
+      --color: var(--wm-color-darkgrey);
       --box-shadow: none;
     }
   }
@@ -69,5 +70,40 @@
   .webmapp-profile-logged-out-signup-button {
     background: var(--wm-color-light);
     color: var(--wm-color-primary);
+  }
+}
+
+.webmapp-profile-user-container {
+  padding: 15px;
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  .webmapp-profile-user-avatar {
+    display: block;
+    width: 64px;
+    height: 64px;
+    &.webmapp-profile-user-avatar-icon {
+      font-size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--wm-color-light);
+      background: rgba(var(--wm-color-secondary-rgb), 0.5);
+    }
+  }
+  .webmapp-profile-user-header-container {
+    display: flex;
+    margin-left: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    .webmapp-profile-user-name {
+      margin: 0 0 3px;
+    }
+    .webmapp-profile-user-email {
+      font-size: var(--wm-font-sm);
+      color: var(--wm-color-darkgrey);
+    }
   }
 }

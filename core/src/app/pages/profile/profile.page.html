@@ -6,11 +6,18 @@
     <ion-fab-button slot="end" class="webmapp-profile-header-toolbar-button">
       <i class="webmapp-icon-settings-outline"></i>
     </ion-fab-button>
+    <ion-fab-button
+      slot="end"
+      *ngIf="isLoggedIn"
+      class="webmapp-profile-header-toolbar-button"
+    >
+      <i class="webmapp-icon-bell-outline"></i>
+    </ion-fab-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="false">
-  <ng-container>
+  <ng-container *ngIf="!isLoggedIn">
     <div class="webmapp-profile-logged-out-slider-container">
       <ion-slides
         class="webmapp-profile-logged-out-slider"
@@ -51,6 +58,22 @@
       >
         {{'pages.profile.loggedOut.signup' | translate}}
       </button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn">
+    <div class="webmapp-profile-user-container">
+      <ion-avatar
+        class="webmapp-profile-user-avatar"
+        [ngClass]="{
+          'webmapp-profile-user-avatar-icon': !avatarUrl
+        }"
+      >
+        <i class="webmapp-icon-user-outline"></i>
+      </ion-avatar>
+      <div class="webmapp-profile-user-header-container">
+        <h4 class="webmapp-profile-user-name">{{name}}</h4>
+        <div class="webmapp-profile-user-email">{{email}}</div>
+      </div>
     </div>
   </ng-container>
 </ion-content>

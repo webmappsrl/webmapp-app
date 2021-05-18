@@ -23,8 +23,8 @@
           "emailRequired": "L'e-mail è obbligatoria",
           "passwordRequired": "La password è obbligatoria"
         },
-        "401": "Account inesistente. Controlla di aver utilizzato le credenziali corrette",
-        "generic": "Si è verificato un errore durante la comunicazione con i nostri servizi. Riprova più tardi"
+        "401": "Le credenziali che hai inserito non sono corrette. Controlla e-mail e password e riprova",
+        "generic": "Oops! Qualcosa è andato storto! Attendi qualche minuto e riprova."
       }
     }
   },
