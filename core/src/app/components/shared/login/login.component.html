@@ -5,46 +5,86 @@
 >
 </webmapp-modal-header>
 <ion-content scrollY="false">
-  <form class="webmapp-login-form" (ngSubmit)="login()">
+  <form class="webmapp-login-form" (ngSubmit)="login()" [formGroup]="loginForm">
     <h1>
       {{ "modals.login.welcome" | translate }}
     </h1>
     <p>
       {{ "modals.login.message" | translate }}
     </p>
-    <ion-label class="webmapp-login-label">
-      {{ "modals.login.email" | translate }}
-    </ion-label>
-    <ion-item class="webmapp-login-field">
-      <ion-input
-        type="text"
-        inputmode="email"
-        pattern="email"
-        required
-        #username
-        class="webmapp-login-input"
-      ></ion-input>
-    </ion-item>
-    <ion-label class="webmapp-login-label">
-      {{ "modals.login.password" | translate }}
-    </ion-label>
-    <ion-item class="webmapp-login-field">
-      <ion-input
-        [type]="showPassword ? 'text' : 'password'"
-        required="true"
-        #password
-        class="webmapp-login-input"
-      ></ion-input>
-      <ion-button
-        class="webmapp-login-input-button"
-        slot="end"
-        (click)="togglePasswordVisibility()"
+
+    <div class="webmapp-login-field-container">
+      <ion-label class="webmapp-login-label">
+        {{ "modals.login.email" | translate }}
+      </ion-label>
+      <ion-item
+        class="webmapp-login-field"
+        [ngClass]="{
+          'webmapp-login-field-has-error':
+            isSubmitted && !!errorControl.email.errors
+        }"
       >
-        <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'">
-        </ion-icon>
-      </ion-button>
-    </ion-item>
-    <div class="webmapp-login-toggle-container">
+        <ion-input
+          type="text"
+          inputmode="email"
+          required
+          #email
+          class="webmapp-login-input"
+          formControlName="email"
+        ></ion-input>
+      </ion-item>
+      <ng-container *ngIf="isSubmitted && !!errorControl.email.errors">
+        <span
+          class="webmapp-login-field-error"
+          *ngIf="errorControl.email.errors?.required"
+        >
+          Email is required.
+        </span>
+        <span
+          class="webmapp-login-field-error"
+          *ngIf="errorControl.email.errors?.email"
+        >
+          The inserted email is not valid
+        </span>
+      </ng-container>
+    </div>
+    <div class="webmapp-login-field-container">
+      <ion-label class="webmapp-login-label">
+        {{ "modals.login.password" | translate }}
+      </ion-label>
+      <ion-item
+        class="webmapp-login-field"
+        [ngClass]="{
+          'webmapp-login-field-has-error':
+            isSubmitted && !!errorControl.password.errors
+        }"
+      >
+        <ion-input
+          [type]="showPassword ? 'text' : 'password'"
+          required="true"
+          #password
+          class="webmapp-login-input"
+          formControlName="password"
+        ></ion-input>
+        <ion-button
+          class="webmapp-login-input-button"
+          slot="end"
+          (click)="togglePasswordVisibility()"
+        >
+          <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'">
+          </ion-icon>
+        </ion-button>
+      </ion-item>
+      <ng-container *ngIf="isSubmitted && !!errorControl.password.errors">
+        <span
+          class="webmapp-login-field-error"
+          *ngIf="errorControl.password.errors?.required"
+        >
+          Password is required.
+        </span>
+      </ng-container>
+    </div>
+    <!-- <div class="webmapp-login-toggle-container">
       <ion-toggle
         #remember
         mode="ios"
@@ -53,9 +93,9 @@
       <ion-label class="webmapp-login-toggle-label">
         {{ "modals.login.rememberLogin" | translate }}
       </ion-label>
-    </div>
+    </div> -->
     <div class="webmapp-login-buttons-container">
-      <button type="submit" class="webmapp-login-submit-button">
+      <button class="webmapp-login-submit-button">
         {{ "modals.login.login" | translate }}
       </button>
       <button

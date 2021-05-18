@@ -8,21 +8,32 @@
     font-size: var(--wm-font-sm);
     font-weight: var(--wm-font-weight-bold);
   }
-  .webmapp-login-field {
+  .webmapp-login-field-container {
     margin-bottom: 15px;
-    --padding-start: 0;
-    .webmapp-login-input {
+    .webmapp-login-field {
+      --padding-start: 0;
+      .webmapp-login-input-button {
+        font-size: var(--wm-font-md);
+        --color: var(--wm-color-dark);
+        --background: var(--wm-color-light);
+        --background-activated: var(--background);
+        --background-activated-opacity: 1;
+        --background-focused: var(--background);
+        --background-focused-opacity: 1;
+        --background-hover: var(--background);
+        --background-hover-opacity: 1;
+      }
+
+      &.item-has-focus {
+        --border-color: var(--wm-color-secondary);
+      }
+      &.webmapp-login-field-has-error {
+        --border-color: var(--ion-color-danger);
+      }
     }
-    .webmapp-login-input-button {
-      font-size: var(--wm-font-md);
-      --color: var(--wm-color-dark);
-      --background: var(--wm-color-light);
-      --background-activated: var(--background);
-      --background-activated-opacity: 1;
-      --background-focused: var(--background);
-      --background-focused-opacity: 1;
-      --background-hover: var(--background);
-      --background-hover-opacity: 1;
+    .webmapp-login-field-error {
+      color: var(--ion-color-danger);
+      font-size: var(--wm-font-sm);
     }
   }
   .webmapp-login-toggle-container {
