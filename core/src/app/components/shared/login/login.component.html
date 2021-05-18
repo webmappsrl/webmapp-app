@@ -38,13 +38,13 @@
           class="webmapp-login-field-error"
           *ngIf="errorControl.email.errors?.required"
         >
-          Email is required.
+          {{ "modals.login.errors.form.emailRequired" | translate }}
         </span>
         <span
           class="webmapp-login-field-error"
           *ngIf="errorControl.email.errors?.email"
         >
-          The inserted email is not valid
+          {{ "modals.login.errors.form.emailInvalid" | translate }}
         </span>
       </ng-container>
     </div>
@@ -80,7 +80,7 @@
           class="webmapp-login-field-error"
           *ngIf="errorControl.password.errors?.required"
         >
-          Password is required.
+          {{ "modals.login.errors.form.passwordRequired" | translate }}
         </span>
       </ng-container>
     </div>

@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, IonInput, ModalController } from '@ionic/angular';
@@ -60,31 +61,43 @@ export class LoginComponent implements OnInit {
             this.logging = false;
             this.dismiss();
           },
-          (loginError) => {
-            console.log(loginError);
+          (loginError: HttpErrorResponse) => {
             this.logging = false;
-            this._alertController
-              .create({
-                mode: 'ios',
-                header: this._languagesService.translate('generic.warning'),
-                message: this._languagesService.translate('generic.error'),
-                buttons: [
-                  {
-                    text: this._languagesService.translate('generic.ok'),
-                  },
-                ],
-              })
-              .then(
-                (alert) => {
-                  alert.present();
-                },
-                (alertError) => {
-                  console.warn(alertError);
-                }
-              );
+            this.showErrorAlert(loginError);
           }
         );
     }
+  }
+
+  showErrorAlert(error: HttpErrorResponse): void {
+    console.log(error);
+    let errorMessage: string = 'modals.login.errors.generic';
+    switch (error.status + '') {
+      case '401':
+        errorMessage = 'modals.login.errors.401';
+        break;
+      default:
+        break;
+    }
+    this._alertController
+      .create({
+        mode: 'ios',
+        header: this._languagesService.translate('generic.warning'),
+        message: this._languagesService.translate(errorMessage),
+        buttons: [
+          {
+            text: this._languagesService.translate('generic.ok'),
+          },
+        ],
+      })
+      .then(
+        (alert) => {
+          alert.present();
+        },
+        (alertError) => {
+          console.warn(alertError);
+        }
+      );
   }
 
   forgotPassword(): void {}

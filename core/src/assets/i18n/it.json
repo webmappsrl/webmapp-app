@@ -16,7 +16,16 @@
       "password": "Password",
       "rememberLogin": "Ricorda le credenziali",
       "forgotPassword": "Hai dimenticato la password?",
-      "login": "Accedi"
+      "login": "Accedi",
+      "errors": {
+        "form": {
+          "emailInvalid": "Hai inserito un'e-mail non valida",
+          "emailRequired": "L'e-mail è obbligatoria",
+          "passwordRequired": "La password è obbligatoria"
+        },
+        "401": "Account inesistente. Controlla di aver utilizzato le credenziali corrette",
+        "generic": "Si è verificato un errore durante la comunicazione con i nostri servizi. Riprova più tardi"
+      }
     }
   },
   "pages": {

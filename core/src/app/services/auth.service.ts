@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { GEOHUB_BASE_URL, GEOHUB_LOGIN_ENDPOINT } from '../constants/geohub';
 import { CommunicationService } from './base/communication.service';
@@ -58,7 +59,7 @@ export class AuthService {
             this._saveToStorage(response);
             resolve(true);
           },
-          (err) => {
+          (err: HttpErrorResponse) => {
             console.warn(err);
             reject(err);
           }
