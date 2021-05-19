@@ -475,7 +475,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     runIonicBuild(instanceName);
     if (!fs.existsSync(instancesDir + instanceName + "/android")) {
       console.log(
-        "-----------------------------------------------------------------asd"
+        "-----------------------------------------------------------------"
       );
       addAndroidPlatform(instanceName);
     }
