@@ -3,6 +3,7 @@
     "error": "Si è verificato un errore. Riprova più tardi",
     "warning": "Attenzione",
     "ok": "ok",
+    "confirm": "conferma",
     "cancel": "annulla",
     "delete": "cancella",
     "retry": "riprova"
@@ -25,6 +26,13 @@
         },
         "401": "Le credenziali che hai inserito non sono corrette. Controlla e-mail e password e riprova",
         "generic": "Oops! Qualcosa è andato storto! Attendi qualche minuto e riprova."
+      }
+    },
+    "settings": {
+      "title": "Impostazioni",
+      "logout": "Log out",
+      "alert": {
+        "logout": "Sicuro di voler disconnettere il tuo account?"
       }
     }
   },

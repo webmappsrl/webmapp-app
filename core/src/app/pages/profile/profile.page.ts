@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { SettingsComponent } from 'src/app/components/settings/settings.component';
 import { LoginComponent } from 'src/app/components/shared/login/login.component';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -54,6 +55,19 @@ export class ProfilePage implements OnInit, OnDestroy {
     this._modalController
       .create({
         component: LoginComponent,
+        swipeToClose: true,
+        mode: 'ios',
+        id: 'webmapp-login-modal',
+      })
+      .then((modal) => {
+        modal.present();
+      });
+  }
+
+  openSettings(): void {
+    this._modalController
+      .create({
+        component: SettingsComponent,
         swipeToClose: true,
         mode: 'ios',
         id: 'webmapp-login-modal',

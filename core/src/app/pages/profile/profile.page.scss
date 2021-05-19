@@ -9,9 +9,11 @@
     .webmapp-profile-header-toolbar-button {
       font-size: 24px;
       --background: var(--wm-color-light);
-      // --color: var(--wm-color-primary);
-      --color: var(--wm-color-darkgrey);
+      --color: var(--wm-color-primary);
       --box-shadow: none;
+      &.webmapp-profile-header-toolbar-button-disabled {
+        --color: var(--wm-color-darkgrey);
+      }
     }
   }
 }

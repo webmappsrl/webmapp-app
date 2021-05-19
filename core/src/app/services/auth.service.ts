@@ -1,7 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { GEOHUB_BASE_URL, GEOHUB_LOGIN_ENDPOINT } from '../constants/geohub';
+import {
+  GEOHUB_BASE_URL,
+  GEOHUB_LOGIN_ENDPOINT,
+  GEOHUB_LOGOUT_ENDPOINT,
+} from '../constants/geohub';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
 
@@ -93,6 +97,35 @@ export class AuthService {
   }
 
   /**
+   * Perform the logout from the geohub
+   */
+  logout(): void {
+    const token: string = this.token;
+    console.log(token);
+    this._storageService.removeUser();
+    this._userData = undefined;
+    this._onStateChange.next(this._userData);
+
+    if (token) {
+      this._communicationService
+        .post(GEOHUB_BASE_URL + GEOHUB_LOGOUT_ENDPOINT, undefined, {
+          headers: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'Content-Type': 'application/json',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            Authorization: 'Bearer ' + token,
+          },
+        })
+        .subscribe(
+          () => {},
+          (err: HttpErrorResponse) => {
+            console.warn(err);
+          }
+        );
+    }
+  }
+
+  /**
    * Save the current logged user in the storage
    *
    * @param apiUser the user retrieved from the geohub
@@ -101,7 +134,7 @@ export class AuthService {
   private _saveUser(apiUser: IGeohubApiLogin): Promise<void> {
     const user: IUser = {
       id: apiUser.id,
-      token: apiUser.token,
+      token: apiUser.access_token,
     };
 
     if (apiUser.created_at) user.createdAt = apiUser.created_at;

@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConfigService } from './services/config.service';
 import { SharedModule } from './components/shared/shared.module';
+import { SettingsModule } from './components/settings/settings.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { SharedModule } from './components/shared/shared.module';
     }),
     AppRoutingModule,
     SharedModule,
+    SettingsModule,
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
