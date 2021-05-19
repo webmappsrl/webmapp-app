@@ -8,6 +8,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProfileDataComponent } from './profile-data/profile-data.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { TranslateModule } from '@ngx-translate/core';
     ProfilePageRoutingModule,
     TranslateModule.forChild(),
   ],
-  declarations: [ProfilePage],
+  declarations: [ProfilePage, ProfileDataComponent],
 })
 export class ProfilePageModule {}

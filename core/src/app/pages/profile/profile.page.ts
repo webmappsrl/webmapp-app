@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -21,7 +22,8 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   constructor(
     private _authService: AuthService,
-    private _modalController: ModalController
+    private _modalController: ModalController,
+    private _router: Router
   ) {
     this.loggedOutSliderOptions = {
       initialSlide: 0,
@@ -41,6 +43,11 @@ export class ProfilePage implements OnInit, OnDestroy {
         this.name = this._authService.name;
         this.email = this._authService.email;
       });
+  }
+
+  tabClick(event: Event, tab: string): void {
+    event.stopImmediatePropagation();
+    this._router.navigate(['/profile/' + tab]);
   }
 
   login(): void {

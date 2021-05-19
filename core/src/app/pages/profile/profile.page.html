@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content scrollY="false">
+<ion-content scrollY="false" class="webmapp-profile-container">
   <ng-container *ngIf="!isLoggedIn">
     <div class="webmapp-profile-logged-out-slider-container">
       <ion-slides
@@ -75,5 +75,31 @@
         <div class="webmapp-profile-user-email">{{email}}</div>
       </div>
     </div>
+    <ion-tabs class="webmapp-profile-tabs">
+      <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
+        <ion-tab-button
+          (click)="tabClick($event, 'profile-data')"
+          tab="profile-data"
+          [routerLink]="['profile-data']"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label">
+            I tuoi dati
+          </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+        <ion-tab-button
+          (click)="tabClick($event, 'profile-records')"
+          tab="profile-records"
+          [routerLink]="['profile-records']"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label">
+            Le tue registrazioni
+          </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
   </ng-container>
 </ion-content>
