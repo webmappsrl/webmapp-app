@@ -65,16 +65,18 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   openSettings(): void {
-    this._modalController
-      .create({
-        component: SettingsComponent,
-        swipeToClose: true,
-        mode: 'ios',
-        id: 'webmapp-login-modal',
-      })
-      .then((modal) => {
-        modal.present();
-      });
+    if (this.isLoggedIn) {
+      this._modalController
+        .create({
+          component: SettingsComponent,
+          swipeToClose: true,
+          mode: 'ios',
+          id: 'webmapp-login-modal',
+        })
+        .then((modal) => {
+          modal.present();
+        });
+    }
   }
 
   signup(): void {}

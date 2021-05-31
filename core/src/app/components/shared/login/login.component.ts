@@ -70,7 +70,6 @@ export class LoginComponent implements OnInit {
   }
 
   showErrorAlert(error: HttpErrorResponse): void {
-    console.log(error);
     let errorMessage: string = 'modals.login.errors.generic';
     switch (error.status + '') {
       case '401':

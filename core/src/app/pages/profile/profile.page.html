@@ -6,6 +6,9 @@
     <ion-fab-button
       slot="end"
       class="webmapp-profile-header-toolbar-button"
+      [ngClass]="{
+        'webmapp-profile-header-toolbar-button-disabled': !isLoggedIn
+      }"
       (click)="openSettings()"
     >
       <i class="webmapp-icon-settings-outline"></i>

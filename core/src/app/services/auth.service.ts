@@ -101,7 +101,6 @@ export class AuthService {
    */
   logout(): void {
     const token: string = this.token;
-    console.log(token);
     this._storageService.removeUser();
     this._userData = undefined;
     this._onStateChange.next(this._userData);
