@@ -59,6 +59,18 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 See also the list of [contributors](https://github.com/webmappsrl/wm-app/graphs/contributors) who participated in this project.
 
+## Geolocation
+
+Add to 
+\android\app\src\main\res\values
+
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="mauron85_bgloc_account_name">$ACCOUNT_NAME</string>
+    <string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string>
+    <string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>
+</resources>
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
