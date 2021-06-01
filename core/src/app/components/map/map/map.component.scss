@@ -1,4 +1,21 @@
-.webmapp-map-fullpage{
-    width: 100%;
-    height: 100%;
+.webmapp-map-fullpage {
+  width: 100%;
+  height: 100%;
+}
+
+.webmapp-map-fabcontainer {
+  position: absolute;
+  right: 10px;
+
+  &.webmapp-map-fabcontainer-middle {
+    margin: 0;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  &.webmapp-map-fabcontainer-bottom {
+    bottom: 10px
+  }
+
 }

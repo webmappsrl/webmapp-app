@@ -16,6 +16,8 @@ import { ConfigService } from './services/config.service';
 import { SharedModule } from './components/shared/shared.module';
 import { SettingsModule } from './components/settings/settings.module';
 import { MapModule } from './components/map/map.module';
+import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,7 +52,9 @@ import { MapModule } from './components/map/map.module';
       deps: [ConfigService],
       multi: true,
     },
+    BackgroundGeolocation,
+    Diagnostic,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
