@@ -35,7 +35,7 @@
 
 /***** popover ****/
 .popover-register {
-  .popover-content {
+  &.popover-translucent.sc-ion-popover-ios-h .popover-arrow.sc-ion-popover-ios::after {
     background: var(--wm-color-primary);
   }
 
@@ -44,4 +44,5 @@
     color: var(--wm-color-light);
   }
 }
+
 /*****************/
