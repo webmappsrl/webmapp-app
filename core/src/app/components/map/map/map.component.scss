@@ -5,7 +5,7 @@
 
 .webmapp-map-fabcontainer {
   position: absolute;
-  right: 10px;
+  right: 22px;
 
   &.webmapp-map-fabcontainer-middle {
     margin: 0;
@@ -15,12 +15,14 @@
   }
 
   &.webmapp-map-fabcontainer-bottom {
-    bottom: 0px
+    bottom: 28px;
   }
 
-  .webmapp-map-fab{
+  .webmapp-map-fab {
     padding-bottom: 20px;
     display: block;
+    &:last-child {
+      padding-bottom: 0;
+    }
   }
-
 }

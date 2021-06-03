@@ -576,8 +576,31 @@ function updateAndroidPlatform(instanceName, appId, appName) {
           )
           .pipe(
             replace(
+              /<string name="mauron85_bgloc_account_name">Webmapp<\/string>/g,
+              ""
+            )
+          )
+          .pipe(
+            replace(
+              /<string name="mauron85_bgloc_account_type">\$ACCOUNT_TYPE<\/string>/g,
+              ""
+            )
+          )
+          .pipe(
+            replace(
+              /<string name="mauron85_bgloc_content_authority">\$CONTENT_AUTHORITY<\/string>/g,
+              ""
+            )
+          )
+          .pipe(
+            replace(
               /<string name="custom_url_scheme">[^<]*<\/string>/g,
-              '<string name="custom_url_scheme">' + appId + "</string>"
+              '<string name="custom_url_scheme">' +
+                appId +
+                "</string>" +
+                '<string name="mauron85_bgloc_account_name">Webmapp</string>' +
+                '<string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string>' +
+                '<string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>'
             )
           )
           .pipe(

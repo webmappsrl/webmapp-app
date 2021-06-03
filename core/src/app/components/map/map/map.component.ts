@@ -1,59 +1,37 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 
 // ol imports
 import { Coordinate } from 'ol/coordinate';
-import {
-  containsCoordinate,
-  Extent,
-  boundingExtent,
-  containsExtent,
-} from 'ol/extent';
-import { CustomTile } from 'ol/source/UTFGrid';
+import { Extent } from 'ol/extent';
 import { getDistance } from 'ol/sphere.js'; // Throws problems importing normally
 import { transform, transformExtent } from 'ol/proj';
 import Circle from 'ol/geom/Circle';
-import CircleStyle from 'ol/style/Circle';
-import Cluster from 'ol/source/Cluster';
 import Feature from 'ol/Feature';
-import Fill from 'ol/style/Fill';
-import GeoJSON from 'ol/format/GeoJSON';
 import Icon from 'ol/style/Icon';
-import LineString from 'ol/geom/LineString';
 import Map from 'ol/Map';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
-import MultiLineString from 'ol/geom/MultiLineString';
-import MultiPolygon from 'ol/geom/MultiPolygon';
-import Overlay from 'ol/Overlay';
-import OverlayPositioning from 'ol/OverlayPositioning';
 import Point from 'ol/geom/Point';
-import Polygon from 'ol/geom/Polygon';
-import Rotate from 'ol/control/Rotate';
-import ScaleLine from 'ol/control/ScaleLine';
-import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import Text from 'ol/style/Text';
-import TileJSON from 'ol/source/TileJSON';
-import TileWMS from 'ol/source/TileWMS';
 import TileLayer from 'ol/layer/Tile';
-import TileState from 'ol/TileState';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
-import Zoom from 'ol/control/Zoom';
-
 
 import {
   DEF_LOCATION_ACCURACY,
   DEF_LOCATION_Z_INDEX,
-} from '../../../constants/map_costants';
-
-
-
+} from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { ILocation } from 'src/app/types/location';
-import { CLocation } from 'src/app/types/clocation';
+import { CLocation } from 'src/app/classes/clocation';
+import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 
 @Component({
   selector: 'webmapp-map',
@@ -61,11 +39,12 @@ import { CLocation } from 'src/app/types/clocation';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterViewInit {
-
   @ViewChild('map') mapDiv: ElementRef;
 
   @Input('start-view') startView: number[] = [11, 43, 10];
   @Input('btnposition') btnposition: string = 'bottom';
+
+  public locationState: EMapLocationState;
 
   private _view: View;
   private _map: Map;
@@ -83,7 +62,7 @@ export class MapComponent implements AfterViewInit {
     icon: string;
   };
 
-  private _locationState: {
+  private _locationAnimationState: {
     goalLocation?: ILocation;
     goalAccuracy?: number;
     animating: boolean;
@@ -91,10 +70,9 @@ export class MapComponent implements AfterViewInit {
     startLocation?: ILocation;
   };
 
-  constructor(
-    private geolocationService: GeolocationService
-  ) {
+  private _location: ILocation;
 
+  constructor(private geolocationService: GeolocationService) {
     this._locationIcon = {
       layer: null,
       location: null,
@@ -104,7 +82,7 @@ export class MapComponent implements AfterViewInit {
       icon: 'locationIcon',
     };
 
-    this._locationState = {
+    this._locationAnimationState = {
       animating: false,
     };
     this._locationIconArrow = new Icon({
@@ -128,7 +106,6 @@ export class MapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-
     this._view = new View({
       center: this._fromLonLat([this.startView[0], this.startView[1]]),
       zoom: this.startView[2],
@@ -146,42 +123,124 @@ export class MapComponent implements AfterViewInit {
       moveTolerance: 3,
     });
 
-    this._map.addLayer(new TileLayer({
-      source: this._initializeBaseSource(),
-      visible: true,
-      zIndex: 1,
-    }));
+    this._map.addLayer(
+      new TileLayer({
+        source: this._initializeBaseSource(),
+        visible: true,
+        zIndex: 1,
+      })
+    );
 
-    //TODO
+    //TODO: figure out why this must be called inside a timeout
     setTimeout(() => {
       this._map.updateSize();
     }, 0);
 
-    this.geolocationService.onLocationChange.subscribe(x => {
-      this.newPosition(x);
+    this._map.on('moveend', () => {
+      if (
+        [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
+          this.locationState
+        ) !== -1 &&
+        this._location?.latitude &&
+        this._location?.longitude
+      ) {
+        const centerCoordinates: Coordinate = this._toLonLat(
+          this._view.getCenter()
+        );
+
+        if (
+          this.getFixedDistance(
+            new CLocation(centerCoordinates[0], centerCoordinates[1]),
+            this._location
+          ) > 30
+        )
+          this.locationState = EMapLocationState.ACTIVE;
+      }
     });
 
-  }
+    this.geolocationService.onLocationChange.subscribe((location) => {
+      this._location = location;
+      this.animateLocation(this._location);
 
-  private newPosition(position: CLocation) {
-    console.log('---- ~ file: btn-geolocation.component.ts ~ line 25 ~ BtnGeolocationComponent ~ locate ~ position', position);
-    this._setLocation(position);
-  }
-
-  private _initializeBaseSource() {
-    return new XYZ({
-      maxZoom: 16,
-      minZoom: 1,
-      tileLoadFunction: (tile: any, url: string) => {
-        tile.getImage().src = url;
-      },
-      tileUrlFunction: (c) => {
-        return 'https://api.webmapp.it/tiles/' + c[0] + '/' + c[1] + '/' + c[2] + '.png';
-      },
-      projection: 'EPSG:3857',
-      tileSize: [256, 256],
+      if (
+        [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
+          this.locationState
+        ) !== -1
+      )
+        this._centerMapToLocation();
     });
+  }
 
+  /**
+   * Move the location icon to the specified new location
+   *
+   * @param location the new location
+   */
+  public animateLocation(location?: ILocation) {
+    if (typeof location?.accuracy === 'number' && location.accuracy >= 0)
+      this._locationAnimationState.goalAccuracy = location.accuracy;
+
+    if (location?.latitude && location?.longitude)
+      this._locationAnimationState.goalLocation = location;
+
+    if (!this._locationIcon.layer) this._setLocation(location);
+    else {
+      this._locationAnimationState.startTime = Date.now();
+      const coordinates: Coordinate = this._toLonLat(
+        this._locationIcon.point.getCoordinates()
+      );
+      this._locationAnimationState.startLocation = new CLocation(
+        coordinates[0],
+        coordinates[1],
+        undefined,
+        this._locationIcon.circle.getRadius()
+      );
+      if (!this._locationAnimationState.animating) {
+        this._locationAnimationState.animating = true;
+
+        this._map.once('postrender', () => {
+          this._animateLocation();
+        });
+      }
+    }
+    this._updateLocationLayer();
+  }
+
+  /**
+   * Make the map follow the location icon
+   */
+  public btnLocationClick(): void {
+    this.locationState = EMapLocationState.FOLLOW;
+    this._centerMapToLocation();
+  }
+
+  /**
+   * Return a value for the distance between the two point using a screen-fixed unit
+   *
+   * @param point1 the first location
+   * @param point2 the second location
+   */
+  getFixedDistance(point1: ILocation, point2: ILocation): number {
+    return (
+      getDistance(
+        [point1.longitude, point1.latitude],
+        [point2.longitude, point2.latitude]
+      ) / this._view.getResolution()
+    );
+  }
+
+  /**
+   * Center the current map view to the current physical location
+   */
+  private _centerMapToLocation() {
+    if (this._location) {
+      this._view.animate({
+        center: this._fromLonLat([
+          this._location.longitude,
+          this._location.latitude,
+        ]),
+      });
+    }
   }
 
   private _toLonLat(coordinates: Coordinate): Coordinate {
@@ -197,41 +256,72 @@ export class MapComponent implements AfterViewInit {
     return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
   }
 
+  /**
+   * Initialize the base source of the map
+   *
+   * @returns the XYZ source to use
+   */
+  private _initializeBaseSource() {
+    return new XYZ({
+      maxZoom: 16,
+      minZoom: 1,
+      tileLoadFunction: (tile: any, url: string) => {
+        tile.getImage().src = url;
+      },
+      tileUrlFunction: (c) => {
+        return (
+          'https://api.webmapp.it/tiles/' +
+          c[0] +
+          '/' +
+          c[1] +
+          '/' +
+          c[2] +
+          '.png'
+        );
+      },
+      projection: 'EPSG:3857',
+      tileSize: [256, 256],
+    });
+  }
 
   /**
    * Handle the location animation
    */
   private _animateLocation(): void {
-    if (!this._locationState.startTime || !this._locationState.startLocation) {
-      if (this._locationState.goalLocation)
-        this._setLocation(this._locationState.goalLocation);
-      else if (typeof this._locationState.goalAccuracy === 'number')
-        this._setLocationAccuracy(this._locationState.goalAccuracy);
+    if (
+      !this._locationAnimationState.startTime ||
+      !this._locationAnimationState.startLocation
+    ) {
+      if (this._locationAnimationState.goalLocation)
+        this._setLocation(this._locationAnimationState.goalLocation);
+      else if (typeof this._locationAnimationState.goalAccuracy === 'number')
+        this._setLocationAccuracy(this._locationAnimationState.goalAccuracy);
       this._stopLocationAnimation();
     } else if (
-      !this._locationState.goalLocation &&
-      typeof this._locationState.goalAccuracy !== 'number'
+      !this._locationAnimationState.goalLocation &&
+      typeof this._locationAnimationState.goalAccuracy !== 'number'
     )
       this._stopLocationAnimation();
     else {
       const delta: number =
-        Math.min(Date.now() - this._locationState.startTime, 500) / 500;
+        Math.min(Date.now() - this._locationAnimationState.startTime, 500) /
+        500;
 
       if (delta < 1) {
-        if (this._locationState.goalLocation) {
+        if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-            this._locationState.goalLocation.longitude -
-            this._locationState.startLocation.longitude,
+              this._locationAnimationState.goalLocation.longitude -
+              this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
-              this._locationState.goalLocation.latitude -
-              this._locationState.startLocation.latitude,
-            deltaAccuracy: number = this._locationState.goalAccuracy
-              ? this._locationState.goalAccuracy -
-              this._locationState.startLocation.accuracy
-              : this._locationState.goalLocation.accuracy
-                ? this._locationState.goalLocation.accuracy -
-                this._locationState.startLocation.accuracy
-                : 0;
+              this._locationAnimationState.goalLocation.latitude -
+              this._locationAnimationState.startLocation.latitude,
+            deltaAccuracy: number = this._locationAnimationState.goalAccuracy
+              ? this._locationAnimationState.goalAccuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : this._locationAnimationState.goalLocation.accuracy
+              ? this._locationAnimationState.goalLocation.accuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -243,30 +333,34 @@ export class MapComponent implements AfterViewInit {
             this._updateLocationLayer();
           } else if (deltaLongitude === 0 && deltaLatitude === 0) {
             // Update accuracy
-            this._locationState.goalAccuracy = this._locationState.goalAccuracy
-              ? this._locationState.goalAccuracy
-              : this._locationState.goalLocation.accuracy;
-            this._locationState.goalLocation = undefined;
+            this._locationAnimationState.goalAccuracy = this
+              ._locationAnimationState.goalAccuracy
+              ? this._locationAnimationState.goalAccuracy
+              : this._locationAnimationState.goalLocation.accuracy;
+            this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
-              this._locationState.startLocation.accuracy + delta * deltaAccuracy
+              this._locationAnimationState.startLocation.accuracy +
+                delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
-              this._locationState.startLocation.longitude +
-              delta * deltaLongitude,
-              this._locationState.startLocation.latitude +
-              delta * deltaLatitude,
+              this._locationAnimationState.startLocation.longitude +
+                delta * deltaLongitude,
+              this._locationAnimationState.startLocation.latitude +
+                delta * deltaLatitude,
               undefined,
-              this._locationState.startLocation.accuracy + delta * deltaAccuracy
+              this._locationAnimationState.startLocation.accuracy +
+                delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
-            typeof this._locationState.startLocation.accuracy === 'number'
-              ? this._locationState.goalAccuracy -
-              this._locationState.startLocation.accuracy
+            typeof this._locationAnimationState.startLocation.accuracy ===
+            'number'
+              ? this._locationAnimationState.goalAccuracy -
+                this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -276,7 +370,8 @@ export class MapComponent implements AfterViewInit {
           }
 
           this._setLocationAccuracy(
-            this._locationState.startLocation.accuracy + delta * deltaAccuracy
+            this._locationAnimationState.startLocation.accuracy +
+              delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -300,7 +395,6 @@ export class MapComponent implements AfterViewInit {
     this._map.render();
   }
 
-
   /**
    * Change the accuracy around the location visible in the map
    *
@@ -319,13 +413,12 @@ export class MapComponent implements AfterViewInit {
    * Perform the needed actions to stop the current location animation
    */
   private _stopLocationAnimation(): void {
-    this._locationState.animating = false;
-    this._locationState.startLocation = undefined;
-    this._locationState.startTime = undefined;
-    this._locationState.goalAccuracy = undefined;
-    this._locationState.goalLocation = undefined;
+    this._locationAnimationState.animating = false;
+    this._locationAnimationState.startLocation = undefined;
+    this._locationAnimationState.startTime = undefined;
+    this._locationAnimationState.goalAccuracy = undefined;
+    this._locationAnimationState.goalLocation = undefined;
   }
-
 
   /**
    * Show in the map the current location using the blue circle and the semi-transparent accuracy circle
@@ -334,9 +427,9 @@ export class MapComponent implements AfterViewInit {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._fromLonLat([
-      location.longitude,
-      location.latitude,
-    ]),
+        location.longitude,
+        location.latitude,
+      ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -369,8 +462,6 @@ export class MapComponent implements AfterViewInit {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
+    } catch (e) {}
   }
-
-
 }

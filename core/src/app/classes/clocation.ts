@@ -1,4 +1,4 @@
-import { ILocation } from './location';
+import { ILocation } from '../types/location';
 
 export class CLocation implements ILocation {
   public longitude: number;
