@@ -8,7 +8,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
 })
 export class BtnGeolocationComponent implements OnInit {
 
-  @Input('color') color: string;
+  @Input('color') color: string = 'light';
 
   constructor(
     private geolocationService: GeolocationService

@@ -32,3 +32,16 @@
 @import "./theme/fonts.scss";
 @import "./theme/typography.scss";
 @import "./theme/variables.scss";
+
+/***** popover ****/
+.popover-register {
+  .popover-content {
+    background: var(--wm-color-primary);
+  }
+
+  webmapp-popover-register {
+    background: var(--wm-color-primary);
+    color: var(--wm-color-light);
+  }
+}
+/*****************/

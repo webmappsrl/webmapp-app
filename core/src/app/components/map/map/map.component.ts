@@ -65,7 +65,7 @@ export class MapComponent implements AfterViewInit {
   @ViewChild('map') mapDiv: ElementRef;
 
   @Input('start-view') startView: number[] = [11, 43, 10];
-  @Input('btnposition') btnposition: string = 'middle';
+  @Input('btnposition') btnposition: string = 'bottom';
 
   private _view: View;
   private _map: Map;

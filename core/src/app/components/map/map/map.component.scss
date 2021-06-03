@@ -15,7 +15,12 @@
   }
 
   &.webmapp-map-fabcontainer-bottom {
-    bottom: 10px
+    bottom: 0px
+  }
+
+  .webmapp-map-fab{
+    padding-bottom: 20px;
+    display: block;
   }
 
 }
