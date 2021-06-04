@@ -104,10 +104,8 @@ export class DeviceService {
    * Handle permissions for location and try to activate the location service
    * Emit LocationState.ENABLED or LocationState.ENABLED_WHEN_IN_USE if location is available. For LocationState.NOT_ENABLED and
    * LocationState.SETTINGS values, subscribe to DeviceService.onLocationStateChanged
-   *
-   * @param force true if the check must trigger the popups
    */
-  enableGPS(force?: boolean): Promise<ELocationState> {
+  enableGPS(): Promise<ELocationState> {
     return new Promise<ELocationState>((resolve, reject) => {
       this._enableGPSPermissions().then(
         (authorized) => {
@@ -117,46 +115,7 @@ export class DeviceService {
             this._diagnostic.isLocationEnabled().then(
               (enabled) => {
                 if (enabled) resolve(authorized);
-                else {
-                  if (force) {
-                    // this._alertController
-                    //   .create({
-                    //     header: this._translateService.instant('alert.warning'),
-                    //     message: this._translateService.instant(
-                    //       'alert.activateGPS'
-                    //     ),
-                    //     buttons: [
-                    //       {
-                    //         text: this._translateService.instant(
-                    //           'buttons.cancel'
-                    //         ),
-                    //         role: 'cancel',
-                    //         cssClass: 'secondary',
-                    //         handler: () => {
-                    //           resolve(ELocationState.NOT_ENABLED);
-                    //         },
-                    //       },
-                    //       {
-                    //         text: this._translateService.instant('buttons.ok'),
-                    //         cssClass: 'primary',
-                    //         handler: () => {
-                    //           if (this.isIos) {
-                    //             this._diagnostic.switchToSettings();
-                    //           } else {
-                    //             this._diagnostic.switchToLocationSettings();
-                    //           }
-                    //           resolve(ELocationState.SETTINGS);
-                    //         },
-                    //       },
-                    //     ],
-                    //   })
-                    //   .then((alert) => {
-                    //     alert.present();
-                    //   });
-                  } else {
-                    resolve(ELocationState.NOT_ENABLED);
-                  }
-                }
+                else resolve(ELocationState.NOT_ENABLED);
               },
               (error) => {
                 reject(error);

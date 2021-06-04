@@ -901,12 +901,31 @@ function updateIosPlatform(instanceName, appId, appName) {
       cwd: instancesDir + instanceName,
     });
 
-    var promises = [];
+    var promises = [],
+      plistKeysConcatValue = "";
+    const plistKeys = {
+      NSCameraUsageDescription:
+        "The app require access to your camera to let you take pictures from the app",
+      NSLocationAlwaysUsageDescription:
+        "The app require access to your location even when the screen is off to let you record a new path in the most precise way possible",
+      NSLocationAlwaysAndWhenInUseUsageDescription:
+        "The app require access to your location even when the screen is off to let you record a new path in the most precise way possible",
+      NSLocationWhenInUseUsageDescription:
+        "The app require access to your location when the screen is on and the app is open to locate you in the map",
+      NSMicrophoneUsageDescription:
+        "The app require access to your microphone to use the camera properly",
+      NSMotionUsageDescription:
+        "The app require access to your motions sensors to show your position and orientation in the map.",
+      NSPhotoLibraryAddUsageDescription:
+        "The app require the ability to add new pictures to your photo library to let you save pictures you take from the app itself",
+      NSPhotoLibraryUsageDescription:
+        "The app require access to your photo library to let you select some pictures directly from your library to use when submitting a new picture",
+    };
 
     // Info.plist
     promises.push(
       new Promise((resolve, reject) => {
-        gulp
+        var replacer = gulp
           .src(instancesDir + instanceName + "/ios/App/App/Info.plist")
           .pipe(
             replace(
@@ -924,8 +943,67 @@ function updateIosPlatform(instanceName, appId, appName) {
           )
           .pipe(
             replace(
+              new RegExp(
+                "<key>CFBundleTypeRole</key>[^<]*" +
+                  "<string>[^<]*</string>[^<]*",
+                "g"
+              ),
+              ""
+            )
+          )
+          .pipe(
+            replace(
+              /<key>CFBundleURLTypes<\/key>[^<]*<array>[^<]*<dict>/g,
+              `<key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+    `
+            )
+          )
+          .pipe(
+            replace(
+              /<key>UIBackgroundModes<\/key>[^<]*<array>[^<]*<string>location<\/string>[^<]*<\/array>[^<]*/g,
+              ""
+            )
+          );
+
+        for (let key in plistKeys) {
+          replacer.pipe(
+            replace(
+              new RegExp(
+                "<key>" + key + "</key>([^<]*)<string>[^<]*</string>[^<]*",
+                "g"
+              ),
+              ""
+            )
+          );
+          plistKeysConcatValue +=
+            `
+<key>` +
+            key +
+            `</key>
+<string>` +
+            plistKeys[key] +
+            "</string>";
+        }
+
+        console.log(plistKeysConcatValue);
+
+        replacer
+          .pipe(
+            replace(
               /<key>CFBundleVersion<\/key>([^<]*)<string>[^<]*<\/string>/g,
-              "<key>CFBundleVersion</key>$1<string>" + argv.bundle + "</string>"
+              "<key>CFBundleVersion</key>$1<string>" +
+                argv.bundle +
+                "</string>" +
+                plistKeysConcatValue +
+                `
+  <key>UIBackgroundModes</key>
+  <array>
+    <string>location</string>
+  </array>`
             )
           )
           .pipe(gulp.dest(instancesDir + instanceName + "/ios/App/App/"))

@@ -262,7 +262,7 @@ export class GeolocationService {
   /**
    * Check permissions, enable GPS and start to track the position showing it in the map
    */
-  private _start(force?: boolean): Promise<IGeolocationServiceState> {
+  private _start(): Promise<IGeolocationServiceState> {
     return new Promise<IGeolocationServiceState>((resolve, reject) => {
       if (this._state.isActive) {
         resolve(this._state);
@@ -275,7 +275,7 @@ export class GeolocationService {
             this._state.isLoading = true;
             this.onGeolocationStateChange.next(this._state);
 
-            this._deviceService.enableGPS(force).then(
+            this._deviceService.enableGPS().then(
               (gpsState) => {
                 switch (gpsState) {
                   case ELocationState.ENABLED_WHEN_IN_USE:
