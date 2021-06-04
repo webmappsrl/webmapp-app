@@ -53,6 +53,17 @@
       }
     }
   },
+  "components":{
+    "map":{
+      "register":{
+        "title":"Registra",
+        "track":"Tracciato",
+        "photo":"Foto",
+        "waypoint":"Waypoint",
+        "vocal":"Vocale"
+      }
+    }
+  },
   "tabs": {
     "home": "home",
     "map": "mappa",

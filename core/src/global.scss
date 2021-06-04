@@ -32,3 +32,19 @@
 @import "./theme/fonts.scss";
 @import "./theme/typography.scss";
 @import "./theme/variables.scss";
+
+/***** popover ****/
+.popover-register {
+  border-radius: 16px;
+  &.popover-translucent.sc-ion-popover-ios-h
+    .popover-arrow.sc-ion-popover-ios::after {
+    background: var(--wm-color-primary);
+  }
+
+  webmapp-popover-register {
+    background: var(--wm-color-primary);
+    color: var(--wm-color-light);
+  }
+}
+
+/*****************/
