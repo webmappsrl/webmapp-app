@@ -20,7 +20,7 @@ describe('CommunicationService', () => {
       ],
     });
 
-    communicationService = TestBed.get(CommunicationService);
+    communicationService = TestBed.inject(CommunicationService);
   });
 
   it('should be created', () => {

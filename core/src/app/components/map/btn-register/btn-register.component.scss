@@ -1,0 +1,6 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-btn-register-fab {
+  margin: 0;
+  @include box-shadow-light;
+}

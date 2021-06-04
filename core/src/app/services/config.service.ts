@@ -10,8 +10,6 @@ import * as VERSION from 'version.json';
 
 import { Injectable } from '@angular/core';
 
-// import { CommunicationService } from './communication.service';
-import { ReplaySubject } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import { StorageService } from './base/storage.service';
 import { CommunicationService } from './base/communication.service';

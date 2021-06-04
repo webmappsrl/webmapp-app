@@ -1,4 +1,41 @@
 {
+  "generic": {
+    "error": "Si è verificato un errore. Riprova più tardi",
+    "warning": "Attenzione",
+    "ok": "ok",
+    "confirm": "conferma",
+    "cancel": "annulla",
+    "delete": "cancella",
+    "retry": "riprova"
+  },
+  "modals": {
+    "login": {
+      "title": "Accedi",
+      "welcome": "Bentornato!",
+      "message": "Accedi con le tue credenziali per continuare.",
+      "email": "E-mail",
+      "password": "Password",
+      "rememberLogin": "Ricorda le credenziali",
+      "forgotPassword": "Hai dimenticato la password?",
+      "login": "Accedi",
+      "errors": {
+        "form": {
+          "emailInvalid": "Hai inserito un'e-mail non valida",
+          "emailRequired": "L'e-mail è obbligatoria",
+          "passwordRequired": "La password è obbligatoria"
+        },
+        "401": "Le credenziali che hai inserito non sono corrette. Controlla e-mail e password e riprova",
+        "generic": "Oops! Qualcosa è andato storto! Attendi qualche minuto e riprova."
+      }
+    },
+    "settings": {
+      "title": "Impostazioni",
+      "logout": "Log out",
+      "alert": {
+        "logout": "Sicuro di voler disconnettere il tuo account?"
+      }
+    }
+  },
   "pages": {
     "home": {
       "mostViewedTracks": "Percorsi più visti",
@@ -13,6 +50,17 @@
         },
         "login": "Accedi",
         "signup": "Registrati"
+      }
+    }
+  },
+  "components":{
+    "map":{
+      "register":{
+        "title":"Registra",
+        "track":"Tracciato",
+        "photo":"Foto",
+        "waypoint":"Waypoint",
+        "vocal":"Vocale"
       }
     }
   },

@@ -8,6 +8,9 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 
 import { ProfilePage } from './profile.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProfileDataComponent } from './profile-data/profile-data.component';
+import { ProfileRecordsComponent } from './profile-records/profile-records.component';
+import { SettingsModule } from 'src/app/components/settings/settings.module';
 
 @NgModule({
   imports: [
@@ -16,7 +19,8 @@ import { TranslateModule } from '@ngx-translate/core';
     IonicModule,
     ProfilePageRoutingModule,
     TranslateModule.forChild(),
+    SettingsModule,
   ],
-  declarations: [ProfilePage],
+  declarations: [ProfilePage, ProfileDataComponent, ProfileRecordsComponent],
 })
 export class ProfilePageModule {}

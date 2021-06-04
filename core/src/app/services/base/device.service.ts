@@ -9,6 +9,8 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { Observable, ReplaySubject } from 'rxjs';
+import { ELocationState } from 'src/app/types/elocation-state.enum';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +32,7 @@ export class DeviceService {
     height: number;
   }>;
 
-  constructor(private _platform: Platform) {
+  constructor(private _platform: Platform, private _diagnostic: Diagnostic) {
     this._onResize = new ReplaySubject(1);
     this._width = window.innerWidth;
     this._height = window.innerHeight;
@@ -80,5 +82,92 @@ export class DeviceService {
 
   get height(): number {
     return this._height;
+  }
+
+  onLocationStateChange(): Observable<ELocationState> {
+    return new Observable<ELocationState>((observer) => {
+      this._diagnostic.registerLocationStateChangeHandler((state: string) => {
+        if (
+          (this.isAndroid &&
+            state !== this._diagnostic.locationMode.LOCATION_OFF) ||
+          (this.isIos &&
+            (state === this._diagnostic.permissionStatus.GRANTED ||
+              state === this._diagnostic.permissionStatus.GRANTED_WHEN_IN_USE))
+        )
+          observer.next(ELocationState.ENABLED);
+        else observer.next(ELocationState.NOT_ENABLED);
+      });
+    });
+  }
+
+  /**
+   * Handle permissions for location and try to activate the location service
+   * Emit LocationState.ENABLED or LocationState.ENABLED_WHEN_IN_USE if location is available. For LocationState.NOT_ENABLED and
+   * LocationState.SETTINGS values, subscribe to DeviceService.onLocationStateChanged
+   */
+  enableGPS(): Promise<ELocationState> {
+    return new Promise<ELocationState>((resolve, reject) => {
+      this._enableGPSPermissions().then(
+        (authorized) => {
+          if (authorized === ELocationState.NOT_AUTHORIZED) {
+            resolve(ELocationState.NOT_AUTHORIZED);
+          } else {
+            this._diagnostic.isLocationEnabled().then(
+              (enabled) => {
+                if (enabled) resolve(authorized);
+                else resolve(ELocationState.NOT_ENABLED);
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          }
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  /**
+   * GPS
+   */
+  /**
+   * Check GPS permissions and eventually ask user for permissions
+   */
+  private _enableGPSPermissions(): Promise<ELocationState> {
+    return new Promise<ELocationState>((resolve, reject) => {
+      this._diagnostic.isLocationAuthorized().then((authorized) => {
+        if (authorized) resolve(ELocationState.ENABLED);
+        else {
+          this._diagnostic
+            .requestLocationAuthorization(
+              this._diagnostic.locationAuthorizationMode.ALWAYS
+            )
+            .then(
+              (status) => {
+                switch (status) {
+                  case this._diagnostic.permissionStatus.GRANTED:
+                    resolve(ELocationState.ENABLED);
+                    break;
+                  case this._diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                    resolve(ELocationState.ENABLED_WHEN_IN_USE);
+                    break;
+                  case this._diagnostic.permissionStatus.DENIED:
+                    resolve(ELocationState.NOT_AUTHORIZED);
+                    break;
+                  case this._diagnostic.permissionStatus.DENIED_ALWAYS:
+                    resolve(ELocationState.NOT_AUTHORIZED);
+                    break;
+                }
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+        }
+      });
+    });
   }
 }

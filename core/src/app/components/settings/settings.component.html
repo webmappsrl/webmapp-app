@@ -1,0 +1,17 @@
+<webmapp-modal-header
+  [title]="'modals.settings.title' | translate"
+  (dismiss)="dismiss()"
+></webmapp-modal-header>
+<ion-content>
+  <ion-list class="webmapp-settings-list">
+    <ion-item
+      class="webmapp-settings-button"
+      button
+      (click)="logout()"
+      mode="md"
+    >
+      <ion-label> {{ "modals.settings.logout" | translate }} </ion-label>
+      <i class="webmapp-icon-chevron-right-outline" slot="end"></i>
+    </ion-item>
+  </ion-list>
+</ion-content>

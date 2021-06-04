@@ -3,14 +3,31 @@
     <ion-title mode="md" class="webmapp-profile-header-toolbar-title">
       {{'pages.profile.title' | translate}}
     </ion-title>
-    <ion-fab-button slot="end" class="webmapp-profile-header-toolbar-button">
+    <ion-fab-button
+      slot="end"
+      class="webmapp-profile-header-toolbar-button"
+      [ngClass]="{
+        'webmapp-profile-header-toolbar-button-disabled': !isLoggedIn
+      }"
+      (click)="openSettings()"
+    >
       <i class="webmapp-icon-settings-outline"></i>
+    </ion-fab-button>
+    <ion-fab-button
+      slot="end"
+      *ngIf="isLoggedIn"
+      class="
+        webmapp-profile-header-toolbar-button
+        webmapp-profile-header-toolbar-button-disabled
+      "
+    >
+      <i class="webmapp-icon-bell-outline"></i>
     </ion-fab-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content scrollY="false">
-  <ng-container>
+<ion-content scrollY="false" class="webmapp-profile-container">
+  <ng-container *ngIf="!isLoggedIn">
     <div class="webmapp-profile-logged-out-slider-container">
       <ion-slides
         class="webmapp-profile-logged-out-slider"
@@ -42,12 +59,57 @@
       </ion-slides>
     </div>
     <div class="webmapp-profile-logged-out-login-buttons-container">
-      <button class="webmapp-profile-logged-out-login-button">
+      <button class="webmapp-profile-logged-out-login-button" (click)="login()">
         {{'pages.profile.loggedOut.login' | translate}}
       </button>
-      <button class="webmapp-profile-logged-out-signup-button">
+      <button
+        class="webmapp-profile-logged-out-signup-button"
+        (click)="signup()"
+      >
         {{'pages.profile.loggedOut.signup' | translate}}
       </button>
     </div>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn">
+    <div class="webmapp-profile-user-container">
+      <ion-avatar
+        class="webmapp-profile-user-avatar"
+        [ngClass]="{
+          'webmapp-profile-user-avatar-icon': !avatarUrl
+        }"
+      >
+        <i class="webmapp-icon-user-outline"></i>
+      </ion-avatar>
+      <div class="webmapp-profile-user-header-container">
+        <h4 class="webmapp-profile-user-name">{{name}}</h4>
+        <div class="webmapp-profile-user-email">{{email}}</div>
+      </div>
+    </div>
+    <ion-tabs class="webmapp-profile-tabs">
+      <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
+        <ion-tab-button
+          (click)="tabClick($event, 'profile-data')"
+          tab="profile-data"
+          [routerLink]="['profile-data']"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label">
+            I tuoi dati
+          </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+        <ion-tab-button
+          (click)="tabClick($event, 'profile-records')"
+          tab="profile-records"
+          [routerLink]="['profile-records']"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label">
+            Le tue registrazioni
+          </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
   </ng-container>
 </ion-content>

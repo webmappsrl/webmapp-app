@@ -18,16 +18,16 @@ const routes: Routes = [
           import('../profile/profile.module').then((m) => m.ProfilePageModule),
       },
       {
+        path: 'map',
+        loadChildren: () =>
+          import('../map/map.module').then((m) => m.MapPageModule),
+      },
+      {
         path: '',
-        redirectTo: '/home',
+        redirectTo: 'home',
         pathMatch: 'full',
       },
     ],
-  },
-  {
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full',
   },
 ];
 

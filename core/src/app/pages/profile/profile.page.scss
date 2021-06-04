@@ -11,63 +11,141 @@
       --background: var(--wm-color-light);
       --color: var(--wm-color-primary);
       --box-shadow: none;
-    }
-  }
-}
-
-.webmapp-profile-logged-out-slider-container {
-  margin-top: 10vh;
-  .webmapp-profile-logged-out-slider {
-    padding-bottom: 30px;
-    --bullet-background-active: var(--wm-color-darkgrey);
-    --bullet-background: rgba(var(--wm-color-darkgrey-rgb), 0.4);
-    .webmapp-profile-logged-out-slide {
-      padding: 0 17px;
-      .webmapp-profile-logged-out-slide-content {
-        width: 100%;
-        padding: 15px;
-        background: rgba(var(--wm-color-tertiary-rgb), 0.1);
-        border-radius: 15px;
-        .webmapp-profile-logged-out-slide-image {
-          height: 25vh;
-        }
-
-        .webmapp-profile-logged-out-slide-text {
-          width: 85%;
-          margin: 10px auto 0;
-          font-size: var(--wm-font-lg);
-          line-height: var(--wm-font-xlg);
-          height: calc(3 * var(--wm-font-xlg));
-        }
+      &.webmapp-profile-header-toolbar-button-disabled {
+        --color: var(--wm-color-darkgrey);
       }
     }
   }
 }
 
-.webmapp-profile-logged-out-login-buttons-container {
-  display: grid;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  grid-template-columns: auto auto auto;
-  padding-bottom: 40px;
-  .webmapp-profile-logged-out-login-button,
-  .webmapp-profile-logged-out-signup-button {
-    grid-column-start: 2;
-    grid-column-end: 2;
-    font-size: var(--wm-font-md);
-    border-radius: 36px;
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid var(--wm-color-primary);
+.webmapp-profile-container {
+  --user-container-padding: 15px;
+  --user-container-content-height: 64px;
+  .webmapp-profile-logged-out-slider-container {
+    margin-top: 10vh;
+    .webmapp-profile-logged-out-slider {
+      padding-bottom: 30px;
+      --bullet-background-active: var(--wm-color-darkgrey);
+      --bullet-background: rgba(var(--wm-color-darkgrey-rgb), 0.4);
+      .webmapp-profile-logged-out-slide {
+        padding: 0 17px;
+        .webmapp-profile-logged-out-slide-content {
+          width: 100%;
+          padding: 15px;
+          background: rgba(var(--wm-color-tertiary-rgb), 0.1);
+          border-radius: 15px;
+          .webmapp-profile-logged-out-slide-image {
+            height: 25vh;
+          }
+
+          .webmapp-profile-logged-out-slide-text {
+            width: 85%;
+            margin: 10px auto 0;
+            font-size: var(--wm-font-lg);
+            line-height: var(--wm-font-xlg);
+            height: calc(3 * var(--wm-font-xlg));
+          }
+        }
+      }
+    }
   }
-  .webmapp-profile-logged-out-login-button {
-    background: var(--wm-color-primary);
-    color: var(--wm-color-light);
+
+  .webmapp-profile-logged-out-login-buttons-container {
+    display: grid;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    grid-template-columns: auto auto auto;
+    padding-bottom: 40px;
+    .webmapp-profile-logged-out-login-button,
+    .webmapp-profile-logged-out-signup-button {
+      grid-column-start: 2;
+      grid-column-end: 2;
+      font-size: var(--wm-font-md);
+      border-radius: 36px;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid var(--wm-color-primary);
+    }
+    .webmapp-profile-logged-out-login-button {
+      background: var(--wm-color-primary);
+      color: var(--wm-color-light);
+    }
+    .webmapp-profile-logged-out-signup-button {
+      background: var(--wm-color-light);
+      color: var(--wm-color-primary);
+    }
   }
-  .webmapp-profile-logged-out-signup-button {
-    background: var(--wm-color-light);
-    color: var(--wm-color-primary);
+
+  .webmapp-profile-user-container {
+    padding: var(--user-container-padding);
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    .webmapp-profile-user-avatar {
+      display: block;
+      width: var(--user-container-content-height);
+      height: var(--user-container-content-height);
+      &.webmapp-profile-user-avatar-icon {
+        font-size: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--wm-color-light);
+        background: rgba(var(--wm-color-secondary-rgb), 0.5);
+      }
+    }
+    .webmapp-profile-user-header-container {
+      display: flex;
+      margin-left: 20px;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+      .webmapp-profile-user-name {
+        margin: 0 0 3px;
+      }
+      .webmapp-profile-user-email {
+        font-size: var(--wm-font-sm);
+        color: var(--wm-color-darkgrey);
+      }
+    }
+  }
+
+  .webmapp-profile-tabs {
+    position: relative;
+    height: calc(
+      100% - 2 * var(--user-container-padding) -
+        var(--user-container-content-height)
+    );
+
+    .webmapp-profile-tabs-tab-bar {
+      justify-content: flex-start;
+      height: calc(var(--wm-font-sm) + 20px);
+      .webmapp-profile-tabs-tab-button {
+        flex: unset;
+        margin: 0 15px;
+        position: relative;
+        --color-selected: var(--wm-color-primary);
+        --color: var(--wm-color-darkgrey);
+        .webmapp-profile-tabs-tab-label {
+          font-size: var(--wm-font-sm);
+          text-transform: uppercase;
+          display: inline;
+        }
+
+        &.tab-selected {
+          .webmapp-profile-tabs-tab-button-border {
+            position: absolute;
+            bottom: -1.5px;
+            left: calc(50% - 14px);
+            width: 28px;
+            height: 5px;
+            background: var(--wm-color-primary);
+          }
+        }
+      }
+    }
   }
 }

@@ -17,5 +17,6 @@ interface IGeohubApiLogin {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   updated_at?: string;
   role?: string;
-  token: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  access_token: string;
 }

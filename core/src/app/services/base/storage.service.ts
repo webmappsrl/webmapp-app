@@ -23,7 +23,7 @@ export class StorageService {
   private _ready: boolean;
   private _store: Storage;
 
-  constructor(private _storage: Storage) {
+  constructor() {
     this._ready = false;
     this.onReady = new ReplaySubject<boolean>(1);
     this.onReady.next(false);

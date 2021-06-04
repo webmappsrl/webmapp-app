@@ -1,0 +1,19 @@
+<div #map class="webmapp-map-fullpage"></div>
+
+<div
+  class="webmapp-map-fabcontainer"
+  [ngClass]="{
+    'webmapp-map-fabcontainer-bottom': btnposition == 'bottom',
+    'webmapp-map-fabcontainer-middle': btnposition == 'middle'
+  }"
+>
+  <webmapp-btn-register class="webmapp-map-fab" [color]="'primary'">
+  </webmapp-btn-register>
+  <webmapp-btn-geolocation
+    class="webmapp-map-fab"
+    color="light"
+    [state]="locationState"
+    (btn-click)="btnLocationClick()"
+  >
+  </webmapp-btn-geolocation>
+</div>

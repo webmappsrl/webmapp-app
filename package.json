@@ -5,7 +5,10 @@
   },
   "license": "Check the license in the LICENSE.md",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "@types/ol": "^6.5.0",
+    "cordova-plugin-background-mode": "^0.7.3"
+  },
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.5",
