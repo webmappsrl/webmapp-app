@@ -8,9 +8,6 @@ import {
 
 // ol imports
 import { Coordinate } from 'ol/coordinate';
-import { Extent } from 'ol/extent';
-import { getDistance } from 'ol/sphere.js'; // Throws problems importing normally
-import { transform, transformExtent } from 'ol/proj';
 import Circle from 'ol/geom/Circle';
 import Feature from 'ol/Feature';
 import Icon from 'ol/style/Icon';
@@ -32,6 +29,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
 import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
+import { MapService } from 'src/app/services/base/map.service';
 
 @Component({
   selector: 'webmapp-map',
@@ -72,7 +70,10 @@ export class MapComponent implements AfterViewInit {
 
   private _location: ILocation;
 
-  constructor(private geolocationService: GeolocationService) {
+  constructor(
+    private geolocationService: GeolocationService,
+    private _mapService: MapService
+  ) {
     this._locationIcon = {
       layer: null,
       location: null,
@@ -107,13 +108,16 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this._view = new View({
-      center: this._fromLonLat([this.startView[0], this.startView[1]]),
+      center: this._mapService.coordsFromLonLat([
+        this.startView[0],
+        this.startView[1],
+      ]),
       zoom: this.startView[2],
       maxZoom: 16,
       minZoom: 1,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,
-      extent: this._extentFromLonLat([-180, -85, 180, 85]),
+      extent: this._mapService.extentFromLonLat([-180, -85, 180, 85]),
     });
 
     this._map = new Map({
@@ -144,14 +148,15 @@ export class MapComponent implements AfterViewInit {
         this._location?.latitude &&
         this._location?.longitude
       ) {
-        const centerCoordinates: Coordinate = this._toLonLat(
+        const centerCoordinates: Coordinate = this._mapService.coordsToLonLat(
           this._view.getCenter()
         );
 
         if (
-          this.getFixedDistance(
+          this._mapService.getFixedDistance(
             new CLocation(centerCoordinates[0], centerCoordinates[1]),
-            this._location
+            this._location,
+            this._view.getResolution()
           ) > 30
         )
           this.locationState = EMapLocationState.ACTIVE;
@@ -176,7 +181,7 @@ export class MapComponent implements AfterViewInit {
    *
    * @param location the new location
    */
-  public animateLocation(location?: ILocation) {
+  animateLocation(location?: ILocation) {
     if (typeof location?.accuracy === 'number' && location.accuracy >= 0)
       this._locationAnimationState.goalAccuracy = location.accuracy;
 
@@ -186,7 +191,7 @@ export class MapComponent implements AfterViewInit {
     if (!this._locationIcon.layer) this._setLocation(location);
     else {
       this._locationAnimationState.startTime = Date.now();
-      const coordinates: Coordinate = this._toLonLat(
+      const coordinates: Coordinate = this._mapService.coordsToLonLat(
         this._locationIcon.point.getCoordinates()
       );
       this._locationAnimationState.startLocation = new CLocation(
@@ -209,24 +214,9 @@ export class MapComponent implements AfterViewInit {
   /**
    * Make the map follow the location icon
    */
-  public btnLocationClick(): void {
+  btnLocationClick(): void {
     this.locationState = EMapLocationState.FOLLOW;
     this._centerMapToLocation();
-  }
-
-  /**
-   * Return a value for the distance between the two point using a screen-fixed unit
-   *
-   * @param point1 the first location
-   * @param point2 the second location
-   */
-  getFixedDistance(point1: ILocation, point2: ILocation): number {
-    return (
-      getDistance(
-        [point1.longitude, point1.latitude],
-        [point2.longitude, point2.latitude]
-      ) / this._view.getResolution()
-    );
   }
 
   /**
@@ -235,25 +225,12 @@ export class MapComponent implements AfterViewInit {
   private _centerMapToLocation() {
     if (this._location) {
       this._view.animate({
-        center: this._fromLonLat([
+        center: this._mapService.coordsFromLonLat([
           this._location.longitude,
           this._location.latitude,
         ]),
       });
     }
-  }
-
-  private _toLonLat(coordinates: Coordinate): Coordinate {
-    return transform(coordinates, 'EPSG:3857', 'EPSG:4326');
-  }
-  private _fromLonLat(coordinates: Coordinate): Coordinate {
-    return transform(coordinates, 'EPSG:4326', 'EPSG:3857');
-  }
-  private _extentToLonLat(extent: Extent): Extent {
-    return transformExtent(extent, 'EPSG:3857', 'EPSG:4326');
-  }
-  private _extentFromLonLat(extent: Extent): Extent {
-    return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
   }
 
   /**
@@ -426,7 +403,7 @@ export class MapComponent implements AfterViewInit {
    * @param location the location
    */
   private _setLocation(location: ILocation): void {
-    const mapLocation: Coordinate = this._fromLonLat([
+    const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
         location.longitude,
         location.latitude,
       ]),
