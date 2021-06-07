@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 
@@ -30,6 +32,7 @@ import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
+import { BtnLayerComponent } from '../btn-layer/btn-layer.component';
 
 @Component({
   selector: 'webmapp-map',
@@ -38,12 +41,19 @@ import { MapService } from 'src/app/services/base/map.service';
 })
 export class MapComponent implements AfterViewInit {
   @ViewChild('map') mapDiv: ElementRef;
+  
+  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
+  @Output() move: EventEmitter<number> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [11, 43, 10];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
 
   public locationState: EMapLocationState;
+
+  public showRecBtn: boolean = true;
+
+  public sortedComponent: any[] = [];
 
   private _view: View;
   private _map: Map;
@@ -228,6 +238,16 @@ export class MapComponent implements AfterViewInit {
       this.locationState = EMapLocationState.FOLLOW;
       this._centerMapToLocation();
     }
+  }
+
+
+  recBtnMove(val) {
+    this.move.emit(val);
+  }
+
+  recBtnUnlocked(val) {
+    this.showRecBtn = false;
+    this.unlocked.emit(val);
   }
 
   /**

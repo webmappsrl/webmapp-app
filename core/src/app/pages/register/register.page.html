@@ -8,5 +8,6 @@
 </ion-header>
 
 <ion-content scrollY="false">
-  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" [btnposition]="'middle'"></webmapp-map>
+  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" [btnposition]="'middle'" (move)="recordMove($event)"  (unick)="recordStart($event)"></webmapp-map>
+
 </ion-content>

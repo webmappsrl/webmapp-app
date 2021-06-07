@@ -64,6 +64,9 @@
         "photo":"Foto",
         "waypoint":"Waypoint",
         "vocal":"Nota vocale"
+      },
+      "btnrec":{
+        "slide":"Scorri per registrare"
       }
     }
   },

@@ -1,0 +1,23 @@
+<ion-list  lines="none" >
+
+  <ion-item-sliding (ionDrag)="sliding($event)" (touchend)="touchEnd()">
+    <div class="webmapp-map-btnrec-backdrop">
+      <div class="webmapp-map-btnrec-backdrop-message" style="opacity:{{1-sliderPercentual}}">
+        {{'components.map.btnrec.slide' | translate}}</div>
+    </div>
+
+    <ion-item-options side="start">
+      <ion-item-option *ngFor="let item of [].constructor(6);" style="opacity: 0;">xx</ion-item-option>
+    </ion-item-options>
+
+    <ion-item >
+      <div class="slider">
+        <ion-fab-button size="small" class="webmapp-btn-layer-fab webmapp-btn-layer-fab-light">
+          <i class="webmapp-icon-arrow-right-outline"></i>
+        </ion-fab-button>
+      </div>
+    </ion-item>
+
+  </ion-item-sliding>
+
+</ion-list>
