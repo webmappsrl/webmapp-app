@@ -1,7 +1,7 @@
 <div class="webmapp-map-register-title">
   {{'components.map.register.title' | translate}}
 </div>
-<div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="track()">
+<div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="track()" *ngIf="!registering">
   <i class="webmapp-icon-directions-outline"></i> {{'components.map.register.track' | translate}}
   <ion-ripple-effect></ion-ripple-effect>
 </div>

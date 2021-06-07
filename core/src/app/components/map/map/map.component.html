@@ -7,13 +7,17 @@
     'webmapp-map-fabcontainer-middle': btnposition == 'middle'
   }"
 >
-  <webmapp-btn-register class="webmapp-map-fab" [color]="'primary'">
+  <webmapp-btn-register 
+    class="webmapp-map-fab" 
+    [color]="'primary'"
+    [registering]="registering"
+    >
   </webmapp-btn-register>
   <webmapp-btn-geolocation
     class="webmapp-map-fab"
     color="light"
     [state]="locationState"
-    (btn-click)="btnLocationClick()"
+    (btn-click)="btnLocationClick()"    
   >
   </webmapp-btn-geolocation>
 </div>

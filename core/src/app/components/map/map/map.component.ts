@@ -41,6 +41,7 @@ export class MapComponent implements AfterViewInit {
 
   @Input('start-view') startView: number[] = [11, 43, 10];
   @Input('btnposition') btnposition: string = 'bottom';
+  @Input('registering') registering: boolean = false;
 
   public locationState: EMapLocationState;
 
