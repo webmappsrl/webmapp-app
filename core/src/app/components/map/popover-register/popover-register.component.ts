@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { NavController, PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'webmapp-popover-register',
@@ -8,15 +8,18 @@ import { PopoverController } from '@ionic/angular';
 })
 export class PopoverRegisterComponent implements OnInit {
 
+  public registering: boolean;
+
   constructor(
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private  navCtrl: NavController
   ) { }
 
   ngOnInit() {
   }
 
   track() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 15 ~ PopoverRegisterComponent ~ track ~ track');
+    this.navCtrl.navigateForward('register');
     this.dismiss();
   }
 

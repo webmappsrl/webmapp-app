@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.register.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" [btnposition]="'middle'" (move)="recordMove($event)"  (unick)="recordStart($event)"></webmapp-map>
+
+</ion-content>

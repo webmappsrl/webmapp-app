@@ -51,6 +51,9 @@
         "login": "Accedi",
         "signup": "Registrati"
       }
+    },
+    "register":{
+      "title":"Registra una traccia"
     }
   },
   "components":{
@@ -60,7 +63,10 @@
         "track":"Tracciato",
         "photo":"Foto",
         "waypoint":"Waypoint",
-        "vocal":"Vocale"
+        "vocal":"Nota vocale"
+      },
+      "btnrec":{
+        "slide":"Scorri per registrare"
       }
     }
   },

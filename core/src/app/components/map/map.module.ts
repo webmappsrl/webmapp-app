@@ -6,12 +6,16 @@ import { BtnGeolocationComponent } from './btn-geolocation/btn-geolocation.compo
 import { BtnRegisterComponent } from './btn-register/btn-register.component';
 import { PopoverRegisterComponent } from './popover-register/popover-register.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { BtnLayerComponent } from './btn-layer/btn-layer.component';
+import { BtnRecComponent } from './btn-rec/btn-rec.component';
 
 @NgModule({
   declarations: [
     MapComponent,
     BtnGeolocationComponent,
     BtnRegisterComponent,
+    BtnLayerComponent,
+    BtnRecComponent,
     PopoverRegisterComponent
   ],
   imports: [

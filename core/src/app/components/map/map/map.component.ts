@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 
@@ -30,6 +32,7 @@ import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
+import { BtnLayerComponent } from '../btn-layer/btn-layer.component';
 
 @Component({
   selector: 'webmapp-map',
@@ -38,11 +41,19 @@ import { MapService } from 'src/app/services/base/map.service';
 })
 export class MapComponent implements AfterViewInit {
   @ViewChild('map') mapDiv: ElementRef;
+  
+  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
+  @Output() move: EventEmitter<number> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [11, 43, 10];
   @Input('btnposition') btnposition: string = 'bottom';
+  @Input('registering') registering: boolean = false;
 
   public locationState: EMapLocationState;
+
+  public showRecBtn: boolean = true;
+
+  public sortedComponent: any[] = [];
 
   private _view: View;
   private _map: Map;
@@ -174,6 +185,12 @@ export class MapComponent implements AfterViewInit {
       )
         this._centerMapToLocation();
     });
+
+    if (this.registering) {
+      this.geolocationService.start();
+      this.locationState = EMapLocationState.FOLLOW;
+      this._centerMapToLocation();
+    }
   }
 
   /**
@@ -215,8 +232,22 @@ export class MapComponent implements AfterViewInit {
    * Make the map follow the location icon
    */
   btnLocationClick(): void {
-    this.locationState = EMapLocationState.FOLLOW;
-    this._centerMapToLocation();
+    if (this.locationState === EMapLocationState.FOLLOW) {
+      this.locationState = EMapLocationState.ACTIVE;
+    } else {
+      this.locationState = EMapLocationState.FOLLOW;
+      this._centerMapToLocation();
+    }
+  }
+
+
+  recBtnMove(val) {
+    this.move.emit(val);
+  }
+
+  recBtnUnlocked(val) {
+    this.showRecBtn = false;
+    this.unlocked.emit(val);
   }
 
   /**
@@ -287,18 +318,18 @@ export class MapComponent implements AfterViewInit {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-              this._locationAnimationState.goalLocation.longitude -
-              this._locationAnimationState.startLocation.longitude,
+            this._locationAnimationState.goalLocation.longitude -
+            this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : this._locationAnimationState.goalLocation.accuracy
-              ? this._locationAnimationState.goalLocation.accuracy -
+                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-              : 0;
+                : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -317,27 +348,27 @@ export class MapComponent implements AfterViewInit {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-                delta * deltaLongitude,
+              delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-                delta * deltaLatitude,
+              delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-            'number'
+              'number'
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -348,7 +379,7 @@ export class MapComponent implements AfterViewInit {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+            delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -404,9 +435,9 @@ export class MapComponent implements AfterViewInit {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-        location.longitude,
-        location.latitude,
-      ]),
+      location.longitude,
+      location.latitude,
+    ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -439,6 +470,6 @@ export class MapComponent implements AfterViewInit {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) {}
+    } catch (e) { }
   }
 }
