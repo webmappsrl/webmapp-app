@@ -412,6 +412,16 @@ function updateResources(instanceName, platform) {
         cwd: instancesDir + instanceName,
       }
     );
+
+    if (platform === "android") {
+      sh.exec(
+        "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
   } else {
     if (verbose) debug("Generating splash screen and icon for all platforms");
     if (fs.existsSync(instancesDir + instanceName + "/android")) {
@@ -432,6 +442,14 @@ function updateResources(instanceName, platform) {
         }
       );
     }
+
+    sh.exec(
+      "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
+        outputRedirect,
+      {
+        cwd: instancesDir + instanceName,
+      }
+    );
   }
   if (verbose) debug("Splash screen and icon generation completed");
 }

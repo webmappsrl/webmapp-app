@@ -11,6 +11,7 @@ import {
 import { Platform } from '@ionic/angular';
 import { ReplaySubject } from 'rxjs';
 import { CLocation } from '../classes/clocation';
+import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { ELocationState } from '../types/elocation-state.enum';
 import { ILocation, IGeolocationServiceState } from '../types/location';
 import { DeviceService } from './base/device.service';
@@ -26,9 +27,14 @@ export class GeolocationService {
     new ReplaySubject<IGeolocationServiceState>(1);
 
   private _config: BackgroundGeolocationConfig;
-  // State variables
   private _currentLocation: CLocation;
-  private _state: IGeolocationServiceState;
+  private _state: IGeolocationServiceState = {
+    isLoading: false,
+    isActive: false,
+    isRecording: false,
+    isPaused: false,
+  };
+  private _recordedFeature: CGeojsonLineStringFeature;
 
   constructor(
     private _backgroundGeolocation: BackgroundGeolocation,
@@ -48,26 +54,27 @@ export class GeolocationService {
       startForeground: false, // Android only
       notificationTitle: '', // Android only
       notificationText: '', // Android only
-      notificationIconColor: '#FF00FF', // Android only
+      // notificationIconColor: '#FF00FF', // Android only
       activityType: 'OtherNavigation', // iOS only
       pauseLocationUpdates: false, // iOS only
       saveBatteryOnBackground: false, // iOS only
       maxLocations: 10000,
       debug: false,
       notificationIconSmall: 'icon',
-      notificationIconLarge: 'icon',
-    };
-
-    this._state = {
-      isActive: false,
-      isLoading: false,
+      notificationIconLarge: null,
     };
 
     if (!this._deviceService.isBrowser) {
       this._platform.ready().then(() => {
         this._deviceService.onLocationStateChange().subscribe(
           (state) => {
-            if (state === ELocationState.ENABLED) this._start();
+            if (
+              [
+                ELocationState.ENABLED,
+                ELocationState.ENABLED_WHEN_IN_USE,
+              ].indexOf(state) !== -1
+            )
+              this._start();
             else this._stop();
           },
           (err) => {
@@ -80,18 +87,89 @@ export class GeolocationService {
     }
   }
 
+  get location(): ILocation {
+    return this?._currentLocation;
+  }
+
+  get recordedFeature(): CGeojsonLineStringFeature {
+    return this?._recordedFeature;
+  }
+
+  get active(): boolean {
+    return !!this?._state?.isActive;
+  }
+
+  get loading(): boolean {
+    return !!this?._state?.isLoading;
+  }
+
+  get recording(): boolean {
+    return !!this?._state?.isRecording;
+  }
+
+  get paused(): boolean {
+    return !!this?._state?.isPaused;
+  }
+
   /**
    * Start the geolocation service
    */
-  public start() {
-    this._start();
+  start(): Promise<any> {
+    return this._start();
   }
 
   /**
    * Stop the geolocation service
    */
-  public stop() {
-    this._stop();
+  stop(): Promise<any> {
+    return this._stop();
+  }
+
+  /**
+   * Start the geolocation record. From this moment the received coordinates will
+   * be saved until the stopRecording is called
+   */
+  startRecording(): Promise<void> {
+    if (!this._state.isActive && !this._state.isLoading) {
+      return new Promise<void>((resolve, reject) => {
+        this._start().then(
+          () => {
+            this._startRecording().then(
+              (res) => {
+                resolve(res);
+              },
+              (err) => {
+                reject(err);
+              }
+            );
+          },
+          (err) => {
+            console.warn(err);
+          }
+        );
+      });
+    } else return this._startRecording();
+  }
+
+  /**
+   * Pause the geolocation record if active
+   */
+  pauseRecording(): Promise<void> {
+    return this._pauseRecording();
+  }
+
+  /**
+   * Resume the geolocation record
+   */
+  resumeRecording(): Promise<void> {
+    return this._resumeRecording();
+  }
+
+  /**
+   * Start the geolocation service
+   */
+  stopRecording(): Promise<CGeojsonLineStringFeature> {
+    return this._stopRecording();
   }
 
   /**
@@ -149,6 +227,14 @@ export class GeolocationService {
     if (this._state.isLoading) {
       this._state.isLoading = false;
       this.onGeolocationStateChange.next(this._state);
+    }
+
+    if (this._state.isRecording && !this._state.isPaused) {
+      this._recordedFeature.addCoordinates(this._currentLocation);
+      const timestamps: Array<number> =
+        this._recordedFeature?.properties?.timestamps ?? [];
+      timestamps.push(this._currentLocation.timestamp);
+      this._recordedFeature.setProperty('timestamps', timestamps);
     }
 
     this.onLocationChange.next(this._currentLocation);
@@ -224,10 +310,7 @@ export class GeolocationService {
       .subscribe(
         () => {
           this._ngZone.run(() => {
-            if (this._state.isActive) {
-              if (!this._deviceService.isAndroid)
-                this._backgroundGeolocation.switchMode(0); // 0 = background, 1 = foreground
-            } else this._backgroundGeolocation.stop();
+            if (!this._state.isRecording) this._backgroundGeolocation.stop();
           });
         },
         (err) => {
@@ -240,10 +323,7 @@ export class GeolocationService {
       .subscribe(
         () => {
           this._ngZone.run(() => {
-            if (this._state.isActive) {
-              if (!this._deviceService.isAndroid)
-                this._backgroundGeolocation.switchMode(1); // 0 = background, 1 = foreground
-            } else {
+            if (!this._state.isRecording) {
               this._backgroundGeolocation.start().then(
                 (res) => {
                   console.log(res);
@@ -410,6 +490,77 @@ export class GeolocationService {
 
       this.onGeolocationStateChange.next(this._state);
       resolve(this._state);
+    });
+  }
+
+  /**
+   * Start the location record. From this moment all the locations will be recorded
+   */
+  private _startRecording(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this._backgroundGeolocation
+        .configure({
+          notificationTitle: 'TITOLO',
+          startForeground: true,
+        })
+        .then(() => {
+          this._state.isRecording = true;
+          this._recordedFeature = new CGeojsonLineStringFeature();
+          resolve();
+        });
+    });
+  }
+
+  /**
+   * Pause the location record
+   */
+  private _pauseRecording(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this._backgroundGeolocation
+        .configure({
+          notificationTitle: 'TITOLO',
+          startForeground: false,
+        })
+        .then(() => {
+          this._state.isPaused = true;
+          resolve();
+        });
+    });
+  }
+
+  /**
+   * Resume the location record
+   */
+  private _resumeRecording(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (this._state.isRecording && this._state.isPaused) {
+        this._backgroundGeolocation
+          .configure({
+            notificationTitle: 'TITOLO',
+            startForeground: true,
+          })
+          .then(() => {
+            this._state.isPaused = false;
+            resolve();
+          });
+      } else if (!this._state.isRecording) reject('No resumable record found');
+    });
+  }
+
+  /**
+   * Stop the location record
+   */
+  private _stopRecording(): Promise<CGeojsonLineStringFeature> {
+    return new Promise<CGeojsonLineStringFeature>((resolve, reject) => {
+      this._backgroundGeolocation
+        .configure({
+          notificationTitle: 'TITOLO',
+          startForeground: false,
+        })
+        .then(() => {
+          this._state.isRecording = false;
+          resolve(this._recordedFeature);
+        });
     });
   }
 }

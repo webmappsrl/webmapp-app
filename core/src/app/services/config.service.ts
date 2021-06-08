@@ -56,7 +56,7 @@ export class ConfigService {
 
             this._communicationService
               .get(url + '?t=' + Date.now())
-              .pipe(timeout(5000))
+              .pipe(timeout(1500))
               .subscribe(
                 (response) => {
                   this._config = response;
