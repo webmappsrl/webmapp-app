@@ -1,13 +1,55 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{'pages.register.title' | translate}}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content scrollY="false">
-  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" [btnposition]="'middle'" (move)="recordMove($event)"  (unick)="recordStart($event)"></webmapp-map>
+
+  <ion-header class="webmapp-pageregister-header" style="opacity: {{1-opacity}}">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{'pages.register.title' | translate}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" #map [btnposition]="'middle'"
+    (move)="recordMove($event)" (unlocked)="recordStart($event)"></webmapp-map>
+
+  <ion-card class="webmapp-pageregister-infopanel" style="opacity: {{opacity}}">
+    <div class="webmapp-pageregister-infopanel-top">
+      <div class="webmapp-pageregister-infopanel-top-title">{{status}}</div>
+      <div class="webmapp-pageregister-infopanel-top-data">
+        {{time?.hour | number : '2.0-0'}}:{{time?.minute| number : '2.0-0'}}:{{time?.second| number : '2.0-0'}}</div>
+    </div>
+    <div class="webmapp-pageregister-infopanel-bottom">
+      <div class="webmapp-pageregister-infopanel-bottom-title">{{'pages.register.currentspeed' | translate}}</div>
+      <div class="webmapp-pageregister-infopanel-bottom-data">{{actualSpeed | number:'1.0-0'}}km/h</div>
+    </div>
+    <div class="webmapp-pageregister-infopanel-bottom webmapp-pageregister-infopanel-bottom-middle">
+      <div class="webmapp-pageregister-infopanel-bottom-title">{{'pages.register.averagespeed' | translate}}</div>
+      <div class="webmapp-pageregister-infopanel-bottom-data">{{averageSpeed | number:'1.0-0'}}km/h</div>
+    </div>
+    <div class="webmapp-pageregister-infopanel-bottom">
+      <div class="webmapp-pageregister-infopanel-bottom-title">{{'pages.register.odo' | translate}}</div>
+      <div class="webmapp-pageregister-infopanel-bottom-data">{{odo | number:'1.2-2'}}</div>
+    </div>
+  </ion-card>
+
+
+  <!-- <ion-fab vertical="bottom" horizontal="center" *ngIf="isRecording">
+    <ion-fab-button (click)="stop($event)" size="big" class="webmapp-pageregister-btnbottomcenter">
+      <i class="webmapp-icon-levels-outline"></i>
+    </ion-fab-button>
+
+    <ion-fab-button (click)="resume($event)" size="big" class="webmapp-pageregister-btnbottomcenter"
+      *ngIf="isPaused">
+      <i class="webmapp-icon-recording-outline"></i>
+    </ion-fab-button>
+  </ion-fab>
+
+
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="isRecording && !isPaused">
+    <ion-fab-button (click)="pause($event)" class="">
+      <i class="webmapp-icon-donwload-outline"></i>
+    </ion-fab-button>
+  </ion-fab> -->
 
 </ion-content>
