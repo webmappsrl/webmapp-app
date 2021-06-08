@@ -103,12 +103,19 @@ export class GeolocationService {
     return !!this?._state?.isLoading;
   }
 
+  get recording(): boolean {
+    return !!this?._state?.isRecording;
+  }
+
+  get paused(): boolean {
+    return !!this?._state?.isPaused;
+  }
+
   /**
    * Start the geolocation service
    */
   start(): Promise<any> {
-    // return this._start();
-    return this.startRecording();
+    return this._start();
   }
 
   /**
