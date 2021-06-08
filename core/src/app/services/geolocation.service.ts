@@ -498,16 +498,22 @@ export class GeolocationService {
    */
   private _startRecording(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this._backgroundGeolocation
-        .configure({
-          notificationTitle: 'TITOLO',
-          startForeground: true,
-        })
-        .then(() => {
-          this._state.isRecording = true;
-          this._recordedFeature = new CGeojsonLineStringFeature();
-          resolve();
-        });
+      if (this._deviceService.isBrowser) {
+        this._state.isRecording = true;
+        this._recordedFeature = new CGeojsonLineStringFeature();
+        resolve();
+      } else {
+        this._backgroundGeolocation
+          .configure({
+            notificationTitle: 'TITOLO',
+            startForeground: true,
+          })
+          .then(() => {
+            this._state.isRecording = true;
+            this._recordedFeature = new CGeojsonLineStringFeature();
+            resolve();
+          });
+      }
     });
   }
 
@@ -516,15 +522,20 @@ export class GeolocationService {
    */
   private _pauseRecording(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      this._backgroundGeolocation
-        .configure({
-          notificationTitle: 'TITOLO',
-          startForeground: false,
-        })
-        .then(() => {
-          this._state.isPaused = true;
-          resolve();
-        });
+      if (this._deviceService.isBrowser) {
+        this._state.isPaused = true;
+        resolve();
+      } else {
+        this._backgroundGeolocation
+          .configure({
+            notificationTitle: 'TITOLO',
+            startForeground: false,
+          })
+          .then(() => {
+            this._state.isPaused = true;
+            resolve();
+          });
+      }
     });
   }
 
@@ -534,15 +545,20 @@ export class GeolocationService {
   private _resumeRecording(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (this._state.isRecording && this._state.isPaused) {
-        this._backgroundGeolocation
-          .configure({
-            notificationTitle: 'TITOLO',
-            startForeground: true,
-          })
-          .then(() => {
-            this._state.isPaused = false;
-            resolve();
-          });
+        if (this._deviceService.isBrowser) {
+          this._state.isPaused = false;
+          resolve();
+        } else {
+          this._backgroundGeolocation
+            .configure({
+              notificationTitle: 'TITOLO',
+              startForeground: true,
+            })
+            .then(() => {
+              this._state.isPaused = false;
+              resolve();
+            });
+        }
       } else if (!this._state.isRecording) reject('No resumable record found');
     });
   }
@@ -552,15 +568,20 @@ export class GeolocationService {
    */
   private _stopRecording(): Promise<CGeojsonLineStringFeature> {
     return new Promise<CGeojsonLineStringFeature>((resolve, reject) => {
-      this._backgroundGeolocation
-        .configure({
-          notificationTitle: 'TITOLO',
-          startForeground: false,
-        })
-        .then(() => {
-          this._state.isRecording = false;
-          resolve(this._recordedFeature);
-        });
+      if (this._deviceService.isBrowser) {
+        this._state.isRecording = false;
+        resolve(this._recordedFeature);
+      } else {
+        this._backgroundGeolocation
+          .configure({
+            notificationTitle: 'TITOLO',
+            startForeground: false,
+          })
+          .then(() => {
+            this._state.isRecording = false;
+            resolve(this._recordedFeature);
+          });
+      }
     });
   }
 }
