@@ -3,6 +3,7 @@
 .webmapp-btn-layer-fab {
   margin: 0;
   @include box-shadow-light;
+  border-radius: 20px;
 
   &.webmapp-btn-layer-fab-light {
     --background: var(--wm-color-light);
