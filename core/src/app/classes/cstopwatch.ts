@@ -34,6 +34,9 @@ export class CStopwatch {
     this.isPaused = false;
   }
 
+  /**
+   * Return the total active time in milliseconds
+   */
   getTime(): number {
     return this.isPaused
       ? this.totalTime

@@ -11,6 +11,7 @@ import {
 import { Platform } from '@ionic/angular';
 import { ReplaySubject } from 'rxjs';
 import { CLocation } from '../classes/clocation';
+import { CStopwatch } from '../classes/cstopwatch';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { ELocationState } from '../types/elocation-state.enum';
 import { ILocation, IGeolocationServiceState } from '../types/location';
@@ -35,6 +36,7 @@ export class GeolocationService {
     isPaused: false,
   };
   private _recordedFeature: CGeojsonLineStringFeature;
+  private _recordStopwatch: CStopwatch;
 
   constructor(
     private _backgroundGeolocation: BackgroundGeolocation,
@@ -95,6 +97,10 @@ export class GeolocationService {
     return this?._recordedFeature;
   }
 
+  get recordTime(): number {
+    return this._recordStopwatch ? this._recordStopwatch.getTime() : 0;
+  }
+
   get active(): boolean {
     return !!this?._state?.isActive;
   }
@@ -130,6 +136,8 @@ export class GeolocationService {
    * be saved until the stopRecording is called
    */
   startRecording(): Promise<void> {
+    this._recordStopwatch = new CStopwatch();
+    this._recordStopwatch.start();
     if (!this._state.isActive && !this._state.isLoading) {
       return new Promise<void>((resolve, reject) => {
         this._start().then(
@@ -155,6 +163,7 @@ export class GeolocationService {
    * Pause the geolocation record if active
    */
   pauseRecording(): Promise<void> {
+    this._recordStopwatch.pause();
     return this._pauseRecording();
   }
 
@@ -162,6 +171,7 @@ export class GeolocationService {
    * Resume the geolocation record
    */
   resumeRecording(): Promise<void> {
+    this._recordStopwatch.resume();
     return this._resumeRecording();
   }
 
@@ -169,6 +179,7 @@ export class GeolocationService {
    * Start the geolocation service
    */
   stopRecording(): Promise<CGeojsonLineStringFeature> {
+    this._recordStopwatch.stop();
     return this._stopRecording();
   }
 

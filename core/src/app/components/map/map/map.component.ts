@@ -52,9 +52,8 @@ export class MapComponent implements AfterViewInit {
   @Input('registering') registering: boolean = false;
 
   @Input('track') set track(value: CGeojsonLineStringFeature) {
-    console.log('---- ~ file: map.component.ts ~ line 54 ~ MapComponent ~ @Input ~ value', value);
     this.drawTrack(value);
-  };
+  }
 
   public locationState: EMapLocationState;
 
@@ -108,7 +107,7 @@ export class MapComponent implements AfterViewInit {
 
     this._track = {
       layer: null,
-      track: null
+      track: null,
     };
 
     this._locationAnimationState = {
@@ -212,19 +211,23 @@ export class MapComponent implements AfterViewInit {
 
   /**
    * Draw a track in the map, remove a prevoius track
+   *
    * @param geojson geojson of the track
    */
   drawTrack(geojson: CGeojsonLineStringFeature) {
-
     if (geojson?.geojson) {
-      const features = new GeoJSON({ featureProjection: 'EPSG:3857' }).readFeatures(geojson.geojson);
+      const features = new GeoJSON({
+        featureProjection: 'EPSG:3857',
+      }).readFeatures(geojson.geojson);
       if (!this._track.layer) {
         this._track.layer = new VectorLayer({
           source: new VectorSource({
             format: new GeoJSON(),
-            features
+            features,
           }),
-          style: () => { return this._getLineStyle(); },
+          style: () => {
+            return this._getLineStyle();
+          },
           updateWhileAnimating: true,
           updateWhileInteracting: true,
           zIndex: 350,
@@ -235,11 +238,9 @@ export class MapComponent implements AfterViewInit {
       }
       try {
         this._map.addLayer(this._track.layer);
-      } catch (e) { }
+      } catch (e) {}
     }
   }
-
-
 
   /**
    * Move the location icon to the specified new location
@@ -288,7 +289,6 @@ export class MapComponent implements AfterViewInit {
     }
   }
 
-
   recBtnMove(val) {
     this.move.emit(val);
   }
@@ -298,18 +298,16 @@ export class MapComponent implements AfterViewInit {
     this.unlocked.emit(val);
   }
 
-  private _getLineStyle(
-    // id: string = ''
-  ): Array<Style> {
+  private _getLineStyle(): // id: string = ''
+  Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
 
-
     let color: string = '255,0,0'; // this._featuresService.color(id),
-    const strokeWidth: number = 2, // this._featuresService.strokeWidth(id),
+    const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
       strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
       lineDash: Array<number> = [], // this._featuresService.lineDash(id),
-      lineCap: CanvasLineCap = 'round',// this._featuresService.lineCap(id),
+      lineCap: CanvasLineCap = 'round', // this._featuresService.lineCap(id),
       currentZoom: number = this._view.getZoom();
 
     color = 'rgba(' + color + ',' + strokeOpacity + ')';
@@ -328,7 +326,6 @@ export class MapComponent implements AfterViewInit {
     // }
 
     const zIndex: number = 50; //this._getZIndex(id, "line", selected);
-
 
     if (selected) {
       style.push(
@@ -425,18 +422,18 @@ export class MapComponent implements AfterViewInit {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-            this._locationAnimationState.goalLocation.longitude -
-            this._locationAnimationState.startLocation.longitude,
+              this._locationAnimationState.goalLocation.longitude -
+              this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : this._locationAnimationState.goalLocation.accuracy
-                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-                : 0;
+              : this._locationAnimationState.goalLocation.accuracy
+              ? this._locationAnimationState.goalLocation.accuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -455,27 +452,27 @@ export class MapComponent implements AfterViewInit {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-              delta * deltaLongitude,
+                delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-              delta * deltaLatitude,
+                delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-              'number'
+            'number'
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
+                this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -486,7 +483,7 @@ export class MapComponent implements AfterViewInit {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-            delta * deltaAccuracy
+              delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -542,9 +539,9 @@ export class MapComponent implements AfterViewInit {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location.longitude,
-      location.latitude,
-    ]),
+        location.longitude,
+        location.latitude,
+      ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -577,6 +574,6 @@ export class MapComponent implements AfterViewInit {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
+    } catch (e) {}
   }
 }
