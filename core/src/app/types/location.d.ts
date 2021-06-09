@@ -10,6 +10,8 @@ export interface ILocation {
 }
 
 export interface IGeolocationServiceState {
-  isActive: boolean;
   isLoading: boolean;
+  isActive: boolean;
+  isRecording: boolean;
+  isPaused: boolean;
 }

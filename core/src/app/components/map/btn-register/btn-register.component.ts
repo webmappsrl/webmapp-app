@@ -10,6 +10,7 @@ import { PopoverRegisterComponent } from '../popover-register/popover-register.c
 export class BtnRegisterComponent implements OnInit {
 
   @Input('color') color: string = 'primary';
+  @Input('registering') registering: boolean = false;
 
   public isPopOverPresented = false;
 
@@ -21,12 +22,15 @@ export class BtnRegisterComponent implements OnInit {
 
   async presentPopOver(ev: any) {
 
+    console.log('---', ev);
+
     this.popover = await this.popoverController.create({
       component: PopoverRegisterComponent,
       cssClass: 'popover-register',
       event: ev,
       translucent: true,
       mode: 'ios',
+      componentProps: { registering: this.registering }
     });
     await this.popover.present();
     this.isPopOverPresented = true;

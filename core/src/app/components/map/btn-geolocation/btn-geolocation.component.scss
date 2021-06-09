@@ -3,6 +3,7 @@
 .webmapp-btn-geolocation-fab {
   margin: 0;
   @include box-shadow-light;
+  border-radius: 20px;
 
   &.webmapp-btn-geolocation-fab-light {
     --background: var(--wm-color-light);

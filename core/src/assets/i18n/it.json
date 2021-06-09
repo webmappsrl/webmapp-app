@@ -51,16 +51,25 @@
         "login": "Accedi",
         "signup": "Registrati"
       }
+    },
+    "register": {
+      "title": "Registra una traccia",
+      "currentspeed": "Velocità attuale",
+      "averagespeed": "Velocità media",
+      "odo": "Km percorsi"
     }
   },
-  "components":{
-    "map":{
-      "register":{
-        "title":"Registra",
-        "track":"Tracciato",
-        "photo":"Foto",
-        "waypoint":"Waypoint",
-        "vocal":"Vocale"
+  "components": {
+    "map": {
+      "register": {
+        "title": "Registra",
+        "track": "Tracciato",
+        "photo": "Foto",
+        "waypoint": "Waypoint",
+        "vocal": "Nota vocale"
+      },
+      "btnrec": {
+        "slide": "Scorri per registrare"
       }
     }
   },

@@ -2,7 +2,9 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 
@@ -19,6 +21,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
+import GeoJSON from 'ol/format/GeoJSON';
 
 import {
   DEF_LOCATION_ACCURACY,
@@ -30,6 +33,8 @@ import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
+import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
+import Stroke from 'ol/style/Stroke';
 
 @Component({
   selector: 'webmapp-map',
@@ -39,10 +44,22 @@ import { MapService } from 'src/app/services/base/map.service';
 export class MapComponent implements AfterViewInit {
   @ViewChild('map') mapDiv: ElementRef;
 
+  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
+  @Output() move: EventEmitter<number> = new EventEmitter();
+
   @Input('start-view') startView: number[] = [11, 43, 10];
   @Input('btnposition') btnposition: string = 'bottom';
+  @Input('registering') registering: boolean = false;
+
+  @Input('track') set track(value: CGeojsonLineStringFeature) {
+    this.drawTrack(value);
+  }
 
   public locationState: EMapLocationState;
+
+  public showRecBtn: boolean = true;
+
+  public sortedComponent: any[] = [];
 
   private _view: View;
   private _map: Map;
@@ -58,6 +75,11 @@ export class MapComponent implements AfterViewInit {
     point: Point;
     circle: Circle;
     icon: string;
+  };
+
+  private _track: {
+    layer: VectorLayer;
+    track: Feature[];
   };
 
   private _locationAnimationState: {
@@ -81,6 +103,11 @@ export class MapComponent implements AfterViewInit {
       point: null,
       circle: null,
       icon: 'locationIcon',
+    };
+
+    this._track = {
+      layer: null,
+      track: null,
     };
 
     this._locationAnimationState = {
@@ -174,6 +201,45 @@ export class MapComponent implements AfterViewInit {
       )
         this._centerMapToLocation();
     });
+
+    if (this.registering) {
+      this.geolocationService.start();
+      this.locationState = EMapLocationState.FOLLOW;
+      this._centerMapToLocation();
+    }
+  }
+
+  /**
+   * Draw a track in the map, remove a prevoius track
+   *
+   * @param geojson geojson of the track
+   */
+  drawTrack(geojson: CGeojsonLineStringFeature) {
+    if (geojson?.geojson) {
+      const features = new GeoJSON({
+        featureProjection: 'EPSG:3857',
+      }).readFeatures(geojson.geojson);
+      if (!this._track.layer) {
+        this._track.layer = new VectorLayer({
+          source: new VectorSource({
+            format: new GeoJSON(),
+            features,
+          }),
+          style: () => {
+            return this._getLineStyle();
+          },
+          updateWhileAnimating: true,
+          updateWhileInteracting: true,
+          zIndex: 350,
+        });
+      } else {
+        this._track.layer.getSource().clear();
+        this._track.layer.getSource().addFeatures(features);
+      }
+      try {
+        this._map.addLayer(this._track.layer);
+      } catch (e) {}
+    }
   }
 
   /**
@@ -215,8 +281,77 @@ export class MapComponent implements AfterViewInit {
    * Make the map follow the location icon
    */
   btnLocationClick(): void {
-    this.locationState = EMapLocationState.FOLLOW;
-    this._centerMapToLocation();
+    if (this.locationState === EMapLocationState.FOLLOW) {
+      this.locationState = EMapLocationState.ACTIVE;
+    } else {
+      this.locationState = EMapLocationState.FOLLOW;
+      this._centerMapToLocation();
+    }
+  }
+
+  recBtnMove(val) {
+    this.move.emit(val);
+  }
+
+  recBtnUnlocked(val) {
+    this.showRecBtn = false;
+    this.unlocked.emit(val);
+  }
+
+  private _getLineStyle(): // id: string = ''
+  Array<Style> {
+    const style: Array<Style> = [],
+      selected: boolean = false;
+
+    let color: string = '255,0,0'; // this._featuresService.color(id),
+    const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
+      strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
+      lineDash: Array<number> = [], // this._featuresService.lineDash(id),
+      lineCap: CanvasLineCap = 'round', // this._featuresService.lineCap(id),
+      currentZoom: number = this._view.getZoom();
+
+    color = 'rgba(' + color + ',' + strokeOpacity + ')';
+
+    // if (
+    //   ("" + this._selectedFeatureId === "" + id ||
+    //     "" + this._hoveredFeatureId === "" + id) &&
+    //   !forceDeselect
+    // ) {
+    //   selected = true;
+    //   strokeWidth = useWmtStyle ? strokeWidth : Math.min(5, strokeWidth + 2);
+    //   strokeOpacity = useWmtStyle
+    //     ? strokeOpacity
+    //     : Math.min(1, strokeOpacity + 0.1);
+    //   if (!useWmtStyle) color = this._themeService.getSelectColor();
+    // }
+
+    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
+
+    if (selected) {
+      style.push(
+        new Style({
+          stroke: new Stroke({
+            color: 'rgba(226, 249, 0, 0.6)',
+            width: 10,
+          }),
+          zIndex: zIndex + 5,
+        })
+      );
+    }
+
+    style.push(
+      new Style({
+        stroke: new Stroke({
+          color,
+          width: strokeWidth,
+          lineDash,
+          lineCap,
+        }),
+        zIndex: zIndex + 2,
+      })
+    );
+
+    return style;
   }
 
   /**

@@ -412,6 +412,16 @@ function updateResources(instanceName, platform) {
         cwd: instancesDir + instanceName,
       }
     );
+
+    if (platform === "android") {
+      sh.exec(
+        "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+    }
   } else {
     if (verbose) debug("Generating splash screen and icon for all platforms");
     if (fs.existsSync(instancesDir + instanceName + "/android")) {
@@ -432,6 +442,14 @@ function updateResources(instanceName, platform) {
         }
       );
     }
+
+    sh.exec(
+      "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
+        outputRedirect,
+      {
+        cwd: instancesDir + instanceName,
+      }
+    );
   }
   if (verbose) debug("Splash screen and icon generation completed");
 }
@@ -473,12 +491,8 @@ function addAndroidPlatform(instanceName, force) {
 function updateAndroidPlatform(instanceName, appId, appName) {
   return new Promise((resolve, reject) => {
     runIonicBuild(instanceName);
-    if (!fs.existsSync(instancesDir + instanceName + "/android")) {
-      console.log(
-        "-----------------------------------------------------------------"
-      );
+    if (!fs.existsSync(instancesDir + instanceName + "/android"))
       addAndroidPlatform(instanceName);
-    }
 
     if (verbose) debug("Updating android platform");
     sh.exec("npx cap copy android" + outputRedirect, {
@@ -988,8 +1002,6 @@ function updateIosPlatform(instanceName, appId, appName) {
             plistKeys[key] +
             "</string>";
         }
-
-        console.log(plistKeysConcatValue);
 
         replacer
           .pipe(
