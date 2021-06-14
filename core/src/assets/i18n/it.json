@@ -54,9 +54,11 @@
     },
     "register": {
       "title": "Registra una traccia",
+      "time":"In movimento",
       "currentspeed": "Velocità attuale",
       "averagespeed": "Velocità media",
-      "odo": "Km percorsi"
+      "odo": "Km percorsi",
+      "backgroundbtn":"Registra in background"
     }
   },
   "components": {

@@ -14,7 +14,7 @@
 
   <ion-card class="webmapp-pageregister-infopanel" style="opacity: {{opacity}}">
     <div class="webmapp-pageregister-infopanel-top">
-      <div class="webmapp-pageregister-infopanel-top-title">{{status}}</div>
+      <div class="webmapp-pageregister-infopanel-top-title">{{'pages.register.time' | translate}}</div>
       <div class="webmapp-pageregister-infopanel-top-data">
         {{time?.hour | number : '2.0-0'}}:{{time?.minute| number : '2.0-0'}}:{{time?.second| number : '2.0-0'}}</div>
     </div>
@@ -32,8 +32,14 @@
     </div>
   </ion-card>
 
+  <div class="webmapp-pageregister-backgroundbtn" *ngIf="isRecording">
+    <ion-button color="secondary" class="webmapp-pageregister-backgroundbtn-button" (click)="background($event)">
+      <i class="webmapp-icon-levels-outline"></i>  {{'pages.register.backgroundbtn' | translate}}
+    </ion-button>    
+  </div>
 
-  <!-- <ion-fab vertical="bottom" horizontal="center" *ngIf="isRecording">
+
+  <ion-fab vertical="bottom" horizontal="center" *ngIf="isRecording">
     <ion-fab-button (click)="stop($event)" size="big" class="webmapp-pageregister-btnbottomcenter">
       <i class="webmapp-icon-levels-outline"></i>
     </ion-fab-button>
@@ -47,9 +53,9 @@
 
 
   <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="isRecording && !isPaused">
-    <ion-fab-button (click)="pause($event)" class="">
+    <ion-fab-button (click)="pause($event)" class="" color="light" >
       <i class="webmapp-icon-donwload-outline"></i>
     </ion-fab-button>
-  </ion-fab> -->
+  </ion-fab>
 
 </ion-content>

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
@@ -15,7 +16,6 @@ export class RegisterPage implements OnInit {
 
   public opacity: number = 0;
 
-  public status: string = "in movimento";
   public time: { hour: number; minute: number; second: number } = { hour: 0, minute: 0, second: 0 };
   public actualSpeed: number = 0;
   public averageSpeed: number = 0;
@@ -30,7 +30,8 @@ export class RegisterPage implements OnInit {
 
   constructor(
     private geolocation: GeolocationService,
-    private geoUtils: GeoutilsService
+    private geoUtils: GeoutilsService,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() {
@@ -82,6 +83,10 @@ export class RegisterPage implements OnInit {
   async pause(ev) {
     await this.geolocation.pauseRecording();
     this.isPaused = true;
+  }
+
+  background(ev){
+    this.navCtrl.navigateBack('map');
   }
 
 

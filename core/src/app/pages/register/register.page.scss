@@ -64,6 +64,21 @@
 
 }
 
+.webmapp-pageregister-backgroundbtn {
+  position: absolute;
+  text-align: center;
+  top: 238px;
+  width: 100%;
+
+  .webmapp-pageregister-backgroundbtn-button {
+    --border-radius:22px;
+    font-size: var(--wm-font-sm);
+    i {
+      margin-right: 10px;
+    }
+
+  }
+}
 
 .webmapp-pageregister-header {
   position: absolute;
@@ -71,9 +86,9 @@
 
 
 
-  .webmapp-pageregister-btnbottomcenter {
-    display: inline-block;
-  }
+.webmapp-pageregister-btnbottomcenter {
+  display: inline-block;
+}
 
 
 .webmapp-pageregister-btnbottomleft {
