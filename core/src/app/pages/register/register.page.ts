@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
@@ -28,7 +29,9 @@ export class RegisterPage implements OnInit, OnDestroy {
   constructor(
     private _geolocationService: GeolocationService,
     private _geoutilsService: GeoutilsService,
-    private _navCtrl: NavController
+    private _navCtrl: NavController,
+    private translate: TranslateService,
+    private alertController: AlertController
   ) {
 
   }
@@ -93,13 +96,49 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async stop(event: MouseEvent) {
+
+    const translation = await this.translate.get([
+      'pages.register.modalconfirm.title',
+      'pages.register.modalconfirm.text',
+      'pages.register.modalconfirm.confirm',
+      'pages.register.modalconfirm.cancel',
+    ]).toPromise();
+
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: translation['pages.register.modalconfirm.title'],
+      message: translation['pages.register.modalconfirm.text'],
+      buttons: [
+        {
+          text: translation['pages.register.modalconfirm.cancel'],
+          cssClass: 'webmapp-pageregister-modalconfirm-btn',
+          role: 'cancel',
+          handler: () => {
+          }
+        }, {
+          text: translation['pages.register.modalconfirm.confirm'],
+          cssClass: 'webmapp-pageregister-modalconfirm-btn',
+          handler: () => {
+            this.stopRecording();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+  }
+
+
+
+  async stopRecording() {
+
     try {
       clearInterval(this._timerInterval);
     } catch (e) { }
 
     await this._geolocationService.stopRecording();
     this.backToMap();
-
   }
 
   async resume(event: MouseEvent) {

@@ -60,7 +60,13 @@
       "odo": "Km percorsi",
       "backgroundbtn": "Registra in background",
       "resumebtn": "Riprendi",
-      "stopbtn": "Termina"
+      "stopbtn": "Termina",
+      "modalconfirm": {
+        "title": "Confermi di voler terminare la registrazione?",
+        "text": "Una volta confermato non potrai più riprendere questa navigazione",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      }
     },
     "map": {
       "recordingbtn": "Reg. in corso"
