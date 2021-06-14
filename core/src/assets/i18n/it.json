@@ -58,7 +58,9 @@
       "currentspeed": "Velocità attuale",
       "averagespeed": "Velocità media",
       "odo": "Km percorsi",
-      "backgroundbtn":"Registra in background"
+      "backgroundbtn":"Registra in background",
+      "resumebtn":"Riprendi",
+      "stopbtn":"Termina"
     }
   },
   "components": {

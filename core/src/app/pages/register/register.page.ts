@@ -14,7 +14,7 @@ export class RegisterPage implements OnInit {
 
   @ViewChild('map') map: MapComponent;
 
-  public opacity: number
+  public opacity: number = 0;
   public time: { hours: number; minutes: number; seconds: number } = { hours: 0, minutes: 0, seconds: 0 }
   public actualSpeed: number = 0;
   public averageSpeed: number = 0;
@@ -90,6 +90,10 @@ export class RegisterPage implements OnInit {
     try {
       clearInterval(this._timerInterval);
     } catch (e) { }
+
+    await this._geolocationService.stopRecording();
+    this.backToMap();
+
   }
 
   async resume(event: MouseEvent) {
@@ -103,6 +107,10 @@ export class RegisterPage implements OnInit {
   }
 
   background(ev) {
+    this.backToMap();
+  }
+
+  backToMap() {
     this._navCtrl.navigateBack('map');
   }
 }

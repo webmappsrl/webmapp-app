@@ -14,6 +14,8 @@ webmapp-app-root {
   --wm-font-sm: calc(var(--wm-font-sm-multiplier) * 1rem);
   --wm-font-xsm-multiplier: 0.75;
   --wm-font-xsm: calc(var(--wm-font-xsm-multiplier) * 1rem);
+  --wm-font-xxsm-multiplier: 0.6;
+  --wm-font-xxsm: calc(var(--wm-font-xsm-multiplier) * 1rem);
 
   --wm-font-weight-light: 300;
   --wm-font-weight-normal: 500;

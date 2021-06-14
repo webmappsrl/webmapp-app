@@ -1,10 +1,7 @@
 <ion-content scrollY="false">
-  <ion-header
-    class="webmapp-pageregister-header"
-    [ngStyle]="{
+  <ion-header class="webmapp-pageregister-header" [ngStyle]="{
       'opacity': 1-opacity
-    }"
-  >
+    }">
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
@@ -13,21 +10,12 @@
     </ion-toolbar>
   </ion-header>
 
-  <webmapp-map
-    class="webmapp-pageregister-map-container"
-    [registering]="true"
-    #map
-    [btnposition]="'middle'"
-    (move)="recordMove($event)"
-    (unlocked)="recordStart($event)"
-  ></webmapp-map>
+  <webmapp-map class="webmapp-pageregister-map-container" [registering]="true" #map [btnposition]="'middle'"
+    (move)="recordMove($event)" (unlocked)="recordStart($event)"></webmapp-map>
 
-  <ion-card
-    class="webmapp-pageregister-infopanel"
-    [ngStyle]="{
+  <ion-card class="webmapp-pageregister-infopanel" [ngStyle]="{
       'opacity': opacity
-    }"
-  >
+    }">
     <div class="webmapp-pageregister-infopanel-top">
       <div class="webmapp-pageregister-infopanel-top-title">{{'pages.register.time' | translate}}</div>
       <div class="webmapp-pageregister-infopanel-top-data">
@@ -43,12 +31,10 @@
         {{actualSpeed | number:'1.0-0'}}km/h
       </div>
     </div>
-    <div
-      class="
+    <div class="
         webmapp-pageregister-infopanel-bottom
         webmapp-pageregister-infopanel-bottom-middle
-      "
-    >
+      ">
       <div class="webmapp-pageregister-infopanel-bottom-title">
         {{'pages.register.averagespeed' | translate}}
       </div>
@@ -68,28 +54,36 @@
 
   <div class="webmapp-pageregister-backgroundbtn" *ngIf="isRecording">
     <ion-button color="secondary" class="webmapp-pageregister-backgroundbtn-button" (click)="background($event)">
-      <i class="webmapp-icon-levels-outline"></i>  {{'pages.register.backgroundbtn' | translate}}
-    </ion-button>    
+      <i class="webmapp-icon-levels-outline"></i> {{'pages.register.backgroundbtn' | translate}}
+    </ion-button>
   </div>
 
-<ion-fab vertical="bottom" horizontal="center" *ngIf="isRecording">
-    <ion-fab-button (click)="stop($event)" size="big" class="webmapp-pageregister-btnbottomcenter">
-      <i class="webmapp-icon-levels-outline"></i>
+  <ion-fab vertical="bottom" horizontal="center" *ngIf="isRecording">
+
+    <ion-fab-button (click)="resume($event)" size="big"
+      class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-resumebtn" *ngIf="isPaused">
+      <div class="webmapp-pageregister-btncontent">
+        <i class="webmapp-icon-recording-outline"></i>
+        <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | translate}}</div>
+      </div>
     </ion-fab-button>
 
-    <ion-fab-button (click)="resume($event)" size="big" class="webmapp-pageregister-btnbottomcenter"
-      *ngIf="isPaused">
-      <i class="webmapp-icon-recording-outline"></i>
+    <ion-fab-button (click)="stop($event)" size="big"
+      class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-stopbtn"
+      [ngClass]="{'webmapp-pageregister-recording':isRecording && !isPaused}">
+      <div class="webmapp-pageregister-btncontent">
+        <i class="webmapp-icon-levels-outline"></i>
+        <div class="webmapp-pageregister-btntext" *ngIf="isPaused">{{'pages.register.stopbtn' | translate}}</div>
+      </div>
     </ion-fab-button>
+
   </ion-fab>
 
 
-
   <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="isRecording && !isPaused">
-    <ion-fab-button (click)="pause($event)" class="" color="light" >
+    <ion-fab-button (click)="pause($event)" class="webmapp-pageregister-pausebtn" size="small">
       <i class="webmapp-icon-donwload-outline"></i>
     </ion-fab-button>
   </ion-fab>
 
 </ion-content>
-
