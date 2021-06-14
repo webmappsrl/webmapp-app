@@ -491,12 +491,8 @@ function addAndroidPlatform(instanceName, force) {
 function updateAndroidPlatform(instanceName, appId, appName) {
   return new Promise((resolve, reject) => {
     runIonicBuild(instanceName);
-    if (!fs.existsSync(instancesDir + instanceName + "/android")) {
-      console.log(
-        "-----------------------------------------------------------------"
-      );
+    if (!fs.existsSync(instancesDir + instanceName + "/android"))
       addAndroidPlatform(instanceName);
-    }
 
     if (verbose) debug("Updating android platform");
     sh.exec("npx cap copy android" + outputRedirect, {
@@ -1006,8 +1002,6 @@ function updateIosPlatform(instanceName, appId, appName) {
             plistKeys[key] +
             "</string>";
         }
-
-        console.log(plistKeysConcatValue);
 
         replacer
           .pipe(

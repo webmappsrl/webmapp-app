@@ -14,80 +14,95 @@ export class RegisterPage implements OnInit {
 
   @ViewChild('map') map: MapComponent;
 
-  public opacity: number = 0;
-
-  public time: { hour: number; minute: number; second: number } = { hour: 0, minute: 0, second: 0 };
+  public opacity: number
+  public time: { hours: number; minutes: number; seconds: number } = { hours: 0, minutes: 0, seconds: 0 }
   public actualSpeed: number = 0;
   public averageSpeed: number = 0;
-  public odo: number = 0;
-
-  // public track;
+  public length: number = 0;
 
   public isRecording = false;
   public isPaused = false;
 
-  private timeseparator = ':';
+  private _timerInterval: any;
 
   constructor(
-    private geolocation: GeolocationService,
-    private geoUtils: GeoutilsService,
-    private navCtrl: NavController
-  ) { }
+    private _geolocationService: GeolocationService,
+    private _geoutilsService: GeoutilsService,
+    private _navCtrl: NavController
+  ) {
+
+  }
 
   ngOnInit() {
-    this.geolocation.onLocationChange.subscribe(loc => {
+    this._geolocationService.onLocationChange.subscribe((loc) => {
       this.updateMap(loc);
     });
   }
 
   recordMove(ev) {
     this.opacity = ev;
-
   }
 
   updateMap(loc: ILocation) {
     if (this.isRecording && !this.isPaused) {
-      this.map.drawTrack(this.geolocation.recordedFeature);
-      this.odo = this.geoUtils.getOdo(this.geolocation.recordedFeature);
-      const timeSeconds = this.geoUtils.getTime(this.geolocation.recordedFeature);
-      this.time = this.formatTime(timeSeconds);
-      this.actualSpeed = this.geoUtils.getCurrentSpeed(this.geolocation.recordedFeature);
-      this.averageSpeed = this.geoUtils.getAverageSpeed(this.geolocation.recordedFeature);
+      this.map.drawTrack(this._geolocationService.recordedFeature);
+      this.length = this._geoutilsService.getLength(
+        this._geolocationService.recordedFeature
+      );
+      // const timeSeconds = this._geoutilsService.getTime(
+      //   this._geolocationService.recordedFeature
+      // );
+      // this.time = this.formatTime(timeSeconds);
+      this.actualSpeed = this._geoutilsService.getCurrentSpeed(
+        this._geolocationService.recordedFeature
+      );
+      this.averageSpeed = this._geoutilsService.getAverageSpeed(
+        this._geolocationService.recordedFeature
+      );
     }
   }
 
-  formatTime(timeSeconds) {
+  /**
+   * Calculate the time values for seconds, minutes and hours given a time in seconds
+   *
+   * @param timeSeconds the time in seconds
+   *
+   * @returns
+   */
+  formatTime(timeSeconds: number) {
     return {
-      hour: Math.floor(timeSeconds / 3600),
-      minute: Math.floor(((timeSeconds - (timeSeconds % 60)) % 3600)),
-      second: Math.floor((timeSeconds % 60))
+      seconds: Math.floor(timeSeconds % 60),
+      minutes: Math.floor(timeSeconds / 60) % 60,
+      hours: Math.floor(timeSeconds / 3600),
     };
-
   }
 
-  async recordStart(ev) {
-    await this.geolocation.startRecording();
+  async recordStart(event: boolean) {
+    await this._geolocationService.startRecording();
+    this._timerInterval = setInterval(() => {
+      this.time = this.formatTime(this._geolocationService.recordTime / 1000);
+    }, 1000);
+
     this.isRecording = true;
   }
 
-  async stop(ev) {
-
+  async stop(event: MouseEvent) {
+    try {
+      clearInterval(this._timerInterval);
+    } catch (e) { }
   }
 
-  async resume(ev) {
-    await this.geolocation.resumeRecording();
+  async resume(event: MouseEvent) {
+    await this._geolocationService.resumeRecording();
     this.isPaused = false;
-
   }
 
-  async pause(ev) {
-    await this.geolocation.pauseRecording();
+  async pause(event: MouseEvent) {
+    await this._geolocationService.pauseRecording();
     this.isPaused = true;
   }
 
-  background(ev){
-    this.navCtrl.navigateBack('map');
+  background(ev) {
+    this._navCtrl.navigateBack('map');
   }
-
-
 }
