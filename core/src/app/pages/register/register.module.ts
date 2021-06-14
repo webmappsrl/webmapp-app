@@ -9,6 +9,7 @@ import { RegisterPageRoutingModule } from './register-routing.module';
 import { RegisterPage } from './register.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
+import { ModalSaveComponent } from './modal-save/modal-save.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,9 @@ import { MapModule } from 'src/app/components/map/map.module';
     RegisterPageRoutingModule,
     MapModule
   ],
-  declarations: [RegisterPage]
+  declarations: [
+    RegisterPage,
+    ModalSaveComponent
+  ]
 })
 export class RegisterPageModule {}

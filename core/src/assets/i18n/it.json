@@ -66,6 +66,9 @@
         "text": "Una volta confermato non potrai più riprendere questa navigazione",
         "confirm": "Conferma",
         "cancel": "Annulla"
+      },
+      "modalsave":{
+        "title":"Salva traccia"
       }
     },
     "map": {

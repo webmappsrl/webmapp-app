@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { ILocation } from 'src/app/types/location';
+import { ModalSaveComponent } from './modal-save/modal-save.component';
 
 @Component({
   selector: 'webmapp-register',
@@ -31,7 +32,8 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _geoutilsService: GeoutilsService,
     private _navCtrl: NavController,
     private translate: TranslateService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private modalController: ModalController
   ) {
 
   }
@@ -136,8 +138,15 @@ export class RegisterPage implements OnInit, OnDestroy {
     try {
       clearInterval(this._timerInterval);
     } catch (e) { }
-
     await this._geolocationService.stopRecording();
+
+    const modal = await this.modalController.create({
+      component: ModalSaveComponent,
+      // cssClass: 'my-custom-class'
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
+
     this.backToMap();
   }
 
