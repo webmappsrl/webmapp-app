@@ -54,13 +54,16 @@
     },
     "register": {
       "title": "Registra una traccia",
-      "time":"In movimento",
+      "time": "In movimento",
       "currentspeed": "Velocità attuale",
       "averagespeed": "Velocità media",
       "odo": "Km percorsi",
-      "backgroundbtn":"Registra in background",
-      "resumebtn":"Riprendi",
-      "stopbtn":"Termina"
+      "backgroundbtn": "Registra in background",
+      "resumebtn": "Riprendi",
+      "stopbtn": "Termina"
+    },
+    "map": {
+      "recordingbtn": "Reg. in corso"
     }
   },
   "components": {

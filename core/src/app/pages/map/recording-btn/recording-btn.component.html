@@ -1,0 +1,11 @@
+<ion-button color="secondary" class="webmapp-pagemap-recordingbtn-button" (click)="click($event)">
+  <i class="webmapp-icon-levels-outline webmapp-pagemap-recordingbtn-icon"></i>
+  <div class="webmapp-pagemap-recordingbtn-content">
+    <div class="webmapp-pagemap-recordingbtn-content-text">
+      {{'pages.map.recordingbtn' | translate}}
+    </div>
+    <div class="webmapp-pagemap-recordingbtn-content-time">
+      {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds| number : '2.0-0'}}
+    </div>
+  </div>
+</ion-button>

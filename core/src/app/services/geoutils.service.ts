@@ -10,10 +10,23 @@ import { IPoint } from '../types/model';
 export class GeoutilsService {
   private maxCurrentSpeedPoint = 5;
 
-  constructor() {}
+  constructor() { }
+
+  /**
+   * Transform a second period into object with hours/minutes/seconds
+   * @param timeSeconds seconds to transform
+   * @returns time as object
+   */
+  static formatTime(timeSeconds: number) {
+    return {
+      seconds: Math.floor(timeSeconds % 60),
+      minutes: Math.floor(timeSeconds / 60) % 60,
+      hours: Math.floor(timeSeconds / 3600),
+    };
+  }
 
   getLength(track: CGeojsonLineStringFeature) {
-    if (track.geometry.coordinates.length >= 2) {
+    if (track?.geometry && track?.geometry?.coordinates.length >= 2) {
       let res = 0;
       for (let i = 1; i < track.geometry.coordinates.length; i++) {
         res += this.calcDistanceM(
@@ -33,7 +46,7 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties.timestamps.length > 1) {
+    if (track.properties.timestamps && track.properties.timestamps.length > 1) {
       return this.calcTimeS(
         track.properties.timestamps[0],
         track.properties.timestamps[track.properties.timestamps.length - 1]
@@ -49,6 +62,7 @@ export class GeoutilsService {
    * @returns
    */
   getCurrentSpeed(track: CGeojsonLineStringFeature) {
+    if (!track || !track.geometry) return 0;
     const lenPoints = track.geometry.coordinates.length;
     const lenTimes = track.properties.timestamps.length;
     if (lenPoints >= 2 && lenTimes >= 2) {
@@ -82,4 +96,7 @@ export class GeoutilsService {
     const res = (time2 - time1) / 1000;
     return res;
   }
+
+
+
 }

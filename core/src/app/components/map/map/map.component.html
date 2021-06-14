@@ -19,6 +19,6 @@
 
 
 <div class="webmapp-map-fabcontainer webmapp-map-fabcontainer-bottom webmapp-map-fabcontainer-center">
-  <webmapp-btn-rec  *ngIf="registering && showRecBtn" (move)="recBtnMove($event)" (unlocked)="recBtnUnlocked($event)">
+  <webmapp-btn-rec  *ngIf="registering && showRecBtn && !isRecording" (move)="recBtnMove($event)" (unlocked)="recBtnUnlocked($event)">
   </webmapp-btn-rec>
 </div>
