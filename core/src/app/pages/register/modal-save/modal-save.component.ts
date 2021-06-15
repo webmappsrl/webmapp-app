@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -27,6 +28,15 @@ export class ModalSaveComponent implements OnInit {
 
   save() {
 
+  }
+
+  async addPhotos(){
+    const modal = await this.modalController.create({
+      component: ModalSelectphotosComponent,
+      // cssClass: 'my-custom-class'
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
   }
 
   isValid() {

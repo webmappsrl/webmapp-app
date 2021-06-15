@@ -10,6 +10,7 @@ import { RegisterPage } from './register.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
+import { ModalSelectphotosComponent } from './modal-selectphotos/modal-selectphotos.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { ModalSaveComponent } from './modal-save/modal-save.component';
   ],
   declarations: [
     RegisterPage,
-    ModalSaveComponent
+    ModalSaveComponent,
+    ModalSelectphotosComponent
   ]
 })
 export class RegisterPageModule {}

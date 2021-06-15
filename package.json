@@ -7,7 +7,8 @@
   "private": true,
   "dependencies": {
     "@types/ol": "^6.5.0",
-    "cordova-plugin-background-mode": "^0.7.3"
+    "cordova-plugin-background-mode": "^0.7.3",
+    "cordova-plugin-photo-library": "^2.3.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

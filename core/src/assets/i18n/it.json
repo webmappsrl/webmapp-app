@@ -77,6 +77,13 @@
         "phototext": "foto dalla galleria del telefono",
         "photoadvice": "Dimensione massime: 200Mb",
         "savebtn": "Salva"
+      },
+      "modalphotos": {
+        "title": "Carica foto",
+        "noimages": "Non sono presenti immagini scattate durante la registrazione del percorso",
+        "selectall": "Seleziona tutto",
+        "deselectall": "Deseleziona tutto",
+        "savebtn": "Carica"
       }
     },
     "map": {
