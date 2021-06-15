@@ -54,7 +54,7 @@
 
   <div class="webmapp-pageregister-backgroundbtn" *ngIf="isRecording">
     <ion-button color="secondary" class="webmapp-pageregister-backgroundbtn-button" (click)="background($event)">
-      <i class="webmapp-icon-levels-outline"></i> {{'pages.register.backgroundbtn' | translate}}
+      <i class="webmapp-icon-background"></i> {{'pages.register.backgroundbtn' | translate}}
     </ion-button>
   </div>
 
@@ -63,7 +63,7 @@
     <ion-fab-button (click)="resume($event)" size="big"
       class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-resumebtn" *ngIf="isPaused">
       <div class="webmapp-pageregister-btncontent">
-        <i class="webmapp-icon-recording-outline"></i>
+        <i class="webmapp-icon-play"></i>
         <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | translate}}</div>
       </div>
     </ion-fab-button>
@@ -72,7 +72,7 @@
       class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-stopbtn"
       [ngClass]="{'webmapp-pageregister-recording':isRecording && !isPaused}">
       <div class="webmapp-pageregister-btncontent">
-        <i class="webmapp-icon-levels-outline"></i>
+        <i class="webmapp-icon-stop"></i>
         <div class="webmapp-pageregister-btntext" *ngIf="isPaused">{{'pages.register.stopbtn' | translate}}</div>
       </div>
     </ion-fab-button>
@@ -82,7 +82,7 @@
 
   <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="isRecording && !isPaused">
     <ion-fab-button (click)="pause($event)" class="webmapp-pageregister-pausebtn" size="small">
-      <i class="webmapp-icon-donwload-outline"></i>
+      <i class="webmapp-icon-pause-outline"></i>
     </ion-fab-button>
   </ion-fab>
 
