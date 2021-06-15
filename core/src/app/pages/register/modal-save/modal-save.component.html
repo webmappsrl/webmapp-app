@@ -11,22 +11,21 @@
 <ion-content>
   <ion-list>
     <ion-item class="webmapp-register-modalsave-item">
-      <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon>
-      <!-- <i class="webmapp-icon-kebab webmapp-register-modalsave-icon secondary"></i> -->
+      <!-- <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon> -->
+      <i class="webmapp-icon-list webmapp-register-modalsave-icon secondary"></i> 
       <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formtitle' |
         translate}}</ion-label>
       <ion-input [(ngModel)]="title"></ion-input>
     </ion-item>
     <ion-item class="webmapp-register-modalsave-item">
-      <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon>
-      <!-- <i class="webmapp-icon-levels-outline webmapp-register-modalsave-icon tertiary"></i> -->
+      <!-- <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon> -->
+      <i class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"></i> 
       <ion-label class="webmapp-register-modalsave-label" position="stacked">
         {{'pages.register.modalsave.formdescription' | translate}}</ion-label>
       <ion-input [(ngModel)]="description"></ion-input>
     </ion-item>
     <ion-item class="webmapp-register-modalsave-item">
-      <ion-icon name="apps" class="webmapp-register-modalsave-icon primary"></ion-icon>
-      <!-- <i class="webmapp-icon-levels-outline webmapp-register-modalsave-icon primary"></i> -->
+      <i class="webmapp-icon-activities webmapp-register-modalsave-icon primary"></i>
       <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formactivity' |
         translate}}</ion-label>
       <ion-select [(ngModel)]="activity">
