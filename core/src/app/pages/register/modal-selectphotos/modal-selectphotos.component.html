@@ -17,13 +17,25 @@
 
   <ng-container *ngIf="images?.length">
 
-    <ion-button class="webmapp-register-modalphotos-selectall" (click)="selectAll(true)" *ngIf="!isAllSelected">
-      {{'pages.register.modalphotos.selectall' | translate}}</ion-button>
-    <ion-button color="primary" class=" webmapp-register-modalphotos-selectall webmapp-register-modalphotos-deselectall"
-      (click)="selectAll(false)" *ngIf="isAllSelected">
-      {{'pages.register.modalphotos.deselectall' | translate}}</ion-button>
-
-
+    <div class="webmapp-register-modalphotos-selectcontainer">
+      <ion-button class="webmapp-register-modalphotos-selectall" (click)="selectAll(true)" *ngIf="!isAllSelected">
+        {{'pages.register.modalphotos.selectall' | translate}}</ion-button>
+      <ion-button color="primary"
+        class=" webmapp-register-modalphotos-selectall webmapp-register-modalphotos-deselectall"
+        (click)="selectAll(false)" *ngIf="isAllSelected">
+        {{'pages.register.modalphotos.deselectall' | translate}}</ion-button>
+    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4" *ngFor="let image of images">
+          <div class="webmapp-register-modalphotos-imagecontainer">
+            <ion-checkbox class="webmapp-register-modalphotos-check"></ion-checkbox>
+            <!-- <img class="webmapp-register-modalphotos-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
+            <img class="webmapp-register-modalphotos-image" [src]="image.thumbnailURL">
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </ng-container>
 
