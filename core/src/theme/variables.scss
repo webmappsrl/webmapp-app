@@ -1,11 +1,18 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+@font-face {
+  font-family: AppFont;
+  src: url("/assets/fonts/Inter-VariableFont_slnt,wght.ttf"); //change url accordingly
+  }
+
 /** Ionic CSS Variables **/
 :root {
   /**
    * Palette Webmapp
    **/
+
+  --ion-font-family: 'AppFont';
 
   --wm-color-primary: #ff7e6b;
   --wm-color-primary-rgb: 255, 126, 107;

@@ -36,8 +36,8 @@
 /***** popover ****/
 .popover-register {
   border-radius: 16px;
-  &.popover-translucent.sc-ion-popover-ios-h
-    .popover-arrow.sc-ion-popover-ios::after {
+
+  &.popover-translucent.sc-ion-popover-ios-h .popover-arrow.sc-ion-popover-ios::after {
     background: var(--wm-color-primary);
   }
 
@@ -58,7 +58,7 @@
 
 /********** back buttons ********/
 
-.webmapp-backbutton{
+.webmapp-backbutton {
   --color: var(--ion-color-dark) !important;
 }
 

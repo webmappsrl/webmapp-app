@@ -67,8 +67,16 @@
         "confirm": "Conferma",
         "cancel": "Annulla"
       },
-      "modalsave":{
-        "title":"Salva traccia"
+      "modalsave": {
+        "title": "Salva traccia",
+        "formtitle": "Titolo traccia",
+        "formdescription": "Descrizione",
+        "formactivity": "Tipo di attività",
+        "formphotos": "Aggiungi foto scattate durante il percorso",
+        "photoaction": "Carica",
+        "phototext": "foto dalla galleria del telefono",
+        "photoadvice": "Dimensione massime: 200Mb",
+        "savebtn": "Salva"
       }
     },
     "map": {

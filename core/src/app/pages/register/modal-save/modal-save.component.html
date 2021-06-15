@@ -1,12 +1,62 @@
-<ion-content scrollY="false">
-  <ion-header>
-    <ion-toolbar>      
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="register" icon="close-outline" text=""  class="webmapp-backbutton" (click)="close()"></ion-back-button>
-      </ion-buttons>
-      <ion-title>{{'pages.register.modalsave.title' | translate}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="register" icon="close-outline" text="" class="webmapp-backbutton" (click)="close()">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.register.modalsave.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content>
+  <ion-item-list>
+    <ion-item class="webmapp-register-modalsave-item">
+      <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon>
+      <!-- <i class="webmapp-icon-kebab webmapp-register-modalsave-icon secondary"></i> -->
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formtitle' |
+        translate}}</ion-label>
+      <ion-input [(ngModel)]="title"></ion-input>
+    </ion-item>
+    <ion-item class="webmapp-register-modalsave-item">
+      <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon>
+      <!-- <i class="webmapp-icon-levels-outline webmapp-register-modalsave-icon tertiary"></i> -->
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">
+        {{'pages.register.modalsave.formdescription' | translate}}</ion-label>
+      <ion-input [(ngModel)]="description"></ion-input>
+    </ion-item>
+    <ion-item class="webmapp-register-modalsave-item">
+      <ion-icon name="apps" class="webmapp-register-modalsave-icon primary"></ion-icon>
+      <!-- <i class="webmapp-icon-levels-outline webmapp-register-modalsave-icon primary"></i> -->
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formactivity' |
+        translate}}</ion-label>
+      <ion-select [(ngModel)]="activity">
+        <ion-select-option value="run">Corsa</ion-select-option>
+        <ion-select-option value="bike">Bicicletta</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item lines="none" class="webmapp-register-modalsave-item">
+      <i class="webmapp-icon-camera webmapp-register-modalsave-icon  secondary"></i>
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formphotos' |
+        translate}}</ion-label>
+
+      <div class="webmapp-register-modalsave-loadphoto">
+        <div class="webmapp-register-modalsave-loadphoto-text">
+          <div class="webmapp-register-modalsave-loadphoto-action">
+            {{'pages.register.modalsave.photoaction' | translate}}
+          </div>
+          {{'pages.register.modalsave.phototext' | translate}}
+        </div>
+        <div class="webmapp-register-modalsave-loadphoto-advice">
+          {{'pages.register.modalsave.photoadvice' | translate}}
+        </div>
+      </div>
+
+    </ion-item>
+  </ion-item-list>
 
 </ion-content>
+
+<ion-footer class="webmapp-register-modalsave-footer">
+  <ion-button class="webmapp-register-modalsave-savebtn" click="save()" [disabled]="!isValid()">
+    {{'pages.register.modalsave.savebtn' | translate}}</ion-button>
+</ion-footer>

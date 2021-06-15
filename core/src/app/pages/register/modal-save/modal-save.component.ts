@@ -8,6 +8,11 @@ import { ModalController } from '@ionic/angular';
 })
 export class ModalSaveComponent implements OnInit {
 
+  public title: string;
+  public description: string;
+  public activity: string;
+
+
   constructor(
     private modalController: ModalController
   ) { }
@@ -18,6 +23,14 @@ export class ModalSaveComponent implements OnInit {
     this.modalController.dismiss({
       dismissed: true
     });
+  }
+
+  save() {
+
+  }
+
+  isValid() {
+    return !!this.title && !!this.activity;
   }
 
 }
