@@ -13,6 +13,8 @@ export class ModalSaveComponent implements OnInit {
   public description: string;
   public activity: string;
 
+  public photos: any[] = [];
+
 
   constructor(
     private modalController: ModalController
@@ -30,13 +32,22 @@ export class ModalSaveComponent implements OnInit {
 
   }
 
-  async addPhotos(){
+  async addPhotos() {
     const modal = await this.modalController.create({
       component: ModalSelectphotosComponent,
       // cssClass: 'my-custom-class'
     });
     await modal.present();
     const res = await modal.onDidDismiss();
+    this.photos = res.data.photos;
+    console.log('---- ~ file: modal-save.component.ts ~ line 40 ~ ModalSaveComponent ~ addPhotos ~ res', res);
+  }
+
+  remove(image) {
+    const i = this.photos.findIndex(x => x.id === image.id);
+    if (i > -1) {
+      this.photos.splice(i, 1);
+    }
   }
 
   isValid() {

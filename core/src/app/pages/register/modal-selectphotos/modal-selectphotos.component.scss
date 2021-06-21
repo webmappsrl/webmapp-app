@@ -80,5 +80,9 @@
     --size:21px;
     --checkmark-width:2px;
 
+    
+    @include box-shadow-light;
+    border-radius: 32px;
+
   }
 }

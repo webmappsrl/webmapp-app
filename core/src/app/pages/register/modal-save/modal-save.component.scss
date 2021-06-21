@@ -73,3 +73,31 @@
     letter-spacing: 1px;
   }
 }
+
+.webmapp-register-modalsave-imagecontainer {
+  text-align: center;
+  height: 100px;
+  width: 140px;
+  position: relative;
+
+  .webmapp-register-modalsave-image {
+    border-radius: 15px;
+    height: 100px;
+    width: 140px;
+  }
+
+  .webmapp-register-modalsave-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+
+    background: #FFFFFF;
+    
+    @include box-shadow-light;
+
+  }
+}

@@ -29,7 +29,8 @@
       <ion-row>
         <ion-col size="4" *ngFor="let image of images">
           <div class="webmapp-register-modalphotos-imagecontainer">
-            <ion-checkbox class="webmapp-register-modalphotos-check"></ion-checkbox>
+            <ion-checkbox class="webmapp-register-modalphotos-check" [(ngModel)]="image.selected"
+              (ionChange)="select($event)"></ion-checkbox>
             <!-- <img class="webmapp-register-modalphotos-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
             <img class="webmapp-register-modalphotos-image" [src]="image.thumbnailURL">
           </div>

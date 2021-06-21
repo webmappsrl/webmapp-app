@@ -33,21 +33,43 @@ export class ModalSelectphotosComponent implements OnInit {
   }
 
   save() {
+    const selectedPhotos = [];
+
+    for (const image of this.images) {
+      if (image.selected) {
+        selectedPhotos.push(image);
+      }
+    }
+    this.modalController.dismiss({
+      dismissed: true,
+      photos: selectedPhotos
+    });
 
   }
 
   selectAll(select: boolean) {
     console.log('---- ~ file: modal-selectphotos.component.ts ~ line 40 ~ ModalSelectphotosComponent ~ selectAll ~ select', select);
     this.isAllSelected = select;
+    for (const image of this.images) {
+      image.selected = select;
+    }
   }
 
-  select(id: number) {
-
+  select(event) {
     //check all selected
+    let isAllSelected = true;
+    for (const image of this.images) {
+      isAllSelected = isAllSelected && image.selected;
+    }
+    this.isAllSelected = isAllSelected;
   }
 
   isValid() {
-    return true;
+    for (const image of this.images) {
+      if (image.selected)
+        return true;
+    }
+    return false;
   }
 
 }
