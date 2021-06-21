@@ -84,6 +84,12 @@
         "selectall": "Seleziona tutto",
         "deselectall": "Deseleziona tutto",
         "savebtn": "Carica"
+      },
+      "modalexit": {
+        "title": "Vuoi uscire senza salvare la tua registrazione?",
+        "text": "Se esci adesso la registrazione andarà persa",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
       }
     },
     "map": {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
 
 @Component({
@@ -17,18 +18,62 @@ export class ModalSaveComponent implements OnInit {
 
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    private translate: TranslateService,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() { }
 
-  close() {
-    this.modalController.dismiss({
-      dismissed: true
+  async close() {
+
+    const translation = await this.translate.get([
+      'pages.register.modalexit.title',
+      'pages.register.modalexit.text',
+      'pages.register.modalexit.confirm',
+      'pages.register.modalexit.cancel',
+    ]).toPromise();
+
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: translation['pages.register.modalexit.title'],
+      message: translation['pages.register.modalexit.text'],
+      buttons: [
+        {
+          text: translation['pages.register.modalexit.cancel'],
+          cssClass: 'webmapp-modalconfirm-btn',
+          role: 'cancel',
+          handler: () => {
+          }
+        }, {
+          text: translation['pages.register.modalexit.confirm'],
+          cssClass: 'webmapp-modalconfirm-btn',
+          handler: () => {
+            this.modalController.dismiss({
+              dismissed: true
+            });
+          }
+        }
+      ]
     });
+
+    await alert.present();
   }
 
   save() {
+    const photoUrls = [];
+    this.photos.forEach(photo => {
+      photoUrls.push(photo.photoURL);
+    });
+    this.modalController.dismiss({
+      trackData: {
+        photos: photoUrls,
+        title: this.title,
+        description: this.description,
+        activity: this.activity
+      },
+      dismissed: false
+    });
 
   }
 
@@ -40,7 +85,6 @@ export class ModalSaveComponent implements OnInit {
     await modal.present();
     const res = await modal.onDidDismiss();
     this.photos = res.data.photos;
-    console.log('---- ~ file: modal-save.component.ts ~ line 40 ~ ModalSaveComponent ~ addPhotos ~ res', res);
   }
 
   remove(image) {

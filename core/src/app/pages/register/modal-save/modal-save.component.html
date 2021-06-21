@@ -68,6 +68,6 @@
 </ion-content>
 
 <ion-footer class="webmapp-register-modalsave-footer">
-  <ion-button class="webmapp-register-modalsave-savebtn" click="save()" [disabled]="!isValid()">
+  <ion-button class="webmapp-register-modalsave-savebtn" (click)="save()" [disabled]="!isValid()">
     {{'pages.register.modalsave.savebtn' | translate}}</ion-button>
 </ion-footer>

@@ -113,13 +113,13 @@ export class RegisterPage implements OnInit, OnDestroy {
       buttons: [
         {
           text: translation['pages.register.modalconfirm.cancel'],
-          cssClass: 'webmapp-pageregister-modalconfirm-btn',
+          cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
           handler: () => {
           }
         }, {
           text: translation['pages.register.modalconfirm.confirm'],
-          cssClass: 'webmapp-pageregister-modalconfirm-btn',
+          cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
             this.stopRecording();
           }
@@ -138,7 +138,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     try {
       clearInterval(this._timerInterval);
     } catch (e) { }
-    await this._geolocationService.stopRecording();
+    const geojson = await this._geolocationService.stopRecording();
 
     const modal = await this.modalController.create({
       component: ModalSaveComponent,
@@ -146,6 +146,13 @@ export class RegisterPage implements OnInit, OnDestroy {
     });
     await modal.present();
     const res = await modal.onDidDismiss();
+
+    if (!res.data.dismissed) {
+      const track = Object.assign({
+        geojson
+      }, res.data.trackData);
+      console.log('TRACK TO SAVE', track); //TODO save in correct way
+    }
 
     this.backToMap();
   }
