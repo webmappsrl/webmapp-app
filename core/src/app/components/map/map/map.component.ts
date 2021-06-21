@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -41,7 +42,7 @@ import Stroke from 'ol/style/Stroke';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') mapDiv: ElementRef;
 
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
@@ -62,6 +63,8 @@ export class MapComponent implements AfterViewInit {
   public isRecording: boolean = false;
 
   public sortedComponent: any[] = [];
+
+  public timer: any;
 
   private _view: View;
   private _map: Map;
@@ -171,6 +174,11 @@ export class MapComponent implements AfterViewInit {
       this._map.updateSize();
     }, 0);
 
+    //TODO: test for ensure presence of map
+    this.timer = setInterval(() => {
+      this._map.updateSize();
+    }, 1000);
+
     this._map.on('moveend', () => {
       if (
         [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
@@ -211,6 +219,10 @@ export class MapComponent implements AfterViewInit {
       this.locationState = EMapLocationState.FOLLOW;
       this._centerMapToLocation();
     }
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
   }
 
   /**
