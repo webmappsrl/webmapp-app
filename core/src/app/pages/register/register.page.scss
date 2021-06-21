@@ -75,6 +75,8 @@
   .webmapp-pageregister-backgroundbtn-button {
     --border-radius: 22px;
     font-size: var(--wm-font-sm);
+    @include box-shadow-light;
+    border-radius: 32px;
 
     i {
       margin-right: 10px;

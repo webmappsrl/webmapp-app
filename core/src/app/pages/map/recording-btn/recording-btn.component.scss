@@ -3,6 +3,7 @@
   .webmapp-pagemap-recordingbtn-button {
     --border-radius: 15px;
     @include box-shadow-light;
+    border-radius: 20px;
 
     // border-radius: 32px;
     .webmapp-pagemap-recordingbtn-content {
