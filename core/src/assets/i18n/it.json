@@ -90,6 +90,16 @@
         "text": "Se esci adesso la registrazione andarà persa",
         "confirm": "Conferma",
         "cancel": "Annulla"
+      },
+      "modalsuccess": {
+        "title": "Attività registrata con successo!",
+        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
+        "time": "Tempo",
+        "odo": "Km percorsi",
+        "slope": "Dislivello",
+        "avgspeed": "Velocità media",
+        "topspeed": "Velocità massima",
+        "return": "Torna ad esplorare"
       }
     },
     "map": {

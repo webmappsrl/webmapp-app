@@ -1,0 +1,128 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-pageregister-modalsuccess {
+  width: 100%;
+  height: 100%;
+  --background: var(--wm-color-secondary);
+
+  .webmapp-pageregister-modalsuccess-header {
+    .webmapp-pageregister-modalsuccess-closebtn {
+      margin: 10px;
+      width: 24px;
+      height: 24px;
+      color: var(--wm-color-light);
+    }
+  }
+
+  .webmapp-pageregister-modalsuccess-body {
+    .webmapp-pageregister-modalsuccess-img {
+      object-fit: cover;
+      padding: 0px 30px;
+    }
+
+    .webmapp-pageregister-modalsuccess-title {
+      font-weight: var(--wm-font-weight-bold);
+      font-size: var(--wm-font-xxxlg);
+      color: var(--wm-color-light);
+      text-align: center;
+      padding: 14px 25px;
+
+    }
+
+    .webmapp-pageregister-modalsuccess-text {
+      font-weight: var(--wm-font-weight-normal);
+      font-size: var(--wm-font-md);
+      text-align: center;
+      color: var(--wm-color-grey);
+      padding: 2px 20px;
+    }
+
+    .webmapp-pageregister-modalsuccess-infopanel {
+      border-radius: 15px;
+
+      .webmapp-pageregister-modalsuccess-infopanel-top {
+        display: inline-block;
+        width: 100%;
+        padding: 16px;
+
+        .webmapp-pageregister-modalsuccess-infopanel-top-map {
+          display: inline-block;
+          width: 100px;
+          height: 100px;
+          border-radius: 15px;
+          overflow: hidden;
+        }
+
+        .webmapp-pageregister-modalsuccess-infopanel-top-info {
+          display: inline-block;
+          vertical-align: top;
+          padding: 15px;
+
+          .webmapp-pageregister-modalsuccess-infopanel-top-name {
+            padding: 5px;
+            font-weight: var(--wm-font-weight-bold);
+            font-size: var(--wm-font-md);
+            color: var(--wm-color-dark);
+          }
+
+          .webmapp-pageregister-modalsuccess-infopanel-top-date {
+            padding: 5px;
+            font-weight: var(--wm-font-weight-light);
+            font-size: var(--wm-font-sm);
+            color: var(--wm-color-darkgrey);
+          }
+
+        }
+
+      }
+
+      .webmapp-pageregister-modalsuccess-infopanel-middle {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        padding: 10px 5px;
+        border: 1px solid var(--wm-color-lightgray);
+        border-right: 0px;
+
+      }
+
+      .webmapp-pageregister-modalsuccess-infopanel-bottom {
+        width: 33%;
+        display: inline-block;
+        text-align: center;
+        padding: 10px 5px;
+
+        &.webmapp-pageregister-modalsuccess-infopanel-bottom-middle {
+          border-left: 1px solid var(--wm-color-lightgray);
+          border-right: 1px solid var(--wm-color-lightgray);
+
+        }
+      }
+
+      .webmapp-pageregister-modalsuccess-infopanel-title {
+        // text-transform: uppercase;
+        color: var(--wm-color-darkgrey);
+        font-weight: var(--wm-font-weight-normal);
+        font-size: var(--wm-font-sm);
+      }
+
+      .webmapp-pageregister-modalsuccess-infopanel-data {
+        color: var(--wm-color-dark);
+        font-weight: var(--wm-font-weight-xbold);
+        font-size: var(--wm-font-lg);
+        padding: 4px;
+      }
+
+    }
+  }
+
+  .webmapp-pageregister-modalsuccess-footer {
+    font-weight: var(--wm-font-weight-normalplus);
+    font-size: var(--wm-font-md);
+    text-align: center;
+    text-transform: uppercase;
+    padding: 20px;
+    color: var(--wm-color-light);
+  }
+
+}

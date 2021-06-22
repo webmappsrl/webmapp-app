@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
+import { Track } from 'src/app/types/track.d.';
 import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
 
 @Component({
@@ -65,13 +66,14 @@ export class ModalSaveComponent implements OnInit {
     this.photos.forEach(photo => {
       photoUrls.push(photo.photoURL);
     });
+    const trackData: Track = {
+      photos: photoUrls,
+      title: this.title,
+      description: this.description,
+      activity: this.activity
+    };
     this.modalController.dismiss({
-      trackData: {
-        photos: photoUrls,
-        title: this.title,
-        description: this.description,
-        activity: this.activity
-      },
+      trackData,
       dismissed: false
     });
 
@@ -84,7 +86,9 @@ export class ModalSaveComponent implements OnInit {
     });
     await modal.present();
     const res = await modal.onDidDismiss();
-    this.photos = res.data.photos;
+    if (res.data && res.data.photos) {
+      this.photos = res.data.photos;
+    }
   }
 
   remove(image) {

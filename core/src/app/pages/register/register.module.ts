@@ -11,6 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSelectphotosComponent } from './modal-selectphotos/modal-selectphotos.component';
+import { ModalSuccessComponent } from './modal-success/modal-success.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,8 @@ import { ModalSelectphotosComponent } from './modal-selectphotos/modal-selectpho
   declarations: [
     RegisterPage,
     ModalSaveComponent,
-    ModalSelectphotosComponent
+    ModalSelectphotosComponent,
+    ModalSuccessComponent
   ]
 })
 export class RegisterPageModule {}

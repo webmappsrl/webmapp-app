@@ -1,0 +1,102 @@
+<ion-content class="webmapp-pageregister-modalsuccess">
+
+  <div class="webmapp-pageregister-modalsuccess-header">
+    <ion-icon name="close-outline" class="webmapp-pageregister-modalsuccess-closebtn" (click)="close()"></ion-icon>
+  </div>
+
+  <div class="webmapp-pageregister-modalsuccess-body">
+    <img class="webmapp-pageregister-modalsuccess-img" src="assets/images/registersuccess.png">
+    <div class="webmapp-pageregister-modalsuccess-title">
+      {{'pages.register.modalsuccess.title' | translate}}</div>
+    <div class="webmapp-pageregister-modalsuccess-text">
+      {{'pages.register.modalsuccess.text' | translate}}</div>
+
+    <ion-card class="webmapp-pageregister-modalsuccess-infopanel">
+      <div class="webmapp-pageregister-modalsuccess-infopanel-top">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-top-map">
+          <webmapp-map></webmapp-map>
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-top-info">
+          <div class="webmapp-pageregister-modalsuccess-infopanel-top-name"> {{track.title}}</div>
+          <div class="webmapp-pageregister-modalsuccess-infopanel-top-date"> {{trackDate | date}}
+          </div>
+        </div>
+      </div>
+
+      <div class="webmapp-pageregister-modalsuccess-infopanel-middle">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-title">
+          {{'pages.register.modalsuccess.time' | translate}}
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-data">
+          {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
+          '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
+        </div>
+      </div>
+      <div class="webmapp-pageregister-modalsuccess-infopanel-middle">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-title">
+          {{'pages.register.modalsuccess.odo' | translate}}
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-data">
+          {{trackodo | number : '1.1-1'}}
+        </div>
+      </div>
+
+
+      <div class="webmapp-pageregister-modalsuccess-infopanel-bottom">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-title">
+          {{'pages.register.modalsuccess.slope' | translate}}
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-data">
+          {{trackSlope | number:'1.0-0'}}m
+        </div>
+      </div>
+      <div class="webmapp-pageregister-modalsuccess-infopanel-bottom">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-title">
+          {{'pages.register.modalsuccess.avgspeed' | translate}}
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-data">
+          {{trackAvgSpeed | number:'1.1-1'}} km/h
+        </div>
+      </div>
+      <div class="webmapp-pageregister-modalsuccess-infopanel-bottom">
+        <div class="webmapp-pageregister-modalsuccess-infopanel-title">
+          {{'pages.register.modalsuccess.topspeed' | translate}}
+        </div>
+        <div class="webmapp-pageregister-modalsuccess-infopanel-data">
+          {{trackTopSpeed | number:'1.1-1'}} km/h
+        </div>
+      </div>
+    </ion-card>
+
+  </div>
+
+  <div class="webmapp-pageregister-modalsuccess-footer" (click)="close()">
+    {{'pages.register.modalsuccess.return' | translate}}
+  </div>
+</ion-content>
+
+
+
+
+
+
+
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="register" text="" class="webmapp-backbutton" (click)="close()">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.register.modalphotos.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+</ion-content>
+
+<ion-footer class="webmapp-register-modalphotos-footer">
+  <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
+    {{'pages.register.modalphotos.savebtn' | translate}}</ion-button>
+</ion-footer> -->

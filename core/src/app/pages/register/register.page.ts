@@ -5,7 +5,9 @@ import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { ILocation } from 'src/app/types/location';
+import { Track } from 'src/app/types/track.d.';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
+import { ModalSuccessComponent } from './modal-success/modal-success.component';
 
 @Component({
   selector: 'webmapp-register',
@@ -141,17 +143,19 @@ export class RegisterPage implements OnInit, OnDestroy {
     const geojson = await this._geolocationService.stopRecording();
 
     const modal = await this.modalController.create({
-      component: ModalSaveComponent,
-      // cssClass: 'my-custom-class'
+      component: ModalSaveComponent
     });
     await modal.present();
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      const track = Object.assign({
+      const track: Track = Object.assign({
         geojson
       }, res.data.trackData);
       console.log('TRACK TO SAVE', track); //TODO save in correct way
+
+      await this.openModalSuccess(track);
+
     }
 
     this.backToMap();
@@ -165,6 +169,17 @@ export class RegisterPage implements OnInit, OnDestroy {
   async pause(event: MouseEvent) {
     await this._geolocationService.pauseRecording();
     this.isPaused = true;
+  }
+
+  async openModalSuccess(track) {
+    const modaSuccess = await this.modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        track
+      }
+    });
+    await modaSuccess.present();
+    // await modaSuccess.onDidDismiss();
   }
 
   background(ev) {

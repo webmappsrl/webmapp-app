@@ -20,6 +20,11 @@ import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx'
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { PhotoLibrary } from '@ionic-native/photo-library/ngx';
 import { CDVPhotoLibraryPipe } from './pipes/cdvphotolibrary.pipe';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
+// import localeFr from '@angular/common/locales/fr';
+registerLocaleData(localeIt);
 
 @NgModule({
   declarations: [AppComponent, CDVPhotoLibraryPipe],
@@ -46,6 +51,7 @@ import { CDVPhotoLibraryPipe } from './pipes/cdvphotolibrary.pipe';
     MapModule
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'it' },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: APP_INITIALIZER,
