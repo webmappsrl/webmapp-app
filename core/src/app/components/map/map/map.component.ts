@@ -23,6 +23,7 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
+import { defaults as defaultInteractions } from 'ol/interaction.js';
 
 import {
   DEF_LOCATION_ACCURACY,
@@ -36,6 +37,7 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import Stroke from 'ol/style/Stroke';
+import { Track } from 'src/app/types/track.d.';
 
 @Component({
   selector: 'webmapp-map',
@@ -48,12 +50,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() move: EventEmitter<number> = new EventEmitter();
 
-  @Input('start-view') startView: number[] = [11, 43, 10];
+  @Input('start-view') startView: number[] = [10.4147, 43.7118, 10];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
+  @Input('static') static: boolean = false;
 
-  @Input('track') set track(value: CGeojsonLineStringFeature) {
-    this.drawTrack(value);
+  @Input('track') set track(value: Track) {
+    this._track.registeredTrack = value;
+    this.drawTrack(value.geojson);
   }
 
   public locationState: EMapLocationState;
@@ -85,6 +89,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _track: {
     layer: VectorLayer;
     track: Feature[];
+    registeredTrack: Track;
   };
 
   private _locationAnimationState: {
@@ -113,6 +118,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._track = {
       layer: null,
       track: null,
+      registeredTrack: null,
     };
 
     this._locationAnimationState = {
@@ -152,10 +158,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       extent: this._mapService.extentFromLonLat([-180, -85, 180, 85]),
     });
 
+    let interactions = null;
+    if (this.static) {
+      interactions = defaultInteractions({
+        doubleClickZoom: false,
+        // dragAndDrop: false,
+        dragPan: false,
+        // keyboardPan: false,
+        // keyboardZoom: false,
+        mouseWheelZoom: false,
+        // pointer: false,
+        // select: false
+      });
+    }
+
     this._map = new Map({
       target: this.mapDiv.nativeElement,
       view: this._view,
       controls: [],
+      interactions,
       moveTolerance: 3,
     });
 
@@ -176,48 +197,54 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     //TODO: test for ensure presence of map
     this.timer = setInterval(() => {
+      if (this.static) {
+        this.drawTrack(this._track.registeredTrack.geojson, true);
+      }
       this._map.updateSize();
     }, 1000);
 
-    this._map.on('moveend', () => {
-      if (
-        [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
-          this.locationState
-        ) !== -1 &&
-        this._location?.latitude &&
-        this._location?.longitude
-      ) {
-        const centerCoordinates: Coordinate = this._mapService.coordsToLonLat(
-          this._view.getCenter()
-        );
+    if (!this.static) {
+
+      this._map.on('moveend', () => {
+        if (
+          [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
+            this.locationState
+          ) !== -1 &&
+          this._location?.latitude &&
+          this._location?.longitude
+        ) {
+          const centerCoordinates: Coordinate = this._mapService.coordsToLonLat(
+            this._view.getCenter()
+          );
+
+          if (
+            this._mapService.getFixedDistance(
+              new CLocation(centerCoordinates[0], centerCoordinates[1]),
+              this._location,
+              this._view.getResolution()
+            ) > 30
+          )
+            this.locationState = EMapLocationState.ACTIVE;
+        }
+      });
+
+      this.geolocationService.onLocationChange.subscribe((location) => {
+        this._location = location;
+        this.animateLocation(this._location);
 
         if (
-          this._mapService.getFixedDistance(
-            new CLocation(centerCoordinates[0], centerCoordinates[1]),
-            this._location,
-            this._view.getResolution()
-          ) > 30
+          [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
+            this.locationState
+          ) !== -1
         )
-          this.locationState = EMapLocationState.ACTIVE;
-      }
-    });
+          this._centerMapToLocation();
+      });
 
-    this.geolocationService.onLocationChange.subscribe((location) => {
-      this._location = location;
-      this.animateLocation(this._location);
-
-      if (
-        [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
-          this.locationState
-        ) !== -1
-      )
+      if (this.registering) {
+        this.geolocationService.start();
+        this.locationState = EMapLocationState.FOLLOW;
         this._centerMapToLocation();
-    });
-
-    if (this.registering) {
-      this.geolocationService.start();
-      this.locationState = EMapLocationState.FOLLOW;
-      this._centerMapToLocation();
+      }
     }
   }
 
@@ -230,7 +257,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *
    * @param geojson geojson of the track
    */
-  drawTrack(geojson: CGeojsonLineStringFeature) {
+  drawTrack(geojson: CGeojsonLineStringFeature, centerToTrack: boolean = false) {
     if (geojson?.geojson) {
       const features = new GeoJSON({
         featureProjection: 'EPSG:3857',
@@ -246,7 +273,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           },
           updateWhileAnimating: true,
           updateWhileInteracting: true,
-          zIndex: 350,
+          zIndex: 450,
         });
       } else {
         this._track.layer.getSource().clear();
@@ -254,7 +281,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
       try {
         this._map.addLayer(this._track.layer);
-      } catch (e) { }
+      } catch (e) {
+      }
+      if (centerToTrack) {
+        this._centerMapToTrack();
+      }
     }
   }
 
@@ -381,6 +412,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this._location.latitude,
         ]),
       });
+    }
+  }
+
+  /**
+   * Center the current map view to the current physical location
+   */
+  private _centerMapToTrack() {
+    if (this._track.layer) {
+      const ext = this._track.layer.getSource().getExtent();
+      this._view.fit(ext);
     }
   }
 

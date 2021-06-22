@@ -142,7 +142,6 @@ export class GeoutilsService {
           track.properties.timestamps[i]
         );
         const speed = dist / 1000 / (timeS / 3600);
-        console.log('---- ~ file: geoutils.service.ts ~ line 145 ~ GeoutilsService ~ getTopSpeed ~ speed', dist, timeS);
         res = Math.max(res, speed);
       }
       return res;

@@ -427,7 +427,7 @@ export class GeolocationService {
           this.onGeolocationStateChange.next(this._state);
 
           setInterval(() => {
-            const center: [number, number] = [11, 43];
+            const center: [number, number] = [10.4147, 43.7118];
             const extent: [number, number, number, number] = [0, 0, 100, 100];
 
             let alt: number = Math.random() * 5000,
