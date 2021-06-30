@@ -18,8 +18,7 @@ import { SettingsModule } from './components/settings/settings.module';
 import { MapModule } from './components/map/map.module';
 import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
-import { PhotoLibrary } from '@ionic-native/photo-library/ngx';
-import { CDVPhotoLibraryPipe } from './pipes/cdvphotolibrary.pipe';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
@@ -27,7 +26,10 @@ import localeIt from '@angular/common/locales/it';
 registerLocaleData(localeIt);
 
 @NgModule({
-  declarations: [AppComponent, CDVPhotoLibraryPipe],
+  declarations: [
+    AppComponent,
+    // CDVPhotoLibraryPipe
+  ],
   entryComponents: [],
   imports: [
     BrowserModule,
@@ -62,7 +64,7 @@ registerLocaleData(localeIt);
     },
     BackgroundGeolocation,
     Diagnostic,
-    PhotoLibrary
+    ImagePicker
   ],
   bootstrap: [AppComponent],
 })

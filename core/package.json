@@ -25,6 +25,7 @@
     "@ionic-native/background-geolocation": "^5.33.1",
     "@ionic-native/core": "^5.33.1",
     "@ionic-native/diagnostic": "^5.33.1",
+    "@ionic-native/image-picker": "^5.34.0",
     "@ionic-native/photo-library": "^5.33.1",
     "@ionic/angular": "^5.5.2",
     "@ionic/storage-angular": "^3.0.6",
@@ -32,6 +33,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "cordova-plugin-photo-library": "^2.3.1",
+    "cordova-plugin-telerik-imagepicker": "^2.3.6",
     "cordova.plugins.diagnostic": "^6.0.3",
     "ol": "^6.5.0",
     "rxjs": "~6.6.0",
@@ -39,7 +41,7 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.4",
+    "@angular-devkit/build-angular": "^0.1102.14",
     "@angular-eslint/builder": "2.0.2",
     "@angular-eslint/eslint-plugin": "2.0.2",
     "@angular-eslint/eslint-plugin-template": "2.0.2",

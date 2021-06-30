@@ -6,11 +6,13 @@
   "license": "Check the license in the LICENSE.md",
   "private": true,
   "dependencies": {
-    "@types/ol": "^6.5.0",
-    "cordova-plugin-background-mode": "^0.7.3",
-    "cordova-plugin-photo-library": "^2.3.1"
+    "@angular-devkit/schematics": "^12.1.0",
+    "@types/ol": "^6.5.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^12.1.0",
+    "@angular/compiler": "^12.1.0",
+    "@angular/compiler-cli": "^12.1.0",
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.5",
     "gulp-replace": "^1.1.2",
