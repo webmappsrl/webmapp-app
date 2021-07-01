@@ -1,3 +1,5 @@
+@import "src/theme/mixins.scss";
+
 .webmapp-pageregister-map-container {
   width: 100%;
   height: 100%;
@@ -64,16 +66,80 @@
 
 }
 
+.webmapp-pageregister-backgroundbtn {
+  position: absolute;
+  text-align: center;
+  top: 238px;
+  width: 100%;
+
+  .webmapp-pageregister-backgroundbtn-button {
+    --border-radius: 22px;
+    font-size: var(--wm-font-sm);
+    @include box-shadow-light;
+    border-radius: 32px;
+
+    i {
+      margin-right: 10px;
+    }
+
+  }
+}
 
 .webmapp-pageregister-header {
   position: absolute;
 }
 
+.webmapp-pageregister-btnbottomcenter {
+  display: inline-block;
+  @include box-shadow-light;
+  border-radius: 32px;
 
 
-  .webmapp-pageregister-btnbottomcenter {
-    display: inline-block;
+  &.webmapp-pageregister-resumebtn {
+    --color: var(--wm-color-primary);
+    --background: var(--wm-color-light);
+    --background-activated: var(--wm-color-primary);
+    --background-activated-opacity: 0.25;
+    --background-focused: var(--wm-color-light);
+    --background-focused-opacity: 0;
+    --background-hover: var(--wm-color-light);
+    --background-hover-opacity: 0;
+    --border-color: var(--wm-color-primary);
+    --border-style: solid;
+    --border-width: 1px;
+    margin-left: -40px;
+    margin-right: 15px;
   }
+
+  &.webmapp-pageregister-stopbtn {
+    &.webmapp-pageregister-recording {
+      box-shadow: 0px 0px 1px 5px rgba(255, 126, 107, 0.3);
+    }
+  }
+
+  .webmapp-pageregister-btncontent {
+    i {
+      display: block;
+    }
+
+    .webmapp-pageregister-btntext {
+      font-size: var(--wm-font-xxsm);
+    }
+  }
+}
+
+.webmapp-pageregister-pausebtn {
+  @include box-shadow-light;
+  border-radius: 32px;
+  --color: var(--wm-color-primary);
+  --background: var(--wm-color-light);
+  --background-activated: var(--wm-color-primary);
+  --background-activated-opacity: 0.25;
+  --background-focused: var(--wm-color-light);
+  --background-focused-opacity: 0;
+  --background-hover: var(--wm-color-light);
+  --background-hover-opacity: 0;
+}
 
 
 .webmapp-pageregister-btnbottomleft {

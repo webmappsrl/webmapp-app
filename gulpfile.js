@@ -714,10 +714,14 @@ function buildAndroidApk(instanceName, type) {
     buildAndroid(instanceName).then(
       () => {
         if (verbose) debug("Assembling the debug apk");
-        sh.exec("./gradlew tasks app:assemble" + type + outputRedirect, {
+        var gradlecom = "./gradlew tasks app:assemble";
+        if(process.platform === "win32")
+          gradlecom = "gradlew tasks app:assemble";
+        sh.exec(gradlecom + type + outputRedirect, {
           cwd: instancesDir + instanceName + "/android",
         });
         if (verbose)
+          debug("on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk");
           debug(
             "Debug apk built in " +
               instancesDir +
@@ -863,10 +867,14 @@ function buildAndroidBundle(instanceName, type) {
     buildAndroid(instanceName).then(
       () => {
         if (verbose) debug("Assembling the debug apk");
-        sh.exec("./gradlew tasks app:bundle" + type + outputRedirect, {
+        var gradlecom = "./gradlew tasks app:bundle";
+        if(process.platform === "win32")
+          gradlecom = "gradlew tasks app:bundle";
+        sh.exec(gradlecom + type + outputRedirect, {
           cwd: instancesDir + instanceName + "/android",
         });
         if (verbose)
+        debug("on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk")
           debug(
             "Debug apk built in " +
               instancesDir +

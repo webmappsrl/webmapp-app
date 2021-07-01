@@ -1,0 +1,103 @@
+@import "src/theme/mixins.scss";
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.webmapp-register-modalsave-icon {
+  position: absolute;
+  left: -28px;
+  top: 10px;
+
+  &.primary {
+    color: var(--wm-color-primary)
+  }
+
+  &.secondary {
+    color: var(--wm-color-secondary)
+  }
+
+  &.tertiary {
+    color: var(--wm-color-tertiary)
+  }
+
+}
+
+.webmapp-register-modalsave-item {
+  padding: 22px 15px 10px 22px;
+  overflow: visible;
+
+  .webmapp-register-modalsave-label {
+    font-weight: var(--wm-font-weight-bold);
+  }
+}
+
+.webmapp-register-modalsave-loadphoto {
+  padding: 20px;
+  border-radius: 15px;
+  border: 2px var(--ion-color-light-shade) dashed;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+
+  .webmapp-register-modalsave-loadphoto-text {
+    font-size: var(--wm-font-sm);
+
+    .webmapp-register-modalsave-loadphoto-action {
+      display: inline;
+      color: var(--wm-color-primary);
+      font-weight: var(--wm-font-weight-bold);
+    }
+  }
+
+
+  .webmapp-register-modalsave-loadphoto-advice {
+    margin-top: 5px;
+    font-size: var(--wm-font-xsm);
+  }
+
+}
+
+.webmapp-register-modalsave-footer {
+  text-align: center;
+
+  .webmapp-register-modalsave-savebtn {
+    --border-radius: 22px;
+    --padding-start: 100px;
+    --padding-end: 100px;
+    font-weight: var(--wm-font-weight-bold);
+    margin: 20px;
+    @include box-shadow-light;
+    border-radius: 32px;
+    letter-spacing: 1px;
+  }
+}
+
+.webmapp-register-modalsave-imagecontainer {
+  text-align: center;
+  height: 100px;
+  width: 140px;
+  position: relative;
+
+  .webmapp-register-modalsave-image {
+    border-radius: 15px;
+    height: 100px;
+    width: 140px;
+  }
+
+  .webmapp-register-modalsave-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+
+    background: #FFFFFF;
+    
+    @include box-shadow-light;
+
+  }
+}

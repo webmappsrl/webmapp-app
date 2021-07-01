@@ -10,10 +10,30 @@ import { IPoint } from '../types/model';
 export class GeoutilsService {
   private maxCurrentSpeedPoint = 5;
 
-  constructor() {}
+  constructor() { }
 
-  getLength(track: CGeojsonLineStringFeature) {
-    if (track.geometry.coordinates.length >= 2) {
+  /**
+   * Transform a second period into object with hours/minutes/seconds
+   *
+   * @param timeSeconds seconds to transform
+   * @returns time as object
+   */
+  static formatTime(timeSeconds: number) {
+    return {
+      seconds: Math.floor(timeSeconds % 60),
+      minutes: Math.floor(timeSeconds / 60) % 60,
+      hours: Math.floor(timeSeconds / 3600),
+    };
+  }
+
+  /**
+   * Get the total length of a track
+   *
+   * @param track a track feature
+   * @returns total length
+   */
+  getLength(track: CGeojsonLineStringFeature): number {
+    if (track?.geometry && track?.geometry?.coordinates.length >= 2) {
       let res = 0;
       for (let i = 1; i < track.geometry.coordinates.length; i++) {
         res += this.calcDistanceM(
@@ -33,7 +53,7 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties.timestamps.length > 1) {
+    if (track.properties.timestamps && track.properties.timestamps.length > 1) {
       return this.calcTimeS(
         track.properties.timestamps[0],
         track.properties.timestamps[track.properties.timestamps.length - 1]
@@ -45,10 +65,11 @@ export class GeoutilsService {
   /**
    * Calculate the current speed on a track
    *
-   * @param track the track
+   * @param track a track feature
    * @returns
    */
-  getCurrentSpeed(track: CGeojsonLineStringFeature) {
+  getCurrentSpeed(track: CGeojsonLineStringFeature): number {
+    if (!track || !track.geometry) return 0;
     const lenPoints = track.geometry.coordinates.length;
     const lenTimes = track.properties.timestamps.length;
     if (lenPoints >= 2 && lenTimes >= 2) {
@@ -66,11 +87,68 @@ export class GeoutilsService {
     return 0;
   }
 
-  getAverageSpeed(track: CGeojsonLineStringFeature) {
+  /**
+   * Get the average speed on a track
+   *
+   * @param track a track feature
+   * @returns average speed
+   */
+  getAverageSpeed(track: CGeojsonLineStringFeature): number {
     const time = this.getTime(track) / 3600;
     if (time > 0) return this.getLength(track) / time;
     return 0;
   }
+
+  /**
+   * Get the date when the track was recorded
+   *
+   * @param track a track feature
+   */
+  getDate(track: CGeojsonLineStringFeature) {
+    return new Date();
+  }
+
+  /**
+   * Get the difference in height of a track
+   *
+   * @param track a track feature
+   * @returns total height difference
+   */
+  getSlope(track: CGeojsonLineStringFeature): number {
+    return 0;
+  }
+
+  /**
+   * Get the top speed on all the track
+   *
+   * @param track a track feature
+   * @returns top speed
+   */
+  getTopSpeed(track: CGeojsonLineStringFeature): number {
+    if (!track || !track.geometry) return 0;
+    const lenPoints = track.geometry.coordinates.length;
+    const lenTimes = track.properties.timestamps.length;
+
+
+    if (lenPoints >= 2 && lenTimes >= 2) {
+      let res = 0;
+      for (let i = 1; i < lenPoints; i++) {
+        const dist = this.calcDistanceM(
+          track.geometry.coordinates[i] as IPoint,
+          track.geometry.coordinates[i - 1] as IPoint
+        );
+        const timeS = this.calcTimeS(
+          track.properties.timestamps[i - 1],
+          track.properties.timestamps[i]
+        );
+        const speed = dist / 1000 / (timeS / 3600);
+        res = Math.max(res, speed);
+      }
+      return res;
+    }
+    return 0;
+  }
+
 
   private calcDistanceM(point1: Coordinate, point2: Coordinate): number {
     const p1 = [point1[0], point1[1]];
@@ -82,4 +160,7 @@ export class GeoutilsService {
     const res = (time2 - time1) / 1000;
     return res;
   }
+
+
+
 }

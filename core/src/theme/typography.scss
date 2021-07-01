@@ -1,22 +1,25 @@
 webmapp-app-root {
   font-size: 16px;
   --wm-font-xxxlg-multiplier: 1.625;
-  --wm-font-xxxlg: calc(var(--wm-font-xxxlg-multiplier) * 1rem);
+  --wm-font-xxxlg: calc(var(--wm-font-xxxlg-multiplier) * 1rem); //26
   --wm-font-xxlg-multiplier: 1.437;
-  --wm-font-xxlg: calc(var(--wm-font-xxlg-multiplier) * 1rem);
+  --wm-font-xxlg: calc(var(--wm-font-xxlg-multiplier) * 1rem); //23
   --wm-font-xlg-multiplier: 1.312;
-  --wm-font-xlg: calc(var(--wm-font-xlg-multiplier) * 1rem);
+  --wm-font-xlg: calc(var(--wm-font-xlg-multiplier) * 1rem); //21
   --wm-font-lg-multiplier: 1.125;
   --wm-font-lg: calc(var(--wm-font-lg-multiplier) * 1rem);
   --wm-font-md-multiplier: 1;
-  --wm-font-md: calc(var(--wm-font-md-multiplier) * 1rem);
+  --wm-font-md: calc(var(--wm-font-md-multiplier) * 1rem); //16
   --wm-font-sm-multiplier: 0.875;
-  --wm-font-sm: calc(var(--wm-font-sm-multiplier) * 1rem);
+  --wm-font-sm: calc(var(--wm-font-sm-multiplier) * 1rem); //14
   --wm-font-xsm-multiplier: 0.75;
   --wm-font-xsm: calc(var(--wm-font-xsm-multiplier) * 1rem);
+  --wm-font-xxsm-multiplier: 0.6;
+  --wm-font-xxsm: calc(var(--wm-font-xxsm-multiplier) * 1rem);
 
   --wm-font-weight-light: 300;
   --wm-font-weight-normal: 500;
+  --wm-font-weight-normalplus: 600;
   --wm-font-weight-bold: 700;
   --wm-font-weight-xbold: 800;
 }
@@ -24,12 +27,15 @@ webmapp-app-root {
 h1 {
   font-size: var(--wm-font-xxxlg);
 }
+
 h2 {
   font-size: var(--wm-font-xxlg);
 }
+
 h3 {
   font-size: var(--wm-font-xlg);
 }
+
 h4 {
   font-size: var(--wm-font-lg);
 }

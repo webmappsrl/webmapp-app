@@ -1,3 +1,6 @@
 <ion-content scrollY="false">
-  <webmapp-map class="webmapp-pagemap-map-container" [start-view]="[12,44,9]"></webmapp-map>
+  <webmapp-map class="webmapp-pagemap-map-container" [start-view]="[10.4147, 43.7118,9]"></webmapp-map>
+
+  <webmapp-recording-btn class="webmapp-pagemap-recordingbtn" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
+  </webmapp-recording-btn>
 </ion-content>

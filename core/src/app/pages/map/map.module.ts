@@ -8,6 +8,8 @@ import { MapPageRoutingModule } from './map-routing.module';
 
 import { MapPage } from './map.page';
 import { MapModule } from 'src/app/components/map/map.module';
+import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,8 +17,12 @@ import { MapModule } from 'src/app/components/map/map.module';
     FormsModule,
     IonicModule,
     MapPageRoutingModule,
-    MapModule
+    MapModule,
+    TranslateModule
   ],
-  declarations: [MapPage]
+  declarations: [
+    RecordingBtnComponent,
+    MapPage
+  ]
 })
-export class MapPageModule {}
+export class MapPageModule { }

@@ -54,9 +54,56 @@
     },
     "register": {
       "title": "Registra una traccia",
+      "time": "In movimento",
       "currentspeed": "Velocità attuale",
       "averagespeed": "Velocità media",
-      "odo": "Km percorsi"
+      "odo": "Km percorsi",
+      "backgroundbtn": "Registra in background",
+      "resumebtn": "Riprendi",
+      "stopbtn": "Termina",
+      "modalconfirm": {
+        "title": "Confermi di voler terminare la registrazione?",
+        "text": "Una volta confermato non potrai più riprendere questa navigazione",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      },
+      "modalsave": {
+        "title": "Salva traccia",
+        "formtitle": "Titolo traccia",
+        "formdescription": "Descrizione",
+        "formactivity": "Tipo di attività",
+        "formphotos": "Aggiungi foto scattate durante il percorso",
+        "photoaction": "Carica",
+        "phototext": "foto dalla galleria del telefono",
+        "photoadvice": "Dimensione massime: 200Mb",
+        "savebtn": "Salva"
+      },
+      "modalphotos": {
+        "title": "Carica foto",
+        "noimages": "Non sono presenti immagini scattate durante la registrazione del percorso",
+        "selectall": "Seleziona tutto",
+        "deselectall": "Deseleziona tutto",
+        "savebtn": "Carica"
+      },
+      "modalexit": {
+        "title": "Vuoi uscire senza salvare la tua registrazione?",
+        "text": "Se esci adesso la registrazione andarà persa",
+        "confirm": "Conferma",
+        "cancel": "Annulla"
+      },
+      "modalsuccess": {
+        "title": "Attività registrata con successo!",
+        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
+        "time": "Tempo",
+        "odo": "Km percorsi",
+        "slope": "Dislivello",
+        "avgspeed": "Velocità media",
+        "topspeed": "Velocità massima",
+        "return": "Torna ad esplorare"
+      }
+    },
+    "map": {
+      "recordingbtn": "Reg. in corso"
     }
   },
   "components": {
