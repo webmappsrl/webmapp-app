@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { CameraPhoto } from '@capacitor/core';
 
 @Component({
   selector: 'webmapp-modalphotos',
@@ -7,10 +8,14 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ModalphotosComponent implements OnInit {
 
-  @Input('photoUrl') photoUrl: string;
+  public photo: CameraPhoto;
+  public src: string;
 
   constructor() { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.src = this.photo.webPath;
+    console.log('------- ~ file: modalphotos.component.ts ~ line 20 ~ ModalphotosComponent ~ photo', this.photo);
+  }
 
 }

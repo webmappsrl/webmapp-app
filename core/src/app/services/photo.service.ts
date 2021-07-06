@@ -19,7 +19,7 @@ export interface PhotoItem {
 
 export class PhotoService {
 
-  private useBase64 = false;
+  private useBase64 = true;
 
   private options = {
     // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
