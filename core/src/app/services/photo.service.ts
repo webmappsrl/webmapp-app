@@ -19,7 +19,7 @@ export interface PhotoItem {
 
 export class PhotoService {
 
-  private useBase64 = true;
+  private useBase64 = false;
 
   private options = {
     // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
@@ -53,7 +53,7 @@ export class PhotoService {
 
   async getPhotos(dateLimit: Date = null): Promise<PhotoItem[]> {
     const res: PhotoItem[] = [];
-    let filePathConverted = null;
+    let filePath = null;
     if (!this._deviceService.isBrowser) {
 
       if (!await this.imagePicker.hasReadPermission()) {
@@ -68,39 +68,12 @@ export class PhotoService {
         if (this.useBase64) {
           data = `data:image/jpeg;base64,${images[i]}`;
         } else {
-
-
-          filePathConverted = Capacitor.convertFileSrc(images[i]);
-          const filePath = images[i];
-          console.log('------- ~ file: photo.service.ts ~ line 75 ~ PhotoService ~ getPhotos ~ filePath', filePath);
-
-          // const uri = Filesystem.getUri(filePathConverted);
-          // console.log('------- ~ file: photo.service.ts ~ line 70 ~ PhotoService ~ getPhotos ~ uri', uri);
-
-          console.log('------- ~ file: photo.service.ts ~ line 56 ~ PhotoService ~ getPhotos ~ filePath', filePathConverted);
-
-          try {
-            const statistics = await Filesystem.stat({
-              path: filePath
-            });
-            console.log('------- ~ file: photo.service.ts ~ line 64 ~ PhotoService ~ getPhotos ~ statistics', statistics);
-
-            const fileContent = await Filesystem.readFile({
-              path: filePathConverted
-            });
-            console.log('------- ~ file: photo.service.ts ~ line 74 ~ PhotoService ~ getPhotos ~ fileContent', fileContent);
-            data = `data:image/jpeg;base64,${fileContent.data}`;
-            console.log('------- ~ file: photo.service.ts ~ line 76 ~ PhotoService ~ getPhotos ~ data', data);
-          }
-          catch (e) {
-            console.log('------- ~ file: photo.service.ts ~ line 79 ~ PhotoService ~ getPhotos ~ e', e);
-
-          }
-
+          data = Capacitor.convertFileSrc(images[i]);
+          filePath = images[i];
         }
         res.push({
           id: i + '',
-          photoURL: filePathConverted,
+          photoURL: filePath,
           data
         });
       }
