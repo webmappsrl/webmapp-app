@@ -1,18 +1,34 @@
-<ion-header >
+<ion-header>
   <ion-toolbar class="webmapp-modalphoto-header">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="map" icon="close-outline" text="" class="webmapp-backbutton" (click)="close()">
+      <ion-back-button defaultHref="map" icon="close-outline" text="" (click)="close()">
       </ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-icon *ngIf="photo" class="webmapp-modalphoto-header-delete" name="trash-outline" (click)="delete()">
+      </ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-img [src]="src" class="webmapp-modalphoto-img" ></ion-img>
+<ion-content class="webmapp-modalphoto-content">
+  <ion-img [src]="photo?.webPath" class="webmapp-modalphoto-img" *ngIf="photo"></ion-img>
+  <div class="webmapp-modalphoto-addbtn" (click)="add()">
+    <i class="webmapp-icon-camera webmapp-register-modalsave-icon  webmapp-modalphoto-addbtn-camera"></i>
+    <ion-icon class="webmapp-modalphoto-addbtn-plus" name="add-outline"></ion-icon>
+  </div>
+  <ion-button class="webmapp-modalphoto-nextbtn" (click)="next()" *ngIf="photoCollection?.length">{{"modals.photo.next"
+    | translate}}</ion-button>
 </ion-content>
 
 
-<ion-footer >
+<ion-footer>
   <ion-toolbar class="webmapp-modalphoto-footer">
+    <ion-slides pager=false [options]="sliderOptions" #slider>
+      <ion-slide *ngFor="let photo of photoCollection">
+        <ion-img class="webmapp-modalphoto-footer-photo" (click)="select(photo)" [src]="photo?.webPath"></ion-img>
+      </ion-slide>
+    </ion-slides>
+
   </ion-toolbar>
 </ion-footer>

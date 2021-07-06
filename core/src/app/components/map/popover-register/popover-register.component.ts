@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, PopoverController } from '@ionic/angular';
-import { Camera, CameraResultType } from '@capacitor/core';
+import { PhotoService } from 'src/app/services/photo.service';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 
 @Component({
@@ -15,6 +15,7 @@ export class PopoverRegisterComponent implements OnInit {
   constructor(
     private popoverController: PopoverController,
     private navCtrl: NavController,
+    private photoService: PhotoService,
     private _modalController: ModalController
   ) { }
 
@@ -31,18 +32,14 @@ export class PopoverRegisterComponent implements OnInit {
 
     this.dismiss();
 
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: true,
-      resultType: CameraResultType.Uri
-    });
+    const image = await this.photoService.shotPhoto();
 
     // // image.webPath will contain a path that can be set as an image src.
     // // You can access the original file using image.path, which can be
     // // passed to the Filesystem API to read the raw data of the image,
     // // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
     // const imageUrl = image.webPath;
-    
+
     const modalPhotos = await this._modalController.create({
       component: ModalphotosComponent,
       componentProps: {

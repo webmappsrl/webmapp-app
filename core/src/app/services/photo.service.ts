@@ -5,6 +5,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
 import { Filesystem } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
+import { Camera, CameraResultType } from '@capacitor/core';
 
 
 export interface PhotoItem {
@@ -90,5 +91,13 @@ export class PhotoService {
       return res;
     }
 
+  }
+
+  async shotPhoto(){
+    return await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
   }
 }
