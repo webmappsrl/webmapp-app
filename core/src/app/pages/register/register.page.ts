@@ -175,6 +175,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     const modaSuccess = await this.modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
+        type: 'track',
         track
       }
     });

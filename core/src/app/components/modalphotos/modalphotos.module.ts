@@ -5,10 +5,11 @@ import { SharedModule } from '../shared/shared.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalphotosComponent } from './modalphotos.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
+import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 
 @NgModule({
-  declarations: [ModalphotosComponent,PopoverphotoComponent],
+  declarations: [ModalphotosComponent, PopoverphotoComponent, ModalphotosaveComponent],
   imports: [CommonModule, IonicModule, TranslateModule, SharedModule],
-  exports: [ModalphotosComponent,PopoverphotoComponent],
+  exports: [ModalphotosComponent, PopoverphotoComponent, ModalphotosaveComponent],
 })
-export class ModalphotosModule {}
+export class ModalphotosModule { }

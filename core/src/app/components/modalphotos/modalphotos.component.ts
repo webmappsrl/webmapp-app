@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CameraPhoto } from '@capacitor/core';
 import { ModalController, PopoverController } from '@ionic/angular';
+import { ModalSuccessComponent } from 'src/app/pages/register/modal-success/modal-success.component';
 import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 
 @Component({
@@ -81,8 +83,30 @@ export class ModalphotosComponent implements OnInit {
     this.photo = this.photoCollection.length ? this.photoCollection[Math.min(this.photoCollection.length - 1, idx)] : null;
   }
 
-  next() {
+  async next() {
+    const modal = await this.modalController.create({
+      component: ModalphotosaveComponent
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
 
+    if (!res.data.dismissed) {
+      console.log('PHOTOS TO SAVE', res.data.photosData); //TODO save in correct way
+
+      await this.openModalSuccess();
+
+    }
+  }
+
+  async openModalSuccess() {
+    const modaSuccess = await this.modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: 'photo'
+      }
+    });
+    await modaSuccess.present();
+    // await modaSuccess.onDidDismiss();
   }
 
 
