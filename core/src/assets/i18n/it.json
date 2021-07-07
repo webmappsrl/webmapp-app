@@ -47,6 +47,22 @@
         "formphototitle": "Titolo foto ",
         "savebtn": "salva"
       }
+    },
+    "success": {
+      "photos": {
+        "title": "Foto registrate con successo!",
+        "text": "Le tue foto sono state salvate correttamente. Puoi visualizzarle accedendo al to profilo."
+      },
+      "track": {
+        "title": "Attività registrata con successo!",
+        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
+        "time": "Tempo",
+        "odo": "Km percorsi",
+        "slope": "Dislivello",
+        "avgspeed": "Velocità media",
+        "topspeed": "Velocità massima"
+      },
+      "return": "Torna ad esplorare"
     }
   },
   "pages": {
@@ -103,17 +119,7 @@
         "text": "Se esci adesso la registrazione andarà persa",
         "confirm": "Conferma",
         "cancel": "Annulla"
-      },
-      "modalsuccess": {
-        "title": "Attività registrata con successo!",
-        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
-        "time": "Tempo",
-        "odo": "Km percorsi",
-        "slope": "Dislivello",
-        "avgspeed": "Velocità media",
-        "topspeed": "Velocità massima",
-        "return": "Torna ad esplorare"
-      }
+      }      
     },
     "map": {
       "recordingbtn": "Reg. in corso"

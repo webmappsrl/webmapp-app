@@ -24,17 +24,19 @@ export class ModalphotosaveComponent implements OnInit {
     });
   }
 
-  valChange(value, idx){
+  valChange(value, idx) {
     this.photos[idx].description = value;
   }
 
   save() {
 
+    this.modalController.dismiss({
+      photos: this.photos
+    });
   }
 
   isValid() {
     const res = this.photos.find(x => !x.description);
-    console.log('------- ~ file: modalphotosave.component.ts ~ line 33 ~ ModalphotosaveComponent ~ isValid ~ res', res,this.photos);
     return !res;
   }
 
