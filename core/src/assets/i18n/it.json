@@ -36,7 +36,11 @@
       }
     },
     "photo":{
-      "next":"avanti"
+      "next":"avanti",
+      "popover":{
+        "shot":"Scatta una foto",
+        "library":"Dalla libreria"
+      }
     }
   },
   "pages": {

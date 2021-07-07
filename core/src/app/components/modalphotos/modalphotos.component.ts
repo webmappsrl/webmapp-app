@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CameraPhoto } from '@capacitor/core';
-import { ModalController } from '@ionic/angular';
-import { PhotoService } from 'src/app/services/photo.service';
+import { ModalController, PopoverController } from '@ionic/angular';
+import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 
 @Component({
   selector: 'webmapp-modalphotos',
@@ -10,8 +11,8 @@ import { PhotoService } from 'src/app/services/photo.service';
 })
 export class ModalphotosComponent implements OnInit {
 
-  public photoCollection: CameraPhoto[] = [];
-  public photo: CameraPhoto;
+  public photoCollection: PhotoItem[] = [];
+  public photo: PhotoItem;
 
   sliderOptions: any = {
     slidesPerView: 5,
@@ -20,7 +21,8 @@ export class ModalphotosComponent implements OnInit {
 
   constructor(
     private photoService: PhotoService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private popoverController: PopoverController
 
   ) { }
 
@@ -34,11 +36,38 @@ export class ModalphotosComponent implements OnInit {
     });
   }
 
-  async add() {
+  async add(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverphotoComponent,
+      cssClass: 'my-custom-class',
+      event: ev,
+      translucent: true
+    });
+    await popover.present();
+    const { role } = await popover.onDidDismiss();
+    if (role === 'photo') {
+      this.addPhoto();
+    } else {
+      this.addFromLibrary();
+    }
+
+  }
+
+  async addPhoto() {
     const nextPhoto = await this.photoService.shotPhoto();
     if (nextPhoto) {
       this.photoCollection.push(nextPhoto);
       this.select(nextPhoto);
+    }
+  }
+
+  async addFromLibrary() {
+    const photos = await this.photoService.getPhotos();
+    if (photos && photos.length) {
+      photos.forEach(photo => {
+        this.photoCollection.push(photo);
+        this.select(photo);
+      });
     }
   }
 
@@ -47,7 +76,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   delete() {
-    const idx = this.photoCollection.findIndex(x => x.webPath === this.photo.webPath);
+    const idx = this.photoCollection.findIndex(x => x.data === this.photo.data);
     this.photoCollection.splice(idx, 1);
     this.photo = this.photoCollection.length ? this.photoCollection[Math.min(this.photoCollection.length - 1, idx)] : null;
   }

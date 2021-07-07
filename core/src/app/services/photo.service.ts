@@ -93,11 +93,16 @@ export class PhotoService {
 
   }
 
-  async shotPhoto(){
-    return await Camera.getPhoto({
+  async shotPhoto() {
+    const photo = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
       resultType: CameraResultType.Uri
     });
+    return {
+      id: '1',
+      photoURL: photo.webPath,
+      data: Capacitor.convertFileSrc(photo.webPath)
+    };
   }
 }
