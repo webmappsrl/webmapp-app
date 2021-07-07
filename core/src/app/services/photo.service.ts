@@ -12,6 +12,7 @@ export interface PhotoItem {
   id: string;
   photoURL: string;
   data: string;
+  description: string;
 }
 
 @Injectable({
@@ -75,7 +76,8 @@ export class PhotoService {
         res.push({
           id: i + '',
           photoURL: filePath,
-          data
+          data,
+          description: ''
         });
       }
       return res;
@@ -85,7 +87,8 @@ export class PhotoService {
         res.push({
           id: '1',
           photoURL: `https://picsum.photos/50${i}/75${i}`,
-          data: `https://picsum.photos/50${i}/75${i}`
+          data: `https://picsum.photos/50${i}/75${i}`,
+          description: ''
         });
       }
       return res;
@@ -93,7 +96,7 @@ export class PhotoService {
 
   }
 
-  async shotPhoto() {
+  async shotPhoto(): Promise<PhotoItem> {
     const photo = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
@@ -102,7 +105,8 @@ export class PhotoService {
     return {
       id: '1',
       photoURL: photo.webPath,
-      data: Capacitor.convertFileSrc(photo.webPath)
+      data: Capacitor.convertFileSrc(photo.webPath),
+      description: ''
     };
   }
 }

@@ -85,7 +85,10 @@ export class ModalphotosComponent implements OnInit {
 
   async next() {
     const modal = await this.modalController.create({
-      component: ModalphotosaveComponent
+      component: ModalphotosaveComponent,
+      componentProps: {
+        photos: this.photoCollection
+      }
     });
     await modal.present();
     const res = await modal.onDidDismiss();

@@ -4,31 +4,31 @@
       <ion-back-button defaultHref="register" icon="close-outline" text="" class="webmapp-backbutton" (click)="close()">
       </ion-back-button>
     </ion-buttons>
-    <ion-title>{{'modals.photo.save.title' | translate}}</ion-title>
+    <ion-title  class="webmapp-modalphotosave-title">{{'modals.photo.save.title' | translate}}</ion-title>
+    <ion-buttons slot="end">      
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- <ion-list>
-    <ion-item class="webmapp-register-modalsave-item">      
-      <i class="webmapp-icon-list webmapp-register-modalsave-icon secondary"></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'modals.photo.save.formtitle' |
-        translate}}</ion-label>
-    </ion-item>
-    <ion-item class="webmapp-register-modalsave-item" *ngFor="photo of photos">
-      <i class="webmapp-icon-activities webmapp-register-modalsave-icon primary"></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'modals.photo.save.formphototitle' |
-        translate}}</ion-label>
-      <ion-input [(ngModel)]="description"></ion-input>
-      
-    </ion-item>
-    
-  </ion-list> -->
-
+  <ion-label class="webmapp-modalphotosave-formtitle">{{'modals.photo.save.formtitle' | translate}}</ion-label>
+  <ion-list>
+    <ng-container *ngFor="let photo of photos;let idx = index">
+      <ion-item class="webmapp-modalphotosave-item" lines="none" >
+        <ion-img slot="start" class="webmapp-modalphotosave-item-photo" [src]="photo?.data"></ion-img>
+        <div class="webmapp-modalphotosave-item-inputwrapper">
+          <i class="webmapp-icon-camera webmapp-modalphotosave-item-icon secondary"></i>
+          <ion-label class="webmapp-modalphotosave-item-label" position="stacked">{{'modals.photo.save.formphototitle' |
+            translate}} {{idx+1}}</ion-label>
+          <ion-input class="webmapp-modalphotosave-item-input" [(ngModel)]="photo.description" (input)="valChange($event.target.value, idx)" type="text"></ion-input>
+        </div>
+      </ion-item>
+    </ng-container>
+  </ion-list>
 </ion-content>
 
 
-<ion-footer class="webmapp-register-modalsave-footer">
-  <ion-button class="webmapp-register-modalsave-savebtn" (click)="save()" [disabled]="!isValid()">
+<ion-footer class="webmapp-modalphotosave-footer">
+  <ion-button class="webmapp-modalphotosave-savebtn" (click)="save()" [disabled]="!isValid()">
     {{'modals.photo.save.savebtn' | translate}}</ion-button>
 </ion-footer>
