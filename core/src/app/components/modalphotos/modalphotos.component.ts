@@ -56,7 +56,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addPhoto() {
-    const nextPhoto = await this.photoService.shotPhoto();
+    const nextPhoto = await this.photoService.shotPhoto(false);
     if (nextPhoto) {
       this.photoCollection.push(nextPhoto);
       this.select(nextPhoto);

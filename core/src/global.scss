@@ -59,7 +59,10 @@
 /********** back buttons ********/
 
 .webmapp-backbutton {
-  --color: var(--ion-color-dark) !important;
+  padding: 5px 20px;
+   &.webmapp-backbutton.dark {
+    --color: var(--ion-color-dark) !important;
+  }
 }
 
 /********************************/
@@ -72,3 +75,12 @@
 }
 
 /**************************************************/
+
+/******** ripple effects  for buttons/icons ********/
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+/*****************************************************/
