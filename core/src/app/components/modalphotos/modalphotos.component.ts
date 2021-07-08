@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CameraPhoto } from '@capacitor/core';
 import { ModalController, PopoverController } from '@ionic/angular';
-import { ModalSuccessComponent } from 'src/app/pages/register/modal-success/modal-success.component';
 import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { SuccessType } from '../../types/success.enum';
+import { ModalSuccessComponent } from '../modal-success/modal-success.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 
@@ -56,7 +56,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addPhoto() {
-    const nextPhoto = await this.photoService.shotPhoto();
+    const nextPhoto = await this.photoService.shotPhoto(false);
     if (nextPhoto) {
       this.photoCollection.push(nextPhoto);
       this.select(nextPhoto);
@@ -84,29 +84,31 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async next() {
+    this.modalController.dismiss();
     const modal = await this.modalController.create({
-      component: ModalphotosaveComponent
+      component: ModalphotosaveComponent,
+      componentProps: {
+        photos: this.photoCollection
+      }
     });
     await modal.present();
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      console.log('PHOTOS TO SAVE', res.data.photosData); //TODO save in correct way
-
-      await this.openModalSuccess();
-
+      await this.openModalSuccess(res.data.photos);
     }
   }
 
-  async openModalSuccess() {
+  async openModalSuccess(photos) {
     const modaSuccess = await this.modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
-        type: 'photo'
+        type: SuccessType.PHOTOS,
+        photos
       }
     });
     await modaSuccess.present();
-    // await modaSuccess.onDidDismiss();
+    await modaSuccess.onDidDismiss();
   }
 
 

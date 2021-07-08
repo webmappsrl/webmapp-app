@@ -1,12 +1,16 @@
-<ion-header>
+<ion-header class="webmapp-modalphoto-header">
+  <div class="ios-filling"></div>
   <ion-toolbar class="webmapp-modalphoto-header">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="map" icon="close-outline" text="" (click)="close()">
+      <ion-back-button class="webmapp-backbutton" defaultHref="map" icon="close-outline" text="" (click)="close()">
       </ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-icon *ngIf="photo" class="webmapp-modalphoto-header-delete" name="trash-outline" (click)="delete()">
-      </ion-icon>
+      <div class="ripple-parent">
+        <ion-icon *ngIf="photo" class="webmapp-modalphoto-header-delete" name="trash-outline" (click)="delete()">
+        </ion-icon>
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

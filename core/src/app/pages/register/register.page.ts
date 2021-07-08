@@ -4,10 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { ILocation } from 'src/app/types/location';
+import { SuccessType } from '../../types/success.enum';
 import { Track } from 'src/app/types/track.d.';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
-import { ModalSuccessComponent } from './modal-success/modal-success.component';
+import { ModalSuccessComponent } from '../../components/modal-success/modal-success.component';
 
 @Component({
   selector: 'webmapp-register',
@@ -175,7 +175,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     const modaSuccess = await this.modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
-        type: 'track',
+        type: SuccessType.TRACK,
         track
       }
     });

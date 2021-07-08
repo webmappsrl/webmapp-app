@@ -28,11 +28,10 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   async photo() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 20 ~ PopoverRegisterComponent ~ photo ~ photo');
 
     this.dismiss();
 
-    const image = await this.photoService.shotPhoto();
+    const image = await this.photoService.shotPhoto(true);
 
     const modalPhotos = await this._modalController.create({
       component: ModalphotosComponent,
@@ -47,7 +46,7 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   waypoint() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 25 ~ PopoverRegisterComponent ~ waypoint ~ waypoint');
+    this.navCtrl.navigateForward('waypoint');
     this.dismiss();
   }
 

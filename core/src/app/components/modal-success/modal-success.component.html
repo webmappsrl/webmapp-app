@@ -1,0 +1,118 @@
+<ion-content class="webmapp-modalsuccess">
+
+  <div class="ios-filling"></div>
+
+  <div class="webmapp-modalsuccess-header">
+    <ion-icon name="close-outline" class="webmapp-modalsuccess-closebtn" (click)="close()"></ion-icon>
+  </div>
+
+  <div class="webmapp-modalsuccess-body">
+    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.png" *ngIf="isTrack">
+    <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos">
+    <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
+      {{'modals.success.track.title' | translate}}</div>
+    <div class="webmapp-modalsuccess-title" *ngIf="isPhotos">
+      {{'modals.success.photos.title' | translate}}</div>
+    <div class="webmapp-modalsuccess-text" *ngIf="isTrack">
+      {{'modals.success.track.text' | translate}}</div>
+    <div class="webmapp-modalsuccess-text" *ngIf="isPhotos">
+      {{'modals.success.photos.text' | translate}}</div>
+
+    <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack">
+      <div class="webmapp-modalsuccess-infopanel-top">
+        <div class="webmapp-modalsuccess-infopanel-top-map">
+          <webmapp-map [track]="track" [static]="true"></webmapp-map>
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-top-info">
+          <div class="webmapp-modalsuccess-infopanel-top-name"> {{track.title}}</div>
+          <div class="webmapp-modalsuccess-infopanel-top-date"> {{trackDate | date}}
+          </div>
+        </div>
+      </div>
+
+      <div class="webmapp-modalsuccess-infopanel-middle">
+        <div class="webmapp-modalsuccess-infopanel-title">
+          {{'modals.success.track.time' | translate}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-data">
+          {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
+          '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
+        </div>
+      </div>
+      <div class="webmapp-modalsuccess-infopanel-middle">
+        <div class="webmapp-modalsuccess-infopanel-title">
+          {{'modals.success.track.odo' | translate}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-data">
+          {{trackodo | number : '1.1-1'}}
+        </div>
+      </div>
+
+
+      <div class="webmapp-modalsuccess-infopanel-bottom">
+        <div class="webmapp-modalsuccess-infopanel-title">
+          {{'modals.success.track.slope' | translate}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-data">
+          {{trackSlope | number:'1.0-0'}}m
+        </div>
+      </div>
+      <div class="webmapp-modalsuccess-infopanel-bottom">
+        <div class="webmapp-modalsuccess-infopanel-title">
+          {{'modals.success.track.avgspeed' | translate}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-data">
+          {{trackAvgSpeed | number:'1.1-1'}} km/h
+        </div>
+      </div>
+      <div class="webmapp-modalsuccess-infopanel-bottom">
+        <div class="webmapp-modalsuccess-infopanel-title">
+          {{'modals.success.track.topspeed' | translate}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-data">
+          {{trackTopSpeed | number:'1.1-1'}} km/h
+        </div>
+      </div>
+    </ion-card>
+
+    <ion-slides pager="false" *ngIf="isPhotos" [options]="sliderOptions" class="webmapp-modalsuccess-photoslider" #slider>
+      <ion-slide *ngFor="let photo of photos;let idx = index">
+        <div class="webmapp-modalsuccess-photocontainer" style="padding-top: {{topValues[idx]}}px;">
+          <ion-img [src]="photo.data" class="webmapp-modalsuccess-photo"></ion-img>
+          <div class="webmapp-modalsuccess-photodescription">{{photo.description}}</div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+
+  </div>
+
+  <div class="webmapp-modalsuccess-footer" (click)="close()">
+    {{'modals.success.return' | translate}}
+  </div>
+</ion-content>
+
+
+
+
+
+
+
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="register" text="" class="webmapp-backbutton webmapp-backbutton.dark" (click)="close()">
+      </ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'modals.photos.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+</ion-content>
+
+<ion-footer class="webmapp-register-modalphotos-footer">
+  <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
+    {{'modals.photos.savebtn' | translate}}</ion-button>
+</ion-footer> -->

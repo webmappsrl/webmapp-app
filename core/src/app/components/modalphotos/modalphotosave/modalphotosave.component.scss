@@ -1,0 +1,51 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-modalphotosave-title {
+    text-align: center;
+}
+
+.webmapp-modalphotosave-item {
+    padding: 15px 0px;
+
+    .webmapp-modalphotosave-item-photo {
+        width: 108px;
+        height: 100px;
+        margin: 0;
+        &::part(image) {
+            border-radius: 15px;
+            object-fit: cover;
+        }
+    }
+
+    .webmapp-modalphotosave-item-inputwrapper {
+        padding: 10px 10px;
+
+        .webmapp-modalphotosave-item-icon {
+            font-size: var(--wm-font-lg);
+            color: var(--wm-color-secondary);
+        }
+
+        .webmapp-modalphotosave-item-label {
+            font-style: normal;
+            font-weight: bold;
+            font-size: var(--wm-font-sm);
+            color: var(--wm-color-dark);
+        }
+        .webmapp-modalphotosave-item-input {
+            border-bottom: 1px solid var(--wm-color-grey);
+        }
+    }
+}
+
+.webmapp-modalphotosave-footer {
+    text-align: center;
+    .webmapp-modalphotosave-savebtn {
+        --border-radius: 22px;
+        --padding-start: 100px;
+        --padding-end: 100px;
+        font-weight: var(--wm-font-weight-bold);
+        margin: 20px;
+        @include box-shadow-light;
+        border-radius: 32px;
+    }
+}

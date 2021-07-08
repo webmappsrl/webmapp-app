@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSelectphotosComponent } from './modal-selectphotos/modal-selectphotos.component';
-import { ModalSuccessComponent } from './modal-success/modal-success.component';
+import { ModalSuccessModule } from 'src/app/components/modal-success/modal-success.module';
 
 @NgModule({
   imports: [
@@ -20,13 +20,13 @@ import { ModalSuccessComponent } from './modal-success/modal-success.component';
     IonicModule,
     TranslateModule,
     RegisterPageRoutingModule,
-    MapModule
+    MapModule,
+    ModalSuccessModule
   ],
   declarations: [
     RegisterPage,
     ModalSaveComponent,
-    ModalSelectphotosComponent,
-    ModalSuccessComponent
+    ModalSelectphotosComponent
   ]
 })
 export class RegisterPageModule {}

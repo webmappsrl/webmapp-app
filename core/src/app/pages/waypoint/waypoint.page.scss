@@ -1,0 +1,45 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-pagewaypoint-infopanel {
+    position: absolute;
+    bottom: 60px;
+    left: 20px;
+    right: 20px;
+    border-radius: 15px;
+    .webmapp-pagewaypoint-infopanel-top {
+        border-bottom: 1px solid var(--wm-color-lightgray);
+        // text-align: center;
+        padding: 17px;
+        .webmapp-pagewaypoint-infopanel-top-title {
+            font-weight: var(--wm-font-weight-bold);
+            font-size: var(--wm-font-lg);
+            color: var(--wm-color-dark);
+        }
+    }
+    .webmapp-pagewaypoint-infopanel-bottom {
+        padding: 17px;
+        .webmapp-pagewaypoint-infopanel-bottom-title {
+            font-size: var(--wm-font-md);
+            color: var(--wm-color-dark);
+        }
+        .webmapp-pagewaypoint-infopanel-bottom-data {
+            font-size: var(--wm-font-md);
+            color: var(--wm-color-darkgrey);
+        }
+    }
+}
+
+.webmapp-pagewaypoint-savebtn {
+    position: absolute;
+    bottom: 10px;
+    --border-radius: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+
+    --padding-start: 20px;
+    --padding-end: 20px;
+
+    @include box-shadow-light;
+    border-radius: 20px;
+}
