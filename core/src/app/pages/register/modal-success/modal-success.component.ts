@@ -11,6 +11,7 @@ import { Track } from 'src/app/types/track.d.';
 export class ModalSuccessComponent implements OnInit {
 
   @Input() track: Track;
+  @Input() type: string;
 
   trackDate;
   trackodo: number = 0;

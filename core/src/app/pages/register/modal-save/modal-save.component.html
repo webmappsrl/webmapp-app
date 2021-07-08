@@ -12,14 +12,14 @@
   <ion-list>
     <ion-item class="webmapp-register-modalsave-item">
       <!-- <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon> -->
-      <i class="webmapp-icon-list webmapp-register-modalsave-icon secondary"></i> 
+      <i class="webmapp-icon-list webmapp-register-modalsave-icon secondary"></i>
       <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formtitle' |
         translate}}</ion-label>
       <ion-input [(ngModel)]="title"></ion-input>
     </ion-item>
     <ion-item class="webmapp-register-modalsave-item">
       <!-- <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon> -->
-      <i class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"></i> 
+      <i class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"></i>
       <ion-label class="webmapp-register-modalsave-label" position="stacked">
         {{'pages.register.modalsave.formdescription' | translate}}</ion-label>
       <ion-input [(ngModel)]="description"></ion-input>
@@ -37,26 +37,35 @@
       <i class="webmapp-icon-camera webmapp-register-modalsave-icon  secondary"></i>
       <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formphotos' |
         translate}}</ion-label>
-
-      <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()" *ngIf="!photos?.length">
-        <div class="webmapp-register-modalsave-loadphoto-text">
-          <div class="webmapp-register-modalsave-loadphoto-action">
-            {{'pages.register.modalsave.photoaction' | translate}}
+      <div class="webmapp-register-modalsave-loadphoto-wrapper" *ngIf="!photos?.length">
+        <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
+          <div class="webmapp-register-modalsave-loadphoto-text">
+            <div class="webmapp-register-modalsave-loadphoto-action">
+              {{'pages.register.modalsave.photoaction' | translate}}
+            </div>
+            {{'pages.register.modalsave.phototext' | translate}}
           </div>
-          {{'pages.register.modalsave.phototext' | translate}}
-        </div>
-        <div class="webmapp-register-modalsave-loadphoto-advice">
-          {{'pages.register.modalsave.photoadvice' | translate}}
+          <div class="webmapp-register-modalsave-loadphoto-advice">
+            {{'pages.register.modalsave.photoadvice' | translate}}
+          </div>
         </div>
       </div>
+
 
       <ion-grid>
         <ion-row>
           <ion-col size="6" *ngFor="let image of photos">
             <div class="webmapp-register-modalsave-imagecontainer">
-              <ion-icon name="close-outline" class="webmapp-register-modalsave-remove" (click)="remove(image)"></ion-icon>
+              <ion-icon name="close-outline" class="webmapp-register-modalsave-remove" (click)="remove(image)">
+              </ion-icon>
               <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-              <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL">
+              <ion-img class="webmapp-register-modalsave-image" [src]="image.data"></ion-img>
+            </div>
+          </ion-col>
+          <ion-col size="6" *ngIf="photos?.length">
+            <div class="webmapp-register-modalsave-imagecontainer">
+              <ion-icon name="add-circle-outline" class="webmapp-register-modalsave-add" (click)="addPhotos()">
+              </ion-icon>              
             </div>
           </ion-col>
         </ion-row>

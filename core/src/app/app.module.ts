@@ -22,6 +22,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+import { ModalphotosModule } from './components/modalphotos/modalphotos.module';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
@@ -50,6 +51,7 @@ registerLocaleData(localeIt);
     AppRoutingModule,
     SharedModule,
     SettingsModule,
+    ModalphotosModule,
     MapModule
   ],
   providers: [

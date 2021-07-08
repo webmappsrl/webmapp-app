@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
-// import { Media } from '@capacitor-community/media';
-
-// const media = new Media();
-
+// import { File } from '@ionic-native/file/ngx';
+// import { FilePath } from '@ionic-native/file-path/ngx';
+import { Filesystem } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
+import { Camera, CameraResultType } from '@capacitor/core';
 
 
 export interface PhotoItem {
   id: string;
   photoURL: string;
+  data: string;
 }
 
 @Injectable({
@@ -17,6 +19,8 @@ export interface PhotoItem {
 })
 
 export class PhotoService {
+
+  private useBase64 = false;
 
   private options = {
     // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
@@ -38,20 +42,40 @@ export class PhotoService {
     // available options are
     // window.imagePicker.OutputType.FILE_URI (0) or
     // window.imagePicker.OutputType.BASE64_STRING (1)
-    outputType: 0
+    outputType: this.useBase64 ? 1 : 0
   };
-  constructor(private imagePicker: ImagePicker,
-    private _deviceService: DeviceService
+
+  constructor(
+    private imagePicker: ImagePicker,
+    private _deviceService: DeviceService,
+    // private file: File,
+    // private filePath: FilePath,
   ) { }
 
   async getPhotos(dateLimit: Date = null): Promise<PhotoItem[]> {
     const res: PhotoItem[] = [];
+    let filePath = null;
     if (!this._deviceService.isBrowser) {
+
+      if (!await this.imagePicker.hasReadPermission()) {
+        await this.imagePicker.requestReadPermission();
+        if (!await this.imagePicker.hasReadPermission())
+          return res;
+      }
+
       const images = await this.imagePicker.getPictures(this.options);
       for (let i = 0; i < images.length; i++) {
+        let data = null;
+        if (this.useBase64) {
+          data = `data:image/jpeg;base64,${images[i]}`;
+        } else {
+          data = Capacitor.convertFileSrc(images[i]);
+          filePath = images[i];
+        }
         res.push({
           id: i + '',
-          photoURL: images[i]
+          photoURL: filePath,
+          data
         });
       }
       return res;
@@ -60,11 +84,25 @@ export class PhotoService {
       for (let i = 0; i < max; i++) {
         res.push({
           id: '1',
-          photoURL: `https://picsum.photos/50${i}/75${i}`
+          photoURL: `https://picsum.photos/50${i}/75${i}`,
+          data: `https://picsum.photos/50${i}/75${i}`
         });
       }
       return res;
     }
 
+  }
+
+  async shotPhoto() {
+    const photo = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: true,
+      resultType: CameraResultType.Uri
+    });
+    return {
+      id: '1',
+      photoURL: photo.webPath,
+      data: Capacitor.convertFileSrc(photo.webPath)
+    };
   }
 }

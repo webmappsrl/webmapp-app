@@ -11,17 +11,16 @@
   top: 10px;
 
   &.primary {
-    color: var(--wm-color-primary)
+    color: var(--wm-color-primary);
   }
 
   &.secondary {
-    color: var(--wm-color-secondary)
+    color: var(--wm-color-secondary);
   }
 
   &.tertiary {
-    color: var(--wm-color-tertiary)
+    color: var(--wm-color-tertiary);
   }
-
 }
 
 .webmapp-register-modalsave-item {
@@ -33,30 +32,31 @@
   }
 }
 
-.webmapp-register-modalsave-loadphoto {
-  padding: 20px;
-  border-radius: 15px;
-  border: 2px var(--ion-color-light-shade) dashed;
-  margin-top: 10px;
-  text-align: center;
-  width: 100%;
+.webmapp-register-modalsave-loadphoto-wrapper {
+    padding-top: 20px;
+  .webmapp-register-modalsave-loadphoto {
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px var(--ion-color-light-shade) dashed;
+    text-align: center;
+    width: 100%;
 
-  .webmapp-register-modalsave-loadphoto-text {
-    font-size: var(--wm-font-sm);
+    .webmapp-register-modalsave-loadphoto-text {
+      font-size: var(--wm-font-sm);
 
-    .webmapp-register-modalsave-loadphoto-action {
-      display: inline;
-      color: var(--wm-color-primary);
-      font-weight: var(--wm-font-weight-bold);
+      .webmapp-register-modalsave-loadphoto-action {
+        display: inline;
+        color: var(--wm-color-primary);
+        font-weight: var(--wm-font-weight-bold);
+      }
     }
+
+    .webmapp-register-modalsave-loadphoto-advice {
+      margin-top: 5px;
+      font-size: var(--wm-font-xsm);
+    }
+
   }
-
-
-  .webmapp-register-modalsave-loadphoto-advice {
-    margin-top: 5px;
-    font-size: var(--wm-font-xsm);
-  }
-
 }
 
 .webmapp-register-modalsave-footer {
@@ -78,26 +78,40 @@
   text-align: center;
   height: 100px;
   width: 140px;
-  position: relative;
+  position: relative;  
+  border-radius: 15px;
+  overflow: hidden;
 
   .webmapp-register-modalsave-image {
-    border-radius: 15px;
     height: 100px;
     width: 140px;
+    &::part(image){      
+      object-fit: cover;
+    }
   }
 
   .webmapp-register-modalsave-remove {
     position: absolute;
     top: 5px;
     right: 5px;
-    
+
     height: 19px;
     width: 19px;
     border-radius: 10px;
 
-    background: #FFFFFF;
-    
-    @include box-shadow-light;
+    background: #ffffff;
 
+    @include box-shadow-light;
   }
+
+  
+  .webmapp-register-modalsave-add{
+    font-size: 45px;
+    color: var(--wm-color-dark);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    }
 }

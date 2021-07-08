@@ -31,9 +31,7 @@
           <div class="webmapp-register-modalphotos-imagecontainer">
             <ion-checkbox class="webmapp-register-modalphotos-check" [(ngModel)]="image.selected"
               (ionChange)="select($event)"></ion-checkbox>
-            <!-- <img class="webmapp-register-modalphotos-image" *ngIf="image.needFilter"
-              [src]="image.photoURL | cdvphotolibrary"> -->
-            <img class="webmapp-register-modalphotos-image" *ngIf="!image.needFilter" [src]="image.photoURL">
+              <ion-img class="webmapp-register-modalphotos-image" [src]="image.data"></ion-img>
           </div>
         </ion-col>
       </ion-row>

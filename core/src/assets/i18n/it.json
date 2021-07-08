@@ -34,6 +34,19 @@
       "alert": {
         "logout": "Sicuro di voler disconnettere il tuo account?"
       }
+    },
+    "photo": {
+      "next": "avanti",
+      "popover": {
+        "shot": "Scatta una foto",
+        "library": "Dalla libreria"
+      },
+      "save": {
+        "title": "Registra foto",
+        "formtitle": "Dai un titolo alle tue foto",
+        "formphototitle": "Titolo foto ",
+        "savebtn": "salva"
+      }
     }
   },
   "pages": {

@@ -1,12 +1,57 @@
 .webmapp-modalphoto-header {
-  --background: var(--wm-color-dark); 
+  --background: var(--wm-color-dark);
+  --color: var(--wm-color-light);
+  .webmapp-modalphoto-header-delete{    
+    font-size: 20px;
+    padding: 15px;
+  }
 }
 
-.webmapp-modalphoto-img {
-  width: 100%;
-  height: 100%;
+.webmapp-modalphoto-content {
+  --background: var(--wm-color-dark);
+  .webmapp-modalphoto-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .webmapp-modalphoto-nextbtn {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    --border-radius: 20px;
+  }
+
+  .webmapp-modalphoto-addbtn {
+    position: absolute;
+    bottom: 28px;
+    left: 35px;
+    .webmapp-modalphoto-addbtn-camera {
+      font-size: 26px;
+      color: var(--wm-color-light);
+    }
+    .webmapp-modalphoto-addbtn-plus {
+      bottom: 20px;
+      position: absolute;
+      left: 20px;
+      font-size: 20px;
+      color: var(--wm-color-light);
+    }
+  }
 }
 
 .webmapp-modalphoto-footer {
   --background: var(--wm-color-dark);
+  padding: 12px 25px;
+  .webmapp-modalphoto-footer-photo{    
+    width: 51px;
+    height: 49px;
+    display: inline-block;
+    padding: 0px 1px;
+    &::part(image){   
+    border-radius: 3px;   
+      object-fit: cover;
+    }
+  }
 }

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Track } from 'src/app/types/track.d.';
-import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
+// import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
+import { PhotoService } from 'src/app/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -21,7 +22,8 @@ export class ModalSaveComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private translate: TranslateService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private photoService: PhotoService
   ) { }
 
   ngOnInit() { }
@@ -79,16 +81,26 @@ export class ModalSaveComponent implements OnInit {
 
   }
 
+  // async addPhotos() {
+  //   const modal = await this.modalController.create({
+  //     component: ModalSelectphotosComponent,
+  //     // cssClass: 'my-custom-class'
+  //   });
+  //   await modal.present();
+  //   const res = await modal.onDidDismiss();
+  //   if (res.data && res.data.photos) {
+  //     this.photos = res.data.photos;
+  //   }
+  // }
+
   async addPhotos() {
-    const modal = await this.modalController.create({
-      component: ModalSelectphotosComponent,
-      // cssClass: 'my-custom-class'
+    const library = await this.photoService.getPhotos();
+    library.forEach((libraryItem) => {
+      const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
+      console.log('------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy', libraryItemCopy);
+      this.photos.push(libraryItemCopy);
     });
-    await modal.present();
-    const res = await modal.onDidDismiss();
-    if (res.data && res.data.photos) {
-      this.photos = res.data.photos;
-    }
+      console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
   }
 
   remove(image) {
