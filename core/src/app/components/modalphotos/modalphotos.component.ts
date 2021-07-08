@@ -84,6 +84,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async next() {
+    this.modalController.dismiss();
     const modal = await this.modalController.create({
       component: ModalphotosaveComponent,
       componentProps: {
@@ -94,10 +95,7 @@ export class ModalphotosComponent implements OnInit {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      console.log('PHOTOS TO SAVE', res.data); //TODO save in correct way
-
       await this.openModalSuccess(res.data.photos);
-
     }
   }
 
@@ -111,7 +109,6 @@ export class ModalphotosComponent implements OnInit {
     });
     await modaSuccess.present();
     await modaSuccess.onDidDismiss();
-    this.modalController.dismiss();
   }
 
 

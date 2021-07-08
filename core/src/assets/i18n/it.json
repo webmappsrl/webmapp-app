@@ -123,6 +123,11 @@
     },
     "map": {
       "recordingbtn": "Reg. in corso"
+    },
+    "waypoint":{
+      "title":"Registra un waypoint",
+      "here":"Ti trovi qui:",
+      "save":"Salva waypoint"
     }
   },
   "components": {

@@ -5,10 +5,10 @@
     'webmapp-map-fabcontainer-middle': btnposition == 'middle'
   }">
 
-  <webmapp-btn-layer class="webmapp-map-fab" *ngIf="registering && !static">
+  <webmapp-btn-layer class="webmapp-map-fab" *ngIf="(registering && !static) || showLayer">
   </webmapp-btn-layer>
 
-  <webmapp-btn-register class="webmapp-map-fab" [color]="'primary'" [registering]="registering" *ngIf="!static">
+  <webmapp-btn-register class="webmapp-map-fab" [color]="'primary'" [registering]="registering" *ngIf="!static && !hideRegister">
   </webmapp-btn-register>
 
   <webmapp-btn-geolocation class="webmapp-map-fab" color="light" [state]="locationState" *ngIf="!static"

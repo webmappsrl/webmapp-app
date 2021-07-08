@@ -46,7 +46,7 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   waypoint() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 25 ~ PopoverRegisterComponent ~ waypoint ~ waypoint');
+    this.navCtrl.navigateForward('waypoint');
     this.dismiss();
   }
 

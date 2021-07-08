@@ -55,6 +55,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('registering') registering: boolean = false;
   @Input('static') static: boolean = false;
 
+  @Input('showLayer') showLayer: boolean = false;
+  @Input('hideRegister') hideRegister: boolean = false;
+
   @Input('track') set track(value: Track) {
     this._track.registeredTrack = value;
     this.drawTrack(value.geojson);
