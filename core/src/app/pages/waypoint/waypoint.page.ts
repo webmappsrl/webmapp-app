@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { ILocation } from 'src/app/types/location';
+import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint-save.component';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -14,11 +16,13 @@ export class WaypointPage implements OnInit, OnDestroy {
   public position1: string = 'nome città';
   public position2: string = 'indirizzo';
   public location: string;
+  private position: ILocation;
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private geolocationService: GeolocationService
+    private geolocationService: GeolocationService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
@@ -33,12 +37,17 @@ export class WaypointPage implements OnInit, OnDestroy {
   }
 
   onChangeLocation(pos: ILocation) {
-    console.log('------- ~ file: waypoint.page.ts ~ line 25 ~ WaypointPage ~ onChangeLocation ~ pos', pos);
     this.location = `${pos.latitude}, ${pos.longitude}`;
-
+    this.position = pos;
   }
 
-  save(){
-    
+  async save() {
+    const modaSuccess = await this.modalController.create({
+      component: ModalWaypointSaveComponent,
+      componentProps: {
+        position: this.position
+      }
+    });
+    await modaSuccess.present();
   }
 }

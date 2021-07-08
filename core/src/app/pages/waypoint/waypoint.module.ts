@@ -9,6 +9,7 @@ import { WaypointPageRoutingModule } from './waypoint-routing.module';
 import { WaypointPage } from './waypoint.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
+import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint-save.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { MapModule } from 'src/app/components/map/map.module';
     TranslateModule,
     MapModule,
   ],
-  declarations: [WaypointPage]
+  declarations: [WaypointPage,ModalWaypointSaveComponent]
 })
 export class WaypointPageModule {}
