@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { IonSlides, ModalController } from '@ionic/angular';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { PhotoItem } from 'src/app/services/photo.service';
 import { SuccessType } from '../../types/success.enum';
@@ -12,6 +12,9 @@ import { Track } from 'src/app/types/track.d.';
 })
 export class ModalSuccessComponent implements OnInit {
 
+
+  @ViewChild('slider') slider: IonSlides;
+
   @Input() track: Track;
   @Input() type: SuccessType;
   @Input() photos: PhotoItem[];
@@ -19,12 +22,22 @@ export class ModalSuccessComponent implements OnInit {
   public isTrack = false;
   public isPhotos = false;
 
+  public topValues = [];
+
+
+  public sliderOptions: any = {
+    slidesPerView: 2.5,
+  };
+
   trackDate;
   trackodo: number = 0;
   trackSlope: number = 0;
   trackAvgSpeed: number = 0;
   trackTopSpeed: number = 0;
   trackTime = { hours: 0, minutes: 0, seconds: 0 };
+
+  private PHOTOSCATTER = 100;
+  private MINSCATTER = 30;
 
   constructor(
     private modalController: ModalController,
@@ -44,6 +57,20 @@ export class ModalSuccessComponent implements OnInit {
         break;
       case SuccessType.PHOTOS:
         this.isPhotos = true;
+        this.photos.forEach(x => {
+          let scatter = Math.random() * this.PHOTOSCATTER;
+          if (this.topValues.length) {
+            while (Math.abs(scatter - this.topValues[this.topValues.length - 1]) < this.MINSCATTER) {
+              scatter = Math.random() * this.PHOTOSCATTER;
+            }
+          }
+          this.topValues.push(scatter);
+        });
+
+        setTimeout(() => { //need for slider to use correct slides per view
+          this.slider.update();
+        }, 100);
+
         break;
     }
   }

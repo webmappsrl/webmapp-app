@@ -9,13 +9,13 @@
   <div class="webmapp-modalsuccess-body">
     <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.png" *ngIf="isTrack">
     <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos">
-    <div class="webmapp-modalsuccess-title"  *ngIf="isTrack">
+    <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
       {{'modals.success.track.title' | translate}}</div>
-      <div class="webmapp-modalsuccess-title"  *ngIf="isPhotos">
-        {{'modals.success.photos.title' | translate}}</div>
-    <div class="webmapp-modalsuccess-text"  *ngIf="isTrack">
+    <div class="webmapp-modalsuccess-title" *ngIf="isPhotos">
+      {{'modals.success.photos.title' | translate}}</div>
+    <div class="webmapp-modalsuccess-text" *ngIf="isTrack">
       {{'modals.success.track.text' | translate}}</div>
-    <div class="webmapp-modalsuccess-text"  *ngIf="isPhotos">
+    <div class="webmapp-modalsuccess-text" *ngIf="isPhotos">
       {{'modals.success.photos.text' | translate}}</div>
 
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack">
@@ -75,7 +75,14 @@
       </div>
     </ion-card>
 
-    <ion-slides></ion-slides>
+    <ion-slides pager="false" *ngIf="isPhotos" [options]="sliderOptions" class="webmapp-modalsuccess-photoslider" #slider>
+      <ion-slide *ngFor="let photo of photos;let idx = index">
+        <div class="webmapp-modalsuccess-photocontainer" style="padding-top: {{topValues[idx]}}px;">
+          <ion-img [src]="photo.data" class="webmapp-modalsuccess-photo"></ion-img>
+          <div class="webmapp-modalsuccess-photodescription">{{photo.description}}</div>
+        </div>
+      </ion-slide>
+    </ion-slides>
 
   </div>
 
