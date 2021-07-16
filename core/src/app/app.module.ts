@@ -16,7 +16,6 @@ import { ConfigService } from './services/config.service';
 import { SharedModule } from './components/shared/shared.module';
 import { SettingsModule } from './components/settings/settings.module';
 import { MapModule } from './components/map/map.module';
-import { BackgroundGeolocation } from '@ionic-native/background-geolocation/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { LOCALE_ID } from '@angular/core';
@@ -54,7 +53,7 @@ registerLocaleData(localeIt);
     SettingsModule,
     ModalphotosModule,
     ModalSuccessModule,
-    MapModule
+    MapModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'it' },
@@ -66,10 +65,9 @@ registerLocaleData(localeIt);
       deps: [ConfigService],
       multi: true,
     },
-    BackgroundGeolocation,
     Diagnostic,
-    ImagePicker
+    ImagePicker,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

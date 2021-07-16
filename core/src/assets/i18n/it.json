@@ -134,7 +134,7 @@
         "formtitle": "Titolo waypoint",
         "formdescription": "Descrizione",
         "formtype": "Tipo di Waypoint",
-        "formoptional":"Facoltativo"
+        "formoptional": "Facoltativo"
       }
     }
   },
@@ -156,5 +156,17 @@
     "home": "home",
     "map": "mappa",
     "profile": "profilo"
+  },
+  "services": {
+    "geolocation": {
+      "notification": {
+        "title": {
+          "newTrackRecord": "Registrazione in corso"
+        },
+        "text": {
+          "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
+        }
+      }
+    }
   }
 }
