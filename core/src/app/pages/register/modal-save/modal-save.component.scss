@@ -24,33 +24,37 @@
 
   .webmapp-register-modalsave-label {
     font-weight: var(--wm-font-weight-bold);
+    &.webmapp-register-modalsave-labelphoto {
+      height: 30px;
+      top: 0px;
+      position: absolute;
+    }
   }
 }
 
-.webmapp-register-modalsave-loadphoto-wrapper {
-    padding-top: 20px;
-  .webmapp-register-modalsave-loadphoto {
-    padding: 20px;
-    border-radius: 15px;
-    border: 2px var(--ion-color-light-shade) dashed;
-    text-align: center;
-    width: 100%;
+.webmapp-register-modalsave-loadphoto {
+  padding: 20px;
+  &.webmapp-register-modalsave-addimagecontainer{
+    padding: 20px 10px;
+  }
+  border-radius: 15px;
+  border: 2px var(--ion-color-light-shade) dashed;
+  text-align: center;
+  width: 100%;
 
-    .webmapp-register-modalsave-loadphoto-text {
-      font-size: var(--wm-font-sm);
+  .webmapp-register-modalsave-loadphoto-text {
+    font-size: var(--wm-font-sm);
 
-      .webmapp-register-modalsave-loadphoto-action {
-        display: inline;
-        color: var(--wm-color-primary);
-        font-weight: var(--wm-font-weight-bold);
-      }
+    .webmapp-register-modalsave-loadphoto-action {
+      display: inline;
+      color: var(--wm-color-primary);
+      font-weight: var(--wm-font-weight-bold);
     }
+  }
 
-    .webmapp-register-modalsave-loadphoto-advice {
-      margin-top: 5px;
-      font-size: var(--wm-font-xsm);
-    }
-
+  .webmapp-register-modalsave-loadphoto-advice {
+    margin-top: 5px;
+    font-size: var(--wm-font-xsm);
   }
 }
 
@@ -72,15 +76,19 @@
 .webmapp-register-modalsave-imagecontainer {
   text-align: center;
   height: 100px;
-  width: 140px;
-  position: relative;  
+  width: 108px;
+  position: relative;
   border-radius: 15px;
   overflow: hidden;
 
+  &.webmapp-register-modalsave-addimagecontainer {
+    border: dashed var(--wm-color-grey) 2px;
+  }
+
   .webmapp-register-modalsave-image {
     height: 100px;
-    width: 140px;
-    &::part(image){      
+    width: 108px;
+    &::part(image) {
       object-fit: cover;
     }
   }
@@ -99,14 +107,13 @@
     @include box-shadow-light;
   }
 
-  
-  .webmapp-register-modalsave-add{
+  .webmapp-register-modalsave-add {
     font-size: 45px;
     color: var(--wm-color-dark);
     position: absolute;
     top: 50%;
     left: 50%;
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
-    }
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 }

@@ -105,6 +105,9 @@
         "photoaction": "Carica",
         "phototext": "foto dalla galleria del telefono",
         "photoadvice": "Dimensione massime: 200Mb",
+        "photoactionshort": "Aggiungi",
+        "phototextshort": "Foto",
+        "photoadviceshort": "(max 200mb)",
         "savebtn": "Salva"
       },
       "modalphotos": {
@@ -134,7 +137,7 @@
         "formtitle": "Titolo waypoint",
         "formdescription": "Descrizione",
         "formtype": "Tipo di Waypoint",
-        "formoptional":"Facoltativo"
+        "formoptional": "Facoltativo"
       }
     }
   },
