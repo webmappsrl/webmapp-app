@@ -29,7 +29,9 @@ export class ModalphotosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.photoCollection.push(this.photo);
+    if (this.photoCollection && this.photoCollection.length) {
+      this.photo = this.photoCollection[this.photoCollection.length - 1];
+    }
   }
 
   close() {
@@ -80,7 +82,13 @@ export class ModalphotosComponent implements OnInit {
   delete() {
     const idx = this.photoCollection.findIndex(x => x.data === this.photo.data);
     this.photoCollection.splice(idx, 1);
-    this.photo = this.photoCollection.length ? this.photoCollection[Math.min(this.photoCollection.length - 1, idx)] : null;
+    if (this.photoCollection.length) {
+      this.photo = this.photoCollection[Math.min(this.photoCollection.length - 1, idx)];
+    } else {
+      this.photo = null;
+      this.addPhoto();
+    }
+
   }
 
   async next() {

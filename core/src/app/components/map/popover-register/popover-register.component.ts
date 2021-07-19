@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, PopoverController } from '@ionic/angular';
 import { PhotoService } from 'src/app/services/photo.service';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
+import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 
 @Component({
   selector: 'webmapp-popover-register',
@@ -27,19 +28,35 @@ export class PopoverRegisterComponent implements OnInit {
     this.dismiss();
   }
 
-  async photo() {
+  async photo(ev) {
 
     this.dismiss();
 
-    const image = await this.photoService.shotPhoto(true);
+    let photos = null;
 
-    const modalPhotos = await this._modalController.create({
-      component: ModalphotosComponent,
-      componentProps: {
-        photo: image
-      }
+    const popover = await this.popoverController.create({
+      component: PopoverphotoComponent,
+      event: ev,
+      translucent: true
     });
-    await modalPhotos.present();
+    await popover.present();
+    const { role } = await popover.onDidDismiss();
+    if (role === 'photo') {
+      const image = await this.photoService.shotPhoto(true);
+      photos = [image];
+    } else {
+      photos = await this.photoService.getPhotos();
+    }
+
+    if (photos.length) {
+      const modalPhotos = await this._modalController.create({
+        component: ModalphotosComponent,
+        componentProps: {
+          photoCollection: photos
+        }
+      });
+      await modalPhotos.present();
+    }
 
     // Can be set to the src of an image now
     // imageElement.src = imageUrl;
