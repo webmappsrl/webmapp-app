@@ -4,6 +4,7 @@ import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { PhotoItem } from 'src/app/services/photo.service';
 import { SuccessType } from '../../types/success.enum';
 import { Track } from 'src/app/types/track.d.';
+import { WaypointSave } from 'src/app/types/waypoint';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',
@@ -18,9 +19,13 @@ export class ModalSuccessComponent implements OnInit {
   @Input() track: Track;
   @Input() type: SuccessType;
   @Input() photos: PhotoItem[];
+  @Input() waypoint: WaypointSave;
 
   public isTrack = false;
   public isPhotos = false;
+  public isWaypoint = false;
+
+  public today = new Date();
 
   public topValues = [];
 
@@ -72,6 +77,9 @@ export class ModalSuccessComponent implements OnInit {
         }, 100);
 
         break;
+        case SuccessType.WAYPOINT:
+          this.isWaypoint = true;
+          break;
     }
   }
 

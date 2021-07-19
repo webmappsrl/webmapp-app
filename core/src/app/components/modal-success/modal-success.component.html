@@ -9,14 +9,19 @@
   <div class="webmapp-modalsuccess-body">
     <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.png" *ngIf="isTrack">
     <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos">
+    <img class="webmapp-modalsuccess-img" src="assets/images/waypointsuccess.png" *ngIf="isWaypoint">
     <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
       {{'modals.success.track.title' | translate}}</div>
     <div class="webmapp-modalsuccess-title" *ngIf="isPhotos">
       {{'modals.success.photos.title' | translate}}</div>
+    <div class="webmapp-modalsuccess-title" *ngIf="isWaypoint">
+      {{'modals.success.waypoint.title' | translate}}</div>
     <div class="webmapp-modalsuccess-text" *ngIf="isTrack">
       {{'modals.success.track.text' | translate}}</div>
     <div class="webmapp-modalsuccess-text" *ngIf="isPhotos">
       {{'modals.success.photos.text' | translate}}</div>
+    <div class="webmapp-modalsuccess-text" *ngIf="isWaypoint">
+      {{'modals.success.waypoint.text' | translate}}</div>
 
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack">
       <div class="webmapp-modalsuccess-infopanel-top">
@@ -75,7 +80,8 @@
       </div>
     </ion-card>
 
-    <ion-slides pager="false" *ngIf="isPhotos" [options]="sliderOptions" class="webmapp-modalsuccess-photoslider" #slider>
+    <ion-slides pager="false" *ngIf="isPhotos" [options]="sliderOptions" class="webmapp-modalsuccess-photoslider"
+      #slider>
       <ion-slide *ngFor="let photo of photos;let idx = index">
         <div class="webmapp-modalsuccess-photocontainer" style="padding-top: {{topValues[idx]}}px;">
           <ion-img [src]="photo.data" class="webmapp-modalsuccess-photo"></ion-img>
@@ -83,6 +89,60 @@
         </div>
       </ion-slide>
     </ion-slides>
+
+    <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isWaypoint">
+      <div class="webmapp-modalsuccess-infopanel-top">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="4">
+              <div class="webmapp-modalsuccess-infopanel-top-map">
+                <webmapp-map [static]="true" [position]="waypoint.displayPosition"></webmapp-map>
+              </div>
+            </ion-col>
+            <ion-col size="8" class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info"> 
+
+              <div class="webmapp-modalsuccess-infopanel-top-date"> {{today | date }}</div>
+
+              <div class="webmapp-modalsuccess-infopanel-section">
+                <i class="webmapp-icon-list secondary webmapp-modalsuccess-infopanel-sectionicon"></i>
+                <div class="webmapp-modalsuccess-infopanel-top-name"> {{waypoint.title}}</div>
+              </div>
+
+              <div class="webmapp-modalsuccess-infopanel-section">
+                <i class="webmapp-icon-activities primary webmapp-modalsuccess-infopanel-sectionicon"></i>
+                <div class="webmapp-modalsuccess-infopanel-top-text"> {{waypoint.waypointtype}}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+
+      <div class="webmapp-modalsuccess-infopanel-content">
+
+        <div class="webmapp-modalsuccess-infopanel-section">
+          <i class="webmapp-icon-pin-outline secondary webmapp-modalsuccess-infopanel-sectionicon"></i>
+          <div class="webmapp-modalsuccess-infopanel-text">
+            {{waypoint.city}}
+            <div>
+              {{waypoint.position.longitude}}
+              {{waypoint.position.latitude}}
+            </div>
+          </div>
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-section">
+          <i class="webmapp-icon-document tertiary webmapp-modalsuccess-infopanel-sectionicon"></i>
+          <div class="webmapp-modalsuccess-infopanel-text">
+            {{waypoint.description}}
+          </div>
+        </div>
+
+
+      </div>
+
+
+
+    </ion-card>
 
   </div>
 

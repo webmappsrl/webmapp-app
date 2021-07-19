@@ -53,6 +53,10 @@
         "title": "Foto registrate con successo!",
         "text": "Le tue foto sono state salvate correttamente. Puoi visualizzarle accedendo al to profilo."
       },
+      "waypoint": {
+        "title": "Waypoint registrato con successo!",
+        "text": "Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo."
+      },
       "track": {
         "title": "Attività registrata con successo!",
         "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",

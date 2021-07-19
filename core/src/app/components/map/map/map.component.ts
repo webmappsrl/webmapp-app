@@ -208,7 +208,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //TODO: test for ensure presence of map
     this.timer = setInterval(() => {
       if (this.static) {
-        this.drawTrack(this._track.registeredTrack.geojson, true);
+        if (this._track.registeredTrack && this._track.registeredTrack.geojson)
+          this.drawTrack(this._track.registeredTrack.geojson, true);
       }
       this._map.updateSize();
     }, 1000);
@@ -566,12 +567,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Force the location layer update
    */
   private _updateLocationLayer(): void {
-    this._locationIcon.location.changed();
-    this._locationIcon.accuracy.changed();
-    this._locationIcon.point.changed();
-    this._locationIcon.circle.changed();
-    this._locationIcon.layer.changed();
-    this._map.render();
+    this._locationIcon?.location?.changed();
+    this._locationIcon?.accuracy?.changed();
+    this._locationIcon?.point?.changed();
+    this._locationIcon?.circle?.changed();
+    this._locationIcon?.layer?.changed();
+    this._map?.render();
   }
 
   /**
@@ -606,8 +607,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location.longitude,
-      location.latitude,
+      location?.longitude,
+      location?.latitude,
     ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
