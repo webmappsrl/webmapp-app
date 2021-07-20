@@ -4,15 +4,18 @@ import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
-import { CameraDirection, CameraSource, Filesystem } from '@capacitor/core';
+import { CameraDirection, Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
+
+const { Filesystem } = Plugins;
 
 export interface PhotoItem {
   id: string;
   photoURL: string;
   data: string;
   description: string;
+  rawData?: string;
 }
 
 @Injectable({
@@ -121,5 +124,29 @@ export class PhotoService {
       data: Capacitor.convertFileSrc(photo.webPath),
       description: ''
     };
+  }
+
+
+  public async getPhotoData(photoUrl: string): Promise<string> {
+    console.log('------- ~ reading ', photoUrl);
+    
+    // TODO get photo data by URL
+    
+    try {
+      const contents = await Filesystem.readFile({
+        path: photoUrl,
+        // directory: FilesystemDirectory.Documents,
+        //encoding: FilesystemEncoding.UTF8
+      });
+      console.log('------------- contents of file', contents);
+      return contents.data;
+    } catch (err) {
+    console.error('read file error', err);
+      return photoUrl;
+    }
+  }
+
+  public async setPhotoData(photo: PhotoItem) {
+    photo.rawData = await this.getPhotoData(photo.photoURL);
   }
 }

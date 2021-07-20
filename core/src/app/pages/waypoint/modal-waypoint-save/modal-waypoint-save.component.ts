@@ -2,6 +2,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalSuccessComponent } from 'src/app/components/modal-success/modal-success.component';
+import { SaveService } from 'src/app/services/save.service';
 import { ILocation } from 'src/app/types/location';
 import { SuccessType } from 'src/app/types/success.enum';
 import { WaypointSave } from 'src/app/types/waypoint';
@@ -23,7 +24,8 @@ export class ModalWaypointSaveComponent implements OnInit {
   public positionCity: string = "città";
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    private saveService: SaveService
   ) { }
 
   ngOnInit() {
@@ -35,7 +37,6 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   async save() {
-    // TODO save waypoint
     const waypoint: WaypointSave = {
       position: this.position,
       displayPosition: this.displayPosition,
@@ -44,6 +45,8 @@ export class ModalWaypointSaveComponent implements OnInit {
       waypointtype: this.waypointtype,
       city: this.positionCity
     };
+
+    await this.saveService.saveWaypoint(waypoint);
 
     this.modalController.dismiss();
 

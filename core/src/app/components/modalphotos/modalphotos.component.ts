@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { SaveService } from 'src/app/services/save.service';
 import { PopoverPhotoType, SuccessType } from '../../types/success.enum';
 import { ModalSuccessComponent } from '../modal-success/modal-success.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
@@ -24,7 +25,8 @@ export class ModalphotosComponent implements OnInit {
   constructor(
     private photoService: PhotoService,
     private modalController: ModalController,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private saveService: SaveService
 
   ) { }
 
@@ -103,6 +105,11 @@ export class ModalphotosComponent implements OnInit {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
+
+      for (const photo of res.data.photos) {
+        await this.saveService.savePhoto(photo);
+      }
+
       await this.openModalSuccess(res.data.photos);
     }
   }
