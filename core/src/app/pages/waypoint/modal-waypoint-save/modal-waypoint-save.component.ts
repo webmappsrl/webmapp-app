@@ -44,8 +44,11 @@ export class ModalWaypointSaveComponent implements OnInit {
       waypointtype: this.waypointtype,
       city: this.positionCity
     };
-    
+
+    this.modalController.dismiss();
+
     await this.openModalSuccess(waypoint);
+
   }
 
   async openModalSuccess(waypoint) {

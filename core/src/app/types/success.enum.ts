@@ -5,3 +5,9 @@ export enum SuccessType {
   WAYPOINT = 'waypoint',
 }
 
+
+export enum PopoverPhotoType {
+  PHOTOS = 'photos',
+  LIBRARY = 'library',
+}
+

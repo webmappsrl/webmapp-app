@@ -114,8 +114,9 @@
 
       .webmapp-modalsuccess-infopanel-content{
         width: 100%;
-        padding: 0 15px 15px;
+        padding: 15px;
         display: inline-block;
+        border: 1px solid var(--wm-color-lightgray);
       }
 
       .webmapp-modalsuccess-infopanel-top-info-limited{
@@ -137,9 +138,11 @@
       .webmapp-modalsuccess-infopanel-section {
         text-align: start;
         padding: 3px 1px;
+        vertical-align: top;
 
         .webmapp-modalsuccess-infopanel-sectionicon {
           display: inline-block;
+          vertical-align: top;
           &.primary {
             color: var(--wm-color-primary);
           }
@@ -164,7 +167,7 @@
         .webmapp-modalsuccess-infopanel-top-text {
           display: inline-block;
           width: 60%;
-          padding: 0 8px 0 0 ;
+          padding: 0 8px ;
         }
         
         .webmapp-modalsuccess-infopanel-text{

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, PopoverController } from '@ionic/angular';
 import { PhotoService } from 'src/app/services/photo.service';
+import { PopoverPhotoType } from 'src/app/types/success.enum';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 
@@ -41,10 +42,10 @@ export class PopoverRegisterComponent implements OnInit {
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
-    if (role === 'photo') {
+    if (role === PopoverPhotoType.PHOTOS) {
       const image = await this.photoService.shotPhoto(true);
       photos = [image];
-    } else {
+    } else if (role === PopoverPhotoType.LIBRARY){
       photos = await this.photoService.getPhotos();
     }
 
