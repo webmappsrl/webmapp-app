@@ -342,6 +342,31 @@ function update(instanceName) {
                   resources + "homepage-logo.svg",
                   dir + "/src/assets/images/"
                 ),
+                new Promise((resolve, reject) => {
+                  getUrlFile(
+                    "notification_icon.png",
+                    resources + "notification_icon.png",
+                    dir + "/resources/"
+                  ).then(
+                    () => {
+                      resolve();
+                    },
+                    () => {
+                      getUrlFile(
+                        "icon.png",
+                        resources + "icon.png",
+                        dir + "/resources/"
+                      ).then(
+                        () => {
+                          resolve();
+                        },
+                        () => {
+                          reject();
+                        }
+                      );
+                    }
+                  );
+                }),
                 getUrlFile(
                   "splash.png",
                   resources + "splash.png",
@@ -397,8 +422,59 @@ function checkBuildsFolder() {
 
 function updateResources(instanceName, platform) {
   if (platform === "ios" || platform === "android") {
-    if (verbose)
-      debug("Generating splash screen and icon for platform " + platform);
+    info("Generating splash screen and icon for platform " + platform);
+
+    if (platform === "android") {
+      sh.exec(
+        "cordova-res " +
+          platform +
+          " --skip-config --copy --icon-source resources/notification_icon.png" +
+          (platform === "android"
+            ? " --icon-foreground-source resources/notification_icon.png --icon-background-source resources/notification_icon.png"
+            : "") +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
+
+      var sizes = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
+      for (let size of sizes) {
+        // sh.exec(
+        //   "cp android/app/src/main/res/mipmap-" +
+        //     size +
+        //     "/ic_launcher.png android/app/src/main/res/drawable-port-" +
+        //     size +
+        //     "/ic_launcher.png" +
+        //     outputRedirect,
+        //   {
+        //     cwd: instancesDir + instanceName,
+        //   }
+        // );
+        sh.exec(
+          "mv android/app/src/main/res/mipmap-" +
+            size +
+            "/ic_launcher.png android/app/src/main/res/mipmap-" +
+            size +
+            "/notification_icon.png" +
+            outputRedirect,
+          {
+            cwd: instancesDir + instanceName,
+          }
+        );
+        sh.exec(
+          "cp android/app/src/main/res/mipmap-" +
+            size +
+            "/notification_icon.png android/app/src/main/res/drawable-port-" +
+            size +
+            "/notification_icon.png" +
+            outputRedirect,
+          {
+            cwd: instancesDir + instanceName,
+          }
+        );
+      }
+    }
 
     sh.exec(
       "cordova-res " +
@@ -413,53 +489,16 @@ function updateResources(instanceName, platform) {
       }
     );
 
-    if (platform === "android") {
-      sh.exec(
-        "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        }
-      );
-    }
-  } else {
-    if (verbose) debug("Generating splash screen and icon for all platforms");
-    if (fs.existsSync(instancesDir + instanceName + "/android")) {
-      sh.exec(
-        "cordova-res android --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        }
-      );
-    }
-    if (fs.existsSync(instancesDir + instanceName + "/ios")) {
-      sh.exec(
-        "cordova-res ios --skip-config --copy --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png" +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        }
-      );
-    }
-
-    sh.exec(
-      "cp resources/icon.png android/app/src/main/res/drawable/icon.png" +
-        outputRedirect,
-      {
-        cwd: instancesDir + instanceName,
-      }
-    );
-  }
-  if (verbose) debug("Splash screen and icon generation completed");
+    info("Splash screen and icon generation completed");
+  } else warning("No platform specified for resource regeneration, skipping");
 }
 
 function initCapacitor(instanceName, id, name) {
-  if (verbose) debug("Initializing capacitor project");
+  info("Initializing capacitor project");
   sh.exec("npx cap init --npm-client npm " + name + " " + id + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
-  if (verbose) debug("Capacitor project initialized");
+  info("Capacitor project initialized");
 }
 
 function runIonicBuild(instanceName) {
@@ -491,8 +530,7 @@ function addAndroidPlatform(instanceName, force) {
 function updateAndroidPlatform(instanceName, appId, appName) {
   return new Promise((resolve, reject) => {
     runIonicBuild(instanceName);
-    if (!fs.existsSync(instancesDir + instanceName + "/android"))
-      addAndroidPlatform(instanceName);
+    addAndroidPlatform(instanceName, argv.force);
 
     if (verbose) debug("Updating android platform");
     sh.exec("npx cap copy android" + outputRedirect, {
@@ -590,19 +628,19 @@ function updateAndroidPlatform(instanceName, appId, appName) {
           )
           .pipe(
             replace(
-              /<string name="mauron85_bgloc_account_name">Webmapp<\/string>/g,
+              /<string name="plugin_bgloc_account_name">Webmapp<\/string>/g,
               ""
             )
           )
           .pipe(
             replace(
-              /<string name="mauron85_bgloc_account_type">\$ACCOUNT_TYPE<\/string>/g,
+              /<string name="plugin_bgloc_account_type">\$ACCOUNT_TYPE<\/string>/g,
               ""
             )
           )
           .pipe(
             replace(
-              /<string name="mauron85_bgloc_content_authority">\$CONTENT_AUTHORITY<\/string>/g,
+              /<string name="plugin_bgloc_content_authority">\$CONTENT_AUTHORITY<\/string>/g,
               ""
             )
           )
@@ -612,9 +650,9 @@ function updateAndroidPlatform(instanceName, appId, appName) {
               '<string name="custom_url_scheme">' +
                 appId +
                 "</string>" +
-                '<string name="mauron85_bgloc_account_name">Webmapp</string>' +
-                '<string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string>' +
-                '<string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>'
+                '<string name="plugin_bgloc_account_name">Webmapp</string>' +
+                '<string name="plugin_bgloc_account_type">$ACCOUNT_TYPE</string>' +
+                '<string name="plugin_bgloc_content_authority">$CONTENT_AUTHORITY</string>'
             )
           )
           .pipe(
@@ -715,23 +753,25 @@ function buildAndroidApk(instanceName, type) {
       () => {
         if (verbose) debug("Assembling the debug apk");
         var gradlecom = "./gradlew tasks app:assemble";
-        if(process.platform === "win32")
+        if (process.platform === "win32")
           gradlecom = "gradlew tasks app:assemble";
         sh.exec(gradlecom + type + outputRedirect, {
           cwd: instancesDir + instanceName + "/android",
         });
         if (verbose)
-          debug("on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk");
           debug(
-            "Debug apk built in " +
-              instancesDir +
-              instanceName +
-              "/android/app/build/outputs/apk/" +
-              type.toLowerCase() +
-              "/app-" +
-              type.toLowerCase() +
-              ".apk"
+            "on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk"
           );
+        debug(
+          "Debug apk built in " +
+            instancesDir +
+            instanceName +
+            "/android/app/build/outputs/apk/" +
+            type.toLowerCase() +
+            "/app-" +
+            type.toLowerCase() +
+            ".apk"
+        );
         resolve();
       },
       (err) => {
@@ -868,23 +908,25 @@ function buildAndroidBundle(instanceName, type) {
       () => {
         if (verbose) debug("Assembling the debug apk");
         var gradlecom = "./gradlew tasks app:bundle";
-        if(process.platform === "win32")
+        if (process.platform === "win32")
           gradlecom = "gradlew tasks app:bundle";
         sh.exec(gradlecom + type + outputRedirect, {
           cwd: instancesDir + instanceName + "/android",
         });
         if (verbose)
-        debug("on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk")
           debug(
-            "Debug apk built in " +
-              instancesDir +
-              instanceName +
-              "/android/app/build/outputs/bundle/" +
-              type.toLowerCase() +
-              "/app-" +
-              type.toLowerCase() +
-              ".aab"
+            "on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk"
           );
+        debug(
+          "Debug apk built in " +
+            instancesDir +
+            instanceName +
+            "/android/app/build/outputs/bundle/" +
+            type.toLowerCase() +
+            "/app-" +
+            type.toLowerCase() +
+            ".aab"
+        );
         resolve();
       },
       (err) => {
@@ -915,8 +957,7 @@ function addIosPlatform(instanceName, force) {
 function updateIosPlatform(instanceName, appId, appName) {
   return new Promise((resolve, reject) => {
     runIonicBuild(instanceName);
-    if (!fs.existsSync(instancesDir + instanceName + "/ios"))
-      addIosPlatform(instanceName);
+    addIosPlatform(instanceName, argv.force);
 
     if (verbose) debug("Updating ios platform");
     sh.exec("npx cap copy ios" + outputRedirect, {

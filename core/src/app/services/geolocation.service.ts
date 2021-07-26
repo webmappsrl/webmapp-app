@@ -1,13 +1,4 @@
 import { Injectable, NgZone } from '@angular/core';
-import {
-  BackgroundGeolocation,
-  BackgroundGeolocationConfig,
-  BackgroundGeolocationEvents,
-  BackgroundGeolocationLocationProvider,
-  BackgroundGeolocationNativeProvider,
-  BackgroundGeolocationResponse,
-} from '@ionic-native/background-geolocation/ngx';
-
 import { Platform } from '@ionic/angular';
 import { ReplaySubject } from 'rxjs';
 import { CLocation } from '../classes/clocation';
@@ -16,6 +7,14 @@ import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-str
 import { ELocationState } from '../types/elocation-state.enum';
 import { ILocation, IGeolocationServiceState } from '../types/location';
 import { DeviceService } from './base/device.service';
+import {
+  BackgroundGeolocationPlugin,
+  ConfigureOptions as BackgroundGeolocationConfig,
+  Location as BackgroundGeolocationResponse,
+} from 'cordova-background-geolocation-plugin/www/BackgroundGeolocation';
+import { TranslateService } from '@ngx-translate/core';
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare const BackgroundGeolocation: BackgroundGeolocationPlugin;
 
 @Injectable({
   providedIn: 'root',
@@ -37,37 +36,17 @@ export class GeolocationService {
   };
   private _recordedFeature: CGeojsonLineStringFeature;
   private _recordStopwatch: CStopwatch;
+  private _backgroundGeolocation: BackgroundGeolocationPlugin;
 
   constructor(
-    private _backgroundGeolocation: BackgroundGeolocation,
     private _deviceService: DeviceService,
     private _platform: Platform,
-    private _ngZone: NgZone
+    private _ngZone: NgZone,
+    private _translateService: TranslateService
   ) {
-    this._config = {
-      locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-      desiredAccuracy: 10,
-      distanceFilter: 3,
-      stationaryRadius: 0,
-      stopOnTerminate: true,
-      startOnBoot: false, // Android only
-      interval: 1500, // Android only
-      fastestInterval: 1500, // Android only
-      startForeground: false, // Android only
-      notificationTitle: '', // Android only
-      notificationText: '', // Android only
-      // notificationIconColor: '#FF00FF', // Android only
-      activityType: 'OtherNavigation', // iOS only
-      pauseLocationUpdates: false, // iOS only
-      saveBatteryOnBackground: false, // iOS only
-      maxLocations: 10000,
-      debug: false,
-      notificationIconSmall: 'icon',
-      notificationIconLarge: null,
-    };
-
     if (!this._deviceService.isBrowser) {
       this._platform.ready().then(() => {
+        this._initializeBackgroundGeolocationPlugin();
         this._deviceService.onLocationStateChange().subscribe(
           (state) => {
             if (
@@ -143,8 +122,8 @@ export class GeolocationService {
         this._start().then(
           () => {
             this._startRecording().then(
-              (res) => {
-                resolve(res);
+              () => {
+                resolve();
               },
               (err) => {
                 reject(err);
@@ -153,6 +132,7 @@ export class GeolocationService {
           },
           (err) => {
             console.warn(err);
+            reject(err);
           }
         );
       });
@@ -181,6 +161,34 @@ export class GeolocationService {
   stopRecording(): Promise<CGeojsonLineStringFeature> {
     this._recordStopwatch.stop();
     return this._stopRecording();
+  }
+
+  /**
+   * Perform the action needed to be able to use the background geolocation plugin
+   */
+  private _initializeBackgroundGeolocationPlugin(): void {
+    this._backgroundGeolocation = BackgroundGeolocation;
+    this._config = {
+      locationProvider: this._backgroundGeolocation.RAW_PROVIDER,
+      desiredAccuracy: 10,
+      distanceFilter: 3,
+      stationaryRadius: 0,
+      stopOnTerminate: true,
+      startOnBoot: false, // Android only
+      interval: 1500, // Android only
+      fastestInterval: 1500, // Android only
+      startForeground: false, // Android only
+      notificationTitle: '', // Android only
+      notificationText: '', // Android only
+      // notificationIconColor: '#FF00FF', // Android only
+      activityType: 'OtherNavigation', // iOS only
+      pauseLocationUpdates: false, // iOS only
+      saveBatteryOnBackground: false, // iOS only
+      maxLocations: 10000,
+      debug: false,
+      notificationIconSmall: 'notification_icon',
+      notificationIconLarge: 'notification_icon',
+    };
   }
 
   /**
@@ -255,99 +263,75 @@ export class GeolocationService {
    * Enable all the handler for the background geolocation plugin
    */
   private _enableBackgroundGeolocationHandlers() {
-    this._backgroundGeolocation
-      .on(BackgroundGeolocationEvents.location)
-      .subscribe(
-        (location) => {
-          this._ngZone.run(() => {
-            this._backgroundGeolocation.startTask().then((task) => {
-              this._locationUpdate(location);
-              this._backgroundGeolocation.endTask(task).then(
-                () => {},
-                (err) => {
-                  console.warn(err);
-                }
-              );
-            });
-          });
-        },
-        (err) => {
-          console.warn(err);
-        }
-      );
-
-    this._backgroundGeolocation
-      .on(BackgroundGeolocationEvents.stationary)
-      .subscribe(
-        (location) => {
-          this._ngZone.run(() => {
-            this._backgroundGeolocation.startTask().then((task) => {
-              this._locationUpdate(location);
-              this._backgroundGeolocation.endTask(task).then(
-                () => {},
-                (err) => {
-                  console.warn(err);
-                }
-              );
-            });
-          });
-        },
-        (err) => {
-          console.warn(err);
-        }
-      );
-
-    this._backgroundGeolocation.on(BackgroundGeolocationEvents.error).subscribe(
-      (error) => {
-        this._ngZone.run(() => {
-          console.warn('Restarting geolocation plugin due to an error', error);
-          this._backgroundGeolocation.stop().then(() => {
-            this._backgroundGeolocation.start().then(
-              (res) => {
-                console.log(res);
-              },
-              (err) => console.warn(err)
-            );
-          });
-        });
-      },
-      (err) => {
-        console.warn(err);
-      }
-    );
-
-    this._backgroundGeolocation
-      .on(BackgroundGeolocationEvents.background)
-      .subscribe(
-        () => {
-          this._ngZone.run(() => {
-            if (!this._state.isRecording) this._backgroundGeolocation.stop();
-          });
-        },
-        (err) => {
-          console.warn(err);
-        }
-      );
-
-    this._backgroundGeolocation
-      .on(BackgroundGeolocationEvents.foreground)
-      .subscribe(
-        () => {
-          this._ngZone.run(() => {
-            if (!this._state.isRecording) {
-              this._backgroundGeolocation.start().then(
-                (res) => {
-                  console.log(res);
-                },
-                (err) => console.warn(err)
-              );
+    this._backgroundGeolocation.on('location').subscribe((location) => {
+      this._ngZone.run(() => {
+        this._backgroundGeolocation.startTask().then((task) => {
+          this._locationUpdate(location);
+          this._backgroundGeolocation.endTask(task).then(
+            () => {},
+            (err) => {
+              console.warn(err);
             }
-          });
-        },
-        (err) => {
-          console.warn(err);
+          );
+        });
+      });
+    });
+
+    this._backgroundGeolocation.on('stationary').subscribe((location) => {
+      this._ngZone.run(() => {
+        this._backgroundGeolocation.startTask().then((task) => {
+          this._locationUpdate(location);
+          this._backgroundGeolocation.endTask(task).then(
+            () => {},
+            (err) => {
+              console.warn(err);
+            }
+          );
+        });
+      });
+    });
+
+    this._backgroundGeolocation.on('error').subscribe((error) => {
+      this._ngZone.run(() => {
+        console.warn('Restarting geolocation plugin due to an error', error);
+        this._backgroundGeolocation.stop().then(() => {
+          this._backgroundGeolocation.start().then(
+            (res) => {
+              console.log(res);
+            },
+            (err) => console.warn(err)
+          );
+        });
+      });
+    });
+
+    this._backgroundGeolocation.on('background').subscribe(() => {
+      this._ngZone.run(() => {
+        if (this._state.isRecording && this._state.isActive) {
+          if (!this._deviceService.isAndroid)
+            this._backgroundGeolocation.switchMode(0); // 0 = background, 1 = foreground
+        } else this._backgroundGeolocation.stop();
+      });
+    });
+
+    this._backgroundGeolocation.on('foreground').subscribe(() => {
+      this._ngZone.run(() => {
+        if (this._state.isRecording && this._state.isActive) {
+          if (this._currentLocation)
+            this.onLocationChange.next(this._currentLocation);
+
+          if (!this._deviceService.isAndroid)
+            this._backgroundGeolocation.switchMode(1); // 0 = background, 1 = foreground
+        } else {
+          this._backgroundGeolocation.start().then(
+            (res) => {
+              console.log(res);
+            },
+            (err) => console.warn(err)
+          );
         }
-      );
+      });
+    });
   }
 
   /**
@@ -371,19 +355,20 @@ export class GeolocationService {
                 switch (gpsState) {
                   case ELocationState.ENABLED_WHEN_IN_USE:
                   case ELocationState.ENABLED:
-                    this._backgroundGeolocation
-                      .getCurrentLocation({
-                        timeout: 3000,
+                    this._backgroundGeolocation.getCurrentLocation(
+                      (location) => {
+                        if (!this._currentLocation)
+                          this._locationUpdate(location);
+                      },
+                      (err) => {
+                        console.warn(err);
+                      },
+                      {
+                        timeout: 10000, // 10 sec
                         maximumAge: 1000 * 60 * 5, // 5 min
                         enableHighAccuracy: false,
-                      })
-                      .then(
-                        (location) => {
-                          if (!this._currentLocation)
-                            this._locationUpdate(location);
-                        },
-                        () => {}
-                      );
+                      }
+                    );
                     this._state.isActive = true;
                     this._backgroundGeolocation.start().then(
                       (res) => {
@@ -476,9 +461,8 @@ export class GeolocationService {
               accuracy: acc,
               time: Date.now(),
               speed,
-              locationProvider:
-                BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-              provider: BackgroundGeolocationNativeProvider.gps,
+              locationProvider: this._backgroundGeolocation.RAW_PROVIDER,
+              provider: 'gps',
               bearing,
             });
           }, 2000);
@@ -506,17 +490,32 @@ export class GeolocationService {
 
   /**
    * Start the location record. From this moment all the locations will be recorded
+   *
+   * @param notificationTitle a string to use as the notification title. By default 'Recording a new route'
+   * @param notificationTitle a string to use as the notification text. By default 'Tap'
    */
-  private _startRecording(): Promise<void> {
+  private _startRecording(
+    notificationTitle?: string,
+    notificationText?: string
+  ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       if (this._deviceService.isBrowser) {
         this._state.isRecording = true;
         this._recordedFeature = new CGeojsonLineStringFeature();
         resolve();
       } else {
+        if (!notificationTitle)
+          notificationTitle = this._translateService.instant(
+            'services.geolocation.notification.title.newTrackRecord'
+          );
+        if (!notificationText)
+          notificationText = this._translateService.instant(
+            'services.geolocation.notification.text.newTrackRecord'
+          );
         this._backgroundGeolocation
           .configure({
-            notificationTitle: 'TITOLO',
+            notificationTitle,
+            notificationText,
             startForeground: true,
           })
           .then(() => {
@@ -539,7 +538,6 @@ export class GeolocationService {
       } else {
         this._backgroundGeolocation
           .configure({
-            notificationTitle: 'TITOLO',
             startForeground: false,
           })
           .then(() => {
@@ -562,7 +560,6 @@ export class GeolocationService {
         } else {
           this._backgroundGeolocation
             .configure({
-              notificationTitle: 'TITOLO',
               startForeground: true,
             })
             .then(() => {
@@ -585,7 +582,6 @@ export class GeolocationService {
       } else {
         this._backgroundGeolocation
           .configure({
-            notificationTitle: 'TITOLO',
             startForeground: false,
           })
           .then(() => {

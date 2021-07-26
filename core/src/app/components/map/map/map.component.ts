@@ -63,6 +63,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.drawTrack(value.geojson);
   }
 
+  @Input('position') set position(value: ILocation) {
+    this._position = value;
+    this.animateLocation(value);
+  }
+
   public locationState: EMapLocationState;
 
   public showRecBtn: boolean = true;
@@ -72,6 +77,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public sortedComponent: any[] = [];
 
   public timer: any;
+
+  private _position: ILocation = null;
 
   private _view: View;
   private _map: Map;

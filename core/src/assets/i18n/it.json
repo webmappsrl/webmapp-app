@@ -119,15 +119,23 @@
         "text": "Se esci adesso la registrazione andarà persa",
         "confirm": "Conferma",
         "cancel": "Annulla"
-      }      
+      }
     },
     "map": {
       "recordingbtn": "Reg. in corso"
     },
-    "waypoint":{
-      "title":"Registra un waypoint",
-      "here":"Ti trovi qui:",
-      "save":"Salva waypoint"
+    "waypoint": {
+      "title": "Registra un waypoint",
+      "here": "Ti trovi qui:",
+      "save": "Salva waypoint",
+      "modalsave": {
+        "title": "Registra un waypoint",
+        "save": "Salva ",
+        "formtitle": "Titolo waypoint",
+        "formdescription": "Descrizione",
+        "formtype": "Tipo di Waypoint",
+        "formoptional": "Facoltativo"
+      }
     }
   },
   "components": {
@@ -148,5 +156,17 @@
     "home": "home",
     "map": "mappa",
     "profile": "profilo"
+  },
+  "services": {
+    "geolocation": {
+      "notification": {
+        "title": {
+          "newTrackRecord": "Registrazione in corso"
+        },
+        "text": {
+          "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
+        }
+      }
+    }
   }
 }

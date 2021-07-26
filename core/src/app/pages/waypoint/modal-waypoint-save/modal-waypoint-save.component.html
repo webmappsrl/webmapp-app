@@ -1,0 +1,59 @@
+<ion-header class="webmapp-modalwaypoint-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.waypoint.modalsave.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <webmapp-map class="webmapp-modalwaypoint-map" #map [static]="true" [position]="displayPosition"></webmapp-map>
+
+  <div class="webmapp-modalwaypoint-extrinfo">
+    <div class="webmapp-modalwaypoint-extrinfo-icon">
+      <i class="webmapp-icon-pin-outline"></i>
+    </div>
+    <div class="webmapp-modalwaypoint-extrinfo-text">
+      <div class="webmapp-modalwaypoint-extrinfo-textcity">{{positionCity}}</div>
+      <div class="webmapp-modalwaypoint-extrinfo-textposition">{{positionString}}</div>
+    </div>
+  </div>
+
+  <ion-list class="webmapp-modalwaypoint-itemlist">
+    <ion-item class="webmapp-modalwaypoint-item">
+      <i class="webmapp-icon-list webmapp-modalwaypoint-icon secondary"></i>
+      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{'pages.waypoint.modalsave.formtitle' |
+        translate}}</ion-label>
+      <ion-input [(ngModel)]="title"></ion-input>
+    </ion-item>
+    <ion-item class="webmapp-modalwaypoint-item">
+      <i class="webmapp-icon-document webmapp-modalwaypoint-icon tertiary"></i>
+      <ion-label class="webmapp-modalwaypoint-label" position="stacked">
+        {{'pages.waypoint.modalsave.formdescription' | translate}}
+        <span class="webmapp-modalwaypoint-label-secondary">({{'pages.waypoint.modalsave.formoptional' |
+          translate}})</span>
+      </ion-label>
+      <ion-input [(ngModel)]="description"></ion-input>
+    </ion-item>
+    <ion-item class="webmapp-modalwaypoint-item">
+      <i class="webmapp-icon-activities webmapp-modalwaypoint-icon primary"></i>
+      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{'pages.waypoint.modalsave.formtype' |
+        translate}}</ion-label>
+      <ion-select [(ngModel)]="waypointtype">
+        <ion-select-option value="waypoint">Segnavia</ion-select-option>
+        <ion-select-option value="sightseen">Panorama</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-button class="webmapp-modalwaypoint-savebtn" (click)="save()" [disabled]="!isValid()">
+      {{'pages.waypoint.modalsave.save' | translate}}
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
