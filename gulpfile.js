@@ -424,54 +424,56 @@ function updateResources(instanceName, platform) {
   if (platform === "ios" || platform === "android") {
     info("Generating splash screen and icon for platform " + platform);
 
-    sh.exec(
-      "cordova-res " +
-        platform +
-        " --skip-config --copy --icon-source resources/notification_icon.png" +
-        (platform === "android"
-          ? " --icon-foreground-source resources/notification_icon.png --icon-background-source resources/notification_icon.png"
-          : "") +
-        outputRedirect,
-      {
-        cwd: instancesDir + instanceName,
-      }
-    );
+    if (platform === "android") {
+      sh.exec(
+        "cordova-res " +
+          platform +
+          " --skip-config --copy --icon-source resources/notification_icon.png" +
+          (platform === "android"
+            ? " --icon-foreground-source resources/notification_icon.png --icon-background-source resources/notification_icon.png"
+            : "") +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        }
+      );
 
-    var sizes = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
-    for (let size of sizes) {
-      // sh.exec(
-      //   "cp android/app/src/main/res/mipmap-" +
-      //     size +
-      //     "/ic_launcher.png android/app/src/main/res/drawable-port-" +
-      //     size +
-      //     "/ic_launcher.png" +
-      //     outputRedirect,
-      //   {
-      //     cwd: instancesDir + instanceName,
-      //   }
-      // );
-      sh.exec(
-        "mv android/app/src/main/res/mipmap-" +
-          size +
-          "/ic_launcher.png android/app/src/main/res/mipmap-" +
-          size +
-          "/notification_icon.png" +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        }
-      );
-      sh.exec(
-        "cp android/app/src/main/res/mipmap-" +
-          size +
-          "/notification_icon.png android/app/src/main/res/drawable-port-" +
-          size +
-          "/notification_icon.png" +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        }
-      );
+      var sizes = ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"];
+      for (let size of sizes) {
+        // sh.exec(
+        //   "cp android/app/src/main/res/mipmap-" +
+        //     size +
+        //     "/ic_launcher.png android/app/src/main/res/drawable-port-" +
+        //     size +
+        //     "/ic_launcher.png" +
+        //     outputRedirect,
+        //   {
+        //     cwd: instancesDir + instanceName,
+        //   }
+        // );
+        sh.exec(
+          "mv android/app/src/main/res/mipmap-" +
+            size +
+            "/ic_launcher.png android/app/src/main/res/mipmap-" +
+            size +
+            "/notification_icon.png" +
+            outputRedirect,
+          {
+            cwd: instancesDir + instanceName,
+          }
+        );
+        sh.exec(
+          "cp android/app/src/main/res/mipmap-" +
+            size +
+            "/notification_icon.png android/app/src/main/res/drawable-port-" +
+            size +
+            "/notification_icon.png" +
+            outputRedirect,
+          {
+            cwd: instancesDir + instanceName,
+          }
+        );
+      }
     }
 
     sh.exec(
