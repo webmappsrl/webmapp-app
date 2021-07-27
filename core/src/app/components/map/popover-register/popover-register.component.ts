@@ -37,13 +37,13 @@ export class PopoverRegisterComponent implements OnInit {
 
     const popover = await this.popoverController.create({
       component: PopoverphotoComponent,
-      event: ev,
+      event: null,//ev,
       translucent: true
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
     if (role === PopoverPhotoType.PHOTOS) {
-      const image = await this.photoService.shotPhoto(true);
+      const image = await this.photoService.shotPhoto(false);
       photos = [image];
     } else if (role === PopoverPhotoType.LIBRARY){
       photos = await this.photoService.getPhotos();
