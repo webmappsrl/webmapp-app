@@ -29,6 +29,8 @@ export class ModalSuccessComponent implements OnInit {
 
   public topValues = [];
 
+  public displayPosition;
+
 
   public sliderOptions: any = {
     slidesPerView: 2.5,
@@ -77,9 +79,11 @@ export class ModalSuccessComponent implements OnInit {
         }, 100);
 
         break;
-        case SuccessType.WAYPOINT:
-          this.isWaypoint = true;
-          break;
+      case SuccessType.WAYPOINT:
+        this.isWaypoint = true;
+        this.displayPosition = this.waypoint.displayPosition;
+        console.log('------- ~ file: modal-success.component.ts ~ line 85 ~ ModalSuccessComponent ~ ngOnInit ~ this.waypoint', this.waypoint);
+        break;
     }
   }
 

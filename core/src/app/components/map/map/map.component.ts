@@ -64,11 +64,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input('position') set position(value: ILocation) {
+    console.log('------- ~ file: map.component.ts ~ line 68 ~ MapComponent ~ @Input ~ value', value);
     if (value) {
-      this._position = value;
-      this._location = value;
-      this.animateLocation(value);
-      this._centerMapToLocation();
+      setTimeout(() => {
+        this._position = value;
+        this._location = value;
+        this.animateLocation(value);
+        this._centerMapToLocation();
+      }, 10);
     }
   }
 
