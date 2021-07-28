@@ -13,6 +13,22 @@ const routes: Routes = [
   {
     path: 'waypoint',
     loadChildren: () => import('./pages/waypoint/waypoint.module').then( m => m.WaypointPageModule)
+  },
+  {
+    path: 'waypointlist',
+    loadChildren: () => import('./pages/waypointlist/waypointlist.module').then( m => m.WaypointlistPageModule)
+  },
+  {
+    path: 'waypointdetail',
+    loadChildren: () => import('./pages/waypointdetail/waypointdetail.module').then( m => m.WaypointdetailPageModule)
+  },
+  {
+    path: 'photolist',
+    loadChildren: () => import('./pages/photolist/photolist.module').then( m => m.PhotolistPageModule)
+  },
+  {
+    path: 'photodetail',
+    loadChildren: () => import('./pages/photodetail/photodetail.module').then( m => m.PhotodetailPageModule)
   }
 
 ];

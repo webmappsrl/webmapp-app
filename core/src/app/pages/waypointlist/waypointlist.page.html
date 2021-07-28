@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="" text="" class="webmapp-backbutton"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.waypointlist.title'|translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let waypoint of waypoints" button detail (click)="open(waypoint)">
+      <div start class="webmapp-waypointlist-item-map">
+        <webmapp-map [static]="true" [position]="waypoint.displayPosition"></webmapp-map>
+      </div>
+      <div>
+        <div class="webmapp-waypointlist-item-title">{{waypoint.title}}</div>
+        <div class="webmapp-waypointlist-item-date">{{waypoint.date | date : "d MMMM YYYY - hh:mm"}}</div>
+      </div>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

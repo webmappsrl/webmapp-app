@@ -81,6 +81,33 @@ export class SaveService {
   }
 
 
+  public async getWaypoints(): Promise<WaypointSave[]> {
+    return this.getGeneric(SaveObjType.WAYPOINT);
+  }
+
+  public async getPhotos(): Promise<PhotoItem[]> {
+    return this.getGeneric(SaveObjType.PHOTO);
+  }
+
+  // public async getTracks(): Promise<Track[]> {
+  //   return this.getGeneric(SaveObjType.TRACK);
+  // }
+
+  public async getGeneric(type: SaveObjType): Promise<any[]> {
+    const res = [];
+    const keys = await Storage.keys();
+    for (const obj of this.index.objects) {
+      if (obj.type === type) {
+        const ret = await Storage.get({ key: obj.key });
+        if (ret && ret.value && ret.value !== 'null') {
+          res.push(JSON.parse(ret.value));
+        }
+      }
+    }
+    return res;
+  }
+
+
   private async savePhotoTrack(photoUrl: string): Promise<string> {
     const data = await this.photoService.getPhotoData(photoUrl);
 
@@ -95,6 +122,7 @@ export class SaveService {
       type,
       saved: false
     };
+    this.index.objects.push(insertObj);
     await Storage.set({ key, value: JSON.stringify(object) });
     await this.updateIndex();
     return key;
@@ -106,7 +134,6 @@ export class SaveService {
 
   private async recoverIndex() {
     const ret = await Storage.get({ key: this.indexKey });
-    console.log('------- ~ file: save.service.ts ~ line 109 ~ SaveService ~ recoverIndex ~ ret', ret);
     if (ret && ret.value && ret.value !== 'null') {
       this.index = JSON.parse(ret.value);
     }

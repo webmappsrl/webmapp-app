@@ -83,6 +83,13 @@
         },
         "login": "Accedi",
         "signup": "Registrati"
+      },
+      "records": {
+        "title": "Registrazioni",
+        "tracks": "Tracce",
+        "photos": "Photos",
+        "waypoints": "Waypoint",
+        "vocals": "Note vocali"
       }
     },
     "register": {
@@ -143,6 +150,22 @@
         "formtype": "Tipo di Waypoint",
         "formoptional": "Facoltativo"
       }
+    },
+    "waypointlist": {
+      "title": "Waypoint registrati"
+    },
+    "waypointdetail": {
+      "title": "Waypoint registrato",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione"
+    },
+    "photolist": {
+      "title": "Foto registrate"
+    },
+    "photodetail": {
+      "title": "Foto registrata",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione"
     }
   },
   "components": {

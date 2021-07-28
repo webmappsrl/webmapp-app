@@ -7,4 +7,5 @@ export interface WaypointSave {
   description: string;
   waypointtype: string;
   city: string;
+  date: Date;
 }

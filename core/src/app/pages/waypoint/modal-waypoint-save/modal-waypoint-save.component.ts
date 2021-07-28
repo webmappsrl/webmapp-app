@@ -43,7 +43,8 @@ export class ModalWaypointSaveComponent implements OnInit {
       title: this.title,
       description: this.description,
       waypointtype: this.waypointtype,
-      city: this.positionCity
+      city: this.positionCity,
+      date: new Date(),
     };
 
     await this.saveService.saveWaypoint(waypoint);

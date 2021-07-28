@@ -64,7 +64,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input('position') set position(value: ILocation) {
-    console.log('------- ~ file: map.component.ts ~ line 68 ~ MapComponent ~ @Input ~ value', value);
     if (value) {
       setTimeout(() => {
         this._position = value;

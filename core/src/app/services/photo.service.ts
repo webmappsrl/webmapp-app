@@ -16,6 +16,7 @@ export interface PhotoItem {
   data: string;
   description: string;
   rawData?: string;
+  date: Date;
 }
 
 @Injectable({
@@ -80,7 +81,8 @@ export class PhotoService {
           id: i + '',
           photoURL: filePath,
           data,
-          description: ''
+          description: '',
+          date: new Date()
         });
       }
       return res;
@@ -91,7 +93,8 @@ export class PhotoService {
           id: '1',
           photoURL: `https://picsum.photos/50${i}/75${i}`,
           data: `https://picsum.photos/50${i}/75${i}`,
-          description: ''
+          description: '',
+          date: new Date()
         });
       }
       return res;
@@ -122,16 +125,17 @@ export class PhotoService {
       id: '1',
       photoURL: photo.webPath,
       data: Capacitor.convertFileSrc(photo.webPath),
-      description: ''
+      description: '',
+      date: new Date()
     };
   }
 
 
   public async getPhotoData(photoUrl: string): Promise<string> {
     console.log('------- ~ reading ', photoUrl);
-    
+
     // TODO get photo data by URL
-    
+
     try {
       const contents = await Filesystem.readFile({
         path: photoUrl,
@@ -141,7 +145,7 @@ export class PhotoService {
       console.log('------------- contents of file', contents);
       return contents.data;
     } catch (err) {
-    console.error('read file error', err);
+      console.error('read file error', err);
       return photoUrl;
     }
   }
