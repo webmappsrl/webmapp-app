@@ -7,6 +7,7 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { CameraDirection, Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
+import { HttpClient } from '@angular/common/http';
 
 const { Filesystem } = Plugins;
 
@@ -53,6 +54,7 @@ export class PhotoService {
   constructor(
     private imagePicker: ImagePicker,
     private _deviceService: DeviceService,
+    private http: HttpClient
     // private file: File,
     // private filePath: FilePath,
   ) { }
@@ -121,34 +123,32 @@ export class PhotoService {
       // promptLabelPhoto: null,	//string
       // promptLabelPicture: null,	//string
     });
-    return {
+    const res = {
       id: '1',
       photoURL: photo.webPath,
       data: Capacitor.convertFileSrc(photo.webPath),
       description: '',
       date: new Date()
     };
+    return res;
   }
 
 
-  public async getPhotoData(photoUrl: string): Promise<string> {
-    console.log('------- ~ reading ', photoUrl);
+  public async getPhotoData(photoUrl: string): Promise<any> {
 
-    // TODO get photo data by URL
-
-    try {
-      const contents = await Filesystem.readFile({
-        path: photoUrl,
-        // directory: FilesystemDirectory.Documents,
-        //encoding: FilesystemEncoding.UTF8
-      });
-      console.log('------------- contents of file', contents);
-      return contents.data;
-    } catch (err) {
-      console.error('read file error', err);
-      return photoUrl;
-    }
+    const filegot = await this.http.get(photoUrl, { responseType: 'blob' }).toPromise();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(filegot);
+      reader.onloadend = () => {
+        const b64 = reader.result;
+        console.log('Sync b64', b64);
+        resolve(b64);
+      };
+      reader.onerror = reject;
+    });
   }
+
 
   public async setPhotoData(photo: PhotoItem) {
     photo.rawData = await this.getPhotoData(photo.photoURL);
