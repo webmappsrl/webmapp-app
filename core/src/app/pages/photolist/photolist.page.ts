@@ -20,10 +20,9 @@ export class PhotolistPage implements OnInit {
 
   async ngOnInit() {
     this.photos = await this.saveService.getPhotos();
-    console.log('------- ~ file: photolist.page.ts ~ line 20 ~ photolistPage ~ ngOnInit ~ this.photos', this.photos);
-  }
+    }
 
-  open(photo) {
+  open(photo: PhotoItem) {
     const navigationExtras: NavigationOptions = {
       queryParams: {
         photo: JSON.stringify(photo)
