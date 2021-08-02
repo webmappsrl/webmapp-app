@@ -152,7 +152,8 @@
       }
     },
     "waypointlist": {
-      "title": "Waypoint registrati"
+      "title": "Waypoint registrati",
+      "noitem": "Al momento non sono presenti waypoint registrati"
     },
     "waypointdetail": {
       "title": "Waypoint registrato",
@@ -160,10 +161,20 @@
       "delete": "Elimina registrazione"
     },
     "photolist": {
-      "title": "Foto registrate"
+      "title": "Foto registrate",
+      "noitem": "Al momento non sono presenti foto registrate"
     },
     "photodetail": {
       "title": "Foto registrata",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione"
+    },
+    "tracklist": {
+      "title": "Tracce registrate",
+      "noitem": "Al momento non sono presenti tracce registrate"
+    },
+    "trackdetail": {
+      "title": "Traccia registrata",
       "edit": "Modifica registrazione",
       "delete": "Elimina registrazione"
     }

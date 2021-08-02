@@ -59,8 +59,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('hideRegister') hideRegister: boolean = false;
 
   @Input('track') set track(value: Track) {
-    this._track.registeredTrack = value;
-    this.drawTrack(value.geojson);
+    if (value) {
+      setTimeout(() => {
+        this._track.registeredTrack = value;
+        this.drawTrack(value.geojson, true);
+      }, 10);
+    }
   }
 
   @Input('position') set position(value: ILocation) {
@@ -274,37 +278,43 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *
    * @param geojson geojson of the track
    */
-  drawTrack(geojson: CGeojsonLineStringFeature, centerToTrack: boolean = false) {
-    if (geojson?.geojson) {
-      const features = new GeoJSON({
-        featureProjection: 'EPSG:3857',
-      }).readFeatures(geojson.geojson);
-      if (!this._track.layer) {
-        this._track.layer = new VectorLayer({
-          source: new VectorSource({
-            format: new GeoJSON(),
-            features,
-          }),
-          style: () => {
-            return this._getLineStyle();
-          },
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: 450,
-        });
-      } else {
-        this._track.layer.getSource().clear();
-        this._track.layer.getSource().addFeatures(features);
-      }
-      try {
-        this._map.addLayer(this._track.layer);
-      } catch (e) {
-      }
-      if (centerToTrack) {
-        this._centerMapToTrack();
-      }
+  drawTrack(trackgeojson: any, centerToTrack: boolean = false) {
+    const geojson: any = this.getGeoJson(trackgeojson);
+
+    console.log('------- ~ file: map.component.ts ~ line 285 ~ MapComponent ~ drawTrack ~ geojson', geojson);
+
+    const features = new GeoJSON({
+      featureProjection: 'EPSG:3857',
+    }).readFeatures(geojson);
+    if (!this._track.layer) {
+      this._track.layer = new VectorLayer({
+        source: new VectorSource({
+          format: new GeoJSON(),
+          features,
+        }),
+        style: () => {
+          return this._getLineStyle();
+        },
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        zIndex: 450,
+      });
+    } else {
+      this._track.layer.getSource().clear();
+      this._track.layer.getSource().addFeatures(features);
+
     }
+    try {
+      this._map.addLayer(this._track.layer);
+    } catch (e) {
+      console.log('-----------------CATCH--------', e);
+    }
+    if (centerToTrack) {
+      this._centerMapToTrack();
+    }
+    //}
   }
+
 
   /**
    * Move the location icon to the specified new location
@@ -360,6 +370,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   recBtnUnlocked(val) {
     this.showRecBtn = false;
     this.unlocked.emit(val);
+  }
+
+  private getGeoJson(trackgeojson: any): any {
+    if (trackgeojson?.geoJson) {
+      return trackgeojson.geoJson;
+    }
+    if (trackgeojson?.geometry) {
+      return trackgeojson.geometry;
+    }
+    if (trackgeojson?._geometry) {
+      return trackgeojson._geometry;
+    }
+    return trackgeojson;
   }
 
   private _getLineStyle(): // id: string = ''

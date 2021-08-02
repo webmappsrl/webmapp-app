@@ -1,4 +1,4 @@
-.webmapp-waypointlist-item-map {
+.webmapp-tracklist-item-map {
     display: inline-block;
     width: 60px;
     height: 60px;
@@ -7,19 +7,19 @@
     margin: 10px 5px;
 }
 
-.webmapp-waypointlist-item-title {
+.webmapp-tracklist-item-title {
     display: block;
     font-size: var(--wm-font-sm);
     font-weight: var(--wm-font-weight-bold);
 }
 
-.webmapp-waypointlist-item-date {
+.webmapp-tracklist-item-date {
     display: block;
     font-size: var(--wm-font-xsm);
     padding: 5px 0;
 }
 
-.webmapp-waypointlist-noitem{    
+.webmapp-tracklist-noitem{    
     padding: 30px 15px;
     text-align: center;
 }

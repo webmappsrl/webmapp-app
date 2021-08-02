@@ -8,6 +8,9 @@
 </ion-header>
 
 <ion-content>
+  <div class="webmapp-photolist-noitem" *ngIf="!photos?.length>0">
+    {{'pages.photolist.noitem'|translate}}
+  </div> 
   <ion-list>
     <ion-item *ngFor="let photo of photos" button detail (click)="open(photo)">
       <ion-img [src]="photo.rawData" start class="webmapp-photolist-item-image"></ion-img>

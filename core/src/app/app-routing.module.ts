@@ -29,6 +29,14 @@ const routes: Routes = [
   {
     path: 'photodetail',
     loadChildren: () => import('./pages/photodetail/photodetail.module').then( m => m.PhotodetailPageModule)
+  },
+  {
+    path: 'tracklist',
+    loadChildren: () => import('./pages/tracklist/tracklist.module').then( m => m.TracklistPageModule)
+  },
+  {
+    path: 'trackdetail',
+    loadChildren: () => import('./pages/trackdetail/trackdetail.module').then( m => m.TrackdetailPageModule)
   }
 
 ];

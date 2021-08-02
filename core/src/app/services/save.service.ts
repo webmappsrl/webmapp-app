@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
+import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { Track } from '../types/track.d.';
 import { WaypointSave } from '../types/waypoint';
 import { PhotoItem, PhotoService } from './photo.service';
@@ -89,9 +90,15 @@ export class SaveService {
     return this.getGeneric(SaveObjType.PHOTO);
   }
 
-  // public async getTracks(): Promise<Track[]> {
-  //   return this.getGeneric(SaveObjType.TRACK);
-  // }
+  public async getTracks(): Promise<Track[]> {
+    const ret: Track[] = await this.getGeneric(SaveObjType.TRACK);
+    return ret;
+  }
+
+  public async getTrackPhoto(key: string): Promise<PhotoItem> {
+    const ret = await Storage.get({ key });
+    return JSON.parse(ret.value);
+  }
 
   public async getGeneric(type: SaveObjType): Promise<any[]> {
     const res = [];
