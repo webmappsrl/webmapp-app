@@ -280,9 +280,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   drawTrack(trackgeojson: any, centerToTrack: boolean = false) {
     const geojson: any = this.getGeoJson(trackgeojson);
-
-    console.log('------- ~ file: map.component.ts ~ line 285 ~ MapComponent ~ drawTrack ~ geojson', geojson);
-
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
     }).readFeatures(geojson);
@@ -302,12 +299,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     } else {
       this._track.layer.getSource().clear();
       this._track.layer.getSource().addFeatures(features);
-
     }
     try {
       this._map.addLayer(this._track.layer);
     } catch (e) {
-      console.log('-----------------CATCH--------', e);
     }
     if (centerToTrack) {
       this._centerMapToTrack();

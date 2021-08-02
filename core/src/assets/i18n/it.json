@@ -176,7 +176,14 @@
     "trackdetail": {
       "title": "Traccia registrata",
       "edit": "Modifica registrazione",
-      "delete": "Elimina registrazione"
+      "delete": "Elimina registrazione",
+      "photos": "Foto",
+      "details": "Dettagli",
+      "time": "Tempo",
+      "distance": "Km percorsi",
+      "slope": "Dislivello",
+      "avgspeed": "Velocità media",
+      "topspeed": "Velocità massima"
     }
   },
   "components": {

@@ -92,8 +92,20 @@ export class SaveService {
 
   public async getTracks(): Promise<Track[]> {
     const ret: Track[] = await this.getGeneric(SaveObjType.TRACK);
+    ret.forEach(t => {
+      this.initTrack(t);
+    });
     return ret;
   }
+
+
+  public async getTrack(key: string): Promise<Track> {
+    const res = await Storage.get({ key });
+    const ret = JSON.parse(res.value);
+    this.initTrack(ret);
+    return ret;
+  }
+
 
   public async getTrackPhoto(key: string): Promise<PhotoItem> {
     const ret = await Storage.get({ key });
@@ -107,7 +119,9 @@ export class SaveService {
       if (obj.type === type) {
         const ret = await Storage.get({ key: obj.key });
         if (ret && ret.value && ret.value !== 'null') {
-          res.push(JSON.parse(ret.value));
+          const returnObj = JSON.parse(ret.value);
+          returnObj.key = obj.key;
+          res.push(returnObj);
         }
       }
     }
@@ -151,6 +165,12 @@ export class SaveService {
       key: this.indexKey,
       value: JSON.stringify(this.index)
     });
+  }
+
+
+  private initTrack(track: Track) {
+    const gj = track.geojson;
+    track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }
 
 

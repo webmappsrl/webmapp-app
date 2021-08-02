@@ -1,9 +1,122 @@
+<ion-menu side="end" menuId="optionMenu" contentId="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-icon name="close-outline" class="webmapp-trackdetail-menuclose" (click)="closeMenu()"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <i class="webmapp-icon-edit-outline " start></i>
+        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|translate}}</div>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="trash-outline" start></ion-icon>
+        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.delete'|translate}}</div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
 <ion-header>
   <ion-toolbar>
-    <ion-title>trackdetail</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.trackdetail.title'|translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="ellipsis-vertical" class="webmapp-trackdetail-menuopen" (click)="menu()"></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content id="main">
+
+  <webmapp-map class="webmapp-trackdetail-map" #map [static]="true" [track]="track"></webmapp-map>
+
+  <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
+
+  <ion-list class="webmapp-trackdetail-itemlist">
+    <ion-item class="webmapp-trackdetail-item" lines="none">
+      <i class="webmapp-icon-list webmapp-trackdetail-icon secondary" start></i>
+      <div class="webmapp-trackdetail-item-title">{{track?.title}}</div>
+    </ion-item>
+
+    <ion-item class="webmapp-trackdetail-item" lines="none">
+      <i class="webmapp-icon-document webmapp-trackdetail-icon tertiary" start></i>
+      <div>
+        <div class="webmapp-trackdetail-item-description">{{track?.description}}</div>
+      </div>
+    </ion-item>
+
+    <ion-item class="webmapp-trackdetail-item" lines="none">
+      <i class="webmapp-icon-document webmapp-trackdetail-icon primary" start></i>
+      {{track?.activity}}
+    </ion-item>
+
+    <ion-item class="webmapp-trackdetail-item" lines="none">
+      <i class="webmapp-icon-camera webmapp-trackdetail-icon secondary" start></i>
+      {{'pages.trackdetail.photos'|translate}}
+    </ion-item>
+  </ion-list>
+
+  <ion-slides pager="false" [options]="sliderOptions" class="webmapp-trackdetail-photoslider" #slider>
+    <ion-slide *ngFor="let photo of photos;let idx = index">
+      <div class="webmapp-trackdetail-photocontainer">
+        <ion-img [src]="photo" class="webmapp-trackdetail-photo"></ion-img>
+      </div>
+    </ion-slide>
+  </ion-slides>
+
+  <div class="webmapp-trackdetail-details">{{'pages.trackdetail.details'|translate}}</div>
+
+  <ion-list>
+    <ion-item class="webmapp-trackdetail-detail">
+      <ion-label class="webmapp-trackdetail-detail-name">
+        {{'pages.trackdetail.time' | translate}}
+      </ion-label>
+      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+        {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
+        '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
+      </ion-label>
+    </ion-item>
+    <ion-item class="webmapp-trackdetail-detail">
+      <ion-label class="webmapp-trackdetail-detail-name">
+        {{'pages.trackdetail.distance' | translate}}
+      </ion-label>
+      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+        {{trackDistance | number:'1.0-0'}}
+      </ion-label>
+    </ion-item>
+    <ion-item class="webmapp-trackdetail-detail">
+      <ion-label class="webmapp-trackdetail-detail-name">
+        {{'pages.trackdetail.slope' | translate}}
+      </ion-label>
+      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+        {{trackSlope | number:'1.0-0'}}m
+      </ion-label>
+    </ion-item>
+    <ion-item class="webmapp-trackdetail-detail">
+      <ion-label class="webmapp-trackdetail-detail-name">
+        {{'pages.trackdetail.avgspeed' | translate}}
+      </ion-label>
+      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+        {{trackAvgSpeed | number:'1.1-1'}} km/h
+      </ion-label>
+    </ion-item>
+    <ion-item class="webmapp-trackdetail-detail">
+      <ion-label class="webmapp-trackdetail-detail-name">
+        {{'pages.trackdetail.topspeed' | translate}}
+      </ion-label>
+      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+        {{trackTopSpeed | number:'1.1-1'}} km/h
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+
 
 </ion-content>

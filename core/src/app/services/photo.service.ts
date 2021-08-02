@@ -8,16 +8,16 @@ import { CameraDirection, Plugins, FilesystemDirectory, FilesystemEncoding } fro
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
+import { RegisterItem } from '../types/track.d.';
 
 const { Filesystem } = Plugins;
 
-export interface PhotoItem {
+export interface PhotoItem extends RegisterItem{
   id: string;
   photoURL: string;
   data: string;
   description: string;
   rawData?: string;
-  date: Date;
 }
 
 @Injectable({

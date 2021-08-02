@@ -1,6 +1,8 @@
 import { ILocation } from './location';
+import { RegisterItem } from './track.d.';
 
-export interface WaypointSave {
+export interface WaypointSave extends RegisterItem
+{
   position: ILocation;
   displayPosition: ILocation;
   title: string;

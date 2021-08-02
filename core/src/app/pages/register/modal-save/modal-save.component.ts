@@ -72,7 +72,8 @@ export class ModalSaveComponent implements OnInit {
       photos: photoUrls,
       title: this.title,
       description: this.description,
-      activity: this.activity
+      activity: this.activity,
+      date: new Date(),
     };
     this.modalController.dismiss({
       trackData,
@@ -100,7 +101,7 @@ export class ModalSaveComponent implements OnInit {
       console.log('------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy', libraryItemCopy);
       this.photos.push(libraryItemCopy);
     });
-      console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
+    console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
   }
 
   remove(image) {
