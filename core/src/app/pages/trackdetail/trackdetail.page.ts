@@ -1,11 +1,12 @@
 import { JsonpClientBackend } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, ModalController } from '@ionic/angular';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { PhotoItem } from 'src/app/services/photo.service';
 import { SaveService } from 'src/app/services/save.service';
 import { Track } from 'src/app/types/track.d.';
+import { ModalSaveComponent } from '../register/modal-save/modal-save.component';
 
 @Component({
   selector: 'webmapp-trackdetail',
@@ -33,7 +34,8 @@ export class TrackdetailPage implements OnInit {
     private route: ActivatedRoute,
     private menuController: MenuController,
     private geoUtils: GeoutilsService,
-    private saveService: SaveService
+    private saveService: SaveService,
+    private modalController: ModalController
   ) {
   }
 
@@ -54,14 +56,8 @@ export class TrackdetailPage implements OnInit {
   }
 
   async getPhotos() {
-    const coll = [];
-    for (const photoKey of this.track.photos) {
-      const photo = await this.saveService.getTrackPhoto(photoKey);
-      coll.push(photo);
-    }
-    this.photos = coll;
+    this.photos = await this.saveService.getTrackPhotos(this.track);
     console.log('------- ~ file: trackdetail.page.ts ~ line 63 ~ TrackdetailPage ~ getPhotos ~ this.photos', this.photos);
-
   }
 
   menu() {
@@ -71,6 +67,32 @@ export class TrackdetailPage implements OnInit {
 
   closeMenu() {
     this.menuController.close('optionMenu');
+  }
+
+  async edit() {
+
+    const modal = await this.modalController.create({
+      component: ModalSaveComponent,
+      componentProps: {
+        track: this.track,
+        photos: this.photos
+      }
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
+    console.log('------- ~ file: trackdetail.page.ts ~ line 88 ~ TrackdetailPage ~ edit ~ res', res);
+
+    if (!res.data.dismissed) {
+      const track: Track = Object.assign(this.track, res.data.trackData);
+      console.log('TRACK TO SAVE', track);
+
+      await this.saveService.updateTrack(track);
+
+      //await this.openModalSuccess(track);
+
+    }
+
+
   }
 
 }

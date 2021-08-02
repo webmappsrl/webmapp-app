@@ -8,7 +8,7 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item>
+      <ion-item  (click)="edit()">
         <i class="webmapp-icon-edit-outline " start></i>
         <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|translate}}</div>
       </ion-item>
@@ -66,7 +66,7 @@
   <ion-slides pager="false" [options]="sliderOptions" class="webmapp-trackdetail-photoslider" #slider>
     <ion-slide *ngFor="let photo of photos;let idx = index">
       <div class="webmapp-trackdetail-photocontainer">
-        <ion-img [src]="photo" class="webmapp-trackdetail-photo"></ion-img>
+        <ion-img [src]="photo.rawData ? photo.rawData : photo.data" class="webmapp-trackdetail-photo"></ion-img>
       </div>
     </ion-slide>
   </ion-slides>

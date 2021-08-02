@@ -1,4 +1,5 @@
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { PhotoItem } from '../services/photo.service';
 
 export interface RegisterItem {
 
@@ -9,7 +10,8 @@ export interface RegisterItem {
 
 export interface Track extends RegisterItem {
   geojson?: CGeojsonLineStringFeature;
-  photos: string[];
+  photos: PhotoItem[];
+  photoKeys: string[];
   title: string;
   description?: string;
   activity: string;

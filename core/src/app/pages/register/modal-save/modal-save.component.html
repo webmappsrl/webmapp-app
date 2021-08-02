@@ -5,7 +5,8 @@
         class="webmapp-backbutton webmapp-backbutton.dark" (click)="close()">
       </ion-back-button>
     </ion-buttons>
-    <ion-title>{{'pages.register.modalsave.title' | translate}}</ion-title>
+    <ion-title *ngIf="!track">{{'pages.register.modalsave.title' | translate}}</ion-title>
+    <ion-title *ngIf="track">{{'pages.register.modalsave.titleEdit' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -43,7 +44,7 @@
 
   <ion-grid>
 
-    <ion-row *ngIf="!photos?.length">
+    <ion-row *ngIf="!photos?.length && !track">
       <ion-col size="12">
         <div class="webmapp-register-modalsave-loadphoto-wrapper">
           <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
@@ -62,7 +63,7 @@
     </ion-row>
 
     <ion-row>
-      <ion-col size="4" *ngIf="photos?.length">
+      <ion-col size="4" *ngIf="photos?.length && !track">
         <div class="webmapp-register-modalsave-imagecontainer webmapp-register-modalsave-addimagecontainer webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
           <div class="webmapp-register-modalsave-loadphoto-text">
             <div class="webmapp-register-modalsave-loadphoto-action">
@@ -80,7 +81,7 @@
           <ion-icon name="close-outline" class="webmapp-register-modalsave-remove" (click)="remove(image)">
           </ion-icon>
           <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-          <ion-img class="webmapp-register-modalsave-image" [src]="image.data"></ion-img>
+          <ion-img class="webmapp-register-modalsave-image" [src]="image?.rawData ? image?.rawData : image?.data"></ion-img>
         </div>
       </ion-col>
     </ion-row>

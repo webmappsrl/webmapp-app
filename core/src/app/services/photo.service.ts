@@ -16,7 +16,7 @@ export interface PhotoItem extends RegisterItem{
   id: string;
   photoURL: string;
   data: string;
-  description: string;
+  description?: string;
   rawData?: string;
 }
 
