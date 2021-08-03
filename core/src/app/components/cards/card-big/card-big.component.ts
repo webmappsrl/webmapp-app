@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
+import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
 
 @Component({
   selector: 'webmapp-card-big',
@@ -12,7 +14,9 @@ export class CardBigComponent implements OnInit {
 
   private _id: string;
 
-  constructor() {}
+  constructor(
+    private navCtrl: NavController
+  ) { }
 
   @Input('id') set id(value: string) {
     this._id = value;
@@ -21,5 +25,14 @@ export class CardBigComponent implements OnInit {
     this.imageUrl = '/assets/icon/icon.png';
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
+
+  open() {
+    const navigationExtras: NavigationOptions = {
+      queryParams: {
+        id: this._id
+      }
+    };
+    this.navCtrl.navigateForward('route', navigationExtras);
+  }
 }

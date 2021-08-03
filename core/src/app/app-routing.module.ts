@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'trackdetail',
     loadChildren: () => import('./pages/trackdetail/trackdetail.module').then( m => m.TrackdetailPageModule)
+  },
+  {
+    path: 'route',
+    loadChildren: () => import('./pages/route/route.module').then( m => m.RoutePageModule)
   }
 
 ];
