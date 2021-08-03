@@ -1,9 +1,96 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>route</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-menu side="end" menuId="optionMenu" contentId="webmapp-pageroute-main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-icon name="close-outline" class="webmapp-pageroute-menuclose" (click)="closeMenu()"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item >
+        <i class="webmapp-icon-directions-outline " start></i>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions'|translate}}</div>
+      </ion-item>
+      <ion-item>
+        <i class="webmapp-icon-donwload-outline" start></i>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.download'|translate}}</div>
+      </ion-item>
+      <ion-item>
+        <i class="webmapp-icon-share-outline"></i>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.share'|translate}}</div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-<ion-content>
+<ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
+  <ion-header class="webmapp-pageroute-header" [ngStyle]="{
+      'opacity': 1-opacity
+    }">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{route?.properties?.name | wmtrans}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <webmapp-map class="webmapp-pageroute-map-container" #map [static]="true"></webmapp-map>
+
+
+
+
+  <ion-fab vertical="bottom" horizontal="end" class="webmapp-pageroute-fabbottom">
+    <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
+      <i class="webmapp-icon-heart-outline"></i>
+    </ion-fab-button>
+    <ion-fab-button (click)="share()" size="small" class="webmapp-pageroute-btnbottom">
+      <i class="webmapp-icon-share-outline"></i>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-button class="webmapp-pageroute-btnnavigate">
+    <i class="webmapp-icon-nav-outline"></i>
+    {{'pages.route.navigate'|translate}}
+  </ion-button>
+
+  <ion-fab vertical="top" horizontal="end">
+    <ion-fab-button (click)="menu()" size="small" class="webmapp-pageroute-btntop">
+      <i class="webmapp-icon-kebab"></i>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="top" horizontal="start">
+    <ion-fab-button (click)="back()" size="small" class="webmapp-pageroute-btntop">
+      <i class="webmapp-icon-chevron-left-outline"></i>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
+
+<ion-card class="webmapp-pageroute-infopanel" [ngStyle]="{
+      'opacity': opacity
+    }">
+  <div class="webmapp-pageroute-infopanel-drag">
+    <div class="webmapp-pageroute-infopanel-drag-handle"></div>
+  </div>
+  <ion-label class="webmapp-pageroute-infopanel-name">{{route?.properties?.name | wmtrans}} </ion-label>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="4">
+        <i class="webmapp-icon-activities primary webmapp-pageroute-infopanel-icon"></i>
+        <ion-label class="webmapp-pageroute-infopanel-value">{{route?.properties?.difficulty | wmtrans}}
+        </ion-label>
+      </ion-col>
+      <ion-col size="4">
+        <i class="webmapp-icon-activities primary webmapp-pageroute-infopanel-icon"></i>
+        <ion-label class="webmapp-pageroute-infopanel-value">{{route?.properties?.distance}}km </ion-label>
+      </ion-col>
+      <ion-col size="4">
+        <i class="webmapp-icon-activities primary webmapp-pageroute-infopanel-icon"></i>
+        <ion-label class="webmapp-pageroute-infopanel-value">{{route?.properties?.duration_forward}} </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+</ion-card>

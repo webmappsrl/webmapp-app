@@ -48,7 +48,6 @@ export class ModalSelectphotosComponent implements OnInit {
   }
 
   selectAll(select: boolean) {
-    console.log('---- ~ file: modal-selectphotos.component.ts ~ line 40 ~ ModalSelectphotosComponent ~ selectAll ~ select', select);
     this.isAllSelected = select;
     for (const image of this.images) {
       image.selected = select;

@@ -20,8 +20,7 @@ export class TracklistPage implements OnInit {
 
   async ngOnInit() {
     this.tracks = await this.saveService.getTracks();
-    console.log('------- ~ file: tracklist.page.ts ~ line 23 ~ TracklistPage ~ ngOnInit ~ this.tracks', this.tracks);
-  }
+    }
 
   open(track) {
     const navigationExtras: NavigationOptions = {

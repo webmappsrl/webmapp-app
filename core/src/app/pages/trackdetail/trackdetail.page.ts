@@ -43,7 +43,6 @@ export class TrackdetailPage implements OnInit {
     this.route.queryParams.subscribe(async params => {
       const t = JSON.parse(params['track']);
       this.track = await this.saveService.getTrack(t.key);
-      console.log('------- ~ file: trackdetail.page.ts ~ line 35 ~ TrackdetailPage ~ this.track', this.track);
       this.trackDistance = this.geoUtils.getLength(this.track.geojson);
       this.trackSlope = this.geoUtils.getSlope(this.track.geojson);
       this.trackAvgSpeed = this.geoUtils.getAverageSpeed(this.track.geojson);
@@ -57,8 +56,7 @@ export class TrackdetailPage implements OnInit {
 
   async getPhotos() {
     this.photos = await this.saveService.getTrackPhotos(this.track);
-    console.log('------- ~ file: trackdetail.page.ts ~ line 63 ~ TrackdetailPage ~ getPhotos ~ this.photos', this.photos);
-  }
+    }
 
   menu() {
     this.menuController.enable(true, 'optionMenu');
@@ -80,12 +78,10 @@ export class TrackdetailPage implements OnInit {
     });
     await modal.present();
     const res = await modal.onDidDismiss();
-    console.log('------- ~ file: trackdetail.page.ts ~ line 88 ~ TrackdetailPage ~ edit ~ res', res);
-
+    
     if (!res.data.dismissed) {
       const track: Track = Object.assign(this.track, res.data.trackData);
-      console.log('TRACK TO SAVE', track);
-
+      
       await this.saveService.updateTrack(track);
 
       //await this.openModalSuccess(track);

@@ -104,10 +104,8 @@ export class ModalSaveComponent implements OnInit {
     const library = await this.photoService.getPhotos();
     library.forEach((libraryItem) => {
       const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
-      console.log('------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy', libraryItemCopy);
       this.photos.push(libraryItemCopy);
     });
-    console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
   }
 
   remove(image) {

@@ -154,8 +154,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       const track: Track = Object.assign({
         geojson
       }, res.data.trackData);
-      console.log('TRACK TO SAVE', track);
-
+     
       await this.saveService.saveTrack(track);
 
       await this.openModalSuccess(track);

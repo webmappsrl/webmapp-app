@@ -7,14 +7,21 @@ import { IonicModule } from '@ionic/angular';
 import { RoutePageRoutingModule } from './route-routing.module';
 
 import { RoutePage } from './route.page';
+import { TranslateModule } from '@ngx-translate/core';
+import { MapModule } from 'src/app/components/map/map.module';
+import { WmTransPipe } from 'src/app/pipes/wmtrans.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RoutePageRoutingModule
+    RoutePageRoutingModule,
+    TranslateModule,
+    MapModule
   ],
-  declarations: [RoutePage]
+  declarations: [
+    RoutePage,
+    WmTransPipe,]
 })
-export class RoutePageModule {}
+export class RoutePageModule { }

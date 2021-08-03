@@ -82,7 +82,6 @@ export class ModalSuccessComponent implements OnInit {
       case SuccessType.WAYPOINT:
         this.isWaypoint = true;
         this.displayPosition = this.waypoint.displayPosition;
-        console.log('------- ~ file: modal-success.component.ts ~ line 85 ~ ModalSuccessComponent ~ ngOnInit ~ this.waypoint', this.waypoint);
         break;
     }
   }

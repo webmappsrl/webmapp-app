@@ -185,6 +185,12 @@
       "slope": "Dislivello",
       "avgspeed": "Velocità media",
       "topspeed": "Velocità massima"
+    },
+    "route": {
+      "navigate": "Naviga",
+      "directions": "Ottieni indicazioni",
+      "download": "Scarica",
+      "share": "Condividi"
     }
   },
   "components": {

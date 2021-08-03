@@ -29,7 +29,6 @@ export class ModalWaypointSaveComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('------- ~ line 18 ~ ModalWaypointSaveComponent ~ ngOnInit ~ this.position', this.position);
     this.positionString = `${this.position.latitude}, ${this.position.longitude}`;
     setTimeout(() => {
       this.displayPosition = this.position;

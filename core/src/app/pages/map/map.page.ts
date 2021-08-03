@@ -18,7 +18,6 @@ export class MapPage implements OnInit {
   }
 
   recordingClick(ev) {
-    console.log('---- ~ file: map.page.ts ~ line 19 ~ MapPage ~ recordingClick ~ ev', ev);
     this._navController.navigateForward('register');
   }
 
