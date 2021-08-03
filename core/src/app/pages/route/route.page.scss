@@ -34,18 +34,18 @@
             border-radius: 4px;
         }
     }
+}
 
-    .webmapp-pageroute-infopanel-name {
-        padding: 5px 15px;
-        font-weight: var(--wm-font-weight-xbold);
-    }
-    .webmapp-pageroute-infopanel-icon {
-        color: var(--wm-color-secondary);
-    }
-    .webmapp-pageroute-infopanel-value {
-        padding: 6px;
-        font-size: var(--wm-font-sm);
-    }
+.webmapp-pageroute-infopanel-name {
+    padding: 5px 15px;
+    font-weight: var(--wm-font-weight-xbold);
+}
+.webmapp-pageroute-infopanel-icon {
+    color: var(--wm-color-secondary);
+}
+.webmapp-pageroute-infopanel-value {
+    padding: 6px;
+    font-size: var(--wm-font-sm);
 }
 
 .webmapp-pageroute-fabbottom {
@@ -60,6 +60,10 @@
         --background-hover: var(--wm-color-light);
         --background-hover-opacity: 0;
     }
+    &.webmapp-pageroute-fabbottom-top {
+        top: 115px;
+        bottom: auto;
+    }
 }
 
 .webmapp-pageroute-btntop {
@@ -73,10 +77,12 @@
     --background-hover-opacity: 0;
 }
 
-.webmapp-pageroute-btnnavigate {
+.webmapp-pageroute-btnnavbottom {
     position: absolute;
     right: 16px;
     bottom: 100px;
+}
+.webmapp-pageroute-btnnavigate {
     --border-radius: 20px;
     --color: var(--wm-color-light);
     --background: var(--wm-color-primary);

@@ -33,7 +33,16 @@ export class RoutePage implements OnInit {
 
   }
 
-  
+  toggleDetail() {
+    const direction = this.opacity >= 1 ? 1 : -1;
+    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity', this.opacity);
+    const interv = setInterval(() => {
+      this.opacity -= 0.01 * direction;
+      if (this.opacity <= 0 || this.opacity >= 1) {
+        clearInterval(interv);
+      }
+    }, 10);
+  }
 
   menu() {
     this.menuController.enable(true, 'optionMenu');
@@ -48,12 +57,13 @@ export class RoutePage implements OnInit {
     console.log('------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share');
 
   }
+
   favourite() {
     console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite');
 
   }
+
   back() {
-    console.log('------- ~ file: route.page.ts ~ line 46 ~ RoutePage ~ back ~ back');
     this.navController.back();
   }
 
