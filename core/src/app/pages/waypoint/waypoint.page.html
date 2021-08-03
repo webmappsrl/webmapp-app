@@ -1,13 +1,15 @@
+<ion-header class="webmapp-pagewaypoint-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.waypoint.title' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content scrollY="false">
-  <ion-header class="webmapp-pagewaypoint-header">
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
-      </ion-buttons>
-      <ion-title>{{'pages.waypoint.title' | translate}}</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <webmapp-map class="webmapp-pagewaypoint-map-container" #map [btnposition]="'middle'" [showLayer]="true" [hideRegister]="true"></webmapp-map>
+  <webmapp-map class="webmapp-pagewaypoint-map-container" #map [btnposition]="'middle'" [showLayer]="true"
+    [hideRegister]="true" [position]="position"></webmapp-map>
 
   <ion-card class="webmapp-pagewaypoint-infopanel">
     <div class="webmapp-pagewaypoint-infopanel-top">
@@ -27,7 +29,8 @@
 
   </ion-card>
 
-  <ion-button class="webmapp-pagewaypoint-savebtn" [disabled]="!position" (click)="save()">{{'pages.waypoint.save' | translate}}</ion-button>
+  <ion-button class="webmapp-pagewaypoint-savebtn" [disabled]="!position" (click)="save()">{{'pages.waypoint.save' |
+    translate}}</ion-button>
 
 
 </ion-content>

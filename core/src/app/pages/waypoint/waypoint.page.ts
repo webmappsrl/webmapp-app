@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -22,7 +22,8 @@ export class WaypointPage implements OnInit, OnDestroy {
 
   constructor(
     private geolocationService: GeolocationService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private navController: NavController
   ) { }
 
   ngOnInit() {
@@ -49,5 +50,7 @@ export class WaypointPage implements OnInit, OnDestroy {
       }
     });
     await modaSuccess.present();
+
+    this.navController.back();
   }
 }

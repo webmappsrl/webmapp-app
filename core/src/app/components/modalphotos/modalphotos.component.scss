@@ -22,12 +22,16 @@
     transform: translateX(-50%);
     -ms-transform: translateX(-50%);
     --border-radius: 20px;
+    text-transform: none;
+    --padding-start: 20px;
+    --padding-end: 20px;
   }
 
   .webmapp-modalphoto-addbtn {
     position: absolute;
-    bottom: 28px;
+    bottom: 38px;
     left: 35px;
+    
     .webmapp-modalphoto-addbtn-camera {
       font-size: 26px;
       color: var(--wm-color-light);

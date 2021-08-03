@@ -1,6 +1,11 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { ModalSuccessComponent } from 'src/app/components/modal-success/modal-success.component';
+import { SaveService } from 'src/app/services/save.service';
 import { ILocation } from 'src/app/types/location';
+import { SuccessType } from 'src/app/types/success.enum';
+import { WaypointSave } from 'src/app/types/waypoint';
 
 @Component({
   selector: 'webmapp-modal-waypoint-save',
@@ -18,7 +23,10 @@ export class ModalWaypointSaveComponent implements OnInit {
   public positionString: string;
   public positionCity: string = "città";
 
-  constructor() { }
+  constructor(
+    private modalController: ModalController,
+    private saveService: SaveService
+  ) { }
 
   ngOnInit() {
     console.log('------- ~ line 18 ~ ModalWaypointSaveComponent ~ ngOnInit ~ this.position', this.position);
@@ -28,7 +36,42 @@ export class ModalWaypointSaveComponent implements OnInit {
     }, 2000);
   }
 
-  save() { }
+  async save() {
+    const waypoint: WaypointSave = {
+      position: this.position,
+      displayPosition: this.displayPosition,
+      title: this.title,
+      description: this.description,
+      waypointtype: this.waypointtype,
+      city: this.positionCity,
+      date: new Date(),
+    };
+
+    await this.saveService.saveWaypoint(waypoint);
+
+    this.modalController.dismiss();
+
+    await this.openModalSuccess(waypoint);
+
+  }
+
+  close() {
+    this.modalController.dismiss({
+      dismissed: true
+    });
+  }
+
+  async openModalSuccess(waypoint) {
+    const modaSuccess = await this.modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: SuccessType.WAYPOINT,
+        waypoint
+      }
+    });
+    await modaSuccess.present();
+    await modaSuccess.onDidDismiss();
+  }
 
   isValid() {
     return this.title && this.waypointtype;

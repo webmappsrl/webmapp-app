@@ -4,6 +4,7 @@ import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { PhotoItem } from 'src/app/services/photo.service';
 import { SuccessType } from '../../types/success.enum';
 import { Track } from 'src/app/types/track.d.';
+import { WaypointSave } from 'src/app/types/waypoint';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',
@@ -18,11 +19,17 @@ export class ModalSuccessComponent implements OnInit {
   @Input() track: Track;
   @Input() type: SuccessType;
   @Input() photos: PhotoItem[];
+  @Input() waypoint: WaypointSave;
 
   public isTrack = false;
   public isPhotos = false;
+  public isWaypoint = false;
+
+  public today = new Date();
 
   public topValues = [];
+
+  public displayPosition;
 
 
   public sliderOptions: any = {
@@ -71,6 +78,11 @@ export class ModalSuccessComponent implements OnInit {
           this.slider.update();
         }, 100);
 
+        break;
+      case SuccessType.WAYPOINT:
+        this.isWaypoint = true;
+        this.displayPosition = this.waypoint.displayPosition;
+        console.log('------- ~ file: modal-success.component.ts ~ line 85 ~ ModalSuccessComponent ~ ngOnInit ~ this.waypoint', this.waypoint);
         break;
     }
   }

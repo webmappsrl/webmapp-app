@@ -220,23 +220,23 @@ export class GeolocationService {
       rawLocation.longitude,
       rawLocation.latitude,
       rawLocation.altitude &&
-      typeof rawLocation.altitude === 'number' &&
-      !Number.isNaN(rawLocation.altitude)
+        typeof rawLocation.altitude === 'number' &&
+        !Number.isNaN(rawLocation.altitude)
         ? rawLocation.altitude
         : undefined,
       rawLocation.accuracy &&
-      typeof rawLocation.accuracy === 'number' &&
-      !Number.isNaN(rawLocation.accuracy)
+        typeof rawLocation.accuracy === 'number' &&
+        !Number.isNaN(rawLocation.accuracy)
         ? rawLocation.accuracy
         : undefined,
       rawLocation.speed &&
-      typeof rawLocation.speed === 'number' &&
-      !Number.isNaN(rawLocation.speed)
+        typeof rawLocation.speed === 'number' &&
+        !Number.isNaN(rawLocation.speed)
         ? rawLocation.speed
         : undefined,
       rawLocation.bearing &&
-      typeof rawLocation.bearing === 'number' &&
-      !Number.isNaN(rawLocation.bearing)
+        typeof rawLocation.bearing === 'number' &&
+        !Number.isNaN(rawLocation.bearing)
         ? rawLocation.bearing
         : undefined
     );
@@ -268,7 +268,7 @@ export class GeolocationService {
         this._backgroundGeolocation.startTask().then((task) => {
           this._locationUpdate(location);
           this._backgroundGeolocation.endTask(task).then(
-            () => {},
+            () => { },
             (err) => {
               console.warn(err);
             }
@@ -282,7 +282,7 @@ export class GeolocationService {
         this._backgroundGeolocation.startTask().then((task) => {
           this._locationUpdate(location);
           this._backgroundGeolocation.endTask(task).then(
-            () => {},
+            () => { },
             (err) => {
               console.warn(err);
             }
@@ -432,7 +432,7 @@ export class GeolocationService {
                 Math.min(
                   extent[3],
                   this._currentLocation.latitude +
-                    (-0.001 + Math.random() / 500)
+                  (-0.001 + Math.random() / 500)
                 )
               );
               lng = Math.max(
@@ -440,7 +440,7 @@ export class GeolocationService {
                 Math.min(
                   extent[2],
                   this._currentLocation.longitude +
-                    (-0.001 + Math.random() / 500)
+                  (-0.001 + Math.random() / 500)
                 )
               );
               if (
@@ -461,7 +461,7 @@ export class GeolocationService {
               accuracy: acc,
               time: Date.now(),
               speed,
-              locationProvider: this._backgroundGeolocation.RAW_PROVIDER,
+              locationProvider: this._backgroundGeolocation ? this._backgroundGeolocation.RAW_PROVIDER : null,
               provider: 'gps',
               bearing,
             });

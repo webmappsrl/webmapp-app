@@ -8,6 +8,7 @@ import { SuccessType } from '../../types/success.enum';
 import { Track } from 'src/app/types/track.d.';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSuccessComponent } from '../../components/modal-success/modal-success.component';
+import { SaveService } from 'src/app/services/save.service';
 
 @Component({
   selector: 'webmapp-register',
@@ -35,7 +36,8 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _navCtrl: NavController,
     private translate: TranslateService,
     private alertController: AlertController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private saveService: SaveService
   ) {
 
   }
@@ -152,7 +154,9 @@ export class RegisterPage implements OnInit, OnDestroy {
       const track: Track = Object.assign({
         geojson
       }, res.data.trackData);
-      console.log('TRACK TO SAVE', track); //TODO save in correct way
+      console.log('TRACK TO SAVE', track);
+
+      await this.saveService.saveTrack(track);
 
       await this.openModalSuccess(track);
 

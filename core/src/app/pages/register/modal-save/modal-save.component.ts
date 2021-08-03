@@ -3,7 +3,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Track } from 'src/app/types/track.d.';
 // import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
-import { PhotoService } from 'src/app/services/photo.service';
+import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -18,6 +18,8 @@ export class ModalSaveComponent implements OnInit {
 
   public photos: any[] = [];
 
+  public track: Track;
+
 
   constructor(
     private modalController: ModalController,
@@ -26,7 +28,13 @@ export class ModalSaveComponent implements OnInit {
     private photoService: PhotoService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (this.track) {
+      this.title = this.track.title;
+      this.description = this.track.description;
+      this.activity = this.track.activity;
+    }
+  }
 
   async close() {
 
@@ -64,15 +72,14 @@ export class ModalSaveComponent implements OnInit {
   }
 
   save() {
-    const photoUrls = [];
-    this.photos.forEach(photo => {
-      photoUrls.push(photo.photoURL);
-    });
+
     const trackData: Track = {
-      photos: photoUrls,
+      photos: this.photos,
+      photoKeys: null,
       title: this.title,
       description: this.description,
-      activity: this.activity
+      activity: this.activity,
+      date: new Date(),
     };
     this.modalController.dismiss({
       trackData,
@@ -100,11 +107,11 @@ export class ModalSaveComponent implements OnInit {
       console.log('------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy', libraryItemCopy);
       this.photos.push(libraryItemCopy);
     });
-      console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
+    console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
   }
 
   remove(image) {
-    const i = this.photos.findIndex(x => x.id === image.id);
+    const i = this.photos.findIndex(x => x.id === image.id || x.key === image.key);
     if (i > -1) {
       this.photos.splice(i, 1);
     }

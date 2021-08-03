@@ -2,7 +2,7 @@
   <div class="ios-filling"></div>
   <ion-toolbar class="webmapp-modalphoto-header">
     <ion-buttons slot="start">
-      <ion-back-button class="webmapp-backbutton" defaultHref="map" icon="close-outline" text="" (click)="close()">
+      <ion-back-button class="webmapp-backbutton" defaultHref="" icon="close-outline" text="" (click)="close()">
       </ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
@@ -30,7 +30,7 @@
   <ion-toolbar class="webmapp-modalphoto-footer">
     <ion-slides pager=false [options]="sliderOptions" #slider>
       <ion-slide *ngFor="let photo of photoCollection">
-        <ion-img class="webmapp-modalphoto-footer-photo" (click)="select(photo)" [src]="photo?.data"></ion-img>
+        <ion-img class="webmapp-modalphoto-footer-photo" (click)="select(photo)" [src]="photo?.rawData ? photo?.rawData : photo?.data"></ion-img>
       </ion-slide>
     </ion-slides>
 

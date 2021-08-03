@@ -112,6 +112,17 @@
         border-right: 0px;
       }
 
+      .webmapp-modalsuccess-infopanel-content{
+        width: 100%;
+        padding: 15px;
+        display: inline-block;
+        border: 1px solid var(--wm-color-lightgray);
+      }
+
+      .webmapp-modalsuccess-infopanel-top-info-limited{
+        width: 60%;
+      }
+
       .webmapp-modalsuccess-infopanel-bottom {
         width: 33%;
         display: inline-block;
@@ -121,6 +132,46 @@
         &.webmapp-modalsuccess-infopanel-bottom-middle {
           border-left: 1px solid var(--wm-color-lightgray);
           border-right: 1px solid var(--wm-color-lightgray);
+        }
+      }
+
+      .webmapp-modalsuccess-infopanel-section {
+        text-align: start;
+        padding: 3px 1px;
+        vertical-align: top;
+
+        .webmapp-modalsuccess-infopanel-sectionicon {
+          display: inline-block;
+          vertical-align: top;
+          &.primary {
+            color: var(--wm-color-primary);
+          }
+
+          &.secondary {
+            color: var(--wm-color-secondary);
+          }
+
+          &.tertiary {
+            color: var(--wm-color-tertiary);
+          }
+        }
+        .webmapp-modalsuccess-infopanel-title,
+        .webmapp-modalsuccess-infopanel-data,
+        .webmapp-modalsuccess-infopanel-top-name,
+        .webmapp-modalsuccess-infopanel-text,
+        .webmapp-modalsuccess-infopanel-top-date {
+          display: inline-block;
+          width: 90%;
+        }
+        .webmapp-modalsuccess-infopanel-top-name,
+        .webmapp-modalsuccess-infopanel-top-text {
+          display: inline-block;
+          width: 60%;
+          padding: 0 8px ;
+        }
+        
+        .webmapp-modalsuccess-infopanel-text{
+          padding: 0 10px;
         }
       }
 

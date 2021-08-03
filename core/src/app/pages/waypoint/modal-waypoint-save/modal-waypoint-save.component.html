@@ -1,7 +1,7 @@
 <ion-header class="webmapp-modalwaypoint-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+      <ion-back-button defaultHref="waypoint" (click)="close()" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.waypoint.modalsave.title' | translate}}</ion-title>
   </ion-toolbar>
@@ -51,7 +51,7 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
+  <ion-toolbar class="webmapp-modalwaypoint-footer">
     <ion-button class="webmapp-modalwaypoint-savebtn" (click)="save()" [disabled]="!isValid()">
       {{'pages.waypoint.modalsave.save' | translate}}
     </ion-button>
