@@ -4,5 +4,5 @@ interface IAPP {
 }
 
 interface IConfig {
-  APP: IAPP;
+  app: IAPP;
 }

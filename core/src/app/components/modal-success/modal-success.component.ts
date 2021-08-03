@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { PhotoItem } from 'src/app/services/photo.service';
-import { SuccessType } from '../../types/success.enum';
+import { SuccessType } from '../../types/esuccess.enum';
 import { Track } from 'src/app/types/track.d.';
 import { WaypointSave } from 'src/app/types/waypoint';
 
@@ -12,8 +12,6 @@ import { WaypointSave } from 'src/app/types/waypoint';
   styleUrls: ['./modal-success.component.scss'],
 })
 export class ModalSuccessComponent implements OnInit {
-
-
   @ViewChild('slider') slider: IonSlides;
 
   @Input() track: Track;
@@ -29,7 +27,6 @@ export class ModalSuccessComponent implements OnInit {
 
   public topValues = [];
 
-
   public sliderOptions: any = {
     slidesPerView: 2.5,
   };
@@ -41,13 +38,15 @@ export class ModalSuccessComponent implements OnInit {
   trackTopSpeed: number = 0;
   trackTime = { hours: 0, minutes: 0, seconds: 0 };
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   private PHOTOSCATTER = 100;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   private MINSCATTER = 30;
 
   constructor(
     private modalController: ModalController,
-    private geoUtils: GeoutilsService,
-  ) { }
+    private geoUtils: GeoutilsService
+  ) {}
 
   ngOnInit() {
     switch (this.type) {
@@ -57,36 +56,41 @@ export class ModalSuccessComponent implements OnInit {
         this.trackSlope = this.geoUtils.getSlope(this.track.geojson);
         this.trackAvgSpeed = this.geoUtils.getAverageSpeed(this.track.geojson);
         this.trackTopSpeed = this.geoUtils.getTopSpeed(this.track.geojson);
-        this.trackTime = GeoutilsService.formatTime(this.geoUtils.getTime(this.track.geojson));
+        this.trackTime = GeoutilsService.formatTime(
+          this.geoUtils.getTime(this.track.geojson)
+        );
         this.isTrack = true;
         break;
       case SuccessType.PHOTOS:
         this.isPhotos = true;
-        this.photos.forEach(x => {
+        this.photos.forEach((x) => {
           let scatter = Math.random() * this.PHOTOSCATTER;
           if (this.topValues.length) {
-            while (Math.abs(scatter - this.topValues[this.topValues.length - 1]) < this.MINSCATTER) {
+            while (
+              Math.abs(scatter - this.topValues[this.topValues.length - 1]) <
+              this.MINSCATTER
+            ) {
               scatter = Math.random() * this.PHOTOSCATTER;
             }
           }
           this.topValues.push(scatter);
         });
 
-        setTimeout(() => { //need for slider to use correct slides per view
+        setTimeout(() => {
+          //need for slider to use correct slides per view
           this.slider.update();
         }, 100);
 
         break;
-        case SuccessType.WAYPOINT:
-          this.isWaypoint = true;
-          break;
+      case SuccessType.WAYPOINT:
+        this.isWaypoint = true;
+        break;
     }
   }
 
   close() {
     this.modalController.dismiss({
-      dismissed: true
+      dismissed: true,
     });
   }
-
 }

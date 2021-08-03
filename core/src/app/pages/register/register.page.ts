@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { AlertController, ModalController, NavController } from '@ionic/angular';
+import {
+  AlertController,
+  ModalController,
+  NavController,
+} from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { SuccessType } from '../../types/success.enum';
+import { SuccessType } from '../../types/esuccess.enum';
 import { Track } from 'src/app/types/track.d.';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSuccessComponent } from '../../components/modal-success/modal-success.component';
@@ -16,11 +20,14 @@ import { SaveService } from 'src/app/services/save.service';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit, OnDestroy {
-
   @ViewChild('map') map: MapComponent;
 
   public opacity: number = 0;
-  public time: { hours: number; minutes: number; seconds: number } = { hours: 0, minutes: 0, seconds: 0 };
+  public time: { hours: number; minutes: number; seconds: number } = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  };
   public actualSpeed: number = 0;
   public averageSpeed: number = 0;
   public length: number = 0;
@@ -38,9 +45,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private modalController: ModalController,
     private saveService: SaveService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this._geolocationService.onLocationChange.subscribe((loc) => {
@@ -56,12 +61,14 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.isPaused = this._geolocationService.paused;
       this.opacity = 1;
       this._timerInterval = setInterval(() => {
-        this.time = GeoutilsService.formatTime(this._geolocationService.recordTime / 1000);
+        this.time = GeoutilsService.formatTime(
+          this._geolocationService.recordTime / 1000
+        );
       }, 1000);
       setTimeout(() => {
         this.updateMap();
       }, 100);
-    };
+    }
   }
 
   recordMove(ev) {
@@ -95,20 +102,20 @@ export class RegisterPage implements OnInit, OnDestroy {
    * @returns
    */
 
-
   async recordStart(event: boolean) {
     await this._geolocationService.startRecording();
     this.checkRecording();
   }
 
   async stop(event: MouseEvent) {
-
-    const translation = await this.translate.get([
-      'pages.register.modalconfirm.title',
-      'pages.register.modalconfirm.text',
-      'pages.register.modalconfirm.confirm',
-      'pages.register.modalconfirm.cancel',
-    ]).toPromise();
+    const translation = await this.translate
+      .get([
+        'pages.register.modalconfirm.title',
+        'pages.register.modalconfirm.text',
+        'pages.register.modalconfirm.confirm',
+        'pages.register.modalconfirm.cancel',
+      ])
+      .toPromise();
 
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
@@ -119,47 +126,45 @@ export class RegisterPage implements OnInit, OnDestroy {
           text: translation['pages.register.modalconfirm.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
-          handler: () => {
-          }
-        }, {
+          handler: () => {},
+        },
+        {
           text: translation['pages.register.modalconfirm.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
             this.stopRecording();
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
-
   }
 
-
-
   async stopRecording() {
-
     try {
       clearInterval(this._timerInterval);
-    } catch (e) { }
+    } catch (e) {}
     const geojson = await this._geolocationService.stopRecording();
 
     const modal = await this.modalController.create({
-      component: ModalSaveComponent
+      component: ModalSaveComponent,
     });
     await modal.present();
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      const track: Track = Object.assign({
-        geojson
-      }, res.data.trackData);
+      const track: Track = Object.assign(
+        {
+          geojson,
+        },
+        res.data.trackData
+      );
       console.log('TRACK TO SAVE', track);
 
       await this.saveService.saveTrack(track);
 
       await this.openModalSuccess(track);
-
     }
 
     this.backToMap();
@@ -180,8 +185,8 @@ export class RegisterPage implements OnInit, OnDestroy {
       component: ModalSuccessComponent,
       componentProps: {
         type: SuccessType.TRACK,
-        track
-      }
+        track,
+      },
     });
     await modaSuccess.present();
     // await modaSuccess.onDidDismiss();
@@ -198,6 +203,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     try {
       clearInterval(this._timerInterval);
-    } catch (e) { }
+    } catch (e) {}
   }
 }

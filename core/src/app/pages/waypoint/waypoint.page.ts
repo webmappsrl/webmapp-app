@@ -12,11 +12,10 @@ import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint
   styleUrls: ['./waypoint.page.scss'],
 })
 export class WaypointPage implements OnInit, OnDestroy {
-
   public position1: string = 'nome città';
   public position2: string = 'indirizzo';
   public location: string;
-  private position: ILocation;
+  public position: ILocation;
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
@@ -24,13 +23,15 @@ export class WaypointPage implements OnInit, OnDestroy {
     private geolocationService: GeolocationService,
     private modalController: ModalController,
     private navController: NavController
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.geolocationService.start();
-    this.geolocationService.onLocationChange.pipe(takeUntil(this._destroyer)).subscribe(x => {
-      this.onChangeLocation(x);
-    });
+    this.geolocationService.onLocationChange
+      .pipe(takeUntil(this._destroyer))
+      .subscribe((x) => {
+        this.onChangeLocation(x);
+      });
   }
 
   ngOnDestroy() {
@@ -46,8 +47,8 @@ export class WaypointPage implements OnInit, OnDestroy {
     const modaSuccess = await this.modalController.create({
       component: ModalWaypointSaveComponent,
       componentProps: {
-        position: this.position
-      }
+        position: this.position,
+      },
     });
     await modaSuccess.present();
 

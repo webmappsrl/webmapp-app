@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
 import { SaveService } from 'src/app/services/save.service';
-import { PopoverPhotoType, SuccessType } from '../../types/success.enum';
+import { PopoverPhotoType, SuccessType } from '../../types/esuccess.enum';
 import { ModalSuccessComponent } from '../modal-success/modal-success.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
@@ -13,13 +13,12 @@ import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
   styleUrls: ['./modalphotos.component.scss'],
 })
 export class ModalphotosComponent implements OnInit {
-
   public photoCollection: PhotoItem[] = [];
   public photo: PhotoItem;
 
   sliderOptions: any = {
     slidesPerView: 5,
-    distanceBetween: 2
+    distanceBetween: 2,
   };
 
   constructor(
@@ -27,8 +26,7 @@ export class ModalphotosComponent implements OnInit {
     private modalController: ModalController,
     private popoverController: PopoverController,
     private saveService: SaveService
-
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.photoCollection && this.photoCollection.length) {
@@ -38,7 +36,7 @@ export class ModalphotosComponent implements OnInit {
 
   close() {
     this.modalController.dismiss({
-      dismissed: true
+      dismissed: true,
     });
   }
 
@@ -47,7 +45,7 @@ export class ModalphotosComponent implements OnInit {
       component: PopoverphotoComponent,
       cssClass: 'my-custom-class',
       event: ev,
-      translucent: true
+      translucent: true,
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
@@ -56,7 +54,6 @@ export class ModalphotosComponent implements OnInit {
     } else if (role === PopoverPhotoType.LIBRARY) {
       this.addFromLibrary();
     }
-
   }
 
   async addPhoto() {
@@ -70,7 +67,7 @@ export class ModalphotosComponent implements OnInit {
   async addFromLibrary() {
     const photos = await this.photoService.getPhotos();
     if (photos && photos.length) {
-      photos.forEach(photo => {
+      photos.forEach((photo) => {
         this.photoCollection.push(photo);
         this.select(photo);
       });
@@ -82,15 +79,17 @@ export class ModalphotosComponent implements OnInit {
   }
 
   delete() {
-    const idx = this.photoCollection.findIndex(x => x.data === this.photo.data);
+    const idx = this.photoCollection.findIndex(
+      (x) => x.data === this.photo.data
+    );
     this.photoCollection.splice(idx, 1);
     if (this.photoCollection.length) {
-      this.photo = this.photoCollection[Math.min(this.photoCollection.length - 1, idx)];
+      this.photo =
+        this.photoCollection[Math.min(this.photoCollection.length - 1, idx)];
     } else {
       this.photo = null;
       this.addPhoto();
     }
-
   }
 
   async next() {
@@ -98,14 +97,13 @@ export class ModalphotosComponent implements OnInit {
     const modal = await this.modalController.create({
       component: ModalphotosaveComponent,
       componentProps: {
-        photos: this.photoCollection
-      }
+        photos: this.photoCollection,
+      },
     });
     await modal.present();
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-
       for (const photo of res.data.photos) {
         await this.saveService.savePhoto(photo);
       }
@@ -119,12 +117,10 @@ export class ModalphotosComponent implements OnInit {
       component: ModalSuccessComponent,
       componentProps: {
         type: SuccessType.PHOTOS,
-        photos
-      }
+        photos,
+      },
     });
     await modaSuccess.present();
     await modaSuccess.onDidDismiss();
   }
-
-
 }

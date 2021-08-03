@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController, PopoverController } from '@ionic/angular';
+import {
+  ModalController,
+  NavController,
+  PopoverController,
+} from '@ionic/angular';
 import { PhotoService } from 'src/app/services/photo.service';
-import { PopoverPhotoType } from 'src/app/types/success.enum';
+import { PopoverPhotoType } from 'src/app/types/esuccess.enum';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 
@@ -11,7 +15,6 @@ import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverpho
   styleUrls: ['./popover-register.component.scss'],
 })
 export class PopoverRegisterComponent implements OnInit {
-
   public registering: boolean;
 
   constructor(
@@ -19,10 +22,9 @@ export class PopoverRegisterComponent implements OnInit {
     private navCtrl: NavController,
     private photoService: PhotoService,
     private _modalController: ModalController
-  ) { }
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   track() {
     this.navCtrl.navigateForward('register');
@@ -30,7 +32,6 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   async photo(ev) {
-
     this.dismiss();
 
     let photos = null;
@@ -38,14 +39,14 @@ export class PopoverRegisterComponent implements OnInit {
     const popover = await this.popoverController.create({
       component: PopoverphotoComponent,
       event: ev,
-      translucent: true
+      translucent: true,
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
     if (role === PopoverPhotoType.PHOTOS) {
       const image = await this.photoService.shotPhoto(true);
       photos = [image];
-    } else if (role === PopoverPhotoType.LIBRARY){
+    } else if (role === PopoverPhotoType.LIBRARY) {
       photos = await this.photoService.getPhotos();
     }
 
@@ -53,8 +54,8 @@ export class PopoverRegisterComponent implements OnInit {
       const modalPhotos = await this._modalController.create({
         component: ModalphotosComponent,
         componentProps: {
-          photoCollection: photos
-        }
+          photoCollection: photos,
+        },
       });
       await modalPhotos.present();
     }
@@ -69,13 +70,13 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   vocal() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal');
+    console.log(
+      '---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal'
+    );
     this.dismiss();
   }
 
   dismiss() {
     this.popoverController.dismiss();
   }
-
-
 }
