@@ -1,26 +1,41 @@
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
-import { SaveObjType } from '../types/esave-object.enum';
 import { Track } from '../types/track.d.';
 import { WaypointSave } from '../types/waypoint';
 import { PhotoItem, PhotoService } from './photo.service';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const { Storage } = Plugins;
 
+export enum SaveObjType {
+  PHOTO = 'photo',
+  PHOTOTRACK = 'phototrack',
+  TRACK = 'track',
+  WAYPOINT = 'waypoint',
+}
+
+interface SaveIndexObj {
+  key: string;
+  type: SaveObjType;
+  saved: boolean;
+}
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class SaveService {
+
   private indexKey = 'index';
   private index = {
     lastId: 0,
-    objects: [],
+    objects: []
   };
 
-  constructor(private photoService: PhotoService) {
+
+  constructor(
+    private photoService: PhotoService
+  ) {
     this.recoverIndex();
-    console.log('----------storage', Storage);
+    console.log("----------storage", Storage);
   }
 
   /**
@@ -61,7 +76,10 @@ export class SaveService {
   /**
    * Get all the object save on storage but not on the cloud
    */
-  public async getUnsavedObjects() {}
+  public async getUnsavedObjects() {
+
+  }
+
 
   private async savePhotoTrack(photoUrl: string): Promise<string> {
     const data = await this.photoService.getPhotoData(photoUrl);
@@ -69,8 +87,14 @@ export class SaveService {
     return await this.saveGeneric(data, SaveObjType.PHOTOTRACK);
   }
 
+
   private async saveGeneric(object: any, type: SaveObjType): Promise<string> {
     const key = type + this.getLastId();
+    const insertObj: SaveIndexObj = {
+      key,
+      type,
+      saved: false
+    };
     await Storage.set({ key, value: JSON.stringify(object) });
     await this.updateIndex();
     return key;
@@ -82,10 +106,7 @@ export class SaveService {
 
   private async recoverIndex() {
     const ret = await Storage.get({ key: this.indexKey });
-    console.log(
-      '------- ~ file: save.service.ts ~ line 109 ~ SaveService ~ recoverIndex ~ ret',
-      ret
-    );
+    console.log('------- ~ file: save.service.ts ~ line 109 ~ SaveService ~ recoverIndex ~ ret', ret);
     if (ret && ret.value && ret.value !== 'null') {
       this.index = JSON.parse(ret.value);
     }
@@ -94,7 +115,11 @@ export class SaveService {
   private async updateIndex() {
     await Storage.set({
       key: this.indexKey,
-      value: JSON.stringify(this.index),
+      value: JSON.stringify(this.index)
     });
   }
+
+
+
+
 }

@@ -4,11 +4,10 @@ import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
-import { CameraDirection, Plugins } from '@capacitor/core';
+import { CameraDirection, Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const { Filesystem } = Plugins;
 
 export interface PhotoItem {
@@ -20,9 +19,11 @@ export interface PhotoItem {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
+
 export class PhotoService {
+
   private useBase64 = false;
 
   private options = {
@@ -45,23 +46,25 @@ export class PhotoService {
     // available options are
     // window.imagePicker.OutputType.FILE_URI (0) or
     // window.imagePicker.OutputType.BASE64_STRING (1)
-    outputType: this.useBase64 ? 1 : 0,
+    outputType: this.useBase64 ? 1 : 0
   };
 
   constructor(
     private imagePicker: ImagePicker,
-    private _deviceService: DeviceService
-  ) // private file: File,
-  // private filePath: FilePath,
-  {}
+    private _deviceService: DeviceService,
+    // private file: File,
+    // private filePath: FilePath,
+  ) { }
 
   async getPhotos(dateLimit: Date = null): Promise<PhotoItem[]> {
     const res: PhotoItem[] = [];
     let filePath = null;
     if (!this._deviceService.isBrowser) {
-      if (!(await this.imagePicker.hasReadPermission())) {
+
+      if (!await this.imagePicker.hasReadPermission()) {
         await this.imagePicker.requestReadPermission();
-        if (!(await this.imagePicker.hasReadPermission())) return res;
+        if (!await this.imagePicker.hasReadPermission())
+          return res;
       }
 
       const images = await this.imagePicker.getPictures(this.options);
@@ -77,7 +80,7 @@ export class PhotoService {
           id: i + '',
           photoURL: filePath,
           data,
-          description: '',
+          description: ''
         });
       }
       return res;
@@ -88,11 +91,12 @@ export class PhotoService {
           id: '1',
           photoURL: `https://picsum.photos/50${i}/75${i}`,
           data: `https://picsum.photos/50${i}/75${i}`,
-          description: '',
+          description: ''
         });
       }
       return res;
     }
+
   }
 
   async shotPhoto(allowlibrary): Promise<PhotoItem> {
@@ -100,15 +104,15 @@ export class PhotoService {
       quality: 90,
       allowEditing: true,
       resultType: CameraResultType.Uri,
-      saveToGallery: true, //boolean	Whether to save the photo to the gallery. If the photo was picked from the gallery, it will only be saved if edited. Default: false
+      saveToGallery: true,	//boolean	Whether to save the photo to the gallery. If the photo was picked from the gallery, it will only be saved if edited. Default: false
       // width: 100,//	number	The width of the saved image
       // height: 100,//	number	The height of the saved image
-      preserveAspectRatio: true, //	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
+      preserveAspectRatio: true,//	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
       // correctOrientation: true,	//boolean	Whether to automatically rotate the image “up” to correct for orientation in portrait mode Default: true
       // source: CameraSource.Camera,	//CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
-      direction: CameraDirection.Rear, //CameraDirection	iOS and Web only: The camera direction.Default: CameraDirection.Rear
+      direction: CameraDirection.Rear,	//CameraDirection	iOS and Web only: The camera direction.Default: CameraDirection.Rear
       // presentationStyle: 'fullscreen',	//"fullscreen" | "popover"	iOS only: The presentation style of the Camera.Defaults to fullscreen.
-      webUseInput: this._deviceService.isBrowser ? null : true, //boolean	Web only: Whether to use the PWA Element experience or file input.The default is to use PWA Elements if installed and fall back to file input.To always use file input, set this to true.Learn more about PWA Elements: https://capacitorjs.com/docs/pwa-elements
+      webUseInput: this._deviceService.isBrowser ? null : true,	//boolean	Web only: Whether to use the PWA Element experience or file input.The default is to use PWA Elements if installed and fall back to file input.To always use file input, set this to true.Learn more about PWA Elements: https://capacitorjs.com/docs/pwa-elements
       // promptLabelHeader: null,	//string	If use CameraSource.Prompt only, can change Prompt label.default: promptLabelHeader: ‘Photo’ // iOS only promptLabelCancel : ‘Cancel’ // iOS only promptLabelPhoto : ‘From Photos’ promptLabelPicture : ‘Take Picture’
       // promptLabelCancel: null,	//string
       // promptLabelPhoto: null,	//string
@@ -118,15 +122,16 @@ export class PhotoService {
       id: '1',
       photoURL: photo.webPath,
       data: Capacitor.convertFileSrc(photo.webPath),
-      description: '',
+      description: ''
     };
   }
 
+
   public async getPhotoData(photoUrl: string): Promise<string> {
     console.log('------- ~ reading ', photoUrl);
-
+    
     // TODO get photo data by URL
-
+    
     try {
       const contents = await Filesystem.readFile({
         path: photoUrl,
@@ -136,7 +141,7 @@ export class PhotoService {
       console.log('------------- contents of file', contents);
       return contents.data;
     } catch (err) {
-      console.error('read file error', err);
+    console.error('read file error', err);
       return photoUrl;
     }
   }
