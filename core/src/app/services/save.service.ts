@@ -1,6 +1,8 @@
+import { JsonpClientBackend } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
-import { Track } from '../types/track.d.';
+import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { RegisterItem, Track } from '../types/track.d.';
 import { WaypointSave } from '../types/waypoint';
 import { PhotoItem, PhotoService } from './photo.service';
 
@@ -17,6 +19,8 @@ interface SaveIndexObj {
   key: string;
   type: SaveObjType;
   saved: boolean;
+  edited: boolean;
+  deleted?: boolean;
 }
 
 @Injectable({
@@ -25,7 +29,7 @@ interface SaveIndexObj {
 export class SaveService {
 
   private indexKey = 'index';
-  private index = {
+  private index: { lastId: number; objects: SaveIndexObj[] } = {
     lastId: 0,
     objects: []
   };
@@ -35,7 +39,6 @@ export class SaveService {
     private photoService: PhotoService
   ) {
     this.recoverIndex();
-    console.log("----------storage", Storage);
   }
 
   /**
@@ -69,8 +72,28 @@ export class SaveService {
       photoKeys.push(photoKey);
     }
     const trackCopy = Object.assign({}, track);
-    trackCopy.photos = photoKeys;
+    trackCopy.photoKeys = photoKeys;
+    trackCopy.photos = null;
     await this.saveGeneric(trackCopy, SaveObjType.TRACK);
+  }
+
+  public async updateTrack(newTrack: Track) {
+    const trackToSave = JSON.parse(JSON.stringify(newTrack));
+    const originalTrack = await this.getTrack(trackToSave.key);
+    console.log('------- ~ file: save.service.ts ~ line 82 ~ SaveService ~ updateTrack ~ originalTrack', originalTrack);
+    const photoKeys: string[] = [];
+    trackToSave.photoKeys = [];
+    for (const photoTrack of trackToSave.photos) {
+      photoKeys.push(photoTrack.key);
+      trackToSave.photoKey.push(photoTrack.key);
+    }
+    trackToSave.photos = null;
+    const deletedPhotos = originalTrack.photoKeys.filter(x => photoKeys.find(y => x !== y));
+    console.log('------- ~ file: save.service.ts ~ line 87 ~ SaveService ~ updateTrack ~ deletedPhotos', deletedPhotos);
+    for (const photokey of deletedPhotos) {
+      //this.deleteGeneric(photokey);
+    }
+    this.updateGeneric(trackToSave.key, trackToSave);
   }
 
   /**
@@ -81,20 +104,93 @@ export class SaveService {
   }
 
 
-  private async savePhotoTrack(photoUrl: string): Promise<string> {
-    const data = await this.photoService.getPhotoData(photoUrl);
+  public async getWaypoints(): Promise<WaypointSave[]> {
+    return this.getGeneric(SaveObjType.WAYPOINT);
+  }
 
-    return await this.saveGeneric(data, SaveObjType.PHOTOTRACK);
+  public async getPhotos(): Promise<PhotoItem[]> {
+    return this.getGeneric(SaveObjType.PHOTO);
+  }
+
+  public async getTracks(): Promise<Track[]> {
+    const ret: Track[] = await this.getGeneric(SaveObjType.TRACK);
+    ret.forEach(t => {
+      this.initTrack(t);
+    });
+    return ret;
   }
 
 
-  private async saveGeneric(object: any, type: SaveObjType): Promise<string> {
+  public async getTrack(key: string): Promise<Track> {
+    const ret = await this.getGenericById(key);
+    this.initTrack(ret);
+    return ret;
+  }
+
+  public async getTrackPhotos(track: Track): Promise<PhotoItem[]> {
+    const coll = [];
+    for (const photoKey of track.photoKeys) {
+      const photo = await this.getGenericById(photoKey);
+      coll.push(photo);
+    }
+    return coll;
+  }
+
+
+  public async getGeneric(type: SaveObjType): Promise<any[]> {
+    const res = [];
+    const keys = await Storage.keys();
+    for (const obj of this.index.objects) {
+      if (obj.type === type && !obj.deleted) {
+        const ret = await this.getGenericById(obj.key);
+        if (ret) {
+          res.push(ret);
+        }
+      }
+    }
+    return res;
+  }
+
+  private async getGenericById(key): Promise<any> {
+    let returnObj = null;
+    const ret = await Storage.get({ key });
+    if (ret && ret.value && ret.value !== 'null') {
+      returnObj = JSON.parse(ret.value);
+      returnObj.key = key;
+    }
+    return returnObj;
+  }
+
+  private async deleteGeneric(key): Promise<any> {
+    await Storage.remove({ key });
+    const indexObj = this.index.objects.find(x => x.key === key);
+    indexObj.deleted = true;
+    await this.updateIndex();
+  }
+
+  private async updateGeneric(key, value: RegisterItem): Promise<any> {
+    await Storage.remove({ key });
+    await Storage.set({ key, value: JSON.stringify(value) });
+    const indexObj = this.index.objects.find(x => x.key === key);
+    indexObj.edited = true;
+    await this.updateIndex();
+  }
+
+  private async savePhotoTrack(photo: PhotoItem): Promise<string> {
+    await this.photoService.setPhotoData(photo);
+    return await this.saveGeneric(photo, SaveObjType.PHOTOTRACK);
+  }
+
+
+  private async saveGeneric(object: RegisterItem, type: SaveObjType): Promise<string> {
     const key = type + this.getLastId();
     const insertObj: SaveIndexObj = {
       key,
       type,
-      saved: false
+      saved: false,
+      edited: false
     };
+    this.index.objects.push(insertObj);
     await Storage.set({ key, value: JSON.stringify(object) });
     await this.updateIndex();
     return key;
@@ -106,7 +202,6 @@ export class SaveService {
 
   private async recoverIndex() {
     const ret = await Storage.get({ key: this.indexKey });
-    console.log('------- ~ file: save.service.ts ~ line 109 ~ SaveService ~ recoverIndex ~ ret', ret);
     if (ret && ret.value && ret.value !== 'null') {
       this.index = JSON.parse(ret.value);
     }
@@ -117,6 +212,12 @@ export class SaveService {
       key: this.indexKey,
       value: JSON.stringify(this.index)
     });
+  }
+
+
+  private initTrack(track: Track) {
+    const gj = track.geojson;
+    track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }
 
 

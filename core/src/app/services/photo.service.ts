@@ -7,14 +7,16 @@ import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { CameraDirection, Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
+import { HttpClient } from '@angular/common/http';
+import { RegisterItem } from '../types/track.d.';
 
 const { Filesystem } = Plugins;
 
-export interface PhotoItem {
+export interface PhotoItem extends RegisterItem{
   id: string;
   photoURL: string;
   data: string;
-  description: string;
+  description?: string;
   rawData?: string;
 }
 
@@ -52,6 +54,7 @@ export class PhotoService {
   constructor(
     private imagePicker: ImagePicker,
     private _deviceService: DeviceService,
+    private http: HttpClient
     // private file: File,
     // private filePath: FilePath,
   ) { }
@@ -80,7 +83,8 @@ export class PhotoService {
           id: i + '',
           photoURL: filePath,
           data,
-          description: ''
+          description: '',
+          date: new Date()
         });
       }
       return res;
@@ -91,7 +95,8 @@ export class PhotoService {
           id: '1',
           photoURL: `https://picsum.photos/50${i}/75${i}`,
           data: `https://picsum.photos/50${i}/75${i}`,
-          description: ''
+          description: '',
+          date: new Date()
         });
       }
       return res;
@@ -118,33 +123,32 @@ export class PhotoService {
       // promptLabelPhoto: null,	//string
       // promptLabelPicture: null,	//string
     });
-    return {
+    const res = {
       id: '1',
       photoURL: photo.webPath,
       data: Capacitor.convertFileSrc(photo.webPath),
-      description: ''
+      description: '',
+      date: new Date()
     };
+    return res;
   }
 
 
-  public async getPhotoData(photoUrl: string): Promise<string> {
-    console.log('------- ~ reading ', photoUrl);
-    
-    // TODO get photo data by URL
-    
-    try {
-      const contents = await Filesystem.readFile({
-        path: photoUrl,
-        // directory: FilesystemDirectory.Documents,
-        //encoding: FilesystemEncoding.UTF8
-      });
-      console.log('------------- contents of file', contents);
-      return contents.data;
-    } catch (err) {
-    console.error('read file error', err);
-      return photoUrl;
-    }
+  public async getPhotoData(photoUrl: string): Promise<any> {
+
+    const filegot = await this.http.get(photoUrl, { responseType: 'blob' }).toPromise();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(filegot);
+      reader.onloadend = () => {
+        const b64 = reader.result;
+        console.log('Sync b64', b64);
+        resolve(b64);
+      };
+      reader.onerror = reject;
+    });
   }
+
 
   public async setPhotoData(photo: PhotoItem) {
     photo.rawData = await this.getPhotoData(photo.photoURL);

@@ -1,0 +1,73 @@
+<ion-menu side="end" menuId="optionMenu" contentId="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-icon name="close-outline" class="webmapp-waypointdetail-menuclose" (click)="closeMenu()"></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <i class="webmapp-icon-edit-outline " start></i>
+        <div class="webmapp-waypointdetail-menuitem">{{'pages.waypointdetail.edit'|translate}}</div>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="trash-outline" start></ion-icon>
+        <div class="webmapp-waypointdetail-menuitem">{{'pages.waypointdetail.delete'|translate}}</div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton.dark"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{'pages.waypointdetail.title'|translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="ellipsis-vertical" class="webmapp-waypointdetail-menuopen" (click)="menu()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="main">
+
+  <webmapp-map class="webmapp-waypointdetail-map" #map [static]="true" [position]="displayPosition"></webmapp-map>
+
+  <div class="webmapp-waypointdetail-date">{{waypoint.date | date : "dd MMMM YYYY"}}</div>
+
+  <ion-list class="webmapp-waypointdetail-itemlist">
+    <ion-item class="webmapp-waypointdetail-item" lines="none">
+      <i class="webmapp-icon-list webmapp-waypointdetail-icon secondary" start></i>
+      <div class="webmapp-waypointdetail-item-title">{{waypoint.title}}</div>
+    </ion-item>
+
+    <ion-item class="webmapp-waypointdetail-item" lines="none">
+      <i class="webmapp-icon-activities webmapp-waypointdetail-icon primary" start></i>
+      {{waypoint.waypointtype}}
+    </ion-item>
+
+
+    <ion-item class="webmapp-waypointdetail-item" lines="none">
+      <i class="webmapp-icon-pin-outline webmapp-waypointdetail-icon secondary" start></i>
+      <div>
+        <div class="webmapp-waypointdetail-item-city">{{waypoint?.city}}</div>
+        <div class="webmapp-waypointdetail-item-position">{{waypoint?.position?.latitude}}, {{
+          waypoint?.position?.longitude }}</div>
+      </div>
+    </ion-item>
+
+
+    <ion-item class="webmapp-waypointdetail-item" lines="none">
+      <i class="webmapp-icon-document webmapp-waypointdetail-icon tertiary" start></i>
+      {{waypoint.description}}
+    </ion-item>
+
+
+
+  </ion-list>
+
+</ion-content>

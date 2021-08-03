@@ -1,0 +1,26 @@
+.webmapp-photolist-item-image {
+    margin: 10px 5px;
+    width: 60px;
+    height: 60px;
+    &::part(image) {
+        object-fit: cover;
+        border-radius: 8px;
+    }
+}
+
+.webmapp-photolist-item-title {
+    display: block;
+    font-size: var(--wm-font-sm);
+    font-weight: var(--wm-font-weight-bold);
+}
+
+.webmapp-photolist-item-date {
+    display: block;
+    font-size: var(--wm-font-xsm);
+    padding: 5px 0;
+}
+
+.webmapp-photolist-noitem{    
+    padding: 30px 15px;
+    text-align: center;
+}

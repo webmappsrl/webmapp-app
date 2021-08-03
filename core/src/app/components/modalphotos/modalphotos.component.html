@@ -30,7 +30,7 @@
   <ion-toolbar class="webmapp-modalphoto-footer">
     <ion-slides pager=false [options]="sliderOptions" #slider>
       <ion-slide *ngFor="let photo of photoCollection">
-        <ion-img class="webmapp-modalphoto-footer-photo" (click)="select(photo)" [src]="photo?.data"></ion-img>
+        <ion-img class="webmapp-modalphoto-footer-photo" (click)="select(photo)" [src]="photo?.rawData ? photo?.rawData : photo?.data"></ion-img>
       </ion-slide>
     </ion-slides>
 

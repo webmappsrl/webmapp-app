@@ -71,14 +71,11 @@
 }
 .webmapp-modalwaypoint-footer {
     text-align: center;
+    min-height: 80px;
 
     .webmapp-modalwaypoint-savebtn {
-        // position: absolute;
-        // bottom: 10px;
+        margin-top: 20px;
         --border-radius: 20px;
-        // left: 50%;
-        // transform: translateX(-50%);
-        // -ms-transform: translateX(-50%);
 
         --padding-start: 100px;
         --padding-end: 100px;

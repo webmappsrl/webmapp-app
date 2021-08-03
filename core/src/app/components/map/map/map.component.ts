@@ -50,7 +50,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() move: EventEmitter<number> = new EventEmitter();
 
-  @Input('start-view') startView: number[] = [10.4147, 43.7118, 10];
+  @Input('start-view') startView: number[] = [11.4147, 44.7118, 10];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
   @Input('static') static: boolean = false;
@@ -59,13 +59,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('hideRegister') hideRegister: boolean = false;
 
   @Input('track') set track(value: Track) {
-    this._track.registeredTrack = value;
-    this.drawTrack(value.geojson);
+    if (value) {
+      setTimeout(() => {
+        this._track.registeredTrack = value;
+        this.drawTrack(value.geojson, true);
+      }, 10);
+    }
   }
 
   @Input('position') set position(value: ILocation) {
-    this._position = value;
-    this.animateLocation(value);
+    if (value) {
+      setTimeout(() => {
+        this._position = value;
+        this._location = value;
+        this.animateLocation(value);
+        this._centerMapToLocation();
+      }, 10);
+    }
   }
 
   public locationState: EMapLocationState;
@@ -268,37 +278,38 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *
    * @param geojson geojson of the track
    */
-  drawTrack(geojson: CGeojsonLineStringFeature, centerToTrack: boolean = false) {
-    if (geojson?.geojson) {
-      const features = new GeoJSON({
-        featureProjection: 'EPSG:3857',
-      }).readFeatures(geojson.geojson);
-      if (!this._track.layer) {
-        this._track.layer = new VectorLayer({
-          source: new VectorSource({
-            format: new GeoJSON(),
-            features,
-          }),
-          style: () => {
-            return this._getLineStyle();
-          },
-          updateWhileAnimating: true,
-          updateWhileInteracting: true,
-          zIndex: 450,
-        });
-      } else {
-        this._track.layer.getSource().clear();
-        this._track.layer.getSource().addFeatures(features);
-      }
-      try {
-        this._map.addLayer(this._track.layer);
-      } catch (e) {
-      }
-      if (centerToTrack) {
-        this._centerMapToTrack();
-      }
+  drawTrack(trackgeojson: any, centerToTrack: boolean = false) {
+    const geojson: any = this.getGeoJson(trackgeojson);
+    const features = new GeoJSON({
+      featureProjection: 'EPSG:3857',
+    }).readFeatures(geojson);
+    if (!this._track.layer) {
+      this._track.layer = new VectorLayer({
+        source: new VectorSource({
+          format: new GeoJSON(),
+          features,
+        }),
+        style: () => {
+          return this._getLineStyle();
+        },
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        zIndex: 450,
+      });
+    } else {
+      this._track.layer.getSource().clear();
+      this._track.layer.getSource().addFeatures(features);
     }
+    try {
+      this._map.addLayer(this._track.layer);
+    } catch (e) {
+    }
+    if (centerToTrack) {
+      this._centerMapToTrack();
+    }
+    //}
   }
+
 
   /**
    * Move the location icon to the specified new location
@@ -326,11 +337,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       );
       if (!this._locationAnimationState.animating) {
         this._locationAnimationState.animating = true;
-
-        this._map.once('postrender', () => {
-          this._animateLocation();
-        });
       }
+
+      this._map.once('postrender', () => {
+        this._animateLocation();
+      });
     }
     this._updateLocationLayer();
   }
@@ -354,6 +365,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   recBtnUnlocked(val) {
     this.showRecBtn = false;
     this.unlocked.emit(val);
+  }
+
+  private getGeoJson(trackgeojson: any): any {
+    if (trackgeojson?.geoJson) {
+      return trackgeojson.geoJson;
+    }
+    if (trackgeojson?.geometry) {
+      return trackgeojson.geometry;
+    }
+    if (trackgeojson?._geometry) {
+      return trackgeojson._geometry;
+    }
+    return trackgeojson;
   }
 
   private _getLineStyle(): // id: string = ''
@@ -468,25 +492,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Handle the location animation
    */
   private _animateLocation(): void {
-    if (
-      !this._locationAnimationState.startTime ||
-      !this._locationAnimationState.startLocation
-    ) {
-      if (this._locationAnimationState.goalLocation)
+    if (!this._locationAnimationState.startTime || !this._locationAnimationState.startLocation) {
+      if (this._locationAnimationState.goalLocation) {
         this._setLocation(this._locationAnimationState.goalLocation);
-      else if (typeof this._locationAnimationState.goalAccuracy === 'number')
+      }
+      else if (typeof this._locationAnimationState.goalAccuracy === 'number') {
         this._setLocationAccuracy(this._locationAnimationState.goalAccuracy);
+      }
       this._stopLocationAnimation();
-    } else if (
-      !this._locationAnimationState.goalLocation &&
-      typeof this._locationAnimationState.goalAccuracy !== 'number'
-    )
+    } else if (!this._locationAnimationState.goalLocation && typeof this._locationAnimationState.goalAccuracy !== 'number') {
       this._stopLocationAnimation();
+    }
     else {
-      const delta: number =
-        Math.min(Date.now() - this._locationAnimationState.startTime, 500) /
-        500;
-
+      const delta: number = Math.min(Date.now() - this._locationAnimationState.startTime, 500) / 500;
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =

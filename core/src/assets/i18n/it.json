@@ -45,7 +45,7 @@
         "title": "Registra foto",
         "formtitle": "Dai un titolo alle tue foto",
         "formphototitle": "Titolo foto ",
-        "savebtn": "salva"
+        "savebtn": "Salva"
       }
     },
     "success": {
@@ -83,6 +83,13 @@
         },
         "login": "Accedi",
         "signup": "Registrati"
+      },
+      "records": {
+        "title": "Registrazioni",
+        "tracks": "Tracce",
+        "photos": "Photos",
+        "waypoints": "Waypoint",
+        "vocals": "Note vocali"
       }
     },
     "register": {
@@ -102,6 +109,7 @@
       },
       "modalsave": {
         "title": "Salva traccia",
+        "titleEdit": "Modifica traccia",
         "formtitle": "Titolo traccia",
         "formdescription": "Descrizione",
         "formactivity": "Tipo di attività",
@@ -143,6 +151,40 @@
         "formtype": "Tipo di Waypoint",
         "formoptional": "Facoltativo"
       }
+    },
+    "waypointlist": {
+      "title": "Waypoint registrati",
+      "noitem": "Al momento non sono presenti waypoint registrati"
+    },
+    "waypointdetail": {
+      "title": "Waypoint registrato",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione"
+    },
+    "photolist": {
+      "title": "Foto registrate",
+      "noitem": "Al momento non sono presenti foto registrate"
+    },
+    "photodetail": {
+      "title": "Foto registrata",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione"
+    },
+    "tracklist": {
+      "title": "Tracce registrate",
+      "noitem": "Al momento non sono presenti tracce registrate"
+    },
+    "trackdetail": {
+      "title": "Traccia registrata",
+      "edit": "Modifica registrazione",
+      "delete": "Elimina registrazione",
+      "photos": "Foto",
+      "details": "Dettagli",
+      "time": "Tempo",
+      "distance": "Km percorsi",
+      "slope": "Dislivello",
+      "avgspeed": "Velocità media",
+      "topspeed": "Velocità massima"
     }
   },
   "components": {

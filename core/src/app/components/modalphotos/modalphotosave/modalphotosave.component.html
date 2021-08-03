@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="register" icon="close-outline" text="" class="webmapp-backbutton webmapp-backbutton.dark" (click)="close()">
+      <ion-back-button defaultHref="" icon="close-outline" text="" class="webmapp-backbutton webmapp-backbutton.dark" (click)="close()">
       </ion-back-button>
     </ion-buttons>
     <ion-title  class="webmapp-modalphotosave-title">{{'modals.photo.save.title' | translate}}</ion-title>
@@ -15,7 +15,7 @@
   <ion-list>
     <ng-container *ngFor="let photo of photos;let idx = index">
       <ion-item class="webmapp-modalphotosave-item" lines="none" >
-        <ion-img slot="start" class="webmapp-modalphotosave-item-photo" [src]="photo?.data"></ion-img>
+        <ion-img slot="start" class="webmapp-modalphotosave-item-photo" [src]="photo?.rawData ? photo?.rawData : photo?.data"></ion-img>
         <div class="webmapp-modalphotosave-item-inputwrapper">
           <i class="webmapp-icon-camera webmapp-modalphotosave-item-icon secondary"></i>
           <ion-label class="webmapp-modalphotosave-item-label" position="stacked">{{'modals.photo.save.formphototitle' |
