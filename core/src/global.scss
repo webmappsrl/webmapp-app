@@ -25,9 +25,9 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
-@import "./assets/icons/webmapp-icons/style.css";
-
 @import "~ol/ol.css";
+
+@import "./assets/icons/webmapp-icons/style.css";
 
 @import "./theme/fonts.scss";
 @import "./theme/typography.scss";
@@ -37,7 +37,8 @@
 .popover-register {
   border-radius: 16px;
 
-  &.popover-translucent.sc-ion-popover-ios-h .popover-arrow.sc-ion-popover-ios::after {
+  &.popover-translucent.sc-ion-popover-ios-h
+    .popover-arrow.sc-ion-popover-ios::after {
     background: var(--wm-color-primary);
   }
 
@@ -60,7 +61,7 @@
 
 .webmapp-backbutton {
   padding: 5px 20px;
-   &.webmapp-backbutton.dark {
+  &.webmapp-backbutton.dark {
     --color: var(--ion-color-dark) !important;
   }
 }

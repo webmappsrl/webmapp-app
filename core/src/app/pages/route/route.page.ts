@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { MenuController, NavController } from '@ionic/angular';
 import { RouteService } from 'src/app/services/route.service';
 import { WmRoute } from 'src/app/types/route';
-import { Track } from 'src/app/types/track.d.';
 
 @Component({
   selector: 'webmapp-route',
@@ -11,7 +10,6 @@ import { Track } from 'src/app/types/track.d.';
   styleUrls: ['./route.page.scss'],
 })
 export class RoutePage implements OnInit {
-
   public route: WmRoute;
 
   public opacity = 1;
@@ -21,21 +19,25 @@ export class RoutePage implements OnInit {
     private routeService: RouteService,
     private navController: NavController,
     private menuController: MenuController
-  ) { }
+  ) {}
 
   async ngOnInit() {
-    this.actRoute.queryParams.subscribe(async params => {
-      const id = params['id'];
+    this.actRoute.queryParams.subscribe(async (params) => {
+      const id = params.id;
       this.route = await this.routeService.getRoute(id);
-      console.log('------- ~ file: route.page.ts ~ line 24 ~ RoutePage ~ ngOnInit ~ this.route', this.route);
-
+      console.log(
+        '------- ~ file: route.page.ts ~ line 24 ~ RoutePage ~ ngOnInit ~ this.route',
+        this.route
+      );
     });
-
   }
 
   toggleDetail() {
     const direction = this.opacity >= 1 ? 1 : -1;
-    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity', this.opacity);
+    console.log(
+      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity',
+      this.opacity
+    );
     const interv = setInterval(() => {
       this.opacity -= 0.01 * direction;
       if (this.opacity <= 0 || this.opacity >= 1) {
@@ -54,17 +56,18 @@ export class RoutePage implements OnInit {
   }
 
   share() {
-    console.log('------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share');
-
+    console.log(
+      '------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share'
+    );
   }
 
   favourite() {
-    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite');
-
+    console.log(
+      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite'
+    );
   }
 
   back() {
     this.navController.back();
   }
-
 }

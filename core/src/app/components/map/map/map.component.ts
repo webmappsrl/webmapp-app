@@ -35,7 +35,6 @@ import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import Stroke from 'ol/style/Stroke';
 import { Track } from 'src/app/types/track';
 
@@ -50,7 +49,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() move: EventEmitter<number> = new EventEmitter();
 
-  @Input('start-view') startView: number[] = [11.4147, 44.7118, 10];
+  @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
   @Input('static') static: boolean = false;
@@ -165,6 +164,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    if (!this.startView) this.startView = [10.4147, 43.7118, 9];
+
     this._view = new View({
       center: this._mapService.coordsFromLonLat([
         this.startView[0],
@@ -248,6 +249,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       });
 
+      if (this.registering) {
+        this.geolocationService.start();
+        this.locationState = EMapLocationState.FOLLOW;
+        this._centerMapToLocation();
+      }
+
       this.geolocationService.onLocationChange.subscribe((location) => {
         this._location = location;
         this.animateLocation(this._location);
@@ -259,12 +266,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         )
           this._centerMapToLocation();
       });
-
-      if (this.registering) {
-        this.geolocationService.start();
-        this.locationState = EMapLocationState.FOLLOW;
-        this._centerMapToLocation();
-      }
     }
   }
 
@@ -377,8 +378,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return trackgeojson;
   }
 
-  private _getLineStyle(): // id: string = ''
-  Array<Style> {
+  private _getLineStyle(): Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
 
@@ -443,6 +443,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this._location.longitude,
           this._location.latitude,
         ]),
+        zoom: this._view.getZoom() >= 14 ? this._view.getZoom() : 14,
       });
     }
   }
@@ -452,8 +453,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToTrack() {
     if (this._track.layer) {
-      const ext = this._track.layer.getSource().getExtent();
-      this._view.fit(ext);
+      this._view.fit(this._track.layer.getSource().getExtent(), {
+        padding: [10, 10, 10, 10],
+      });
     }
   }
 
@@ -660,7 +662,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 400,
+        zIndex: Number.MAX_SAFE_INTEGER,
       });
     }
     try {
