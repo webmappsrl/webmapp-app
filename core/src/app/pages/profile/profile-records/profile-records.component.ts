@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -8,29 +7,24 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./profile-records.component.scss'],
 })
 export class ProfileRecordsComponent implements OnInit {
+  constructor(private _navController: NavController) {}
 
-  constructor(
-    private navController: NavController,
-    private _router: Router
-  ) { }
-
-  ngOnInit() { }
+  ngOnInit() {}
 
   open(section) {
     switch (section) {
       case 'tracks':
-        this._router.navigate(['tracklist']);
+        this._navController.navigateForward(['tracklist']);
         break;
       case 'photos':
-        this._router.navigate(['photolist']);
+        this._navController.navigateForward(['photolist']);
         break;
       case 'waypoints':
-        this._router.navigate(['waypointlist']);
+        this._navController.navigateForward(['waypointlist']);
         break;
       case 'vocals':
-        this._router.navigate(['vocallist']);
+        this._navController.navigateForward(['vocallist']);
         break;
     }
   }
-
 }

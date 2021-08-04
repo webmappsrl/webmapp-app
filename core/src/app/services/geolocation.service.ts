@@ -248,15 +248,18 @@ export class GeolocationService {
       this.onGeolocationStateChange.next(this._state);
     }
 
-    if (this._state.isRecording && !this._state.isPaused) {
-      this._recordedFeature.addCoordinates(this._currentLocation);
-      const timestamps: Array<number> =
-        this._recordedFeature?.properties?.timestamps ?? [];
-      timestamps.push(this._currentLocation.timestamp);
-      this._recordedFeature.setProperty('timestamps', timestamps);
-    }
+    if (this._state.isRecording && !this._state.isPaused)
+      this._addLocationToRecordedFeature(this._currentLocation);
 
     this.onLocationChange.next(this._currentLocation);
+  }
+
+  private _addLocationToRecordedFeature(location: ILocation): void {
+    this._recordedFeature.addCoordinates(location);
+    const timestamps: Array<number> =
+      this._recordedFeature?.properties?.timestamps ?? [];
+    timestamps.push(location.timestamp);
+    this._recordedFeature.setProperty('timestamps', timestamps);
   }
 
   /**
@@ -499,11 +502,9 @@ export class GeolocationService {
     notificationText?: string
   ): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      if (this._deviceService.isBrowser) {
-        this._state.isRecording = true;
-        this._recordedFeature = new CGeojsonLineStringFeature();
-        resolve();
-      } else {
+      let promise: Promise<any>;
+      if (this._deviceService.isBrowser) promise = Promise.resolve();
+      else {
         if (!notificationTitle)
           notificationTitle = this._translateService.instant(
             'services.geolocation.notification.title.newTrackRecord'
@@ -513,19 +514,20 @@ export class GeolocationService {
             'services.geolocation.notification.text.newTrackRecord'
           );
 
-        this._backgroundGeolocation
-          .configure({
-            notificationTitle,
-            notificationText,
-            startForeground: true,
-            pauseLocationUpdates: false,
-          })
-          .then(() => {
-            this._state.isRecording = true;
-            this._recordedFeature = new CGeojsonLineStringFeature();
-            resolve();
-          });
+        promise = this._backgroundGeolocation.configure({
+          notificationTitle,
+          notificationText,
+          startForeground: true,
+          pauseLocationUpdates: false,
+        });
       }
+
+      promise.then(() => {
+        this._state.isRecording = true;
+        this._recordedFeature = new CGeojsonLineStringFeature();
+        this._addLocationToRecordedFeature(this._currentLocation);
+        resolve();
+      });
     });
   }
 
