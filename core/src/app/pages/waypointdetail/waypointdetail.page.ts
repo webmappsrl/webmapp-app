@@ -25,15 +25,14 @@ export class WaypointdetailPage implements OnInit {
 
   ngOnInit() {
     this.displayPosition = this.waypoint.displayPosition;
-    console.log('------- ~ file: waypointdetail.page.ts ~ line 26 ~ WaypointdetailPage ~ ngOnInit ~ this.waypoint', this.waypoint);
   }
 
-  menu(){
+  menu() {
     this.menuController.enable(true, 'optionMenu');
     this.menuController.open('optionMenu');
   }
 
-  closeMenu(){
+  closeMenu() {
     this.menuController.close('optionMenu');
   }
 

@@ -22,8 +22,7 @@ export class PhotodetailPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('------- ~ file: photodetail.page.ts ~ line 27 ~ PhotodetailPage ~ ngOnInit ~ this.photo', this.photo);
-
+    
   }
 
   menu() {

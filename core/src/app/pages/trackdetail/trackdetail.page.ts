@@ -90,7 +90,6 @@ export class TrackdetailPage implements OnInit {
 
     if (!res.data.dismissed) {
       const track: Track = Object.assign(this.track, res.data.trackData);
-      console.log('TRACK TO SAVE', track);
 
       await this.saveService.updateTrack(track);
 

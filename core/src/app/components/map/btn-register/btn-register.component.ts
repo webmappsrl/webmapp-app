@@ -22,8 +22,6 @@ export class BtnRegisterComponent implements OnInit {
 
   async presentPopOver(ev: any) {
 
-    console.log('---', ev);
-
     this.popover = await this.popoverController.create({
       component: PopoverRegisterComponent,
       cssClass: 'popover-register',
