@@ -20,6 +20,8 @@ export class DeviceService {
     width: number;
     height: number;
   }>;
+  public onBackground: Observable<void>;
+  public onForeground: Observable<void>;
 
   private _isBrowser: boolean;
   private _isAndroid: boolean;
@@ -31,9 +33,14 @@ export class DeviceService {
     width: number;
     height: number;
   }>;
+  private _isBackground: boolean;
+  private _onBackground: ReplaySubject<void>;
+  private _onForeground: ReplaySubject<void>;
 
   constructor(private _platform: Platform, private _diagnostic: Diagnostic) {
     this._onResize = new ReplaySubject(1);
+    this._onBackground = new ReplaySubject(1);
+    this._onForeground = new ReplaySubject(1);
     this._width = window.innerWidth;
     this._height = window.innerHeight;
     this._onResize.next({
@@ -41,6 +48,8 @@ export class DeviceService {
       height: this._height,
     });
     this.onResize = this._onResize;
+    this.onBackground = this._onBackground;
+    this.onForeground = this._onForeground;
 
     this._isBrowser =
       this._platform.is('pwa') ||
@@ -58,6 +67,25 @@ export class DeviceService {
         height: this._height,
       });
     });
+
+    this._isBackground = false;
+
+    document.addEventListener(
+      'pause',
+      () => {
+        this._isBackground = true;
+        this._onBackground.next();
+      },
+      false
+    );
+    document.addEventListener(
+      'resume',
+      () => {
+        this._isBackground = false;
+        this._onForeground.next();
+      },
+      false
+    );
   }
 
   get isBrowser(): boolean {
@@ -82,6 +110,14 @@ export class DeviceService {
 
   get height(): number {
     return this._height;
+  }
+
+  get isBackground(): boolean {
+    return this._isBackground;
+  }
+
+  get isForeground(): boolean {
+    return !this._isBackground;
   }
 
   onLocationStateChange(): Observable<ELocationState> {

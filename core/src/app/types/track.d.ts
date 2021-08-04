@@ -2,11 +2,9 @@ import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-str
 import { PhotoItem } from '../services/photo.service';
 
 export interface RegisterItem {
-
   date: Date;
   key?: string;
 }
-
 
 export interface Track extends RegisterItem {
   geojson?: CGeojsonLineStringFeature;

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { Track } from 'src/app/types/track.d.';
-// import { ModalSelectphotosComponent } from '../modal-selectphotos/modal-selectphotos.component';
-import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { Track } from 'src/app/types/track';
+import { PhotoService } from 'src/app/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -11,7 +10,6 @@ import { PhotoItem, PhotoService } from 'src/app/services/photo.service';
   styleUrls: ['./modal-save.component.scss'],
 })
 export class ModalSaveComponent implements OnInit {
-
   public title: string;
   public description: string;
   public activity: string;
@@ -20,13 +18,12 @@ export class ModalSaveComponent implements OnInit {
 
   public track: Track;
 
-
   constructor(
     private modalController: ModalController,
     private translate: TranslateService,
     private alertController: AlertController,
     private photoService: PhotoService
-  ) { }
+  ) {}
 
   ngOnInit() {
     if (this.track) {
@@ -37,13 +34,14 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async close() {
-
-    const translation = await this.translate.get([
-      'pages.register.modalexit.title',
-      'pages.register.modalexit.text',
-      'pages.register.modalexit.confirm',
-      'pages.register.modalexit.cancel',
-    ]).toPromise();
+    const translation = await this.translate
+      .get([
+        'pages.register.modalexit.title',
+        'pages.register.modalexit.text',
+        'pages.register.modalexit.confirm',
+        'pages.register.modalexit.cancel',
+      ])
+      .toPromise();
 
     const alert = await this.alertController.create({
       cssClass: 'my-custom-class',
@@ -54,25 +52,24 @@ export class ModalSaveComponent implements OnInit {
           text: translation['pages.register.modalexit.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
-          handler: () => {
-          }
-        }, {
+          handler: () => {},
+        },
+        {
           text: translation['pages.register.modalexit.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
             this.modalController.dismiss({
-              dismissed: true
+              dismissed: true,
             });
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
   }
 
   save() {
-
     const trackData: Track = {
       photos: this.photos,
       photoKeys: null,
@@ -83,9 +80,8 @@ export class ModalSaveComponent implements OnInit {
     };
     this.modalController.dismiss({
       trackData,
-      dismissed: false
+      dismissed: false,
     });
-
   }
 
   // async addPhotos() {
@@ -104,14 +100,22 @@ export class ModalSaveComponent implements OnInit {
     const library = await this.photoService.getPhotos();
     library.forEach((libraryItem) => {
       const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
-      console.log('------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy', libraryItemCopy);
+      console.log(
+        '------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy',
+        libraryItemCopy
+      );
       this.photos.push(libraryItemCopy);
     });
-    console.log('------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos', this.photos);
+    console.log(
+      '------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos',
+      this.photos
+    );
   }
 
   remove(image) {
-    const i = this.photos.findIndex(x => x.id === image.id || x.key === image.key);
+    const i = this.photos.findIndex(
+      (x) => x.id === image.id || x.key === image.key
+    );
     if (i > -1) {
       this.photos.splice(i, 1);
     }
@@ -120,5 +124,4 @@ export class ModalSaveComponent implements OnInit {
   isValid() {
     return !!this.title && !!this.activity;
   }
-
 }

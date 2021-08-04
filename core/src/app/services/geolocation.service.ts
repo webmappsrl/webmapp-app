@@ -182,7 +182,7 @@ export class GeolocationService {
       notificationText: '', // Android only
       // notificationIconColor: '#FF00FF', // Android only
       activityType: 'OtherNavigation', // iOS only
-      pauseLocationUpdates: false, // iOS only
+      pauseLocationUpdates: true, // iOS only
       saveBatteryOnBackground: false, // iOS only
       maxLocations: 10000,
       debug: false,
@@ -220,23 +220,23 @@ export class GeolocationService {
       rawLocation.longitude,
       rawLocation.latitude,
       rawLocation.altitude &&
-        typeof rawLocation.altitude === 'number' &&
-        !Number.isNaN(rawLocation.altitude)
+      typeof rawLocation.altitude === 'number' &&
+      !Number.isNaN(rawLocation.altitude)
         ? rawLocation.altitude
         : undefined,
       rawLocation.accuracy &&
-        typeof rawLocation.accuracy === 'number' &&
-        !Number.isNaN(rawLocation.accuracy)
+      typeof rawLocation.accuracy === 'number' &&
+      !Number.isNaN(rawLocation.accuracy)
         ? rawLocation.accuracy
         : undefined,
       rawLocation.speed &&
-        typeof rawLocation.speed === 'number' &&
-        !Number.isNaN(rawLocation.speed)
+      typeof rawLocation.speed === 'number' &&
+      !Number.isNaN(rawLocation.speed)
         ? rawLocation.speed
         : undefined,
       rawLocation.bearing &&
-        typeof rawLocation.bearing === 'number' &&
-        !Number.isNaN(rawLocation.bearing)
+      typeof rawLocation.bearing === 'number' &&
+      !Number.isNaN(rawLocation.bearing)
         ? rawLocation.bearing
         : undefined
     );
@@ -268,7 +268,7 @@ export class GeolocationService {
         this._backgroundGeolocation.startTask().then((task) => {
           this._locationUpdate(location);
           this._backgroundGeolocation.endTask(task).then(
-            () => { },
+            () => {},
             (err) => {
               console.warn(err);
             }
@@ -282,7 +282,7 @@ export class GeolocationService {
         this._backgroundGeolocation.startTask().then((task) => {
           this._locationUpdate(location);
           this._backgroundGeolocation.endTask(task).then(
-            () => { },
+            () => {},
             (err) => {
               console.warn(err);
             }
@@ -296,25 +296,27 @@ export class GeolocationService {
         console.warn('Restarting geolocation plugin due to an error', error);
         this._backgroundGeolocation.stop().then(() => {
           this._backgroundGeolocation.start().then(
-            (res) => {
-              console.log(res);
-            },
-            (err) => console.warn(err)
+            () => {},
+            (err) => {
+              console.warn(err);
+            }
           );
         });
       });
     });
 
-    this._backgroundGeolocation.on('background').subscribe(() => {
+    // this._backgroundGeolocation.on('background').subscribe(() => {
+    this._deviceService.onBackground.subscribe(() => {
       this._ngZone.run(() => {
         if (this._state.isRecording && this._state.isActive) {
           if (!this._deviceService.isAndroid)
-            this._backgroundGeolocation.switchMode(0); // 0 = background, 1 = foreground
+            this._backgroundGeolocation.switchMode(1); // 0 = background, 1 = foreground
         } else this._backgroundGeolocation.stop();
       });
     });
 
-    this._backgroundGeolocation.on('foreground').subscribe(() => {
+    // this._backgroundGeolocation.on('foreground').subscribe(() => {
+    this._deviceService.onForeground.subscribe(() => {
       this._ngZone.run(() => {
         if (this._state.isRecording && this._state.isActive) {
           if (this._currentLocation)
@@ -324,9 +326,7 @@ export class GeolocationService {
             this._backgroundGeolocation.switchMode(1); // 0 = background, 1 = foreground
         } else {
           this._backgroundGeolocation.start().then(
-            (res) => {
-              console.log(res);
-            },
+            () => {},
             (err) => console.warn(err)
           );
         }
@@ -371,9 +371,7 @@ export class GeolocationService {
                     );
                     this._state.isActive = true;
                     this._backgroundGeolocation.start().then(
-                      (res) => {
-                        console.log(res);
-                      },
+                      () => {},
                       (err) => console.warn(err)
                     );
                     this.onGeolocationStateChange.next(this._state);
@@ -432,7 +430,7 @@ export class GeolocationService {
                 Math.min(
                   extent[3],
                   this._currentLocation.latitude +
-                  (-0.001 + Math.random() / 500)
+                    (-0.001 + Math.random() / 500)
                 )
               );
               lng = Math.max(
@@ -440,7 +438,7 @@ export class GeolocationService {
                 Math.min(
                   extent[2],
                   this._currentLocation.longitude +
-                  (-0.001 + Math.random() / 500)
+                    (-0.001 + Math.random() / 500)
                 )
               );
               if (
@@ -461,7 +459,9 @@ export class GeolocationService {
               accuracy: acc,
               time: Date.now(),
               speed,
-              locationProvider: this._backgroundGeolocation ? this._backgroundGeolocation.RAW_PROVIDER : null,
+              locationProvider: this._backgroundGeolocation
+                ? this._backgroundGeolocation.RAW_PROVIDER
+                : null,
               provider: 'gps',
               bearing,
             });
@@ -512,11 +512,13 @@ export class GeolocationService {
           notificationText = this._translateService.instant(
             'services.geolocation.notification.text.newTrackRecord'
           );
+
         this._backgroundGeolocation
           .configure({
             notificationTitle,
             notificationText,
             startForeground: true,
+            pauseLocationUpdates: false,
           })
           .then(() => {
             this._state.isRecording = true;
@@ -539,6 +541,7 @@ export class GeolocationService {
         this._backgroundGeolocation
           .configure({
             startForeground: false,
+            pauseLocationUpdates: true,
           })
           .then(() => {
             this._state.isPaused = true;
@@ -561,6 +564,7 @@ export class GeolocationService {
           this._backgroundGeolocation
             .configure({
               startForeground: true,
+              pauseLocationUpdates: false,
             })
             .then(() => {
               this._state.isPaused = false;
@@ -583,6 +587,7 @@ export class GeolocationService {
         this._backgroundGeolocation
           .configure({
             startForeground: false,
+            pauseLocationUpdates: true,
           })
           .then(() => {
             this._state.isRecording = false;
