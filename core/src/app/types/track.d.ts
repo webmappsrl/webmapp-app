@@ -1,14 +1,14 @@
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
-import { PhotoItem } from '../services/photo.service';
+import { IPhotoItem } from '../services/photo.service';
 
-export interface RegisterItem {
+export interface IRegisterItem {
   date: Date;
   key?: string;
 }
 
-export interface Track extends RegisterItem {
+export interface ITrack extends IRegisterItem {
   geojson?: CGeojsonLineStringFeature;
-  photos: PhotoItem[];
+  photos: IPhotoItem[];
   photoKeys: string[];
   title: string;
   description?: string;

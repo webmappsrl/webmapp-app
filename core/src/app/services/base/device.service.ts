@@ -120,6 +120,11 @@ export class DeviceService {
     return !this._isBackground;
   }
 
+  /**
+   * Trigger an event when the gps is started or stopped
+   *
+   * @returns {Observable<ELocationState>}
+   */
   onLocationStateChange(): Observable<ELocationState> {
     return new Observable<ELocationState>((observer) => {
       this._diagnostic.registerLocationStateChangeHandler((state: string) => {
@@ -140,6 +145,8 @@ export class DeviceService {
    * Handle permissions for location and try to activate the location service
    * Emit LocationState.ENABLED or LocationState.ENABLED_WHEN_IN_USE if location is available. For LocationState.NOT_ENABLED and
    * LocationState.SETTINGS values, subscribe to DeviceService.onLocationStateChanged
+   *
+   * @returns {Promise<ELocationState>}
    */
   enableGPS(): Promise<ELocationState> {
     return new Promise<ELocationState>((resolve, reject) => {
@@ -171,6 +178,8 @@ export class DeviceService {
    */
   /**
    * Check GPS permissions and eventually ask user for permissions
+   *
+   * @returns {Promise<ELocationState>}
    */
   private _enableGPSPermissions(): Promise<ELocationState> {
     return new Promise<ELocationState>((resolve, reject) => {

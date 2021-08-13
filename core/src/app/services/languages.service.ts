@@ -52,9 +52,11 @@ export class LanguagesService {
   }
 
   /**
-   * Allow to change the app language
+   * Change the app language
    *
-   * @param lang string of at least two chars that represent the language to switch
+   * @param {string} lang string of at least two chars that represent the language to switch
+   *
+   * @returns {void}
    */
   changeLanguage(lang: string): void {
     lang = lang.substring(0, 2);
@@ -76,9 +78,11 @@ export class LanguagesService {
   }
 
   /**
-   * If lang is available return true
+   * Check if the language is available
    *
-   * @param lang the language to look for
+   * @param {string} lang the language to look for
+   *
+   * @returns {boolean}
    */
   isAvailable(lang: string): boolean {
     if (
@@ -96,11 +100,13 @@ export class LanguagesService {
   }
 
   /**
-   * Return the translation for the specifiedkey using the specified object
+   * Translate the specified key in the specified object
    *
-   * @param key the key
-   * @param object the object containing the key and eventually the translations
-   * @param fallbackKey the fallback key. Used if there is no translation of the key
+   * @param {string} key the key
+   * @param {any} object the object containing the key and eventually the translations
+   * @param {string} fallbackKey the fallback key. Used if there is no translation of the key
+   *
+   * @returns {string} the translated string
    */
   translate(key: string, object?: any, fallbackKey?: string): string {
     let value: string;

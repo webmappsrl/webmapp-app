@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PhotoItem } from 'src/app/services/photo.service';
+import { IPhotoItem } from 'src/app/services/photo.service';
 import { MenuController } from '@ionic/angular';
 
 @Component({
@@ -9,29 +9,25 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./photodetail.page.scss'],
 })
 export class PhotodetailPage implements OnInit {
-
-  public photo: PhotoItem;
+  public photo: IPhotoItem;
 
   constructor(
-    private route: ActivatedRoute,
-    private menuController: MenuController
+    private _route: ActivatedRoute,
+    private _menuController: MenuController
   ) {
-    this.route.queryParams.subscribe(params => {
-      this.photo = JSON.parse(params['photo']);
+    this._route.queryParams.subscribe((params) => {
+      this.photo = JSON.parse(params.photo);
     });
   }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() {}
 
   menu() {
-    this.menuController.enable(true, 'optionMenu');
-    this.menuController.open('optionMenu');
+    this._menuController.enable(true, 'optionMenu');
+    this._menuController.open('optionMenu');
   }
 
   closeMenu() {
-    this.menuController.close('optionMenu');
+    this._menuController.close('optionMenu');
   }
-
 }

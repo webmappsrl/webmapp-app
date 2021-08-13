@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
-import { PopoverPhotoType } from 'src/app/types/success.enum';
+import { EPopoverPhotoType } from 'src/app/types/esuccess.enum';
 
 @Component({
   selector: 'webmapp-popoverphoto',
@@ -8,20 +8,15 @@ import { PopoverPhotoType } from 'src/app/types/success.enum';
   styleUrls: ['./popoverphoto.component.scss'],
 })
 export class PopoverphotoComponent implements OnInit {
+  constructor(private _popoverController: PopoverController) {}
 
-  constructor(
-    private popoverController: PopoverController,
-  ) { }
-
-  ngOnInit() { }
-
+  ngOnInit() {}
 
   single() {
-    this.popoverController.dismiss({}, PopoverPhotoType.PHOTOS);
+    this._popoverController.dismiss({}, EPopoverPhotoType.PHOTOS);
   }
 
   multiple() {
-    this.popoverController.dismiss({}, PopoverPhotoType.LIBRARY);
+    this._popoverController.dismiss({}, EPopoverPhotoType.LIBRARY);
   }
-
 }

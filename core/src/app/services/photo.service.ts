@@ -4,21 +4,13 @@ import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
-import {
-  CameraDirection,
-  Plugins,
-  FilesystemDirectory,
-  FilesystemEncoding,
-} from '@capacitor/core';
+import { CameraDirection, Plugins } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraResultType } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
-import { RegisterItem } from '../types/track';
+import { IRegisterItem } from '../types/track';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { Filesystem } = Plugins;
-
-export interface PhotoItem extends RegisterItem {
+export interface IPhotoItem extends IRegisterItem {
   id: string;
   photoURL: string;
   data: string;
@@ -30,9 +22,9 @@ export interface PhotoItem extends RegisterItem {
   providedIn: 'root',
 })
 export class PhotoService {
-  private useBase64 = false;
+  private _useBase64 = false;
 
-  private options = {
+  private _options = {
     // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
     // selection of a single image, the plugin will return it.
     maximumImagesCount: 100,
@@ -52,29 +44,28 @@ export class PhotoService {
     // available options are
     // window.imagePicker.OutputType.FILE_URI (0) or
     // window.imagePicker.OutputType.BASE64_STRING (1)
-    outputType: this.useBase64 ? 1 : 0,
+    outputType: this._useBase64 ? 1 : 0,
   };
 
   constructor(
-    private imagePicker: ImagePicker,
+    private _imagePicker: ImagePicker,
     private _deviceService: DeviceService,
-    private http: HttpClient // private file: File,
-  ) // private filePath: FilePath,
-  {}
+    private _http: HttpClient // private file: File, // private filePath: FilePath,
+  ) {}
 
-  async getPhotos(dateLimit: Date = null): Promise<PhotoItem[]> {
-    const res: PhotoItem[] = [];
+  async getPhotos(dateLimit: Date = null): Promise<IPhotoItem[]> {
+    const res: IPhotoItem[] = [];
     let filePath = null;
     if (!this._deviceService.isBrowser) {
-      if (!(await this.imagePicker.hasReadPermission())) {
-        await this.imagePicker.requestReadPermission();
-        if (!(await this.imagePicker.hasReadPermission())) return res;
+      if (!(await this._imagePicker.hasReadPermission())) {
+        await this._imagePicker.requestReadPermission();
+        if (!(await this._imagePicker.hasReadPermission())) return res;
       }
 
-      const images = await this.imagePicker.getPictures(this.options);
+      const images = await this._imagePicker.getPictures(this._options);
       for (let i = 0; i < images.length; i++) {
         let data = null;
-        if (this.useBase64) {
+        if (this._useBase64) {
           data = `data:image/jpeg;base64,${images[i]}`;
         } else {
           data = Capacitor.convertFileSrc(images[i]);
@@ -104,7 +95,7 @@ export class PhotoService {
     }
   }
 
-  async shotPhoto(allowlibrary): Promise<PhotoItem> {
+  async shotPhoto(allowlibrary): Promise<IPhotoItem> {
     const photo = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
@@ -134,7 +125,7 @@ export class PhotoService {
   }
 
   public async getPhotoData(photoUrl: string): Promise<any> {
-    const filegot = await this.http
+    const filegot = await this._http
       .get(photoUrl, { responseType: 'blob' })
       .toPromise();
     return new Promise((resolve, reject) => {
@@ -149,7 +140,7 @@ export class PhotoService {
     });
   }
 
-  public async setPhotoData(photo: PhotoItem) {
+  public async setPhotoData(photo: IPhotoItem) {
     photo.rawData = await this.getPhotoData(photo.photoURL);
   }
 }

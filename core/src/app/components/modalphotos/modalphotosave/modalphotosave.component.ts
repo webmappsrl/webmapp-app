@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PhotoItem } from 'src/app/services/photo.service';
+import { IPhotoItem } from 'src/app/services/photo.service';
 
 @Component({
   selector: 'webmapp-modalphotosave',
@@ -8,19 +8,15 @@ import { PhotoItem } from 'src/app/services/photo.service';
   styleUrls: ['./modalphotosave.component.scss'],
 })
 export class ModalphotosaveComponent implements OnInit {
+  public photos: IPhotoItem[];
 
-  public photos: PhotoItem[];
+  constructor(private modalController: ModalController) {}
 
-  constructor(
-    private modalController: ModalController,
-  ) { }
-
-  ngOnInit() { }
-
+  ngOnInit() {}
 
   close() {
     this.modalController.dismiss({
-      dismissed: true
+      dismissed: true,
     });
   }
 
@@ -29,16 +25,13 @@ export class ModalphotosaveComponent implements OnInit {
   }
 
   save() {
-
     this.modalController.dismiss({
-      photos: this.photos
+      photos: this.photos,
     });
   }
 
   isValid() {
-    const res = this.photos.find(x => !x.description);
+    const res = this.photos.find((x) => !x.description);
     return !res;
   }
-
-
 }

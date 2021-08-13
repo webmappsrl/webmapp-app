@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { Track } from 'src/app/types/track';
+import { ITrack } from 'src/app/types/track';
 import { PhotoService } from 'src/app/services/photo.service';
 
 @Component({
@@ -16,13 +16,13 @@ export class ModalSaveComponent implements OnInit {
 
   public photos: any[] = [];
 
-  public track: Track;
+  public track: ITrack;
 
   constructor(
-    private modalController: ModalController,
-    private translate: TranslateService,
-    private alertController: AlertController,
-    private photoService: PhotoService
+    private _modalController: ModalController,
+    private _translate: TranslateService,
+    private _alertController: AlertController,
+    private _photoService: PhotoService
   ) {}
 
   ngOnInit() {
@@ -34,7 +34,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async close() {
-    const translation = await this.translate
+    const translation = await this._translate
       .get([
         'pages.register.modalexit.title',
         'pages.register.modalexit.text',
@@ -43,7 +43,7 @@ export class ModalSaveComponent implements OnInit {
       ])
       .toPromise();
 
-    const alert = await this.alertController.create({
+    const alert = await this._alertController.create({
       cssClass: 'my-custom-class',
       header: translation['pages.register.modalexit.title'],
       message: translation['pages.register.modalexit.text'],
@@ -58,7 +58,7 @@ export class ModalSaveComponent implements OnInit {
           text: translation['pages.register.modalexit.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
-            this.modalController.dismiss({
+            this._modalController.dismiss({
               dismissed: true,
             });
           },
@@ -70,7 +70,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   save() {
-    const trackData: Track = {
+    const trackData: ITrack = {
       photos: this.photos,
       photoKeys: null,
       title: this.title,
@@ -78,7 +78,7 @@ export class ModalSaveComponent implements OnInit {
       activity: this.activity,
       date: new Date(),
     };
-    this.modalController.dismiss({
+    this._modalController.dismiss({
       trackData,
       dismissed: false,
     });
@@ -97,7 +97,7 @@ export class ModalSaveComponent implements OnInit {
   // }
 
   async addPhotos() {
-    const library = await this.photoService.getPhotos();
+    const library = await this._photoService.getPhotos();
     library.forEach((libraryItem) => {
       const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
       console.log(

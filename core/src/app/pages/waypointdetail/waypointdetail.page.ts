@@ -10,16 +10,15 @@ import { WaypointSave } from 'src/app/types/waypoint';
   styleUrls: ['./waypointdetail.page.scss'],
 })
 export class WaypointdetailPage implements OnInit {
-
   public waypoint: WaypointSave;
   public displayPosition: ILocation;
 
   constructor(
-    private route: ActivatedRoute,
-    private menuController: MenuController
+    private _route: ActivatedRoute,
+    private _menuController: MenuController
   ) {
-    this.route.queryParams.subscribe(params => {
-      this.waypoint = JSON.parse(params['waypoint']);
+    this._route.queryParams.subscribe((params) => {
+      this.waypoint = JSON.parse(params.waypoint);
     });
   }
 
@@ -28,12 +27,11 @@ export class WaypointdetailPage implements OnInit {
   }
 
   menu() {
-    this.menuController.enable(true, 'optionMenu');
-    this.menuController.open('optionMenu');
+    this._menuController.enable(true, 'optionMenu');
+    this._menuController.open('optionMenu');
   }
 
   closeMenu() {
-    this.menuController.close('optionMenu');
+    this._menuController.close('optionMenu');
   }
-
 }

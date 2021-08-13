@@ -36,7 +36,7 @@ import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
-import { Track } from 'src/app/types/track';
+import { ITrack } from 'src/app/types/track';
 
 @Component({
   selector: 'webmapp-map',
@@ -57,7 +57,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
 
-  @Input('track') set track(value: Track) {
+  @Input('track') set track(value: ITrack) {
     if (value) {
       setTimeout(() => {
         this._track.registeredTrack = value;
@@ -108,7 +108,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _track: {
     layer: VectorLayer;
     track: Feature[];
-    registeredTrack: Track;
+    registeredTrack: ITrack;
   };
 
   private _locationAnimationState: {

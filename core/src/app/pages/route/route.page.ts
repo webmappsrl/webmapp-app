@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuController, NavController } from '@ionic/angular';
 import { RouteService } from 'src/app/services/route.service';
-import { WmRoute } from 'src/app/types/route';
+import { IWmRoute } from 'src/app/types/route';
 
 @Component({
   selector: 'webmapp-route',
@@ -10,21 +10,21 @@ import { WmRoute } from 'src/app/types/route';
   styleUrls: ['./route.page.scss'],
 })
 export class RoutePage implements OnInit {
-  public route: WmRoute;
+  public route: IWmRoute;
 
   public opacity = 1;
 
   constructor(
-    private actRoute: ActivatedRoute,
-    private routeService: RouteService,
-    private navController: NavController,
-    private menuController: MenuController
+    private _actRoute: ActivatedRoute,
+    private _routeService: RouteService,
+    private _navController: NavController,
+    private _menuController: MenuController
   ) {}
 
   async ngOnInit() {
-    this.actRoute.queryParams.subscribe(async (params) => {
+    this._actRoute.queryParams.subscribe(async (params) => {
       const id = params.id;
-      this.route = await this.routeService.getRoute(id);
+      this.route = await this._routeService.getRoute(id);
       console.log(
         '------- ~ file: route.page.ts ~ line 24 ~ RoutePage ~ ngOnInit ~ this.route',
         this.route
@@ -47,12 +47,12 @@ export class RoutePage implements OnInit {
   }
 
   menu() {
-    this.menuController.enable(true, 'optionMenu');
-    this.menuController.open('optionMenu');
+    this._menuController.enable(true, 'optionMenu');
+    this._menuController.open('optionMenu');
   }
 
   closeMenu() {
-    this.menuController.close('optionMenu');
+    this._menuController.close('optionMenu');
   }
 
   share() {
@@ -68,6 +68,6 @@ export class RoutePage implements OnInit {
   }
 
   back() {
-    this.navController.back();
+    this._navController.back();
   }
 }

@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { WmRoute } from '../types/route';
+import { IWmRoute } from '../types/route';
 import { CommunicationService } from './base/communication.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RouteService {
+  constructor(private _communicationService: CommunicationService) {}
 
-  constructor(
-    private comService: CommunicationService
-  ) { }
-
-
-  public async getRoute(routeId: number): Promise<WmRoute> {
-    const res = await this.comService.get("https://geohub.webmapp.it/api/ec/track/18").toPromise();
+  public async getRoute(routeId: number): Promise<IWmRoute> {
+    const res = await this._communicationService
+      .get('https://geohub.webmapp.it/api/ec/track/18')
+      .toPromise();
     return res;
   }
 }

@@ -12,45 +12,46 @@ import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint
   styleUrls: ['./waypoint.page.scss'],
 })
 export class WaypointPage implements OnInit, OnDestroy {
-
   public position1: string = 'nome città';
   public position2: string = 'indirizzo';
   public location: string;
-  private position: ILocation;
+  private _location: ILocation;
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   constructor(
-    private geolocationService: GeolocationService,
-    private modalController: ModalController,
-    private navController: NavController
-  ) { }
+    private _geolocationService: GeolocationService,
+    private _modalController: ModalController,
+    private _navController: NavController
+  ) {}
 
   ngOnInit() {
-    this.geolocationService.start();
-    this.geolocationService.onLocationChange.pipe(takeUntil(this._destroyer)).subscribe(x => {
-      this.onChangeLocation(x);
-    });
+    this._geolocationService.start();
+    this._geolocationService.onLocationChange
+      .pipe(takeUntil(this._destroyer))
+      .subscribe((x) => {
+        this.onChangeLocation(x);
+      });
   }
 
   ngOnDestroy() {
     this._destroyer.next(true);
   }
 
-  onChangeLocation(pos: ILocation) {
-    this.location = `${pos.latitude}, ${pos.longitude}`;
-    this.position = pos;
+  onChangeLocation(location: ILocation) {
+    this.location = `${location.latitude}, ${location.longitude}`;
+    this._location = location;
   }
 
   async save() {
-    const modaSuccess = await this.modalController.create({
+    const modaSuccess = await this._modalController.create({
       component: ModalWaypointSaveComponent,
       componentProps: {
-        position: this.position
-      }
+        position: this._location,
+      },
     });
     await modaSuccess.present();
 
-    this.navController.back();
+    this._navController.back();
   }
 }

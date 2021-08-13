@@ -1,27 +1,23 @@
-/* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
-
-export interface wmImage {
-
+export interface IWmImage {
   id: number;
   url: string;
   caption: string;
   api_url: string;
   sizes: {
-    "108x148": string;
-    "108x137": string;
-    "225x100": string;
-    "118x138": string;
-    "108x139": string;
-    "118x117": string;
-    "335x250": string;
-    "400x200": string;
-    "1440x500": string;
-  }
+    '108x148': string;
+    '108x137': string;
+    '225x100': string;
+    '118x138': string;
+    '108x139': string;
+    '118x117': string;
+    '335x250': string;
+    '400x200': string;
+    '1440x500': string;
+  };
 }
 
-export interface WmRoute {
+export interface IWmRoute {
   type: string;
   properties: {
     id: number;
@@ -62,9 +58,8 @@ export interface WmRoute {
     geojson_url: string;
     kml_url: string;
     gpx_url: string;
-    image: wmImage;
-    imageGallery: wmImage[
-    ];
+    image: IWmImage;
+    imageGallery: IWmImage[];
     taxonomy: {
       activity: string[];
       where: string[];
