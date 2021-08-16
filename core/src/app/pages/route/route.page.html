@@ -10,15 +10,15 @@
     <ion-list>
       <ion-item>
         <i class="webmapp-icon-directions-outline " start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions'|translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions' | translate}}</div>
       </ion-item>
       <ion-item>
         <i class="webmapp-icon-donwload-outline" start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.download'|translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.download' | translate}}</div>
       </ion-item>
       <ion-item>
         <i class="webmapp-icon-share-outline"></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.share'|translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.share' | translate}}</div>
       </ion-item>
     </ion-list>
   </ion-content>
@@ -63,11 +63,13 @@
 
 
 
-  <ion-card class="webmapp-pageroute-infopanel" >
+  <ion-card class="webmapp-pageroute-infopanel" [ngStyle]="{'min-height': (50-(50*opacity))+'%'}">
     <div class="webmapp-pageroute-infopanel-drag" (click)="toggleDetail()">
       <div class="webmapp-pageroute-infopanel-drag-handle"></div>
     </div>
-    <ion-label class="webmapp-pageroute-infopanel-name" *ngIf="opacity>0" [ngStyle]="{      'opacity': opacity    }">{{route?.properties?.name | wmtrans}} </ion-label>
+    <ion-label class="webmapp-pageroute-infopanel-name" *ngIf="opacity>0" [ngStyle]="{      'opacity': opacity    }">
+      {{route?.properties?.name | wmtrans}} </ion-label>
+
     <ion-grid *ngIf="opacity>0" [ngStyle]="{      'opacity': opacity    }">
       <ion-row>
         <ion-col size="4">
@@ -86,9 +88,69 @@
       </ion-row>
     </ion-grid>
 
+    <ion-tabs *ngIf="opacity<=0" [ngStyle]="{      'opacity': 1-opacity    }" class="webmapp-route-tabs">
+
+      <ion-tab-bar slot="top" class="webmapp-pageroute-infopanel-tabs">
+
+        <ion-slides pager="false"  [options]="slideOpts" #slideTab>
+          <ion-slide>
+            <ion-tab-button tab="route-detail" [routerLink]="['route-detail']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabdetail' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+          <ion-slide>
+            <ion-tab-button tab="route-walkable" [routerLink]="['route-walkable']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabwalkable' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+          <ion-slide>
+            <ion-tab-button tab="route-howto" [routerLink]="['route-howto']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabhowto' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+          <ion-slide>
+            <ion-tab-button tab="route-eat" [routerLink]="['route-eat']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabeat' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+          <ion-slide>
+            <ion-tab-button tab="route-description" [routerLink]="['route-description']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabdescription' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+          <ion-slide>
+            <ion-tab-button tab="route-accessibility" [routerLink]="['route-accessibility']"
+              class="webmapp-pageroute-infopanel-tabs-button">
+              <ion-label class="webmapp-pageroute-infopanel-tabs-label">
+                {{'pages.route.tabaccessibility' | translate}}
+              </ion-label>
+            </ion-tab-button>
+          </ion-slide>
+        </ion-slides>
+      </ion-tab-bar>
+    </ion-tabs>
+
+
+
   </ion-card>
 
-  <ion-fab [vertical]="opacity==1?'bottom':'top'" horizontal="end" class="webmapp-pageroute-fabbottom {{opacity<1?'webmapp-pageroute-fabbottom-top':''}}">
+  <ion-fab [vertical]="opacity==1?'bottom':'top'" horizontal="end"
+    class="webmapp-pageroute-fabbottom {{opacity<1?'webmapp-pageroute-fabbottom-top':''}}">
     <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i class="webmapp-icon-heart-outline"></i>
     </ion-fab-button>
@@ -103,7 +165,7 @@
   <ion-button (click)="navigate()" class="webmapp-pageroute-btnnavigate webmapp-pageroute-btnnavbottom"
     *ngIf="opacity >0" [ngStyle]="{      'opacity': opacity    }">
     <i class="webmapp-icon-nav-outline"></i>
-    <ion-label>{{'pages.route.navigate'|translate}}
+    <ion-label>{{'pages.route.navigate' | translate}}
     </ion-label>
   </ion-button>
 

@@ -27,11 +27,11 @@
         text-align: center;
         display: inline-block;
         .webmapp-pageroute-infopanel-drag-handle {
-            background-color: var(--wm-color-lightgray);
+            background-color: var(--wm-color-grey);
             display: inline-block;
-            width: 30px;
-            height: 4px;
-            border-radius: 4px;
+            width: 55px;
+            height: 5px;
+            border-radius: 5px;
         }
     }
 }
@@ -103,4 +103,28 @@
 }
 .webmapp-pageroute-menuitem {
     padding: 5px 20px;
+}
+
+.webmapp-route-tabs {
+    margin: 20px 0px;
+    .webmapp-pageroute-infopanel-tabs {
+        border: none;
+        --border: none;
+        .webmapp-pageroute-infopanel-tabs-button {
+            &.tab-selected {
+                color: var(--wm-color-dark);
+                font-weight: var(--wm-font-weight-bold);
+                ::after {
+                    content: "";
+                    display: block;
+                    width: 40%;
+                    margin-left: 30%;
+                    margin-top: 3px;
+                    border-bottom: 0px;
+                    border-style: solid;
+                    border-color: var(--wm-color-primary);
+                }
+            }
+        }
+    }
 }

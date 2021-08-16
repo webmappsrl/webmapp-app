@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuController, NavController } from '@ionic/angular';
 import { RouteService } from 'src/app/services/route.service';
+import { StatusService } from 'src/app/services/status.service';
 import { IWmRoute } from 'src/app/types/route';
 
 @Component({
@@ -14,21 +15,28 @@ export class RoutePage implements OnInit {
 
   public opacity = 1;
 
+  public slideOpts = {
+    initialSlide: 0,
+    speed: 400,
+    spaceBetween: 5,
+    slidesOffsetAfter: 5,
+    slidesOffsetBefore: 5,
+    slidesPerView: 3.5,
+  };
+
   constructor(
     private _actRoute: ActivatedRoute,
     private _routeService: RouteService,
     private _navController: NavController,
-    private _menuController: MenuController
-  ) {}
+    private _menuController: MenuController,
+    private _statusService: StatusService
+  ) { }
 
   async ngOnInit() {
     this._actRoute.queryParams.subscribe(async (params) => {
       const id = params.id;
       this.route = await this._routeService.getRoute(id);
-      console.log(
-        '------- ~ file: route.page.ts ~ line 24 ~ RoutePage ~ ngOnInit ~ this.route',
-        this.route
-      );
+      this._statusService.route = this.route;
     });
   }
 
@@ -70,4 +78,5 @@ export class RoutePage implements OnInit {
   back() {
     this._navController.back();
   }
+
 }

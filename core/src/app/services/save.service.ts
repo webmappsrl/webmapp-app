@@ -1,25 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { ISaveIndexObj } from '../types/save';
+import { ESaveObjType } from '../types/save.enum';
 import { IRegisterItem, ITrack } from '../types/track';
 import { WaypointSave } from '../types/waypoint';
 import { StorageService } from './base/storage.service';
 import { IPhotoItem, PhotoService } from './photo.service';
 
-export enum ESaveObjType {
-  PHOTO = 'photo',
-  PHOTOTRACK = 'phototrack',
-  TRACK = 'track',
-  WAYPOINT = 'waypoint',
-}
-
-interface ISaveIndexObj {
-  key: string;
-  type: ESaveObjType;
-  saved: boolean;
-  edited: boolean;
-  deleted?: boolean;
-}
 
 @Injectable({
   providedIn: 'root',
