@@ -13,6 +13,8 @@ import { IWmRoute } from 'src/app/types/route';
 export class RoutePage implements OnInit {
   public route: IWmRoute;
 
+  public track;
+
   public opacity = 1;
 
   public slideOpts = {
@@ -37,6 +39,7 @@ export class RoutePage implements OnInit {
       const id = params.id;
       this.route = await this._routeService.getRoute(id);
       this._statusService.route = this.route;
+      this.track = this.route.geometry;
     });
   }
 
