@@ -3,10 +3,8 @@ import { Plugins } from '@capacitor/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { IRegisterItem, ITrack } from '../types/track';
 import { WaypointSave } from '../types/waypoint';
+import { StorageService } from './base/storage.service';
 import { IPhotoItem, PhotoService } from './photo.service';
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const { Storage } = Plugins;
 
 export enum ESaveObjType {
   PHOTO = 'photo',
@@ -33,7 +31,10 @@ export class SaveService {
     objects: [],
   };
 
-  constructor(private _photoService: PhotoService) {
+  constructor(
+    private _photoService: PhotoService,
+    private _storage: StorageService
+  ) {
     this._recoverIndex();
   }
 
@@ -103,7 +104,7 @@ export class SaveService {
   /**
    * Get all the object save on storage but not on the cloud
    */
-  public async getUnsavedObjects() {}
+  public async getUnsavedObjects() { }
 
   public async getWaypoints(): Promise<WaypointSave[]> {
     return this.getGeneric(ESaveObjType.WAYPOINT);
@@ -138,7 +139,6 @@ export class SaveService {
 
   public async getGeneric(type: ESaveObjType): Promise<any[]> {
     const res = [];
-    const keys = await Storage.keys();
     for (const obj of this._index.objects) {
       if (obj.type === type && !obj.deleted) {
         const ret = await this._getGenericById(obj.key);
@@ -152,24 +152,24 @@ export class SaveService {
 
   private async _getGenericById(key): Promise<any> {
     let returnObj = null;
-    const ret = await Storage.get({ key });
-    if (ret && ret.value && ret.value !== 'null') {
-      returnObj = JSON.parse(ret.value);
+    const ret = await this._storage.getByKey(key);
+    if (ret) {
+      returnObj = ret;
       returnObj.key = key;
     }
     return returnObj;
   }
 
   private async _deleteGeneric(key): Promise<any> {
-    await Storage.remove({ key });
+    await this._storage.removeByKey(key);
     const indexObj = this._index.objects.find((x) => x.key === key);
     indexObj.deleted = true;
     await this._updateIndex();
   }
 
   private async _updateGeneric(key, value: IRegisterItem): Promise<any> {
-    await Storage.remove({ key });
-    await Storage.set({ key, value: JSON.stringify(value) });
+    await this._storage.removeByKey(key);
+    await this._storage.setByKey(key, value);
     const indexObj = this._index.objects.find((x) => x.key === key);
     indexObj.edited = true;
     await this._updateIndex();
@@ -192,7 +192,7 @@ export class SaveService {
       edited: false,
     };
     this._index.objects.push(insertObj);
-    await Storage.set({ key, value: JSON.stringify(object) });
+    await this._storage.setByKey(key, object);
     await this._updateIndex();
     return key;
   }
@@ -202,17 +202,17 @@ export class SaveService {
   }
 
   private async _recoverIndex() {
-    const ret = await Storage.get({ key: this._indexKey });
-    if (ret && ret.value && ret.value !== 'null') {
-      this._index = JSON.parse(ret.value);
-    }
+    const ret = await this._storage.getByKey(this._indexKey);    
+    if (ret) {
+      this._index = ret;
+    }    
   }
 
   private async _updateIndex() {
-    await Storage.set({
-      key: this._indexKey,
-      value: JSON.stringify(this._index),
-    });
+    await this._storage.setByKey(
+      this._indexKey,
+      this._index
+    );    
   }
 
   private _initTrack(track: ITrack) {

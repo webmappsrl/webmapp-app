@@ -133,7 +133,7 @@ export class PhotoService {
       reader.readAsDataURL(filegot);
       reader.onloadend = () => {
         const b64 = reader.result;
-        console.log('Sync b64', b64);
+        // console.log('Sync b64', b64);
         resolve(b64);
       };
       reader.onerror = reject;
