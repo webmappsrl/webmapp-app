@@ -205,6 +205,10 @@
         "ele_min": "Quota minima",
         "ele_from": "Quota di partenza",
         "ele_to": "Quota di arrivo"
+      },
+      "description": {
+        "gallery": "Gallery",
+        "description": "Descrizione"
       }
     }
   },
