@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
+import { StatusService } from 'src/app/services/status.service';
+import { IGeojsonFeature, iLocalString } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-card-big',
@@ -9,30 +11,34 @@ import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
 })
 export class CardBigComponent implements OnInit {
   public imageUrl: string;
-  public title: string;
-  public subtitle: string;
+  public title: iLocalString;
+  public subtitle: any;
 
-  private _id: string;
+  private _item: IGeojsonFeature;
 
   constructor(
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private _statusService: StatusService
   ) { }
 
-  @Input('id') set id(value: string) {
-    this._id = value;
-    this.title = 'Al lago delle Malghette';
-    this.subtitle = 'Trentino alto adige';
-    this.imageUrl = '/assets/icon/icon.png';
+  @Input('item') set item(value: IGeojsonFeature) {
+    this._item = value;
+    this.title = value.properties.name;
+    this.subtitle = value.properties.created_at;
+    this.imageUrl = value.properties.image.url;
   }
 
-  ngOnInit() { }
+  ngOnInit(
+  ) { }
 
   open() {
-    const navigationExtras: NavigationOptions = {
-      queryParams: {
-        id: this._id
-      }
-    };
-    this.navCtrl.navigateForward('route', navigationExtras);
+    this._statusService.route = this._item;
+    // const navigationExtras: NavigationOptions = {
+    //   queryParams: {
+    //     id: this._id
+    //   }
+    // };
+    // this.navCtrl.navigateForward('route', navigationExtras);
+    this.navCtrl.navigateForward('route');
   }
 }

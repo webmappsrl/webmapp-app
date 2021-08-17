@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { GeohubService } from 'src/app/services/geohub.service';
+import { GeolocationService } from 'src/app/services/geolocation.service';
+import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-page-home',
@@ -6,16 +9,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  public ids: Array<string>;
-  public ids2: Array<string>;
-  constructor() {}
+  public mostViewedRoutes: Array<IGeojsonFeature>;
+  public nearRoutes: Array<IGeojsonFeature>;
+  constructor(
+    private _geoHubService: GeohubService,
+    private _geoLocation: GeolocationService
+  ) { }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.ids = ['1', '2', '3', '4', '5'];
-    }, 2500);
-    setTimeout(() => {
-      this.ids2 = ['1', '2', '3', '4', '5'];
-    }, 4000);
+  async ngOnInit() {
+    this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
+    this.nearRoutes = await this._geoHubService.getNearEcTracks(this._geoLocation.location);
   }
 }

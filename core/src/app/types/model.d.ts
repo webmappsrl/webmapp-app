@@ -19,6 +19,12 @@ export interface IGeojsonGeometry {
   | IMultiPolygon;
 }
 
+export interface iLocalString{
+    it?: string;
+    en?: string;
+
+}
+
 /**
  * Define the supported properties
  */
@@ -28,18 +34,9 @@ export interface IGeojsonProperties {
 
   created_at?: Date;
   updated_at?: Date;
-  name?: {
-    it?: string;
-    en?: string;
-  };
-  description?: {
-    it?: string;
-    en?: string;
-  };
-  excerpt?: {
-    it?: string;
-    en?: string;
-  };
+  name?: iLocalString;
+  description?: iLocalString;
+  excerpt?: iLocalString;
   source_id?: string;
   import_method?: string;
   source?: string;
@@ -56,10 +53,7 @@ export interface IGeojsonProperties {
   ele_max?: number;
   duration_forward?: number;
   duration_backward?: number;
-  difficulty?: {
-    it?: string;
-    en?: string;
-  };
+  difficulty?: iLocalString;
   geojson_url?: string;
   kml_url?: string;
   gpx_url?: string;

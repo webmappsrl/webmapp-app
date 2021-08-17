@@ -29,7 +29,7 @@ export class RoutePage implements OnInit {
   };
 
   constructor(
-    private _actRoute: ActivatedRoute,
+    // private _actRoute: ActivatedRoute,
     private _geohubService: GeohubService,
     private _navController: NavController,
     private _menuController: MenuController,
@@ -38,13 +38,17 @@ export class RoutePage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this._actRoute.queryParams.subscribe(async (params) => {
-      const id = params.id;
-      this.route = await this._geohubService.getEcRoute(id);
-      console.log('------- ~ file: route.page.ts ~ line 44 ~ RoutePage ~ this._actRoute.queryParams.subscribe ~ this.route', this.route);
-      this._statusService.route = this.route;
-      this.track = this.route.geometry;
-    });
+    // this._actRoute.queryParams.subscribe(async (params) => {
+    //   const id = params.id;
+    //   this.route = await this._geohubService.getEcRoute(id);
+    //   console.log('------- ~ file: route.page.ts ~ line 44 ~ RoutePage ~ this._actRoute.queryParams.subscribe ~ this.route', this.route);
+    //   this._statusService.route = this.route;
+    //   this.track = this.route.geometry;
+    // });
+
+    this.route = this._statusService.route;
+    this.track = this.route.geometry;
+
     await this._platform.ready();
     this.height = this._platform.height();
   }

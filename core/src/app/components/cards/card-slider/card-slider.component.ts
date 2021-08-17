@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DeviceService } from 'src/app/services/base/device.service';
+import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-card-slider',
@@ -8,7 +9,7 @@ import { DeviceService } from 'src/app/services/base/device.service';
 })
 export class CardSliderComponent implements OnInit {
   @Input('title') title: string;
-  @Input('data') data: Array<string>;
+  @Input('data') data: Array<IGeojsonFeature>;
 
   public sliderOptions: any;
 
