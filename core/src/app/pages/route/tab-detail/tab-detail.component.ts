@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StatusService } from 'src/app/services/status.service';
-import { IWmRoute } from 'src/app/types/route';
+import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-tab-detail',
@@ -9,7 +9,7 @@ import { IWmRoute } from 'src/app/types/route';
   styleUrls: ['./tab-detail.component.scss'],
 })
 export class TabDetailComponent implements OnInit {
-  public route: IWmRoute;
+  public route: IGeojsonFeature;
 
   constructor(
     private _statusService: StatusService) { }

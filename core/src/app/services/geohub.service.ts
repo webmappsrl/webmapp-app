@@ -8,7 +8,7 @@ import { CommunicationService } from './base/communication.service';
   providedIn: 'root',
 })
 export class GeohubService {
-  constructor(private _communicationService: CommunicationService) {}
+  constructor(private _communicationService: CommunicationService) { }
 
   /**
    * Get an instance of the specified ec track
@@ -19,6 +19,17 @@ export class GeohubService {
    */
   getEcTrack(id: string): CGeojsonLineStringFeature {
     return undefined;
+  }
+
+  /**
+   * Get an instance of the specified ec track
+   *
+   * @param {string} id the ec track id
+   *
+   * @returns {IGeojsonFeature}
+   */
+  async getEcRoute(id: string): Promise<IGeojsonFeature> {
+    return this._getMockFeature();
   }
 
   /**
@@ -39,7 +50,7 @@ export class GeohubService {
    *
    * @returns {IGeojsonFeature}
    */
-  getEcMedia(id: string): IGeojsonFeature {
+  async getEcMedia(id: string): Promise<IGeojsonFeature> {
     return undefined;
   }
 
@@ -59,8 +70,19 @@ export class GeohubService {
    *
    * @returns {Array<IGeojsonFeature>}
    */
-  getNearEcTracks(location: ILocation): Array<IGeojsonFeature> {
-    return [];
+  async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
+    const res = await this._getMockFeature();
+    return [res, res, res, res, res];
+  }
+
+  /**
+   * Get an array with the closest ec tracks to the specified location
+   *
+   * @returns {Array<IGeojsonFeature>}
+   */
+  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
+    const res = await this._getMockFeature();
+    return [res, res, res, res, res];
   }
 
   /**
@@ -73,4 +95,13 @@ export class GeohubService {
   private _getFeature<T extends IGeojsonFeature>(id: string): T {
     return undefined;
   }
+
+  private async _getMockFeature(): Promise<IGeojsonFeature> {
+    const res = await this._communicationService
+      .get('https://geohub.webmapp.it/api/ec/track/18')
+      .toPromise();
+    return res;
+  }
+
+
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StatusService } from 'src/app/services/status.service';
-import { IWmRoute } from 'src/app/types/route';
+import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
   selector: 'app-tab-description',
@@ -13,7 +13,7 @@ export class TabDescriptionComponent implements OnInit {
     slidesPerView: 1.5,
   };
   
-  public route: IWmRoute;  
+  public route: IGeojsonFeature;  
 
   constructor(
     private _statusService: StatusService) { }

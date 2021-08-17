@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuController, NavController, Platform } from '@ionic/angular';
-import { RouteService } from 'src/app/services/route.service';
+import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
-import { IWmRoute } from 'src/app/types/route';
+import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-route',
@@ -11,7 +11,7 @@ import { IWmRoute } from 'src/app/types/route';
   styleUrls: ['./route.page.scss'],
 })
 export class RoutePage implements OnInit {
-  public route: IWmRoute;
+  public route: IGeojsonFeature;
 
   public track;
 
@@ -30,7 +30,7 @@ export class RoutePage implements OnInit {
 
   constructor(
     private _actRoute: ActivatedRoute,
-    private _routeService: RouteService,
+    private _geohubService: GeohubService,
     private _navController: NavController,
     private _menuController: MenuController,
     private _statusService: StatusService,
@@ -40,7 +40,8 @@ export class RoutePage implements OnInit {
   async ngOnInit() {
     this._actRoute.queryParams.subscribe(async (params) => {
       const id = params.id;
-      this.route = await this._routeService.getRoute(id);
+      this.route = await this._geohubService.getEcRoute(id);
+      console.log('------- ~ file: route.page.ts ~ line 44 ~ RoutePage ~ this._actRoute.queryParams.subscribe ~ this.route', this.route);
       this._statusService.route = this.route;
       this.track = this.route.geometry;
     });
