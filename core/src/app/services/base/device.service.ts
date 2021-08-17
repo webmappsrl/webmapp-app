@@ -20,6 +20,8 @@ export class DeviceService {
     width: number;
     height: number;
   }>;
+  public onBackground: Observable<void>;
+  public onForeground: Observable<void>;
 
   private _isBrowser: boolean;
   private _isAndroid: boolean;
@@ -31,9 +33,14 @@ export class DeviceService {
     width: number;
     height: number;
   }>;
+  private _isBackground: boolean;
+  private _onBackground: ReplaySubject<void>;
+  private _onForeground: ReplaySubject<void>;
 
   constructor(private _platform: Platform, private _diagnostic: Diagnostic) {
     this._onResize = new ReplaySubject(1);
+    this._onBackground = new ReplaySubject(1);
+    this._onForeground = new ReplaySubject(1);
     this._width = window.innerWidth;
     this._height = window.innerHeight;
     this._onResize.next({
@@ -41,6 +48,8 @@ export class DeviceService {
       height: this._height,
     });
     this.onResize = this._onResize;
+    this.onBackground = this._onBackground;
+    this.onForeground = this._onForeground;
 
     this._isBrowser =
       this._platform.is('pwa') ||
@@ -58,6 +67,25 @@ export class DeviceService {
         height: this._height,
       });
     });
+
+    this._isBackground = false;
+
+    document.addEventListener(
+      'pause',
+      () => {
+        this._isBackground = true;
+        this._onBackground.next();
+      },
+      false
+    );
+    document.addEventListener(
+      'resume',
+      () => {
+        this._isBackground = false;
+        this._onForeground.next();
+      },
+      false
+    );
   }
 
   get isBrowser(): boolean {
@@ -84,6 +112,19 @@ export class DeviceService {
     return this._height;
   }
 
+  get isBackground(): boolean {
+    return this._isBackground;
+  }
+
+  get isForeground(): boolean {
+    return !this._isBackground;
+  }
+
+  /**
+   * Trigger an event when the gps is started or stopped
+   *
+   * @returns {Observable<ELocationState>}
+   */
   onLocationStateChange(): Observable<ELocationState> {
     return new Observable<ELocationState>((observer) => {
       this._diagnostic.registerLocationStateChangeHandler((state: string) => {
@@ -104,6 +145,8 @@ export class DeviceService {
    * Handle permissions for location and try to activate the location service
    * Emit LocationState.ENABLED or LocationState.ENABLED_WHEN_IN_USE if location is available. For LocationState.NOT_ENABLED and
    * LocationState.SETTINGS values, subscribe to DeviceService.onLocationStateChanged
+   *
+   * @returns {Promise<ELocationState>}
    */
   enableGPS(): Promise<ELocationState> {
     return new Promise<ELocationState>((resolve, reject) => {
@@ -135,6 +178,8 @@ export class DeviceService {
    */
   /**
    * Check GPS permissions and eventually ask user for permissions
+   *
+   * @returns {Promise<ELocationState>}
    */
   private _enableGPSPermissions(): Promise<ELocationState> {
     return new Promise<ELocationState>((resolve, reject) => {

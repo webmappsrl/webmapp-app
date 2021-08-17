@@ -35,9 +35,8 @@ import { ILocation } from 'src/app/types/location';
 import { CLocation } from 'src/app/classes/clocation';
 import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import Stroke from 'ol/style/Stroke';
-import { Track } from 'src/app/types/track.d.';
+import { ITrack } from 'src/app/types/track';
 
 @Component({
   selector: 'webmapp-map',
@@ -50,7 +49,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() move: EventEmitter<number> = new EventEmitter();
 
-  @Input('start-view') startView: number[] = [11.4147, 44.7118, 10];
+  @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
   @Input('static') static: boolean = false;
@@ -58,7 +57,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
 
-  @Input('track') set track(value: Track) {
+  @Input('track') set track(value: ITrack) {
     if (value) {
       setTimeout(() => {
         this._track.registeredTrack = value;
@@ -109,7 +108,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _track: {
     layer: VectorLayer;
     track: Feature[];
-    registeredTrack: Track;
+    registeredTrack: ITrack;
   };
 
   private _locationAnimationState: {
@@ -165,6 +164,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    if (!this.startView) this.startView = [10.4147, 43.7118, 9];
+
     this._view = new View({
       center: this._mapService.coordsFromLonLat([
         this.startView[0],
@@ -225,7 +226,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }, 1000);
 
     if (!this.static) {
-
       this._map.on('moveend', () => {
         if (
           [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
@@ -249,6 +249,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }
       });
 
+      if (this.registering) {
+        this.geolocationService.start();
+        this.locationState = EMapLocationState.FOLLOW;
+        this._centerMapToLocation();
+      }
+
       this.geolocationService.onLocationChange.subscribe((location) => {
         this._location = location;
         this.animateLocation(this._location);
@@ -260,12 +266,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         )
           this._centerMapToLocation();
       });
-
-      if (this.registering) {
-        this.geolocationService.start();
-        this.locationState = EMapLocationState.FOLLOW;
-        this._centerMapToLocation();
-      }
     }
   }
 
@@ -302,14 +302,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) {
-    }
+    } catch (e) {}
     if (centerToTrack) {
       this._centerMapToTrack();
     }
     //}
   }
-
 
   /**
    * Move the location icon to the specified new location
@@ -380,8 +378,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return trackgeojson;
   }
 
-  private _getLineStyle(): // id: string = ''
-    Array<Style> {
+  private _getLineStyle(): Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
 
@@ -446,6 +443,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this._location.longitude,
           this._location.latitude,
         ]),
+        zoom: this._view.getZoom() >= 14 ? this._view.getZoom() : 14,
       });
     }
   }
@@ -455,8 +453,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToTrack() {
     if (this._track.layer) {
-      const ext = this._track.layer.getSource().getExtent();
-      this._view.fit(ext);
+      this._view.fit(this._track.layer.getSource().getExtent(), {
+        padding: [10, 10, 10, 10],
+      });
     }
   }
 
@@ -492,34 +491,42 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * Handle the location animation
    */
   private _animateLocation(): void {
-    if (!this._locationAnimationState.startTime || !this._locationAnimationState.startLocation) {
+    if (
+      !this._locationAnimationState.startTime ||
+      !this._locationAnimationState.startLocation
+    ) {
       if (this._locationAnimationState.goalLocation) {
         this._setLocation(this._locationAnimationState.goalLocation);
-      }
-      else if (typeof this._locationAnimationState.goalAccuracy === 'number') {
+      } else if (
+        typeof this._locationAnimationState.goalAccuracy === 'number'
+      ) {
         this._setLocationAccuracy(this._locationAnimationState.goalAccuracy);
       }
       this._stopLocationAnimation();
-    } else if (!this._locationAnimationState.goalLocation && typeof this._locationAnimationState.goalAccuracy !== 'number') {
+    } else if (
+      !this._locationAnimationState.goalLocation &&
+      typeof this._locationAnimationState.goalAccuracy !== 'number'
+    ) {
       this._stopLocationAnimation();
-    }
-    else {
-      const delta: number = Math.min(Date.now() - this._locationAnimationState.startTime, 500) / 500;
+    } else {
+      const delta: number =
+        Math.min(Date.now() - this._locationAnimationState.startTime, 500) /
+        500;
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-            this._locationAnimationState.goalLocation.longitude -
-            this._locationAnimationState.startLocation.longitude,
+              this._locationAnimationState.goalLocation.longitude -
+              this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : this._locationAnimationState.goalLocation.accuracy
-                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-                : 0;
+              : this._locationAnimationState.goalLocation.accuracy
+              ? this._locationAnimationState.goalLocation.accuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -538,27 +545,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-              delta * deltaLongitude,
+                delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-              delta * deltaLatitude,
+                delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-              'number'
+            'number'
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
+                this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -569,7 +576,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-            delta * deltaAccuracy
+              delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -625,9 +632,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location?.longitude,
-      location?.latitude,
-    ]),
+        location?.longitude,
+        location?.latitude,
+      ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -655,11 +662,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 400,
+        zIndex: Number.MAX_SAFE_INTEGER,
       });
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
+    } catch (e) {}
   }
 }

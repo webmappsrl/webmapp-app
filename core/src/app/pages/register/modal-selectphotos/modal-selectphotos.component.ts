@@ -8,18 +8,17 @@ import { PhotoService } from 'src/app/services/photo.service';
   styleUrls: ['./modal-selectphotos.component.scss'],
 })
 export class ModalSelectphotosComponent implements OnInit {
-
   public images = [];
 
   public isAllSelected = false;
 
   constructor(
-    private modalController: ModalController,
-    private photoService: PhotoService
-  ) { }
+    private _modalController: ModalController,
+    private _photoService: PhotoService
+  ) {}
 
   async ngOnInit() {
-    const library = await this.photoService.getPhotos();
+    const library = await this._photoService.getPhotos();
     library.forEach((libraryItem) => {
       const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
       this.images.push(libraryItemCopy);
@@ -27,8 +26,8 @@ export class ModalSelectphotosComponent implements OnInit {
   }
 
   close() {
-    this.modalController.dismiss({
-      dismissed: true
+    this._modalController.dismiss({
+      dismissed: true,
     });
   }
 
@@ -40,15 +39,13 @@ export class ModalSelectphotosComponent implements OnInit {
         selectedPhotos.push(image);
       }
     }
-    this.modalController.dismiss({
+    this._modalController.dismiss({
       dismissed: true,
-      photos: selectedPhotos
+      photos: selectedPhotos,
     });
-
   }
 
   selectAll(select: boolean) {
-    console.log('---- ~ file: modal-selectphotos.component.ts ~ line 40 ~ ModalSelectphotosComponent ~ selectAll ~ select', select);
     this.isAllSelected = select;
     for (const image of this.images) {
       image.selected = select;
@@ -66,10 +63,8 @@ export class ModalSelectphotosComponent implements OnInit {
 
   isValid() {
     for (const image of this.images) {
-      if (image.selected)
-        return true;
+      if (image.selected) return true;
     }
     return false;
   }
-
 }

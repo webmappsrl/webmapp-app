@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController, PopoverController } from '@ionic/angular';
+import {
+  ModalController,
+  NavController,
+  PopoverController,
+} from '@ionic/angular';
+import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
+import { GeolocationService } from 'src/app/services/geolocation.service';
 import { PhotoService } from 'src/app/services/photo.service';
-import { PopoverPhotoType } from 'src/app/types/success.enum';
+import { ILocation } from 'src/app/types/location';
+import { EPopoverPhotoType } from 'src/app/types/esuccess.enum';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 
@@ -11,50 +18,61 @@ import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverpho
   styleUrls: ['./popover-register.component.scss'],
 })
 export class PopoverRegisterComponent implements OnInit {
-
   public registering: boolean;
 
   constructor(
-    private popoverController: PopoverController,
-    private navCtrl: NavController,
-    private photoService: PhotoService,
-    private _modalController: ModalController
-  ) { }
+    private _geolocationService: GeolocationService,
+    private _modalController: ModalController,
+    private _navCtrl: NavController,
+    private _photoService: PhotoService,
+    private _popoverController: PopoverController
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   track() {
-    this.navCtrl.navigateForward('register');
+    const location: ILocation = this._geolocationService.location;
+    let state: any = {};
+
+    if (location && location.latitude && location.longitude) {
+      state = {
+        startView: [
+          location.longitude,
+          location.latitude,
+          DEF_MAP_LOCATION_ZOOM,
+        ],
+      };
+    }
+
+    this._navCtrl.navigateForward('register');
     this.dismiss();
   }
 
   async photo(ev) {
-
     this.dismiss();
 
     let photos = null;
 
-    const popover = await this.popoverController.create({
+    const popover = await this._popoverController.create({
       component: PopoverphotoComponent,
-      event: null,//ev,
-      translucent: true
+      event: null, //ev,
+      translucent: true,
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
-    if (role === PopoverPhotoType.PHOTOS) {
-      const image = await this.photoService.shotPhoto(false);
+    if (role === EPopoverPhotoType.PHOTOS) {
+      const image = await this._photoService.shotPhoto(false);
       photos = [image];
-    } else if (role === PopoverPhotoType.LIBRARY){
-      photos = await this.photoService.getPhotos();
+    } else if (role === EPopoverPhotoType.LIBRARY) {
+      photos = await this._photoService.getPhotos();
     }
 
     if (photos.length) {
       const modalPhotos = await this._modalController.create({
         component: ModalphotosComponent,
         componentProps: {
-          photoCollection: photos
-        }
+          photoCollection: photos,
+        },
       });
       await modalPhotos.present();
     }
@@ -64,18 +82,18 @@ export class PopoverRegisterComponent implements OnInit {
   }
 
   waypoint() {
-    this.navCtrl.navigateForward('waypoint');
+    this._navCtrl.navigateForward('waypoint');
     this.dismiss();
   }
 
   vocal() {
-    console.log('---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal');
+    console.log(
+      '---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal'
+    );
     this.dismiss();
   }
 
   dismiss() {
-    this.popoverController.dismiss();
+    this._popoverController.dismiss();
   }
-
-
 }

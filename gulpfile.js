@@ -763,7 +763,8 @@ function buildAndroidApk(instanceName, type) {
             "on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk"
           );
         debug(
-          "Debug apk built in " +
+          type +
+            " apk built in " +
             instancesDir +
             instanceName +
             "/android/app/build/outputs/apk/" +
@@ -813,29 +814,25 @@ function signAndroidApk(instanceName, alias) {
       instanceName +
       "/android/app/build/outputs/apk/release/app-release-unsigned.apk builds/tmp/app-release-unsigned.apk"
   );
-  if (verbose) debug("Signing the release apk");
-  sh.exec(
-    "jarsigner -sigalg SHA1withRSA -digestalg SHA1 --keystore builds/keys/" +
-      alias +
-      ".keystore builds/tmp/app-release-unsigned.apk " +
-      alias +
-      " -storepass T1tup4awmA!" +
-      outputRedirect
-  );
   if (verbose) debug("Checking instance in builds directory");
   if (!fs.existsSync("builds/" + instanceName))
     sh.exec("mkdir builds/" + instanceName);
   if (!fs.existsSync("builds/" + instanceName + "/android"))
     sh.exec("mkdir builds/" + instanceName + "/android");
-  if (verbose) debug("Completing the apk sign");
+  if (verbose) debug("Signing the release apk");
   sh.exec(
-    "zipalign -v 4 builds/tmp/app-release-unsigned.apk builds/" +
+    "apksigner sign --in builds/tmp/app-release-unsigned.apk --out builds/" +
       instanceName +
       "/android/" +
       instanceName +
       "_" +
       version.version +
-      ".apk" +
+      ".apk --ks builds/keys/" +
+      alias +
+      ".keystore --ks-key-alias " +
+      alias +
+      " --ks-pass pass:T1tup4awmA! --v4-signing-enabled false" +
+      (verbose ? " --verbose" : "") +
       outputRedirect
   );
   info("OK");
@@ -900,8 +897,8 @@ function buildSignedApk(instanceName) {
 function buildAndroidBundle(instanceName, type) {
   return new Promise((resolve, reject) => {
     if (type !== "Debug" && type !== "Release") {
-      error("Cannot build " + type + " apk");
-      reject("Cannot build " + type + " apk");
+      error("Cannot build " + type + " app bundle");
+      reject("Cannot build " + type + " app bundle");
     }
 
     buildAndroid(instanceName).then(
@@ -918,7 +915,8 @@ function buildAndroidBundle(instanceName, type) {
             "on windows if BUILD FAILED add ANDROID_HOME variable in 'Environment Variables' as C:\\Users\\USER\\AppData\\Local\\Android\\Sdk"
           );
         debug(
-          "Debug apk built in " +
+          type +
+            " android app bundle built in " +
             instancesDir +
             instanceName +
             "/android/app/build/outputs/bundle/" +
@@ -930,6 +928,105 @@ function buildAndroidBundle(instanceName, type) {
         resolve();
       },
       (err) => {
+        reject(err);
+      }
+    );
+  });
+}
+
+function signAndroidBundle(instanceName, alias) {
+  info("Signing release bundle...");
+  if (
+    fs.existsSync(
+      "builds/" +
+        instanceName +
+        "/android/" +
+        instanceName +
+        "_" +
+        version.version +
+        ".aab"
+    )
+  ) {
+    if (verbose) debug("Removing old existing incompatible builds");
+    sh.exec(
+      "rm builds/" +
+        instanceName +
+        "/android/" +
+        instanceName +
+        "_" +
+        version.version +
+        ".aab" +
+        outputRedirect
+    );
+  }
+  if (verbose) debug("Moving release bundle to builds directory");
+  sh.exec(
+    "cp " +
+      instancesDir +
+      instanceName +
+      "/android/app/build/outputs/bundle/release/app-release.aab builds/tmp/app-release.aab"
+  );
+  if (verbose) debug("Checking instance in builds directory");
+  if (!fs.existsSync("builds/" + instanceName))
+    sh.exec("mkdir builds/" + instanceName);
+  if (!fs.existsSync("builds/" + instanceName + "/android"))
+    sh.exec("mkdir builds/" + instanceName + "/android");
+  if (verbose) debug("Signing the release bundle");
+  sh.exec(
+    "jarsigner -sigalg SHA1withRSA -digestalg SHA1 --keystore builds/keys/" +
+      alias +
+      ".keystore builds/tmp/app-release.aab " +
+      alias +
+      " -storepass T1tup4awmA!" +
+      outputRedirect
+  );
+  if (verbose) debug("Completing the bundle sign");
+  sh.exec(
+    "zipalign -v 4 builds/tmp/app-release.aab builds/" +
+      instanceName +
+      "/android/" +
+      instanceName +
+      "_" +
+      version.version +
+      ".aab" +
+      outputRedirect
+  );
+  info("OK");
+
+  return (
+    "builds/" +
+    instanceName +
+    "/android/" +
+    instanceName +
+    "_" +
+    version.version +
+    ".aab"
+  );
+}
+
+function buildSignedBundle(instanceName) {
+  return new Promise((resolve, reject) => {
+    var alias = argv.alias ? argv.alias : instanceName;
+
+    if (!checkKeystore(alias)) return;
+
+    buildAndroidBundle(instanceName, "Release").then(
+      () => {
+        checkBuildsFolder();
+
+        if (fs.existsSync("builds/tmp")) sh.exec("rm -r builds/tmp");
+        sh.exec("mkdir builds/tmp");
+
+        var relativePath = signAndroidBundle(instanceName, alias);
+
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
+
+        resolve(relativePath);
+      },
+      (err) => {
+        if (verbose) debug("Cleaning temp files");
+        sh.exec("rm -rf builds/tmp");
         reject(err);
       }
     );
@@ -1421,6 +1518,24 @@ gulp.task("deploy-android-apk", function (done) {
 });
 
 /**
+ * Build the android apk to use when testing a prerelease version
+ */
+gulp.task("build-android-bundle", function (done) {
+  var instanceName = argv.instance ? argv.instance : "";
+
+  if (verbose)
+    debug("Building the android release bundle for instance " + instanceName);
+  buildSignedBundle(instanceName).then(
+    () => {
+      done();
+    },
+    (err) => {
+      done();
+    }
+  );
+});
+
+/**
  * Build the ios platform for the given instance
  */
 gulp.task("build-ios", function (done) {
@@ -1467,8 +1582,10 @@ gulp.task("release", function (done) {
   uploadIos(instanceName).then(
     () => {
       success(instanceName + " ios version uploaded successfully");
-      title("Building the android release apk for instance " + instanceName);
-      buildSignedApk(instanceName).then(
+      title(
+        "Building the android release app bundle for instance " + instanceName
+      );
+      buildSignedBundle(instanceName).then(
         () => {
           success(instanceName + " android version built successfully");
           done();

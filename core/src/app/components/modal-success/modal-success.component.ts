@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, ModalController } from '@ionic/angular';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { PhotoItem } from 'src/app/services/photo.service';
-import { SuccessType } from '../../types/success.enum';
-import { Track } from 'src/app/types/track.d.';
+import { IPhotoItem } from 'src/app/services/photo.service';
+import { ESuccessType } from '../../types/esuccess.enum';
+import { ITrack } from 'src/app/types/track';
 import { WaypointSave } from 'src/app/types/waypoint';
 
 @Component({
@@ -12,13 +12,11 @@ import { WaypointSave } from 'src/app/types/waypoint';
   styleUrls: ['./modal-success.component.scss'],
 })
 export class ModalSuccessComponent implements OnInit {
-
-
   @ViewChild('slider') slider: IonSlides;
 
-  @Input() track: Track;
-  @Input() type: SuccessType;
-  @Input() photos: PhotoItem[];
+  @Input() track: ITrack;
+  @Input() type: ESuccessType;
+  @Input() photos: IPhotoItem[];
   @Input() waypoint: WaypointSave;
 
   public isTrack = false;
@@ -31,7 +29,6 @@ export class ModalSuccessComponent implements OnInit {
 
   public displayPosition;
 
-
   public sliderOptions: any = {
     slidesPerView: 2.5,
   };
@@ -43,54 +40,64 @@ export class ModalSuccessComponent implements OnInit {
   trackTopSpeed: number = 0;
   trackTime = { hours: 0, minutes: 0, seconds: 0 };
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   private PHOTOSCATTER = 100;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   private MINSCATTER = 30;
 
   constructor(
-    private modalController: ModalController,
-    private geoUtils: GeoutilsService,
-  ) { }
+    private _modalController: ModalController,
+    private _geoUtils: GeoutilsService
+  ) {}
 
   ngOnInit() {
     switch (this.type) {
-      case SuccessType.TRACK:
-        this.trackDate = this.geoUtils.getDate(this.track.geojson);
-        this.trackodo = this.geoUtils.getLength(this.track.geojson);
-        this.trackSlope = this.geoUtils.getSlope(this.track.geojson);
-        this.trackAvgSpeed = this.geoUtils.getAverageSpeed(this.track.geojson);
-        this.trackTopSpeed = this.geoUtils.getTopSpeed(this.track.geojson);
-        this.trackTime = GeoutilsService.formatTime(this.geoUtils.getTime(this.track.geojson));
+      case ESuccessType.TRACK:
+        this.trackDate = this._geoUtils.getDate(this.track.geojson);
+        this.trackodo = this._geoUtils.getLength(this.track.geojson);
+        this.trackSlope = this._geoUtils.getSlope(this.track.geojson);
+        this.trackAvgSpeed = this._geoUtils.getAverageSpeed(this.track.geojson);
+        this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track.geojson);
+        this.trackTime = GeoutilsService.formatTime(
+          this._geoUtils.getTime(this.track.geojson)
+        );
         this.isTrack = true;
         break;
-      case SuccessType.PHOTOS:
+      case ESuccessType.PHOTOS:
         this.isPhotos = true;
-        this.photos.forEach(x => {
+        this.photos.forEach((x) => {
           let scatter = Math.random() * this.PHOTOSCATTER;
           if (this.topValues.length) {
-            while (Math.abs(scatter - this.topValues[this.topValues.length - 1]) < this.MINSCATTER) {
+            while (
+              Math.abs(scatter - this.topValues[this.topValues.length - 1]) <
+              this.MINSCATTER
+            ) {
               scatter = Math.random() * this.PHOTOSCATTER;
             }
           }
           this.topValues.push(scatter);
         });
 
-        setTimeout(() => { //need for slider to use correct slides per view
+        setTimeout(() => {
+          //need for slider to use correct slides per view
           this.slider.update();
         }, 100);
 
         break;
-      case SuccessType.WAYPOINT:
+      case ESuccessType.WAYPOINT:
         this.isWaypoint = true;
         this.displayPosition = this.waypoint.displayPosition;
-        console.log('------- ~ file: modal-success.component.ts ~ line 85 ~ ModalSuccessComponent ~ ngOnInit ~ this.waypoint', this.waypoint);
+        console.log(
+          '------- ~ file: modal-success.component.ts ~ line 85 ~ ModalSuccessComponent ~ ngOnInit ~ this.waypoint',
+          this.waypoint
+        );
         break;
     }
   }
 
   close() {
-    this.modalController.dismiss({
-      dismissed: true
+    this._modalController.dismiss({
+      dismissed: true,
     });
   }
-
 }

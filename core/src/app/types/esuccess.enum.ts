@@ -1,13 +1,10 @@
-
-export enum SuccessType {
+export enum ESuccessType {
   TRACK = 'track',
   PHOTOS = 'photos',
   WAYPOINT = 'waypoint',
 }
 
-
-export enum PopoverPhotoType {
+export enum EPopoverPhotoType {
   PHOTOS = 'photos',
   LIBRARY = 'library',
 }
-

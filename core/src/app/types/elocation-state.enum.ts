@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum ELocationState {
   ENABLED = 0,
   ENABLED_WHEN_IN_USE = 1,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 interface IUser {
   id: number;
   email?: string;
@@ -12,11 +13,8 @@ interface IGeohubApiLogin {
   id: number;
   email?: string;
   name?: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   created_at?: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   updated_at?: string;
   role?: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   access_token: string;
 }

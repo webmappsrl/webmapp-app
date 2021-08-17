@@ -1,4 +1,6 @@
 // MAP
+export const DEF_MAP_MAX_ZOOM: number = 16;
+export const DEF_MAP_LOCATION_ZOOM: number = 15;
 // export const DEF_FEATURE_COLOR: string = '#000000';
 // export const DEF_FEATURE_FILL_OPACITY: number = 0.2;
 // export const DEF_TRACK_STROKE_WIDTH: number = 2.5;

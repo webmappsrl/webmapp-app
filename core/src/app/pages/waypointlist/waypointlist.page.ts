@@ -10,25 +10,23 @@ import { WaypointSave } from 'src/app/types/waypoint';
   styleUrls: ['./waypointlist.page.scss'],
 })
 export class WaypointlistPage implements OnInit {
-
   public waypoints: WaypointSave[];
 
   constructor(
-    private saveService: SaveService,
-    private navController: NavController
-  ) { }
+    private _saveService: SaveService,
+    private _navController: NavController
+  ) {}
 
   async ngOnInit() {
-    this.waypoints = await this.saveService.getWaypoints();
-    }
+    this.waypoints = await this._saveService.getWaypoints();
+  }
 
   open(waypoint) {
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        waypoint: JSON.stringify(waypoint)
-      }
+        waypoint: JSON.stringify(waypoint),
+      },
     };
-    this.navController.navigateForward('waypointdetail', navigationExtras);
+    this._navController.navigateForward('waypointdetail', navigationExtras);
   }
-
 }

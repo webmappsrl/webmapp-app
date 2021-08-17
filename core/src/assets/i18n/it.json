@@ -185,6 +185,27 @@
       "slope": "Dislivello",
       "avgspeed": "Velocità media",
       "topspeed": "Velocità massima"
+    },
+    "route": {
+      "navigate": "Naviga",
+      "directions": "Ottieni indicazioni",
+      "download": "Scarica",
+      "share": "Condividi",
+      "tabdetail": "Dettagli",
+      "tabwalkable": "Percorribilità",
+      "tabhowto": "Come arrivare",
+      "tabeat": "Dove mangiare",
+      "tabdescription": "Descrizione",
+      "tabaccessibility": "Accessibilità",
+      "detail": {
+        "distance": "Lunghezza",
+        "ascent": "Dislivello +",
+        "descent": "Dislivello -",
+        "ele_max": "Quota massima",
+        "ele_min": "Quota minima",
+        "ele_from": "Quota di partenza",
+        "ele_to": "Quota di arrivo"
+      }
     }
   },
   "components": {

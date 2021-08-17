@@ -1,10 +1,9 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalSuccessComponent } from 'src/app/components/modal-success/modal-success.component';
 import { SaveService } from 'src/app/services/save.service';
 import { ILocation } from 'src/app/types/location';
-import { SuccessType } from 'src/app/types/success.enum';
+import { ESuccessType } from 'src/app/types/esuccess.enum';
 import { WaypointSave } from 'src/app/types/waypoint';
 
 @Component({
@@ -13,7 +12,6 @@ import { WaypointSave } from 'src/app/types/waypoint';
   styleUrls: ['./modal-waypoint-save.component.scss'],
 })
 export class ModalWaypointSaveComponent implements OnInit {
-
   public position: ILocation;
   public displayPosition: ILocation;
   public title: string;
@@ -21,15 +19,14 @@ export class ModalWaypointSaveComponent implements OnInit {
   public waypointtype: string;
 
   public positionString: string;
-  public positionCity: string = "città";
+  public positionCity: string = 'città';
 
   constructor(
-    private modalController: ModalController,
-    private saveService: SaveService
-  ) { }
+    private _modalController: ModalController,
+    private _saveService: SaveService
+  ) {}
 
   ngOnInit() {
-    console.log('------- ~ line 18 ~ ModalWaypointSaveComponent ~ ngOnInit ~ this.position', this.position);
     this.positionString = `${this.position.latitude}, ${this.position.longitude}`;
     setTimeout(() => {
       this.displayPosition = this.position;
@@ -47,27 +44,26 @@ export class ModalWaypointSaveComponent implements OnInit {
       date: new Date(),
     };
 
-    await this.saveService.saveWaypoint(waypoint);
+    await this._saveService.saveWaypoint(waypoint);
 
-    this.modalController.dismiss();
+    this._modalController.dismiss();
 
     await this.openModalSuccess(waypoint);
-
   }
 
   close() {
-    this.modalController.dismiss({
-      dismissed: true
+    this._modalController.dismiss({
+      dismissed: true,
     });
   }
 
   async openModalSuccess(waypoint) {
-    const modaSuccess = await this.modalController.create({
+    const modaSuccess = await this._modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
-        type: SuccessType.WAYPOINT,
-        waypoint
-      }
+        type: ESuccessType.WAYPOINT,
+        waypoint,
+      },
     });
     await modaSuccess.present();
     await modaSuccess.onDidDismiss();
@@ -75,6 +71,5 @@ export class ModalWaypointSaveComponent implements OnInit {
 
   isValid() {
     return this.title && this.waypointtype;
-
   }
 }
