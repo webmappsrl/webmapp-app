@@ -97,3 +97,12 @@ export interface IWmImage {
     '1440x500': string;
   };
 }
+export interface IGeojsonCluster {
+  type: 'Feature',
+  geometry: IGeojsonGeometry,
+  properties: {
+    ids: string[], // Id di Ec Track che fanno parte del cluster
+    images: string[], // Massimo 3 url di immagini ottimizzate
+    bbox: number[] // Extent di tutte le ec track assieme
+  }
+}

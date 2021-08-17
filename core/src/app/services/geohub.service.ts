@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
 import { ILocation } from '../types/location';
-import { IGeojsonFeature } from '../types/model';
+import { IGeojsonCluster, IGeojsonFeature } from '../types/model';
 import { CommunicationService } from './base/communication.service';
 
 @Injectable({
@@ -57,10 +58,25 @@ export class GeohubService {
   /**
    * Perform a search with the given params
    *
-   * @returns {Array<IGeojsonFeature>}
+   * @returns {Array<RouteCluster>}
    */
-  search(): Array<IGeojsonFeature> {
-    return [];
+  async search(boundingBox: number[]): Promise<Array<IGeojsonCluster>> {
+    // const res = await this._communicationService
+    //   .get('api/ec/track/search ')
+    //   .toPromise();
+    // return res;
+    return [{
+      type: 'Feature',
+      geometry: {
+        type: EGeojsonGeometryTypes.POINT,
+        coordinates: [11.31, 43.21]
+      },
+      properties: {
+        ids: ['1'],
+        images: ['https://picsum.photos/50/50'],
+        bbox: [1, 2, 3, 4]
+      }
+    }];
   }
 
   /**

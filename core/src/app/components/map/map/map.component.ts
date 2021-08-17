@@ -37,6 +37,7 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
+import { IGeojsonCluster } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-map',
@@ -47,7 +48,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') mapDiv: ElementRef;
 
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
-  @Output() move: EventEmitter<number> = new EventEmitter();
+  @Output() moveBtn: EventEmitter<number> = new EventEmitter();
+  @Output() move: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
@@ -78,6 +80,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this._location = value;
         this.animateLocation(value);
         this._centerMapToLocation();
+      }, 10);
+    }
+  }
+
+
+  @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
+    if (value) {
+      setTimeout(() => {
+        this._addClusterMarkers(value);
       }, 10);
     }
   }
@@ -232,6 +243,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if (!this.static) {
       this._map.on('moveend', () => {
+        this.move.emit(this._map.getView().calculateExtent(this._map.getSize()));
         if (
           [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
             this.locationState
@@ -362,13 +374,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   recBtnMove(val) {
-    this.move.emit(val);
+    this.moveBtn.emit(val);
   }
 
   recBtnUnlocked(val) {
     this.showRecBtn = false;
     this.unlocked.emit(val);
   }
+
 
   private getGeoJson(trackgeojson: any): any {
     if (trackgeojson?.geoJson) {
@@ -673,5 +686,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     try {
       this._map.addLayer(this._locationIcon.layer);
     } catch (e) { }
+  }
+
+
+  _addClusterMarkers(value: Array<IGeojsonCluster>) {
+  console.log('------- ~ file: map.component.ts ~ line 693 ~ _addClusterMarkers ~ value', value);
+
   }
 }
