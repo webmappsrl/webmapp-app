@@ -58,7 +58,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <webmapp-map class="webmapp-pageroute-map-container" #map [static]="true" [track]="track"></webmapp-map>
+  <webmapp-map class="webmapp-pageroute-map-container" #map [static]="true" [track]="track" [ngStyle]="{'margin-top': (headerHeight-(headerHeight*opacity))+'px','height':mapHeigth()+'px'}"></webmapp-map>
 
 
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, Platform } from '@ionic/angular';
 import { RouteService } from 'src/app/services/route.service';
 import { StatusService } from 'src/app/services/status.service';
 import { IWmRoute } from 'src/app/types/route';
@@ -16,6 +16,8 @@ export class RoutePage implements OnInit {
   public track;
 
   public opacity = 1;
+  public headerHeight = 110;
+  public height = 700;
 
   public slideOpts = {
     initialSlide: 0,
@@ -31,7 +33,8 @@ export class RoutePage implements OnInit {
     private _routeService: RouteService,
     private _navController: NavController,
     private _menuController: MenuController,
-    private _statusService: StatusService
+    private _statusService: StatusService,
+    private _platform: Platform
   ) { }
 
   async ngOnInit() {
@@ -41,6 +44,8 @@ export class RoutePage implements OnInit {
       this._statusService.route = this.route;
       this.track = this.route.geometry;
     });
+    await this._platform.ready();
+    this.height = this._platform.height();
   }
 
   toggleDetail() {
@@ -80,6 +85,12 @@ export class RoutePage implements OnInit {
 
   back() {
     this._navController.back();
+  }
+
+  mapHeigth() {
+    const h = this.height * 0.5 * (this.opacity + 1);
+    const ret = h - ((1 - this.opacity) * this.headerHeight);
+    return ret;
   }
 
 }

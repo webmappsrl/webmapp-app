@@ -284,9 +284,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    * @param geojson geojson of the track
    */
   drawTrack(trackgeojson: any, centerToTrack: boolean = false) {
-    console.log('------- ~ file: map.component.ts ~ line 283 ~ MapComponent ~ drawTrack ~ trackgeojson', trackgeojson);
     const geojson: any = this.getGeoJson(trackgeojson);
-    console.log('------- ~ file: map.component.ts ~ line 284 ~ MapComponent ~ drawTrack ~ geojson', geojson);
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
     }).readFeatures(geojson);
