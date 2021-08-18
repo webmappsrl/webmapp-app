@@ -1,0 +1,48 @@
+<div class="webmapp-map-clustermarker-container">
+  <!-- 
+  <img class="webmapp-map-clustermarker-img webmapp-map-clustermarker-img2" [src]="img2"/>
+  <img class="webmapp-map-clustermarker-img webmapp-map-clustermarker-img3" [src]="img3" *ngIf="img3" /> -->
+
+
+  <!-- <img class="webmapp-map-clustermarker-img" [src]="img1" /> -->
+
+  <svg class="webmapp-map-clustermarker-img webmapp-map-clustermarker-img2" *ngIf="img2" viewBox="0 0 61 67" fill="none"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <path
+      d="M26 2.75278C28.7846 1.14508 32.2154 1.14508 35 2.75278L54.8779 14.2293C57.6625 15.837 59.3779 18.8081 59.3779 22.0235V44.9765C59.3779 48.1919 57.6625 51.163 54.8779 52.7707L35 64.2472C32.2154 65.8549 28.7846 65.8549 26 64.2472L6.12212 52.7707C3.33751 51.163 1.62212 48.1919 1.62212 44.9765V22.0235C1.62212 18.8081 3.33751 15.837 6.12212 14.2293L26 2.75278Z"
+      [attr.fill]="'url(#img2_'+id+')'" stroke="white" stroke-width="2" />
+    <defs>
+      <pattern  id="{{'img2_'+id}}" height="100%" width="100%" patternContentUnits="objectBoundingBox">
+        <image [attr.xlink:href]="img2" height="1" width="1" preserveAspectRatio="xMidYMid slice" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <svg class="webmapp-map-clustermarker-img webmapp-map-clustermarker-img3" *ngIf="img3" viewBox="0 0 61 67" fill="none"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <path
+      d="M26 2.75278C28.7846 1.14508 32.2154 1.14508 35 2.75278L54.8779 14.2293C57.6625 15.837 59.3779 18.8081 59.3779 22.0235V44.9765C59.3779 48.1919 57.6625 51.163 54.8779 52.7707L35 64.2472C32.2154 65.8549 28.7846 65.8549 26 64.2472L6.12212 52.7707C3.33751 51.163 1.62212 48.1919 1.62212 44.9765V22.0235C1.62212 18.8081 3.33751 15.837 6.12212 14.2293L26 2.75278Z"
+      [attr.fill]="'url(#img3_'+id+')'" stroke="white" stroke-width="2" />
+    <defs>
+      <pattern  id="{{'img3_'+id}}" height="100%" width="100%" patternContentUnits="objectBoundingBox">
+        <image [attr.xlink:href]="img3" height="1" width="1" preserveAspectRatio="xMidYMid slice" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <svg class="webmapp-map-clustermarker-img" viewBox="0 0 61 67" fill="none" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <path
+      d="M26 2.75278C28.7846 1.14508 32.2154 1.14508 35 2.75278L54.8779 14.2293C57.6625 15.837 59.3779 18.8081 59.3779 22.0235V44.9765C59.3779 48.1919 57.6625 51.163 54.8779 52.7707L35 64.2472C32.2154 65.8549 28.7846 65.8549 26 64.2472L6.12212 52.7707C3.33751 51.163 1.62212 48.1919 1.62212 44.9765V22.0235C1.62212 18.8081 3.33751 15.837 6.12212 14.2293L26 2.75278Z"
+      [attr.fill]="'url(#img'+id+')'" stroke="white" stroke-width="2" />
+    <defs>
+      <pattern id="{{'img'+id}}" height="100%" width="100%" patternContentUnits="objectBoundingBox">
+        <image [attr.xlink:href]="img1" height="1" width="1" preserveAspectRatio="xMidYMid slice" />
+      </pattern>
+    </defs>
+  </svg>
+
+  <div class="webmapp-map-clustermarker-counter" *ngIf="count>1">{{count}}</div>
+
+  <div class="webmapp-map-clustermarker-clickarea" (click)="click()"></div>
+</div>

@@ -1,6 +1,6 @@
 <ion-content scrollY="false">
   <webmapp-map class="webmapp-pagemap-map-container" [start-view]="[10.4147, 43.7118,9]" (move)="mapMove($event)"
-    [clusters]="clusters"></webmapp-map>
+    [clusters]="clusters" (clickcluster)="clickcluster($event)" [boundigBox]="boundigBox"></webmapp-map>
 
   <webmapp-recording-btn class="webmapp-pagemap-recordingbtn" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
   </webmapp-recording-btn>

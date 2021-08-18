@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
 import { ILocation } from '../types/location';
-import { IGeojsonCluster, IGeojsonFeature } from '../types/model';
+import { IGeojsonCluster, IGeojsonClusterApiResponse, IGeojsonFeature } from '../types/model';
 import { CommunicationService } from './base/communication.service';
 
 @Injectable({
@@ -60,23 +61,45 @@ export class GeohubService {
    *
    * @returns {Array<RouteCluster>}
    */
-  async search(boundingBox: number[]): Promise<Array<IGeojsonCluster>> {
-    // const res = await this._communicationService
-    //   .get('api/ec/track/search ')
-    //   .toPromise();
-    // return res;
-    return [{
-      type: 'Feature',
-      geometry: {
-        type: EGeojsonGeometryTypes.POINT,
-        coordinates: [11.31, 43.21]
-      },
-      properties: {
-        ids: ['1'],
-        images: ['https://picsum.photos/50/50'],
-        bbox: [1, 2, 3, 4]
-      }
-    }];
+  async search(boundingBox: number[]): Promise<IGeojsonClusterApiResponse> {
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`,)
+      .toPromise();
+    return res;
+    // return [{
+    //   type: 'Feature',
+    //   geometry: {
+    //     type: EGeojsonGeometryTypes.POINT,
+    //     coordinates: [ 10.4147 + Math.random()/10,43.7118 + Math.random()/10]
+    //   },
+    //   properties: {
+    //     ids: [1,2,3,Math.round(Math.random()*100)],
+    //     images: ['https://picsum.photos/60/50','https://picsum.photos/45/40','https://picsum.photos/45/45'],
+    //     bbox: [1, 2, 3, 4]
+    //   }
+    // },{
+    //   type: 'Feature',
+    //   geometry: {
+    //     type: EGeojsonGeometryTypes.POINT,
+    //     coordinates: [ 10.247 + Math.random()/10,43.5 + Math.random()/10]
+    //   },
+    //   properties: {
+    //     ids: [6,7],
+    //     images: ['https://picsum.photos/360/60','https://picsum.photos/90/190'],
+    //     bbox: [1, 2, 3, 4]
+    //   }
+    // },{
+    //   type: 'Feature',
+    //   geometry: {
+    //     type: EGeojsonGeometryTypes.POINT,
+    //     coordinates: [ 10.6 + Math.random()/10,43.9 + Math.random()/10]
+    //   },
+    //   properties: {
+    //     ids: [5],
+    //     images: ['https://picsum.photos/100/200'],
+    //     bbox: [1, 2, 3, 4]
+    //   }
+    // }];
   }
 
   /**

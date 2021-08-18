@@ -1,12 +1,17 @@
 import {
   AfterViewInit,
   Component,
+  ComponentFactory,
+  ComponentFactoryResolver,
+  ComponentRef,
   ElementRef,
+  EmbeddedViewRef,
   EventEmitter,
   Input,
   OnDestroy,
   Output,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 
 // ol imports
@@ -28,6 +33,9 @@ import { defaults as defaultInteractions } from 'ol/interaction.js';
 import {
   DEF_LOCATION_ACCURACY,
   DEF_LOCATION_Z_INDEX,
+  DEF_MAP_CLUSTER_ZOOM_DURATION,
+  DEF_MAP_MAX_ZOOM,
+  DEF_MAP_MIN_ZOOM,
 } from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -38,6 +46,12 @@ import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
 import { IGeojsonCluster } from 'src/app/types/model';
+import { fromLonLat } from 'ol/proj';
+import Overlay from 'ol/Overlay';
+import OverlayPositioning from 'ol/OverlayPositioning';
+import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
+import { ClusterMarker } from 'src/app/types/map';
+
 
 @Component({
   selector: 'webmapp-map',
@@ -50,6 +64,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
   @Output() move: EventEmitter<any> = new EventEmitter();
+  @Output() clickcluster: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
@@ -84,14 +99,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-
-  @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
+  @Input('boundigBox') set boundigBox(value: number[]) {
     if (value) {
-      setTimeout(() => {
-        this._addClusterMarkers(value);
-      }, 10);
+      this._centerMapToBoundingBox(value);
     }
   }
+
+
+  @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
+    this._addClusterMarkers(value);
+  }
+
+  @ViewChild("clusterContainer", { read: ViewContainerRef }) clusterContainer;
 
   public locationState: EMapLocationState;
 
@@ -102,6 +121,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public sortedComponent: any[] = [];
 
   public timer: any;
+
+  private _clusterMarkers: ClusterMarker[] = [];
 
   private _position: ILocation = null;
 
@@ -139,7 +160,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private geolocationService: GeolocationService,
-    private _mapService: MapService
+    private _mapService: MapService,
+    private resolver: ComponentFactoryResolver
   ) {
     this._locationIcon = {
       layer: null,
@@ -188,8 +210,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.startView[1],
       ]),
       zoom: this.startView[2],
-      maxZoom: 16,
-      minZoom: 1,
+      maxZoom: DEF_MAP_MAX_ZOOM,
+      minZoom: DEF_MAP_MIN_ZOOM,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,
       extent: this._mapService.extentFromLonLat([-180, -85, 180, 85]),
@@ -243,7 +265,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if (!this.static) {
       this._map.on('moveend', () => {
-        this.move.emit(this._map.getView().calculateExtent(this._map.getSize()));
+        this.move.emit(
+          this._mapService.extentToLonLat(
+            this._map.getView().calculateExtent(this._map.getSize()))
+        );
         if (
           [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
             this.locationState
@@ -467,12 +492,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Set the current map view to a specific bounding box
+   */
+  private _centerMapToBoundingBox(boundingbox) {
+    const latlon = this._mapService.extentFromLonLat(boundingbox);
+    this._view.fit(latlon, { duration: DEF_MAP_CLUSTER_ZOOM_DURATION, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50,50,50,50]})
+  }
+
+
+  /**
    * Center the current map view to the current physical location
    */
   private _centerMapToTrack() {
     if (this._track.layer) {
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [10, 10, 10, 10],
+        padding: [50, 50, 50, 50],
       });
     }
   }
@@ -484,8 +518,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _initializeBaseSource() {
     return new XYZ({
-      maxZoom: 16,
-      minZoom: 1,
+      maxZoom: DEF_MAP_MAX_ZOOM,
+      minZoom: DEF_MAP_MIN_ZOOM,
       tileLoadFunction: (tile: any, url: string) => {
         tile.getImage().src = url;
       },
@@ -689,8 +723,59 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  _addClusterMarkers(value: Array<IGeojsonCluster>) {
-  console.log('------- ~ file: map.component.ts ~ line 693 ~ _addClusterMarkers ~ value', value);
+
+
+  private _idOfClusterMarker(ig: IGeojsonCluster): string { return ig.properties.ids.join('-') }
+
+  private _addClusterMarkers(values: Array<IGeojsonCluster>) {
+    if (values) {
+      for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
+        const ov = this._clusterMarkers[i];
+        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster))) {
+          this._removeClusterMarker(ov);
+          this._clusterMarkers.splice(i, 1);
+        }
+      }
+
+      const factory: ComponentFactory<ClusterMarkerComponent> = this.resolver.resolveComponentFactory(ClusterMarkerComponent);
+
+      values.forEach(cluster => {
+        if (!this._clusterMarkers.find(x => this._idOfClusterMarker(x.cluster) == this._idOfClusterMarker(cluster))) {
+          const mark = this._addClusterMarker(cluster, factory);
+          this._clusterMarkers.push(mark);
+        }
+      })
+    }
 
   }
+
+  private _addClusterMarker(cluster: IGeojsonCluster, factory: ComponentFactory<ClusterMarkerComponent>): ClusterMarker {
+
+    const componentRef: ComponentRef<ClusterMarkerComponent> = this.clusterContainer.createComponent(factory);
+    componentRef.instance.item = cluster;
+    componentRef.instance.clickcluster.subscribe((x) => { this.clickcluster.emit(x); });
+
+    const pos = fromLonLat([cluster.geometry.coordinates[0] as number, cluster.geometry.coordinates[1] as number]); // TODO check object type
+
+    const markerOverlay = new Overlay({
+      position: pos,
+      positioning: OverlayPositioning.CENTER_CENTER,
+      element: (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement,
+      stopEvent: false,
+      id: this._idOfClusterMarker(cluster)
+    });
+    this._map.addOverlay(markerOverlay);
+    return {
+      cluster,
+      overlay: markerOverlay,
+      component: componentRef
+    };
+
+  }
+
+  private _removeClusterMarker(cm: ClusterMarker) {
+    this._map.removeOverlay(cm.overlay);
+    cm.component.destroy();
+  }
+
 }

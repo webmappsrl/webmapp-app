@@ -89,7 +89,7 @@ export class StorageService {
   }
 
   getByKey(key: string): Promise<any> {
-    console.log('------- ~ file: storage.service.ts ~ line 92 ~ StorageService ~ getByKey ~ key', key);
+    // console.log('------- ~ file: storage.service.ts ~ line 92 ~ StorageService ~ getByKey ~ key', key);
     return this._get(key);
   }
 
@@ -146,7 +146,7 @@ export class StorageService {
       this._store.get(key).then(
         (value) => {
           let result: any;
-          console.log('------- ~ file: storage.service.ts ~ line 150 ~ StorageService ~ _storeGet ~ value', value);
+          // console.log('------- ~ file: storage.service.ts ~ line 150 ~ StorageService ~ _storeGet ~ value', value);
           if (value) {
             try {
               result = JSON.parse(

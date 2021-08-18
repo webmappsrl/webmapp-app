@@ -15,13 +15,15 @@ export class MapPage implements OnInit {
 
   public clusters: IGeojsonCluster[];
 
+  public boundigBox: number[];
+
   constructor(
     private _navController: NavController,
     private _geolocationService: GeolocationService,
     private _geohubService: GeohubService
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   recordingClick(ev) {
     const location: ILocation = this._geolocationService.location;
@@ -43,9 +45,23 @@ export class MapPage implements OnInit {
 
   isRecording() {
     return this._geolocationService.recording;
-  }  
+  }
 
-  async mapMove(moveEv){   
-    this.clusters = await this._geohubService.search(moveEv)
+  async mapMove(moveEv) {
+    const res = await this._geohubService.search(moveEv)
+    if (res && res.features) {
+      this.clusters = res.features;
+    }
+  }
+
+  clickcluster(cluster: IGeojsonCluster) {
+    if (cluster.properties.ids.length > 1) {
+      //cluster
+      this.boundigBox = cluster.properties.bbox;
+    } else {
+      // single track
+      this.boundigBox = cluster.properties.bbox;
+
+    }
   }
 }
