@@ -496,7 +496,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToBoundingBox(boundingbox) {
     const latlon = this._mapService.extentFromLonLat(boundingbox);
-    this._view.fit(latlon, { duration: DEF_MAP_CLUSTER_ZOOM_DURATION, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50,50,50,50]})
+    this._view.fit(latlon, { duration: DEF_MAP_CLUSTER_ZOOM_DURATION, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
   }
 
 
@@ -725,7 +725,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
 
 
-  private _idOfClusterMarker(ig: IGeojsonCluster): string { return ig.properties.ids.join('-') }
+  private _idOfClusterMarker(ig: IGeojsonCluster): string { return ig.properties.ids.sort((a, b) => a - b).join('-') }
 
   private _addClusterMarkers(values: Array<IGeojsonCluster>) {
     if (values) {
