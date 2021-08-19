@@ -1,0 +1,31 @@
+@import "src/theme/mixins.scss";
+.webmapp-searchbar-main {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+
+    .webmapp-searchbar-textcontainer {
+        border-radius: 30px;
+        @include box-shadow-light;
+
+        .webmapp-searchbar-rightbtn {
+            border-left: 1px solid var(--wm-color-grey);
+            padding: 7px 2px 7px 11px;
+        }
+    }
+
+    .webmapp-searchbar-categoryslider {
+        padding: 10px 0;
+        .webmapp-searchbar-categorybtn {
+            @include box-shadow-light;
+            background: var(--wm-color-light);
+            padding: 8px 15px;
+            border-radius: 43px;
+            font-size: var(--wm-font-xsm);
+            &.webmapp-searchbar-categorybtn-selected {
+                background: var(--wm-color-secondary);
+                color: var(--wm-color-light)
+            }
+        }
+    }
+}

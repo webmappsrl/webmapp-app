@@ -10,6 +10,7 @@ import { MapPage } from './map.page';
 import { MapModule } from 'src/app/components/map/map.module';
 import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { SearchBarComponent } from 'src/app/components/search-bar/search-bar.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   declarations: [
     RecordingBtnComponent,
-    MapPage
+    MapPage,
+    SearchBarComponent
   ]
 })
 export class MapPageModule { }
