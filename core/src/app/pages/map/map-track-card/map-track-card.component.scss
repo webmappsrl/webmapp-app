@@ -1,0 +1,44 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-maptrackcard {
+    width: 286px;
+    height: 137px;
+    border-radius: 15px;
+    position: relative;
+    @include box-shadow-light;
+
+    .webmapp-maptrackcard-image {
+        height: 137px;
+        width: 108px;
+        &::part(image) {
+            object-fit: cover;
+        }
+        left: 0;
+        position: absolute;
+    }
+
+    .webmapp-maptrackcard-info {
+        left: 108px;
+        position: absolute;
+        width: 178px;
+        padding: 10px;
+    }
+
+    .webmapp-maptrackcard-favourite {
+        position: absolute;
+        z-index: 99;
+        top: 10px;
+        left: 10px;
+        color: var(--wm-color-light);
+    }
+
+    .webmapp-maptrackcard-exit {
+        position: absolute;
+        z-index: 99;
+        top: 7px;
+        right: 8px;
+        color: var(--wm-color-derk);
+        font-size: 9px;
+        @include box-shadow-light;
+    }
+}

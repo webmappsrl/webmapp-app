@@ -12,10 +12,13 @@
         <webmapp-card-big></webmapp-card-big>
       </ion-slide>
     </ng-container>
-    <ng-container *ngIf="data">
+    <ng-container *ngIf="data && data.length">
       <ion-slide *ngFor="let item of data">
         <webmapp-card-big [item]="item"></webmapp-card-big>
       </ion-slide>
     </ng-container>
+    <ion-label *ngIf="data && !data.length" class="webmapp-card-slider-nodata">
+      {{nodata}}
+    </ion-label>
   </ion-slides>
 </div>

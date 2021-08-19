@@ -1,0 +1,11 @@
+<ion-card class="webmapp-maptrackcard">
+  <i class="webmapp-maptrackcard-favourite webmapp-icon-heart-outline"
+    [ngClass]="{'webmapp-icon-heart':track.favourite}"> </i>
+  <ion-img [src]="track.properties.image.url" class="webmapp-maptrackcard-image">
+
+  </ion-img>
+  <div class="webmapp-maptrackcard-info">
+    {{track.properties.name | wmtrans }}
+  </div>
+  <i class="webmapp-maptrackcard-exit webmapp-icon-close-outline" (click)="exit()"> </i>
+</ion-card>

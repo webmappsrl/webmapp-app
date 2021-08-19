@@ -72,7 +72,8 @@
   "pages": {
     "home": {
       "mostViewedTracks": "Percorsi più visti",
-      "closerTracks": "Percorsi nelle vicinanze"
+      "closerTracks": "Percorsi nelle vicinanze",
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
     },
     "profile": {
       "title": "Profilo",

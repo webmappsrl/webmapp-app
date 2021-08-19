@@ -65,18 +65,36 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
   @Output() move: EventEmitter<any> = new EventEmitter();
   @Output() clickcluster: EventEmitter<any> = new EventEmitter();
+  @Output() touch: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
-  @Input('static') static: boolean = false;
 
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
 
+  @Input('static') set static(value: boolean) {
+    this._static = value;
+    if (this._map) {
+      const interactions = defaultInteractions({
+        doubleClickZoom: !value,
+        dragPan: !value,
+        mouseWheelZoom: !value,
+      });
+      this._map.getInteractions().forEach(inter => {
+        this._map.removeInteraction(inter);
+      })
+      interactions.forEach(interaction => {
+        this._map.addInteraction(interaction);
+      })
+
+    }
+  }
+
+
   @Input('track') set track(value: ITrack) {
     if (value) {
-      console.log('------- ~ file: map.component.ts ~ line 62 ~ MapComponent ~ @Input ~ value', value);
       setTimeout(() => {
         this._track.registeredTrack = value;
         if (value.geojson) {
@@ -85,6 +103,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.drawTrack(value, true);
         }
       }, 10);
+    } else {
+      this.deleteTrack();
     }
   }
 
@@ -128,6 +148,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _view: View;
   private _map: Map;
+  private _static: boolean;
 
   // Location Icon
   private _locationIconArrow: Icon;
@@ -218,7 +239,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     let interactions = null;
-    if (this.static) {
+    if (this._static) {
       interactions = defaultInteractions({
         doubleClickZoom: false,
         // dragAndDrop: false,
@@ -351,6 +372,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //}
   }
 
+  deleteTrack() {
+    if (this._map && this._track.layer) {
+      this._map.removeLayer(this._track.layer);
+    }
+  }
+
   /**
    * Move the location icon to the specified new location
    *
@@ -464,6 +491,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     style.push(
       new Style({
         stroke: new Stroke({
+          color: 'rgba(255, 255, 255, 0.9)',
+          width: strokeWidth * 2,
+        }),
+        zIndex: zIndex + 1,
+      })
+    );
+
+    style.push(
+      new Style({
+        stroke: new Stroke({
           color,
           width: strokeWidth,
           lineDash,
@@ -506,7 +543,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToTrack() {
     if (this._track.layer) {
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [50, 50, 50, 50],
+        padding: [50, 50, 50, 50], duration: DEF_MAP_CLUSTER_ZOOM_DURATION
       });
     }
   }

@@ -15,5 +15,13 @@ export class StatusService {
     return this._route;
   }
 
+  private _isSelectedMapTrack: boolean;
+
+  public set isSelectedMapTrack(val: boolean) {
+    this._isSelectedMapTrack = val;
+  }
+  public get isSelectedMapTrack(): boolean {
+    return this._isSelectedMapTrack;
+  }
   constructor() { }
 }

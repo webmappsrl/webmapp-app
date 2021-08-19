@@ -13,19 +13,23 @@
             padding: 7px 2px 7px 11px;
         }
     }
+}
 
-    .webmapp-searchbar-categoryslider {
-        padding: 10px 0;
-        .webmapp-searchbar-categorybtn {
-            @include box-shadow-light;
-            background: var(--wm-color-light);
-            padding: 8px 15px;
-            border-radius: 43px;
+.webmapp-searchbar-categoryslider {
+    .webmapp-searchbar-categorybtn {
+        @include box-shadow-light;
+        background: var(--wm-color-light);
+        color: var(--wm-color-dark);
+        padding: 8px 15px;
+        border-radius: 43px;
+        font-size: var(--wm-font-sm);
+        &.webmapp-searchbar-categorybtn-selected {
+            background: var(--wm-color-secondary);
+            color: var(--wm-color-light);
+        }
+        .webmapp-searchbar-categorylabel {
+            padding: 0 5px;
             font-size: var(--wm-font-xsm);
-            &.webmapp-searchbar-categorybtn-selected {
-                background: var(--wm-color-secondary);
-                color: var(--wm-color-light)
-            }
         }
     }
 }

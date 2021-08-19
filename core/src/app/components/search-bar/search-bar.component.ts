@@ -26,7 +26,7 @@ export class SearchBarComponent implements OnInit {
   ];
 
   public sliderOptions: any = {
-    slidesPerView: 3.5,
+    slidesPerView: 2.8,
   };
 
   constructor() { }

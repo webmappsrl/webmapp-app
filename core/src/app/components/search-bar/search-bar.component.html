@@ -4,16 +4,15 @@
     <ion-input type="text" class="webmapp-searchbar-textinput"></ion-input>
     <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn"></i>
   </ion-item>
-
-
-  <ion-slides pager="false" [options]="sliderOptions" class="webmapp-searchbar-categoryslider" #slider>
-    <ion-slide *ngFor="let category of categories">
-      <div class="webmapp-searchbar-categorybtn"
-        [ngClass]="{'webmapp-searchbar-categorybtn-selected':category.selected}" (click)="select(category)">
-        <i  class="webmapp-icon-{{category.icon}} webmapp-searchbar-categorybtn-icon"></i>
-        {{category.name}}
-      </div>
-    </ion-slide>
-  </ion-slides>
-
 </div>
+
+<ion-slides pager="false" [options]="sliderOptions" class="webmapp-searchbar-categoryslider" #slider>
+  <ion-slide *ngFor="let category of categories">
+    <div class="webmapp-searchbar-categorybtn" [ngClass]="{'webmapp-searchbar-categorybtn-selected':category.selected}"
+      (click)="select(category)">
+      <i class="webmapp-icon-{{category.icon}} webmapp-searchbar-categorybtn-icon"></i>
+      <ion-label class="webmapp-searchbar-categorylabel">{{category.name}}</ion-label>
+      
+    </div>
+  </ion-slide>
+</ion-slides>

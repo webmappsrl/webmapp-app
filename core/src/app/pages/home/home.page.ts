@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -18,6 +19,9 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
-    this.nearRoutes = await this._geoHubService.getNearEcTracks(this._geoLocation.location);
+    await this._geoLocation.start();
+    this._geoLocation.onLocationChange.pipe(first()).subscribe(async (pos) => {      
+      this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);      
+    })
   }
 }

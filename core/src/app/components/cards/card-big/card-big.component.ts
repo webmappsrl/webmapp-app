@@ -25,7 +25,9 @@ export class CardBigComponent implements OnInit {
     this._item = value;
     this.title = value.properties.name;
     this.subtitle = value.properties.created_at;
-    this.imageUrl = value.properties.image.url;
+    if (value.properties.image && value.properties.image.url) {
+      this.imageUrl = value.properties.image.url;
+    }
   }
 
   ngOnInit(

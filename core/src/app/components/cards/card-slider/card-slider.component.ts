@@ -9,6 +9,7 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class CardSliderComponent implements OnInit {
   @Input('title') title: string;
+  @Input('nodata') nodata: string;
   @Input('data') data: Array<IGeojsonFeature>;
 
   public sliderOptions: any;

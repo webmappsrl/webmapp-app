@@ -12,7 +12,7 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
 
   constructor() {
     this._properties = {
-      id: '',
+      id: null,
     };
   }
 
@@ -28,7 +28,7 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
     return this?._geometry?.type;
   }
 
-  get id(): string {
+  get id(): number {
     return this?._properties?.id;
   }
 

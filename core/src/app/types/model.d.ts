@@ -30,7 +30,7 @@ export interface iLocalString{
  */
 export interface IGeojsonProperties {
   [_: string]: any; // allow to work with custom properties when needed
-  id: string;
+  id: number;
 
   created_at?: Date;
   updated_at?: Date;

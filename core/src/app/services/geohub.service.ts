@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
@@ -19,8 +20,12 @@ export class GeohubService {
    *
    * @returns {CGeojsonLineStringFeature}
    */
-  getEcTrack(id: string): CGeojsonLineStringFeature {
-    return undefined;
+  async getEcTrack(id: string): Promise<CGeojsonLineStringFeature> {
+    
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+      .toPromise();
+    return res;
   }
 
   /**
@@ -110,8 +115,10 @@ export class GeohubService {
    * @returns {Array<IGeojsonFeature>}
    */
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
-    const res = await this._getMockFeature();
-    return [res, res, res, res, res];
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`,).pipe(map(x=>x.features))
+      .toPromise();
+    return res;
   }
 
   /**
@@ -120,8 +127,10 @@ export class GeohubService {
    * @returns {Array<IGeojsonFeature>}
    */
   async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
-    const res = await this._getMockFeature();
-    return [res, res, res, res, res];
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x=>x.features))
+      .toPromise();
+    return res;
   }
 
   /**

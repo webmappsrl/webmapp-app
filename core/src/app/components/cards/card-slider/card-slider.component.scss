@@ -5,3 +5,8 @@
 .webmapp-card-slider {
   overflow: visible;
 }
+.webmapp-card-slider-nodata {
+  padding: 10px 20px;
+  color:var(--wm-color-darkgrey);
+  font-size: var(--wm-font-sm);
+}

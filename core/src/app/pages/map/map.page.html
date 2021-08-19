@@ -3,9 +3,18 @@
 
   <webmapp-search-bar class="webmapp-pagemap-searchbar"> </webmapp-search-bar>
 
-  <webmapp-map class="webmapp-pagemap-map-container" [start-view]="[10.4147, 43.7118,9]" (move)="mapMove($event)"
-    [clusters]="clusters" (clickcluster)="clickcluster($event)" [boundigBox]="boundigBox"></webmapp-map>
+  <webmapp-map class="webmapp-pagemap-map-container" (move)="mapMove($event)" (clickcluster)="clickcluster($event)"
+    (touch)="mapTouch($event)" [start-view]="[10.4147, 43.7118,9]" [clusters]="clusters" [boundigBox]="boundigBox"     
+    [btnposition]="selectedTrackId?'middle':'bottom'" [track]="selectedTrack"><!-- [static]="selectedTrackId?true:false"  -->
+  </webmapp-map>
 
   <webmapp-recording-btn class="webmapp-pagemap-recordingbtn" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
   </webmapp-recording-btn>
+
+  <ion-slides pager="false" (ionSlideDidChange)="sliderChange($event)" [options]="sliderOptions"
+    *ngIf="selectedTracks && selectedTracks.length" class="webmapp-pagemap-cardslider" #slider>
+    <ion-slide *ngFor="let track of selectedTracks">
+      <webmapp-map-track-card [track]="track" (close)="closeCard()" (click)="openTrack(track)"></webmapp-map-track-card>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
