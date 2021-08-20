@@ -16,6 +16,7 @@ import { TabEatComponent } from './tab-eat/tab-eat.component';
 import { TabHowtoComponent } from './tab-howto/tab-howto.component';
 import { TabWalkableComponent } from './tab-walkable/tab-walkable.component';
 import { PipeModule } from 'src/app/pipes/pipe.module';
+import { SlopeChartComponent } from './slope-chart/slope-chart.component';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { PipeModule } from 'src/app/pipes/pipe.module';
     TabEatComponent,
     TabDescriptionComponent,
     TabAccessibilityComponent,
+    SlopeChartComponent
   ]
 })
 export class RoutePageModule { }

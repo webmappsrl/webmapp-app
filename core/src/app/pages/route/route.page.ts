@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuController, NavController, Platform } from '@ionic/angular';
+import { take } from 'rxjs/operators';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -29,7 +30,7 @@ export class RoutePage implements OnInit {
   };
 
   constructor(
-    // private _actRoute: ActivatedRoute,
+    private _actRoute: ActivatedRoute,
     private _geohubService: GeohubService,
     private _navController: NavController,
     private _menuController: MenuController,
@@ -47,6 +48,16 @@ export class RoutePage implements OnInit {
     // });
 
     this.route = this._statusService.route;
+
+    if (!this.route) {
+      const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();;
+      const id = params.id ? params.id : 22; //TODO only for debug
+      this.route = await this._geohubService.getEcRoute(id);
+      this._statusService.route = this.route;
+      this.track = this.route.geometry;
+
+    }
+
     this.track = this.route.geometry;
 
     await this._platform.ready();
@@ -55,10 +66,10 @@ export class RoutePage implements OnInit {
 
   toggleDetail() {
     const direction = this.opacity >= 1 ? 1 : -1;
-    console.log(
-      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity',
-      this.opacity
-    );
+    // console.log(
+    //   '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity',
+    //   this.opacity
+    // );
     const interv = setInterval(() => {
       this.opacity -= 0.01 * direction;
       if (this.opacity <= 0 || this.opacity >= 1) {

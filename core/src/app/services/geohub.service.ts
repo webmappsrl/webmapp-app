@@ -21,9 +21,19 @@ export class GeohubService {
    * @returns {CGeojsonLineStringFeature}
    */
   async getEcTrack(id: string): Promise<CGeojsonLineStringFeature> {
-    
+    const fondo = ['asfalto', 'lastricato', 'naturale']
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+      .pipe(map((res: CGeojsonLineStringFeature) => {
+        let lastAlt = 0; let idx = 0
+        res.geometry.coordinates.forEach(coord => {
+          coord.push(Math.abs(coord[2] - lastAlt)); //pendenza
+          lastAlt = coord[2];
+          coord.push(fondo[Math.round(idx / 30) % 3]);
+          idx++;
+        })        
+        return res;
+      }))
       .toPromise();
     return res;
   }
@@ -116,7 +126,7 @@ export class GeohubService {
    */
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`,).pipe(map(x=>x.features))
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`,).pipe(map(x => x.features))
       .toPromise();
     return res;
   }
@@ -128,7 +138,7 @@ export class GeohubService {
    */
   async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x=>x.features))
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
       .toPromise();
     return res;
   }
