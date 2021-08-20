@@ -543,7 +543,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToTrack() {
     if (this._track.layer) {
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [50, 50, 50, 50], duration: DEF_MAP_CLUSTER_ZOOM_DURATION
+        padding: [120, 120, 120, 120], duration: DEF_MAP_CLUSTER_ZOOM_DURATION
       });
     }
   }

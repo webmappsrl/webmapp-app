@@ -42,7 +42,7 @@ export interface IGeojsonProperties {
   source?: string;
   distance_comp?: number;
   user_id?: number;
-  feature_image?: number;
+  // feature_image?: number;
   audio?: string;
   distance?: number;
   ascent?: number;
@@ -57,8 +57,9 @@ export interface IGeojsonProperties {
   geojson_url?: string;
   kml_url?: string;
   gpx_url?: string;
-  image?: IWmImage;
-  imageGallery?: IWmImage[];
+  feature_image ?: IWmImage;
+  image ?: IWmImage;
+  image_gallery?: IWmImage[];
   taxonomy?: {
     activity?: string[];
     where?: string[];

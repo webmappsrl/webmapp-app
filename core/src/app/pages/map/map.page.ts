@@ -118,7 +118,7 @@ export class MapPage implements OnInit {
       },
       properties: {
         ids: [ectrack.properties.id],
-        images: [ectrack.properties.image.url],
+        images: [ectrack.properties.feature_image.url],
         bbox: []
       }
     };
