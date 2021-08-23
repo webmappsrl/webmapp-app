@@ -74,8 +74,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
 
-  @Input('static') set static(value: boolean) {
-    this._static = value;
+  @Input('static') set setStatic(value: boolean) {
+    this.static = value;
     if (this._map) {
       const interactions = defaultInteractions({
         doubleClickZoom: !value,
@@ -148,7 +148,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _view: View;
   private _map: Map;
-  private _static: boolean;
+  public static: boolean;
 
   // Location Icon
   private _locationIconArrow: Icon;
@@ -239,7 +239,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     let interactions = null;
-    if (this._static) {
+    if (this.static) {
       interactions = defaultInteractions({
         doubleClickZoom: false,
         // dragAndDrop: false,
