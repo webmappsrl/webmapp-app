@@ -4,8 +4,13 @@ import { ClusterMarkerComponent } from "../components/map/cluster-marker/cluster
 import { IGeojsonCluster } from "./model";
 
 
-interface ClusterMarker {
+export interface ClusterMarker {
   cluster: IGeojsonCluster,
   component: ComponentRef<ClusterMarkerComponent>,
   overlay: Overlay
+}
+
+export interface MapMoveEvent {
+  boundigBox: number[];
+  zoom: number;
 }

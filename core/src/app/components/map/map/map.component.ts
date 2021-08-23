@@ -50,7 +50,7 @@ import { fromLonLat } from 'ol/proj';
 import Overlay from 'ol/Overlay';
 import OverlayPositioning from 'ol/OverlayPositioning';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
-import { ClusterMarker } from 'src/app/types/map';
+import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
 
 
 @Component({
@@ -63,7 +63,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
-  @Output() move: EventEmitter<any> = new EventEmitter();
+  @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
   @Output() clickcluster: EventEmitter<any> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
 
@@ -286,9 +286,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if (!this.static) {
       this._map.on('moveend', () => {
-        this.move.emit(
-          this._mapService.extentToLonLat(
-            this._map.getView().calculateExtent(this._map.getSize()))
+        this.move.emit({
+          boundigBox: this._mapService.extentToLonLat(
+            this._map.getView().calculateExtent(this._map.getSize())), zoom: this._view.getZoom()
+        }
         );
         if (
           [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
@@ -794,14 +795,48 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const pos = fromLonLat([cluster.geometry.coordinates[0] as number, cluster.geometry.coordinates[1] as number]); // TODO check object type
 
+
+
+    var canvas = <HTMLCanvasElement>document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    var htmlText = ((componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement).outerHTML;
+
+    var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+      '<foreignObject width="100%" height="100%">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
+      htmlText +
+      '</div>' +
+      '</foreignObject>' +
+      '</svg>';
+
+    console.log('------- ~ file: map.component.ts ~ line 805 ~ _addClusterMarker ~ data', data);
+    var DOMURL = window.URL;// || window.webkitURL || window;
+
+    var img = new Image();
+    var svg = new Blob([data], {
+      type: 'image/svg+xml;charset=utf-8'
+    });
+    var url = DOMURL.createObjectURL(svg);
+
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      DOMURL.revokeObjectURL(url);
+    }
+
+    img.src = url;
+
+
     const markerOverlay = new Overlay({
       position: pos,
       positioning: OverlayPositioning.CENTER_CENTER,
       element: (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement,
+      //element: img,
       stopEvent: false,
       id: this._idOfClusterMarker(cluster)
     });
     this._map.addOverlay(markerOverlay);
+
     return {
       cluster,
       overlay: markerOverlay,

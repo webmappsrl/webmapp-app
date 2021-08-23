@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, NavController } from '@ionic/angular';
+import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
-import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
+import { DEF_MAP_LOCATION_ZOOM, DEF_MAP_MAX_BOUNDINGBOX, DEF_MAP_MAX_ZOOM } from 'src/app/constants/map';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { StatusService } from 'src/app/services/status.service';
 import { EGeojsonGeometryTypes } from 'src/app/types/egeojson-geometry-types.enum';
 import { ILocation } from 'src/app/types/location';
-import { IGeojsonCluster, IGeojsonGeometry } from 'src/app/types/model';
+import { MapMoveEvent } from 'src/app/types/map';
+import { IGeojsonCluster, IGeojsonClusterApiResponse, IGeojsonGeometry } from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-page-map',
@@ -22,8 +24,10 @@ export class MapPage implements OnInit {
   public _zoneAllClusters: IGeojsonCluster[];
 
   public boundigBox: number[];
+  public actualZoom: number;
 
   public selectedTrack: IGeojsonGeometry;
+  public referenceTrackId: number = null;
 
   public selectedTracks: CGeojsonLineStringFeature[] = [];
 
@@ -65,47 +69,66 @@ export class MapPage implements OnInit {
     return this._geolocationService.recording;
   }
 
-  async mapMove(moveEv) {
-    const res = await this._geohubService.search(moveEv)
-    if (res && res.features && !this.selectedTrackId) {
-      this.clusters = res.features.filter(x => { return (x.properties.ids[0] != this.selectedTrackId) || !this.selectedTrackId });
+  async mapMove(moveEvent: MapMoveEvent) {
+    this.actualZoom = moveEvent.zoom;
+    const res = await this._geohubService.search(moveEvent.boundigBox, this.referenceTrackId)
+    if (res && res.features) {
+      this.clusters = this._cleanResultsFromSelected(res);
     }
   }
 
+  private _cleanResultsFromSelected(res: IGeojsonClusterApiResponse): IGeojsonCluster[] {
+    let ret = res.features.filter(x => x.properties.ids[0] != this.selectedTrackId || x.properties.ids.length > 1);
+    ret.forEach(cluster => {
+      const ids = cluster.properties.ids;
+      if (ids.includes(this.selectedTrackId)) {
+        ids.splice(ids.indexOf(this.selectedTrackId), 1);
+      }
+    })
+    return ret;
+  }
+
+  private _isMaxZoom() {
+    return this.actualZoom == DEF_MAP_MAX_ZOOM;
+  }
+
   async clickcluster(cluster: IGeojsonCluster) {
-    if (cluster.properties.ids.length > 1) {
+    if (cluster.properties.ids.length > 1 && (!this._isMaxZoom() && !this.referenceTrackId)) {
       //cluster
       this.boundigBox = cluster.properties.bbox;
       this.selectTrack(null);
     } else {
       const trackId = cluster.properties.ids[0]
-      if (this.selectedTrackId) {
-        this.selectTrack(trackId);
-      } else {
+      if (!this.referenceTrackId) {
+        this.referenceTrackId = trackId;
+
         // single track
         //const track = await this._geohubService.getEcTrack(trackId + '')
         this.selectedTracks = [];
 
-        const clusterCopy = this.clusters;
-        //this.clusters = [];
+        const allNearTrackClusters = await this._geohubService.search(DEF_MAP_MAX_BOUNDINGBOX, trackId)
+
         this._zoneAllClusters = []
-        let trackIdx = 0, idx = 0;
-        for (let clust of clusterCopy) {
-          for (let id of clust.properties.ids) {
-            const ectrack = await this._geohubService.getEcTrack(id + '');
-            this.selectedTracks.push(ectrack);
-            if (trackId === id) {
-              trackIdx = idx;
-            }
-            idx++;
 
-            this._zoneAllClusters.push(this._createClusterForEcTrack(ectrack))
-          }
-        }
+        const ids = [], promises = [];
+        allNearTrackClusters.features.forEach(clust => { ids.push(...clust.properties.ids) })
+        ids.forEach(id => {
+          promises.push(this._geohubService.getEcTrack(id + ''));
+        })
 
-        this.selectTrack(trackId);
+        console.log("generate promises");
+        const statusesPromise = Promise.all(promises);
+        const ectracks = await statusesPromise;
+        console.log("all promises");
+        ectracks.forEach(ectrack => {
+          this.selectedTracks.push(ectrack);
+          this._zoneAllClusters.push(this._createClusterForEcTrack(ectrack))
+        })
 
       }
+      console.log("let's select");
+      this.selectTrack(trackId);
+
 
     }
   }
@@ -139,7 +162,7 @@ export class MapPage implements OnInit {
     this.selectedTracks = id ? this.selectedTracks : [];
 
     if (id) {
-      this.clusters = this._zoneAllClusters.filter(cl => cl.properties.ids[0] != id);
+      // this.clusters = this._zoneAllClusters.filter(cl => cl.properties.ids[0] != id);
 
       const trackIdx = this._zoneAllClusters.findIndex(x => x.properties.ids[0] == id)
       this.selectedTrack = this.selectedTracks[trackIdx].geometry;
@@ -151,6 +174,7 @@ export class MapPage implements OnInit {
       }
     } else {
       this.selectedTrack = null;
+      this.referenceTrackId = null;
     }
   }
 

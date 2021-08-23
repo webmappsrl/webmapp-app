@@ -31,7 +31,7 @@ export class GeohubService {
           lastAlt = coord[2];
           coord.push(fondo[Math.round(idx / 30) % 3]);
           idx++;
-        })        
+        })
         return res;
       }))
       .toPromise();
@@ -76,9 +76,13 @@ export class GeohubService {
    *
    * @returns {Array<RouteCluster>}
    */
-  async search(boundingBox: number[]): Promise<IGeojsonClusterApiResponse> {
+  async search(boundingBox: number[], referenceTrackId: number = null): Promise<IGeojsonClusterApiResponse> {
+    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`;
+    if (referenceTrackId) {
+      url += `&reference_id=${referenceTrackId}`;
+    }
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`,)
+      .get(url)
       .toPromise();
     return res;
     // return [{
