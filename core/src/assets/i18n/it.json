@@ -139,7 +139,7 @@
     },
     "map": {
       "recordingbtn": "Reg. in corso",
-      "searchherebtn" : "Cerca in quest'area"
+      "searchherebtn": "Cerca in quest'area"
     },
     "waypoint": {
       "title": "Registra un waypoint",
@@ -225,6 +225,31 @@
       },
       "btnrec": {
         "slide": "Scorri per registrare"
+      }
+    },
+    "slopechart": {
+      "surfaces": {
+        "asphalt": {
+          "label": "asfalto"
+        },
+        "concrete": {
+          "label": "cemento"
+        },
+        "dirt": {
+          "label": "terra"
+        },
+        "grass": {
+          "label": "erba"
+        },
+        "gravel": {
+          "label": "ghiaia"
+        },
+        "paved": {
+          "label": "lastricato"
+        },
+        "sand": {
+          "label": "sabbia"
+        }
       }
     }
   },

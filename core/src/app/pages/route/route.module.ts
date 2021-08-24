@@ -26,7 +26,7 @@ import { SlopeChartComponent } from './slope-chart/slope-chart.component';
     RoutePageRoutingModule,
     TranslateModule,
     MapModule,
-    PipeModule
+    PipeModule,
   ],
   declarations: [
     RoutePage,
@@ -36,7 +36,7 @@ import { SlopeChartComponent } from './slope-chart/slope-chart.component';
     TabEatComponent,
     TabDescriptionComponent,
     TabAccessibilityComponent,
-    SlopeChartComponent
-  ]
+    SlopeChartComponent,
+  ],
 })
-export class RoutePageModule { }
+export class RoutePageModule {}
