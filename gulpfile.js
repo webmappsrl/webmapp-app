@@ -771,7 +771,7 @@ function buildAndroidApk(instanceName, type) {
             type.toLowerCase() +
             "/app-" +
             type.toLowerCase() +
-            ".apk"
+            "-unsigned.apk"
         );
         resolve();
       },
