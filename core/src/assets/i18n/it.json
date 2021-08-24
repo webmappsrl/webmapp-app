@@ -138,7 +138,8 @@
       }
     },
     "map": {
-      "recordingbtn": "Reg. in corso"
+      "recordingbtn": "Reg. in corso",
+      "searchherebtn" : "Cerca in quest'area"
     },
     "waypoint": {
       "title": "Registra un waypoint",

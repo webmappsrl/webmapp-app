@@ -1,17 +1,20 @@
 <ion-content scrollY="false">
 
+  <div class="webmapp-pagemap-searcharea">
+    
+    <webmapp-search-bar class="webmapp-pagemap-searchbar"> </webmapp-search-bar>
 
-  <webmapp-search-bar class="webmapp-pagemap-searchbar"> </webmapp-search-bar>
+    <ion-button (click)="closeCard()" class="webmapp-pagemap-searchherebtn"
+      [hidden]="!selectedTracks || !selectedTracks.length">
+      <i class="webmapp-icon-search-outline"></i>
+      <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>    
+    </ion-button>
 
-  <webmapp-map class="webmapp-pagemap-map-container" 
-    (move)="mapMove($event)" 
-    (clickcluster)="clickcluster($event)"
-    (touch)="mapTouch($event)" 
-    [start-view]="[10.4147, 43.7118,9]" 
-    [clusters]="clusters" 
-    [boundigBox]="boundigBox"     
-    [btnposition]="selectedTrackId?'middle':'bottom'" 
-    [track]="selectedTrack">
+  </div>
+
+  <webmapp-map class="webmapp-pagemap-map-container" (move)="mapMove($event)" (clickcluster)="clickcluster($event)"
+    (touch)="mapTouch($event)" [start-view]="[10.4147, 43.7118,9]" [clusters]="clusters" [boundigBox]="boundigBox"
+    [btnposition]="selectedTrackId?'middle':'bottom'" [track]="selectedTrack">
     <!-- [static]="selectedTrackId?true:false"  -->
   </webmapp-map>
 
