@@ -46,11 +46,12 @@ export class SlopeChartComponent implements OnInit {
 
   private _setChart() {
     if (!!this._chartCanvas && !!this.route) {
-      let values: {
+      let surfaceValues: {
           [id: string]: Array<number>;
         } = {},
+        slopeValues: Array<[number, number]> = [],
         labels: Array<number> = [],
-        steps: number = 75,
+        steps: number = 50,
         trackLength: number = 0,
         currentDistance: number = 0,
         previousLocation: ILocation,
@@ -62,7 +63,7 @@ export class SlopeChartComponent implements OnInit {
       // steps = Math.max(5, Math.min(800, steps));
 
       for (let i in ESlopeChartSurface) {
-        values[ESlopeChartSurface[i]] = [];
+        surfaceValues[ESlopeChartSurface[i]] = [];
       }
 
       this._chartValues = [];
@@ -70,12 +71,16 @@ export class SlopeChartComponent implements OnInit {
       labels.push(0);
 
       let surface = Object.values(ESlopeChartSurface)[0];
-      values = this._setSurfaceValue(
+      surfaceValues = this._setSurfaceValue(
         surface,
         this.route.geometry.coordinates[0][2],
-        values
+        surfaceValues
       );
       if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
+      slopeValues.push([
+        this.route.geometry.coordinates[0][2],
+        Math.round(Math.random() * 15),
+      ]);
 
       currentLocation = new CLocation(
         this.route.geometry.coordinates[0][0],
@@ -133,31 +138,34 @@ export class SlopeChartComponent implements OnInit {
             deltaLatitude: number =
               currentLocation.latitude - previousLocation.latitude,
             deltaAltitude: number =
-              currentLocation.altitude - previousLocation.altitude;
-
-          this._chartValues.push(
-            new CLocation(
+              currentLocation.altitude - previousLocation.altitude,
+            longitude: number =
               previousLocation.longitude +
-                (deltaLongitude * difference) / localDistance,
+              (deltaLongitude * difference) / localDistance,
+            latitude: number =
               previousLocation.latitude +
-                (deltaLatitude * difference) / localDistance
-            )
-          );
-
-          let surface =
-            Object.values(ESlopeChartSurface)[
-              Math.round(step / 10) %
-                (Object.keys(ESlopeChartSurface).length - 2)
-            ];
-          values = this._setSurfaceValue(
-            surface,
-            Math.round(
+              (deltaLatitude * difference) / localDistance,
+            altitude: number = Math.round(
               previousLocation.altitude +
                 (deltaAltitude * difference) / localDistance
             ),
-            values
+            surface =
+              Object.values(ESlopeChartSurface)[
+                Math.round(step / 10) %
+                  (Object.keys(ESlopeChartSurface).length - 2)
+              ],
+            slope: number = Math.round(Math.random() * 10);
+
+          this._chartValues.push(new CLocation(longitude, latitude));
+
+          surfaceValues = this._setSurfaceValue(
+            surface,
+            altitude,
+            surfaceValues
           );
           if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
+          slopeValues.push([altitude, slope]);
+
           labels.push(
             parseFloat(((step * trackLength) / (steps * 1000)).toFixed(1))
           );
@@ -180,24 +188,32 @@ export class SlopeChartComponent implements OnInit {
         Object.values(ESlopeChartSurface)[
           Math.round(step / 10) % (Object.keys(ESlopeChartSurface).length - 2)
         ];
-      values = this._setSurfaceValue(
+      surfaceValues = this._setSurfaceValue(
         surface,
         this.route.geometry.coordinates[
           this.route.geometry.coordinates.length - 1
         ][2],
-        values
+        surfaceValues
       );
       if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
+      slopeValues.push([
+        this.route.geometry.coordinates[
+          this.route.geometry.coordinates.length - 1
+        ][2],
+        slopeValues[slopeValues.length - 1][1] +
+          Math.round(Math.random() * 1) -
+          0.5,
+      ]);
 
       labels.push(parseFloat((trackLength / 1000).toFixed(1)));
 
       //   if (this._chart) this._chart.destroy();
 
-      let keys: Array<string> = Object.keys(values);
+      let keys: Array<string> = Object.keys(surfaceValues);
       this.surfaces = [];
       for (let i = 0; i < keys.length; i++) {
         if (!usedSurfaces.includes(<ESlopeChartSurface>keys[i]))
-          delete values[keys[i]];
+          delete surfaceValues[keys[i]];
         else {
           this.surfaces.push({
             id: <ESlopeChartSurface>keys[i],
@@ -206,7 +222,7 @@ export class SlopeChartComponent implements OnInit {
         }
       }
 
-      this._createChart(labels, values);
+      this._createChart(labels, surfaceValues, slopeValues);
     }
   }
 
@@ -253,35 +269,148 @@ export class SlopeChartComponent implements OnInit {
       tension: 0.3,
       backgroundColor: SLOPE_CHART_SURFACE[surface].backgroundColor,
       borderColor: 'rgba(255, 199, 132, 0)',
-      // borderWidth: 0,
+      // borderWidth: 3,
       // borderCapStyle: "butt",
-      // borderDash: [],
+      // borderDash: [30, 30],
       // borderDashOffset: 0.0,
       // borderJoinStyle: "miter",
       pointRadius: 0,
-      // pointBorderColor: pointBorderColor,
-      // pointBorderWidth: 1,
-      // pointBackgroundColor: pointFillColor,
-      // pointHoverRadius: pointHoverRadius,
-      // pointHoverBorderColor: pointHoverBorderColor,
-      // pointHoverBorderWidth: 2,
-      // pointHoverBackgroundColor: pointHoverFillColor,
-      // pointHitRadius: 10,
       data: values,
       spanGaps: false,
     };
   }
 
+  private _getSlopeGradientColor(value: number): string {
+    let easy: [number, number, number] = [8, 217, 4],
+      mediumEasy: [number, number, number] = [184, 219, 57],
+      mediumHard: [number, number, number] = [207, 167, 25],
+      medium: [number, number, number] = [214, 204, 13],
+      hard: [number, number, number] = [196, 30, 4],
+      min: [number, number, number],
+      max: [number, number, number],
+      proportion: number = 0;
+
+    if (value <= 0) {
+      min = easy;
+      max = easy;
+    } else if (value < 5) {
+      min = easy;
+      max = mediumEasy;
+      proportion = value / 5;
+    } else if (value < 10) {
+      min = mediumEasy;
+      max = mediumHard;
+      proportion = value / 5;
+    } else if (value < 15) {
+      min = mediumHard;
+      max = hard;
+      proportion = value / 5;
+      // } else if (value < 7.5) {
+      //   min = easy;
+      //   max = medium;
+      //   proportion = value / 7.5;
+      // } else if (value < 15) {
+      //   min = medium;
+      //   max = hard;
+      //   proportion = value / 7.5;
+    } else {
+      min = hard;
+      max = hard;
+      proportion = 1;
+    }
+
+    let result: [string, string, string] = ['0', '0', '0'];
+
+    result[0] = Math.abs(
+      Math.round(min[0] + (max[0] - min[0]) * proportion)
+    ).toString(16);
+    result[1] = Math.abs(
+      Math.round(min[1] + (max[1] - min[1]) * proportion)
+    ).toString(16);
+    result[2] = Math.abs(
+      Math.round(min[2] + (max[2] - min[2]) * proportion)
+    ).toString(16);
+
+    return (
+      '#' +
+      (result[0].length < 2 ? '0' : '') +
+      result[0] +
+      (result[1].length < 2 ? '0' : '') +
+      result[1] +
+      (result[2].length < 2 ? '0' : '') +
+      result[2]
+    );
+  }
+
+  private _getSlopeChartSlopeDataset(
+    slopeValues: Array<[number, number]>
+  ): Array<ChartDataset<'line', any>> {
+    let values: Array<number> = slopeValues.map((value) => value[0]),
+      slopes: Array<number> = slopeValues.map((value) => value[1]);
+
+    return [
+      {
+        fill: false,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.3,
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        borderColor: (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+
+          if (!chartArea) {
+            // This case happens on initial chart load
+            return null;
+          }
+
+          let gradient = ctx.createLinearGradient(
+            chartArea.left,
+            0,
+            chartArea.right,
+            0
+          );
+
+          for (let i in slopes) {
+            gradient.addColorStop(
+              parseInt(i) / slopes.length,
+              this._getSlopeGradientColor(slopes[i])
+            );
+          }
+
+          return gradient;
+        },
+        borderWidth: 3,
+        pointRadius: 0,
+        data: values,
+        spanGaps: false,
+      },
+      {
+        fill: false,
+        cubicInterpolationMode: 'monotone',
+        tension: 0.3,
+        borderColor: 'rgba(255, 255, 255, 1)',
+        borderWidth: 8,
+        pointRadius: 0,
+        data: values,
+        spanGaps: false,
+      },
+    ];
+  }
+
   private _createChart(
     labels: Array<number>,
-    values: { [id: string]: Array<number> }
+    surfaceValues: { [id: string]: Array<number> },
+    slopeValues: Array<[number, number]>
   ) {
     if (this._chartCanvas) {
       let surfaceDatasets: Array<ChartDataset> = [];
 
-      for (let i in values) {
+      for (let i in surfaceValues) {
         surfaceDatasets.push(
-          this._getSlopeChartSurfaceDataset(values[i], <ESlopeChartSurface>i)
+          this._getSlopeChartSurfaceDataset(
+            surfaceValues[i],
+            <ESlopeChartSurface>i
+          )
         );
       }
 
@@ -289,7 +418,10 @@ export class SlopeChartComponent implements OnInit {
         type: 'line',
         data: {
           labels: labels,
-          datasets: [...surfaceDatasets],
+          datasets: [
+            ...this._getSlopeChartSlopeDataset(slopeValues),
+            ...surfaceDatasets,
+          ],
         },
         options: {
           //   events: ["mousemove", "click", "touchstart", "touchmove"],
@@ -323,41 +455,6 @@ export class SlopeChartComponent implements OnInit {
               },
             },
           },
-          //   tooltips: {
-          //     intersect: false,
-          //     mode: "index",
-          //     backgroundColor: tooltipBackgroundColor,
-          //     titleFontColor: tooltipColor,
-          //     bodyFontColor: tooltipColor,
-          //     footerFontColor: tooltipColor,
-          //     titleFontSize: tooltipTitleFontSize,
-          //     bodyFontSize: tooltipLabelFontSize,
-          //     borderColor: tooltipBorderColor,
-          //     borderWidth: tooltipBorderWidth,
-          //     callbacks: {
-          //       label: (item: ChartTooltipItem, data: ChartData): string => {
-          //         if (this._configService.showTooltipLabel()) {
-          //           this._mapService.drawTemporaryPoi(
-          //             this._chartValues[item.index],
-          //             "elevation_poi"
-          //           );
-          //           return item.xLabel + " km";
-          //         } else return undefined;
-          //       },
-          //       title: (
-          //         item: Array<ChartTooltipItem>,
-          //         data: ChartData
-          //       ): string => {
-          //         return item[0].yLabel + " m";
-          //       },
-          //       labelColor: function (tooltipItem, chart) {
-          //         return {
-          //           borderColor: pointHoverBorderColor,
-          //           backgroundColor: pointHoverFillColor,
-          //         };
-          //       },
-          //     },
-          //   },
         },
       });
     }
