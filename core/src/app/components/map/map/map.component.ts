@@ -47,8 +47,6 @@ import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
 import { IGeojsonCluster } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
-import Overlay from 'ol/Overlay';
-import OverlayPositioning from 'ol/OverlayPositioning';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
 
@@ -64,7 +62,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
-  @Output() clickcluster: EventEmitter<any> = new EventEmitter();
+  @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
@@ -127,7 +125,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
 
   @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
-    this._addClusterMarkers(value);
+    if (value) {
+      setTimeout(() => { this._addClusterMarkers(value); }, 0);
+    }
   }
 
   @ViewChild("clusterContainer", { read: ViewContainerRef }) clusterContainer;
@@ -143,6 +143,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public timer: any;
 
   private _clusterMarkers: ClusterMarker[] = [];
+  private _clusterLayer: VectorLayer;
 
   private _position: ILocation = null;
 
@@ -283,6 +284,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
       this._map.updateSize();
     }, 1000);
+
+    this._map.on('click', (evt) => { this._mapClick(evt) });
 
     if (!this.static) {
       this._map.on('moveend', () => {
@@ -765,29 +768,39 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string { return ig.properties.ids.sort((a, b) => a - b).join('-') }
 
-  private _addClusterMarkers(values: Array<IGeojsonCluster>) {
+  private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
+
+    this._createClusterLayer();
+
     if (values) {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
+
         if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster))) {
+
           this._removeClusterMarker(ov);
           this._clusterMarkers.splice(i, 1);
+
         }
       }
 
       const factory: ComponentFactory<ClusterMarkerComponent> = this.resolver.resolveComponentFactory(ClusterMarkerComponent);
 
-      values.forEach(cluster => {
+      for (const cluster of values) {
         if (!this._clusterMarkers.find(x => this._idOfClusterMarker(x.cluster) == this._idOfClusterMarker(cluster))) {
-          const mark = this._addClusterMarker(cluster, factory);
-          this._clusterMarkers.push(mark);
+
+          const icon = await this._createClusterCanvasIcon(cluster, factory);
+
+          this._addClusterIconToLayer(icon)
+
+          this._clusterMarkers.push(icon);
         }
-      })
+      }
     }
 
   }
 
-  private _addClusterMarker(cluster: IGeojsonCluster, factory: ComponentFactory<ClusterMarkerComponent>): ClusterMarker {
+  private async _createClusterCanvasIcon(cluster: IGeojsonCluster, factory: ComponentFactory<ClusterMarkerComponent>): Promise<ClusterMarker> {
 
     const componentRef: ComponentRef<ClusterMarkerComponent> = this.clusterContainer.createComponent(factory);
     componentRef.instance.item = cluster;
@@ -795,7 +808,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const pos = fromLonLat([cluster.geometry.coordinates[0] as number, cluster.geometry.coordinates[1] as number]); // TODO check object type
 
-
+    var htmlTextCanvas = await componentRef.instance.createMarkerHtmlForCanvas();
 
     var canvas = <HTMLCanvasElement>document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
@@ -805,12 +818,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     var data = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
       '<foreignObject width="100%" height="100%">' +
       '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
-      htmlText +
+      htmlTextCanvas +
       '</div>' +
       '</foreignObject>' +
       '</svg>';
 
-    console.log('------- ~ file: map.component.ts ~ line 805 ~ _addClusterMarker ~ data', data);
+    // console.log('------- ~ file: map.component.ts ~ line 805 ~ _addClusterMarker ~ data', data);
     var DOMURL = window.URL;// || window.webkitURL || window;
 
     var img = new Image();
@@ -827,27 +840,91 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     img.src = url;
 
 
-    const markerOverlay = new Overlay({
-      position: pos,
-      positioning: OverlayPositioning.CENTER_CENTER,
-      element: (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement,
-      //element: img,
-      stopEvent: false,
-      id: this._idOfClusterMarker(cluster)
+    // const markerOverlay = new Overlay({
+    //   position: pos,
+    //   positioning: OverlayPositioning.CENTER_CENTER,
+    //   // element: (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement,
+    //   element: img,
+    //   stopEvent: false,
+    //   id: this._idOfClusterMarker(cluster)
+    // });
+    // this._map.addOverlay(markerOverlay);
+
+    const iconFeature = new Feature({
+      // geometry: pos,
+      geometry: new Point([pos[0], pos[1]]),
     });
-    this._map.addOverlay(markerOverlay);
+
+    const iconStyle = new Style({
+      image: new Icon({
+        anchor: [0, 0],
+        img: img,
+        imgSize: [100, 100]
+      }),
+    });
+
+    iconFeature.setStyle(iconStyle);
 
     return {
       cluster,
-      overlay: markerOverlay,
-      component: componentRef
+      icon: iconFeature,
+      // component: componentRef,
+      id: this._idOfClusterMarker(cluster)
     };
 
   }
 
-  private _removeClusterMarker(cm: ClusterMarker) {
-    this._map.removeOverlay(cm.overlay);
-    cm.component.destroy();
+  private _createClusterLayer() {
+    if (!this._clusterLayer) {
+
+
+      this._clusterLayer = new VectorLayer({
+        source: new VectorSource({
+          // format: new GeoJSON(),
+          features: [],
+        }),
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        zIndex: 400,
+      });
+
+      this._map.addLayer(this._clusterLayer);
+
+    }
   }
 
+  private _addClusterIconToLayer(cm: ClusterMarker) {
+    const source = this._clusterLayer.getSource();
+    this._clusterLayer.getSource().addFeature(cm.icon);
+    // this._map.removeOverlay(cm.icon);
+    // cm.component.destroy();
+  }
+
+  private _removeClusterMarker(cm: ClusterMarker) {
+    const source = this._clusterLayer.getSource();
+    if (source.hasFeature(cm.icon)) {
+      source.removeFeature(cm.icon)
+    }
+    // this._map.removeOverlay(cm.icon);
+    //cm.component.destroy();
+  }
+
+  private _mapClick(evt) {
+    console.log('------- ~ file: map.component.ts ~ line 913 ~ _mapClick ~ evt', evt);
+    const feature = this._map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+    console.log('------- ~ file: map.component.ts ~ line 915 ~ feature ~ feature', feature);
+      return feature;
+    });
+    console.log('------- ~ file: map.component.ts ~ line 918 ~ _mapClick ~ feature', feature);
+    if (feature) {
+      const clusterMarker = this._clusterMarkers.find(x => x.icon == feature);
+      if (clusterMarker) {
+        this.clickcluster.emit(clusterMarker.cluster);
+      }
+    } else {
+      this.touch.emit();
+    }
+  }
 }
+
+
