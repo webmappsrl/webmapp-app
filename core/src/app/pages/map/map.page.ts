@@ -93,10 +93,11 @@ export class MapPage implements OnInit {
   }
 
   async clickcluster(cluster: IGeojsonCluster) {
-    if (cluster.properties.ids.length > 1 && (!this._isMaxZoom() && !this.referenceTrackId)) {
+    //if (cluster.properties.ids.length > 1 && (!this._isMaxZoom() && !this.referenceTrackId)) {
+      if (cluster.properties.ids.length > 1 && !this._isMaxZoom()) {
       //cluster
       this.boundigBox = cluster.properties.bbox;
-      this.selectTrack(null);
+      // this.selectTrack(null);
     } else {
       const trackId = cluster.properties.ids[0]
       if (!this.referenceTrackId) {
