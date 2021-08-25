@@ -40,7 +40,7 @@ export class ClusterMarkerComponent implements OnInit {
     this.clickcluster.emit(this._item);
   }
 
-  private async getB64img(url: string): Promise<string | ArrayBuffer> {
+  private static async getB64img(url: string): Promise<string | ArrayBuffer> {
     if (!url) { return null; }
     const data = await fetch(url);
     const blob = await data.blob();
@@ -54,13 +54,20 @@ export class ClusterMarkerComponent implements OnInit {
     });
   }
 
-  public async createMarkerHtmlForCanvas(): Promise<string> {
+  public static async createMarkerHtmlForCanvas(value: IGeojsonCluster): Promise<string> {
 
+    let img2b64: string | ArrayBuffer = null;
+    let img3b64: string | ArrayBuffer = null;
 
-
-    let img1b64: string | ArrayBuffer = await this.getB64img(this.img1);
-    let img2b64: string | ArrayBuffer = await this.getB64img(this.img2);
-    let img3b64: string | ArrayBuffer = await this.getB64img(this.img3);
+    let img1b64: string | ArrayBuffer = await this.getB64img(value.properties.images[0]);
+    if (value.properties.images.length > 1) {
+      img2b64 = await this.getB64img(value.properties.images[1]);
+    }
+    if (value.properties.images.length > 2) {
+      img3b64 = await this.getB64img(value.properties.images[2]);
+    }
+    const clusterCount = value.properties.ids.length;
+    
     let html = `
     <div class="webmapp-map-clustermarker-container" style="position: relative;width: 30px;height: 60px;">`;
 
@@ -110,7 +117,7 @@ export class ClusterMarkerComponent implements OnInit {
       </defs>
   </svg>`;
 
-    if (this.count > 1) {
+    if (clusterCount > 1) {
       html += ` 
       <div class="webmapp-map-clustermarker-counter" style="position: absolute;
         width: 24px;
@@ -124,16 +131,12 @@ export class ClusterMarkerComponent implements OnInit {
         border: 2px solid #FFF;
         padding-top: 4px;
         font-family: arial;
-        font-size: 12px;">${this.count}</div>
+        font-size: 12px;">${clusterCount}</div>
       
 
       `
     }
-
-    // html += `  <div class="webmapp-map-clustermarker-clickarea" (click)="click()"></div>`
-
     html += ` </div>`
-    // console.log('------- ~ file: cluster-marker.component.ts ~ line 123 ~ html', html);
     return html;
   }
 
