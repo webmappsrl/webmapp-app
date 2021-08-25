@@ -2,8 +2,11 @@
   <canvas #chartCanvas class="webmapp-slopechart-canvas"></canvas>
 </div>
 <div class="webmapp-slopechart-legend-container">
-  <div class="webmapp-slopechart-legend-slope-container">
-    <!-- <div *ngFor="surfaces" clas=""></div> -->
+  <div class="webmapp-slopechart-legend-slope-container" *ngIf="slopeAvailable">
+    <div class="webmapp-slopechart-legend-slope-label">
+      {{ "components.slopechart.slope.label" | translate }}
+    </div>
+    <div class="webmapp-slopechart-legend-slope-bar"></div>
   </div>
   <div
     class="webmapp-slopechart-legend-surface-container"

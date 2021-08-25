@@ -250,6 +250,9 @@
         "sand": {
           "label": "sabbia"
         }
+      },
+      "slope": {
+        "label": "pendenza"
       }
     }
   },

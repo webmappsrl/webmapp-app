@@ -1,7 +1,14 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartDataset, registerables } from 'chart.js';
 import { CLocation } from 'src/app/classes/clocation';
-import { SLOPE_CHART_SURFACE } from 'src/app/constants/slope-chart';
+import {
+  SLOPE_CHART_SLOPE_EASY,
+  SLOPE_CHART_SLOPE_HARD,
+  SLOPE_CHART_SLOPE_MEDIUM,
+  SLOPE_CHART_SLOPE_MEDIUM_EASY,
+  SLOPE_CHART_SLOPE_MEDIUM_HARD,
+  SLOPE_CHART_SURFACE,
+} from 'src/app/constants/slope-chart';
 import { MapService } from 'src/app/services/base/map.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ESlopeChartSurface } from 'src/app/types/eslope-chart.enum';
@@ -27,6 +34,7 @@ export class SlopeChartComponent implements OnInit {
   }> = [];
 
   public route: IGeojsonFeature;
+  public slopeAvailable: boolean = true;
 
   constructor(
     private _mapService: MapService,
@@ -301,27 +309,33 @@ export class SlopeChartComponent implements OnInit {
    * @returns
    */
   private _getSlopeGradientColor(value: number): string {
-    let easy: [number, number, number] = [8, 217, 4],
-      medium: [number, number, number] = [255, 223, 10],
-      hard: [number, number, number] = [196, 30, 4],
-      min: [number, number, number],
+    let min: [number, number, number],
       max: [number, number, number],
-      proportion: number = 0;
+      proportion: number = 0,
+      step: number = 15 / 4;
 
     if (value <= 0) {
-      min = easy;
-      max = easy;
-    } else if (value < 7.5) {
-      min = easy;
-      max = medium;
-      proportion = value / 7.5;
-    } else if (value < 15) {
-      min = medium;
-      max = hard;
-      proportion = (value - 7.5) / 7.5;
+      min = SLOPE_CHART_SLOPE_EASY;
+      max = SLOPE_CHART_SLOPE_EASY;
+    } else if (value < step) {
+      min = SLOPE_CHART_SLOPE_EASY;
+      max = SLOPE_CHART_SLOPE_MEDIUM_EASY;
+      proportion = value / step;
+    } else if (value < 2 * step) {
+      min = SLOPE_CHART_SLOPE_MEDIUM_EASY;
+      max = SLOPE_CHART_SLOPE_MEDIUM;
+      proportion = (value - step) / step;
+    } else if (value < 3 * step) {
+      min = SLOPE_CHART_SLOPE_MEDIUM;
+      max = SLOPE_CHART_SLOPE_MEDIUM_HARD;
+      proportion = (value - 2 * step) / step;
+    } else if (value < 4 * step) {
+      min = SLOPE_CHART_SLOPE_MEDIUM_HARD;
+      max = SLOPE_CHART_SLOPE_HARD;
+      proportion = (value - 3 * step) / step;
     } else {
-      min = hard;
-      max = hard;
+      min = SLOPE_CHART_SLOPE_HARD;
+      max = SLOPE_CHART_SLOPE_HARD;
       proportion = 1;
     }
 
