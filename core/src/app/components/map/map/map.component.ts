@@ -76,6 +76,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
+  @Input('animation') useAnimation: boolean = true;
 
   @Input('static') set setStatic(value: boolean) {
     this.static = value;
@@ -155,7 +156,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _view: View;
   private _map: Map;
   public static: boolean;
-  
+
   private _lastlusterMarkerTransparency;
 
   // Location Icon
@@ -545,7 +546,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToBoundingBox(boundingbox) {
     const latlon = this._mapService.extentFromLonLat(boundingbox);
-    this._view.fit(latlon, { duration: DEF_MAP_CLUSTER_ZOOM_DURATION, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
+    this._view.fit(latlon, { duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
   }
 
 
@@ -555,7 +556,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToTrack() {
     if (this._track.layer) {
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [120, 120, 120, 120], duration: DEF_MAP_CLUSTER_ZOOM_DURATION
+        padding: [120, 70, 120, 20], duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0
       });
     }
   }
@@ -784,7 +785,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
 
-        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || this._lastlusterMarkerTransparency != transparent ) {
+        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || this._lastlusterMarkerTransparency != transparent) {
           this._removeClusterMarker(ov);
           this._clusterMarkers.splice(i, 1);
         }
