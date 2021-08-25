@@ -1,5 +1,33 @@
-.webmapp-slopechart-canvas {
+.webmapp-slopechart-canvas-container {
+  margin: 0 auto;
+  width: 100%;
+  height: 180px;
+  .webmapp-slopechart-canvas {
     margin: 0 auto;
     width: 100%;
-    height: 100%;
   }
+}
+
+.webmapp-slopechart-legend-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  .webmapp-slopechart-legend-surface {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    .webmapp-slopechart-legend-surface-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    .webmapp-slopechart-legend-surface-label {
+      margin-left: 5px;
+      &::first-letter {
+        text-transform: uppercase;
+      }
+    }
+  }
+}

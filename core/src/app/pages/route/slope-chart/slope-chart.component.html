@@ -1,3 +1,29 @@
-<!-- <canvas #chartCanvas class="webmapp-slopechart-canvas"></canvas> -->
-
-<canvas #chartCanvas class="webmapp-slopechart-canvas" ></canvas>
+<div class="webmapp-slopechart-canvas-container">
+  <canvas #chartCanvas class="webmapp-slopechart-canvas"></canvas>
+</div>
+<div class="webmapp-slopechart-legend-container">
+  <div class="webmapp-slopechart-legend-slope-container">
+    <!-- <div *ngFor="surfaces" clas=""></div> -->
+  </div>
+  <div
+    class="webmapp-slopechart-legend-surface-container"
+    *ngIf="surfaces && surfaces.length > 0"
+  >
+    <div
+      *ngFor="let surface of surfaces"
+      class="webmapp-slopechart-legend-surface"
+    >
+      <span
+        [ngStyle]="{
+          background: surface.backgroundColor
+        }"
+        class="webmapp-slopechart-legend-surface-dot"
+      ></span>
+      <div class="webmapp-slopechart-legend-surface-label">
+        {{
+          "components.slopechart.surfaces." + surface.id + ".label" | translate
+        }}
+      </div>
+    </div>
+  </div>
+</div>
