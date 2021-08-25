@@ -1,5 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Chart, ChartDataset, registerables } from 'chart.js';
 import { CLocation } from 'src/app/classes/clocation';
 import { SLOPE_CHART_SURFACE } from 'src/app/constants/slope-chart';
@@ -31,7 +30,6 @@ export class SlopeChartComponent implements OnInit {
 
   constructor(
     private _mapService: MapService,
-    private _translateService: TranslateService,
     private _statusService: StatusService
   ) {
     Chart.register(...registerables);
@@ -44,6 +42,9 @@ export class SlopeChartComponent implements OnInit {
     }, 0);
   }
 
+  /**
+   * Calculate all the chart values and trigger the chart representation
+   */
   private _setChart() {
     if (!!this._chartCanvas && !!this.route) {
       let surfaceValues: {
@@ -59,8 +60,6 @@ export class SlopeChartComponent implements OnInit {
         maxAlt: number = undefined,
         minAlt: number = undefined,
         usedSurfaces: Array<ESlopeChartSurface> = [];
-
-      // steps = Math.max(5, Math.min(800, steps));
 
       for (let i in ESlopeChartSurface) {
         surfaceValues[ESlopeChartSurface[i]] = [];
@@ -154,7 +153,7 @@ export class SlopeChartComponent implements OnInit {
                 Math.round(step / 10) %
                   (Object.keys(ESlopeChartSurface).length - 2)
               ],
-            slope: number = Math.round(Math.random() * 10);
+            slope: number = Math.round(Math.random() * 15);
 
           this._chartValues.push(new CLocation(longitude, latitude));
 
@@ -226,6 +225,14 @@ export class SlopeChartComponent implements OnInit {
     }
   }
 
+  /**
+   * Set the surface value on a specific surface
+   *
+   * @param surface the surface type
+   * @param value the value
+   * @param values the current values
+   * @returns
+   */
   private _setSurfaceValue(
     surface: string,
     value: number,
@@ -256,6 +263,13 @@ export class SlopeChartComponent implements OnInit {
     return values;
   }
 
+  /**
+   * Return a chart.js dataset for a surface
+   *
+   * @param values the chart values
+   * @param surface the surface type
+   * @returns
+   */
   private _getSlopeChartSurfaceDataset(
     values: Array<number>,
     surface: ESlopeChartSurface
@@ -280,11 +294,15 @@ export class SlopeChartComponent implements OnInit {
     };
   }
 
+  /**
+   * Return an RGB color for the given slope percentage value
+   *
+   * @param value the slope percentage value
+   * @returns
+   */
   private _getSlopeGradientColor(value: number): string {
     let easy: [number, number, number] = [8, 217, 4],
-      mediumEasy: [number, number, number] = [184, 219, 57],
-      mediumHard: [number, number, number] = [207, 167, 25],
-      medium: [number, number, number] = [214, 204, 13],
+      medium: [number, number, number] = [255, 223, 10],
       hard: [number, number, number] = [196, 30, 4],
       min: [number, number, number],
       max: [number, number, number],
@@ -293,26 +311,14 @@ export class SlopeChartComponent implements OnInit {
     if (value <= 0) {
       min = easy;
       max = easy;
-    } else if (value < 5) {
+    } else if (value < 7.5) {
       min = easy;
-      max = mediumEasy;
-      proportion = value / 5;
-    } else if (value < 10) {
-      min = mediumEasy;
-      max = mediumHard;
-      proportion = value / 5;
+      max = medium;
+      proportion = value / 7.5;
     } else if (value < 15) {
-      min = mediumHard;
+      min = medium;
       max = hard;
-      proportion = value / 5;
-      // } else if (value < 7.5) {
-      //   min = easy;
-      //   max = medium;
-      //   proportion = value / 7.5;
-      // } else if (value < 15) {
-      //   min = medium;
-      //   max = hard;
-      //   proportion = value / 7.5;
+      proportion = (value - 7.5) / 7.5;
     } else {
       min = hard;
       max = hard;
@@ -342,6 +348,12 @@ export class SlopeChartComponent implements OnInit {
     );
   }
 
+  /**
+   * Return a chart.js dataset for the slope values
+   *
+   * @param slopeValues the chart slope values as Array<[chartValue, slopePercentage]>
+   * @returns
+   */
   private _getSlopeChartSlopeDataset(
     slopeValues: Array<[number, number]>
   ): Array<ChartDataset<'line', any>> {
@@ -397,6 +409,13 @@ export class SlopeChartComponent implements OnInit {
     ];
   }
 
+  /**
+   * Create the chart
+   *
+   * @param labels the chart labels
+   * @param surfaceValues the surface values
+   * @param slopeValues the slope values
+   */
   private _createChart(
     labels: Array<number>,
     surfaceValues: { [id: string]: Array<number> },
