@@ -26,7 +26,7 @@
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack">
       <div class="webmapp-modalsuccess-infopanel-top">
         <div class="webmapp-modalsuccess-infopanel-top-map">
-          <webmapp-map [track]="track" [static]="true"></webmapp-map>
+          <webmapp-map [track]="track" [static]="true" [animation]="false"></webmapp-map>
         </div>
         <div class="webmapp-modalsuccess-infopanel-top-info">
           <div class="webmapp-modalsuccess-infopanel-top-name"> {{track.title}}</div>
@@ -96,7 +96,7 @@
           <ion-row>
             <ion-col size="4">
               <div class="webmapp-modalsuccess-infopanel-top-map">
-                <webmapp-map [static]="true" [position]="displayPosition"></webmapp-map>
+                <webmapp-map [static]="true"  [animation]="false" [position]="displayPosition"></webmapp-map>
               </div>
             </ion-col>
             <ion-col size="8" class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info"> 

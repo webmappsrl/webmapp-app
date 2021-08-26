@@ -1,11 +1,8 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        defaultHref=""
-        text=""
-        class="webmapp-backbutton"
-      ></ion-back-button>
+      <!-- <ion-back-button defaultHref="/profile/profile-records" text="" class="webmapp-backbutton"></ion-back-button> -->
+      <ion-icon name="arrow-back-outline" [routerLink]="['/profile/profile-records']" class="webmapp-backbutton"></ion-icon>
     </ion-buttons>
     <ion-title>{{'pages.tracklist.title'|translate}}</ion-title>
   </ion-toolbar>
@@ -18,7 +15,7 @@
   <ion-list>
     <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
       <div start class="webmapp-tracklist-item-map">
-        <webmapp-map [static]="true" [track]="track"></webmapp-map>
+        <webmapp-map [static]="true" [animation]="false" [track]="track"></webmapp-map>
       </div>
       <div>
         <div class="webmapp-tracklist-item-title">{{track.title}}</div>

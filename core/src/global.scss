@@ -60,7 +60,8 @@
 /********** back buttons ********/
 
 .webmapp-backbutton {
-  padding: 5px 20px;
+  padding: 5px 20px;  
+  font-size: 24px;
   &.webmapp-backbutton.dark {
     --color: var(--ion-color-dark) !important;
   }

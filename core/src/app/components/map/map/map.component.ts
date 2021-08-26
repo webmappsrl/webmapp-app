@@ -76,6 +76,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
+  @Input('animation') useAnimation: boolean = true;
 
   @Input('static') set setStatic(value: boolean) {
     this.static = value;
@@ -95,15 +96,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  @Input('height') set height(value: number) {
+    if (this._height != value) {
+      this._height = value;
+      if (this._track.registeredTrack && this.centerToTrack) {
+        this._centerMapToTrack();
+      }
+    }
+  }
 
   @Input('track') set track(value: ITrack) {
     if (value) {
       setTimeout(() => {
         this._track.registeredTrack = value;
+        this.centerToTrack = true;
         if (value.geojson) {
-          this.drawTrack(value.geojson, true);
+          this.drawTrack(value.geojson);
         } else {
-          this.drawTrack(value, true);
+          this.drawTrack(value);
         }
       }, 10);
     } else {
@@ -139,6 +149,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   public locationState: EMapLocationState;
 
+  public centerToTrack: boolean = false;
+
   public showRecBtn: boolean = true;
 
   public isRecording: boolean = false;
@@ -151,11 +163,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _clusterLayer: VectorLayer;
 
   private _position: ILocation = null;
+  private _height: number;
 
   private _view: View;
   private _map: Map;
   public static: boolean;
-  
+
   private _lastlusterMarkerTransparency;
 
   // Location Icon
@@ -286,8 +299,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //TODO: test for ensure presence of map
     this.timer = setInterval(() => {
       if (this.static) {
-        if (this._track.registeredTrack && this._track.registeredTrack.geojson)
-          this.drawTrack(this._track.registeredTrack.geojson, true);
+        if (this._track.registeredTrack && this._track.registeredTrack.geojson) {
+          this.centerToTrack = true;
+          this.drawTrack(this._track.registeredTrack.geojson);
+        }
       }
       this._map.updateSize();
     }, 1000);
@@ -352,7 +367,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *
    * @param geojson geojson of the track
    */
-  drawTrack(trackgeojson: any, centerToTrack: boolean = false) {
+  drawTrack(trackgeojson: any) {
     const geojson: any = this.getGeoJson(trackgeojson);
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
@@ -377,7 +392,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     try {
       this._map.addLayer(this._track.layer);
     } catch (e) { }
-    if (centerToTrack) {
+    if (this.centerToTrack) {
       this._centerMapToTrack();
     }
     //}
@@ -545,7 +560,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToBoundingBox(boundingbox) {
     const latlon = this._mapService.extentFromLonLat(boundingbox);
-    this._view.fit(latlon, { duration: DEF_MAP_CLUSTER_ZOOM_DURATION, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
+    this._view.fit(latlon, { duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
   }
 
 
@@ -554,8 +569,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToTrack() {
     if (this._track.layer) {
+      const verticalPadding = (!this._height || this._height > 500) ? 120 : this._height * 0.25;
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [120, 120, 120, 120], duration: DEF_MAP_CLUSTER_ZOOM_DURATION
+        padding: [verticalPadding, 70, verticalPadding, 20], duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0
       });
     }
   }
@@ -784,8 +800,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
 
-        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || this._lastlusterMarkerTransparency != transparent ) {
-          this._removeClusterMarker(ov);
+        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || this._lastlusterMarkerTransparency != transparent) {
+          this._removeClusterIconFromLayer(ov);
           this._clusterMarkers.splice(i, 1);
         }
       }
@@ -891,7 +907,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // cm.component.destroy();
   }
 
-  private _removeClusterMarker(cm: ClusterMarker) {
+  private _removeClusterIconFromLayer(cm: ClusterMarker) {
     const source = this._clusterLayer.getSource();
     if (source.hasFeature(cm.icon)) {
       source.removeFeature(cm.icon)
