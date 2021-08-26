@@ -1,5 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Chart, ChartDataset, registerables } from 'chart.js';
+import {
+  Chart,
+  ChartDataset,
+  Color,
+  registerables,
+  Tick,
+  TooltipItem,
+  TooltipModel,
+} from 'chart.js';
 import { CLocation } from 'src/app/classes/clocation';
 import {
   SLOPE_CHART_SLOPE_EASY,
@@ -34,6 +42,7 @@ export class SlopeChartComponent implements OnInit {
   }> = [];
 
   public route: IGeojsonFeature;
+  public slopeValues: Array<[number, number]>;
   public slopeAvailable: boolean = true;
 
   constructor(
@@ -60,7 +69,7 @@ export class SlopeChartComponent implements OnInit {
         } = {},
         slopeValues: Array<[number, number]> = [],
         labels: Array<number> = [],
-        steps: number = 50,
+        steps: number = 100,
         trackLength: number = 0,
         currentDistance: number = 0,
         previousLocation: ILocation,
@@ -95,12 +104,15 @@ export class SlopeChartComponent implements OnInit {
         this.route.geometry.coordinates[0][2]
       );
       this._chartValues.push(currentLocation);
+      maxAlt = currentLocation.altitude;
+      minAlt = currentLocation.altitude;
 
       for (let i = 1; i < this.route.geometry.coordinates.length; i++) {
         previousLocation = currentLocation;
         currentLocation = new CLocation(
           this.route.geometry.coordinates[i][0],
-          this.route.geometry.coordinates[i][1]
+          this.route.geometry.coordinates[i][1],
+          this.route.geometry.coordinates[i][2]
         );
         trackLength += this._mapService.getDistanceBetweenPoints(
           previousLocation,
@@ -229,7 +241,13 @@ export class SlopeChartComponent implements OnInit {
         }
       }
 
-      this._createChart(labels, surfaceValues, slopeValues);
+      this._createChart(
+        labels,
+        trackLength,
+        maxAlt,
+        surfaceValues,
+        slopeValues
+      );
     }
   }
 
@@ -407,6 +425,10 @@ export class SlopeChartComponent implements OnInit {
         },
         borderWidth: 3,
         pointRadius: 0,
+        pointHoverBackgroundColor: '#000000',
+        pointHoverBorderColor: '#FFFFFF',
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 2,
         data: values,
         spanGaps: false,
       },
@@ -427,16 +449,22 @@ export class SlopeChartComponent implements OnInit {
    * Create the chart
    *
    * @param labels the chart labels
+   * @param length the track length
+   * @param maxAltitude the max altitude value
    * @param surfaceValues the surface values
    * @param slopeValues the slope values
    */
   private _createChart(
     labels: Array<number>,
+    length: number,
+    maxAltitude: number,
     surfaceValues: { [id: string]: Array<number> },
     slopeValues: Array<[number, number]>
   ) {
     if (this._chartCanvas) {
       let surfaceDatasets: Array<ChartDataset> = [];
+
+      this.slopeValues = slopeValues;
 
       for (let i in surfaceValues) {
         surfaceDatasets.push(
@@ -457,38 +485,162 @@ export class SlopeChartComponent implements OnInit {
           ],
         },
         options: {
-          //   events: ["mousemove", "click", "touchstart", "touchmove"],
+          events: [
+            'mousemove',
+            'click',
+            'touchstart',
+            'touchmove',
+            'pointermove',
+          ],
+          layout: {
+            padding: {
+              top: 40,
+            },
+          },
           maintainAspectRatio: false,
+          hover: {
+            intersect: false,
+            mode: 'index',
+          },
           plugins: {
             legend: {
               display: false,
+            },
+            tooltip: {
+              enabled: true,
+              intersect: false,
+              mode: 'index',
+              cornerRadius: 8,
+              caretPadding: 150,
+              xAlign: 'center',
+              yAlign: 'bottom',
+              titleMarginBottom: 0,
+              callbacks: {
+                title: function (items: Array<TooltipItem<'line'>>): string {
+                  let result: string = items[0].raw + ' m';
+
+                  if (slopeValues?.[items[0].dataIndex]?.[1] >= 0)
+                    result += ' / ' + slopeValues[items[0].dataIndex][1] + '%';
+
+                  return result;
+                },
+                label: function (): string {
+                  return undefined;
+                },
+              },
             },
           },
           scales: {
             y: {
               title: {
                 display: false,
-                text: 'm',
+              },
+              max: maxAltitude,
+              ticks: {
+                maxTicksLimit: 3,
+                maxRotation: 0,
+                includeBounds: true,
+                mirror: true,
+                z: 10,
+                align: 'end',
+                callback: (
+                  tickValue: number | string,
+                  index: number,
+                  ticks: Array<Tick>
+                ): string => {
+                  return tickValue + ' m';
+                },
+                color: (ctx, options): Color => {
+                  console.log(this._chart.ctx, ctx, options);
+                  return '#000000';
+                },
               },
               grid: {
-                display: false,
+                drawOnChartArea: true,
+                drawTicks: false,
+                drawBorder: false,
+                borderDash: [10, 10],
+                color: '#D2D2D2',
               },
             },
             x: {
-              ticks: {
-                maxTicksLimit: 5,
-                maxRotation: 0,
-              },
               title: {
                 display: false,
-                text: 'km',
+              },
+              max: length,
+              min: 0,
+              ticks: {
+                maxTicksLimit: 4,
+                maxRotation: 0,
+                includeBounds: true,
+                callback: (
+                  tickValue: number | string,
+                  index: number,
+                  ticks: Array<Tick>
+                ): string => {
+                  return labels[index] + ' km';
+                },
               },
               grid: {
-                display: false,
+                color: '#D2D2D2',
+                drawOnChartArea: false,
+                drawTicks: true,
+                drawBorder: true,
+                tickLength: 10,
               },
             },
           },
         },
+        plugins: [
+          {
+            id: 'webmappTooltipPlugin',
+            beforeTooltipDraw: (chart) => {
+              let tooltip: TooltipModel<'line'> = chart.tooltip;
+              if ((<any>tooltip)._active && (<any>tooltip)._active.length > 0) {
+                let activePoint = (<any>tooltip)._active[0],
+                  ctx = chart.ctx,
+                  x = activePoint.element.x,
+                  topY = chart.scales['y'].top - 15,
+                  bottomY = chart.scales['y'].bottom + 10;
+
+                // draw line
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+
+                if (
+                  (<any>tooltip)?._tooltipItems?.[0]?.dataIndex >= 0 &&
+                  typeof labels[
+                    (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
+                  ] !== 'undefined'
+                ) {
+                  let distance: string =
+                      labels[(<any>tooltip)._tooltipItems[0].dataIndex] + ' km',
+                    measure: TextMetrics = ctx.measureText(distance),
+                    minX: number = Math.max(
+                      0,
+                      Math.min(
+                        chart.width - measure.width,
+                        x - measure.width / 2
+                      )
+                    ),
+                    minY: number = bottomY;
+
+                  ctx.fillStyle = '#ffffff';
+                  ctx.fillRect(minX - 4, minY, measure.width + 8, 20);
+                  ctx.fillStyle = '#000000';
+                  ctx.fillText(distance, minX, bottomY + 14);
+                }
+
+                ctx.restore();
+              }
+            },
+          },
+        ],
       });
     }
   }
