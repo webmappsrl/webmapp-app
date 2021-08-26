@@ -43,7 +43,15 @@ export class SlopeChartComponent implements OnInit {
 
   public route: IGeojsonFeature;
   public slopeValues: Array<[number, number]>;
-  public slopeAvailable: boolean = true;
+  public slope: {
+    available: boolean;
+    selectedValue: number;
+    selectedPercentage: number;
+  } = {
+    available: true,
+    selectedValue: undefined,
+    selectedPercentage: 0,
+  };
 
   constructor(
     private _mapService: MapService,
@@ -93,10 +101,7 @@ export class SlopeChartComponent implements OnInit {
         surfaceValues
       );
       if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
-      slopeValues.push([
-        this.route.geometry.coordinates[0][2],
-        Math.round(Math.random() * 15),
-      ]);
+      slopeValues.push([this.route.geometry.coordinates[0][2], 0]);
 
       currentLocation = new CLocation(
         this.route.geometry.coordinates[0][0],
@@ -107,6 +112,7 @@ export class SlopeChartComponent implements OnInit {
       maxAlt = currentLocation.altitude;
       minAlt = currentLocation.altitude;
 
+      // Calculate track length and max/min altitude
       for (let i = 1; i < this.route.geometry.coordinates.length; i++) {
         previousLocation = currentLocation;
         currentLocation = new CLocation(
@@ -134,7 +140,7 @@ export class SlopeChartComponent implements OnInit {
 
       for (
         let i = 1;
-        i < this.route.geometry.coordinates.length && step < steps;
+        i < this.route.geometry.coordinates.length && step <= steps;
         i++
       ) {
         previousLocation = currentLocation;
@@ -149,7 +155,7 @@ export class SlopeChartComponent implements OnInit {
         );
         currentDistance += localDistance;
 
-        while (currentDistance > (trackLength / steps) * step) {
+        while (currentDistance >= (trackLength / steps) * step) {
           let difference: number =
               localDistance - (currentDistance - (trackLength / steps) * step),
             deltaLongitude: number =
@@ -173,9 +179,16 @@ export class SlopeChartComponent implements OnInit {
                 Math.round(step / 10) %
                   (Object.keys(ESlopeChartSurface).length - 2)
               ],
-            slope: number = Math.round(Math.random() * 15);
+            slope: number = parseFloat(
+              (
+                ((altitude -
+                  this._chartValues[this._chartValues.length - 1].altitude) *
+                  100) /
+                (trackLength / steps)
+              ).toPrecision(1)
+            );
 
-          this._chartValues.push(new CLocation(longitude, latitude));
+          this._chartValues.push(new CLocation(longitude, latitude, altitude));
 
           surfaceValues = this._setSurfaceValue(
             surface,
@@ -192,41 +205,6 @@ export class SlopeChartComponent implements OnInit {
           step++;
         }
       }
-
-      this._chartValues.push(
-        new CLocation(
-          this.route.geometry.coordinates[
-            this.route.geometry.coordinates.length - 1
-          ][0],
-          this.route.geometry.coordinates[
-            this.route.geometry.coordinates.length - 1
-          ][1]
-        )
-      );
-      surface =
-        Object.values(ESlopeChartSurface)[
-          Math.round(step / 10) % (Object.keys(ESlopeChartSurface).length - 2)
-        ];
-      surfaceValues = this._setSurfaceValue(
-        surface,
-        this.route.geometry.coordinates[
-          this.route.geometry.coordinates.length - 1
-        ][2],
-        surfaceValues
-      );
-      if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
-      slopeValues.push([
-        this.route.geometry.coordinates[
-          this.route.geometry.coordinates.length - 1
-        ][2],
-        slopeValues[slopeValues.length - 1][1] +
-          Math.round(Math.random() * 1) -
-          0.5,
-      ]);
-
-      labels.push(parseFloat((trackLength / 1000).toFixed(1)));
-
-      //   if (this._chart) this._chart.destroy();
 
       let keys: Array<string> = Object.keys(surfaceValues);
       this.surfaces = [];
@@ -301,19 +279,11 @@ export class SlopeChartComponent implements OnInit {
     surface: ESlopeChartSurface
   ): ChartDataset<'line', any> {
     return {
-      // label: this._translateService.instant(
-      //   'slopechart.surface.' + surface + '.label'
-      // ),
       fill: true,
       cubicInterpolationMode: 'monotone',
       tension: 0.3,
       backgroundColor: SLOPE_CHART_SURFACE[surface].backgroundColor,
       borderColor: 'rgba(255, 199, 132, 0)',
-      // borderWidth: 3,
-      // borderCapStyle: "butt",
-      // borderDash: [30, 30],
-      // borderDashOffset: 0.0,
-      // borderJoinStyle: "miter",
       pointRadius: 0,
       data: values,
       spanGaps: false,
@@ -331,6 +301,8 @@ export class SlopeChartComponent implements OnInit {
       max: [number, number, number],
       proportion: number = 0,
       step: number = 15 / 4;
+
+    value = Math.abs(value);
 
     if (value <= 0) {
       min = SLOPE_CHART_SLOPE_EASY;
@@ -519,7 +491,9 @@ export class SlopeChartComponent implements OnInit {
                 title: function (items: Array<TooltipItem<'line'>>): string {
                   let result: string = items[0].raw + ' m';
 
-                  if (slopeValues?.[items[0].dataIndex]?.[1] >= 0)
+                  if (
+                    typeof slopeValues?.[items[0].dataIndex]?.[1] === 'number'
+                  )
                     result += ' / ' + slopeValues[items[0].dataIndex][1] + '%';
 
                   return result;
@@ -537,10 +511,10 @@ export class SlopeChartComponent implements OnInit {
               },
               max: maxAltitude,
               ticks: {
-                maxTicksLimit: 3,
+                maxTicksLimit: 2,
                 maxRotation: 0,
                 includeBounds: true,
-                mirror: true,
+                // mirror: true,
                 z: 10,
                 align: 'end',
                 callback: (
@@ -549,10 +523,6 @@ export class SlopeChartComponent implements OnInit {
                   ticks: Array<Tick>
                 ): string => {
                   return tickValue + ' m';
-                },
-                color: (ctx, options): Color => {
-                  console.log(this._chart.ctx, ctx, options);
-                  return '#000000';
                 },
               },
               grid: {
@@ -596,6 +566,7 @@ export class SlopeChartComponent implements OnInit {
             id: 'webmappTooltipPlugin',
             beforeTooltipDraw: (chart) => {
               let tooltip: TooltipModel<'line'> = chart.tooltip;
+
               if ((<any>tooltip)._active && (<any>tooltip)._active.length > 0) {
                 let activePoint = (<any>tooltip)._active[0],
                   ctx = chart.ctx,
@@ -637,7 +608,17 @@ export class SlopeChartComponent implements OnInit {
                 }
 
                 ctx.restore();
-              }
+
+                this.slope.selectedValue =
+                  slopeValues[(<any>tooltip)?._tooltipItems?.[0]?.dataIndex][1];
+                this.slope.selectedPercentage =
+                  (Math.min(
+                    15,
+                    Math.max(0, Math.abs(this.slope.selectedValue))
+                  ) *
+                    100) /
+                  15;
+              } else this.slope.selectedValue = undefined;
             },
           },
         ],
