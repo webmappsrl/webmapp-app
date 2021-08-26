@@ -1,5 +1,19 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Chart, ChartDataset, registerables } from 'chart.js';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  Chart,
+  ChartDataset,
+  registerables,
+  Tick,
+  TooltipItem,
+  TooltipModel,
+} from 'chart.js';
 import { CLocation } from 'src/app/classes/clocation';
 import {
   SLOPE_CHART_SLOPE_EASY,
@@ -25,6 +39,9 @@ export class SlopeChartComponent implements OnInit {
     this._chartCanvas = content.nativeElement;
   }
 
+  @Output('hover') hover: EventEmitter<ILocation> =
+    new EventEmitter<ILocation>();
+
   private _chartCanvas: any;
   private _chart: Chart;
   private _chartValues: Array<ILocation>;
@@ -34,7 +51,16 @@ export class SlopeChartComponent implements OnInit {
   }> = [];
 
   public route: IGeojsonFeature;
-  public slopeAvailable: boolean = true;
+  public slopeValues: Array<[number, number]>;
+  public slope: {
+    available: boolean;
+    selectedValue: number;
+    selectedPercentage: number;
+  } = {
+    available: true,
+    selectedValue: undefined,
+    selectedPercentage: 0,
+  };
 
   constructor(
     private _mapService: MapService,
@@ -60,7 +86,7 @@ export class SlopeChartComponent implements OnInit {
         } = {},
         slopeValues: Array<[number, number]> = [],
         labels: Array<number> = [],
-        steps: number = 50,
+        steps: number = 100,
         trackLength: number = 0,
         currentDistance: number = 0,
         previousLocation: ILocation,
@@ -84,10 +110,7 @@ export class SlopeChartComponent implements OnInit {
         surfaceValues
       );
       if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
-      slopeValues.push([
-        this.route.geometry.coordinates[0][2],
-        Math.round(Math.random() * 15),
-      ]);
+      slopeValues.push([this.route.geometry.coordinates[0][2], 0]);
 
       currentLocation = new CLocation(
         this.route.geometry.coordinates[0][0],
@@ -95,12 +118,16 @@ export class SlopeChartComponent implements OnInit {
         this.route.geometry.coordinates[0][2]
       );
       this._chartValues.push(currentLocation);
+      maxAlt = currentLocation.altitude;
+      minAlt = currentLocation.altitude;
 
+      // Calculate track length and max/min altitude
       for (let i = 1; i < this.route.geometry.coordinates.length; i++) {
         previousLocation = currentLocation;
         currentLocation = new CLocation(
           this.route.geometry.coordinates[i][0],
-          this.route.geometry.coordinates[i][1]
+          this.route.geometry.coordinates[i][1],
+          this.route.geometry.coordinates[i][2]
         );
         trackLength += this._mapService.getDistanceBetweenPoints(
           previousLocation,
@@ -122,7 +149,7 @@ export class SlopeChartComponent implements OnInit {
 
       for (
         let i = 1;
-        i < this.route.geometry.coordinates.length && step < steps;
+        i < this.route.geometry.coordinates.length && step <= steps;
         i++
       ) {
         previousLocation = currentLocation;
@@ -137,7 +164,7 @@ export class SlopeChartComponent implements OnInit {
         );
         currentDistance += localDistance;
 
-        while (currentDistance > (trackLength / steps) * step) {
+        while (currentDistance >= (trackLength / steps) * step) {
           let difference: number =
               localDistance - (currentDistance - (trackLength / steps) * step),
             deltaLongitude: number =
@@ -161,9 +188,16 @@ export class SlopeChartComponent implements OnInit {
                 Math.round(step / 10) %
                   (Object.keys(ESlopeChartSurface).length - 2)
               ],
-            slope: number = Math.round(Math.random() * 15);
+            slope: number = parseFloat(
+              (
+                ((altitude -
+                  this._chartValues[this._chartValues.length - 1].altitude) *
+                  100) /
+                (trackLength / steps)
+              ).toPrecision(1)
+            );
 
-          this._chartValues.push(new CLocation(longitude, latitude));
+          this._chartValues.push(new CLocation(longitude, latitude, altitude));
 
           surfaceValues = this._setSurfaceValue(
             surface,
@@ -181,41 +215,6 @@ export class SlopeChartComponent implements OnInit {
         }
       }
 
-      this._chartValues.push(
-        new CLocation(
-          this.route.geometry.coordinates[
-            this.route.geometry.coordinates.length - 1
-          ][0],
-          this.route.geometry.coordinates[
-            this.route.geometry.coordinates.length - 1
-          ][1]
-        )
-      );
-      surface =
-        Object.values(ESlopeChartSurface)[
-          Math.round(step / 10) % (Object.keys(ESlopeChartSurface).length - 2)
-        ];
-      surfaceValues = this._setSurfaceValue(
-        surface,
-        this.route.geometry.coordinates[
-          this.route.geometry.coordinates.length - 1
-        ][2],
-        surfaceValues
-      );
-      if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
-      slopeValues.push([
-        this.route.geometry.coordinates[
-          this.route.geometry.coordinates.length - 1
-        ][2],
-        slopeValues[slopeValues.length - 1][1] +
-          Math.round(Math.random() * 1) -
-          0.5,
-      ]);
-
-      labels.push(parseFloat((trackLength / 1000).toFixed(1)));
-
-      //   if (this._chart) this._chart.destroy();
-
       let keys: Array<string> = Object.keys(surfaceValues);
       this.surfaces = [];
       for (let i = 0; i < keys.length; i++) {
@@ -229,7 +228,13 @@ export class SlopeChartComponent implements OnInit {
         }
       }
 
-      this._createChart(labels, surfaceValues, slopeValues);
+      this._createChart(
+        labels,
+        trackLength,
+        maxAlt,
+        surfaceValues,
+        slopeValues
+      );
     }
   }
 
@@ -283,19 +288,11 @@ export class SlopeChartComponent implements OnInit {
     surface: ESlopeChartSurface
   ): ChartDataset<'line', any> {
     return {
-      // label: this._translateService.instant(
-      //   'slopechart.surface.' + surface + '.label'
-      // ),
       fill: true,
       cubicInterpolationMode: 'monotone',
       tension: 0.3,
       backgroundColor: SLOPE_CHART_SURFACE[surface].backgroundColor,
       borderColor: 'rgba(255, 199, 132, 0)',
-      // borderWidth: 3,
-      // borderCapStyle: "butt",
-      // borderDash: [30, 30],
-      // borderDashOffset: 0.0,
-      // borderJoinStyle: "miter",
       pointRadius: 0,
       data: values,
       spanGaps: false,
@@ -313,6 +310,8 @@ export class SlopeChartComponent implements OnInit {
       max: [number, number, number],
       proportion: number = 0,
       step: number = 15 / 4;
+
+    value = Math.abs(value);
 
     if (value <= 0) {
       min = SLOPE_CHART_SLOPE_EASY;
@@ -407,6 +406,10 @@ export class SlopeChartComponent implements OnInit {
         },
         borderWidth: 3,
         pointRadius: 0,
+        pointHoverBackgroundColor: '#000000',
+        pointHoverBorderColor: '#FFFFFF',
+        pointHoverRadius: 6,
+        pointHoverBorderWidth: 2,
         data: values,
         spanGaps: false,
       },
@@ -427,16 +430,22 @@ export class SlopeChartComponent implements OnInit {
    * Create the chart
    *
    * @param labels the chart labels
+   * @param length the track length
+   * @param maxAltitude the max altitude value
    * @param surfaceValues the surface values
    * @param slopeValues the slope values
    */
   private _createChart(
     labels: Array<number>,
+    length: number,
+    maxAltitude: number,
     surfaceValues: { [id: string]: Array<number> },
     slopeValues: Array<[number, number]>
   ) {
     if (this._chartCanvas) {
       let surfaceDatasets: Array<ChartDataset> = [];
+
+      this.slopeValues = slopeValues;
 
       for (let i in surfaceValues) {
         surfaceDatasets.push(
@@ -457,38 +466,180 @@ export class SlopeChartComponent implements OnInit {
           ],
         },
         options: {
-          //   events: ["mousemove", "click", "touchstart", "touchmove"],
+          events: [
+            'mousemove',
+            'click',
+            'touchstart',
+            'touchmove',
+            'pointermove',
+          ],
+          layout: {
+            padding: {
+              top: 40,
+            },
+          },
           maintainAspectRatio: false,
+          hover: {
+            intersect: false,
+            mode: 'index',
+          },
           plugins: {
             legend: {
               display: false,
+            },
+            tooltip: {
+              enabled: true,
+              intersect: false,
+              mode: 'index',
+              cornerRadius: 8,
+              caretPadding: 150,
+              xAlign: 'center',
+              yAlign: 'bottom',
+              titleMarginBottom: 0,
+              callbacks: {
+                title: function (items: Array<TooltipItem<'line'>>): string {
+                  let result: string = items[0].raw + ' m';
+
+                  if (
+                    typeof slopeValues?.[items[0].dataIndex]?.[1] === 'number'
+                  )
+                    result += ' / ' + slopeValues[items[0].dataIndex][1] + '%';
+
+                  return result;
+                },
+                label: function (): string {
+                  return undefined;
+                },
+              },
             },
           },
           scales: {
             y: {
               title: {
                 display: false,
-                text: 'm',
+              },
+              max: maxAltitude,
+              ticks: {
+                maxTicksLimit: 2,
+                maxRotation: 0,
+                includeBounds: true,
+                // mirror: true,
+                z: 10,
+                align: 'end',
+                callback: (
+                  tickValue: number | string,
+                  index: number,
+                  ticks: Array<Tick>
+                ): string => {
+                  return tickValue + ' m';
+                },
               },
               grid: {
-                display: false,
+                drawOnChartArea: true,
+                drawTicks: false,
+                drawBorder: false,
+                borderDash: [10, 10],
+                color: '#D2D2D2',
               },
             },
             x: {
-              ticks: {
-                maxTicksLimit: 5,
-                maxRotation: 0,
-              },
               title: {
                 display: false,
-                text: 'km',
+              },
+              max: length,
+              min: 0,
+              ticks: {
+                maxTicksLimit: 4,
+                maxRotation: 0,
+                includeBounds: true,
+                callback: (
+                  tickValue: number | string,
+                  index: number,
+                  ticks: Array<Tick>
+                ): string => {
+                  return labels[index] + ' km';
+                },
               },
               grid: {
-                display: false,
+                color: '#D2D2D2',
+                drawOnChartArea: false,
+                drawTicks: true,
+                drawBorder: true,
+                tickLength: 10,
               },
             },
           },
         },
+        plugins: [
+          {
+            id: 'webmappTooltipPlugin',
+            beforeTooltipDraw: (chart) => {
+              let tooltip: TooltipModel<'line'> = chart.tooltip;
+
+              if ((<any>tooltip)._active && (<any>tooltip)._active.length > 0) {
+                let activePoint = (<any>tooltip)._active[0],
+                  ctx = chart.ctx,
+                  x = activePoint.element.x,
+                  topY = chart.scales['y'].top - 15,
+                  bottomY = chart.scales['y'].bottom + 10;
+
+                // draw line
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, topY);
+                ctx.lineTo(x, bottomY);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = '#000000';
+                ctx.stroke();
+
+                if (
+                  (<any>tooltip)?._tooltipItems?.[0]?.dataIndex >= 0 &&
+                  typeof labels[
+                    (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
+                  ] !== 'undefined'
+                ) {
+                  let distance: string =
+                      labels[(<any>tooltip)._tooltipItems[0].dataIndex] + ' km',
+                    measure: TextMetrics = ctx.measureText(distance),
+                    minX: number = Math.max(
+                      0,
+                      Math.min(
+                        chart.width - measure.width,
+                        x - measure.width / 2
+                      )
+                    ),
+                    minY: number = bottomY;
+
+                  ctx.fillStyle = '#ffffff';
+                  ctx.fillRect(minX - 4, minY, measure.width + 8, 20);
+                  ctx.fillStyle = '#000000';
+                  ctx.fillText(distance, minX, bottomY + 14);
+                }
+
+                ctx.restore();
+
+                this.slope.selectedValue =
+                  slopeValues[(<any>tooltip)?._tooltipItems?.[0]?.dataIndex][1];
+                this.slope.selectedPercentage =
+                  (Math.min(
+                    15,
+                    Math.max(0, Math.abs(this.slope.selectedValue))
+                  ) *
+                    100) /
+                  15;
+
+                this.hover.emit(
+                  this._chartValues[
+                    (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
+                  ]
+                );
+              } else {
+                this.slope.selectedValue = undefined;
+                this.hover.emit(undefined);
+              }
+            },
+          },
+        ],
       });
     }
   }
