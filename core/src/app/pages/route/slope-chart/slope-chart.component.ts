@@ -1,8 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {
   Chart,
   ChartDataset,
-  Color,
   registerables,
   Tick,
   TooltipItem,
@@ -32,6 +38,9 @@ export class SlopeChartComponent implements OnInit {
   @ViewChild('chartCanvas') set content(content: ElementRef) {
     this._chartCanvas = content.nativeElement;
   }
+
+  @Output('hover') hover: EventEmitter<ILocation> =
+    new EventEmitter<ILocation>();
 
   private _chartCanvas: any;
   private _chart: Chart;
@@ -618,7 +627,16 @@ export class SlopeChartComponent implements OnInit {
                   ) *
                     100) /
                   15;
-              } else this.slope.selectedValue = undefined;
+
+                this.hover.emit(
+                  this._chartValues[
+                    (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
+                  ]
+                );
+              } else {
+                this.slope.selectedValue = undefined;
+                this.hover.emit(undefined);
+              }
             },
           },
         ],
