@@ -19,12 +19,15 @@
 
 .webmapp-pageroute-infopanel {
   position: absolute;
-  width: 100%;
-  min-height: 40px;
-  margin: 0;
-  bottom: 0px;
-  left: 0px;
-  border-radius: 15px 15px 0 0;
+    width: 100%;
+    min-height: 40px; 
+    bottom: -411px;
+
+  .webmapp-pageroute-infopanel-card {
+    margin: 0;
+    height: 500px;
+    border-radius: 15px 15px 0 0;
+  }
 
   .webmapp-pageroute-infopanel-drag {
     width: 100%;
