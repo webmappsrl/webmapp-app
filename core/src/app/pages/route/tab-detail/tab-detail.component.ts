@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StatusService } from 'src/app/services/status.service';
+import { ILocation } from 'src/app/types/location';
 import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
@@ -10,13 +10,20 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class TabDetailComponent implements OnInit {
   public route: IGeojsonFeature;
+  @Output('slopeChartHover') slopeChartHover: EventEmitter<ILocation> =
+    new EventEmitter<ILocation>();
 
-  constructor(
-    private _statusService: StatusService) { }
+  constructor(private _statusService: StatusService) {}
 
   ngOnInit() {
-      this.route = this._statusService.route;
-      console.log('------- ~ file: tab-detail.component.ts ~ line 19 ~ TabDetailComponent ~ ngOnInit ~ this.route', this.route);
+    this.route = this._statusService.route;
+    console.log(
+      '------- ~ file: tab-detail.component.ts ~ line 19 ~ TabDetailComponent ~ ngOnInit ~ this.route',
+      this.route
+    );
   }
 
+  onLocationHover(event: ILocation) {
+    this.slopeChartHover.emit(event);
+  }
 }
