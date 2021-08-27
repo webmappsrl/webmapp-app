@@ -2,7 +2,8 @@
   --padding-bottom: 15px;
   .wm-home-header-container {
     padding-top: 55px;
-    min-height: 155px;
+    height: 310px;
+    text-align: center;
 
     &:before {
       content: "";
@@ -11,10 +12,26 @@
       top: 0;
       z-index: -1;
       width: 100%;
-      height: 155px;
+      height: 310px;
       background: var(--wm-color-secondary);
       border-radius: 0 0 75% 75% / 0 0 120px 120px;
       transform: scaleX(1.4);
+    }
+
+    .wm-home-hader-label {
+      color: var(--wm-color-light);
+      display: block;
+      font-size: var(--wm-font-xxxlg);
+      font-weight: var(--wm-font-weight-bold);
+      padding: 30px 20px;
+    }
+    
+    .wm-home-hader-button {
+      color: var(--wm-color-light);
+      border-radius: 25px;
+      --border-radius: 25px;
+      --padding-start: 20px;
+      --padding-end: 20px;
     }
 
     .wm-home-logo-container {
