@@ -22,6 +22,33 @@
         position: absolute;
         width: 178px;
         padding: 10px;
+
+        .webmapp-maptrackcard-info-label {
+            display: block;
+            color: var(--wm-color-dark);
+            text-align: left;
+            min-height: 30px;
+        }
+
+        .webmapp-maptrackcard-info-name {
+            font-weight: var(--wm-font-weight-bold);
+            font-size: var(--wm-font-sm);
+            min-height: 40px;
+        }
+        .webmapp-maptrackcard-info-time {
+            font-size: var(--wm-font-xsm);
+        }
+        .webmapp-maptrackcard-info-difficulty {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-maptrackcard-info-distance {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-maptrackcard-info-icon {
+            color: var(--wm-color-secondary);
+        }
     }
 
     .webmapp-maptrackcard-favourite {

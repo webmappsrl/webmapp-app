@@ -18,7 +18,7 @@
     class="webmapp-map-fab"
     [color]="'primary'"
     [registering]="registering"
-    *ngIf="!static && !hideRegister"
+    *ngIf="!static && !hideRegister && isLoggedIn"
   >
   </webmapp-btn-register>
 

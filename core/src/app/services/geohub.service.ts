@@ -2,16 +2,21 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
-import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
+import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { ILocation } from '../types/location';
-import { IGeojsonCluster, IGeojsonClusterApiResponse, IGeojsonFeature } from '../types/model';
+import { IGeojsonClusterApiResponse, IGeojsonFeature, WhereTaxonomy } from '../types/model';
 import { CommunicationService } from './base/communication.service';
+import { StorageService } from './base/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeohubService {
-  constructor(private _communicationService: CommunicationService) { }
+
+  constructor(
+    private _communicationService: CommunicationService,
+    private _storageService: StorageService
+  ) { }
 
   /**
    * Get an instance of the specified ec track
@@ -85,40 +90,6 @@ export class GeohubService {
       .get(url)
       .toPromise();
     return res;
-    // return [{
-    //   type: 'Feature',
-    //   geometry: {
-    //     type: EGeojsonGeometryTypes.POINT,
-    //     coordinates: [ 10.4147 + Math.random()/10,43.7118 + Math.random()/10]
-    //   },
-    //   properties: {
-    //     ids: [1,2,3,Math.round(Math.random()*100)],
-    //     images: ['https://picsum.photos/60/50','https://picsum.photos/45/40','https://picsum.photos/45/45'],
-    //     bbox: [1, 2, 3, 4]
-    //   }
-    // },{
-    //   type: 'Feature',
-    //   geometry: {
-    //     type: EGeojsonGeometryTypes.POINT,
-    //     coordinates: [ 10.247 + Math.random()/10,43.5 + Math.random()/10]
-    //   },
-    //   properties: {
-    //     ids: [6,7],
-    //     images: ['https://picsum.photos/360/60','https://picsum.photos/90/190'],
-    //     bbox: [1, 2, 3, 4]
-    //   }
-    // },{
-    //   type: 'Feature',
-    //   geometry: {
-    //     type: EGeojsonGeometryTypes.POINT,
-    //     coordinates: [ 10.6 + Math.random()/10,43.9 + Math.random()/10]
-    //   },
-    //   properties: {
-    //     ids: [5],
-    //     images: ['https://picsum.photos/100/200'],
-    //     bbox: [1, 2, 3, 4]
-    //   }
-    // }];
   }
 
   /**
@@ -148,6 +119,26 @@ export class GeohubService {
   }
 
   /**
+   * Get a where taxonomy (form cache if available)
+   * 
+   * @param id id of the where taxonomy
+   * @returns a where taxonomy
+   */
+  async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
+    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
+    const cached = await this._getFromCache(cacheId);
+    if (cached) return cached;
+    const res = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/taxonomy/where/${id}`,)
+      .pipe(map(value => {
+        delete value.geometry;
+        this._setInCache(cacheId, value);
+        return value;
+      }))
+      .toPromise();
+    return res;
+  }
+
+  /**
    * Get an instance of the specified geohub feature
    *
    * @param {string} id the feature id
@@ -164,6 +155,16 @@ export class GeohubService {
       .toPromise();
     return res;
   }
+
+  private async _getFromCache(cacheId: string): Promise<any> {
+    const res = await this._storageService.getByKey(cacheId);
+    return res;
+  }
+
+  private async _setInCache(cacheId, value) {
+    return this._storageService.setByKey(cacheId, value);
+  }
+
 
 
 }

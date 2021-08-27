@@ -110,3 +110,31 @@ export interface IGeojsonCluster {
 export interface IGeojsonClusterApiResponse {
   features: IGeojsonCluster[];
 }
+
+export interface WhereTaxonomy {  
+    id: 9,
+    created_at: Date,
+    updated_at: Date
+    name: iLocalString,
+    import_method: string,
+    source_id: number,
+    admin_level: number,
+    description: string,
+    // excerpt: null,
+    // source: null,
+    // user_id: null,
+    // identifier: toscana,
+    // icon: null,
+    // color: null,
+    // zindex: null,
+    // feature_image: null,
+    // stroke_width: null,
+    // stroke_opacity: null,
+    // line_dash: null,
+    // min_visible_zoom: null,
+    // min_size_zoom: null,
+    // min_size: null,
+    // max_size: null,
+    // icon_zoom: null,
+    // icon_size: null    
+}

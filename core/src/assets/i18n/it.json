@@ -6,7 +6,9 @@
     "confirm": "conferma",
     "cancel": "annulla",
     "delete": "cancella",
-    "retry": "riprova"
+    "retry": "riprova",
+    "minute": "min",
+    "hour": "h"
   },
   "modals": {
     "login": {
@@ -73,7 +75,9 @@
     "home": {
       "mostViewedTracks": "Percorsi più visti",
       "closerTracks": "Percorsi nelle vicinanze",
-      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
+      "intro": "Pianifichiamo insieme la tua prossima avventura",
+      "button": "Scegli un punto di partenza"
     },
     "profile": {
       "title": "Profilo",

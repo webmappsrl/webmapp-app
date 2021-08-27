@@ -5,7 +5,18 @@
 
   </ion-img>
   <div class="webmapp-maptrackcard-info">
-    {{track.properties.name | wmtrans }}
+    <ion-label class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-name">{{track.properties.name | wmtrans }}</ion-label>
+    <ion-label class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-time">{{track.properties.duration_forward | minutetime}}</ion-label>
+    <ion-label class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-difficulty">
+      <i class="webmapp-maptrackcard-info-icon webmapp-icon-heart-outline"> </i>
+      {{track.properties.difficulty | wmtrans }}
+    </ion-label>
+    <ion-label class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-distance">
+      <i class="webmapp-maptrackcard-info-icon webmapp-icon-heart-outline"> </i>
+      {{track.properties.distance}} Km
+    </ion-label>
+    
+  
   </div>
   <i class="webmapp-maptrackcard-exit webmapp-icon-close-outline" (click)="exit()"> </i>
 </ion-card>

@@ -161,9 +161,7 @@ export class RoutePage implements OnInit {
   }
 
   mapHeigth() {
-    let ret =
-      this.height -
-      (this.headerHeight + this.maxInfoheight) * (1 - this.opacity);
+    let ret = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));    
     return ret;
   }
 

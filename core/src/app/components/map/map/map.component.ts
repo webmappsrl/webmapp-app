@@ -52,6 +52,9 @@ import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.compone
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
+import { AuthService } from 'src/app/services/auth.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -162,9 +165,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   public isRecording: boolean = false;
 
+  public isLoggedIn: boolean = false;
+
   public sortedComponent: any[] = [];
 
   public timer: any;
+
+  private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   private _clusterMarkers: ClusterMarker[] = [];
   private _clusterLayer: VectorLayer;
@@ -215,7 +222,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private geolocationService: GeolocationService,
     private _mapService: MapService,
-    private resolver: ComponentFactoryResolver
+    // private resolver: ComponentFactoryResolver,
+    private _authService: AuthService
   ) {
     this._locationIcon = {
       layer: null,
@@ -256,6 +264,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this._authService.onStateChange
+      .pipe(takeUntil(this._destroyer))
+      .subscribe((user: IUser) => {
+        this.isLoggedIn = this._authService.isLoggedIn;
+      });
+
     if (!this.startView) this.startView = [10.4147, 43.7118, 9];
 
     this._view = new View({
@@ -378,6 +392,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     clearInterval(this.timer);
+    this._destroyer.next(true);
   }
 
   /**
@@ -409,7 +424,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) {}
+    } catch (e) { }
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
@@ -662,18 +677,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-              this._locationAnimationState.goalLocation.longitude -
-              this._locationAnimationState.startLocation.longitude,
+            this._locationAnimationState.goalLocation.longitude -
+            this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : this._locationAnimationState.goalLocation.accuracy
-              ? this._locationAnimationState.goalLocation.accuracy -
+                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-              : 0;
+                : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -692,27 +707,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-                delta * deltaLongitude,
+              delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-                delta * deltaLatitude,
+              delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-            'number'
+              'number'
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -723,7 +738,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+            delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -779,9 +794,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-        location?.longitude,
-        location?.latitude,
-      ]),
+      location?.longitude,
+      location?.latitude,
+    ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -814,7 +829,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
@@ -968,33 +983,33 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const precision =
       this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
 
-    this._clusterLayer
-      .getSource()
-      .forEachFeatureInExtent(
-        buffer(
-          [
-            evt.coordinate[0],
-            evt.coordinate[1],
-            evt.coordinate[0],
-            evt.coordinate[1],
-          ],
-          precision
-        ),
-        (feature) => {
-          features.push(feature);
+    if (this._clusterLayer && this._clusterLayer.getSource()) {
+      this._clusterLayer
+        .getSource()
+        .forEachFeatureInExtent(
+          buffer(
+            [
+              evt.coordinate[0],
+              evt.coordinate[1],
+              evt.coordinate[0],
+              evt.coordinate[1],
+            ],
+            precision
+          ),
+          (feature) => {
+            features.push(feature);
+          }
+        );
+      if (features.length) {
+        const nearestFeature = this._getNearest(features, evt.coordinate);
+        const clusterMarker = this._clusterMarkers.find(
+          (x) => x.icon == nearestFeature
+        );
+        if (clusterMarker) {
+          this.clickcluster.emit(clusterMarker.cluster);
         }
-      );
-    if (features.length) {
-      const nearestFeature = this._getNearest(features, evt.coordinate);
-      const clusterMarker = this._clusterMarkers.find(
-        (x) => x.icon == nearestFeature
-      );
-      if (clusterMarker) {
-        this.clickcluster.emit(clusterMarker.cluster);
-      }
-    } else {
-      this.touch.emit();
-    }
+      } else { this.touch.emit(); }
+    } else { this.touch.emit(); }
   }
 
   _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
@@ -1073,10 +1088,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         if (track) {
           let trackGeometry: LineString = new LineString(
-              (<ILineString>track.geometry.coordinates).map((value) =>
-                this._mapService.coordsFromLonLat(value)
-              )
-            ),
+            (<ILineString>track.geometry.coordinates).map((value) =>
+              this._mapService.coordsFromLonLat(value)
+            )
+          ),
             trackColor: string = track?.properties?.color;
 
           if (this._slopeChartTrack) {
