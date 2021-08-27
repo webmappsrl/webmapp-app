@@ -16,6 +16,7 @@ import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ILocation } from 'src/app/types/location';
 import { IGeojsonFeature } from 'src/app/types/model';
+import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
   selector: 'webmapp-route',
@@ -32,10 +33,10 @@ export class RoutePage implements OnInit {
   public opacity = 1;
   public headerHeight = 105;
   public height = 700;
-  public maxInfoheight = 500; //from CCS????
+  public maxInfoheight = 350; //from CCS????
   public minInfoheight = 90; //from CCS????
 
-  public slopeChartHoverLocation: ILocation;
+  public slopeChartHoverElements: ISlopeChartHoverElements;
 
   private _tabChildEventSubscriptions: Array<Subscription> = [];
 
@@ -188,9 +189,10 @@ export class RoutePage implements OnInit {
     this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
+      this._subscribeToTabsEvents();
       setTimeout(() => {
         this._subscribeToTabsEvents();
-      }, 200);
+      }, 1000);
     });
     // this.animationMapTop.onFinish(() => { this.gesture.enable(true); });
     // this.animationMapHeight.onFinish(() => { this.gesture.enable(true); });
@@ -205,7 +207,6 @@ export class RoutePage implements OnInit {
 
   private _subscribeToTabsEvents() {
     // Delete previous subscription
-
     for (let i in this._tabChildEventSubscriptions) {
       if (this._tabChildEventSubscriptions[i]?.unsubscribe)
         this._tabChildEventSubscriptions[i].unsubscribe();
@@ -228,13 +229,12 @@ export class RoutePage implements OnInit {
         this._tabChildEventSubscriptions.push(
           (<any>this.routeTabs.outlet).activated.instance.slopeChartHover
             .pipe(auditTime(100))
-            .subscribe((location: ILocation) => {
-              this.slopeChartHoverLocation = location;
+            .subscribe((elements: ISlopeChartHoverElements) => {
+              this.slopeChartHoverElements = elements;
             })
         );
       }
-    }
-    // console.log(this.routeTabs.outlet.activated.instance);
+    } else this.slopeChartHoverElements = undefined;
   }
 
   private clamp(min, n, max) {

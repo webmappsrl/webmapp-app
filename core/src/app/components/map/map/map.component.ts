@@ -46,13 +46,16 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
-import { IGeojsonCluster } from 'src/app/types/model';
+import { IGeojsonCluster, ILineString } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
 import Fill from 'ol/style/Fill';
+import LineString from 'ol/geom/LineString';
+import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
+import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
   selector: 'webmapp-map',
@@ -143,8 +146,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('temporaryLocation') set temporaryLocation(value: ILocation) {
-    this._drawTemporaryLocationFeature(value);
+  @Input('slopeChartElements') set slopeChartElements(
+    value: ISlopeChartHoverElements
+  ) {
+    this._drawTemporaryLocationFeature(value?.location, value?.track);
   }
 
   @ViewChild('clusterContainer', { read: ViewContainerRef }) clusterContainer;
@@ -202,9 +207,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _location: ILocation;
 
-  private _temporaryLocationLayer: VectorLayer;
-  private _temporaryLocationSource: VectorSource;
-  private _temporaryLocationFeature: Feature;
+  private _slopeChartLayer: VectorLayer;
+  private _slopeChartSource: VectorSource;
+  private _slopeChartPoint: Feature<Point>;
+  private _slopeChartTrack: Feature<LineString>;
 
   constructor(
     private geolocationService: GeolocationService,
@@ -486,11 +492,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return trackgeojson;
   }
 
-  private _getLineStyle(): Array<Style> {
+  private _getLineStyle(color?: string): Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
 
-    let color: string = '255,0,0'; // this._featuresService.color(id),
+    if (!color) color = '255, 177, 0'; // this._featuresService.color(id),
+    if (color[0] === '#') {
+      color =
+        parseInt(color.substring(1, 3), 16) +
+        ', ' +
+        parseInt(color.substring(3, 5), 16) +
+        ', ' +
+        parseInt(color.substring(5, 7), 16);
+    }
     const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
       strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
       lineDash: Array<number> = [], // this._featuresService.lineDash(id),
@@ -1001,59 +1015,90 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2));
   }
 
-  private _drawTemporaryLocationFeature(location?: ILocation): void {
+  private _drawTemporaryLocationFeature(
+    location?: ILocation,
+    track?: CGeojsonLineStringFeature
+  ): void {
     if (location) {
-      if (!this._temporaryLocationSource) {
-        this._temporaryLocationSource = new VectorSource({
-          // format: new GeoJSON(),
+      if (!this._slopeChartSource) {
+        this._slopeChartSource = new VectorSource({
+          format: new GeoJSON(),
         });
       }
-      if (!this._temporaryLocationLayer) {
-        this._temporaryLocationLayer = new VectorLayer({
-          source: this._temporaryLocationSource,
-          style: () => {
-            return [
-              new Style({
-                image: new CircleStyle({
-                  fill: new Fill({
-                    color: '#000',
+      if (!this._slopeChartLayer) {
+        this._slopeChartLayer = new VectorLayer({
+          source: this._slopeChartSource,
+          style: (feature) => {
+            if (feature.getGeometry().getType() === 'Point') {
+              return [
+                new Style({
+                  image: new CircleStyle({
+                    fill: new Fill({
+                      color: '#000',
+                    }),
+                    radius: 7,
+                    stroke: new Stroke({
+                      width: 2,
+                      color: '#fff',
+                    }),
                   }),
-                  radius: 7,
-                  stroke: new Stroke({
-                    width: 2,
-                    color: '#fff',
-                  }),
+                  zIndex: 100,
                 }),
-              }),
-            ];
+              ];
+            } else {
+              return this._getLineStyle(this._slopeChartTrack.get('color'));
+            }
           },
           updateWhileAnimating: false,
           updateWhileInteracting: false,
           zIndex: DEF_LOCATION_Z_INDEX - 1,
         });
-        this._map.addLayer(this._temporaryLocationLayer);
+        this._map.addLayer(this._slopeChartLayer);
       }
 
       if (location) {
-        let geometry: Point = new Point(
+        let pointGeometry: Point = new Point(
           this._mapService.coordsFromLonLat([
             location.longitude,
             location.latitude,
           ])
         );
-        if (this._temporaryLocationFeature)
-          this._temporaryLocationFeature.setGeometry(geometry);
+
+        if (this._slopeChartPoint)
+          this._slopeChartPoint.setGeometry(pointGeometry);
         else {
-          this._temporaryLocationFeature = new Feature(geometry);
-          this._temporaryLocationSource.addFeature(
-            this._temporaryLocationFeature
-          );
+          this._slopeChartPoint = new Feature(pointGeometry);
+          this._slopeChartSource.addFeature(this._slopeChartPoint);
+        }
+
+        if (track) {
+          let trackGeometry: LineString = new LineString(
+              (<ILineString>track.geometry.coordinates).map((value) =>
+                this._mapService.coordsFromLonLat(value)
+              )
+            ),
+            trackColor: string = track?.properties?.color;
+
+          if (this._slopeChartTrack) {
+            this._slopeChartTrack.setGeometry(trackGeometry);
+            this._slopeChartTrack.set('color', trackColor);
+          } else {
+            this._slopeChartTrack = new Feature(trackGeometry);
+            this._slopeChartTrack.set('color', trackColor);
+            this._slopeChartSource.addFeature(this._slopeChartTrack);
+          }
         }
       } else {
-        this._temporaryLocationFeature = undefined;
-        this._temporaryLocationSource.clear();
+        this._slopeChartPoint = undefined;
+        this._slopeChartTrack = undefined;
+        this._slopeChartSource.clear();
       }
 
+      this._map.render();
+    } else if (this._slopeChartSource && this._map) {
+      this._slopeChartPoint = undefined;
+      this._slopeChartTrack = undefined;
+      this._slopeChartSource.clear();
       this._map.render();
     }
   }

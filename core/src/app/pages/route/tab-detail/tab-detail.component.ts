@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StatusService } from 'src/app/services/status.service';
-import { ILocation } from 'src/app/types/location';
 import { IGeojsonFeature } from 'src/app/types/model';
+import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
   selector: 'webmapp-tab-detail',
@@ -10,8 +10,8 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class TabDetailComponent implements OnInit {
   public route: IGeojsonFeature;
-  @Output('slopeChartHover') slopeChartHover: EventEmitter<ILocation> =
-    new EventEmitter<ILocation>();
+  @Output('slopeChartHover')
+  slopeChartHover: EventEmitter<ISlopeChartHoverElements> = new EventEmitter<ISlopeChartHoverElements>();
 
   constructor(private _statusService: StatusService) {}
 
@@ -23,7 +23,7 @@ export class TabDetailComponent implements OnInit {
     );
   }
 
-  onLocationHover(event: ILocation) {
+  onLocationHover(event: ISlopeChartHoverElements) {
     this.slopeChartHover.emit(event);
   }
 }

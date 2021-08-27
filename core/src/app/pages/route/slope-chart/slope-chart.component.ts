@@ -15,6 +15,7 @@ import {
   TooltipModel,
 } from 'chart.js';
 import { CLocation } from 'src/app/classes/clocation';
+import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import {
   SLOPE_CHART_SLOPE_EASY,
   SLOPE_CHART_SLOPE_HARD,
@@ -25,9 +26,11 @@ import {
 } from 'src/app/constants/slope-chart';
 import { MapService } from 'src/app/services/base/map.service';
 import { StatusService } from 'src/app/services/status.service';
+import { EGeojsonGeometryTypes } from 'src/app/types/egeojson-geometry-types.enum';
 import { ESlopeChartSurface } from 'src/app/types/eslope-chart.enum';
 import { ILocation } from 'src/app/types/location';
-import { IGeojsonFeature } from 'src/app/types/model';
+import { IGeojsonFeature, ILineString } from 'src/app/types/model';
+import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
   selector: 'webmapp-slope-chart',
@@ -39,8 +42,8 @@ export class SlopeChartComponent implements OnInit {
     this._chartCanvas = content.nativeElement;
   }
 
-  @Output('hover') hover: EventEmitter<ILocation> =
-    new EventEmitter<ILocation>();
+  @Output('hover') hover: EventEmitter<ISlopeChartHoverElements> =
+    new EventEmitter<ISlopeChartHoverElements>();
 
   private _chartCanvas: any;
   private _chart: Chart;
@@ -628,11 +631,24 @@ export class SlopeChartComponent implements OnInit {
                     100) /
                   15;
 
-                this.hover.emit(
-                  this._chartValues[
-                    (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
-                  ]
-                );
+                let coordinates: ILineString = (<ILineString>(
+                    this.route.geometry.coordinates
+                  )).slice(0, 10),
+                  surfaceTrack: CGeojsonLineStringFeature =
+                    new CGeojsonLineStringFeature({
+                      type: EGeojsonGeometryTypes.LINE_STRING,
+                      coordinates,
+                    });
+
+                // surfaceTrack.setProperty('color', '#ff00ff');
+
+                this.hover.emit({
+                  location:
+                    this._chartValues[
+                      (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
+                    ],
+                  // track: surfaceTrack,
+                });
               } else {
                 this.slope.selectedValue = undefined;
                 this.hover.emit(undefined);

@@ -12,17 +12,16 @@ export type IMultiPolygon = Array<Array<Array<IPoint>>>;
 export interface IGeojsonGeometry {
   type: EGeojsonGeometryTypes;
   coordinates:
-  | IPoint
-  | ILineString
-  | IMultiLineString
-  | IPolygon
-  | IMultiPolygon;
+    | IPoint
+    | ILineString
+    | IMultiLineString
+    | IPolygon
+    | IMultiPolygon;
 }
 
-export interface iLocalString{
-    it?: string;
-    en?: string;
-
+export interface iLocalString {
+  it?: string;
+  en?: string;
 }
 
 /**
@@ -57,8 +56,8 @@ export interface IGeojsonProperties {
   geojson_url?: string;
   kml_url?: string;
   gpx_url?: string;
-  feature_image ?: IWmImage;
-  image ?: IWmImage;
+  feature_image?: IWmImage;
+  image?: IWmImage;
   image_gallery?: IWmImage[];
   taxonomy?: {
     activity?: string[];
@@ -99,15 +98,15 @@ export interface IWmImage {
   };
 }
 export interface IGeojsonCluster {
-  type: 'Feature',
-  geometry: IGeojsonGeometry,
+  type: 'Feature';
+  geometry: IGeojsonGeometry;
   properties: {
-    ids: number[], // Id di Ec Track che fanno parte del cluster
-    images: string[], // Massimo 3 url di immagini ottimizzate
-    bbox: number[] // Extent di tutte le ec track assieme
-  }
+    ids: number[]; // Id di Ec Track che fanno parte del cluster
+    images: string[]; // Massimo 3 url di immagini ottimizzate
+    bbox: number[]; // Extent di tutte le ec track assieme
+  };
 }
 
-export interface IGeojsonClusterApiResponse{
-  features : IGeojsonCluster[];
+export interface IGeojsonClusterApiResponse {
+  features: IGeojsonCluster[];
 }
