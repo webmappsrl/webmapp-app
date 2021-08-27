@@ -37,9 +37,8 @@ export class RoutePage implements OnInit {
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
   @ViewChild('mapControl') mapControl: ElementRef;
+  @ViewChild('headerPageRoute') headerControl: ElementRef;
   private animation?: Animation;
-  private animationMapTop: Animation;
-  private animationMapHeight: Animation;
   private gesture?: Gesture;
 
   private started: boolean = false;
@@ -100,21 +99,10 @@ export class RoutePage implements OnInit {
       .duration(1000)
       .fromTo('transform', 'translateY(0)', `translateY(-${this.maxInfoheight - this.minInfoheight}px)`);
 
-    this.animationMapTop = this.animationCtrl.create()
-      .addElement(this.mapControl.nativeElement)
-      .duration(1000)
-      .fromTo('transform', 'translateY(0)', `translateY(${this.headerHeight}px)`);
-    this.animationMapHeight = this.animationCtrl.create()
-      .addElement(this.mapControl.nativeElement)
-      .duration(1000)
-      .fromTo('height', `${this.height}px`, `${this.height - this.headerHeight - this.maxInfoheight}px`);
-
-    // [ngStyle]="{'margin-top': (headerHeight-(headerHeight*opacity))+'px','height':mapHeigth()+'px'}"
-
     this.gesture = this.gestureCtrl.create({
       el: this.dragHandleIcon.nativeElement,
       threshold: 0,
-      gestureName: 'square-drag',
+      gestureName: 'handler-drag',
       onMove: ev => this.onMove(ev),
       onEnd: ev => this.onEnd(ev)
     })
@@ -168,7 +156,7 @@ export class RoutePage implements OnInit {
   }
 
   mapHeigth() {
-    let ret =  this.height - ((this.headerHeight + this.maxInfoheight) * (1-this.opacity));
+    let ret = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));
     console.log('------- ~ file: route.page.ts ~ line 172 ~ RoutePage ~ mapHeigth ~ ret', ret);
     return ret;
   }
@@ -179,14 +167,10 @@ export class RoutePage implements OnInit {
   private onMove(ev) {
     if (!this.started) {
       this.animation.progressStart(false);
-      this.animationMapTop.progressStart(false);
-      this.animationMapHeight.progressStart(false);
       this.started = true;
     }
-
-    this.animation.progressStep(this.getStep(ev));
-    this.animationMapTop.progressStep(this.getStep(ev));
-    this.animationMapHeight.progressStep(this.getStep(ev));
+    const step = this.getStep(ev)
+    this.animation.progressStep(step);
   }
 
   private onEnd(ev) {
@@ -198,11 +182,9 @@ export class RoutePage implements OnInit {
     const shouldComplete = step > 0.5;
 
     this.animation.progressEnd((shouldComplete) ? 1 : 0, step);
-    this.animationMapTop.progressEnd((shouldComplete) ? 1 : 0, step);
-    this.animationMapHeight.progressEnd((shouldComplete) ? 1 : 0, step);
     this.animation.onFinish(() => { this.gesture.enable(true); });
-    this.animationMapTop.onFinish(() => { this.gesture.enable(true); });
-    this.animationMapHeight.onFinish(() => { this.gesture.enable(true); });
+    // this.animationMapTop.onFinish(() => { this.gesture.enable(true); });
+    // this.animationMapHeight.onFinish(() => { this.gesture.enable(true); });
 
     this.opacity = (shouldComplete) ? 0 : 1;
 
