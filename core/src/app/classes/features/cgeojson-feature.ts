@@ -40,6 +40,8 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
     };
   }
 
+  abstract setGeometry(geometry: IGeojsonGeometry): void;
+
   setProperty(property: string, value: any): void {
     this._properties[property] = value;
   }

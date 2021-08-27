@@ -1,11 +1,8 @@
 import {
   AfterViewInit,
   Component,
-  ComponentFactory,
   ComponentFactoryResolver,
-  ComponentRef,
   ElementRef,
-  EmbeddedViewRef,
   EventEmitter,
   Input,
   OnDestroy,
@@ -24,6 +21,7 @@ import Icon from 'ol/style/Icon';
 import Map from 'ol/Map';
 import Point from 'ol/geom/Point';
 import Style from 'ol/style/Style';
+import CircleStyle from 'ol/style/Circle';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -48,7 +46,7 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
-import { IGeojsonCluster } from 'src/app/types/model';
+import { IGeojsonCluster, ILineString } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
@@ -57,7 +55,10 @@ import Geometry from 'ol/geom/Geometry';
 import { AuthService } from 'src/app/services/auth.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
+import Fill from 'ol/style/Fill';
+import LineString from 'ol/geom/LineString';
+import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
+import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
   selector: 'webmapp-map',
@@ -89,13 +90,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         dragPan: !value,
         mouseWheelZoom: !value,
       });
-      this._map.getInteractions().forEach(inter => {
+      this._map.getInteractions().forEach((inter) => {
         this._map.removeInteraction(inter);
-      })
-      interactions.forEach(interaction => {
+      });
+      interactions.forEach((interaction) => {
         this._map.addInteraction(interaction);
-      })
-
+      });
     }
   }
 
@@ -141,14 +141,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-
   @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
     if (value) {
-      setTimeout(() => { this._addClusterMarkers(value); }, 0);
+      setTimeout(() => {
+        this._addClusterMarkers(value);
+      }, 0);
     }
   }
 
-  @ViewChild("clusterContainer", { read: ViewContainerRef }) clusterContainer;
+  @Input('slopeChartElements') set slopeChartElements(
+    value: ISlopeChartHoverElements
+  ) {
+    this._drawTemporaryLocationFeature(value?.location, value?.track);
+  }
+
+  @ViewChild('clusterContainer', { read: ViewContainerRef }) clusterContainer;
 
   public locationState: EMapLocationState;
 
@@ -163,7 +170,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public sortedComponent: any[] = [];
 
   public timer: any;
-  
+
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   private _clusterMarkers: ClusterMarker[] = [];
@@ -206,6 +213,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   };
 
   private _location: ILocation;
+
+  private _slopeChartLayer: VectorLayer;
+  private _slopeChartSource: VectorSource;
+  private _slopeChartPoint: Feature<Point>;
+  private _slopeChartTrack: Feature<LineString>;
 
   constructor(
     private geolocationService: GeolocationService,
@@ -256,7 +268,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._destroyer))
       .subscribe((user: IUser) => {
         this.isLoggedIn = this._authService.isLoggedIn;
-        });
+      });
 
     if (!this.startView) this.startView = [10.4147, 43.7118, 9];
 
@@ -313,7 +325,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //TODO: test for ensure presence of map
     this.timer = setInterval(() => {
       if (this.static) {
-        if (this._track.registeredTrack && this._track.registeredTrack.geojson) {
+        if (
+          this._track.registeredTrack &&
+          this._track.registeredTrack.geojson
+        ) {
           this.centerToTrack = true;
           this.drawTrack(this._track.registeredTrack.geojson);
         }
@@ -321,15 +336,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this._map.updateSize();
     }, 1000);
 
-    this._map.on('click', (evt) => { this._mapClick(evt) });
+    this._map.on('click', (evt) => {
+      this._mapClick(evt);
+    });
 
     if (!this.static) {
       this._map.on('moveend', () => {
         this.move.emit({
           boundigBox: this._mapService.extentToLonLat(
-            this._map.getView().calculateExtent(this._map.getSize())), zoom: this._view.getZoom()
-        }
-        );
+            this._map.getView().calculateExtent(this._map.getSize())
+          ),
+          zoom: this._view.getZoom(),
+        });
         if (
           [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
             this.locationState
@@ -476,7 +494,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.unlocked.emit(val);
   }
 
-
   private getGeoJson(trackgeojson: any): any {
     if (trackgeojson?.geoJson) {
       return trackgeojson.geoJson;
@@ -490,11 +507,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return trackgeojson;
   }
 
-  private _getLineStyle(): Array<Style> {
+  private _getLineStyle(color?: string): Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
 
-    let color: string = '255,0,0'; // this._featuresService.color(id),
+    if (!color) color = '255, 177, 0'; // this._featuresService.color(id),
+    if (color[0] === '#') {
+      color =
+        parseInt(color.substring(1, 3), 16) +
+        ', ' +
+        parseInt(color.substring(3, 5), 16) +
+        ', ' +
+        parseInt(color.substring(5, 7), 16);
+    }
     const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
       strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
       lineDash: Array<number> = [], // this._featuresService.lineDash(id),
@@ -575,18 +600,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _centerMapToBoundingBox(boundingbox) {
     const latlon = this._mapService.extentFromLonLat(boundingbox);
-    this._view.fit(latlon, { duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0, maxZoom: DEF_MAP_MAX_ZOOM, padding: [50, 50, 50, 50] })
+    this._view.fit(latlon, {
+      duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
+      maxZoom: DEF_MAP_MAX_ZOOM,
+      padding: [50, 50, 50, 50],
+    });
   }
-
 
   /**
    * Center the current map view to the current physical location
    */
   private _centerMapToTrack() {
     if (this._track.layer) {
-      const verticalPadding = (!this._height || this._height > 500) ? 120 : this._height * 0.25;
+      const verticalPadding =
+        !this._height || this._height > 500 ? 120 : this._height * 0.25;
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [verticalPadding, 70, verticalPadding, 20], duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0
+        padding: [verticalPadding, 70, verticalPadding, 20],
+        duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
       });
     }
   }
@@ -802,31 +832,43 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     } catch (e) { }
   }
 
-
-
-
-  private _idOfClusterMarker(ig: IGeojsonCluster): string { return ig.properties.ids.sort((a, b) => a - b).join('-') }
+  private _idOfClusterMarker(ig: IGeojsonCluster): string {
+    return ig.properties.ids.sort((a, b) => a - b).join('-');
+  }
 
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
-
     let transparent: boolean = !!this._track.registeredTrack;
     this._createClusterLayer();
     if (values) {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
 
-        if (!values.find(x => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || this._lastlusterMarkerTransparency != transparent) {
+        if (
+          !values.find(
+            (x) =>
+              this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)
+          ) ||
+          this._lastlusterMarkerTransparency != transparent
+        ) {
           this._removeClusterIconFromLayer(ov);
           this._clusterMarkers.splice(i, 1);
         }
       }
 
       for (const cluster of values) {
-        if (!this._clusterMarkers.find(x => this._idOfClusterMarker(x.cluster) == this._idOfClusterMarker(cluster))) {
+        if (
+          !this._clusterMarkers.find(
+            (x) =>
+              this._idOfClusterMarker(x.cluster) ==
+              this._idOfClusterMarker(cluster)
+          )
+        ) {
+          const icon = await this._createClusterCanvasIcon(
+            cluster,
+            transparent
+          );
 
-          const icon = await this._createClusterCanvasIcon(cluster, transparent);
-
-          this._addClusterIconToLayer(icon)
+          this._addClusterIconToLayer(icon);
 
           this._clusterMarkers.push(icon);
         }
@@ -834,13 +876,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
 
     this._lastlusterMarkerTransparency = transparent;
-
   }
 
-  private async _createClusterCanvasIcon(cluster: IGeojsonCluster, transparent: boolean = false): Promise<ClusterMarker> {
-
-
-    const position = fromLonLat([cluster.geometry.coordinates[0] as number, cluster.geometry.coordinates[1] as number]); // TODO check object type
+  private async _createClusterCanvasIcon(
+    cluster: IGeojsonCluster,
+    transparent: boolean = false
+  ): Promise<ClusterMarker> {
+    const position = fromLonLat([
+      cluster.geometry.coordinates[0] as number,
+      cluster.geometry.coordinates[1] as number,
+    ]); // TODO check object type
     const iconFeature = new Feature({
       geometry: new Point([position[0], position[1]]),
     });
@@ -852,7 +897,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         anchor: [0.5, 0.5],
         img: img,
         imgSize: [100, 100],
-        opacity: transparent ? 0.5 : 1
+        opacity: transparent ? 0.5 : 1,
       }),
     });
 
@@ -862,19 +907,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       cluster,
       icon: iconFeature,
       // component: componentRef,
-      id: this._idOfClusterMarker(cluster)
+      id: this._idOfClusterMarker(cluster),
     };
-
   }
 
-  private async _createClusterCavasImage(cluster: IGeojsonCluster): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster);
+  private async _createClusterCavasImage(
+    cluster: IGeojsonCluster
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas =
+      await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster);
 
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-
-    const canvasHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+    const canvasHtml =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
       '<foreignObject width="100%" height="100%">' +
       '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
       htmlTextCanvas +
@@ -882,21 +929,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       '</foreignObject>' +
       '</svg>';
 
-    const DOMURL = window.URL;// || window.webkitURL || window;
+    const DOMURL = window.URL; // || window.webkitURL || window;
 
     const img = new Image();
     const svg = new Blob([canvasHtml], {
-      type: 'image/svg+xml;charset=utf-8'
+      type: 'image/svg+xml;charset=utf-8',
     });
     const url = DOMURL.createObjectURL(svg);
 
     img.onload = function () {
       ctx.drawImage(img, 0, 0);
       DOMURL.revokeObjectURL(url);
-    }
+    };
 
     img.src = url;
-    img.crossOrigin = "Anonymous";
+    img.crossOrigin = 'Anonymous';
 
     return img;
   }
@@ -925,7 +972,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _removeClusterIconFromLayer(cm: ClusterMarker) {
     const source = this._clusterLayer.getSource();
     if (source.hasFeature(cm.icon)) {
-      source.removeFeature(cm.icon)
+      source.removeFeature(cm.icon);
     }
     // this._map.removeOverlay(cm.icon);
     //cm.component.destroy();
@@ -933,37 +980,49 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _mapClick(evt: MapBrowserEvent<UIEvent>) {
     const features: Feature<Geometry>[] = [];
-    const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
+    const precision =
+      this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
 
-    this._clusterLayer.getSource().forEachFeatureInExtent(
-      buffer([evt.coordinate[0], evt.coordinate[1], evt.coordinate[0], evt.coordinate[1]], precision),
-      (feature) => {
-        features.push(feature);
-      }
-    )
-    if (features.length) {
-      const nearestFeature = this._getNearest(features, evt.coordinate);
-      const clusterMarker = this._clusterMarkers.find(x => x.icon == nearestFeature);
-      if (clusterMarker) {
-        this.clickcluster.emit(clusterMarker.cluster);
-      }
-    } else {
-      this.touch.emit();
-    }
-
+    if (this._clusterLayer && this._clusterLayer.getSource()) {
+      this._clusterLayer
+        .getSource()
+        .forEachFeatureInExtent(
+          buffer(
+            [
+              evt.coordinate[0],
+              evt.coordinate[1],
+              evt.coordinate[0],
+              evt.coordinate[1],
+            ],
+            precision
+          ),
+          (feature) => {
+            features.push(feature);
+          }
+        );
+      if (features.length) {
+        const nearestFeature = this._getNearest(features, evt.coordinate);
+        const clusterMarker = this._clusterMarkers.find(
+          (x) => x.icon == nearestFeature
+        );
+        if (clusterMarker) {
+          this.clickcluster.emit(clusterMarker.cluster);
+        }
+      } else { this.touch.emit(); }
+    } else { this.touch.emit(); }
   }
 
   _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
     let ret: Feature<Geometry> = features[0];
     let minDistance = Number.MAX_VALUE;
-    features.forEach(feature => {
+    features.forEach((feature) => {
       const geom = feature.getGeometry() as Point;
       let distance = this._distance(geom.getFlatCoordinates(), coordinate);
       if (distance < minDistance) {
         minDistance = distance;
         ret = feature;
       }
-    })
+    });
     return ret;
   }
 
@@ -971,6 +1030,91 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2));
   }
 
+  private _drawTemporaryLocationFeature(
+    location?: ILocation,
+    track?: CGeojsonLineStringFeature
+  ): void {
+    if (location) {
+      if (!this._slopeChartSource) {
+        this._slopeChartSource = new VectorSource({
+          format: new GeoJSON(),
+        });
+      }
+      if (!this._slopeChartLayer) {
+        this._slopeChartLayer = new VectorLayer({
+          source: this._slopeChartSource,
+          style: (feature) => {
+            if (feature.getGeometry().getType() === 'Point') {
+              return [
+                new Style({
+                  image: new CircleStyle({
+                    fill: new Fill({
+                      color: '#000',
+                    }),
+                    radius: 7,
+                    stroke: new Stroke({
+                      width: 2,
+                      color: '#fff',
+                    }),
+                  }),
+                  zIndex: 100,
+                }),
+              ];
+            } else {
+              return this._getLineStyle(this._slopeChartTrack.get('color'));
+            }
+          },
+          updateWhileAnimating: false,
+          updateWhileInteracting: false,
+          zIndex: DEF_LOCATION_Z_INDEX - 1,
+        });
+        this._map.addLayer(this._slopeChartLayer);
+      }
+
+      if (location) {
+        let pointGeometry: Point = new Point(
+          this._mapService.coordsFromLonLat([
+            location.longitude,
+            location.latitude,
+          ])
+        );
+
+        if (this._slopeChartPoint)
+          this._slopeChartPoint.setGeometry(pointGeometry);
+        else {
+          this._slopeChartPoint = new Feature(pointGeometry);
+          this._slopeChartSource.addFeature(this._slopeChartPoint);
+        }
+
+        if (track) {
+          let trackGeometry: LineString = new LineString(
+            (<ILineString>track.geometry.coordinates).map((value) =>
+              this._mapService.coordsFromLonLat(value)
+            )
+          ),
+            trackColor: string = track?.properties?.color;
+
+          if (this._slopeChartTrack) {
+            this._slopeChartTrack.setGeometry(trackGeometry);
+            this._slopeChartTrack.set('color', trackColor);
+          } else {
+            this._slopeChartTrack = new Feature(trackGeometry);
+            this._slopeChartTrack.set('color', trackColor);
+            this._slopeChartSource.addFeature(this._slopeChartTrack);
+          }
+        }
+      } else {
+        this._slopeChartPoint = undefined;
+        this._slopeChartTrack = undefined;
+        this._slopeChartSource.clear();
+      }
+
+      this._map.render();
+    } else if (this._slopeChartSource && this._map) {
+      this._slopeChartPoint = undefined;
+      this._slopeChartTrack = undefined;
+      this._slopeChartSource.clear();
+      this._map.render();
+    }
+  }
 }
-
-

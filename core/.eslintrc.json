@@ -74,6 +74,16 @@
           },
           {
             "selector": "variable",
+            "modifiers": [
+              "private"
+            ],
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "require"
+          },
+          {
+            "selector": "variable",
             "format": [
               "camelCase"
             ],
