@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
-import { ValueAccessor } from '@ionic/angular/directives/control-value-accessors/value-accessor';
 import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
-import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
+import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { ILocation } from '../types/location';
-import { IGeojsonCluster, IGeojsonClusterApiResponse, IGeojsonFeature, WhereTaxonomy } from '../types/model';
+import { IGeojsonClusterApiResponse, IGeojsonFeature, WhereTaxonomy } from '../types/model';
 import { CommunicationService } from './base/communication.service';
-
-const CACHE_WHERETAXONOMYKEY = 'wheretax'
+import { StorageService } from './base/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeohubService {
 
-  private taxonomyCache: Array<{ key: string, value: any }> = [];
-
-  constructor(private _communicationService: CommunicationService) { }
+  constructor(
+    private _communicationService: CommunicationService,
+    private _storageService: StorageService
+  ) { }
 
   /**
    * Get an instance of the specified ec track
@@ -90,7 +89,7 @@ export class GeohubService {
     const res = await this._communicationService
       .get(url)
       .toPromise();
-    return res;   
+    return res;
   }
 
   /**
@@ -126,7 +125,7 @@ export class GeohubService {
    * @returns a where taxonomy
    */
   async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
-    const cacheId = `${CACHE_WHERETAXONOMYKEY}-${id}`;
+    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
     const cached = await this._getFromCache(cacheId);
     if (cached) return cached;
     const res = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/taxonomy/where/${id}`,)
@@ -158,17 +157,12 @@ export class GeohubService {
   }
 
   private async _getFromCache(cacheId: string): Promise<any> {
-    const res = this.taxonomyCache.find(c => c.key == cacheId);
-    return res ? res.value : null;
+    const res = await this._storageService.getByKey(cacheId);
+    return res;
   }
 
-  private _setInCache(cacheId, value) {
-    const res = this.taxonomyCache.find(c => c.key == cacheId);
-    if (!res) {
-      const res = this.taxonomyCache.push({ key: cacheId, value });
-    } else {
-      res.value = value;
-    }
+  private async _setInCache(cacheId, value) {
+    return this._storageService.setByKey(cacheId, value);
   }
 
 
