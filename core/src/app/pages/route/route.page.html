@@ -82,7 +82,8 @@
           </ion-col>
           <ion-col size="4">
             <i class="webmapp-icon-activities primary webmapp-pageroute-infopanel-icon"></i>
-            <ion-label class="webmapp-pageroute-infopanel-value">{{route?.properties?.duration_forward}} </ion-label>
+            <ion-label class="webmapp-pageroute-infopanel-value">{{route?.properties?.duration_forward | minutetime}}
+            </ion-label>
           </ion-col>
         </ion-row>
       </ion-grid>

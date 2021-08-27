@@ -6,7 +6,9 @@
     "confirm": "conferma",
     "cancel": "annulla",
     "delete": "cancella",
-    "retry": "riprova"
+    "retry": "riprova",
+    "minute":"min",    
+    "hour":"h"
   },
   "modals": {
     "login": {

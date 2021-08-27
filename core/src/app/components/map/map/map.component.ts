@@ -54,6 +54,9 @@ import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.compone
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
+import { AuthService } from 'src/app/services/auth.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -155,9 +158,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   public isRecording: boolean = false;
 
+  public isLoggedIn: boolean = false;
+
   public sortedComponent: any[] = [];
 
   public timer: any;
+  
+  private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   private _clusterMarkers: ClusterMarker[] = [];
   private _clusterLayer: VectorLayer;
@@ -203,7 +210,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private geolocationService: GeolocationService,
     private _mapService: MapService,
-    private resolver: ComponentFactoryResolver
+    // private resolver: ComponentFactoryResolver,
+    private _authService: AuthService
   ) {
     this._locationIcon = {
       layer: null,
@@ -244,6 +252,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this._authService.onStateChange
+      .pipe(takeUntil(this._destroyer))
+      .subscribe((user: IUser) => {
+        this.isLoggedIn = this._authService.isLoggedIn;
+        });
+
     if (!this.startView) this.startView = [10.4147, 43.7118, 9];
 
     this._view = new View({
@@ -360,6 +374,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     clearInterval(this.timer);
+    this._destroyer.next(true);
   }
 
   /**

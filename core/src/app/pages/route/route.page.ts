@@ -157,7 +157,7 @@ export class RoutePage implements OnInit {
 
   mapHeigth() {
     let ret = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));
-    console.log('------- ~ file: route.page.ts ~ line 172 ~ RoutePage ~ mapHeigth ~ ret', ret);
+    // console.log('------- ~ file: route.page.ts ~ line 172 ~ RoutePage ~ mapHeigth ~ ret', ret);
     return ret;
   }
 
