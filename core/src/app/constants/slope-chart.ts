@@ -17,24 +17,24 @@ export const SLOPE_CHART_SURFACE: {
   [id in ESlopeChartSurface]: ISlopeChartStyle;
 } = {
   [ESlopeChartSurface.ASPHALT]: {
-    backgroundColor: 'rgba(55, 52, 60, 1)',
+    backgroundColor: '55, 52, 60',
   },
   [ESlopeChartSurface.CONCRETE]: {
-    backgroundColor: 'rgba(134, 130, 140, 1)',
+    backgroundColor: '134, 130, 140',
   },
   [ESlopeChartSurface.DIRT]: {
-    backgroundColor: 'rgba(125, 84, 62, 1)',
+    backgroundColor: '125, 84, 62',
   },
   [ESlopeChartSurface.GRASS]: {
-    backgroundColor: 'rgba(143, 176, 85, 1)',
+    backgroundColor: '143, 176, 85',
   },
   [ESlopeChartSurface.GRAVEL]: {
-    backgroundColor: 'rgba(5, 56, 85, 1)',
+    backgroundColor: '5, 56, 85',
   },
   [ESlopeChartSurface.PAVED]: {
-    backgroundColor: 'rgba(116, 140, 172, 1)',
+    backgroundColor: '116, 140, 172',
   },
   [ESlopeChartSurface.SAND]: {
-    backgroundColor: 'rgba(245, 213, 56, 1)',
+    backgroundColor: '245, 213, 56',
   },
 };

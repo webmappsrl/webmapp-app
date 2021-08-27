@@ -84,9 +84,11 @@ export class SlopeChartComponent implements OnInit {
    */
   private _setChart() {
     if (!!this._chartCanvas && !!this.route) {
-      let surfaceValues: {
-          [id: string]: Array<number>;
-        } = {},
+      let surfaceValues: Array<{
+          surface: string;
+          values: Array<number>;
+          locations: Array<ILocation>;
+        }> = [],
         slopeValues: Array<[number, number]> = [],
         labels: Array<number> = [],
         steps: number = 100,
@@ -98,23 +100,9 @@ export class SlopeChartComponent implements OnInit {
         minAlt: number = undefined,
         usedSurfaces: Array<ESlopeChartSurface> = [];
 
-      for (let i in ESlopeChartSurface) {
-        surfaceValues[ESlopeChartSurface[i]] = [];
-      }
-
       this._chartValues = [];
 
       labels.push(0);
-
-      let surface = Object.values(ESlopeChartSurface)[0];
-      surfaceValues = this._setSurfaceValue(
-        surface,
-        this.route.geometry.coordinates[0][2],
-        surfaceValues
-      );
-      if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
-      slopeValues.push([this.route.geometry.coordinates[0][2], 0]);
-
       currentLocation = new CLocation(
         this.route.geometry.coordinates[0][0],
         this.route.geometry.coordinates[0][1],
@@ -123,6 +111,16 @@ export class SlopeChartComponent implements OnInit {
       this._chartValues.push(currentLocation);
       maxAlt = currentLocation.altitude;
       minAlt = currentLocation.altitude;
+
+      let surface = Object.values(ESlopeChartSurface)[0];
+      surfaceValues = this._setSurfaceValue(
+        surface,
+        this.route.geometry.coordinates[0][2],
+        [currentLocation],
+        surfaceValues
+      );
+      if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
+      slopeValues.push([this.route.geometry.coordinates[0][2], 0]);
 
       // Calculate track length and max/min altitude
       for (let i = 1; i < this.route.geometry.coordinates.length; i++) {
@@ -143,18 +141,21 @@ export class SlopeChartComponent implements OnInit {
           minAlt = currentLocation.altitude;
       }
 
-      let step: number = 1;
+      let step: number = 1,
+        locations: Array<ILocation> = [];
       currentLocation = new CLocation(
         this.route.geometry.coordinates[0][0],
         this.route.geometry.coordinates[0][1],
         this.route.geometry.coordinates[0][2]
       );
 
+      // Create the chart datasets
       for (
         let i = 1;
         i < this.route.geometry.coordinates.length && step <= steps;
         i++
       ) {
+        locations.push(currentLocation);
         previousLocation = currentLocation;
         currentLocation = new CLocation(
           this.route.geometry.coordinates[i][0],
@@ -200,13 +201,22 @@ export class SlopeChartComponent implements OnInit {
               ).toPrecision(1)
             );
 
-          this._chartValues.push(new CLocation(longitude, latitude, altitude));
+          let intermediateLocation: ILocation = new CLocation(
+            longitude,
+            latitude,
+            altitude
+          );
 
+          this._chartValues.push(intermediateLocation);
+
+          locations.push(intermediateLocation);
           surfaceValues = this._setSurfaceValue(
             surface,
             altitude,
+            locations,
             surfaceValues
           );
+          locations = [intermediateLocation];
           if (!usedSurfaces.includes(surface)) usedSurfaces.push(surface);
           slopeValues.push([altitude, slope]);
 
@@ -218,15 +228,17 @@ export class SlopeChartComponent implements OnInit {
         }
       }
 
-      let keys: Array<string> = Object.keys(surfaceValues);
       this.surfaces = [];
-      for (let i = 0; i < keys.length; i++) {
-        if (!usedSurfaces.includes(<ESlopeChartSurface>keys[i]))
-          delete surfaceValues[keys[i]];
+      for (let i = 0; i < surfaceValues.length; i++) {
+        if (
+          !usedSurfaces.includes(<ESlopeChartSurface>surfaceValues[i].surface)
+        )
+          delete surfaceValues[surfaceValues[i].surface];
         else {
           this.surfaces.push({
-            id: <ESlopeChartSurface>keys[i],
-            backgroundColor: SLOPE_CHART_SURFACE[keys[i]].backgroundColor,
+            id: <ESlopeChartSurface>surfaceValues[i].surface,
+            backgroundColor:
+              SLOPE_CHART_SURFACE[surfaceValues[i].surface].backgroundColor,
           });
         }
       }
@@ -249,7 +261,7 @@ export class SlopeChartComponent implements OnInit {
    * @param values the current values
    * @returns
    */
-  private _setSurfaceValue(
+  private _setSurfaceValueOld(
     surface: string,
     value: number,
     values: {
@@ -280,6 +292,53 @@ export class SlopeChartComponent implements OnInit {
   }
 
   /**
+   * Set the surface value on a specific surface
+   *
+   * @param surface the surface type
+   * @param value the value
+   * @param values the current values
+   * @returns
+   */
+  private _setSurfaceValue(
+    surface: string,
+    value: number,
+    locations: Array<ILocation>,
+    values: Array<{
+      surface: string;
+      values: Array<number>;
+      locations: Array<ILocation>;
+    }>
+  ): Array<{
+    surface: string;
+    values: Array<number>;
+    locations: Array<ILocation>;
+  }> {
+    let oldSurface: string = values?.[values.length - 1]?.surface;
+
+    if (oldSurface === surface) {
+      // Merge the old surface segment with the new one
+      values[values.length - 1].values.push(value);
+      if (values[values.length - 1].locations.length > 0)
+        values[values.length - 1].locations.splice(-1, 1);
+      values[values.length - 1].locations.push(...locations);
+    } else {
+      //Creare a new surface segment
+      let nullElements: Array<any> = [];
+      if (values?.[values.length - 1]?.values) {
+        nullElements.length = values[values.length - 1].values.length;
+        values[values.length - 1].values.push(value);
+      }
+      values.push({
+        surface,
+        values: [...nullElements, value],
+        locations,
+      });
+    }
+
+    return values;
+  }
+
+  /**
    * Return a chart.js dataset for a surface
    *
    * @param values the chart values
@@ -294,7 +353,8 @@ export class SlopeChartComponent implements OnInit {
       fill: true,
       cubicInterpolationMode: 'monotone',
       tension: 0.3,
-      backgroundColor: SLOPE_CHART_SURFACE[surface].backgroundColor,
+      backgroundColor:
+        'rgb(' + SLOPE_CHART_SURFACE[surface].backgroundColor + ')',
       borderColor: 'rgba(255, 199, 132, 0)',
       pointRadius: 0,
       data: values,
@@ -442,7 +502,11 @@ export class SlopeChartComponent implements OnInit {
     labels: Array<number>,
     length: number,
     maxAltitude: number,
-    surfaceValues: { [id: string]: Array<number> },
+    surfaceValues: Array<{
+      surface: string;
+      values: Array<number>;
+      locations: Array<ILocation>;
+    }>,
     slopeValues: Array<[number, number]>
   ) {
     if (this._chartCanvas) {
@@ -453,8 +517,8 @@ export class SlopeChartComponent implements OnInit {
       for (let i in surfaceValues) {
         surfaceDatasets.push(
           this._getSlopeChartSurfaceDataset(
-            surfaceValues[i],
-            <ESlopeChartSurface>i
+            surfaceValues[i].values,
+            <ESlopeChartSurface>surfaceValues[i].surface
           )
         );
       }
@@ -631,23 +695,47 @@ export class SlopeChartComponent implements OnInit {
                     100) /
                   15;
 
-                let coordinates: ILineString = (<ILineString>(
-                    this.route.geometry.coordinates
-                  )).slice(0, 10),
+                let index: number = (<any>tooltip)._tooltipItems[0].dataIndex,
+                  locations: Array<ILocation> = [],
+                  surfaceColor: string;
+
+                for (let i in surfaceValues) {
+                  if (!!surfaceValues[i].values[index]) {
+                    locations = surfaceValues[i].locations;
+                    let surface = surfaceValues[i].surface;
+
+                    for (let s of this.surfaces) {
+                      if (s.id === surface) {
+                        surfaceColor = s.backgroundColor;
+                        break;
+                      }
+                    }
+                    break;
+                  }
+                }
+
+                let coordinates: ILineString = <ILineString>locations.map(
+                    (location) => {
+                      // return this._mapService.coordsFromLonLat(
+                      return [location.longitude, location.latitude];
+                    }
+                  ),
                   surfaceTrack: CGeojsonLineStringFeature =
                     new CGeojsonLineStringFeature({
                       type: EGeojsonGeometryTypes.LINE_STRING,
                       coordinates,
                     });
 
-                // surfaceTrack.setProperty('color', '#ff00ff');
+                surfaceTrack.setProperty('color', surfaceColor);
+
+                console.log(surfaceTrack);
 
                 this.hover.emit({
                   location:
                     this._chartValues[
                       (<any>tooltip)?._tooltipItems?.[0]?.dataIndex
                     ],
-                  // track: surfaceTrack,
+                  track: surfaceTrack,
                 });
               } else {
                 this.slope.selectedValue = undefined;
