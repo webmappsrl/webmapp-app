@@ -13,6 +13,7 @@ import {
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
 import { GeohubService } from 'src/app/services/geohub.service';
+import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ILocation } from 'src/app/types/location';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -70,7 +71,8 @@ export class RoutePage implements OnInit {
     private _statusService: StatusService,
     private _platform: Platform,
     private animationCtrl: AnimationController,
-    private gestureCtrl: GestureController
+    private gestureCtrl: GestureController,
+    private _shareService: ShareService
   ) { }
 
   async ngOnInit() {
@@ -180,6 +182,9 @@ export class RoutePage implements OnInit {
     console.log(
       '------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share'
     );
+    
+    this._shareService.shareRoute(this.route)
+
   }
 
   favourite() {

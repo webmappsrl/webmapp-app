@@ -275,6 +275,12 @@
           "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
         }
       }
+    },
+    "share": {
+      "title": "Hai visto questo percorso?",
+      "text": "Ecco un percorso interessante di webmapp",
+      "url": "www.webmapp.it",
+      "dialogTitle": "Condividi con i tuoi amici"
     }
   }
 }
