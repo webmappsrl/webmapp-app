@@ -37,6 +37,7 @@ import {
   DEF_MAP_CLUSTER_CLICK_TOLERANCE,
   DEF_MAP_MAX_ZOOM,
   DEF_MAP_MIN_ZOOM,
+  DEF_MAP_MAX_CENTER_ZOOM,
 } from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -89,6 +90,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         doubleClickZoom: !value,
         dragPan: !value,
         mouseWheelZoom: !value,
+        pinchRotate: false
       });
       this._map.getInteractions().forEach((inter) => {
         this._map.removeInteraction(inter);
@@ -99,9 +101,28 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('height') set height(value: number) {
-    if (this._height != value) {
-      this._height = value;
+  @Input('height') set height(value: number[] | number) {
+    let height = value as number;
+    let topPadding = this._bottomPadding;
+    let bottomPadding = this._topPadding;
+    if (Array.isArray(value)) {
+      height = value[0];
+      topPadding = value[1] ? value[1] : this._topPadding;
+      bottomPadding = value[2] ? value[2] : this._bottomPadding;
+    }
+    if (this._height != height || this._bottomPadding != bottomPadding || this._topPadding != topPadding) {
+      this._height = height;
+      this._bottomPadding = bottomPadding;
+      this._topPadding = topPadding;
+      if (this._track.registeredTrack && this.centerToTrack) {
+        this._centerMapToTrack();
+      }
+    }
+  }
+
+  @Input('bottomPadding') set bottomPadding(value: number) {
+    if (this._bottomPadding != value) {
+      this._bottomPadding = value;
       if (this._track.registeredTrack && this.centerToTrack) {
         this._centerMapToTrack();
       }
@@ -178,6 +199,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _position: ILocation = null;
   private _height: number;
+  private _bottomPadding: number = 0;
+  private _topPadding: number = 0;
 
   private _view: View;
   private _map: Map;
@@ -296,6 +319,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         mouseWheelZoom: false,
         // pointer: false,
         // select: false
+        pinchRotate: false
       });
     }
 
@@ -586,11 +610,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToLocation() {
     if (this._location) {
       this._view.animate({
+        duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
         center: this._mapService.coordsFromLonLat([
           this._location.longitude,
           this._location.latitude,
         ]),
-        zoom: this._view.getZoom() >= 14 ? this._view.getZoom() : 14,
+        zoom: this._view.getZoom() >= DEF_MAP_MAX_CENTER_ZOOM ? this._view.getZoom() : DEF_MAP_MAX_CENTER_ZOOM,
       });
     }
   }
@@ -614,8 +639,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this._track.layer) {
       const verticalPadding =
         !this._height || this._height > 500 ? 120 : this._height * 0.25;
+      const padding = [verticalPadding + this._topPadding, 70, verticalPadding + this._bottomPadding, 20];
+      
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [verticalPadding, 70, verticalPadding, 20],
+        padding: padding,
         duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
       });
     }

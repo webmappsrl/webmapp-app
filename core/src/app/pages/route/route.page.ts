@@ -11,7 +11,7 @@ import {
   Platform,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { auditTime, take } from 'rxjs/operators';
+import { auditTime, map, take } from 'rxjs/operators';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ILocation } from 'src/app/types/location';
@@ -32,7 +32,7 @@ export class RoutePage implements OnInit {
 
   public opacity = 1;
   public headerHeight = 105;
-  public height = 700;
+  public height = 700; //will be updated by real screen height
   public maxInfoheight = 350; //from CCS????
   public minInfoheight = 90; //from CCS????
 
@@ -51,8 +51,11 @@ export class RoutePage implements OnInit {
 
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
-  @ViewChild('mapControl') mapControl: ElementRef;
+  @ViewChild('mapcontainer') mapControl: ElementRef;
   @ViewChild('headerPageRoute') headerControl: ElementRef;
+  @ViewChild('header') header: ElementRef;
+  @ViewChild('lessdetails') lessDetails: ElementRef;
+  @ViewChild('moredetails') moreDetails: ElementRef;
   private animation?: Animation;
   private gesture?: Gesture;
 
@@ -68,7 +71,7 @@ export class RoutePage implements OnInit {
     private _platform: Platform,
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // this._actRoute.queryParams.subscribe(async (params) => {
@@ -83,7 +86,7 @@ export class RoutePage implements OnInit {
 
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
-      const id = params.id ? params.id : 22; //TODO only for debug
+      const id = params.id ? params.id : 3; //TODO only for debug
       this.route = await this._geohubService.getEcRoute(id);
       this._statusService.route = this.route;
       this.track = this.route.geometry;
@@ -93,16 +96,60 @@ export class RoutePage implements OnInit {
 
     await this._platform.ready();
     this.height = this._platform.height();
-
-    this.animation = this.animationCtrl
+    this.maxInfoheight = this.height / 2;
+    const animationPanel = this.animationCtrl
       .create()
       .addElement(this.dragHandleContainer.nativeElement)
-      .duration(1000)
       .fromTo(
         'transform',
         'translateY(0)',
         `translateY(-${this.maxInfoheight - this.minInfoheight}px)`
       );
+
+    const animationHeader = this.animationCtrl
+      .create()
+      .addElement(this.header.nativeElement)
+      .fromTo(
+        'opacity',
+        '0',
+        '1'
+      );
+
+    const animationDetails = this.animationCtrl
+      .create()
+      .addElement(this.lessDetails.nativeElement)
+      .fromTo(
+        'opacity',
+        '1',
+        '0'
+      );
+    const animationMoreDetails = this.animationCtrl
+      .create()
+      .addElement(this.moreDetails.nativeElement)
+      .fromTo(
+        'opacity',
+        '0',
+        '1'
+      );
+
+    // [ngStyle]="{'margin-top': (headerHeight-(headerHeight*opacity))+'px','height':mapHeigth()+'px'}"
+    // const animationMap = this.animationCtrl
+    //   .create()
+    //   .addElement(this.mapControl.nativeElement)
+    //   .fromTo(
+    //     'transform',
+    //     `translateY(0px)`,
+    //     `translateY(${this.headerHeight}px)`
+    //     // )
+    //     // .fromTo(
+    //     //   'height',
+    //     //   `${this.height}px`,
+    //     //   `${this.height - (this.headerHeight + this.maxInfoheight)}px`
+    //   );
+
+    this.animation = this.animationCtrl.create()
+      .duration(1000)
+      .addAnimation([animationHeader, animationPanel, animationDetails, animationMoreDetails,]);
 
     this.gesture = this.gestureCtrl.create({
       el: this.dragHandleIcon.nativeElement,
@@ -115,19 +162,10 @@ export class RoutePage implements OnInit {
     this.gesture.enable(true);
   }
 
-  // toggleDetail() {
-  //   const direction = this.opacity >= 1 ? 1 : -1;
-  //   // console.log(
-  //   //   '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity',
-  //   //   this.opacity
-  //   // );
-  //   const interv = setInterval(() => {
-  //     this.opacity -= 0.01 * direction;
-  //     if (this.opacity <= 0 || this.opacity >= 1) {
-  //       clearInterval(interv);
-  //     }
-  //   }, 10);
-  // }
+  handleClick() {
+    const shouldComplete = this.opacity >= 1;
+    this.endAnimation(shouldComplete, this.opacity ? 0 : 1);
+  }
 
   menu() {
     this._menuController.enable(true, 'optionMenu');
@@ -161,7 +199,10 @@ export class RoutePage implements OnInit {
   }
 
   mapHeigth() {
-    let ret = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));    
+    const mapHeight = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));
+    const mapPaddingTop = this.headerHeight * (1 - this.opacity);
+    const mapPaddingBottom = (this.maxInfoheight * (1 - this.opacity)) + (this.minInfoheight * this.opacity);
+    let ret = [mapHeight, mapPaddingTop, mapPaddingBottom];
     return ret;
   }
 
@@ -184,6 +225,10 @@ export class RoutePage implements OnInit {
     const step = this.getStep(ev);
     const shouldComplete = step > 0.5;
 
+    this.endAnimation(shouldComplete, step);
+  }
+
+  private endAnimation(shouldComplete, step) {
     this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
