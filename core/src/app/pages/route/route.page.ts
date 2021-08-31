@@ -28,6 +28,7 @@ export class RoutePage implements OnInit {
   @ViewChild('routeTabs') routeTabs: IonTabs;
 
   public route: IGeojsonFeature;
+  public isFavourite: boolean = false;
 
   public track;
 
@@ -94,6 +95,7 @@ export class RoutePage implements OnInit {
       this.track = this.route.geometry;
     }
 
+    this.isFavourite = this.route.properties.isFavourite; //TODO check isFAvourite property on API
     this.track = this.route.geometry;
 
     await this._platform.ready();
@@ -182,15 +184,17 @@ export class RoutePage implements OnInit {
     console.log(
       '------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share'
     );
-    
+
     this._shareService.shareRoute(this.route)
 
   }
 
-  favourite() {
+  async favourite() {
     console.log(
       '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite'
     );
+    await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
+    this.isFavourite = !this.isFavourite;
   }
 
   navigate() {

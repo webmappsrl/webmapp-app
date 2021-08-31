@@ -220,6 +220,11 @@
         "title":"Praticabilità del percorso",
         "info":"Altre info"
       }
+    },
+    "favourites":{
+      "title":"Preferiti",
+      "nodata":"Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
+      "remove":"Rimuovi"
     }
   },
   "components": {
@@ -267,6 +272,7 @@
   "tabs": {
     "home": "home",
     "map": "mappa",
+    "favourites": "preferiti",
     "profile": "profilo"
   },
   "services": {

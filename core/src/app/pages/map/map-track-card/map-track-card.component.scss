@@ -54,9 +54,10 @@
     .webmapp-maptrackcard-favourite {
         position: absolute;
         z-index: 99;
-        top: 10px;
-        left: 10px;
+        top: -5px;
+        left: -5px;
         color: var(--wm-color-light);
+        padding: 15px
     }
 
     .webmapp-maptrackcard-exit {

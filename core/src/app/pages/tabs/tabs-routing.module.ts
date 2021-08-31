@@ -23,6 +23,11 @@ const routes: Routes = [
           import('../map/map.module').then((m) => m.MapPageModule),
       },
       {
+        path: 'favourites',
+        loadChildren: () =>
+          import('../favourites/favourites.module').then((m) => m.FavouritesPageModule),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

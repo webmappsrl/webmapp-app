@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar class="webmapp-favourites-header-toolbar-header">
+    <ion-title mode="md" class="webmapp-favourites-header-toolbar-title">
+      {{'pages.favourites.title' | translate}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length">{{'pages.favourites.nodata' |
+    translate}}</ion-label>
+  <ion-list>
+    <ion-item *ngFor="let track of tracks"button detail lines="none" class="webmapp-favourites-card">
+
+      <ion-img [src]="track.properties?.feature_image?.url" (click)="open(track)"  class="webmapp-favourites-image" >
+
+      </ion-img>
+      <div class="webmapp-favourites-info" (click)="open(track)"  >
+        <ion-label class="webmapp-favourites-info-label webmapp-favourites-info-name">{{track.properties.name | wmtrans
+          }}</ion-label>
+        <ion-label class="webmapp-favourites-info-label webmapp-favourites-info-time">
+          {{track.properties.duration_forward | minutetime}}</ion-label>
+        <ion-label class="webmapp-favourites-info-label webmapp-favourites-info-difficulty">
+          <i class="webmapp-favourites-info-icon webmapp-icon-heart-outline"> </i>
+          {{track.properties.difficulty | wmtrans }}
+        </ion-label>
+        <ion-label class="webmapp-favourites-info-label webmapp-favourites-info-distance">
+          <i class="webmapp-favourites-info-icon webmapp-icon-heart-outline"> </i>
+          {{track.properties.distance}} Km
+        </ion-label>
+
+      </div>
+
+
+        <ion-label class="webmapp-favourites-remove" (click)="remove($event,track)">{{"pages.favourites.remove" | translate}}
+        </ion-label>
+
+    </ion-item>
+  </ion-list>
+
+</ion-content>

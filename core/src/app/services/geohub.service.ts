@@ -38,13 +38,13 @@ export class GeohubService {
           idx++;
         })
         res.properties.praticability = [{
-          name:{it:"Trekking"},
+          name: { it: "Trekking" },
           icon: 'trekking'
-        },{
-          name:{it:"A cavallo"},
+        }, {
+          name: { it: "A cavallo" },
           icon: 'horse'
-        },{
-          name:{it:"In bici"},
+        }, {
+          name: { it: "In bici" },
           icon: 'bike'
         }]
         return res;
@@ -145,6 +145,19 @@ export class GeohubService {
         return value;
       }))
       .toPromise();
+    return res;
+  }
+
+  async getFavouriteTracks(): Promise<Array<IGeojsonFeature>> {
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
+  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<Boolean> {
+    return isFavourite;
+    const res = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/favourite/${trackId}`,).toPromise();
     return res;
   }
 
