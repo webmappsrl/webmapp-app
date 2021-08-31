@@ -47,7 +47,7 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
-import { IGeojsonCluster, ILineString } from 'src/app/types/model';
+import { IGeojsonCluster, ILineString, IPoi } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
 import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
@@ -145,6 +145,28 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  @Input('poismall') set poiSmall(value: IPoi[]) {
+    if (value && value != this._poiSmallMarkers) {
+      this._poiSmallMarkers = value;
+      setTimeout(() => {
+        this._addPoisMarkers(value, true);
+      }, 10);
+    } else {
+      this.deleteTrack();
+    }
+  }
+
+  @Input('poibig') set poiBig(value: IPoi[]) {
+    if (value && value != this._poiBigMarkers) {
+      this._poiBigMarkers = value;
+      setTimeout(() => {
+        this._addPoisMarkers(value, false);
+      }, 10);
+    } else {
+      this.deleteTrack();
+    }
+  }
+
   @Input('position') set position(value: ILocation) {
     if (value) {
       setTimeout(() => {
@@ -196,6 +218,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _clusterMarkers: ClusterMarker[] = [];
   private _clusterLayer: VectorLayer;
+
+  private _poiSmallMarkers: IPoi[] = [];
+  // private _poiSmallLayer: VectorLayer;
+  private _poiBigMarkers: IPoi[] = [];
+  // private _poiBigLayer: VectorLayer;
 
   private _position: ILocation = null;
   private _height: number;
@@ -640,7 +667,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const verticalPadding =
         !this._height || this._height > 500 ? 120 : this._height * 0.25;
       const padding = [verticalPadding + this._topPadding, 70, verticalPadding + this._bottomPadding, 20];
-      
+
       this._view.fit(this._track.layer.getSource().getExtent(), {
         padding: padding,
         duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
@@ -862,6 +889,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
     return ig.properties.ids.sort((a, b) => a - b).join('-');
   }
+
+
+  private async _addPoisMarkers(values: Array<IPoi>, isSmall: boolean) { }
 
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
     let transparent: boolean = !!this._track.registeredTrack;

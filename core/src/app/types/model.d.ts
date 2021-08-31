@@ -107,6 +107,16 @@ export interface IGeojsonCluster {
   };
 }
 
+export interface IPoi {
+  type: 'Point';
+  geometry: IGeojsonGeometry;
+  properties: {
+    id: number; // Id del poi
+    image: string; // url image
+    
+  };
+}
+
 export interface IGeojsonClusterApiResponse {
   features: IGeojsonCluster[];
 }
