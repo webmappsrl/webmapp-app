@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { TabAccessibilityComponent } from './tab-accessibility.component';
+import { TabViabilityComponent } from './tab-viability.component';
 
-describe('TabAccessibilityComponent', () => {
-  let component: TabAccessibilityComponent;
-  let fixture: ComponentFixture<TabAccessibilityComponent>;
+describe('TabViabilityComponent', () => {
+  let component: TabViabilityComponent;
+  let fixture: ComponentFixture<TabViabilityComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TabAccessibilityComponent ],
+      declarations: [ TabViabilityComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TabAccessibilityComponent);
+    fixture = TestBed.createComponent(TabViabilityComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

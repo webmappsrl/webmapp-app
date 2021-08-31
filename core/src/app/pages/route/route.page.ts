@@ -89,7 +89,7 @@ export class RoutePage implements OnInit {
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
       const id = params.id ? params.id : 3; //TODO only for debug
-      this.route = await this._geohubService.getEcRoute(id);
+      this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
       this.track = this.route.geometry;
     }

@@ -198,11 +198,11 @@
       "download": "Scarica",
       "share": "Condividi",
       "tabdetail": "Dettagli",
-      "tabwalkable": "Percorribilità",
+      "tabviability": "Percorribilità",
       "tabhowto": "Come arrivare",
       "tabeat": "Dove mangiare",
       "tabdescription": "Descrizione",
-      "tabaccessibility": "Accessibilità",
+      "tabwalkable": "Accessibilità",
       "detail": {
         "distance": "Lunghezza",
         "ascent": "Dislivello +",
@@ -215,6 +215,10 @@
       "description": {
         "gallery": "Gallery",
         "description": "Descrizione"
+      },
+      "viability":{
+        "title":"Praticabilità del percorso",
+        "info":"Altre info"
       }
     }
   },

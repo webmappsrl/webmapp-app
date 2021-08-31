@@ -37,22 +37,32 @@ export class GeohubService {
           coord.push(fondo[Math.round(idx / 30) % 3]);
           idx++;
         })
+        res.properties.praticability = [{
+          name:{it:"Trekking"},
+          icon: 'trekking'
+        },{
+          name:{it:"A cavallo"},
+          icon: 'horse'
+        },{
+          name:{it:"In bici"},
+          icon: 'bike'
+        }]
         return res;
       }))
       .toPromise();
     return res;
   }
 
-  /**
-   * Get an instance of the specified ec track
-   *
-   * @param {string} id the ec track id
-   *
-   * @returns {IGeojsonFeature}
-   */
-  async getEcRoute(id: string): Promise<IGeojsonFeature> {
-    return this._getMockFeature();
-  }
+  // /**
+  //  * Get an instance of the specified ec track
+  //  *
+  //  * @param {string} id the ec track id
+  //  *
+  //  * @returns {IGeojsonFeature}
+  //  */
+  // async getEcRoute(id: string): Promise<IGeojsonFeature> {
+  //   return this._getMockFeature();
+  // }
 
   /**
    * Get an instance of the specified ec poi
