@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GeohubService } from 'src/app/services/geohub.service';
+import { UtilsService } from 'src/app/services/utils.service';
 import { IGeojsonCluster } from 'src/app/types/model';
 
 @Component({
@@ -49,31 +50,19 @@ export class ClusterMarkerComponent implements OnInit {
     this.clickcluster.emit(this._item);
   }
 
-  private static async getB64img(url: string): Promise<string | ArrayBuffer> {
-    if (!url) { return null; }
-    const data = await fetch(url);
-    const blob = await data.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        const base64data = reader.result;
-        resolve(base64data);
-      }
-    });
-  }
+  
 
   public static async createMarkerHtmlForCanvas(value: IGeojsonCluster, isFavourite: boolean): Promise<string> {
 
     let img2b64: string | ArrayBuffer = null;
     let img3b64: string | ArrayBuffer = null;
 
-    let img1b64: string | ArrayBuffer = await this.getB64img(value.properties.images[0]);
+    let img1b64: string | ArrayBuffer = await UtilsService.getB64img(value.properties.images[0]);
     if (value.properties.images.length > 1) {
-      img2b64 = await this.getB64img(value.properties.images[1]);
+      img2b64 = await UtilsService.getB64img(value.properties.images[1]);
     }
     if (value.properties.images.length > 2) {
-      img3b64 = await this.getB64img(value.properties.images[2]);
+      img3b64 = await UtilsService.getB64img(value.properties.images[2]);
     }
     const clusterCount = value.properties.ids.length;
 

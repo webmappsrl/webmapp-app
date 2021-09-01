@@ -97,9 +97,14 @@ export interface IWmImage {
     '1440x500': string;
   };
 }
-export interface IGeojsonCluster {
-  type: 'Feature';
+
+export interface IGeojsonGeneric{
+  type:string;
   geometry: IGeojsonGeometry;
+  properties: any;
+}
+export interface IGeojsonCluster extends IGeojsonGeneric{
+  type: 'Feature';
   properties: {
     ids: number[]; // Id di Ec Track che fanno parte del cluster
     images: string[]; // Massimo 3 url di immagini ottimizzate
@@ -107,14 +112,13 @@ export interface IGeojsonCluster {
   };
 }
 
-export interface IPoi {
+export interface IGeojsonPoi  extends IGeojsonGeneric{
   type: 'Point';
-  geometry: IGeojsonGeometry;
   properties: {
     id: number; // Id del poi
-    image: string; // url image
-    
+    image: string; // url image    
   };
+  isSmall?: boolean
 }
 
 export interface IGeojsonClusterApiResponse {

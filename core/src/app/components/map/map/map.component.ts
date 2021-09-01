@@ -47,10 +47,10 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
-import { IGeojsonCluster, ILineString, IPoi } from 'src/app/types/model';
+import { IGeojsonCluster, IGeojsonGeometry, IGeojsonPoi, ILineString } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
-import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
+import { ClusterMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
 import { AuthService } from 'src/app/services/auth.service';
@@ -61,6 +61,7 @@ import LineString from 'ol/geom/LineString';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
+import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
 
 @Component({
   selector: 'webmapp-map',
@@ -146,27 +147,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('poismall') set poiSmall(value: IPoi[]) {
-    if (value && value != this._poiSmallMarkers) {
-      this._poiSmallMarkers = value;
+  @Input('pois') set pois(value: IGeojsonPoi[]) {
+    if (value) {
       setTimeout(() => {
-        this._addPoisMarkers(value, true);
+        this._addPoisMarkers(value);
       }, 10);
-    } else {
-      this._deletePoisMarkers(true);
     }
   }
 
-  @Input('poibig') set poiBig(value: IPoi[]) {
-    if (value && value != this._poiBigMarkers) {
-      this._poiBigMarkers = value;
-      setTimeout(() => {
-        this._addPoisMarkers(value, false);
-      }, 10);
-    } else {
-      this._deletePoisMarkers(false);
-    }
-  }
 
   @Input('position') set position(value: ILocation) {
     if (value) {
@@ -220,10 +208,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _clusterMarkers: ClusterMarker[] = [];
   private _clusterLayer: VectorLayer;
 
-  private _poiSmallMarkers: IPoi[] = [];
-  // private _poiSmallLayer: VectorLayer;
-  private _poiBigMarkers: IPoi[] = [];
-  // private _poiBigLayer: VectorLayer;
+  private _poiMarkers: PoiMarker[] = [];
+  private _poisLayer: VectorLayer;
 
   private _position: ILocation = null;
   private _height: number;
@@ -893,44 +879,46 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  private async _addPoisMarkers(values: Array<IPoi>, isSmall: boolean) { }
+  private async _addPoisMarkers(poiCollection: Array<IGeojsonPoi>) {
+    this._poisLayer = this._createLayer(this._poisLayer, 400);
 
-  private async _deletePoisMarkers(isSmall: boolean) { }
+    if (poiCollection) {
+      for (let i = this._poiMarkers.length - 1; i >= 0; i--) {
+        const ov = this._poiMarkers[i];
+        if (!poiCollection.find((x) => x.properties.id + '' == ov.id)) {
+          this._removeIconFromLayer(this._poisLayer, ov.icon);
+          this._poiMarkers.splice(i, 1);
+        }
+      }
+
+      for (const poi of poiCollection) {
+        if (!this._poiMarkers.find((x) => x.id == poi.properties.id + '')) {
+          const icon = await this._createPoiCanvasIcon(poi);
+          this._addIconToLayer(this._poisLayer, icon.icon);
+          this._poiMarkers.push(icon);
+        }
+      }
+    }
+  }
 
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
     let transparent: boolean = !!this._track.registeredTrack;
-    this._createClusterLayer();
+    this._clusterLayer = this._createLayer(this._clusterLayer, 400);
+    const reset = this._lastlusterMarkerTransparency != transparent;
+
     if (values) {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
-
-        if (
-          !values.find(
-            (x) =>
-              this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)
-          ) ||
-          this._lastlusterMarkerTransparency != transparent
-        ) {
-          this._removeClusterIconFromLayer(ov);
+        if (!values.find((x) => this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)) || reset) {
+          this._removeIconFromLayer(this._clusterLayer, ov.icon);
           this._clusterMarkers.splice(i, 1);
         }
       }
 
       for (const cluster of values) {
-        if (
-          !this._clusterMarkers.find(
-            (x) =>
-              this._idOfClusterMarker(x.cluster) ==
-              this._idOfClusterMarker(cluster)
-          )
-        ) {
-          const icon = await this._createClusterCanvasIcon(
-            cluster,
-            transparent
-          );
-
-          this._addClusterIconToLayer(icon);
-
+        if (!this._clusterMarkers.find((x) => this._idOfClusterMarker(x.cluster) == this._idOfClusterMarker(cluster))) {
+          const icon = await this._createClusterCanvasIcon(cluster, transparent);
+          this._addIconToLayer(this._clusterLayer, icon.icon);
           this._clusterMarkers.push(icon);
         }
       }
@@ -939,20 +927,48 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._lastlusterMarkerTransparency = transparent;
   }
 
+
+  private async _createPoiCanvasIcon(
+    poi: IGeojsonPoi
+  ): Promise<PoiMarker> {
+    // TODO check object type
+
+    const img = await this._createPoiCavasImage(poi);
+    const iconFeature = await this._createIconFeature(poi.geometry, img);
+    return {
+      poi,
+      icon: iconFeature,
+      id: poi.properties.id + '',
+    };
+  }
+
   private async _createClusterCanvasIcon(
     cluster: IGeojsonCluster,
     transparent: boolean = false
   ): Promise<ClusterMarker> {
-    const position = fromLonLat([
-      cluster.geometry.coordinates[0] as number,
-      cluster.geometry.coordinates[1] as number,
-    ]); // TODO check object type
-    const iconFeature = new Feature({
-      geometry: new Point([position[0], position[1]]),
-    });
+    // TODO check object type
 
     const img = await this._createClusterCavasImage(cluster);
 
+    const iconFeature = await this._createIconFeature(cluster.geometry, img, transparent);
+
+    return {
+      cluster,
+      icon: iconFeature,
+      // component: componentRef,
+      id: this._idOfClusterMarker(cluster),
+    };
+  }
+
+  private async _createIconFeature(geometry: IGeojsonGeometry, img: HTMLImageElement, transparent: boolean = false): Promise<Feature<Geometry>> {
+    const position = fromLonLat([
+      geometry.coordinates[0] as number,
+      geometry.coordinates[1] as number,
+    ]);
+
+    const iconFeature = new Feature({
+      geometry: new Point([position[0], position[1]]),
+    });
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0.5, 0.5],
@@ -964,12 +980,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     iconFeature.setStyle(iconStyle);
 
-    return {
-      cluster,
-      icon: iconFeature,
-      // component: componentRef,
-      id: this._idOfClusterMarker(cluster),
-    };
+    return iconFeature;
   }
 
   private async _createClusterCavasImage(
@@ -981,6 +992,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     const htmlTextCanvas = await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster, isFavourite);
 
+    return this._createCanvasForHtml(htmlTextCanvas);
+  }
+
+
+  private async _createPoiCavasImage(
+    poi: IGeojsonPoi
+  ): Promise<HTMLImageElement> {
+
+    const htmlTextCanvas = await PoiMarkerComponent.createMarkerHtmlForCanvas(poi);
+
+    return this._createCanvasForHtml(htmlTextCanvas);
+  }
+
+  private async _createCanvasForHtml(html: string): Promise<HTMLImageElement> {
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -988,7 +1013,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
       '<foreignObject width="100%" height="100%">' +
       '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
-      htmlTextCanvas +
+      html +
       '</div>' +
       '</foreignObject>' +
       '</svg>';
@@ -1012,31 +1037,30 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return img;
   }
 
-  private _createClusterLayer() {
-    if (!this._clusterLayer) {
-      this._clusterLayer = new VectorLayer({
+  private _createLayer(layer: VectorLayer, zIndex: number) {
+    if (!layer) {
+      layer = new VectorLayer({
         source: new VectorSource({
           features: [],
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 400,
+        zIndex,
       });
-      this._map.addLayer(this._clusterLayer);
+      this._map.addLayer(layer);
     }
+    return layer;
   }
 
-  private _addClusterIconToLayer(cm: ClusterMarker) {
-    const source = this._clusterLayer.getSource();
-    this._clusterLayer.getSource().addFeature(cm.icon);
-    // this._map.removeOverlay(cm.icon);
-    // cm.component.destroy();
+  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+    const source = layer.getSource();
+    layer.getSource().addFeature(icon);
   }
 
-  private _removeClusterIconFromLayer(cm: ClusterMarker) {
-    const source = this._clusterLayer.getSource();
-    if (source.hasFeature(cm.icon)) {
-      source.removeFeature(cm.icon);
+  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+    const source = layer.getSource();
+    if (source.hasFeature(icon)) {
+      source.removeFeature(icon);
     }
     // this._map.removeOverlay(cm.icon);
     //cm.component.destroy();
