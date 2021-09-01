@@ -148,6 +148,8 @@ export class GeohubService {
     return res;
   }
 
+  private _favourites: Array<number> = null;
+
   async getFavouriteTracks(): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
@@ -155,10 +157,30 @@ export class GeohubService {
     return res;
   }
 
-  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<Boolean> {
+  async favourites(): Promise<number[]> {
+    if (!this._favourites) {
+      //this._favourites = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/favourite`,).toPromise(); 
+      this._favourites = [22, 25, 12];
+    }
+    return this._favourites;
+  }
+
+  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<boolean> {
+    const favourites = await this.favourites();
+    if (isFavourite) {
+      favourites.push(trackId);
+    } else {
+      const idx = favourites.findIndex(x => x == trackId);
+      if (idx >= 0) {
+        favourites.splice(idx, 1);
+      }
+    }
     return isFavourite;
-    const res = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/favourite/${trackId}`,).toPromise();
-    return res;
+  }
+
+  async isFavouriteTrack(trackId: number): Promise<boolean> {
+    const favourites = await this.favourites();
+    return !!favourites.find(x => x == trackId);    
   }
 
   /**

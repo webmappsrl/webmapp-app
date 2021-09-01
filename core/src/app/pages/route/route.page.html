@@ -181,7 +181,7 @@
     <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>
     </ion-fab-button> -->
-    <webmapp-fav-btn (click)="favourite()"></webmapp-fav-btn>
+    <webmapp-fav-btn (click)="favourite()" [isFavourite]="isFavourite"></webmapp-fav-btn>
     <ion-fab-button (click)="share()" size="small" class="webmapp-pageroute-btnbottom">
       <i class="webmapp-icon-share-outline"></i>
     </ion-fab-button>

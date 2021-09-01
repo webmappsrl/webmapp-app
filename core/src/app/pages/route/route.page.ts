@@ -95,7 +95,7 @@ export class RoutePage implements OnInit {
       this.track = this.route.geometry;
     }
 
-    this.isFavourite = this.route.properties.isFavourite; //TODO check isFAvourite property on API
+    this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id); 
     this.track = this.route.geometry;
 
     await this._platform.ready();

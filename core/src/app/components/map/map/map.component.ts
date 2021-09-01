@@ -60,6 +60,7 @@ import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
+import { GeohubService } from 'src/app/services/geohub.service';
 
 @Component({
   selector: 'webmapp-map',
@@ -152,7 +153,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this._addPoisMarkers(value, true);
       }, 10);
     } else {
-      this.deleteTrack();
+      this._deletePoisMarkers(true);
     }
   }
 
@@ -163,7 +164,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this._addPoisMarkers(value, false);
       }, 10);
     } else {
-      this.deleteTrack();
+      this._deletePoisMarkers(false);
     }
   }
 
@@ -272,6 +273,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private geolocationService: GeolocationService,
     private _mapService: MapService,
+    private geohubSErvice: GeohubService,
     // private resolver: ComponentFactoryResolver,
     private _authService: AuthService
   ) {
@@ -893,6 +895,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private async _addPoisMarkers(values: Array<IPoi>, isSmall: boolean) { }
 
+  private async _deletePoisMarkers(isSmall: boolean) { }
+
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
     let transparent: boolean = !!this._track.registeredTrack;
     this._createClusterLayer();
@@ -971,8 +975,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private async _createClusterCavasImage(
     cluster: IGeojsonCluster
   ): Promise<HTMLImageElement> {
-    const htmlTextCanvas =
-      await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster);
+    let isFavourite = false;
+    if (cluster.properties.ids.length == 1) {
+      isFavourite = await this.geohubSErvice.isFavouriteTrack(cluster.properties.ids[0])
+    }
+    const htmlTextCanvas = await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster, isFavourite);
 
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
