@@ -219,6 +219,10 @@
       "viability":{
         "title":"Praticabilità del percorso",
         "info":"Altre info"
+      },
+      "favbtn":{
+        "isFavourite":"Aggiunto ai preferiti!",
+        "isNotFavourite":"Rimosso dai preferiti!"
       }
     },
     "favourites":{

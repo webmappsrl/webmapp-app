@@ -17,6 +17,7 @@ import { TabHowtoComponent } from './tab-howto/tab-howto.component';
 import { TabWalkableComponent } from './tab-walkable/tab-walkable.component';
 import { PipeModule } from 'src/app/pipes/pipe.module';
 import { SlopeChartComponent } from './slope-chart/slope-chart.component';
+import { FavBtnComponent } from './fav-btn/fav-btn.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { SlopeChartComponent } from './slope-chart/slope-chart.component';
     TabDescriptionComponent,
     TabViabilityComponent,
     SlopeChartComponent,
+    FavBtnComponent
   ],
 })
 export class RoutePageModule {}

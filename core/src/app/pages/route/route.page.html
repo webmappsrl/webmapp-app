@@ -178,9 +178,10 @@
 
   <ion-fab [vertical]="opacity==1?'bottom':'top'" horizontal="end"
     class="webmapp-pageroute-fabbottom {{opacity<1?'webmapp-pageroute-fabbottom-top':''}}">
-    <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
+    <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>
-    </ion-fab-button>
+    </ion-fab-button> -->
+    <webmapp-fav-btn (click)="favourite()"></webmapp-fav-btn>
     <ion-fab-button (click)="share()" size="small" class="webmapp-pageroute-btnbottom">
       <i class="webmapp-icon-share-outline"></i>
     </ion-fab-button>
