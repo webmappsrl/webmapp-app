@@ -71,5 +71,21 @@ export class PoiPage implements OnInit {
     this.updatePoiMarkers();
   }
 
+  phone() {
+    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone');
+
+  }
+
+  email() {
+    console.log('------- ~ file: poi.page.ts ~ line 80 ~ PoiPage ~ email ~ email');
+
+  }
+
+  url() {
+    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url');
+
+  }
+
+
 
 }

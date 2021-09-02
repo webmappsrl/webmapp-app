@@ -23,9 +23,8 @@
           <ion-ripple-effect></ion-ripple-effect>
         </div>
       </div>
-
-
     </div>
+
     <div class="webmapp-pagepoi-info-body">
       <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pagepoi-info-body-photoslider" #slider>
         <ion-slide *ngFor="let image of selectedPoi.properties.images">
@@ -34,6 +33,31 @@
           </div>
         </ion-slide>
       </ion-slides>
+
+      <div [hidden]="!selectedPoi.properties.address" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference">
+        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+        {{ selectedPoi.properties.address}}
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+      <div [hidden]="!selectedPoi.properties.phone" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+        (click)="phone()">
+        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+        {{ selectedPoi.properties.phone}}
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+      <div [hidden]="!selectedPoi.properties.email" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+        (click)="email()">
+        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+        {{ selectedPoi.properties.email}}
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+      <div [hidden]="!selectedPoi.properties.url" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+        (click)="url()">
+        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+        {{ selectedPoi.properties.url}}
+        <ion-ripple-effect></ion-ripple-effect>
+      </div>
+
       <div class="webmapp-pagepoi-info-body-description" [innerHTML]="selectedPoi.properties.description | wmtrans">
       </div>
     </div>
@@ -42,3 +66,9 @@
 
 
 </ion-content>
+
+<ion-fab vertical="top" horizontal="start">
+  <ion-fab-button (click)="back()" size="small" class="webmapp-pagepoi-btntop">
+    <i class="webmapp-icon-close-outline"></i>
+  </ion-fab-button>
+</ion-fab>
