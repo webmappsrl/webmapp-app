@@ -1,0 +1,64 @@
+.webmapp-pagepoi-map-container {
+    width: 100%;
+    height: 53%;
+}
+
+.webmapp-pagepoi-info-container {
+    position: absolute;
+    display: block;
+    bottom: 0;
+    height: 50%;
+    border-radius: 15px;
+    background: white;
+    width: 100%;
+    padding: 10px;
+    .webmapp-pagepoi-info-header {
+        padding: 10px;
+        width: 100%;
+        position: relative;
+
+        .webmapp-pagepoi-info-header-title {
+            font-size: var(--wm-font-lg);
+            font-weight: var(--wm-font-weight-bold);
+        }
+
+        .webmapp-pagepoi-info-header-arrows {
+            position: absolute;
+            right: 0;
+            top: 0;
+            .webmapp-pagepoi-info-header-arrow {
+                display: inline-block;
+                width: 50px;
+                height: 30px;
+                text-align: center;
+                padding: 6px;
+                border-radius: 30px;
+
+                .webmapp-pagepoi-info-header-arrow-icon {
+                    font-size: large;
+                }
+            }
+        }
+    }
+
+    .webmapp-pagepoi-info-body {
+        .webmapp-pagepoi-info-body-photoslider {
+            padding: 10px 0;
+            overflow: visible;
+            .webmapp-pagepoi-info-body-photocontainer {
+                position: relative;
+                .webmapp-pagepoi-info-body-photo {
+                    height: 100px;
+                    width: 150px;
+                    &::part(image) {
+                        object-fit: cover;
+                        border-radius: 15px;
+                    }
+                }
+            }
+        }
+        .webmapp-pagepoi-info-body-description {
+            padding: 10px 0;
+        }
+    }
+}

@@ -45,6 +45,10 @@ const routes: Routes = [
   {
     path: 'favourites',
     loadChildren: () => import('./pages/favourites/favourites.module').then( m => m.FavouritesPageModule)
+  },
+  {
+    path: 'poi',
+    loadChildren: () => import('./pages/poi/poi.module').then( m => m.PoiPageModule)
   }
 
 ];

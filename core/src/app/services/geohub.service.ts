@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { ILocation } from '../types/location';
-import { IGeojsonClusterApiResponse, IGeojsonFeature, WhereTaxonomy } from '../types/model';
+import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed, WhereTaxonomy } from '../types/model';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
 
@@ -128,6 +129,86 @@ export class GeohubService {
     return res;
   }
 
+  async getDetailsPoisForTrack(id: number): Promise<Array<IGeojsonPoiDetailed>> {
+    const mock = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "properties": {
+            "id": 1,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg",
+            images: ['https://picsum.photos/500/750', 'https://picsum.photos/550/800'],
+            name: { it: 'esempio', en: 'example' },
+            description: { it: 'descrizione poi', en: 'desc' },
+            email: 'pippo@gmail.com',
+            phone: '12345678',
+            address: 'Via di qua 0',
+            url: 'www.google.com'
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.1022, 42.66137]
+          }
+        },
+        {
+          "properties": {
+            "id": 2,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg",
+            images: ['https://picsum.photos/550/750', 'https://picsum.photos/500/800','https://picsum.photos/550/650', 'https://picsum.photos/500/200'],
+            name: { it: 'esempio 2 ', en: 'example' },
+            description: { it: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu. Vestibulum vehicula porttitor lacus, et sodales lorem vehicula vel. Quisque commodo mi id faucibus mollis. Nam porttitor, enim nec consequat commodo, dui lacus suscipit ante, in scelerisque lectus nibh eu turpis. Nulla metus risus, tristique vitae cursus vitae, hendrerit quis dolor. Donec tincidunt quis nulla sed lobortis. Aliquam eget nunc fringilla, fermentum sem ac, condimentum neque. Phasellus id aliquet sem, nec facilisis orci. Maecenas ultricies sollicitudin auctor. Cras quis orci placerat neque viverra tempor. Mauris et dolor rutrum, rutrum elit a, consectetur sem. Sed a erat nunc. Aliquam suscipit tincidunt semper. Morbi maximus eros diam.
+                        Praesent dapibus, turpis in pulvinar efficitur, justo elit pulvinar lectus, non varius quam massa et sapien. Integer pulvinar diam lacus, in aliquam massa efficitur at. Suspendisse interdum auctor erat et lobortis. Sed a quam nunc. Mauris vitae erat placerat, interdum magna ac, accumsan urna. Suspendisse eu suscipit dolor. In hac habitasse platea dictumst. Cras volutpat risus a magna scelerisque, sed facilisis leo ullamcorper. In placerat ante a metus molestie euismod. Nulla ante sem, sollicitudin at dolor vel, fermentum ornare erat. Quisque posuere vitae risus ac porta. Nullam dapibus tincidunt quam non dictum. Vestibulum scelerisque nunc et lectus ornare, vitae mattis ante dictum. Aliquam erat volutpat. Praesent congue lacus mi, sed consequat nibh dapibus vel. Suspendisse potenti.
+                        Cras gravida eros felis, sit amet commodo odio convallis id. In mi eros, pretium sed magna a, rutrum pretium neque. Suspendisse feugiat aliquet nunc non venenatis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum pellentesque dictum dictum. Aenean ultrices consectetur congue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce ullamcorper nisl dolor, a dapibus magna fermentum vel. Donec a maximus lectus. Donec posuere hendrerit enim placerat imperdiet. Aliquam commodo est lacus, at lacinia erat volutpat ac. Quisque in nisl aliquam, lobortis ante at, aliquam diam. Sed eu sagittis arcu. Nulla facilisi. Nam egestas sem tellus, eu ultricies neque ultrices sit amet.
+                        Morbi efficitur magna a vestibulum auctor. Praesent pellentesque risus ac urna scelerisque, non consequat justo commodo. Curabitur viverra lacus non magna tristique consectetur quis eu dolor. Etiam consectetur ornare nibh eget tempor. Fusce pulvinar, lacus eget dictum finibus, tortor elit finibus libero, ac convallis est enim nec risus. Duis faucibus, urna ac placerat blandit, justo tortor mattis arcu, in euismod arcu neque ac turpis. Duis sodales massa vel laoreet tempor. Suspendisse fringilla neque ut ante aliquet, vel rhoncus erat semper. Donec ut lacinia lorem, sed porta massa. Suspendisse quis nisi at lorem accumsan ornare. Duis tristique metus at sapien viverra ullamcorper. Curabitur venenatis justo nibh, sed venenatis nulla elementum eu. Nullam vulputate urna maximus vestibulum suscipit. Phasellus semper lacus vitae lacinia convallis. Cras tempus nec lorem vitae faucibus.
+                        Pellentesque ac nibh eros. Pellentesque tempus consectetur metus, eu euismod augue. Aenean a facilisis felis. Suspendisse potenti. Proin venenatis, nunc a dictum fermentum, nibh augue dignissim lacus, ut congue dui ante ut est. Mauris cursus faucibus eros, ut euismod urna. Duis ut tempor nulla. Nunc facilisis semper diam vitae aliquam. Pellentesque non imperdiet odio. Donec accumsan viverra metus eu sollicitudin. In elit neque, tristique in turpis et, rutrum gravida mi.`, en: 'desc' }
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.108, 42.658]
+          }
+        }
+      ]
+    }
+    let call = this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,)
+    call = of(mock);
+    const res = await call.pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
+  async getPoiForTrack(id: number): Promise<Array<IGeojsonPoi>> {
+    const mock = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "properties": {
+            "id": 1,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.1022, 42.66137]
+          }
+        },
+        {
+          "properties": {
+            "id": 2,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.108, 42.658]
+          }
+        }
+      ]
+    }
+    let call = this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,)
+    call = of(mock);
+    const res = await call.pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
   /**
    * Get a where taxonomy (form cache if available)
    * 
@@ -180,7 +261,7 @@ export class GeohubService {
 
   async isFavouriteTrack(trackId: number): Promise<boolean> {
     const favourites = await this.favourites();
-    return !!favourites.find(x => x == trackId);    
+    return !!favourites.find(x => x == trackId);
   }
 
   /**

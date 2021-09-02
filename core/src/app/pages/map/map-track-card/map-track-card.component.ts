@@ -35,7 +35,7 @@ export class MapTrackCardComponent implements OnInit {
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.track.properties.id);
 
     await this._platform.ready();
-    console.log('------- ~ file: map-track-card.component.ts ~ line 29 ~ MapTrackCardComponent ~ ngOnInit ~ this.favouriteanimation', this.favouriteanimation);
+    // console.log('------- ~ file: map-track-card.component.ts ~ line 29 ~ MapTrackCardComponent ~ ngOnInit ~ this.favouriteanimation', this.favouriteanimation);
 
     this.animation = this.animationCtrl.create()
       .duration(1000)

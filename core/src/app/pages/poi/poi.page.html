@@ -1,0 +1,44 @@
+<ion-content>
+
+  <div #mapcontainer class="webmapp-pagepoi-map-container">
+    <webmapp-map class="" #map [static]="true" [track]="track" [hideRegister]="true" [pois]="pois"
+      (clickpoi)="clickPoi($event)"></webmapp-map>
+  </div>
+
+
+  <div class="webmapp-pagepoi-info-container" scrollY="true">
+    <div class="webmapp-pagepoi-info-header">
+
+      <div class="webmapp-pagepoi-info-header-title">
+        {{ selectedPoi.properties.name | wmtrans}}
+      </div>
+
+      <div class="webmapp-pagepoi-info-header-arrows">
+        <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+          <i class="webmapp-icon-arrow-left-outline webmapp-pagepoi-info-header-arrow-icon" (click)="prevPoi()"></i>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+        <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+          <i class="webmapp-icon-arrow-right-outline webmapp-pagepoi-info-header-arrow-icon" (click)="nextPoi()"></i>
+          <ion-ripple-effect></ion-ripple-effect>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="webmapp-pagepoi-info-body">
+      <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pagepoi-info-body-photoslider" #slider>
+        <ion-slide *ngFor="let image of selectedPoi.properties.images">
+          <div class="webmapp-pagepoi-info-body-photocontainer">
+            <ion-img [src]="image" class="webmapp-pagepoi-info-body-photo"></ion-img>
+          </div>
+        </ion-slide>
+      </ion-slides>
+      <div class="webmapp-pagepoi-info-body-description" [innerHTML]="selectedPoi.properties.description | wmtrans">
+      </div>
+    </div>
+
+  </div>
+
+
+</ion-content>

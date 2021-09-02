@@ -75,6 +75,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
+  @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
@@ -149,8 +150,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input('pois') set pois(value: IGeojsonPoi[]) {
     if (value) {
+      const valueClone = JSON.parse(JSON.stringify(value));
       setTimeout(() => {
-        this._addPoisMarkers(value);
+        this._addPoisMarkers(valueClone);
       }, 10);
     }
   }
@@ -885,14 +887,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (poiCollection) {
       for (let i = this._poiMarkers.length - 1; i >= 0; i--) {
         const ov = this._poiMarkers[i];
-        if (!poiCollection.find((x) => x.properties.id + '' == ov.id)) {
+        if (!poiCollection.find((x) => x.properties.id + '' == ov.id && ov.poi.isSmall == x.isSmall)) {
           this._removeIconFromLayer(this._poisLayer, ov.icon);
           this._poiMarkers.splice(i, 1);
         }
       }
-
       for (const poi of poiCollection) {
-        if (!this._poiMarkers.find((x) => x.id == poi.properties.id + '')) {
+        if (!this._poiMarkers.find((x) => x.id == poi.properties.id + '' && poi.isSmall == x.poi.isSmall)) {
           const icon = await this._createPoiCanvasIcon(poi);
           this._addIconToLayer(this._poisLayer, icon.icon);
           this._poiMarkers.push(icon);
@@ -934,7 +935,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     // TODO check object type
 
     const img = await this._createPoiCavasImage(poi);
-    const iconFeature = await this._createIconFeature(poi.geometry, img);
+    const iconFeature = await this._createIconFeature(poi.geometry, img, PoiMarkerComponent.markerSize);
     return {
       poi,
       icon: iconFeature,
@@ -950,7 +951,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const img = await this._createClusterCavasImage(cluster);
 
-    const iconFeature = await this._createIconFeature(cluster.geometry, img, transparent);
+    const iconFeature = await this._createIconFeature(cluster.geometry, img, ClusterMarkerComponent.markerSize, transparent);
 
     return {
       cluster,
@@ -960,7 +961,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  private async _createIconFeature(geometry: IGeojsonGeometry, img: HTMLImageElement, transparent: boolean = false): Promise<Feature<Geometry>> {
+  private async _createIconFeature(geometry: IGeojsonGeometry, img: HTMLImageElement, size: number, transparent: boolean = false): Promise<Feature<Geometry>> {
     const position = fromLonLat([
       geometry.coordinates[0] as number,
       geometry.coordinates[1] as number,
@@ -973,7 +974,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       image: new Icon({
         anchor: [0.5, 0.5],
         img: img,
-        imgSize: [100, 100],
+        imgSize: [size, size],
         opacity: transparent ? 0.5 : 1,
       }),
     });
@@ -992,7 +993,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     const htmlTextCanvas = await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster, isFavourite);
 
-    return this._createCanvasForHtml(htmlTextCanvas);
+    return this._createCanvasForHtml(htmlTextCanvas, ClusterMarkerComponent.markerSize);
   }
 
 
@@ -1001,16 +1002,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ): Promise<HTMLImageElement> {
 
     const htmlTextCanvas = await PoiMarkerComponent.createMarkerHtmlForCanvas(poi);
-
-    return this._createCanvasForHtml(htmlTextCanvas);
+    return this._createCanvasForHtml(htmlTextCanvas, PoiMarkerComponent.markerSize);
   }
 
-  private async _createCanvasForHtml(html: string): Promise<HTMLImageElement> {
+  private async _createCanvasForHtml(html: string, size: number): Promise<HTMLImageElement> {
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
     const canvasHtml =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
       '<foreignObject width="100%" height="100%">' +
       '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
       html +
@@ -1067,37 +1067,49 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private _mapClick(evt: MapBrowserEvent<UIEvent>) {
-    const features: Feature<Geometry>[] = [];
-    const precision =
-      this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
 
-    if (this._clusterLayer && this._clusterLayer.getSource()) {
-      this._clusterLayer
-        .getSource()
+
+    const clusterFeature = this._getNearestFeatureOfLayer(this._clusterLayer, evt);
+    const poiFeature = this._getNearestFeatureOfLayer(this._poisLayer, evt);
+
+
+    const clusterMarker = this._clusterMarkers.find((x) => x.icon == clusterFeature);
+    if (clusterMarker) {
+      this.clickcluster.emit(clusterMarker.cluster);
+    }
+
+    const poiMarker = this._poiMarkers.find((x) => x.icon == poiFeature);
+    console.log('------- ~ file: map.component.ts ~ line 1082 ~ _mapClick ~ poiMarker', poiMarker);
+    if (poiMarker) {
+      this.clickpoi.emit(poiMarker.poi);
+    }
+
+    if (!clusterFeature && !poiFeature) { this.touch.emit(); }
+
+  }
+
+  _getNearestFeatureOfLayer(layer: VectorLayer, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
+    const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
+    let nearestFeature = null;
+    const features: Feature<Geometry>[] = [];
+
+    if (layer && layer.getSource()) {
+      layer.getSource()
         .forEachFeatureInExtent(
-          buffer(
-            [
-              evt.coordinate[0],
-              evt.coordinate[1],
-              evt.coordinate[0],
-              evt.coordinate[1],
-            ],
+          buffer([evt.coordinate[0], evt.coordinate[1], evt.coordinate[0], evt.coordinate[1],],
             precision
           ),
           (feature) => {
             features.push(feature);
           }
         );
-      if (features.length) {
-        const nearestFeature = this._getNearest(features, evt.coordinate);
-        const clusterMarker = this._clusterMarkers.find(
-          (x) => x.icon == nearestFeature
-        );
-        if (clusterMarker) {
-          this.clickcluster.emit(clusterMarker.cluster);
-        }
-      } else { this.touch.emit(); }
-    } else { this.touch.emit(); }
+    }
+
+    if (features.length) {
+      nearestFeature = this._getNearest(features, evt.coordinate);
+    }
+
+    return nearestFeature;
   }
 
   _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {

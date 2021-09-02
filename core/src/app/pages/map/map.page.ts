@@ -133,6 +133,8 @@ export class MapPage implements OnInit {
 
     }
   }
+
+  
   private _createClusterForEcTrack(ectrack: CGeojsonLineStringFeature): IGeojsonCluster {
     const simpleCluster: IGeojsonCluster = {
       type: 'Feature',

@@ -10,6 +10,8 @@ import { IGeojsonCluster } from 'src/app/types/model';
 })
 export class ClusterMarkerComponent implements OnInit {
 
+  public static markerSize = 100;
+
   @Output('clickcluster') clickcluster: EventEmitter<IGeojsonCluster> =
     new EventEmitter<IGeojsonCluster>();
 

@@ -16,7 +16,7 @@ import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ILocation } from 'src/app/types/location';
-import { IGeojsonFeature } from 'src/app/types/model';
+import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
@@ -31,6 +31,7 @@ export class RoutePage implements OnInit {
   public isFavourite: boolean = false;
 
   public track;
+  public pois: Array<IGeojsonPoi> = null;
 
   public opacity = 1;
   public headerHeight = 105;
@@ -64,6 +65,8 @@ export class RoutePage implements OnInit {
   private started: boolean = false;
   private initialStep: number = 0;
 
+  private relatedPois: IGeojsonPoiDetailed[] = null;
+
   constructor(
     private _actRoute: ActivatedRoute,
     private _geohubService: GeohubService,
@@ -92,11 +95,20 @@ export class RoutePage implements OnInit {
       const id = params.id ? params.id : 3; //TODO only for debug
       this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
-      this.track = this.route.geometry;
     }
 
-    this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id); 
-    this.track = this.route.geometry;
+    this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
+    setTimeout(() => {this.track = this.route.geometry;}, 0);
+
+    this.pois = await this._geohubService.getPoiForTrack(this.route.properties.id);
+    this.updatePoiMarkers(false);
+
+    this.setAnimations();
+
+    this.getRelatedPois();
+  }
+
+  async setAnimations() {
 
     await this._platform.ready();
     this.height = this._platform.height();
@@ -136,21 +148,6 @@ export class RoutePage implements OnInit {
         '1'
       );
 
-    // [ngStyle]="{'margin-top': (headerHeight-(headerHeight*opacity))+'px','height':mapHeigth()+'px'}"
-    // const animationMap = this.animationCtrl
-    //   .create()
-    //   .addElement(this.mapControl.nativeElement)
-    //   .fromTo(
-    //     'transform',
-    //     `translateY(0px)`,
-    //     `translateY(${this.headerHeight}px)`
-    //     // )
-    //     // .fromTo(
-    //     //   'height',
-    //     //   `${this.height}px`,
-    //     //   `${this.height - (this.headerHeight + this.maxInfoheight)}px`
-    //   );
-
     this.animation = this.animationCtrl.create()
       .duration(1000)
       .addAnimation([animationHeader, animationPanel, animationDetails, animationMoreDetails,]);
@@ -164,6 +161,10 @@ export class RoutePage implements OnInit {
     });
 
     this.gesture.enable(true);
+  }
+
+  async getRelatedPois() {
+    this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
   }
 
   handleClick() {
@@ -237,10 +238,27 @@ export class RoutePage implements OnInit {
     this.endAnimation(shouldComplete, step);
   }
 
+  private updatePoiMarkers(isSmall) {
+    const res = [];
+    this.pois.forEach(poi => {
+      poi.isSmall = isSmall;
+      res.push(poi);
+    });
+    this.pois = res;
+  }
+
+
+  async clickPoi(poi: IGeojsonPoi) {
+    console.log('------- ~ file: route.page.ts ~ line 251 ~ RoutePage ~ clickPoi ~ poi', poi);
+    this._statusService.setPois(this.relatedPois, poi.properties.id);
+    this._navController.navigateForward(['poi']);
+  }
+
   private endAnimation(shouldComplete, step) {
     this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
+      this.updatePoiMarkers(this.opacity < 0.5);
       this._subscribeToTabsEvents();
       setTimeout(() => {
         this._subscribeToTabsEvents();

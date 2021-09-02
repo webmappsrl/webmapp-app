@@ -31,7 +31,7 @@
 </ion-menu>
 
 <ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
-  <div #header style="opacity: 0" class="webmapp-pageroute-header">
+  <div #header style="opacity: 0" [hidden]="opacity == 1" class="webmapp-pageroute-header">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -76,8 +76,8 @@
     </ion-header>
   </div>
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <webmapp-map class="" #map [static]="true" [track]="track" [hideRegister]="true" [height]="mapHeigth()"
-      [slopeChartElements]="slopeChartHoverElements"></webmapp-map>
+    <webmapp-map class="" #map [static]="true" [track]="track" [hideRegister]="true" [pois]="pois"
+      (clickpoi)="clickPoi($event)" [height]="mapHeigth()" [slopeChartElements]="slopeChartHoverElements"></webmapp-map>
   </div>
   <div class="webmapp-pageroute-infopanel" #dragHandleContainer style="bottom:{{minInfoheight-maxInfoheight}}px">
     <ion-card class="webmapp-pageroute-infopanel-card" style="height:{{maxInfoheight}}px">
