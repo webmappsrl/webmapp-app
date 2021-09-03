@@ -66,6 +66,11 @@ import { getVectorContext } from 'ol/render';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
+const CLUSTERLAYERZINDEX = 400
+const POISLAYERZINDEX = 400
+const SELECTEDPOILAYERZINDEX = 500
+const TRACKLAYERZINDEX = 450
+
 @Component({
   selector: 'webmapp-map',
   templateUrl: './map.component.html',
@@ -223,6 +228,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _poiMarkers: PoiMarker[] = [];
   private _poisLayer: VectorLayer;
+  private _slectedPoiLayer: VectorLayer;
 
   private _position: ILocation = null;
   private _height: number;
@@ -468,7 +474,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 450,
+        zIndex: TRACKLAYERZINDEX,
       });
     } else {
       this._track.layer.getSource().clear();
@@ -900,19 +906,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     startTime?,
   } = {};
   private async _selectedPoiMarker(poi?: IGeojsonPoi) {
+    
+    this._slectedPoiLayer = this._createLayer(this._slectedPoiLayer, SELECTEDPOILAYERZINDEX);
+    
     let markerGeometry = null;
     if (this._selectedPoi.marker) {
-      this._removeIconFromLayer(this._poisLayer, this._selectedPoi.marker.icon);
+      this._removeIconFromLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
       markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
     }
     poi.isSmall = false;
     this._selectedPoi.newSelectedPoi = poi;
     const { marker, style } = await this._createPoiCanvasIcon(poi, markerGeometry);
     this._selectedPoi.marker = marker; this._selectedPoi.style = style;
-    this._addIconToLayer(this._poisLayer, this._selectedPoi.marker.icon);
+    this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
     if (!this._selectedPoi.lastSelectedPoi) {
       //insert
-      //this._addIconToLayer(this._poisLayer, this._selectedPoi.marker.icon);
+      //this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
       this._selectedPoi.lastSelectedPoi = poi;
     } else {
       //animate
@@ -963,7 +972,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   _selectedPoiStartAnimation() {
     this._selectedPoi.animating = true;
     this._selectedPoi.startTime = Date.now();
-    this._poisLayer.on('postrender', (event) => { this._selectedPoiMove(event) });
+    this._slectedPoiLayer.on('postrender', (event) => { this._selectedPoiMove(event) });
     // this._selectedPoi.marker.icon.setGeometry(null);
   }
 
@@ -977,12 +986,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this._selectedPoi.marker.icon.setGeometry(this._getPoint(this._selectedPoi.newSelectedPoi.geometry.coordinates));
 
-    this._poisLayer.un('postrender', (event) => { this._selectedPoiMove(event) });
+    this._slectedPoiLayer.un('postrender', (event) => { this._selectedPoiMove(event) });
     this._selectedPoi.lastSelectedPoi = this._selectedPoi.newSelectedPoi;
   }
 
   private async _addPoisMarkers(poiCollection: Array<IGeojsonPoi>) {
-    this._poisLayer = this._createLayer(this._poisLayer, 400);
+    this._poisLayer = this._createLayer(this._poisLayer, POISLAYERZINDEX);
 
     if (poiCollection) {
       for (let i = this._poiMarkers.length - 1; i >= 0; i--) {
@@ -1004,7 +1013,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
     let transparent: boolean = !!this._track.registeredTrack;
-    this._clusterLayer = this._createLayer(this._clusterLayer, 400);
+    this._clusterLayer = this._createLayer(this._clusterLayer, CLUSTERLAYERZINDEX);
     const reset = this._lastlusterMarkerTransparency != transparent;
 
     if (values) {
