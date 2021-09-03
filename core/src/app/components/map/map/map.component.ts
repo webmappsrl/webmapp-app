@@ -62,6 +62,9 @@ import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-lin
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
+import { getVectorContext } from 'ol/render';
+
+const SELECTEDPOIANIMATIONDURATION = 300;
 
 @Component({
   selector: 'webmapp-map',
@@ -142,7 +145,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         } else {
           this.drawTrack(value);
         }
-      }, 10);
+      }, 0);
     } else {
       this.deleteTrack();
     }
@@ -153,8 +156,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       const valueClone = JSON.parse(JSON.stringify(value));
       setTimeout(() => {
         this._addPoisMarkers(valueClone);
-      }, 10);
+      }, 0);
     }
+  }
+
+  @Input('selectedpoi') set selectedpoi(value: IGeojsonPoi) {
+
+    setTimeout(() => {
+      this._selectedPoiMarker(value);
+    }, 0);
+
   }
 
 
@@ -165,7 +176,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this._location = value;
         this.animateLocation(value);
         this._centerMapToLocation();
-      }, 10);
+      }, 0);
     }
   }
 
@@ -880,6 +891,95 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return ig.properties.ids.sort((a, b) => a - b).join('-');
   }
 
+  private _selectedPoi: {
+    lastSelectedPoi?: IGeojsonPoi,
+    newSelectedPoi?: IGeojsonPoi,
+    marker?: PoiMarker,
+    style?: Style,
+    animating?,
+    startTime?,
+  } = {};
+  private async _selectedPoiMarker(poi?: IGeojsonPoi) {
+    let markerGeometry = null;
+    if (this._selectedPoi.marker) {
+      this._removeIconFromLayer(this._poisLayer, this._selectedPoi.marker.icon);
+      markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
+    }
+    poi.isSmall = false;
+    this._selectedPoi.newSelectedPoi = poi;
+    const { marker, style } = await this._createPoiCanvasIcon(poi, markerGeometry);
+    this._selectedPoi.marker = marker; this._selectedPoi.style = style;
+    this._addIconToLayer(this._poisLayer, this._selectedPoi.marker.icon);
+    if (!this._selectedPoi.lastSelectedPoi) {
+      //insert
+      //this._addIconToLayer(this._poisLayer, this._selectedPoi.marker.icon);
+      this._selectedPoi.lastSelectedPoi = poi;
+    } else {
+      //animate
+      this._selectedPoiStartAnimation();
+    }
+
+  }
+
+  _selectedPoiMove(event) {
+    if (this._selectedPoi.animating) {
+
+      const time = event.frameState.time;
+      const elapsedTime = time - this._selectedPoi.startTime;
+      const distance = elapsedTime / SELECTEDPOIANIMATIONDURATION;
+
+      if (distance > 1) {
+        this._selectedPoistopAnimation();
+        return;
+      }
+
+      const newPositionCoords = this.newAnimationPosition(this._selectedPoi.lastSelectedPoi.geometry.coordinates, this._selectedPoi.newSelectedPoi.geometry.coordinates, distance)
+
+
+      this._selectedPoi.marker.icon.setGeometry(this._getPoint(newPositionCoords));
+
+
+      // this._selectedPoi.marker.icon.setGeometry();
+      // const vectorContext = getVectorContext(event);
+      // vectorContext.setStyle(this._selectedPoi.style);
+      // vectorContext.drawGeometry(this._selectedPoi.position);
+      // tell OpenLayers to continue the postrender animation
+      this._map.render();
+    }
+  }
+
+  newAnimationPosition(coordStart, coordEnd, distance) {
+    const deltaX = (coordEnd[0] - coordStart[0]) * distance;
+    const deltaY = (coordEnd[1] - coordStart[1]) * distance;
+    
+    return [
+      coordStart[0] + deltaX,
+      coordStart[1] + deltaY
+    ];
+  }
+
+
+
+  _selectedPoiStartAnimation() {
+    this._selectedPoi.animating = true;
+    this._selectedPoi.startTime = Date.now();
+    this._poisLayer.on('postrender', (event) => { this._selectedPoiMove(event) });
+    // this._selectedPoi.marker.icon.setGeometry(null);
+  }
+
+  _getPoint(coordinates) {
+    const position = fromLonLat(coordinates);
+    return new Point([position[0], position[1]]);
+  }
+
+  _selectedPoistopAnimation() {
+    this._selectedPoi.animating = false;
+
+    this._selectedPoi.marker.icon.setGeometry(this._getPoint(this._selectedPoi.newSelectedPoi.geometry.coordinates));
+
+    this._poisLayer.un('postrender', (event) => { this._selectedPoiMove(event) });
+    this._selectedPoi.lastSelectedPoi = this._selectedPoi.newSelectedPoi;
+  }
 
   private async _addPoisMarkers(poiCollection: Array<IGeojsonPoi>) {
     this._poisLayer = this._createLayer(this._poisLayer, 400);
@@ -894,9 +994,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
       for (const poi of poiCollection) {
         if (!this._poiMarkers.find((x) => x.id == poi.properties.id + '' && poi.isSmall == x.poi.isSmall)) {
-          const icon = await this._createPoiCanvasIcon(poi);
-          this._addIconToLayer(this._poisLayer, icon.icon);
-          this._poiMarkers.push(icon);
+          const { marker } = await this._createPoiCanvasIcon(poi);
+          this._addIconToLayer(this._poisLayer, marker.icon);
+          this._poiMarkers.push(marker);
         }
       }
     }
@@ -930,16 +1030,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
 
   private async _createPoiCanvasIcon(
-    poi: IGeojsonPoi
-  ): Promise<PoiMarker> {
+    poi: IGeojsonPoi,
+    geometry = null
+  ): Promise<{ marker: PoiMarker, style: Style }> {
     // TODO check object type
 
     const img = await this._createPoiCavasImage(poi);
-    const iconFeature = await this._createIconFeature(poi.geometry, img, PoiMarkerComponent.markerSize);
+    const { iconFeature, style } = await this._createIconFeature(geometry ? geometry : poi.geometry, img, PoiMarkerComponent.markerSize);
     return {
-      poi,
-      icon: iconFeature,
-      id: poi.properties.id + '',
+      marker: {
+        poi,
+        icon: iconFeature,
+        id: poi.properties.id + '',
+      }, style
     };
   }
 
@@ -951,7 +1054,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const img = await this._createClusterCavasImage(cluster);
 
-    const iconFeature = await this._createIconFeature(cluster.geometry, img, ClusterMarkerComponent.markerSize, transparent);
+    const { iconFeature } = await this._createIconFeature(cluster.geometry, img, ClusterMarkerComponent.markerSize, transparent);
 
     return {
       cluster,
@@ -961,7 +1064,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     };
   }
 
-  private async _createIconFeature(geometry: IGeojsonGeometry, img: HTMLImageElement, size: number, transparent: boolean = false): Promise<Feature<Geometry>> {
+  private async _createIconFeature(geometry: IGeojsonGeometry, img: HTMLImageElement, size: number, transparent: boolean = false): Promise<{ iconFeature: Feature<Geometry>, style: Style }> {
     const position = fromLonLat([
       geometry.coordinates[0] as number,
       geometry.coordinates[1] as number,
@@ -970,7 +1073,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const iconFeature = new Feature({
       geometry: new Point([position[0], position[1]]),
     });
-    const iconStyle = new Style({
+    const style = new Style({
       image: new Icon({
         anchor: [0.5, 0.5],
         img: img,
@@ -979,9 +1082,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }),
     });
 
-    iconFeature.setStyle(iconStyle);
+    iconFeature.setStyle(style);
 
-    return iconFeature;
+    return { iconFeature, style };
   }
 
   private async _createClusterCavasImage(

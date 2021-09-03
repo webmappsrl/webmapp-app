@@ -143,7 +143,7 @@ export class GeohubService {
             email: 'pippo@gmail.com',
             phone: '12345678',
             address: 'Via di qua 0',
-            url: 'www.google.com'
+            url: 'http://www.google.com'
           },
           "geometry": {
             "type": "Point",

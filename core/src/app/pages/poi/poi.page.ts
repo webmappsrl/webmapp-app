@@ -33,7 +33,10 @@ export class PoiPage implements OnInit {
     this.route = this._statusService.route;
     this.pois = this._statusService.getRelatedPois();
     this.selectPoiById(this._statusService.getSelectedPoiId());
-    setTimeout(() => { this.track = this.route.geometry; }, 0);
+    setTimeout(() => { 
+      this.track = this.route.geometry; 
+      this.updatePoiMarkers();
+    }, 0);
   }
 
 
@@ -44,7 +47,7 @@ export class PoiPage implements OnInit {
   private updatePoiMarkers() {
     const res = [];
     this.pois.forEach(poi => {
-      poi.isSmall = poi != this.selectedPoi;
+      poi.isSmall = true; // poi != this.selectedPoi;
       res.push(poi);
     });
     this.pois = res;
@@ -52,7 +55,7 @@ export class PoiPage implements OnInit {
 
   async clickPoi(poi: IGeojsonPoiDetailed) {
     this.selectPoi(poi)
-    this.updatePoiMarkers();
+    // this.updatePoiMarkers();
   }
 
   prevPoi() {
@@ -71,7 +74,7 @@ export class PoiPage implements OnInit {
   selectPoi(poi: IGeojsonPoiDetailed) {
     this.selectedPoi = this.pois.find(p => p.properties.id == poi.properties.id);
     this.poiIdx = this.pois.findIndex(p => p.properties.id == poi.properties.id);
-    this.updatePoiMarkers();
+    // this.updatePoiMarkers();
   }
 
   phone(phoneNumber) {

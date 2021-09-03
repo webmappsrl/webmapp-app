@@ -2,7 +2,7 @@
 
   <div #mapcontainer class="webmapp-pagepoi-map-container">
     <webmapp-map class="" #map [static]="true" [track]="track" [hideRegister]="true" [pois]="pois"
-      (clickpoi)="clickPoi($event)"></webmapp-map>
+      (clickpoi)="clickPoi($event)" [selectedpoi]="selectedPoi"></webmapp-map>
   </div>
 
 
@@ -34,25 +34,29 @@
         </ion-slide>
       </ion-slides>
 
-      <div [hidden]="!selectedPoi.properties.address" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference">
+      <div [hidden]="!selectedPoi.properties.address"
+        class="ripple-parent ion-activatable webmapp-pagepoi-info-reference">
         <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
         {{ selectedPoi.properties.address}}
         <ion-ripple-effect></ion-ripple-effect>
       </div>
       <div [hidden]="!selectedPoi.properties.phone" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-        (click)="phone()">
-        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
-        {{ selectedPoi.properties.phone}}
+        (click)="phone(selectedPoi.properties.phone)">
+        <a href="tel:{{ selectedPoi.properties.phone}}">
+          <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+          {{ selectedPoi.properties.phone}}</a>
         <ion-ripple-effect></ion-ripple-effect>
       </div>
       <div [hidden]="!selectedPoi.properties.email" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-        (click)="email()">
-        <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
-        {{ selectedPoi.properties.email}}
-        <ion-ripple-effect></ion-ripple-effect>
+        (click)="email(selectedPoi.properties.email)">
+        <a href="mailto:{{ selectedPoi.properties.email}}">
+          <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+          {{ selectedPoi.properties.email}}
+          <ion-ripple-effect></ion-ripple-effect>
+        </a>
       </div>
       <div [hidden]="!selectedPoi.properties.url" class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-        (click)="url()">
+        (click)="url(selectedPoi.properties.url)">
         <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
         {{ selectedPoi.properties.url}}
         <ion-ripple-effect></ion-ripple-effect>
