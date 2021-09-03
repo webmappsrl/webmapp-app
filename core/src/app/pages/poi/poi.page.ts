@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature, IGeojsonPoiDetailed } from 'src/app/types/model';
+import { Plugins } from '@capacitor/core';
+
+const { Browser } = Plugins;
 
 @Component({
   selector: 'app-poi',
@@ -71,19 +74,19 @@ export class PoiPage implements OnInit {
     this.updatePoiMarkers();
   }
 
-  phone() {
-    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone');
+  phone(phoneNumber) {
+    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone',phoneNumber);
 
   }
 
-  email() {
+  email(email) {
     console.log('------- ~ file: poi.page.ts ~ line 80 ~ PoiPage ~ email ~ email');
 
   }
 
-  url() {
-    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url');
-
+  async url(url) {
+    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url',url);
+    await Browser.open({url});
   }
 
 
