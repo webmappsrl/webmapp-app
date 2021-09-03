@@ -209,6 +209,39 @@ export class GeohubService {
     return res;
   }
 
+  public async stringSearch(searchstring : string): Promise<Array<IGeojsonPoi>>{ //TODO real mock and result type
+    const mock = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "properties": {
+            "id": 1,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.1022, 42.66137]
+          }
+        },
+        {
+          "properties": {
+            "id": 2,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg"
+          },
+          "geometry": {
+            "type": "Point",
+            "coordinates": [11.108, 42.658]
+          }
+        }
+      ]
+    }
+    let call = this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/search/${searchstring}`,)
+    call = of(mock);
+    const res = await call.pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
   /**
    * Get a where taxonomy (form cache if available)
    * 
