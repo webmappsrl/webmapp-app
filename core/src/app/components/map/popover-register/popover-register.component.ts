@@ -8,7 +8,7 @@ import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { PhotoService } from 'src/app/services/photo.service';
 import { ILocation } from 'src/app/types/location';
-import { PopoverPhotoType } from 'src/app/types/success.enum';
+import { EPopoverPhotoType } from 'src/app/types/esuccess.enum';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 
@@ -60,10 +60,10 @@ export class PopoverRegisterComponent implements OnInit {
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
-    if (role === PopoverPhotoType.PHOTOS) {
+    if (role === EPopoverPhotoType.PHOTOS) {
       const image = await this._photoService.shotPhoto(false);
       photos = [image];
-    } else if (role === PopoverPhotoType.LIBRARY) {
+    } else if (role === EPopoverPhotoType.LIBRARY) {
       photos = await this._photoService.getPhotos();
     }
 

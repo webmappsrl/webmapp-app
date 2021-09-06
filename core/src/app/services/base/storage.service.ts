@@ -88,6 +88,19 @@ export class StorageService {
     return this._remove(USER_STORAGE_KEY);
   }
 
+  getByKey(key: string): Promise<any> {
+    // console.log('------- ~ file: storage.service.ts ~ line 92 ~ StorageService ~ getByKey ~ key', key);
+    return this._get(key);
+  }
+
+  setByKey(key: string, value: any): Promise<any> {
+    return this._set(key, value);
+  }
+
+  removeByKey(key: string): Promise<any> {
+    return this._remove(key);
+  }
+
   /**
    * Set a value in the storage
    *
@@ -133,6 +146,7 @@ export class StorageService {
       this._store.get(key).then(
         (value) => {
           let result: any;
+          // console.log('------- ~ file: storage.service.ts ~ line 150 ~ StorageService ~ _storeGet ~ value', value);
           if (value) {
             try {
               result = JSON.parse(

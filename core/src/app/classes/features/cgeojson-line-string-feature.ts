@@ -1,11 +1,12 @@
 import { EGeojsonGeometryTypes } from 'src/app/types/egeojson-geometry-types.enum';
 import { ILocation } from 'src/app/types/location';
-import { IPoint, ILineString } from 'src/app/types/model';
+import { IPoint, ILineString, IGeojsonGeometry } from 'src/app/types/model';
 import { CGeojsonFeature } from './cgeojson-feature';
 
 export class CGeojsonLineStringFeature extends CGeojsonFeature {
-  constructor() {
+  constructor(geometry?: IGeojsonGeometry) {
     super();
+    if (geometry.type === 'LineString') this._geometry = geometry;
   }
 
   /**
@@ -18,6 +19,15 @@ export class CGeojsonLineStringFeature extends CGeojsonFeature {
     const newPoint: IPoint = [location.longitude, location.latitude];
     if (location.altitude) newPoint.push(location.altitude);
     (this._geometry.coordinates as ILineString).push(newPoint);
+  }
+
+  /**
+   * Set the feature geometry
+   *
+   * @param geometry a LineString geometry
+   */
+  setGeometry(geometry: IGeojsonGeometry): void {
+    if (geometry.type === 'LineString') this._geometry = geometry;
   }
 
   /**

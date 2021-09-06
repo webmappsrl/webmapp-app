@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
 import { SaveService } from 'src/app/services/save.service';
-import { Track } from 'src/app/types/track';
+import { ITrack } from 'src/app/types/track';
 
 @Component({
   selector: 'webmapp-tracklist',
@@ -10,15 +10,15 @@ import { Track } from 'src/app/types/track';
   styleUrls: ['./tracklist.page.scss'],
 })
 export class TracklistPage implements OnInit {
-  public tracks: Track[];
+  public tracks: ITrack[];
 
   constructor(
-    private saveService: SaveService,
-    private navController: NavController
+    private _saveService: SaveService,
+    private _navController: NavController
   ) {}
 
   async ngOnInit() {
-    this.tracks = await this.saveService.getTracks();
+    this.tracks = await this._saveService.getTracks();
     console.log(
       '------- ~ file: tracklist.page.ts ~ line 23 ~ TracklistPage ~ ngOnInit ~ this.tracks',
       this.tracks
@@ -31,6 +31,6 @@ export class TracklistPage implements OnInit {
         track: JSON.stringify(track),
       },
     };
-    this.navController.navigateForward('trackdetail', navigationExtras);
+    this._navController.navigateForward('trackdetail', navigationExtras);
   }
 }

@@ -1,5 +1,5 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom">
+  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
     <ion-tab-button tab="home">
       <i class="webmapp-icon-home-outline"></i>
       <ion-label class="webmapp-tabs-label">
@@ -10,6 +10,12 @@
       <i class="webmapp-icon-map-outline"></i>
       <ion-label class="webmapp-tabs-label">
         {{'tabs.map' | translate}}
+      </ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="favourites">
+      <i class="webmapp-icon-heart-outline"></i>
+      <ion-label class="webmapp-tabs-label">
+        {{'tabs.favourites' | translate}}
       </ion-label>
     </ion-tab-button>
     <ion-tab-button tab="profile">

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
-import { PhotoItem } from 'src/app/services/photo.service';
+import { IPhotoItem } from 'src/app/services/photo.service';
 import { SaveService } from 'src/app/services/save.service';
 
 @Component({
@@ -10,25 +10,23 @@ import { SaveService } from 'src/app/services/save.service';
   styleUrls: ['./photolist.page.scss'],
 })
 export class PhotolistPage implements OnInit {
-
-  public photos: PhotoItem[];
+  public photos: IPhotoItem[];
 
   constructor(
-    private saveService: SaveService,
-    private navController: NavController
-  ) { }
+    private _saveService: SaveService,
+    private _navController: NavController
+  ) {}
 
   async ngOnInit() {
-    this.photos = await this.saveService.getPhotos();
-    }
-
-  open(photo: PhotoItem) {
-    const navigationExtras: NavigationOptions = {
-      queryParams: {
-        photo: JSON.stringify(photo)
-      }
-    };
-    this.navController.navigateForward('photodetail', navigationExtras);
+    this.photos = await this._saveService.getPhotos();
   }
 
+  open(photo: IPhotoItem) {
+    const navigationExtras: NavigationOptions = {
+      queryParams: {
+        photo: JSON.stringify(photo),
+      },
+    };
+    this._navController.navigateForward('photodetail', navigationExtras);
+  }
 }

@@ -1,23 +1,34 @@
 {
   "root": true,
-  "ignorePatterns": ["projects/**/*"],
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": [
+        "*.ts"
+      ],
       "parserOptions": {
-        "project": ["core/tsconfig.json", "core/e2e/tsconfig.json"],
+        "project": [
+          "core/tsconfig.json",
+          "core/e2e/tsconfig.json"
+        ],
         "createDefaultProgram": true
       },
       "extends": [
         "plugin:@angular-eslint/ng-cli-compat",
         "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:jsdoc/recommended"
       ],
       "rules": {
         "@angular-eslint/component-class-suffix": [
           "error",
           {
-            "suffixes": ["Page", "Component"]
+            "suffixes": [
+              "Page",
+              "Component"
+            ]
           }
         ],
         "@angular-eslint/component-selector": [
@@ -42,12 +53,130 @@
         "arrow-body-style": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "@angular-eslint/no-input-rename": "off",
-        "@angular-eslint/no-output-rename": "off"
+        "@angular-eslint/no-output-rename": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "default",
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "forbid"
+          },
+          {
+            "selector": "variable",
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "forbid"
+          },
+          {
+            "selector": "variable",
+            "modifiers": [
+              "private"
+            ],
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "require"
+          },
+          {
+            "selector": "variable",
+            "format": [
+              "camelCase"
+            ],
+            "modifier": [
+              "const",
+              "exported"
+            ],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "forbid"
+          },
+          {
+            "selector": "interface",
+            "format": [
+              "PascalCase"
+            ],
+            "leadingUnderscore": "forbid",
+            "prefix": [
+              "I"
+            ]
+          },
+          {
+            "selector": "enum",
+            "format": [
+              "PascalCase"
+            ],
+            "leadingUnderscore": "forbid",
+            "prefix": [
+              "E"
+            ]
+          },
+          {
+            "selector": "enumMember",
+            "format": [
+              "UPPER_CASE"
+            ],
+            "leadingUnderscore": "forbid",
+            "trailingUnderscore": "forbid"
+          },
+          {
+            "selector": "memberLike",
+            "modifiers": [
+              "private"
+            ],
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "require"
+          },
+          {
+            "selector": "typeLike",
+            "format": [
+              "PascalCase"
+            ],
+            "leadingUnderscore": "forbid",
+            "trailingUnderscore": "forbid"
+          }
+        ],
+        "jsdoc/require-param-description": 0,
+        "jsdoc/require-returns-description": 0,
+        "jsdoc/require-throws": 1,
+        "jsdoc/require-jsdoc": [
+          "warn",
+          {
+            "require": {
+              "ArrowFunctionExpression": false,
+              "ClassDeclaration": false,
+              "ClassExpression": false,
+              "FunctionDeclaration": true,
+              "MethodDefinition": true
+            },
+            "checkConstructors": false,
+            "checkGetters": false,
+            "checkSetters": false
+          }
+        ]
+      },
+      "settings": {
+        "jsdoc": {
+          "tagNamePreference": {
+            "param": "param",
+            "returns": "returns",
+            "throws": "throws"
+          }
+        }
       }
     },
     {
-      "files": ["*.html"],
-      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
       "rules": {}
     }
   ]

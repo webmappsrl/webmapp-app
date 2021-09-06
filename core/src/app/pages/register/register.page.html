@@ -10,7 +10,7 @@
         <ion-back-button
           defaultHref="map"
           text=""
-          class="webmapp-backbutton webmapp-backbutton.dark"
+          class="webmapp-backbutton webmapp-backbutton-dark"
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{'pages.register.title' | translate}}</ion-title>
@@ -22,7 +22,7 @@
     [registering]="true"
     #map
     [btnposition]="'middle'"
-    (move)="recordMove($event)"
+    (moveBtn)="recordMove($event)"
     (unlocked)="recordStart($event)"
     [start-view]="location"
   ></webmapp-map>

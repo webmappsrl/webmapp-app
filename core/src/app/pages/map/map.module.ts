@@ -10,6 +10,9 @@ import { MapPage } from './map.page';
 import { MapModule } from 'src/app/components/map/map.module';
 import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { SearchBarComponent } from 'src/app/components/search-bar/search-bar.component';
+import { MapTrackCardComponent } from './map-track-card/map-track-card.component';
+import { PipeModule } from 'src/app/pipes/pipe.module';
 
 @NgModule({
   imports: [
@@ -18,11 +21,14 @@ import { TranslateModule } from '@ngx-translate/core';
     IonicModule,
     MapPageRoutingModule,
     MapModule,
-    TranslateModule
+    TranslateModule,
+    PipeModule
   ],
   declarations: [
     RecordingBtnComponent,
-    MapPage
+    MapPage,
+    SearchBarComponent,
+    MapTrackCardComponent
   ]
 })
 export class MapPageModule { }

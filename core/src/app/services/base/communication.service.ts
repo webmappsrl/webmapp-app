@@ -18,7 +18,10 @@ export class CommunicationService {
   /**
    * Perform a GET request and get the result
    *
-   * @param url
+   * @param {string} url the request url
+   * @param {any} options the request options
+   *
+   * @returns {Observable<any>}
    */
   get(url: string, options?: any): Observable<any> {
     return this._http.get(url, options);
@@ -27,7 +30,11 @@ export class CommunicationService {
   /**
    * Perform a request using POST and get the result
    *
-   * @param url
+   * @param {string} url the request url
+   * @param {any} body the request body
+   * @param {any} options the request options
+   *
+   * @returns {Observable<any>}
    */
   post(url: string, body: any, options?: any): Observable<any> {
     return this._http.post(url, body, options);
@@ -36,7 +43,9 @@ export class CommunicationService {
   /**
    * Perform a head request and return the filesize of an online resource
    *
-   * @param url the url of the online resource
+   * @param {string} url the request url
+   *
+   * @returns {Observable<number>} with the file size in byte
    */
   getFileSize(url: string): Observable<number> {
     return new Observable<number>((observer) => {

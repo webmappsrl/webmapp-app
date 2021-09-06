@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 export enum EMapLocationState {
   OFF = 0,
   ACTIVE = 1,

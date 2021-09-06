@@ -2,7 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import {
-  GEOHUB_BASE_URL,
+  GEOHUB_PROTOCOL,
+  GEOHUB_DOMAIN,
   GEOHUB_LOGIN_ENDPOINT,
   GEOHUB_LOGOUT_ENDPOINT,
 } from '../constants/geohub';
@@ -69,7 +70,7 @@ export class AuthService {
     return new Promise<boolean>((resolve, reject) => {
       this._communicationService
         .post(
-          GEOHUB_BASE_URL + GEOHUB_LOGIN_ENDPOINT,
+          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGIN_ENDPOINT,
           {
             email,
             password,
@@ -107,14 +108,18 @@ export class AuthService {
 
     if (token) {
       this._communicationService
-        .post(GEOHUB_BASE_URL + GEOHUB_LOGOUT_ENDPOINT, undefined, {
-          headers: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            'Content-Type': 'application/json',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            Authorization: 'Bearer ' + token,
-          },
-        })
+        .post(
+          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGOUT_ENDPOINT,
+          undefined,
+          {
+            headers: {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'Content-Type': 'application/json',
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              Authorization: 'Bearer ' + token,
+            },
+          }
+        )
         .subscribe(
           () => {},
           (err: HttpErrorResponse) => {

@@ -1,106 +1,147 @@
 @import "src/theme/mixins.scss";
 
 .webmapp-pageroute-content {
-    position: relative;
+  position: relative;
 }
 
 .webmapp-pageroute-header {
-    position: absolute;
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
 }
 
 .webmapp-pageroute-map-container {
+  width: 100%;
+  display: block;
+  height: 100vh;
+  position: relative;
+  .webmapp-pageroute-map {
     width: 100%;
-    height: 100%;
+
+    // height: 360px;
+    // margin-top: 110px;
+    // margin-bottom: 47px;
+    display: block;
+  }
 }
 
 .webmapp-pageroute-infopanel {
-    position: absolute;
-    width: 100%;
-    min-height: 40px;
-    bottom: -10px;
-    left: -10px;
-    border-radius: 15px 15px 0 0;
+  position: absolute;
+  width: 100%;
+  min-height: 40px;
+  // bottom: -261px;
 
-    .webmapp-pageroute-infopanel-drag {
-        width: 100%;
-        height: 30px;
-        text-align: center;
-        display: inline-block;
-        .webmapp-pageroute-infopanel-drag-handle {
-            background-color: var(--wm-color-lightgray);
-            display: inline-block;
-            width: 30px;
-            height: 4px;
-            border-radius: 4px;
-        }
+  .webmapp-pageroute-infopanel-card {
+    margin: 0;
+    // height: 350px;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .webmapp-pageroute-infopanel-drag {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    display: inline-block;
+    .webmapp-pageroute-infopanel-drag-handle {
+      background-color: var(--wm-color-grey);
+      display: inline-block;
+      width: 55px;
+      height: 5px;
+      border-radius: 5px;
     }
+  }
 }
 
 .webmapp-pageroute-infopanel-name {
-    padding: 5px 15px;
-    font-weight: var(--wm-font-weight-xbold);
+  padding: 5px 15px;
+  font-weight: var(--wm-font-weight-xbold);
 }
 .webmapp-pageroute-infopanel-icon {
-    color: var(--wm-color-secondary);
+  color: var(--wm-color-secondary);
 }
 .webmapp-pageroute-infopanel-value {
-    padding: 6px;
-    font-size: var(--wm-font-sm);
+  padding: 6px;
+  font-size: var(--wm-font-sm);
 }
 
 .webmapp-pageroute-fabbottom {
-    bottom: 140px;
-    .webmapp-pageroute-btnbottom {
-        --color: var(--wm-color-primary);
-        --background: var(--wm-color-light);
-        --background-activated: var(--wm-color-primary);
-        --background-activated-opacity: 0.25;
-        --background-focused: var(--wm-color-light);
-        --background-focused-opacity: 0;
-        --background-hover: var(--wm-color-light);
-        --background-hover-opacity: 0;
-    }
-    &.webmapp-pageroute-fabbottom-top {
-        top: 115px;
-        bottom: auto;
-    }
-}
-
-.webmapp-pageroute-btntop {
-    --color: var(--wm-color-dark);
+  bottom: 140px;
+  .webmapp-pageroute-btnbottom {
+    --color: var(--wm-color-primary);
     --background: var(--wm-color-light);
-    --background-activated: var(--wm-color-dark);
+    --background-activated: var(--wm-color-primary);
     --background-activated-opacity: 0.25;
     --background-focused: var(--wm-color-light);
     --background-focused-opacity: 0;
     --background-hover: var(--wm-color-light);
     --background-hover-opacity: 0;
+  }
+  &.webmapp-pageroute-fabbottom-top {
+    top: 115px;
+    bottom: auto;
+  }
+}
+
+.webmapp-pageroute-btntop {
+  --color: var(--wm-color-dark);
+  --background: var(--wm-color-light);
+  --background-activated: var(--wm-color-dark);
+  --background-activated-opacity: 0.25;
+  --background-focused: var(--wm-color-light);
+  --background-focused-opacity: 0;
+  --background-hover: var(--wm-color-light);
+  --background-hover-opacity: 0;
 }
 
 .webmapp-pageroute-btnnavbottom {
-    position: absolute;
-    right: 16px;
-    bottom: 100px;
+  position: absolute;
+  right: 16px;
+  bottom: 91px;
 }
 .webmapp-pageroute-btnnavigate {
-    --border-radius: 20px;
-    --color: var(--wm-color-light);
-    --background: var(--wm-color-primary);
-    --background-activated: var(--wm-color-light);
-    --background-activated-opacity: 0.25;
-    --background-focused: var(--wm-color-primary);
-    --background-focused-opacity: 0;
-    --background-hover: var(--wm-color-primary);
-    --background-hover-opacity: 0;
+  --border-radius: 20px;
+  --color: var(--wm-color-light);
+  --background: var(--wm-color-primary);
+  --background-activated: var(--wm-color-light);
+  --background-activated-opacity: 0.25;
+  --background-focused: var(--wm-color-primary);
+  --background-focused-opacity: 0;
+  --background-hover: var(--wm-color-primary);
+  --background-hover-opacity: 0;
 }
 
 .webmapp-pageroute-menuopen {
-    padding: 15px;
+  padding: 15px;
 }
 .webmapp-pageroute-menuclose {
-    font-size: 28px;
-    padding: 15px;
+  font-size: 28px;
+  padding: 15px;
 }
 .webmapp-pageroute-menuitem {
-    padding: 5px 20px;
+  padding: 5px 20px;
+}
+
+.webmapp-route-tabs {
+  margin: 20px 0px;
+  padding: 0 0 20px;
+  .webmapp-pageroute-infopanel-tabs {
+    border: none;
+    --border: none;
+    .webmapp-pageroute-infopanel-tabs-button {
+      &.tab-selected {
+        color: var(--wm-color-dark);
+        font-weight: var(--wm-font-weight-bold);
+        ::after {
+          content: "";
+          display: block;
+          width: 40%;
+          margin-left: 30%;
+          margin-top: 3px;
+          border-bottom: 0px;
+          border-style: solid;
+          border-color: var(--wm-color-primary);
+        }
+      }
+    }
+  }
 }

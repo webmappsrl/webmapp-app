@@ -8,9 +8,9 @@ import { IPoint } from '../types/model';
   providedIn: 'root',
 })
 export class GeoutilsService {
-  private maxCurrentSpeedPoint = 5;
+  private _maxCurrentSpeedPoint = 5;
 
-  constructor() { }
+  constructor() {}
 
   /**
    * Transform a second period into object with hours/minutes/seconds
@@ -36,7 +36,7 @@ export class GeoutilsService {
     if (track?.geometry && track?.geometry?.coordinates.length >= 2) {
       let res = 0;
       for (let i = 1; i < track.geometry.coordinates.length; i++) {
-        res += this.calcDistanceM(
+        res += this._calcDistanceM(
           track.geometry.coordinates[i] as IPoint,
           track.geometry.coordinates[i - 1] as IPoint
         );
@@ -54,7 +54,7 @@ export class GeoutilsService {
    */
   getTime(track: CGeojsonLineStringFeature): number {
     if (track.properties.timestamps && track.properties.timestamps.length > 1) {
-      return this.calcTimeS(
+      return this._calcTimeS(
         track.properties.timestamps[0],
         track.properties.timestamps[track.properties.timestamps.length - 1]
       );
@@ -73,12 +73,16 @@ export class GeoutilsService {
     const lenPoints = track.geometry.coordinates.length;
     const lenTimes = track.properties.timestamps.length;
     if (lenPoints >= 2 && lenTimes >= 2) {
-      const maxIndex = Math.min(lenPoints, lenTimes, this.maxCurrentSpeedPoint);
-      const dist = this.calcDistanceM(
+      const maxIndex = Math.min(
+        lenPoints,
+        lenTimes,
+        this._maxCurrentSpeedPoint
+      );
+      const dist = this._calcDistanceM(
         track.geometry.coordinates[lenPoints - 1] as IPoint,
         track.geometry.coordinates[lenPoints - maxIndex] as IPoint
       );
-      const timeS = this.calcTimeS(
+      const timeS = this._calcTimeS(
         track.properties.timestamps[lenTimes - maxIndex],
         track.properties.timestamps[lenTimes - 1]
       );
@@ -90,8 +94,8 @@ export class GeoutilsService {
   /**
    * Get the average speed on a track
    *
-   * @param track a track feature
-   * @returns average speed
+   * @param {CGeojsonLineStringFeature} track a track feature
+   * @returns {number} the average speed
    */
   getAverageSpeed(track: CGeojsonLineStringFeature): number {
     const time = this.getTime(track) / 3600;
@@ -111,8 +115,9 @@ export class GeoutilsService {
   /**
    * Get the difference in height of a track
    *
-   * @param track a track feature
-   * @returns total height difference
+   * @param {CGeojsonLineStringFeature} track a track feature
+   *
+   * @returns {number} total height difference
    */
   getSlope(track: CGeojsonLineStringFeature): number {
     return 0;
@@ -121,23 +126,23 @@ export class GeoutilsService {
   /**
    * Get the top speed on all the track
    *
-   * @param track a track feature
-   * @returns top speed
+   * @param {CGeojsonLineStringFeature} track a track feature
+   *
+   * @returns {number} top speed
    */
   getTopSpeed(track: CGeojsonLineStringFeature): number {
     if (!track || !track.geometry) return 0;
     const lenPoints = track.geometry.coordinates.length;
     const lenTimes = track.properties.timestamps.length;
 
-
     if (lenPoints >= 2 && lenTimes >= 2) {
       let res = 0;
       for (let i = 1; i < lenPoints; i++) {
-        const dist = this.calcDistanceM(
+        const dist = this._calcDistanceM(
           track.geometry.coordinates[i] as IPoint,
           track.geometry.coordinates[i - 1] as IPoint
         );
-        const timeS = this.calcTimeS(
+        const timeS = this._calcTimeS(
           track.properties.timestamps[i - 1],
           track.properties.timestamps[i]
         );
@@ -149,18 +154,14 @@ export class GeoutilsService {
     return 0;
   }
 
-
-  private calcDistanceM(point1: Coordinate, point2: Coordinate): number {
+  private _calcDistanceM(point1: Coordinate, point2: Coordinate): number {
     const p1 = [point1[0], point1[1]];
     const p2 = [point2[0], point2[1]];
     return getDistance(p1, p2);
   }
 
-  private calcTimeS(time1: number, time2: number): number {
+  private _calcTimeS(time1: number, time2: number): number {
     const res = (time2 - time1) / 1000;
     return res;
   }
-
-
-
 }

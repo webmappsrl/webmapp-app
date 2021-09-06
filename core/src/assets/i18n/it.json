@@ -6,7 +6,9 @@
     "confirm": "conferma",
     "cancel": "annulla",
     "delete": "cancella",
-    "retry": "riprova"
+    "retry": "riprova",
+    "minute": "min",
+    "hour": "h"
   },
   "modals": {
     "login": {
@@ -72,7 +74,10 @@
   "pages": {
     "home": {
       "mostViewedTracks": "Percorsi più visti",
-      "closerTracks": "Percorsi nelle vicinanze"
+      "closerTracks": "Percorsi nelle vicinanze",
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
+      "intro": "Pianifichiamo insieme la tua prossima avventura",
+      "button": "Scegli un punto di partenza"
     },
     "profile": {
       "title": "Profilo",
@@ -137,7 +142,8 @@
       }
     },
     "map": {
-      "recordingbtn": "Reg. in corso"
+      "recordingbtn": "Reg. in corso",
+      "searchherebtn": "Cerca in quest'area"
     },
     "waypoint": {
       "title": "Registra un waypoint",
@@ -190,7 +196,39 @@
       "navigate": "Naviga",
       "directions": "Ottieni indicazioni",
       "download": "Scarica",
-      "share": "Condividi"
+      "share": "Condividi",
+      "tabdetail": "Dettagli",
+      "tabviability": "Percorribilità",
+      "tabhowto": "Come arrivare",
+      "tabeat": "Dove mangiare",
+      "tabdescription": "Descrizione",
+      "tabwalkable": "Accessibilità",
+      "detail": {
+        "distance": "Lunghezza",
+        "ascent": "Dislivello +",
+        "descent": "Dislivello -",
+        "ele_max": "Quota massima",
+        "ele_min": "Quota minima",
+        "ele_from": "Quota di partenza",
+        "ele_to": "Quota di arrivo"
+      },
+      "description": {
+        "gallery": "Gallery",
+        "description": "Descrizione"
+      },
+      "viability":{
+        "title":"Praticabilità del percorso",
+        "info":"Altre info"
+      },
+      "favbtn":{
+        "isFavourite":"Aggiunto ai preferiti!",
+        "isNotFavourite":"Rimosso dai preferiti!"
+      }
+    },
+    "favourites":{
+      "title":"Preferiti",
+      "nodata":"Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
+      "remove":"Rimuovi"
     }
   },
   "components": {
@@ -205,11 +243,40 @@
       "btnrec": {
         "slide": "Scorri per registrare"
       }
+    },
+    "slopechart": {
+      "surfaces": {
+        "asphalt": {
+          "label": "asfalto"
+        },
+        "concrete": {
+          "label": "cemento"
+        },
+        "dirt": {
+          "label": "terra"
+        },
+        "grass": {
+          "label": "erba"
+        },
+        "gravel": {
+          "label": "ghiaia"
+        },
+        "paved": {
+          "label": "lastricato"
+        },
+        "sand": {
+          "label": "sabbia"
+        }
+      },
+      "slope": {
+        "label": "pendenza"
+      }
     }
   },
   "tabs": {
     "home": "home",
     "map": "mappa",
+    "favourites": "preferiti",
     "profile": "profilo"
   },
   "services": {
@@ -222,6 +289,12 @@
           "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
         }
       }
+    },
+    "share": {
+      "title": "Hai visto questo percorso?",
+      "text": "Ecco un percorso interessante di webmapp",
+      "url": "www.webmapp.it",
+      "dialogTitle": "Condividi con i tuoi amici"
     }
   }
 }

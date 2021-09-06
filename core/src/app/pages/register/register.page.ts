@@ -8,12 +8,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from 'src/app/components/map/map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { SuccessType } from '../../types/success.enum';
+import { ESuccessType } from '../../types/esuccess.enum';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSuccessComponent } from '../../components/modal-success/modal-success.component';
 import { SaveService } from 'src/app/services/save.service';
-import { Track } from 'src/app/types/track';
-import { ILocation } from 'src/app/types/location';
+import { ITrack } from 'src/app/types/track';
 import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
 
 @Component({
@@ -165,7 +164,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      const track: Track = Object.assign(
+      const track: ITrack = Object.assign(
         {
           geojson,
         },
@@ -195,7 +194,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     const modaSuccess = await this._modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
-        type: SuccessType.TRACK,
+        type: ESuccessType.TRACK,
         track,
       },
     });
