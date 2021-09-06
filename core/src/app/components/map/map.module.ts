@@ -8,6 +8,7 @@ import { PopoverRegisterComponent } from './popover-register/popover-register.co
 import { TranslateModule } from '@ngx-translate/core';
 import { BtnLayerComponent } from './btn-layer/btn-layer.component';
 import { BtnRecComponent } from './btn-rec/btn-rec.component';
+import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { BtnRecComponent } from './btn-rec/btn-rec.component';
     BtnRegisterComponent,
     BtnLayerComponent,
     BtnRecComponent,
-    PopoverRegisterComponent
+    PopoverRegisterComponent,
+    ClusterMarkerComponent
   ],
   imports: [
     CommonModule,

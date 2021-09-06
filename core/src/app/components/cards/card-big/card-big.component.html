@@ -19,11 +19,11 @@
       ></ion-skeleton-text>
     </ng-container>
     <ng-container *ngIf="title">
-      <ion-card-subtitle class="webmapp-card-big-subtitle" *ngIf="subtitle">
-        {{ subtitle }}
+      <ion-card-subtitle class="webmapp-card-big-subtitle">
+        {{ where | wmtrans }}
       </ion-card-subtitle>
       <ion-card-title class="webmapp-card-big-title">
-        {{ title }}
+        {{ title  | wmtrans }}
       </ion-card-title>
     </ng-container>
   </ion-card-header>

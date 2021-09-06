@@ -1,6 +1,10 @@
 // MAP
+export const DEF_MAP_MAX_BOUNDINGBOX: number[] = [-90,-180,90,180];
+export const DEF_MAP_MIN_ZOOM: number = 1;
 export const DEF_MAP_MAX_ZOOM: number = 16;
 export const DEF_MAP_LOCATION_ZOOM: number = 15;
+export const DEF_MAP_CLUSTER_ZOOM_DURATION: number = 600;
+export const DEF_MAP_CLUSTER_CLICK_TOLERANCE: number = 40;
 // export const DEF_FEATURE_COLOR: string = '#000000';
 // export const DEF_FEATURE_FILL_OPACITY: number = 0.2;
 // export const DEF_TRACK_STROKE_WIDTH: number = 2.5;

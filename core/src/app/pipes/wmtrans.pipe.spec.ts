@@ -1,4 +1,4 @@
-import { WmTransPipe } from './wmtrans.pipe';
+import { WmTransPipe } from './pipe.module';
 
 describe('WmTransPipe', () => {
   it('create an instance', () => {

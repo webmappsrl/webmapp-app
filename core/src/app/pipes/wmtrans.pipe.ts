@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
   name: 'wmtrans',
 })
 export class WmTransPipe implements PipeTransform {
-  constructor(private _translate: TranslateService) {}
+  constructor(private _translate: TranslateService) { }
 
   transform(value: any, ...args: unknown[]): unknown {
     if (value) {
@@ -19,6 +19,9 @@ export class WmTransPipe implements PipeTransform {
         if (value[val]) {
           return value[val];
         }
+      }
+      if (typeof (value) === 'string') {
+        return value;
       }
     }
     return '';

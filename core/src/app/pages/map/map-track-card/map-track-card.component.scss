@@ -1,0 +1,71 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-maptrackcard {
+    width: 286px;
+    height: 137px;
+    border-radius: 15px;
+    position: relative;
+    @include box-shadow-light;
+
+    .webmapp-maptrackcard-image {
+        height: 137px;
+        width: 108px;
+        &::part(image) {
+            object-fit: cover;
+        }
+        left: 0;
+        position: absolute;
+    }
+
+    .webmapp-maptrackcard-info {
+        left: 108px;
+        position: absolute;
+        width: 178px;
+        padding: 10px;
+
+        .webmapp-maptrackcard-info-label {
+            display: block;
+            color: var(--wm-color-dark);
+            text-align: left;
+            min-height: 30px;
+        }
+
+        .webmapp-maptrackcard-info-name {
+            font-weight: var(--wm-font-weight-bold);
+            font-size: var(--wm-font-sm);
+            min-height: 40px;
+        }
+        .webmapp-maptrackcard-info-time {
+            font-size: var(--wm-font-xsm);
+        }
+        .webmapp-maptrackcard-info-difficulty {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-maptrackcard-info-distance {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-maptrackcard-info-icon {
+            color: var(--wm-color-secondary);
+        }
+    }
+
+    .webmapp-maptrackcard-favourite {
+        position: absolute;
+        z-index: 99;
+        top: 10px;
+        left: 10px;
+        color: var(--wm-color-light);
+    }
+
+    .webmapp-maptrackcard-exit {
+        position: absolute;
+        z-index: 99;
+        top: 7px;
+        right: 8px;
+        color: var(--wm-color-derk);
+        font-size: 9px;
+        @include box-shadow-light;
+    }
+}

@@ -1,14 +1,22 @@
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
+import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { ILocation } from '../types/location';
-import { IGeojsonFeature } from '../types/model';
+import { IGeojsonClusterApiResponse, IGeojsonFeature, WhereTaxonomy } from '../types/model';
 import { CommunicationService } from './base/communication.service';
+import { StorageService } from './base/storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeohubService {
-  constructor(private _communicationService: CommunicationService) {}
+
+  constructor(
+    private _communicationService: CommunicationService,
+    private _storageService: StorageService
+  ) { }
 
   /**
    * Get an instance of the specified ec track
@@ -17,8 +25,33 @@ export class GeohubService {
    *
    * @returns {CGeojsonLineStringFeature}
    */
-  getEcTrack(id: string): CGeojsonLineStringFeature {
-    return undefined;
+  async getEcTrack(id: string): Promise<CGeojsonLineStringFeature> {
+    const fondo = ['asfalto', 'lastricato', 'naturale']
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+      .pipe(map((res: CGeojsonLineStringFeature) => {
+        let lastAlt = 0; let idx = 0
+        res.geometry.coordinates.forEach(coord => {
+          coord.push(Math.abs(coord[2] - lastAlt)); //pendenza
+          lastAlt = coord[2];
+          coord.push(fondo[Math.round(idx / 30) % 3]);
+          idx++;
+        })
+        return res;
+      }))
+      .toPromise();
+    return res;
+  }
+
+  /**
+   * Get an instance of the specified ec track
+   *
+   * @param {string} id the ec track id
+   *
+   * @returns {IGeojsonFeature}
+   */
+  async getEcRoute(id: string): Promise<IGeojsonFeature> {
+    return this._getMockFeature();
   }
 
   /**
@@ -39,17 +72,24 @@ export class GeohubService {
    *
    * @returns {IGeojsonFeature}
    */
-  getEcMedia(id: string): IGeojsonFeature {
+  async getEcMedia(id: string): Promise<IGeojsonFeature> {
     return undefined;
   }
 
   /**
    * Perform a search with the given params
    *
-   * @returns {Array<IGeojsonFeature>}
+   * @returns {Array<RouteCluster>}
    */
-  search(): Array<IGeojsonFeature> {
-    return [];
+  async search(boundingBox: number[], referenceTrackId: number = null): Promise<IGeojsonClusterApiResponse> {
+    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`;
+    if (referenceTrackId) {
+      url += `&reference_id=${referenceTrackId}`;
+    }
+    const res = await this._communicationService
+      .get(url)
+      .toPromise();
+    return res;
   }
 
   /**
@@ -59,8 +99,43 @@ export class GeohubService {
    *
    * @returns {Array<IGeojsonFeature>}
    */
-  getNearEcTracks(location: ILocation): Array<IGeojsonFeature> {
-    return [];
+  async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`,).pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
+  /**
+   * Get an array with the closest ec tracks to the specified location
+   *
+   * @returns {Array<IGeojsonFeature>}
+   */
+  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
+    const res = await this._communicationService
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
+  /**
+   * Get a where taxonomy (form cache if available)
+   * 
+   * @param id id of the where taxonomy
+   * @returns a where taxonomy
+   */
+  async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
+    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
+    const cached = await this._getFromCache(cacheId);
+    if (cached) return cached;
+    const res = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/taxonomy/where/${id}`,)
+      .pipe(map(value => {
+        delete value.geometry;
+        this._setInCache(cacheId, value);
+        return value;
+      }))
+      .toPromise();
+    return res;
   }
 
   /**
@@ -73,4 +148,23 @@ export class GeohubService {
   private _getFeature<T extends IGeojsonFeature>(id: string): T {
     return undefined;
   }
+
+  private async _getMockFeature(): Promise<IGeojsonFeature> {
+    const res = await this._communicationService
+      .get('https://geohub.webmapp.it/api/ec/track/18')
+      .toPromise();
+    return res;
+  }
+
+  private async _getFromCache(cacheId: string): Promise<any> {
+    const res = await this._storageService.getByKey(cacheId);
+    return res;
+  }
+
+  private async _setInCache(cacheId, value) {
+    return this._storageService.setByKey(cacheId, value);
+  }
+
+
+
 }

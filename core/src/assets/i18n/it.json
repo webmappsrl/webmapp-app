@@ -6,7 +6,9 @@
     "confirm": "conferma",
     "cancel": "annulla",
     "delete": "cancella",
-    "retry": "riprova"
+    "retry": "riprova",
+    "minute": "min",
+    "hour": "h"
   },
   "modals": {
     "login": {
@@ -72,7 +74,10 @@
   "pages": {
     "home": {
       "mostViewedTracks": "Percorsi più visti",
-      "closerTracks": "Percorsi nelle vicinanze"
+      "closerTracks": "Percorsi nelle vicinanze",
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
+      "intro": "Pianifichiamo insieme la tua prossima avventura",
+      "button": "Scegli un punto di partenza"
     },
     "profile": {
       "title": "Profilo",
@@ -137,7 +142,8 @@
       }
     },
     "map": {
-      "recordingbtn": "Reg. in corso"
+      "recordingbtn": "Reg. in corso",
+      "searchherebtn": "Cerca in quest'area"
     },
     "waypoint": {
       "title": "Registra un waypoint",
@@ -205,6 +211,10 @@
         "ele_min": "Quota minima",
         "ele_from": "Quota di partenza",
         "ele_to": "Quota di arrivo"
+      },
+      "description": {
+        "gallery": "Gallery",
+        "description": "Descrizione"
       }
     }
   },
@@ -219,6 +229,34 @@
       },
       "btnrec": {
         "slide": "Scorri per registrare"
+      }
+    },
+    "slopechart": {
+      "surfaces": {
+        "asphalt": {
+          "label": "asfalto"
+        },
+        "concrete": {
+          "label": "cemento"
+        },
+        "dirt": {
+          "label": "terra"
+        },
+        "grass": {
+          "label": "erba"
+        },
+        "gravel": {
+          "label": "ghiaia"
+        },
+        "paved": {
+          "label": "lastricato"
+        },
+        "sand": {
+          "label": "sabbia"
+        }
+      },
+      "slope": {
+        "label": "pendenza"
       }
     }
   },

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StatusService } from 'src/app/services/status.service';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage {
-  constructor() {}
+  constructor(
+    private _statusService : StatusService
+  ) {}
+
+  isBarHidden(){
+    return this._statusService.isSelectedMapTrack;
+  }
 }
