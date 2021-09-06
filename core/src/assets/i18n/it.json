@@ -271,6 +271,14 @@
       "slope": {
         "label": "pendenza"
       }
+    },
+    "searchbar":{
+      "places":"Luoghi",
+      "noplaces":"Nessun luogo corrisponde alla ricerca effetuata",
+      "tracks":"Percorsi",
+      "notracks":"Nessun percorso corrisponde alla ricerca effetuata",
+      "filters":"Filtra per",
+      "nofilters":"Nessun filtro corrisponde alla ricerca effetuata"
     }
   },
   "tabs": {
