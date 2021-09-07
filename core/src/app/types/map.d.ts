@@ -1,6 +1,6 @@
 import Feature from "ol/Feature";
 import Geometry from "ol/geom/Geometry";
-import { IGeojsonCluster, IGeojsonPoi } from "./model";
+import { IGeojsonCluster, IGeojsonPoi, iLocalString } from "./model";
 
 export interface iMarker{
   icon: Feature<Geometry>,
@@ -15,6 +15,33 @@ export interface PoiMarker  extends iMarker{
 }
 
 export interface MapMoveEvent {
-  boundigBox: number[];
+  boundingbox: number[];
   zoom: number;
+}
+
+export interface PlaceResult {
+  type: 'Point';
+  properties: {
+    id: number; // Id  poi
+    image: string; // url image 
+    boundingbox: number[];   
+    name: iLocalString;
+    desription: iLocalString;
+  };
+}
+export interface placeResult {
+  type: 'Point';
+  properties: {
+    boundingbox: number[];   
+    name: iLocalString;
+  };
+}
+export interface TrackResult {
+  type: 'Point';
+  properties: {
+    id: string; // Id track
+    image: string; // url image  
+    name: iLocalString;
+    desription: iLocalString;
+  };
 }

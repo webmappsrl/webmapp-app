@@ -8,6 +8,8 @@ export class StatusService {
 
   private _route: IGeojsonFeature;
 
+  private _filters: any[];
+
   private _relatedPois: IGeojsonPoiDetailed[];
   private _selectedPoiId: number;
 
@@ -33,10 +35,27 @@ export class StatusService {
     this._selectedPoiId = id;
   }
 
-  public getRelatedPois() : IGeojsonPoiDetailed[]{
+  public getRelatedPois(): IGeojsonPoiDetailed[] {
     return this._relatedPois;
   }
-  public getSelectedPoiId() : number {
+  public getSelectedPoiId(): number {
     return this._selectedPoiId;
+  }
+
+  public addFilter(filter) {
+    // TODO set search filters
+    this._filters.push(filter);
+  }
+
+  public removeFilter(filter) {
+    // TODO set search filters
+    const idx = this._filters.find(x => x == filter);
+    if (idx >= 0) {
+      this._filters.splice(idx, 1);
+    }
+  }
+  public getFilters() {
+    // TODO set search filters
+    return this._filters;
   }
 }
