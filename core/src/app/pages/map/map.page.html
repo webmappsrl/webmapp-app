@@ -24,7 +24,7 @@
   <ion-slides pager="false" (ionSlideDidChange)="sliderChange($event)" [options]="sliderOptions"
     [hidden]="!selectedTracks || !selectedTracks.length" class="webmapp-pagemap-cardslider" #slider>
     <ion-slide *ngFor="let track of selectedTracks">
-      <webmapp-map-track-card [track]="track" (close)="closeCard()" (click)="openTrack(track)"></webmapp-map-track-card>
+      <webmapp-map-track-card [track]="track" (close)="closeCard()" (openClick)="openTrack(track)"></webmapp-map-track-card>
     </ion-slide>
   </ion-slides>
 </ion-content>

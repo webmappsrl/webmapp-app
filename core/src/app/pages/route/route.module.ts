@@ -10,13 +10,14 @@ import { RoutePage } from './route.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
 import { TabDetailComponent } from './tab-detail/tab-detail.component';
-import { TabAccessibilityComponent } from './tab-accessibility/tab-accessibility.component';
+import { TabViabilityComponent } from './tab-viability/tab-viability.component';
 import { TabDescriptionComponent } from './tab-description/tab-description.component';
 import { TabEatComponent } from './tab-eat/tab-eat.component';
 import { TabHowtoComponent } from './tab-howto/tab-howto.component';
 import { TabWalkableComponent } from './tab-walkable/tab-walkable.component';
 import { PipeModule } from 'src/app/pipes/pipe.module';
 import { SlopeChartComponent } from './slope-chart/slope-chart.component';
+import { FavBtnComponent } from './fav-btn/fav-btn.component';
 
 @NgModule({
   imports: [
@@ -35,8 +36,9 @@ import { SlopeChartComponent } from './slope-chart/slope-chart.component';
     TabHowtoComponent,
     TabEatComponent,
     TabDescriptionComponent,
-    TabAccessibilityComponent,
+    TabViabilityComponent,
     SlopeChartComponent,
+    FavBtnComponent
   ],
 })
 export class RoutePageModule {}

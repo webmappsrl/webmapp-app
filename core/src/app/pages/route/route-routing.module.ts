@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { RoutePage } from './route.page';
-import { TabAccessibilityComponent } from './tab-accessibility/tab-accessibility.component';
+import { TabViabilityComponent } from './tab-viability/tab-viability.component';
 import { TabDescriptionComponent } from './tab-description/tab-description.component';
 import { TabDetailComponent } from './tab-detail/tab-detail.component';
 import { TabEatComponent } from './tab-eat/tab-eat.component';
@@ -20,8 +20,8 @@ const routes: Routes = [
         component: TabDetailComponent,
       },
       {
-        path: 'route-walkable',
-        component: TabWalkableComponent,
+        path: 'route-viability',
+        component: TabViabilityComponent,
       },
       {
         path: 'route-howto',
@@ -36,13 +36,13 @@ const routes: Routes = [
         component: TabDescriptionComponent,
       },
       {
-        path: 'route-accessibility',
-        component: TabAccessibilityComponent,
-      },
-      {
         path: '',
         redirectTo: 'route-detail',
         pathMatch: 'full',
+      },
+      {
+        path: 'route-walkable',
+        component: TabWalkableComponent,
       },
     ],
   },

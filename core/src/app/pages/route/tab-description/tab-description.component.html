@@ -3,22 +3,22 @@
   <div>
     <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.gallery' | translate}}
     </ion-label>
-    
-    <ion-slides pager="false"  [options]="sliderOptions" class="webmapp-pageroute-tabdescription-photoslider"
-    #slider>
-    <ion-slide *ngFor="let photo of route?.properties.image_gallery">
-      <div class="webmapp-pageroute-tabdescription-photocontainer" >
-        <ion-img [src]="photo.url" class="webmapp-pageroute-tabdescription-photo"></ion-img>
-      </div>
-    </ion-slide>
-  </ion-slides>
-    
+
+    <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pageroute-tabdescription-photoslider" #slider>
+      <ion-slide *ngFor="let photo of route?.properties.image_gallery">
+        <div class="webmapp-pageroute-tabdescription-photocontainer">
+          <ion-img [src]="photo.url" class="webmapp-pageroute-tabdescription-photo"></ion-img>
+        </div>
+      </ion-slide>
+    </ion-slides>
+
 
   </div>
   <div>
     <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.description' |
       translate}}</ion-label>
-    <div class="webmapp-pageroute-tabdescription-description" [innerHTML]="this.route.properties.description | wmtrans"></div>
+    <div class="webmapp-pageroute-tabdescription-description" [innerHTML]="this.route.properties.description | wmtrans">
+    </div>
   </div>
 
 </ion-content>

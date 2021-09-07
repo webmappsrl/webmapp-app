@@ -37,6 +37,7 @@ import {
   DEF_MAP_CLUSTER_CLICK_TOLERANCE,
   DEF_MAP_MAX_ZOOM,
   DEF_MAP_MIN_ZOOM,
+  DEF_MAP_MAX_CENTER_ZOOM,
 } from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -46,10 +47,15 @@ import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
 import { MapService } from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import { ITrack } from 'src/app/types/track';
-import { IGeojsonCluster, ILineString } from 'src/app/types/model';
+import {
+  IGeojsonCluster,
+  IGeojsonGeometry,
+  IGeojsonPoi,
+  ILineString,
+} from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
 import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
-import { ClusterMarker, MapMoveEvent } from 'src/app/types/map';
+import { ClusterMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
 import { AuthService } from 'src/app/services/auth.service';
@@ -59,6 +65,16 @@ import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
+import { GeohubService } from 'src/app/services/geohub.service';
+import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
+import { getVectorContext } from 'ol/render';
+
+const SELECTEDPOIANIMATIONDURATION = 300;
+
+const CLUSTERLAYERZINDEX = 400;
+const POISLAYERZINDEX = 400;
+const SELECTEDPOILAYERZINDEX = 500;
+const TRACKLAYERZINDEX = 450;
 
 @Component({
   selector: 'webmapp-map',
@@ -72,6 +88,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
+  @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
@@ -89,6 +106,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         doubleClickZoom: !value,
         dragPan: !value,
         mouseWheelZoom: !value,
+        pinchRotate: false,
       });
       this._map.getInteractions().forEach((inter) => {
         this._map.removeInteraction(inter);
@@ -99,9 +117,32 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('height') set height(value: number) {
-    if (this._height != value) {
-      this._height = value;
+  @Input('height') set height(value: number[] | number) {
+    let height = value as number;
+    let topPadding = this._bottomPadding;
+    let bottomPadding = this._topPadding;
+    if (Array.isArray(value)) {
+      height = value[0];
+      topPadding = value[1] ? value[1] : this._topPadding;
+      bottomPadding = value[2] ? value[2] : this._bottomPadding;
+    }
+    if (
+      this._height != height ||
+      this._bottomPadding != bottomPadding ||
+      this._topPadding != topPadding
+    ) {
+      this._height = height;
+      this._bottomPadding = bottomPadding;
+      this._topPadding = topPadding;
+      if (this._track.registeredTrack && this.centerToTrack) {
+        this._centerMapToTrack();
+      }
+    }
+  }
+
+  @Input('bottomPadding') set bottomPadding(value: number) {
+    if (this._bottomPadding != value) {
+      this._bottomPadding = value;
       if (this._track.registeredTrack && this.centerToTrack) {
         this._centerMapToTrack();
       }
@@ -118,10 +159,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         } else {
           this.drawTrack(value);
         }
-      }, 10);
+      }, 0);
     } else {
       this.deleteTrack();
     }
+  }
+
+  @Input('pois') set pois(value: IGeojsonPoi[]) {
+    if (value) {
+      const valueClone = JSON.parse(JSON.stringify(value));
+      setTimeout(() => {
+        this._addPoisMarkers(valueClone);
+      }, 0);
+    }
+  }
+
+  @Input('selectedpoi') set selectedpoi(value: IGeojsonPoi) {
+    setTimeout(() => {
+      this._selectedPoiMarker(value);
+    }, 0);
   }
 
   @Input('position') set position(value: ILocation) {
@@ -131,7 +187,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this._location = value;
         this.animateLocation(value);
         this._centerMapToLocation();
-      }, 10);
+      }, 0);
     }
   }
 
@@ -176,8 +232,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _clusterMarkers: ClusterMarker[] = [];
   private _clusterLayer: VectorLayer;
 
+  private _poiMarkers: PoiMarker[] = [];
+  private _poisLayer: VectorLayer;
+  private _slectedPoiLayer: VectorLayer;
+
   private _position: ILocation = null;
   private _height: number;
+  private _bottomPadding: number = 0;
+  private _topPadding: number = 0;
 
   private _view: View;
   private _map: Map;
@@ -222,6 +284,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private geolocationService: GeolocationService,
     private _mapService: MapService,
+    private geohubSErvice: GeohubService,
     // private resolver: ComponentFactoryResolver,
     private _authService: AuthService
   ) {
@@ -296,6 +359,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         mouseWheelZoom: false,
         // pointer: false,
         // select: false
+        pinchRotate: false,
       });
     }
 
@@ -416,7 +480,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 450,
+        zIndex: TRACKLAYERZINDEX,
       });
     } else {
       this._track.layer.getSource().clear();
@@ -424,7 +488,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) { }
+    } catch (e) {}
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
@@ -586,11 +650,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToLocation() {
     if (this._location) {
       this._view.animate({
+        duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
         center: this._mapService.coordsFromLonLat([
           this._location.longitude,
           this._location.latitude,
         ]),
-        zoom: this._view.getZoom() >= 14 ? this._view.getZoom() : 14,
+        zoom:
+          this._view.getZoom() >= DEF_MAP_MAX_CENTER_ZOOM
+            ? this._view.getZoom()
+            : DEF_MAP_MAX_CENTER_ZOOM,
       });
     }
   }
@@ -614,8 +682,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this._track.layer) {
       const verticalPadding =
         !this._height || this._height > 500 ? 120 : this._height * 0.25;
+      const padding = [
+        verticalPadding + this._topPadding,
+        70,
+        verticalPadding + this._bottomPadding,
+        20,
+      ];
+
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: [verticalPadding, 70, verticalPadding, 20],
+        padding: padding,
         duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
       });
     }
@@ -677,18 +752,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-            this._locationAnimationState.goalLocation.longitude -
-            this._locationAnimationState.startLocation.longitude,
+              this._locationAnimationState.goalLocation.longitude -
+              this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : this._locationAnimationState.goalLocation.accuracy
-                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-                : 0;
+              : this._locationAnimationState.goalLocation.accuracy
+              ? this._locationAnimationState.goalLocation.accuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -707,27 +782,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-              delta * deltaLongitude,
+                delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-              delta * deltaLatitude,
+                delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-              'number'
+            'number'
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
+                this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -738,7 +813,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-            delta * deltaAccuracy
+              delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -794,9 +869,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location?.longitude,
-      location?.latitude,
-    ]),
+        location?.longitude,
+        location?.latitude,
+      ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -829,28 +904,167 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
+    } catch (e) {}
   }
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
     return ig.properties.ids.sort((a, b) => a - b).join('-');
   }
 
+  private _selectedPoi: {
+    lastSelectedPoi?: IGeojsonPoi;
+    newSelectedPoi?: IGeojsonPoi;
+    marker?: PoiMarker;
+    style?: Style;
+    animating?;
+    startTime?;
+  } = {};
+  private async _selectedPoiMarker(poi?: IGeojsonPoi) {
+    this._slectedPoiLayer = this._createLayer(
+      this._slectedPoiLayer,
+      SELECTEDPOILAYERZINDEX
+    );
+
+    let markerGeometry = null;
+    if (this._selectedPoi.marker) {
+      this._removeIconFromLayer(
+        this._slectedPoiLayer,
+        this._selectedPoi.marker.icon
+      );
+      markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
+    }
+    poi.isSmall = false;
+    this._selectedPoi.newSelectedPoi = poi;
+    const { marker, style } = await this._createPoiCanvasIcon(
+      poi,
+      markerGeometry
+    );
+    this._selectedPoi.marker = marker;
+    this._selectedPoi.style = style;
+    this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
+    if (!this._selectedPoi.lastSelectedPoi) {
+      //insert
+      //this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
+      this._selectedPoi.lastSelectedPoi = poi;
+    } else {
+      //animate
+      this._selectedPoiStartAnimation();
+    }
+  }
+
+  _selectedPoiMove(event) {
+    if (this._selectedPoi.animating) {
+      const time = event.frameState.time;
+      const elapsedTime = time - this._selectedPoi.startTime;
+      const distance = elapsedTime / SELECTEDPOIANIMATIONDURATION;
+
+      if (distance > 1) {
+        this._selectedPoistopAnimation();
+        return;
+      }
+
+      const newPositionCoords = this.newAnimationPosition(
+        this._selectedPoi.lastSelectedPoi.geometry.coordinates,
+        this._selectedPoi.newSelectedPoi.geometry.coordinates,
+        distance
+      );
+
+      this._selectedPoi.marker.icon.setGeometry(
+        this._getPoint(newPositionCoords)
+      );
+
+      // this._selectedPoi.marker.icon.setGeometry();
+      // const vectorContext = getVectorContext(event);
+      // vectorContext.setStyle(this._selectedPoi.style);
+      // vectorContext.drawGeometry(this._selectedPoi.position);
+      // tell OpenLayers to continue the postrender animation
+      this._map.render();
+    }
+  }
+
+  newAnimationPosition(coordStart, coordEnd, distance) {
+    const deltaX = (coordEnd[0] - coordStart[0]) * distance;
+    const deltaY = (coordEnd[1] - coordStart[1]) * distance;
+
+    return [coordStart[0] + deltaX, coordStart[1] + deltaY];
+  }
+
+  _selectedPoiStartAnimation() {
+    this._selectedPoi.animating = true;
+    this._selectedPoi.startTime = Date.now();
+    this._slectedPoiLayer.on('postrender', (event) => {
+      this._selectedPoiMove(event);
+    });
+    // this._selectedPoi.marker.icon.setGeometry(null);
+  }
+
+  _getPoint(coordinates) {
+    const position = fromLonLat(coordinates);
+    return new Point([position[0], position[1]]);
+  }
+
+  _selectedPoistopAnimation() {
+    this._selectedPoi.animating = false;
+
+    this._selectedPoi.marker.icon.setGeometry(
+      this._getPoint(this._selectedPoi.newSelectedPoi.geometry.coordinates)
+    );
+
+    this._slectedPoiLayer.un('postrender', (event) => {
+      this._selectedPoiMove(event);
+    });
+    this._selectedPoi.lastSelectedPoi = this._selectedPoi.newSelectedPoi;
+  }
+
+  private async _addPoisMarkers(poiCollection: Array<IGeojsonPoi>) {
+    this._poisLayer = this._createLayer(this._poisLayer, POISLAYERZINDEX);
+
+    if (poiCollection) {
+      for (let i = this._poiMarkers.length - 1; i >= 0; i--) {
+        const ov = this._poiMarkers[i];
+        if (
+          !poiCollection.find(
+            (x) => x.properties.id + '' == ov.id && ov.poi.isSmall == x.isSmall
+          )
+        ) {
+          this._removeIconFromLayer(this._poisLayer, ov.icon);
+          this._poiMarkers.splice(i, 1);
+        }
+      }
+      for (const poi of poiCollection) {
+        if (
+          !this._poiMarkers.find(
+            (x) =>
+              x.id == poi.properties.id + '' && poi.isSmall == x.poi.isSmall
+          )
+        ) {
+          const { marker } = await this._createPoiCanvasIcon(poi);
+          this._addIconToLayer(this._poisLayer, marker.icon);
+          this._poiMarkers.push(marker);
+        }
+      }
+    }
+  }
+
   private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
     let transparent: boolean = !!this._track.registeredTrack;
-    this._createClusterLayer();
+    this._clusterLayer = this._createLayer(
+      this._clusterLayer,
+      CLUSTERLAYERZINDEX
+    );
+    const reset = this._lastlusterMarkerTransparency != transparent;
+
     if (values) {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
         const ov = this._clusterMarkers[i];
-
         if (
           !values.find(
             (x) =>
               this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)
           ) ||
-          this._lastlusterMarkerTransparency != transparent
+          reset
         ) {
-          this._removeClusterIconFromLayer(ov);
+          this._removeIconFromLayer(this._clusterLayer, ov.icon);
           this._clusterMarkers.splice(i, 1);
         }
       }
@@ -867,9 +1081,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             cluster,
             transparent
           );
-
-          this._addClusterIconToLayer(icon);
-
+          this._addIconToLayer(this._clusterLayer, icon.icon);
           this._clusterMarkers.push(icon);
         }
       }
@@ -878,30 +1090,42 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._lastlusterMarkerTransparency = transparent;
   }
 
+  private async _createPoiCanvasIcon(
+    poi: IGeojsonPoi,
+    geometry = null
+  ): Promise<{ marker: PoiMarker; style: Style }> {
+    // TODO check object type
+
+    const img = await this._createPoiCavasImage(poi);
+    const { iconFeature, style } = await this._createIconFeature(
+      geometry ? geometry : poi.geometry,
+      img,
+      PoiMarkerComponent.markerSize
+    );
+    return {
+      marker: {
+        poi,
+        icon: iconFeature,
+        id: poi.properties.id + '',
+      },
+      style,
+    };
+  }
+
   private async _createClusterCanvasIcon(
     cluster: IGeojsonCluster,
     transparent: boolean = false
   ): Promise<ClusterMarker> {
-    const position = fromLonLat([
-      cluster.geometry.coordinates[0] as number,
-      cluster.geometry.coordinates[1] as number,
-    ]); // TODO check object type
-    const iconFeature = new Feature({
-      geometry: new Point([position[0], position[1]]),
-    });
+    // TODO check object type
 
     const img = await this._createClusterCavasImage(cluster);
 
-    const iconStyle = new Style({
-      image: new Icon({
-        anchor: [0.5, 0.5],
-        img: img,
-        imgSize: [100, 100],
-        opacity: transparent ? 0.5 : 1,
-      }),
-    });
-
-    iconFeature.setStyle(iconStyle);
+    const { iconFeature } = await this._createIconFeature(
+      cluster.geometry,
+      img,
+      ClusterMarkerComponent.markerSize,
+      transparent
+    );
 
     return {
       cluster,
@@ -911,20 +1135,79 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     };
   }
 
+  private async _createIconFeature(
+    geometry: IGeojsonGeometry,
+    img: HTMLImageElement,
+    size: number,
+    transparent: boolean = false
+  ): Promise<{ iconFeature: Feature<Geometry>; style: Style }> {
+    const position = fromLonLat([
+      geometry.coordinates[0] as number,
+      geometry.coordinates[1] as number,
+    ]);
+
+    const iconFeature = new Feature({
+      geometry: new Point([position[0], position[1]]),
+    });
+    const style = new Style({
+      image: new Icon({
+        anchor: [0.5, 0.5],
+        img: img,
+        imgSize: [size, size],
+        opacity: transparent ? 0.5 : 1,
+      }),
+    });
+
+    iconFeature.setStyle(style);
+
+    return { iconFeature, style };
+  }
+
   private async _createClusterCavasImage(
     cluster: IGeojsonCluster
   ): Promise<HTMLImageElement> {
+    let isFavourite = false;
+    if (cluster.properties.ids.length == 1) {
+      isFavourite = await this.geohubSErvice.isFavouriteTrack(
+        cluster.properties.ids[0]
+      );
+    }
     const htmlTextCanvas =
-      await ClusterMarkerComponent.createMarkerHtmlForCanvas(cluster);
+      await ClusterMarkerComponent.createMarkerHtmlForCanvas(
+        cluster,
+        isFavourite
+      );
 
+    return this._createCanvasForHtml(
+      htmlTextCanvas,
+      ClusterMarkerComponent.markerSize
+    );
+  }
+
+  private async _createPoiCavasImage(
+    poi: IGeojsonPoi
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas = await PoiMarkerComponent.createMarkerHtmlForCanvas(
+      poi
+    );
+    return this._createCanvasForHtml(
+      htmlTextCanvas,
+      PoiMarkerComponent.markerSize
+    );
+  }
+
+  private async _createCanvasForHtml(
+    html: string,
+    size: number
+  ): Promise<HTMLImageElement> {
     const canvas = <HTMLCanvasElement>document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
     const canvasHtml =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
       '<foreignObject width="100%" height="100%">' +
       '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
-      htmlTextCanvas +
+      html +
       '</div>' +
       '</foreignObject>' +
       '</svg>';
@@ -933,11 +1216,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const img = new Image();
     const svg = new Blob([canvasHtml], {
-      type: 'image/svg+xml;charset=utf-8',
+      type: 'image/svg+xml', //;charset=utf-8',
     });
     const url = DOMURL.createObjectURL(svg);
 
-    img.onload = function () {
+    img.onload = () => {
       ctx.drawImage(img, 0, 0);
       DOMURL.revokeObjectURL(url);
     };
@@ -948,43 +1231,74 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return img;
   }
 
-  private _createClusterLayer() {
-    if (!this._clusterLayer) {
-      this._clusterLayer = new VectorLayer({
+  private _createLayer(layer: VectorLayer, zIndex: number) {
+    if (!layer) {
+      layer = new VectorLayer({
         source: new VectorSource({
           features: [],
         }),
         updateWhileAnimating: true,
         updateWhileInteracting: true,
-        zIndex: 400,
+        zIndex,
       });
-      this._map.addLayer(this._clusterLayer);
+      this._map.addLayer(layer);
     }
+    return layer;
   }
 
-  private _addClusterIconToLayer(cm: ClusterMarker) {
-    const source = this._clusterLayer.getSource();
-    this._clusterLayer.getSource().addFeature(cm.icon);
-    // this._map.removeOverlay(cm.icon);
-    // cm.component.destroy();
+  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+    const source = layer.getSource();
+    layer.getSource().addFeature(icon);
   }
 
-  private _removeClusterIconFromLayer(cm: ClusterMarker) {
-    const source = this._clusterLayer.getSource();
-    if (source.hasFeature(cm.icon)) {
-      source.removeFeature(cm.icon);
+  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+    const source = layer.getSource();
+    if (source.hasFeature(icon)) {
+      source.removeFeature(icon);
     }
     // this._map.removeOverlay(cm.icon);
     //cm.component.destroy();
   }
 
   private _mapClick(evt: MapBrowserEvent<UIEvent>) {
-    const features: Feature<Geometry>[] = [];
+    const clusterFeature = this._getNearestFeatureOfLayer(
+      this._clusterLayer,
+      evt
+    );
+    const poiFeature = this._getNearestFeatureOfLayer(this._poisLayer, evt);
+
+    const clusterMarker = this._clusterMarkers.find(
+      (x) => x.icon == clusterFeature
+    );
+    if (clusterMarker) {
+      this.clickcluster.emit(clusterMarker.cluster);
+    }
+
+    const poiMarker = this._poiMarkers.find((x) => x.icon == poiFeature);
+    console.log(
+      '------- ~ file: map.component.ts ~ line 1082 ~ _mapClick ~ poiMarker',
+      poiMarker
+    );
+    if (poiMarker) {
+      this.clickpoi.emit(poiMarker.poi);
+    }
+
+    if (!clusterFeature && !poiFeature) {
+      this.touch.emit();
+    }
+  }
+
+  _getNearestFeatureOfLayer(
+    layer: VectorLayer,
+    evt: MapBrowserEvent<UIEvent>
+  ): Feature<Geometry> {
     const precision =
       this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
+    let nearestFeature = null;
+    const features: Feature<Geometry>[] = [];
 
-    if (this._clusterLayer && this._clusterLayer.getSource()) {
-      this._clusterLayer
+    if (layer && layer.getSource()) {
+      layer
         .getSource()
         .forEachFeatureInExtent(
           buffer(
@@ -1000,16 +1314,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             features.push(feature);
           }
         );
-      if (features.length) {
-        const nearestFeature = this._getNearest(features, evt.coordinate);
-        const clusterMarker = this._clusterMarkers.find(
-          (x) => x.icon == nearestFeature
-        );
-        if (clusterMarker) {
-          this.clickcluster.emit(clusterMarker.cluster);
-        }
-      } else { this.touch.emit(); }
-    } else { this.touch.emit(); }
+    }
+
+    if (features.length) {
+      nearestFeature = this._getNearest(features, evt.coordinate);
+    }
+
+    return nearestFeature;
   }
 
   _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
@@ -1088,10 +1399,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         if (track) {
           let trackGeometry: LineString = new LineString(
-            (<ILineString>track.geometry.coordinates).map((value) =>
-              this._mapService.coordsFromLonLat(value)
-            )
-          ),
+              (<ILineString>track.geometry.coordinates).map((value) =>
+                this._mapService.coordsFromLonLat(value)
+              )
+            ),
             trackColor: string = track?.properties?.color;
 
           if (this._slopeChartTrack) {

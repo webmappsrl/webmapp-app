@@ -11,11 +11,12 @@ import {
   Platform,
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-import { auditTime, take } from 'rxjs/operators';
+import { auditTime, map, take } from 'rxjs/operators';
 import { GeohubService } from 'src/app/services/geohub.service';
+import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
 import { ILocation } from 'src/app/types/location';
-import { IGeojsonFeature } from 'src/app/types/model';
+import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
@@ -27,12 +28,14 @@ export class RoutePage implements OnInit {
   @ViewChild('routeTabs') routeTabs: IonTabs;
 
   public route: IGeojsonFeature;
+  public isFavourite: boolean = false;
 
   public track;
+  public pois: Array<IGeojsonPoi> = null;
 
   public opacity = 1;
   public headerHeight = 105;
-  public height = 700;
+  public height = 700; //will be updated by real screen height
   public maxInfoheight = 350; //from CCS????
   public minInfoheight = 90; //from CCS????
 
@@ -51,13 +54,18 @@ export class RoutePage implements OnInit {
 
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
-  @ViewChild('mapControl') mapControl: ElementRef;
+  @ViewChild('mapcontainer') mapControl: ElementRef;
   @ViewChild('headerPageRoute') headerControl: ElementRef;
+  @ViewChild('header') header: ElementRef;
+  @ViewChild('lessdetails') lessDetails: ElementRef;
+  @ViewChild('moredetails') moreDetails: ElementRef;
   private animation?: Animation;
   private gesture?: Gesture;
 
   private started: boolean = false;
   private initialStep: number = 0;
+
+  private relatedPois: IGeojsonPoiDetailed[] = null;
 
   constructor(
     private _actRoute: ActivatedRoute,
@@ -67,8 +75,9 @@ export class RoutePage implements OnInit {
     private _statusService: StatusService,
     private _platform: Platform,
     private animationCtrl: AnimationController,
-    private gestureCtrl: GestureController
-  ) {}
+    private gestureCtrl: GestureController,
+    private _shareService: ShareService
+  ) { }
 
   async ngOnInit() {
     // this._actRoute.queryParams.subscribe(async (params) => {
@@ -83,26 +92,65 @@ export class RoutePage implements OnInit {
 
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
-      const id = params.id ? params.id : 22; //TODO only for debug
-      this.route = await this._geohubService.getEcRoute(id);
+      const id = params.id ? params.id : 3; //TODO only for debug
+      this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
-      this.track = this.route.geometry;
     }
 
-    this.track = this.route.geometry;
+    this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
+    setTimeout(() => {this.track = this.route.geometry;}, 0);
+
+    this.pois = await this._geohubService.getPoiForTrack(this.route.properties.id);
+    this.updatePoiMarkers(false);
+
+    this.setAnimations();
+
+    this.getRelatedPois();
+  }
+
+  async setAnimations() {
 
     await this._platform.ready();
     this.height = this._platform.height();
-
-    this.animation = this.animationCtrl
+    this.maxInfoheight = this.height / 2;
+    const animationPanel = this.animationCtrl
       .create()
       .addElement(this.dragHandleContainer.nativeElement)
-      .duration(1000)
       .fromTo(
         'transform',
         'translateY(0)',
         `translateY(-${this.maxInfoheight - this.minInfoheight}px)`
       );
+
+    const animationHeader = this.animationCtrl
+      .create()
+      .addElement(this.header.nativeElement)
+      .fromTo(
+        'opacity',
+        '0',
+        '1'
+      );
+
+    const animationDetails = this.animationCtrl
+      .create()
+      .addElement(this.lessDetails.nativeElement)
+      .fromTo(
+        'opacity',
+        '1',
+        '0'
+      );
+    const animationMoreDetails = this.animationCtrl
+      .create()
+      .addElement(this.moreDetails.nativeElement)
+      .fromTo(
+        'opacity',
+        '0',
+        '1'
+      );
+
+    this.animation = this.animationCtrl.create()
+      .duration(1000)
+      .addAnimation([animationHeader, animationPanel, animationDetails, animationMoreDetails,]);
 
     this.gesture = this.gestureCtrl.create({
       el: this.dragHandleIcon.nativeElement,
@@ -115,19 +163,14 @@ export class RoutePage implements OnInit {
     this.gesture.enable(true);
   }
 
-  // toggleDetail() {
-  //   const direction = this.opacity >= 1 ? 1 : -1;
-  //   // console.log(
-  //   //   '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ toggleDetail ~ this.opacity',
-  //   //   this.opacity
-  //   // );
-  //   const interv = setInterval(() => {
-  //     this.opacity -= 0.01 * direction;
-  //     if (this.opacity <= 0 || this.opacity >= 1) {
-  //       clearInterval(interv);
-  //     }
-  //   }, 10);
-  // }
+  async getRelatedPois() {
+    this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
+  }
+
+  handleClick() {
+    const shouldComplete = this.opacity >= 1;
+    this.endAnimation(shouldComplete, this.opacity ? 0 : 1);
+  }
 
   menu() {
     this._menuController.enable(true, 'optionMenu');
@@ -142,12 +185,17 @@ export class RoutePage implements OnInit {
     console.log(
       '------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share'
     );
+
+    this._shareService.shareRoute(this.route)
+
   }
 
-  favourite() {
+  async favourite() {
     console.log(
       '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite'
     );
+    await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
+    this.isFavourite = !this.isFavourite;
   }
 
   navigate() {
@@ -161,7 +209,10 @@ export class RoutePage implements OnInit {
   }
 
   mapHeigth() {
-    let ret = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));    
+    const mapHeight = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));
+    const mapPaddingTop = this.headerHeight * (1 - this.opacity);
+    const mapPaddingBottom = (this.maxInfoheight * (1 - this.opacity)) + (this.minInfoheight * this.opacity);
+    let ret = [mapHeight, mapPaddingTop, mapPaddingBottom];
     return ret;
   }
 
@@ -184,9 +235,30 @@ export class RoutePage implements OnInit {
     const step = this.getStep(ev);
     const shouldComplete = step > 0.5;
 
+    this.endAnimation(shouldComplete, step);
+  }
+
+  private updatePoiMarkers(isSmall) {
+    const res = [];
+    this.pois.forEach(poi => {
+      poi.isSmall = isSmall;
+      res.push(poi);
+    });
+    this.pois = res;
+  }
+
+
+  async clickPoi(poi: IGeojsonPoi) {
+    console.log('------- ~ file: route.page.ts ~ line 251 ~ RoutePage ~ clickPoi ~ poi', poi);
+    this._statusService.setPois(this.relatedPois, poi.properties.id);
+    this._navController.navigateForward(['poi']);
+  }
+
+  private endAnimation(shouldComplete, step) {
     this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
+      this.updatePoiMarkers(this.opacity < 0.5);
       this._subscribeToTabsEvents();
       setTimeout(() => {
         this._subscribeToTabsEvents();

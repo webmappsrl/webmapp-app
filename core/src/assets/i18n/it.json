@@ -198,11 +198,11 @@
       "download": "Scarica",
       "share": "Condividi",
       "tabdetail": "Dettagli",
-      "tabwalkable": "Percorribilità",
+      "tabviability": "Percorribilità",
       "tabhowto": "Come arrivare",
       "tabeat": "Dove mangiare",
       "tabdescription": "Descrizione",
-      "tabaccessibility": "Accessibilità",
+      "tabwalkable": "Accessibilità",
       "detail": {
         "distance": "Lunghezza",
         "ascent": "Dislivello +",
@@ -215,7 +215,20 @@
       "description": {
         "gallery": "Gallery",
         "description": "Descrizione"
+      },
+      "viability":{
+        "title":"Praticabilità del percorso",
+        "info":"Altre info"
+      },
+      "favbtn":{
+        "isFavourite":"Aggiunto ai preferiti!",
+        "isNotFavourite":"Rimosso dai preferiti!"
       }
+    },
+    "favourites":{
+      "title":"Preferiti",
+      "nodata":"Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
+      "remove":"Rimuovi"
     }
   },
   "components": {
@@ -258,11 +271,20 @@
       "slope": {
         "label": "pendenza"
       }
+    },
+    "searchbar":{
+      "places":"Luoghi",
+      "noplaces":"Nessun luogo corrisponde alla ricerca effetuata",
+      "tracks":"Percorsi",
+      "notracks":"Nessun percorso corrisponde alla ricerca effetuata",
+      "filters":"Filtra per",
+      "nofilters":"Nessun filtro corrisponde alla ricerca effetuata"
     }
   },
   "tabs": {
     "home": "home",
     "map": "mappa",
+    "favourites": "preferiti",
     "profile": "profilo"
   },
   "services": {
@@ -275,6 +297,12 @@
           "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
         }
       }
+    },
+    "share": {
+      "title": "Hai visto questo percorso?",
+      "text": "Ecco un percorso interessante di webmapp",
+      "url": "www.webmapp.it",
+      "dialogTitle": "Condividi con i tuoi amici"
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IGeojsonFeature } from '../types/model';
+import { IGeojsonFeature, IGeojsonPoiDetailed } from '../types/model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +7,9 @@ import { IGeojsonFeature } from '../types/model';
 export class StatusService {
 
   private _route: IGeojsonFeature;
+
+  private _relatedPois: IGeojsonPoiDetailed[];
+  private _selectedPoiId: number;
 
   public set route(val: IGeojsonFeature) {
     this._route = val;
@@ -24,4 +27,16 @@ export class StatusService {
     return this._isSelectedMapTrack;
   }
   constructor() { }
+
+  public setPois(relatedPois: IGeojsonPoiDetailed[], id: number) {
+    this._relatedPois = relatedPois;
+    this._selectedPoiId = id;
+  }
+
+  public getRelatedPois() : IGeojsonPoiDetailed[]{
+    return this._relatedPois;
+  }
+  public getSelectedPoiId() : number {
+    return this._selectedPoiId;
+  }
 }

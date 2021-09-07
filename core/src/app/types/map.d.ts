@@ -1,16 +1,17 @@
-import { ComponentRef } from "@angular/core";
 import Feature from "ol/Feature";
 import Geometry from "ol/geom/Geometry";
-import Icon from "ol/style/Icon";
-import { ClusterMarkerComponent } from "../components/map/cluster-marker/cluster-marker.component";
-import { IGeojsonCluster } from "./model";
+import { IGeojsonCluster, IGeojsonPoi } from "./model";
 
-
-export interface ClusterMarker {
-  cluster: IGeojsonCluster,
-  //component: ComponentRef<ClusterMarkerComponent>,
+export interface iMarker{
   icon: Feature<Geometry>,
   id: string
+}
+export interface ClusterMarker extends iMarker{
+  cluster: IGeojsonCluster
+}
+
+export interface PoiMarker  extends iMarker{
+  poi: IGeojsonPoi
 }
 
 export interface MapMoveEvent {

@@ -12,11 +12,11 @@ export type IMultiPolygon = Array<Array<Array<IPoint>>>;
 export interface IGeojsonGeometry {
   type: EGeojsonGeometryTypes;
   coordinates:
-    | IPoint
-    | ILineString
-    | IMultiLineString
-    | IPolygon
-    | IMultiPolygon;
+  | IPoint
+  | ILineString
+  | IMultiLineString
+  | IPolygon
+  | IMultiPolygon;
 }
 
 export interface iLocalString {
@@ -97,9 +97,14 @@ export interface IWmImage {
     '1440x500': string;
   };
 }
-export interface IGeojsonCluster {
-  type: 'Feature';
+
+export interface IGeojsonGeneric {
+  type: string;
   geometry: IGeojsonGeometry;
+  properties: any;
+}
+export interface IGeojsonCluster extends IGeojsonGeneric {
+  type: 'Feature';
   properties: {
     ids: number[]; // Id di Ec Track che fanno parte del cluster
     images: string[]; // Massimo 3 url di immagini ottimizzate
@@ -107,34 +112,56 @@ export interface IGeojsonCluster {
   };
 }
 
+export interface IGeojsonPoi extends IGeojsonGeneric {
+  type: 'Point';
+  properties: {
+    id: number; // Id del poi
+    image: string; // url image    
+  };
+  isSmall?: boolean
+}
+
+export interface IGeojsonPoiDetailed extends IGeojsonPoi {
+  properties: {
+    id: number; // Id del poi
+    image: string; // url image   
+    images: string[]; // url images
+    name: iLocalString;
+    description: iLocalString;
+    email?: string,
+    phone?: string,
+    address?: string,
+    url?: string
+  };
+}
 export interface IGeojsonClusterApiResponse {
   features: IGeojsonCluster[];
 }
 
-export interface WhereTaxonomy {  
-    id: 9,
-    created_at: Date,
-    updated_at: Date
-    name: iLocalString,
-    import_method: string,
-    source_id: number,
-    admin_level: number,
-    description: string,
-    // excerpt: null,
-    // source: null,
-    // user_id: null,
-    // identifier: toscana,
-    // icon: null,
-    // color: null,
-    // zindex: null,
-    // feature_image: null,
-    // stroke_width: null,
-    // stroke_opacity: null,
-    // line_dash: null,
-    // min_visible_zoom: null,
-    // min_size_zoom: null,
-    // min_size: null,
-    // max_size: null,
-    // icon_zoom: null,
-    // icon_size: null    
+export interface WhereTaxonomy {
+  id: 9,
+  created_at: Date,
+  updated_at: Date
+  name: iLocalString,
+  import_method: string,
+  source_id: number,
+  admin_level: number,
+  description: string,
+  // excerpt: null,
+  // source: null,
+  // user_id: null,
+  // identifier: toscana,
+  // icon: null,
+  // color: null,
+  // zindex: null,
+  // feature_image: null,
+  // stroke_width: null,
+  // stroke_opacity: null,
+  // line_dash: null,
+  // min_visible_zoom: null,
+  // min_size_zoom: null,
+  // min_size: null,
+  // max_size: null,
+  // icon_zoom: null,
+  // icon_size: null    
 }

@@ -54,9 +54,22 @@
     .webmapp-maptrackcard-favourite {
         position: absolute;
         z-index: 99;
-        top: 10px;
-        left: 10px;
+        top: -5px;
+        left: -5px;
         color: var(--wm-color-light);
+        padding: 15px
+    }
+
+    .webmapp-maptrackcard-favourite-animation{
+        position: absolute;
+        z-index: 98;
+        top: 6.6px;
+        left: 6.7px;
+        background-color: var(--wm-color-light);        
+        width: 20px;
+        height: 20px;
+        border-radius: 100px;
+        opacity: 0.01;
     }
 
     .webmapp-maptrackcard-exit {

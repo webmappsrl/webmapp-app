@@ -35,6 +35,13 @@
         padding-top: 3px;
         font-size: var(--wm-font-sm);
     }
+
+    .webmapp-map-clustermarker-favourite{
+        position: absolute;
+        top: 5px;
+        left: 40px;
+        color: var(--wm-color-primary);
+    }
 }
 
 .webmapp-map-clustermarker-clickarea {
