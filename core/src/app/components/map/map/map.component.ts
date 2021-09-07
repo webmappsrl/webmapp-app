@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ComponentFactoryResolver,
   ElementRef,
   EventEmitter,
   Input,
@@ -27,10 +26,10 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
-import TileJsonSource from 'ol/source/TileJSON';
 import MVT from 'ol/format/MVT';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
+import TileJSON from 'ol/source/TileJSON';
 import GeoJSON from 'ol/format/GeoJSON';
 import { defaults as defaultInteractions } from 'ol/interaction.js';
 
@@ -71,7 +70,19 @@ import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-lin
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
-import { getVectorContext } from 'ol/render';
+
+import { createXYZ } from 'ol/tilegrid';
+import { CommunicationService } from 'src/app/services/base/communication.service';
+import { take } from 'rxjs/operators';
+import {
+  IVectorMapSource,
+  IVectorMapSourceJson,
+  IVectorMapStyle,
+} from 'src/app/types/vector-map';
+import {
+  EVectorLayerType,
+  EVectorSourceType,
+} from 'src/app/types/evector-map-enums.enum';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -79,10 +90,6 @@ const CLUSTERLAYERZINDEX = 400;
 const POISLAYERZINDEX = 400;
 const SELECTEDPOILAYERZINDEX = 500;
 const TRACKLAYERZINDEX = 450;
-
-import { createXYZ } from 'ol/tilegrid';
-import { CommunicationService } from 'src/app/services/base/communication.service';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'webmapp-map',
@@ -380,18 +387,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       moveTolerance: 3,
     });
 
-    this._map.addLayer(
-      new TileLayer({
-        source: this._initializeBaseSource(),
-        visible: true,
-        zIndex: 1,
-      })
-    );
     this._communicationService
-      .get('https://tiles.webmapp.it/italy/italy.json')
+      .get(
+        'https://tiles.webmapp.it/map_styles/webmapp_bright/webmapp_bright.json'
+      )
       .pipe(take(1))
-      .subscribe((tileJson) => {
-        this._map.addLayer(this._initializeVectorTileBaseLayer(tileJson));
+      .subscribe(async (styleJson: IVectorMapStyle) => {
+        const layers: Array<any> = await this._createVectorTilesFromStyleJson(
+          styleJson
+        );
+
+        console.log(layers);
+        for (let layer of layers) {
+          this._map.addLayer(layer);
+        }
+        // this._map.addLayer(this._initializeVectorTileBaseLayer(tileJson));
       });
 
     this.isRecording = this._geolocationService.recording;
@@ -467,8 +477,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this._centerMapToLocation();
       });
     }
-
-    // this.initLayer(tileJSON);
   }
 
   ngOnDestroy() {
@@ -712,100 +720,235 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  /**
-   * Initialize the base source of the map
-   *
-   * @returns the XYZ source to use
-   */
-  private _initializeBaseSource() {
-    return new XYZ({
-      maxZoom: DEF_MAP_MAX_ZOOM,
-      minZoom: DEF_MAP_MIN_ZOOM,
-      tileLoadFunction: (tile: any, url: string) => {
-        tile.getImage().src = url;
-      },
-      tileUrlFunction: (c) => {
-        return (
-          'https://tiles.webmapp.it/blankmap/' +
-          c[0] +
-          '/' +
-          c[1] +
-          '/' +
-          c[2] +
-          '.png'
-        );
-      },
-      projection: 'EPSG:3857',
-      tileSize: [256, 256],
+  private _createVectorTilesFromStyleJson(
+    style: IVectorMapStyle
+  ): Promise<any> {
+    return new Promise<Array<any>>((resolve, reject) => {
+      resolve([
+        new TileLayer({
+          // preload: 1,
+          source: new TileJSON({
+            // cacheSize?: number;
+            // imageSmoothing?: boolean;
+            // jsonp?: boolean;
+            // tileJSON?: Config;
+            // tileSize: 256,
+            url: 'https://tiles.webmapp.it/italy.json',
+            // crossOrigin: 'anonymous',
+          }),
+          zIndex: 100,
+        }),
+      ]);
     });
   }
 
-  private _generateColor(str) {
-    const rgb = [0, 0, 0];
-    for (let i = 0; i < str.length; i++) {
-      const v = str.charCodeAt(i);
-      rgb[v % 3] = (rgb[i % 3] + 13 * (v % 13)) % 12;
-    }
-    let r = 4 + rgb[0];
-    let g = 4 + rgb[1];
-    let b = 4 + rgb[2];
-    r = r * 16 + r;
-    g = g * 16 + g;
-    b = b * 16 + b;
-    return [r, g, b, 1];
-  }
-
-  private _initializeVectorTileBaseLayer(data): VectorTileLayer {
-    const layerStyleMap = {},
-      layerStyleVisibility = {};
-    console.log(data.vector_layers);
-    data.vector_layers.forEach((el) => {
-      const color = this._generateColor(el.id);
-      if (el.id === 'water') {
-        layerStyleMap[el.id] = new Style({
-          fill: new Fill({ color }),
-        });
-      } else {
-        layerStyleMap[el.id] = new Style({
-          stroke: new Stroke({ color, width: 1 }),
-        });
+  private _createLayersFromStyleJson(style: IVectorMapStyle): Promise<any> {
+    return new Promise<Array<any>>((resolve, reject) => {
+      if (!style?.sources) {
+        resolve([]);
+        return;
       }
-      layerStyleVisibility[el.id] = true;
-    });
 
+      let promises: Array<Promise<VectorTileLayer | TileLayer>> = [],
+        styleFunctions: {
+          [sourceId: string]: {
+            [layerId: string]: Array<Style>;
+          };
+        } = {};
+
+      if (style?.layers?.length) {
+        for (let layer of style.layers) {
+          let styles: Array<Style> = [],
+            lineColor: string,
+            lineWidth: number,
+            fillColor: string,
+            fillOpacity: number;
+          switch (layer.type) {
+            case EVectorLayerType.LINE:
+              lineColor = layer?.paint?.['line-color'] ?? '#000000';
+              lineWidth = layer?.paint?.['line-width']?.base ?? 1;
+              styles.push(
+                new Style({
+                  stroke: new Stroke({ color: lineColor, width: lineWidth }),
+                })
+              );
+              break;
+            case EVectorLayerType.FILL:
+              fillColor = layer?.paint?.['fill-color'] ?? '#000000';
+              fillOpacity = layer?.paint?.['fill-opacity'] ?? 0.3;
+              lineColor = layer?.paint?.['line-color'] ?? '#000000';
+              lineWidth = layer?.paint?.['line-width']?.base ?? 1;
+
+              styles.push(
+                new Style({
+                  fill: new Fill({
+                    color: fillColor,
+                  }),
+                  stroke: new Stroke({ color: lineColor, width: lineWidth }),
+                })
+              );
+              break;
+            case EVectorLayerType.SYMBOL:
+              break;
+          }
+
+          if (!styleFunctions[layer.source]) styleFunctions[layer.source] = {};
+          if (!styleFunctions[layer.source][layer['source-layer']])
+            styleFunctions[layer.source][layer['source-layer']] = [];
+
+          styleFunctions[layer.source][layer['source-layer']].push(...styles);
+        }
+      }
+
+      for (let sourceId in style.sources) {
+        if (style.sources[sourceId]?.type) {
+          const zIndex: number = Object.keys(style.sources).indexOf(sourceId);
+          switch (style.sources[sourceId].type) {
+            case EVectorSourceType.RASTER:
+              if (style.sources[sourceId]?.tiles?.length) {
+                promises.push(
+                  Promise.resolve(
+                    this._createRasterTileLayer(style.sources[sourceId], zIndex)
+                  )
+                );
+              }
+              break;
+            case EVectorSourceType.VECTOR:
+              if (style.sources[sourceId]?.tiles?.length) {
+                promises.push(
+                  Promise.resolve(
+                    this._createVectorTileLayer(
+                      sourceId,
+                      style.sources[sourceId],
+                      styleFunctions,
+                      zIndex
+                    )
+                  )
+                );
+              } else if (style.sources[sourceId]?.url) {
+                promises.push(
+                  this._createVectorTileLayerFromJsonSource(
+                    sourceId,
+                    style.sources[sourceId],
+                    styleFunctions,
+                    zIndex
+                  )
+                );
+              }
+              break;
+          }
+        }
+        break;
+      }
+
+      Promise.all(promises).then((layers) => {
+        resolve(layers);
+      });
+    });
+  }
+
+  private _createRasterTileLayer(
+    source: IVectorMapSource,
+    zIndex: number
+  ): TileLayer {
+    return new TileLayer({
+      source: new XYZ({
+        maxZoom: source.maxzoom ?? DEF_MAP_MAX_ZOOM,
+        minZoom: source.minzoom ?? DEF_MAP_MIN_ZOOM,
+        urls: source.tiles,
+        projection: 'EPSG:3857',
+        tileSize: [256, 256],
+      }),
+      visible: true,
+      zIndex: zIndex,
+    });
+  }
+
+  private _createVectorTileLayer(
+    sourceId: string,
+    source: IVectorMapSource | IVectorMapSourceJson,
+    styleFunctions: {
+      [sourceId: string]: {
+        [layerId: string]: Array<Style>;
+      };
+    },
+    zIndex: number
+  ): VectorTileLayer {
     return new VectorTileLayer({
       preload: 1,
       source: new VectorTileSource({
         format: new MVT(),
         tileGrid: createXYZ({
-          minZoom: data.minzoom,
-          maxZoom: data.maxzoom,
+          minZoom: source.minzoom,
+          maxZoom: source.maxzoom,
         }),
-        urls: data.tiles,
+        urls: source.tiles,
       }),
-      //extent: ol.proj.transformExtent(data['bounds'], 'EPSG:4326', 'EPSG:3857'),
       style: (feature, resolution) => {
-        const layerId = feature.get('layer');
-        if (!layerStyleVisibility[layerId]) return null;
-        const style = layerStyleMap[layerId];
-        return [style];
+        // const layerId = feature.get('layer');
+        // if (!styleFunctions?.[sourceId]?.[layerId]) return null;
+        // return styleFunctions[sourceId][layerId];
+        return new Style({
+          stroke: new Stroke({
+            color: '#ff00ff',
+          }),
+        });
       },
-      zIndex: 10000,
+      zIndex: zIndex * 1000,
     });
   }
 
-  /**
-   * Initialize the base source of the map
-   *
-   * @returns the VectorTile source to use
-   */
-  private _initializeVectorTileBaseSource(): VectorTileSource {
-    // return new VectorTileSource({
-    //   // format: new MVT(),
-    //   format: new GML
-    //   url: 'https://tiles.webmapp.it/tiles/{z}/{y}/{x}.pbf',
-    // });
-    return undefined;
+  private _createVectorTileLayerFromJsonSource(
+    sourceId: string,
+    source: IVectorMapSource,
+    styleFunctions: {
+      [sourceId: string]: {
+        [layerId: string]: Array<Style>;
+      };
+    },
+    zIndex: number
+  ): Promise<VectorTileLayer> {
+    return new Promise<VectorTileLayer>((resolve, reject) => {
+      this._communicationService
+        .get(source.url)
+        .toPromise()
+        .then(
+          (json: IVectorMapSourceJson) => {
+            // for (let i in json.vector_layers) {
+            //   let layerId: string = json.vector_layers[i].id;
+            //   for (let j in styleFunctions) {
+            //     if (
+            //       styleFunctions[j].source === sourceId &&
+            //       styleFunctions[j].sourceLayer === layerId
+            //     ) {
+            //       console.log(sourceId, layerId);
+            //       if (!styleFunctions[layerId])
+            //         styleFunctions[layerId] = styleFunctions[j];
+            //       else
+            //         styleFunctions[layerId].style.push(
+            //           ...styleFunctions[j].style
+            //         );
+            //       break;
+            //     }
+            //   }
+            // }
+
+            // console.log(styleFunctions['water']);
+
+            resolve(
+              this._createVectorTileLayer(
+                sourceId,
+                json,
+                styleFunctions,
+                zIndex
+              )
+            );
+          },
+          () => {
+            resolve(null);
+          }
+        );
+    });
   }
 
   /**
