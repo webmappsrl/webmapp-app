@@ -538,11 +538,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     });
 
     var split = version.version.split("."),
-      versionCode = "";
-    for (var i in split) {
-      if (parseInt(split[i]) < 10) versionCode += "0";
-      versionCode += split[i];
-    }
+      versionCode = version.code;
 
     var promises = [];
 
@@ -751,7 +747,7 @@ function buildAndroidApk(instanceName, type) {
 
     buildAndroid(instanceName).then(
       () => {
-        if (verbose) debug("Assembling the debug apk");
+        if (verbose) debug("Assembling the " + type + " apk");
         var gradlecom = "./gradlew tasks app:assemble";
         if (process.platform === "win32")
           gradlecom = "gradlew tasks app:assemble";
