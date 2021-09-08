@@ -23,7 +23,7 @@ export class MapPage implements OnInit {
   public clusters: IGeojsonCluster[];
   public _zoneAllClusters: IGeojsonCluster[];
 
-  public boundigBox: number[];
+  public boundingbox: number[];
   public actualZoom: number;
 
   public selectedTrack: IGeojsonGeometry;
@@ -37,6 +37,8 @@ export class MapPage implements OnInit {
     slidesPerView: 1.2,
     centeredSlides: true
   };
+
+  private _actualBooundingbox
 
   constructor(
     private _navController: NavController,
@@ -69,13 +71,23 @@ export class MapPage implements OnInit {
     return this._geolocationService.recording;
   }
 
-  async mapMove(moveEvent: MapMoveEvent) {
-    this.actualZoom = moveEvent.zoom;
-    const res = await this._geohubService.search(moveEvent.boundigBox, this.referenceTrackId)
+  async updateSearch() {
+    //TODO get filters
+    const filters = this._statuService.getFilters();
+    const res = await this._geohubService.search(this._actualBooundingbox, filters, this.referenceTrackId)
     if (res && res.features) {
       this.clusters = this._cleanResultsFromSelected(res);
+
     }
   }
+
+  async mapMove(moveEvent: MapMoveEvent) {
+    this.actualZoom = moveEvent.zoom;
+    this._actualBooundingbox = moveEvent.boundingbox;
+    this.updateSearch()
+  }
+
+
 
   private _cleanResultsFromSelected(res: IGeojsonClusterApiResponse): IGeojsonCluster[] {
     let ret = res.features.filter(x => x.properties.ids[0] != this.selectedTrackId || x.properties.ids.length > 1);
@@ -94,9 +106,9 @@ export class MapPage implements OnInit {
 
   async clickcluster(cluster: IGeojsonCluster) {
     //if (cluster.properties.ids.length > 1 && (!this._isMaxZoom() && !this.referenceTrackId)) {
-      if (cluster.properties.ids.length > 1 && !this._isMaxZoom()) {
+    if (cluster.properties.ids.length > 1 && !this._isMaxZoom()) {
       //cluster
-      this.boundigBox = cluster.properties.bbox;
+      this.boundingbox = cluster.properties.bbox;
       // this.selectTrack(null);
     } else {
       const trackId = cluster.properties.ids[0]
@@ -107,7 +119,8 @@ export class MapPage implements OnInit {
         //const track = await this._geohubService.getEcTrack(trackId + '')
         this.selectedTracks = [];
 
-        const allNearTrackClusters = await this._geohubService.search(DEF_MAP_MAX_BOUNDINGBOX, trackId)
+        const filters = this._statuService.getFilters();
+        const allNearTrackClusters = await this._geohubService.search(DEF_MAP_MAX_BOUNDINGBOX, filters, trackId)
 
         this._zoneAllClusters = []
 
@@ -134,7 +147,7 @@ export class MapPage implements OnInit {
     }
   }
 
-  
+
   private _createClusterForEcTrack(ectrack: CGeojsonLineStringFeature): IGeojsonCluster {
     const simpleCluster: IGeojsonCluster = {
       type: 'Feature',
@@ -191,6 +204,12 @@ export class MapPage implements OnInit {
     this.selectTrack(null);
     this._statuService.route = track;
     this._navController.navigateForward('route');
+  }
+
+  goToBBox(ev) {
+    console.log('------- ~ file: map.page.ts ~ line 197 ~ MapPage ~ goToBBox ~ ev', ev);
+    this.boundingbox = ev;
+
   }
 
 }

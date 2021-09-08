@@ -191,7 +191,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('boundigBox') set boundigBox(value: number[]) {
+  @Input('boundingbox') set boundingbox(value: number[]) {
     if (value) {
       this._centerMapToBoundingBox(value);
     }
@@ -407,7 +407,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (!this.static) {
       this._map.on('moveend', () => {
         this.move.emit({
-          boundigBox: this._mapService.extentToLonLat(
+          boundingbox: this._mapService.extentToLonLat(
             this._map.getView().calculateExtent(this._map.getSize())
           ),
           zoom: this._view.getZoom(),
