@@ -229,18 +229,11 @@ export class SlopeChartComponent implements OnInit {
       }
 
       this.surfaces = [];
-      for (let i = 0; i < surfaceValues.length; i++) {
-        if (
-          !usedSurfaces.includes(<ESlopeChartSurface>surfaceValues[i].surface)
-        )
-          delete surfaceValues[surfaceValues[i].surface];
-        else {
-          this.surfaces.push({
-            id: <ESlopeChartSurface>surfaceValues[i].surface,
-            backgroundColor:
-              SLOPE_CHART_SURFACE[surfaceValues[i].surface].backgroundColor,
-          });
-        }
+      for (let surface of usedSurfaces) {
+        this.surfaces.push({
+          id: surface,
+          backgroundColor: SLOPE_CHART_SURFACE[surface].backgroundColor,
+        });
       }
 
       this._createChart(
@@ -727,8 +720,6 @@ export class SlopeChartComponent implements OnInit {
                     });
 
                 surfaceTrack.setProperty('color', surfaceColor);
-
-                console.log(surfaceTrack);
 
                 this.hover.emit({
                   location:

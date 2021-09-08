@@ -39,6 +39,12 @@
       &::first-letter {
         text-transform: uppercase;
       }
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      /* white-space: nowrap; */
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .webmapp-card-big-subtitle-skeleton {

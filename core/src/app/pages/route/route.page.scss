@@ -65,7 +65,7 @@
 }
 
 .webmapp-pageroute-fabbottom {
-  bottom: 140px;
+  bottom: 178px;
   .webmapp-pageroute-btnbottom {
     --color: var(--wm-color-primary);
     --background: var(--wm-color-light);
@@ -77,7 +77,8 @@
     --background-hover-opacity: 0;
   }
   &.webmapp-pageroute-fabbottom-top {
-    top: 115px;
+    top: calc(115px + constant(safe-area-inset-top));
+    top: calc(115px + env(safe-area-inset-top));
     bottom: auto;
   }
 }
@@ -93,10 +94,14 @@
   --background-hover-opacity: 0;
 }
 
+.fab-vertical-top {
+  top: 30px;
+}
+
 .webmapp-pageroute-btnnavbottom {
   position: absolute;
   right: 16px;
-  bottom: 91px;
+  bottom: 126px;
 }
 .webmapp-pageroute-btnnavigate {
   --border-radius: 20px;
