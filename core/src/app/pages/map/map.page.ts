@@ -34,7 +34,7 @@ export class MapPage implements OnInit {
   public selectedTrackId: number = null;
 
   public sliderOptions = {
-    slidesPerView: 1.2,
+    slidesPerView: 1.25,
     centeredSlides: true
   };
 
