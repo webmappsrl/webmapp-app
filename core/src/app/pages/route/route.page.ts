@@ -99,7 +99,6 @@ export class RoutePage implements OnInit {
     }
 
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
-    setTimeout(() => { this.track = this.route.geometry; }, 0);
 
     this.pois = await this._geohubService.getPoiForTrack(this.route.properties.id);
     this.updatePoiMarkers(false);
@@ -108,6 +107,7 @@ export class RoutePage implements OnInit {
 
     this.getRelatedPois();
 
+    setTimeout(() => { this.track = this.route.geometry; }, 400);
     setTimeout(() => { this.useAnimation = true; }, 500);
   }
 

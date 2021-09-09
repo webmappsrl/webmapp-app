@@ -22,7 +22,7 @@ export class PoiMarkerComponent implements OnInit {
 
 
     let html = `
-    <div class="webmapp-map-clustermarker-container" style="position: relative;width: 30px;height: 60px;">`;
+    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
 
     if (!value.isSmall) {
       html += `

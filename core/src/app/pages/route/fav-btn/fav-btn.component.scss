@@ -12,6 +12,7 @@
         height: 44px;
         width: 22px;
         border-radius: 22px 0 0 22px;
+        white-space: nowrap;
         .webmapp-route-favbtn-icon {
             color: var(--wm-color-primary);
             display: inline-block;
@@ -21,9 +22,12 @@
     .webmapp-route-favbtn-text {
         color: var(--wm-color-primary);
         display: inline-block;
+        opacity: 0;
         font-size: 12px;
         padding: 11px;
         white-space: nowrap;
+        padding: 8px 0;
+        margin: -8px;
     }
     .webmapp-route-favbtn-center {
         background-color: var(--wm-color-light);
