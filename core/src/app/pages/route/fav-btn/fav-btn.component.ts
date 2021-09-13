@@ -45,7 +45,7 @@ export class FavBtnComponent implements OnInit {
         `1`)
 
     this.animation = this.animationCtrl.create()
-      .duration(1000)
+      .duration(600)
       .addAnimation([animationLeft, animationCenter, animationText]);
   }
 
@@ -57,7 +57,7 @@ export class FavBtnComponent implements OnInit {
     this.isFavourite = !this.isFavourite;
     this.animation.direction('normal' )
     await this.animation.play();
-    await new Promise(r => setTimeout(r, 1000)); 
+    await new Promise(r => setTimeout(r, 1500)); 
     this.animation.direction('reverse')
     await this.animation.play();
     this.isAnimating = false;

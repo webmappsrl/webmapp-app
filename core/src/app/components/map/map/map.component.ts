@@ -87,7 +87,7 @@ import {
 const SELECTEDPOIANIMATIONDURATION = 300;
 
 const CLUSTERLAYERZINDEX = 400;
-const POISLAYERZINDEX = 400;
+const POISLAYERZINDEX = 460;
 const SELECTEDPOILAYERZINDEX = 500;
 const TRACKLAYERZINDEX = 450;
 
@@ -206,7 +206,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('boundigBox') set boundigBox(value: number[]) {
+  @Input('boundingbox') set boundingbox(value: number[]) {
     if (value) {
       this._centerMapToBoundingBox(value);
     }
@@ -432,7 +432,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (!this.static) {
       this._map.on('moveend', () => {
         this.move.emit({
-          boundigBox: this._mapService.extentToLonLat(
+          boundingbox: this._mapService.extentToLonLat(
             this._map.getView().calculateExtent(this._map.getSize())
           ),
           zoom: this._view.getZoom(),
@@ -1443,11 +1443,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const img = new Image();
     const svg = new Blob([canvasHtml], {
-      type: 'image/svg+xml;charset=utf-8',
+      type: 'image/svg+xml', //;charset=utf-8',
     });
     const url = DOMURL.createObjectURL(svg);
 
-    img.onload = function () {
+    img.onload = () => {
       ctx.drawImage(img, 0, 0);
       DOMURL.revokeObjectURL(url);
     };

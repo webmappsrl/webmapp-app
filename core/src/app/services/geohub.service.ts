@@ -92,8 +92,8 @@ export class GeohubService {
    *
    * @returns {Array<RouteCluster>}
    */
-  async search(boundingBox: number[], referenceTrackId: number = null): Promise<IGeojsonClusterApiResponse> {
-    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingBox[0]},${boundingBox[1]},${boundingBox[2]},${boundingBox[3]}`;
+  async search(boundingbox: number[], filters, referenceTrackId: number): Promise<IGeojsonClusterApiResponse> {
+    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}`;
     if (referenceTrackId) {
       url += `&reference_id=${referenceTrackId}`;
     }
@@ -215,8 +215,11 @@ export class GeohubService {
       "features": [
         {
           "properties": {
-            "id": 1,
-            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg"
+            "id": 23,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg",
+            name: { it: 'esempio 2 ', en: 'example' },
+            description: { it: ` Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu.`, en: 'desc' },
+            boundingbox : [11.1022, 42.66137,11.108, 42.658]
           },
           "geometry": {
             "type": "Point",
@@ -225,8 +228,10 @@ export class GeohubService {
         },
         {
           "properties": {
-            "id": 2,
-            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg"
+            "id": 22,
+            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg",name: { it: 'esempio 2 ', en: 'example' },
+            description: { it: `Lorem ipsum dolor sit amet, `, en: 'desc' },
+            boundingbox : [11.1022, 42.66137,11.108, 42.658]          
           },
           "geometry": {
             "type": "Point",

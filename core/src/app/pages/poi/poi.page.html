@@ -1,12 +1,11 @@
-<ion-content>
 
   <div #mapcontainer class="webmapp-pagepoi-map-container">
-    <webmapp-map class="" #map [static]="true" [track]="track" [hideRegister]="true" [pois]="pois"
+    <webmapp-map class="" #map [static]="false" [track]="track" [hideRegister]="true" [pois]="pois"
       (clickpoi)="clickPoi($event)" [selectedpoi]="selectedPoi"></webmapp-map>
   </div>
 
 
-  <div class="webmapp-pagepoi-info-container" scrollY="true">
+  <div class="webmapp-pagepoi-info-container">
     <div class="webmapp-pagepoi-info-header">
 
       <div class="webmapp-pagepoi-info-header-title">
@@ -25,7 +24,7 @@
       </div>
     </div>
 
-    <div class="webmapp-pagepoi-info-body">
+    <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
       <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pagepoi-info-body-photoslider" #slider>
         <ion-slide *ngFor="let image of selectedPoi.properties.images">
           <div class="webmapp-pagepoi-info-body-photocontainer">
@@ -64,14 +63,13 @@
 
       <div class="webmapp-pagepoi-info-body-description" [innerHTML]="selectedPoi.properties.description | wmtrans">
       </div>
-    </div>
+    </ion-content>
 
   </div>
 
 
-</ion-content>
 
-<ion-fab vertical="top" horizontal="start">
+<ion-fab vertical="top" horizontal="start" class="webmapp-pagepoi-top">
   <ion-fab-button (click)="back()" size="small" class="webmapp-pagepoi-btntop">
     <i class="webmapp-icon-close-outline"></i>
   </ion-fab-button>

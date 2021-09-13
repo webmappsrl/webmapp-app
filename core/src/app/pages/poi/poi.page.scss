@@ -42,6 +42,7 @@
     }
 
     .webmapp-pagepoi-info-body {
+        --padding-bottom: 30px;
         .webmapp-pagepoi-info-reference {
             padding: 3px 5px;
             font-size: var(--wm-font-sm);
@@ -75,6 +76,9 @@
     }
 }
 
+.webmapp-pagepoi-top{
+    top: calc(10px + constant(safe-area-inset-top));
+    top: calc(10px + env(safe-area-inset-top));
 .webmapp-pagepoi-btntop {
     --color: var(--wm-color-dark);
     --background: var(--wm-color-light);
@@ -85,3 +89,6 @@
     --background-hover: var(--wm-color-light);
     --background-hover-opacity: 0;
 }
+
+}
+

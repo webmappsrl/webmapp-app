@@ -29,6 +29,7 @@ export class RoutePage implements OnInit {
 
   public route: IGeojsonFeature;
   public isFavourite: boolean = false;
+  public useAnimation = false;
 
   public track;
   public pois: Array<IGeojsonPoi> = null;
@@ -37,7 +38,7 @@ export class RoutePage implements OnInit {
   public headerHeight = 105;
   public height = 700; //will be updated by real screen height
   public maxInfoheight = 350; //from CCS????
-  public minInfoheight = 90; //from CCS????
+  public minInfoheight = 120; //from CCS????
 
   public slopeChartHoverElements: ISlopeChartHoverElements;
 
@@ -98,7 +99,6 @@ export class RoutePage implements OnInit {
     }
 
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
-    setTimeout(() => {this.track = this.route.geometry;}, 0);
 
     this.pois = await this._geohubService.getPoiForTrack(this.route.properties.id);
     this.updatePoiMarkers(false);
@@ -106,6 +106,9 @@ export class RoutePage implements OnInit {
     this.setAnimations();
 
     this.getRelatedPois();
+
+    setTimeout(() => { this.track = this.route.geometry; }, 400);
+    setTimeout(() => { this.useAnimation = true; }, 500);
   }
 
   async setAnimations() {

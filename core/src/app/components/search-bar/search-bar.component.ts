@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { GeohubService } from 'src/app/services/geohub.service';
-
+import { StatusService } from 'src/app/services/status.service';
+import { PlaceResult, TrackResult } from 'src/app/types/map';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',
@@ -26,15 +28,25 @@ export class SearchBarComponent implements OnInit {
     }
   ];
 
+
+  @Output() goToBBox: EventEmitter<number[]> = new EventEmitter();
+  @Output() searchChange: EventEmitter<any> = new EventEmitter();
+
   public searchstring: string = null;
   public inputInFocus: boolean = false;
+
+  public places = [];
+  public tracks = [];
+  public filters = [];
 
   public sliderOptions: any = {
     slidesPerView: 2.8,
   };
 
   constructor(
-    private _geoHubService : GeohubService
+    private _geoHubService: GeohubService,
+    private _statusService: StatusService,
+    private navCtrl: NavController
   ) { }
 
   ngOnInit() { }
@@ -48,12 +60,39 @@ export class SearchBarComponent implements OnInit {
   }
 
   inputFocus(inFocus: boolean) {
-    this.inputInFocus = inFocus;
+    setTimeout(() => {
+      this.inputInFocus = inFocus;
+    }, 250);
   }
 
   async inputChange(ev) {
-    console.log('------- ~ file: search-bar.component.ts ~ line 52 ~ SearchBarComponent ~ inputChange ~ ev', this.searchstring);
-    const results = await this._geoHubService.stringSearch(this.searchstring);
+    let results = [];
+    if (this.searchstring) {
+      results = await this._geoHubService.stringSearch(this.searchstring);
+    }
+    this.places = results;
+    this.tracks = results;
+    this.filters = results;
+  }
+
+  selectPlace(place: PlaceResult) {
+    console.log('------- ~ file: search-bar.component.ts ~ line 69 ~ SearchBarComponent ~ selectPlace ~ place', place);
+    const bbox = place.properties.boundingbox;
+    console.log('------- ~ file: search-bar.component.ts ~ line 79 ~ SearchBarComponent ~ selectPlace ~ place.properties', place.properties);
+    console.log('------- ~ file: search-bar.component.ts ~ line 79 ~ SearchBarComponent ~ selectPlace ~ bbox', bbox);
+    this.goToBBox.emit(bbox)
+  }
+
+  async selectTrack(track: TrackResult) {
+    console.log('------- ~ file: search-bar.component.ts ~ line 69 ~ SearchBarComponent ~ selecttrack ~ track', track);
+    const route = await this._geoHubService.getEcTrack(track.properties.id);
+    this._statusService.route = route;
+    this.navCtrl.navigateForward('route');
+  }
+  selectFilter(filter) {
+    console.log('------- ~ file: search-bar.component.ts ~ line 69 ~ SearchBarComponent ~ selectfilter ~ filter', filter);
+    this._statusService.addFilter(filter);
+    this.searchChange.emit();
   }
 
 }
