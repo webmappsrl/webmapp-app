@@ -23,6 +23,7 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { ModalphotosModule } from './components/modalphotos/modalphotos.module';
 import { ModalSuccessModule } from './components/modal-success/modal-success.module';
+import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
@@ -67,6 +68,7 @@ registerLocaleData(localeIt);
     },
     Diagnostic,
     ImagePicker,
+    GoogleAnalytics,
   ],
   bootstrap: [AppComponent],
 })

@@ -25,14 +25,14 @@
       <div class="webmapp-searchbar-results-section">
         <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.places' | translate}}
         </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="places.length==0">
+        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.places.length==0">
           {{'components.searchbar.noplaces' | translate}}</ion-label>
         <ion-list>
           <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let place of places" (click)="selectPlace(place)" lines="none">
+            *ngFor="let place of results?.places" (click)="selectPlace(place)" lines="none">
             <i class="webmapp-icon-pin-outline"></i>
             <ion-label class="webmapp-searchbar-results-section-resultname">
-              {{place.properties.name | wmtrans}}
+              {{place.name | wmtrans}}
             </ion-label>
             <ion-ripple-effect></ion-ripple-effect>
           </ion-item>
@@ -43,21 +43,21 @@
       <div class="webmapp-searchbar-results-section">
         <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.tracks' | translate}}
         </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="tracks.length==0">
+        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.ec_tracks.length==0">
           {{'components.searchbar.notracks' | translate}}</ion-label>
         <ion-list>
           <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let track of tracks" (click)="selectTrack(track)" lines="none">
+            *ngFor="let track of results?.ec_tracks" (click)="selectTrack(track)" lines="none">
 
-            <ion-img slot="start" [src]="track.properties.image" class="webmapp-searchbar-results-section-resultimage"></ion-img>
+            <ion-img slot="start" [src]="track.image" class="webmapp-searchbar-results-section-resultimage"></ion-img>
 
             <div>
               <ion-label class="webmapp-searchbar-results-section-resultname">
-                {{track.properties.name | wmtrans}}
+                {{track.name | wmtrans}}
               </ion-label>
-              <ion-label class="webmapp-searchbar-results-section-resultsubtitle ">
+              <!-- <ion-label class="webmapp-searchbar-results-section-resultsubtitle ">
                 {{track.properties.description | wmtrans}}
-              </ion-label>
+              </ion-label> -->
             </div>
 
             <ion-ripple-effect></ion-ripple-effect>
@@ -69,16 +69,16 @@
       <div class="webmapp-searchbar-results-section">
         <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.filters' | translate}}
         </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="filters.length==0">
+        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.poi_types.length==0">
           {{'components.searchbar.nofilters' | translate}}</ion-label>
         <ion-list>
           <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let filter of filters" (click)="selectFilter(filter)" lines="none">
+            *ngFor="let filter of results?.poi_types" (click)="selectFilter(filter)" lines="none">
 
             <i class="webmapp-icon-pin-outline"></i>
 
             <ion-label class="webmapp-searchbar-results-section-resultname">
-              {{filter.properties.name | wmtrans}}
+              {{filter.name | wmtrans}}
             </ion-label>
             <ion-ripple-effect></ion-ripple-effect>
           </ion-item>

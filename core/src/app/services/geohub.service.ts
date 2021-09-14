@@ -5,6 +5,7 @@ import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-str
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { ILocation } from '../types/location';
+import { SearchStringResult } from '../types/map';
 import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed, WhereTaxonomy } from '../types/model';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
@@ -26,7 +27,7 @@ export class GeohubService {
    *
    * @returns {CGeojsonLineStringFeature}
    */
-  async getEcTrack(id: string): Promise<CGeojsonLineStringFeature> {
+  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
     const fondo = ['asfalto', 'lastricato', 'naturale']
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
@@ -211,41 +212,48 @@ export class GeohubService {
     return res;
   }
 
-  public async stringSearch(searchstring: string): Promise<Array<IGeojsonPoi>> { //TODO real mock and result type
-    const mock = {
-      "type": "FeatureCollection",
-      "features": [
+  public async stringSearch(searchstring: string): Promise<SearchStringResult> { //TODO real mock and result type
+    const mock: SearchStringResult = {
+      places: [
         {
-          "properties": {
-            "id": 23,
-            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg",
-            name: { it: 'esempio 2 ', en: 'example' },
-            description: { it: ` Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu.`, en: 'desc' },
-            boundingbox: [11.1022, 42.66137, 11.108, 42.658]
-          },
-          "geometry": {
-            "type": "Point",
-            "coordinates": [11.1022, 42.66137]
-          }
+          "id": 1,
+          name: { it: 'esempio 2 ', en: 'example' },
+          "bbox": [11.1022, 42.66137, 11.108, 42.658]
         },
         {
-          "properties": {
-            "id": 22,
-            "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg", name: { it: 'esempio 2 ', en: 'example' },
-            description: { it: `Lorem ipsum dolor sit amet, `, en: 'desc' },
-            boundingbox: [11.1022, 42.66137, 11.108, 42.658]
-          },
-          "geometry": {
-            "type": "Point",
-            "coordinates": [11.108, 42.658]
-          }
+          "id": 2,
+          name: { it: `Lorem ipsum dolor sit amet, `, en: 'desc' },
+          "bbox": [11.1022, 42.66137, 11.108, 42.658]
+        },
+      ],
+      ec_tracks: [
+        {
+          "id": 22,
+          "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg",
+          name: { it: 'esempio traccia ', en: 'example' },
+          "where": [1]
+        },
+        {
+          "id": 25,
+          "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg",
+          name: { it: 'esempio traccia bis  ', en: 'example' },
+          "where": [12]
         }
+      ],
+      poi_types: [
+        {
+          "id": 6,
+          name: { it: 'esempio filtro ', en: 'example' }
+        },
+        {
+          "id": 5,
+          name: { it: 'esempio filtro bis', en: 'example' }
+        },
       ]
     }
     let call = this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/search/${searchstring}`,)
     call = of(mock);
-    const res = await call.pipe(map(x => x.features))
-      .toPromise();
+    const res = await call.toPromise();
     return res;
   }
 
@@ -283,7 +291,7 @@ export class GeohubService {
   async favourites(): Promise<number[]> {
     if (!this._favourites) {
       try {
-        this._favourites = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/user/favorites`, {}).toPromise();
+        this._favourites = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/user/favorite`, {}).toPromise();
         console.log("------- ~ GeohubService ~ favourites ~ this._favourites", this._favourites);
       }
       catch (err) {
