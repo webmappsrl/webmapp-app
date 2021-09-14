@@ -85,7 +85,8 @@
         .webmapp-modalsuccess-infopanel-top-info {
           display: inline-block;
           vertical-align: top;
-          padding: 15px;
+          padding-left: 15px;
+          width: 65%;
 
           .webmapp-modalsuccess-infopanel-top-name {
             padding: 5px;
@@ -166,7 +167,7 @@
         .webmapp-modalsuccess-infopanel-top-name,
         .webmapp-modalsuccess-infopanel-top-text {
           display: inline-block;
-          width: 60%;
+          // width: 60%;
           padding: 0 8px ;
         }
         

@@ -6,7 +6,7 @@ import { CGeojsonFeature } from './cgeojson-feature';
 export class CGeojsonLineStringFeature extends CGeojsonFeature {
   constructor(geometry?: IGeojsonGeometry) {
     super();
-    if (geometry.type === 'LineString') this._geometry = geometry;
+    if (geometry && geometry.type === 'LineString') this._geometry = geometry;
   }
 
   /**
