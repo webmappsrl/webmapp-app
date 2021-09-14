@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { LanguagesService } from './services/languages.service';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -14,7 +15,8 @@ export class AppComponent {
   constructor(
     private _languagesService: LanguagesService,
     private _platform: Platform,
-    private _googleAnalytics: GoogleAnalytics
+    private _googleAnalytics: GoogleAnalytics,
+    private _authService : AuthService
   ) {
     this._languagesService.initialize();
 

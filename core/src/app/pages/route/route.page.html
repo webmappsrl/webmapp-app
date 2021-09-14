@@ -18,7 +18,7 @@
           {{'pages.route.directions' | translate}}
         </div>
       </ion-item>
-      <ion-item>
+      <ion-item  (click)="download()">
         <i class="webmapp-icon-donwload-outline" start></i>
         <div class="webmapp-pageroute-menuitem">
           {{'pages.route.download' | translate}}
@@ -260,6 +260,14 @@
       </div>
     </ion-card>
   </div>
+ 
+  <div class="webmapp-pageroute-downloadbackpanel" [hidden]="!showDownload"></div>
+  <div class="webmapp-pageroute-downloadpanel" [hidden]="!showDownload">
+    <div class="webmapp-pageroute-downloadpanel-container">
+     <i class="webmapp-pageroute-downloadpanel-exit webmapp-icon-close-outline" (click)="endDownload()">  </i>
+     <webmapp-download-panel></webmapp-download-panel>
+    </div>
+  </div>
 
   <ion-fab
     [vertical]="opacity==1?'bottom':'top'"
@@ -269,6 +277,13 @@
     <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>
     </ion-fab-button> -->
+    <ion-fab-button
+      (click)="download()"
+      size="small"
+      class="webmapp-pageroute-btnbottom"
+    >
+      <i class="webmapp-icon-donwload-outline"></i>
+    </ion-fab-button>
     <webmapp-fav-btn
       (click)="favourite()"
       [isFavourite]="isFavourite"

@@ -150,3 +150,47 @@
     }
   }
 }
+
+.webmapp-pageroute-downloadbackpanel {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2991;
+  background-color: #333;
+  opacity: 0.4;
+}
+
+
+.webmapp-pageroute-downloadpanel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  min-height: 200px;
+  z-index: 2998;
+  background: var(--wm-color-light);
+  border-radius: 20px 20px 0 0;
+
+  .webmapp-pageroute-downloadpanel-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 20px 10px;
+    .webmapp-pageroute-downloadpanel-exit {
+      position: absolute;
+      z-index: 99;
+      top: 8px;
+      right: 8px;
+      font-size: 15px;
+      padding: 5px;
+      color: var(--wm-color-derk);
+      background-color: rgba(255, 255, 255, 0.7);
+
+      color: var(--wm-color-dark);
+      // @include box-shadow-light;
+    }
+  }
+}
