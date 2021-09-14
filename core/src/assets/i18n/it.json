@@ -33,6 +33,7 @@
     "settings": {
       "title": "Impostazioni",
       "logout": "Log out",
+      "version": "Versione",
       "alert": {
         "logout": "Sicuro di voler disconnettere il tuo account?"
       }
