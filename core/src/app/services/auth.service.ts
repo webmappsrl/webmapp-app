@@ -22,8 +22,12 @@ export class AuthService {
     private _storageService: StorageService
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
-    this._onStateChange.next(this._userData);
+    
+    this._onStateChange.subscribe(x => {
+      this._communicationService.setToken(x?.token);
+    })
 
+    this._onStateChange.next(this._userData);
     this._storageService.getUser().then(
       (user: IUser) => {
         this._userData = user;
@@ -33,6 +37,7 @@ export class AuthService {
         console.warn(err);
       }
     );
+
   }
 
   get isLoggedIn(): boolean {
@@ -121,7 +126,7 @@ export class AuthService {
           }
         )
         .subscribe(
-          () => {},
+          () => { },
           (err: HttpErrorResponse) => {
             console.warn(err);
           }

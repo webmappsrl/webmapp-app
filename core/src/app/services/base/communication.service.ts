@@ -6,14 +6,21 @@
  * */
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommunicationService {
-  constructor(private _http: HttpClient) {}
+
+  private _token: string;
+
+  constructor(private _http: HttpClient) { }
+
+  setToken(token: string) {
+    this._token = token;
+  }
 
   /**
    * Perform a GET request and get the result
@@ -24,7 +31,19 @@ export class CommunicationService {
    * @returns {Observable<any>}
    */
   get(url: string, options?: any): Observable<any> {
+    options = this._setAuthToken(options);
     return this._http.get(url, options);
+  }
+
+  private _setAuthToken(options) {
+    if (this._token) {
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this._token}`
+      })
+      options = Object.assign({ headers: headers }, options);
+    }
+    return options;
   }
 
   /**
@@ -37,6 +56,7 @@ export class CommunicationService {
    * @returns {Observable<any>}
    */
   post(url: string, body: any, options?: any): Observable<any> {
+    options = this._setAuthToken(options);
     return this._http.post(url, body, options);
   }
 

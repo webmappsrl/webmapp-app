@@ -7,6 +7,9 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length">{{'pages.favourites.nodata' |
     translate}}</ion-label>
   <ion-list>

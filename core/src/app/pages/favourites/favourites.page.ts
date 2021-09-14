@@ -20,11 +20,17 @@ export class FavouritesPage implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.doRefresh(null);
+  }
+
+  async doRefresh(event) {
     this.tracks = await this._geoHubService.getFavouriteTracks();
+    if (event) {
+      event.target.complete();
+    }
   }
 
   open(track: IGeojsonFeature) {
-    console.log('------- ~ file: favourites.page.ts ~ line 27 ~ FavouritesPage ~ open ~ track', track);
     this._statusService.route = track;
     this._navController.navigateForward('/route');
   }
