@@ -10,6 +10,8 @@ import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDe
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
 
+const FAVOURITE_PAGESIZE = 3;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -279,11 +281,14 @@ export class GeohubService {
 
   private _favourites: Array<number> = null;
 
-  async getFavouriteTracks(): Promise<Array<IGeojsonFeature>> {
+  async getFavouriteTracks(page: number = 0): Promise<Array<IGeojsonFeature>> {
     const favourites = await this.favourites();
-    console.log("------- ~ GeohubService ~ getFavouriteTracks ~ favourites", favourites);
+
+    
+    let ids: number[] = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
+    
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/multiple?ids=${ids.join(',')}`).pipe(map(x => x.features))
       .toPromise();
     return res;
   }
@@ -292,12 +297,12 @@ export class GeohubService {
     if (!this._favourites) {
       try {
         const { favorites } = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/list`).toPromise();
-        this._favourites = favorites;        
+        this._favourites = favorites;
       }
       catch (err) {
-        console.log("------- ~ GeohubService ~ favourites ~ err", err);        
+        console.log("------- ~ GeohubService ~ favourites ~ err", err);
       }
-    }    
+    }
     return this._favourites;
   }
 
