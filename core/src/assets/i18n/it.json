@@ -224,6 +224,19 @@
       "favbtn":{
         "isFavourite":"Aggiunto ai preferiti!",
         "isNotFavourite":"Rimosso dai preferiti!"
+      },
+      "downloadpanel":{
+        "download":"Download",
+        "downloading":"Downloading",
+        "complete":"Download completato",
+        "downloadbtn":"Scarica",
+        "gotobtn":"Vai ai miei download",
+        "dontclose":"Non chiudere l'applicazione durante la fase di installazione dei dati",
+        "downsetup":"Setup iniziale",
+        "downmap":"Download della mappa",
+        "downdata":"Download dei dati",
+        "downmedia":"Download dei media",
+        "install":"Istallazione"
       }
     },
     "favourites":{
