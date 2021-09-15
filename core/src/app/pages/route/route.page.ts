@@ -40,9 +40,12 @@ export class RoutePage implements OnInit {
   public maxInfoheight = 350; //from CCS????
   public minInfoheight = 120; //from CCS????
 
+  public showDownload = false;
+
   public slopeChartHoverElements: ISlopeChartHoverElements;
 
   private _tabChildEventSubscriptions: Array<Subscription> = [];
+
 
   public slideOpts = {
     initialSlide: 0,
@@ -194,11 +197,9 @@ export class RoutePage implements OnInit {
   }
 
   async favourite() {
-    console.log(
-      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite'
-    );
-    await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
-    this.isFavourite = !this.isFavourite;
+    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);
+    this.isFavourite = await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
+    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);    
   }
 
   navigate() {
@@ -320,5 +321,14 @@ export class RoutePage implements OnInit {
   private getStep(ev) {
     const delta = this.initialStep - ev.deltaY;
     return this.clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
+  }
+
+  public download(){
+    console.log("------- ~ RoutePage ~ download ~ download");
+    this.showDownload = true;    
+  }
+
+  public endDownload(){
+    this.showDownload = false;
   }
 }

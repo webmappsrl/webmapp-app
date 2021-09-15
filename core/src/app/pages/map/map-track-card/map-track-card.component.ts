@@ -52,8 +52,8 @@ export class MapTrackCardComponent implements OnInit {
 
   async setFavourite() {
     this.animation.play();
-    await this._geohubService.setFavouriteTrack(this.track.properties.id, !this.isFavourite);
-    this.isFavourite = !this.isFavourite;
+    this.isFavourite = await this._geohubService.setFavouriteTrack(this.track.properties.id, !this.isFavourite);
+    
   }
 
   exit() {

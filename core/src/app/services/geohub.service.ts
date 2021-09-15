@@ -280,8 +280,8 @@ export class GeohubService {
   private _favourites: Array<number> = null;
 
   async getFavouriteTracks(): Promise<Array<IGeojsonFeature>> {
-    // const favourites = await this.favourites();
-    // console.log("------- ~ GeohubService ~ getFavouriteTracks ~ favourites", favourites);
+    const favourites = await this.favourites();
+    console.log("------- ~ GeohubService ~ getFavouriteTracks ~ favourites", favourites);
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`,).pipe(map(x => x.features))
       .toPromise();
@@ -291,28 +291,29 @@ export class GeohubService {
   async favourites(): Promise<number[]> {
     if (!this._favourites) {
       try {
-        this._favourites = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/user/favorite`, {}).toPromise();
-        console.log("------- ~ GeohubService ~ favourites ~ this._favourites", this._favourites);
+        const { favorites } = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/list`).toPromise();
+        this._favourites = favorites;        
       }
       catch (err) {
-        console.log("------- ~ GeohubService ~ favourites ~ err", err);
-        this._favourites = [22, 25, 12];
-
+        console.log("------- ~ GeohubService ~ favourites ~ err", err);        
       }
-    }
+    }    
     return this._favourites;
   }
 
   async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<boolean> {
 
-    const favResult: { favorite: true | false } = await this._communicationService.get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${trackId}/favorites`,).toPromise();
-    if (favResult.favorite !== isFavourite) {
-      // TODO is possible? have to handle it?
-      isFavourite = favResult.favorite;
+    if (isFavourite) {
+      await this._communicationService.post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/add/${trackId}`, null).toPromise();
+    } else {
+      await this._communicationService.post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/remove/${trackId}`, null).toPromise();
     }
 
     const favourites = await this.favourites();
-    const idx = favourites.findIndex(x => x === trackId);
+    let idx = -1;
+    if (favourites && favourites.length) {
+      idx = favourites.findIndex(x => x === trackId);
+    }
     if (isFavourite) {
       if (idx < 0) {
         favourites.push(trackId);
@@ -327,7 +328,10 @@ export class GeohubService {
 
   async isFavouriteTrack(trackId: number): Promise<boolean> {
     const favourites = await this.favourites();
-    return !!favourites.find(x => x == trackId);
+    if (favourites && favourites.length) {
+      return !!favourites.find(x => x == trackId);
+    }
+    return false;
   }
 
   /**
