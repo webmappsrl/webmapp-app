@@ -287,10 +287,15 @@ export class GeohubService {
     
     let ids: number[] = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
     
+    
+    return this.getTracks(ids);
+  }
+
+  async getTracks(ids:number[]) : Promise<Array<IGeojsonFeature>>{
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/multiple?ids=${ids.join(',')}`).pipe(map(x => x.features))
       .toPromise();
-    return res;
+      return res;
   }
 
   async favourites(): Promise<number[]> {

@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">     
+      <ion-icon name="arrow-back-outline" [routerLink]="['/profile/profile-data']" class="webmapp-backbutton"></ion-icon>
+    </ion-buttons>    
+    <ion-title mode="md" class="webmapp-downloadlist-header-toolbar-title">
+      {{'pages.downloadlist.title' | translate}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-label class="webmapp-downloadlist-nodata" *ngIf="!tracks || !tracks.length">{{'pages.downloadlist.nodata' |
+    translate}}</ion-label>
+  <ion-list>
+    <webmapp-card-track *ngFor="let track of tracks" [isDownload]="true" [track]="track" (open)="open($event)"
+    (remove)="remove($event)">     
+
+    </webmapp-card-track>
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

@@ -40,8 +40,7 @@ export class FavouritesPage implements OnInit {
     this._navController.navigateForward('/route');
   }
 
-  async remove($event: Event, track: IGeojsonFeature) {
-    $event.preventDefault();
+  async remove(track: IGeojsonFeature) {    
     await this._geoHubService.setFavouriteTrack(track.properties.id, false);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);

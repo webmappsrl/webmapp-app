@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { DownloadService } from 'src/app/download.service';
+import { DownloadService } from 'src/app/services/download.service';
 import { StatusService } from 'src/app/services/status.service';
 import { DownloadStatus } from 'src/app/types/download';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -21,14 +22,15 @@ export class DownloadPanelComponent implements OnInit {
 
   constructor(
     private _statusService: StatusService,
-    private _downloadService :  DownloadService
+    private _downloadService :  DownloadService,
+    private _navController: NavController
   ) { }
 
   async ngOnInit() {
     setTimeout(() => {      
       this.track = this._statusService.route;  
       if(this._downloadService.isDownloadedTrack(this.track.properties.id)){
-        this.gotoDownloads();
+        this.completeDownloads();
       }
     }, 500);
 
@@ -72,12 +74,14 @@ export class DownloadPanelComponent implements OnInit {
       }
     ]
     if(status && status.finish){
-      this.gotoDownloads();
+      this.completeDownloads();
     }
   }
+gotoDownloads() {
+  this._navController.navigateForward(['/downloadlist']);
+}
 
-
-  gotoDownloads() {
+  completeDownloads() {
 
     this._downloadService.onChangeStatus.unsubscribe();
 

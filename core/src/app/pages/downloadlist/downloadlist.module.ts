@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { FavouritesPageRoutingModule } from './favourites-routing.module';
+import { DownloadlistPageRoutingModule } from './downloadlist-routing.module';
 
-import { FavouritesPage } from './favourites.page';
+import { DownloadlistPage } from './downloadlist.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipeModule } from 'src/app/pipes/pipe.module';
 import { CardsModule } from 'src/app/components/cards/cards.module';
@@ -16,11 +16,11 @@ import { CardsModule } from 'src/app/components/cards/cards.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FavouritesPageRoutingModule,
+    DownloadlistPageRoutingModule,
     TranslateModule,
     PipeModule,
     CardsModule
   ],
-  declarations: [FavouritesPage]
+  declarations: [DownloadlistPage]
 })
-export class FavouritesPageModule {}
+export class DownloadlistPageModule {}

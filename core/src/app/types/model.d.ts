@@ -80,6 +80,10 @@ export interface IGeojsonFeature {
   geometry: IGeojsonGeometry;
 }
 
+export interface IGeojsonFeatureDownloaded extends IGeojsonFeature{
+  size:number;
+}
+
 export interface IWmImage {
   id: number;
   url: string;
