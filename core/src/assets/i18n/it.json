@@ -1,8 +1,8 @@
 {
   "components": {
     "cardtrack": {
-      "remove": "Rimuovi",
-      "delete": "Elimina"
+      "delete": "Elimina",
+      "remove": "Rimuovi"
     },
     "map": {
       "btnrec": {
@@ -127,13 +127,18 @@
     }
   },
   "pages": {
+    "downloadlist": {
+      "cancel": "Annulla",
+      "deleteselected": "Elimina selezionati",
+      "nodata": "Non hai ancora scaricato nessuna traccia",
+      "nodata2": "Con i contenuti per uso offline navighi in tranquillità anche senza connessione!",
+      "nodatabtn": "Esplora",
+      "select": "Seleziona",
+      "title": "Downloads"
+    },
     "favourites": {
       "nodata": "Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
       "title": "Preferiti"
-    },
-    "downloadlist": {
-      "nodata": "Non sono state salvate tracce",
-      "title": "Downloads"
     },
     "home": {
       "button": "Scegli un punto di partenza",

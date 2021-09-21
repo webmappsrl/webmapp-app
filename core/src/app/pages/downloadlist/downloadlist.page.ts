@@ -11,12 +11,17 @@ import { IGeojsonFeatureDownloaded } from 'src/app/types/model';
 })
 export class DownloadlistPage implements OnInit {
 
-  public tracks = [];
+  public tracks: IGeojsonFeatureDownloaded[] = [];
+
+  public selected: IGeojsonFeatureDownloaded[] = [];
+
+
+  public isSelectedActive = false;
 
   constructor(
     private _downloadService: DownloadService,
-    private _statusService:StatusService,
-    private _navController:NavController
+    private _statusService: StatusService,
+    private _navController: NavController
   ) { }
 
   async ngOnInit() {
@@ -28,10 +33,30 @@ export class DownloadlistPage implements OnInit {
     this._navController.navigateForward('/route');
   }
 
-  async remove(track: IGeojsonFeatureDownloaded) {    
+  select(ev, track) {
+    if (ev.detail.checked) {
+      this.selected.push(track);
+    } else {
+      this.selected.splice(this.selected.indexOf(track), 1);
+    }
+  }
+
+  deleteSelected() {
+    console.log("------- ~ DownloadlistPage ~ deleteSelected ~ deleteSelected", this.selected);
+    this.selected.forEach(track => {
+      this.remove(track);
+    });
+    this.isSelectedActive = false;
+  }
+
+  async remove(track: IGeojsonFeatureDownloaded) {
     await this._downloadService.removeDownload(track.properties.id);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
+  }
+
+  gotoMap(){
+    this._navController.navigateForward('/map');
   }
 
 }
