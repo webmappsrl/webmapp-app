@@ -65,6 +65,9 @@
     "warning": "Attenzione"
   },
   "modals": {
+    "coin": {
+      "defaultmessage": "Acquista coins per utilizzare contenuti offline"
+    },
     "login": {
       "email": "E-mail",
       "errors": {

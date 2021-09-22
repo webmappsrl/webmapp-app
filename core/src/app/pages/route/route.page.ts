@@ -12,6 +12,7 @@ import {
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
+import { CoinService } from 'src/app/services/coin.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
@@ -80,7 +81,8 @@ export class RoutePage implements OnInit {
     private _platform: Platform,
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
-    private _shareService: ShareService
+    private _shareService: ShareService,
+    private _coinService : CoinService
   ) { }
 
   async ngOnInit() {
@@ -325,6 +327,7 @@ export class RoutePage implements OnInit {
 
   public download(){
     console.log("------- ~ RoutePage ~ download ~ download");
+    this._coinService.openModal();
     this.showDownload = true;    
   }
 

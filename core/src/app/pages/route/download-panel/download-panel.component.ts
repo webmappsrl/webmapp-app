@@ -29,7 +29,7 @@ export class DownloadPanelComponent implements OnInit {
   async ngOnInit() {
     setTimeout(() => {      
       this.track = this._statusService.route;  
-      if(this._downloadService.isDownloadedTrack(this.track.properties.id)){
+      if(this.track && this._downloadService.isDownloadedTrack(this.track.properties.id)){
         this.completeDownloads();
       }
     }, 500);
