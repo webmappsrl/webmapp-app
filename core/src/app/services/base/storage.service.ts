@@ -129,6 +129,7 @@ export class StorageService {
   async getImage(url: string): Promise<string> {
     const path = await this._get(`${IMAGE_STORAGE_PREFIX}-${url}`);
     if (path) {
+      console.log("------- ~ StorageService ~ getImage ~ path", path);
       return this._fileRead(path)
     } else {
       return '';

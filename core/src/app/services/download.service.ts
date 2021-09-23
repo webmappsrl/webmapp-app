@@ -7,7 +7,6 @@ import { StatusService } from 'src/app/services/status.service';
 import { DbService } from './base/db.service';
 import { promise } from 'selenium-webdriver';
 import { StorageService } from './base/storage.service';
-import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +27,6 @@ export class DownloadService {
   async isDownloadedTrack(trackId: number): Promise<boolean> {
     // const track = await this.db.getTrack(trackId);
     const track = await this.storage.getTrack(trackId);
-
-
-
     // FIXME remove
     return false;
 
@@ -116,7 +112,7 @@ export class DownloadService {
     let totalSize = 0;
     for (let i = 0; i < urlList.length; i++) {
       const url = urlList[i];
-      const imgB64 = await UtilsService.getB64img(url) as string; // TODO can do in async way
+      const imgB64 = await DownloadService.downloadBase64Img(url) as string; // TODO can do in async way
       totalSize += imgB64.length;
 
       await this.storage.setImage(url, imgB64);
@@ -167,7 +163,7 @@ export class DownloadService {
     }
 
     const update = (old, sum): number => {
-      return Math.min(100, old + (sum ? sum : 0) * 100)
+      return Math.min(1, old + (sum ? sum : 0))
     }
 
     this._status.setup = update(this._status.setup, statusUpdate.setup)
@@ -177,11 +173,11 @@ export class DownloadService {
     this._status.install = update(this._status.install, statusUpdate.install)
 
     if (
-      this._status.setup > 99 &&
-      this._status.map > 99 &&
-      this._status.data > 99 &&
-      this._status.media > 99 &&
-      this._status.install > 99
+      this._status.setup > 0.99 &&
+      this._status.map > 0.99 &&
+      this._status.data > 0.99 &&
+      this._status.media > 0.99 &&
+      this._status.install > 0.99
     ) {
       this._status.finish = true;
     }
@@ -201,5 +197,23 @@ export class DownloadService {
       ret.push(t2);
     })
     return ret;
+  }
+
+  static async downloadBase64Img(url) : Promise<string | ArrayBuffer> {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          resolve(base64data);
+        }
+      } catch (error) {
+        console.log("------- ~ UtilsService ~ getB64img ~ error", error);
+        resolve('');
+      }
+    });
   }
 }

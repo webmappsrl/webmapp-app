@@ -266,7 +266,7 @@
     <div class="webmapp-pageroute-downloadpanel-container">
       <ion-img class="webmapp-pageroute-downloadpanel-logo" src="assets/images/logo46.png"></ion-img>
      <i class="webmapp-pageroute-downloadpanel-exit webmapp-icon-close-outline" (click)="endDownload()">  </i>
-     <webmapp-download-panel></webmapp-download-panel>
+     <webmapp-download-panel (exit)="endDownload()"></webmapp-download-panel>
     </div>
   </div>
 

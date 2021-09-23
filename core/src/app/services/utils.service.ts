@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
+import { StorageService } from './base/storage.service';
+import { DownloadService } from './download.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilsService {
 
-  static imgCache: Array<{ key: string, value: string | ArrayBuffer }> = [];
+  private imgCache: Array<{ key: string, value: string | ArrayBuffer }> = [];
 
-  constructor() { }
+  constructor(
+    private download: DownloadService,
+    private storage: StorageService
+  ) { }
 
-  static async getB64img(url: string): Promise<string | ArrayBuffer> {
+  async getB64img(url: string): Promise<string | ArrayBuffer> {
     if (!url) { return null; }
     const cached = this.imgCache.find(x => x.key == url);
     if (cached) {
       return cached.value;
     }
-    const data = await fetch(url);
-    const blob = await data.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      try {
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          this.imgCache.push({ key: url, value: base64data })
-          resolve(base64data);
-        }
-      } catch (error) {
-        console.log("------- ~ UtilsService ~ getB64img ~ error", error);
-        resolve('');
+    else {
+
+      let base64data = await this.storage.getImage(url);
+
+      if (!base64data) {
+        base64data = await DownloadService.downloadBase64Img(url) as string;
       }
 
-    });
+      this.imgCache.push({ key: url, value: base64data })
+      return base64data;
+    }
+
   }
 }

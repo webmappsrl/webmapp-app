@@ -68,6 +68,7 @@ import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
 import { getVectorContext } from 'ol/render';
+import { MarkerService } from 'src/app/services/marker.service';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -286,7 +287,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private _mapService: MapService,
     private geohubSErvice: GeohubService,
     // private resolver: ComponentFactoryResolver,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private markerService:MarkerService
   ) {
     this._locationIcon = {
       layer: null,
@@ -1100,7 +1102,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const { iconFeature, style } = await this._createIconFeature(
       geometry ? geometry : poi.geometry,
       img,
-      PoiMarkerComponent.markerSize
+      this.markerService.poiMarkerSize
     );
     return {
       marker: {
@@ -1123,7 +1125,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const { iconFeature } = await this._createIconFeature(
       cluster.geometry,
       img,
-      ClusterMarkerComponent.markerSize,
+      this.markerService.clusterMarkerSize,
       transparent
     );
 
@@ -1173,26 +1175,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       );
     }
     const htmlTextCanvas =
-      await ClusterMarkerComponent.createMarkerHtmlForCanvas(
+      await this.markerService.createClusterMarkerHtmlForCanvas(
         cluster,
         isFavourite
       );
 
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      ClusterMarkerComponent.markerSize
+      this.markerService.clusterMarkerSize
     );
   }
 
   private async _createPoiCavasImage(
     poi: IGeojsonPoi
   ): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await PoiMarkerComponent.createMarkerHtmlForCanvas(
+    const htmlTextCanvas = await this.markerService.createPoiMarkerHtmlForCanvas(
       poi
     );
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      PoiMarkerComponent.markerSize
+      this.markerService.poiMarkerSize
     );
   }
 
