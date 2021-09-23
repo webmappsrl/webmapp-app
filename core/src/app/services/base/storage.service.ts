@@ -10,10 +10,18 @@ import { ReplaySubject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import {
   CONFIG_JSON_STORAGE_KEY,
+  IMAGE_STORAGE_PREFIX,
   INITIALIZED_FLAG_STORAGE_KEY,
   LANGUAGE_STORAGE_KEY,
+  POI_STORAGE_PREFIX,
+  TRACK_STORAGE_PREFIX,
   USER_STORAGE_KEY,
 } from 'src/app/constants/storage';
+import { IGeojsonFeature, IGeojsonFeatureDownloaded, IGeojsonPoiDetailed } from 'src/app/types/model';
+import { Md5 } from 'ts-md5/dist/md5'
+
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+const { Filesystem } = Plugins;
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +94,58 @@ export class StorageService {
 
   removeUser(): Promise<void> {
     return this._remove(USER_STORAGE_KEY);
+  }
+
+  async setTrack(id: string | number, track: IGeojsonFeature | IGeojsonFeatureDownloaded): Promise<void> {
+    return this._set(`${TRACK_STORAGE_PREFIX}-${id}`, track);
+  }
+
+  async getTrack(id: string | number): Promise<IGeojsonFeatureDownloaded> {
+    return this._get(`${TRACK_STORAGE_PREFIX}-${id}`);
+  }
+
+  async removeTrack(id: string | number): Promise<void> {
+    return this._remove(`${TRACK_STORAGE_PREFIX}-${id}`);
+  }
+
+  async setPoi(id: string | number, poi: IGeojsonPoiDetailed): Promise<void> {
+    return this._set(`${POI_STORAGE_PREFIX}-${id}`, poi);
+  }
+
+  async getPoi(id: string | number): Promise<IGeojsonPoiDetailed> {
+    return this._get(`${POI_STORAGE_PREFIX}-${id}`);
+  }
+
+  async removePoi(id: string | number): Promise<void> {
+    return this._remove(`${POI_STORAGE_PREFIX}-${id}`);
+  }
+
+  async setImage(url: string, filedata: string): Promise<void> {
+    const path = this.urlTofileName(url);
+    await this._fileWrite(path, filedata);
+    return this._set(`${IMAGE_STORAGE_PREFIX}-${url}`, path);
+  }
+
+  async getImage(url: string): Promise<string> {
+    const path = await this._get(`${IMAGE_STORAGE_PREFIX}-${url}`);
+    if (path) {
+      return this._fileRead(path)
+    } else {
+      return '';
+    }
+  }
+
+  async removeImage(url: string): Promise<void> {
+    const path = await this._get(`${IMAGE_STORAGE_PREFIX}-${url}`);
+    if (path) {
+      this._fileDelete(path);
+      this._remove(`${IMAGE_STORAGE_PREFIX}-${url}`);
+    }
+    return;
+  }
+
+  urlTofileName(url: string) {
+    return `${Md5.hashStr(url)}.img`;
   }
 
   getByKey(key: string): Promise<any> {
@@ -229,5 +289,43 @@ export class StorageService {
           });
       });
     }
+  }
+
+  private async _fileWrite(path, data) {
+    try {
+      const result = await Filesystem.writeFile({
+        path: path,
+        data: data,
+        directory: FilesystemDirectory.Documents,
+        encoding: FilesystemEncoding.UTF8
+      })
+    } catch (e) {
+      console.error('Unable to write file', e);
+    }
+  }
+
+  private async _fileRead(path): Promise<string> {
+    let contents = await Filesystem.readFile({
+      path: path,
+      directory: FilesystemDirectory.Documents,
+      encoding: FilesystemEncoding.UTF8
+    });
+    return contents.data;
+  }
+
+  private async _fileAppend(path, data) {
+    await Filesystem.appendFile({
+      path: path,
+      data: data,
+      directory: FilesystemDirectory.Documents,
+      encoding: FilesystemEncoding.UTF8
+    });
+  }
+
+  private async _fileDelete(path) {
+    await Filesystem.deleteFile({
+      path: path,
+      directory: FilesystemDirectory.Documents
+    });
   }
 }

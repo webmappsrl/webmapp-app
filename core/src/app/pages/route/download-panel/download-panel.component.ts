@@ -32,7 +32,7 @@ export class DownloadPanelComponent implements OnInit {
       if(this.track && this._downloadService.isDownloadedTrack(this.track.properties.id)){
         this.completeDownloads();
       }
-    }, 500);
+    }, 1000);
 
   }
 
@@ -45,12 +45,11 @@ export class DownloadPanelComponent implements OnInit {
       this.updateStatus(x);
     })
 
-    this._downloadService.startDownload(this.track.properties.id);
+    this._downloadService.startDownload(this.track);
     this.updateStatus(null);
   }
 
   updateStatus(status : DownloadStatus){
-    console.log("------- ~ DownloadPanelComponent ~ updateStatus ~ status", status);
     this.downloadElements = [
       {
         name: 'downsetup',

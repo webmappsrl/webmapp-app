@@ -82,7 +82,7 @@ export class RoutePage implements OnInit {
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
     private _shareService: ShareService,
-    private _coinService : CoinService
+    private _coinService: CoinService
   ) { }
 
   async ngOnInit() {
@@ -101,6 +101,8 @@ export class RoutePage implements OnInit {
       const id = params.id ? params.id : 3; //TODO only for debug
       this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
+
+
     }
 
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
@@ -173,6 +175,7 @@ export class RoutePage implements OnInit {
 
   async getRelatedPois() {
     this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
+    this._statusService.setPois(this.relatedPois, 0);
   }
 
   handleClick() {
@@ -199,9 +202,9 @@ export class RoutePage implements OnInit {
   }
 
   async favourite() {
-    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);
+    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite', this.isFavourite);
     this.isFavourite = await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
-    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);    
+    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite', this.isFavourite);
   }
 
   navigate() {
@@ -325,13 +328,13 @@ export class RoutePage implements OnInit {
     return this.clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
   }
 
-  public download(){
+  public download() {
     console.log("------- ~ RoutePage ~ download ~ download");
     this._coinService.openModal();
-    this.showDownload = true;    
+    this.showDownload = true;
   }
 
-  public endDownload(){
+  public endDownload() {
     this.showDownload = false;
   }
 }

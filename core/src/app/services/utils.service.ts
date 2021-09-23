@@ -20,11 +20,17 @@ export class UtilsService {
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        const base64data = reader.result;
-        this.imgCache.push({ key: url, value: base64data })
-        resolve(base64data);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          this.imgCache.push({ key: url, value: base64data })
+          resolve(base64data);
+        }
+      } catch (error) {
+        console.log("------- ~ UtilsService ~ getB64img ~ error", error);
+        resolve('');
       }
+
     });
   }
 }
