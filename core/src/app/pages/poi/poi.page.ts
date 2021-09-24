@@ -18,6 +18,8 @@ export class PoiPage implements OnInit {
   public selectedPoi: IGeojsonPoiDetailed;
   public track;
 
+  public useAnimation = false;
+
   public poiIdx: number;
 
   public sliderOptions: any = {
@@ -37,6 +39,10 @@ export class PoiPage implements OnInit {
       this.track = this.route.geometry; 
       this.updatePoiMarkers();
     }, 0);
+    
+    setTimeout(() => { 
+      this.useAnimation = true;
+    }, 1000);
   }
 
 
