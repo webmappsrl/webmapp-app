@@ -13,6 +13,7 @@ import {
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
 import { CoinService } from 'src/app/services/coin.service';
+import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
@@ -31,6 +32,7 @@ export class RoutePage implements OnInit {
   public route: IGeojsonFeature;
   public isFavourite: boolean = false;
   public useAnimation = false;
+  public useCache = false;
 
   public track;
   public pois: Array<IGeojsonPoi> = null;
@@ -82,7 +84,8 @@ export class RoutePage implements OnInit {
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
     private _shareService: ShareService,
-    private _coinService: CoinService
+    private _coinService: CoinService,
+    private downloadService: DownloadService
   ) { }
 
   async ngOnInit() {
@@ -98,7 +101,7 @@ export class RoutePage implements OnInit {
 
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
-      const id = params.id ? params.id : 3; //TODO only for debug
+      const id = params.id ? params.id : 4; //TODO only for debug
       this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
 
@@ -113,6 +116,8 @@ export class RoutePage implements OnInit {
     this.setAnimations();
 
     this.getRelatedPois();
+
+    this.useCache = await this.downloadService.isDownloadedTrack(this.route.properties.id);
 
     setTimeout(() => { this.track = this.route.geometry; }, 400);
     setTimeout(() => { this.useAnimation = true; }, 500);

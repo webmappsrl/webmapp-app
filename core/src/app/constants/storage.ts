@@ -6,3 +6,5 @@ export const TAXONOMYWHERE_STORAGE_KEY: string = 'webmapp-taxonomywhere';
 export const TRACK_STORAGE_PREFIX: string = 'webmapp-track';
 export const POI_STORAGE_PREFIX: string = 'webmapp-poi';
 export const IMAGE_STORAGE_PREFIX: string = 'webmapp-image';
+export const MBTILES_STORAGE_PREFIX: string = 'webmapp-mbtiles';
+export const DOWNLOAD_INDEX_KEY: string = 'webmapp-downloadindex';

@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { interval, ReplaySubject } from 'rxjs';
-import { DownloadStatus } from '../types/download';
+import { DownloadedTrackComponents, DownloadStatus } from '../types/download';
 import { IGeojsonFeature, IGeojsonFeatureDownloaded } from '../types/model';
 import { GeohubService } from './geohub.service';
 import { StatusService } from 'src/app/services/status.service';
 import { DbService } from './base/db.service';
 import { promise } from 'selenium-webdriver';
 import { StorageService } from './base/storage.service';
+import { CommunicationService } from './base/communication.service';
+import { environment } from 'src/environments/environment';
+import { GEOHUB_TILES_DOMAIN } from '../constants/geohub';
+import { DOWNLOAD_INDEX_KEY } from '../constants/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -17,19 +21,27 @@ export class DownloadService {
 
   private _status: DownloadStatus;
 
+  private downloadIndex: DownloadedTrackComponents[];
+
   constructor(
     private _geohubservice: GeohubService,
     private _statusService: StatusService,
     private storage: StorageService,
+    // private communicationService: CommunicationService,
     // private db: DbService
-  ) { }
+  ) {
+    this.storage.getByKey(DOWNLOAD_INDEX_KEY).then(val => {
+      if (val) { this.downloadIndex = val; }
+      else { this.downloadIndex = []; }
+    })
+  }
+
+  async saveIndex() {
+    return this.storage.setByKey(DOWNLOAD_INDEX_KEY, this.downloadIndex);
+  }
 
   async isDownloadedTrack(trackId: number): Promise<boolean> {
-    // const track = await this.db.getTrack(trackId);
-    const track = await this.storage.getTrack(trackId);
-    // FIXME remove
-    return false;
-
+    const track = this.downloadIndex.find(x => x.trackId === trackId);
     return !!track;
   }
 
@@ -43,11 +55,17 @@ export class DownloadService {
 
     this.createNewStatus();
 
+    this.updateStatus({
+      finish: false,
+      setup: 1
+    })
+
+
     // downaload mbtiles (MAP)
-    for (let i = 0; i < track.properties.mbtiles.length; i++) {
-      const mbtileId = track.properties.mbtiles[i];
-      sizeMb += await this.downloadMBtiles(mbtileId, track.properties.mbtiles.length) // TODO async
-    }
+    // const mbtiles = ['2/2/1', '7/67/47', '11/1086/755', '11/1087/755'];
+    const mbtiles = track.properties.mbtiles;
+    sizeMb += await this.downloadMBtiles(mbtiles); // TODO async
+
 
     const imageUrlList: string[] = [];
 
@@ -57,13 +75,17 @@ export class DownloadService {
     sizeMb += await this.saveTrack(track, dataTotal); // TODO async
     console.log("------- ~ DownloadService ~ startDownload ~ track.properties", track.properties);
     imageUrlList.push(track.properties.feature_image.url);
-    track.properties.image_gallery.forEach(img => {
-      imageUrlList.push(img.url);
-    })
+    if (track.properties.image_gallery) {
+      track.properties.image_gallery.forEach(img => {
+        imageUrlList.push(img.url);
+      })
+    }
 
+    const poisIds = [];
     // download poi (data) - DB key=poiId ??    
     for (let i = 0; i < pois.length; i++) {
       const poi = pois[i];
+      poisIds.push(poi.properties.id);
       imageUrlList.push(poi.properties.image);
       for (let j = 0; j < poi.properties.images.length; j++) {
         const imgUrl = poi.properties.images[j];
@@ -72,16 +94,51 @@ export class DownloadService {
       };
     }
 
-
     sizeMb += await this.downloadImages(imageUrlList, track); // TODO async
+
+    this.downloadIndex.push({
+      trackId: track.properties.id,
+      tiles: mbtiles,
+      images: imageUrlList,
+      pois: poisIds
+    })
+    this.saveIndex();
 
     this.updateTrackSize(track as IGeojsonFeatureDownloaded, sizeMb)
 
     //TODO rollback?
   }
 
-  async downloadMBtiles(tilesID, totalTiles): Promise<number> {
-    // TODO download tile
+  async downloadMBtiles(tilesIDs: string[]): Promise<number> {
+
+    if (!tilesIDs) {
+      this.updateStatus({
+        finish: false,
+        map: 1
+      })
+      return 0;
+    }
+
+    let totalSize = 0;
+    for (let i = 0; i < tilesIDs.length; i++) {
+      const tilesId = tilesIDs[i];
+
+      // TODO check already downloaded mbtiles
+
+      const tileData = (await DownloadService.downloadFile(`${GEOHUB_TILES_DOMAIN}/raster/${tilesId}.mbtiles`)); // TODO can do in async way
+
+      totalSize += tileData.byteLength;
+
+      await this.storage.setMBTiles(tilesId, tileData);
+      this.updateStatus({
+        finish: false,
+        map: 1 / tilesIDs.length
+      })
+    }
+    return totalSize;
+
+
+
 
     //save to disk -> progress event
 
@@ -104,13 +161,16 @@ export class DownloadService {
       finish: false,
       data: 1 / objTotal
     })
-    //TODO add track-poi reference
     return JSON.stringify(poi).length;
   }
 
   async downloadImages(urlList: string[], referenceTrack): Promise<number> {
     let totalSize = 0;
     for (let i = 0; i < urlList.length; i++) {
+
+
+      // TODO check already downloaded images
+
       const url = urlList[i];
       const imgB64 = await DownloadService.downloadBase64Img(url) as string; // TODO can do in async way
       totalSize += imgB64.length;
@@ -121,7 +181,6 @@ export class DownloadService {
         media: 1 / urlList.length
       })
     }
-    //TODO add track-image reference
     return totalSize;
   }
 
@@ -138,7 +197,7 @@ export class DownloadService {
   removeDownload(trackId: number) {
     //TODO delete downloaded elements
 
-    // check DB relation
+    // check index relation
     // delete media
     // delete track & poi
     // delete mbtiles
@@ -199,7 +258,7 @@ export class DownloadService {
     return ret;
   }
 
-  static async downloadBase64Img(url) : Promise<string | ArrayBuffer> {
+  static async downloadBase64Img(url): Promise<string | ArrayBuffer> {
     const data = await fetch(url);
     const blob = await data.blob();
     return new Promise((resolve) => {
@@ -215,5 +274,26 @@ export class DownloadService {
         resolve('');
       }
     });
+  }
+
+  static async downloadFile(url): Promise<ArrayBuffer> {
+    const data = await fetch(url);
+
+    return data.arrayBuffer();
+
+    //   const blob = await data.blob();
+    //   return new Promise((resolve) => {
+    //     const reader = new FileReader();
+    //     reader.readAsDataURL(blob);
+    //     try {
+    //       reader.onloadend = () => {
+    //         const base64data = reader.result;
+    //         resolve(base64data);
+    //       }
+    //     } catch (error) {
+    //       console.log("------- ~ UtilsService ~ downloadFile ~ error", error);
+    //       resolve('');
+    //     }
+    //   });
   }
 }

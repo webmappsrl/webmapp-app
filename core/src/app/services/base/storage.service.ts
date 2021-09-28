@@ -16,6 +16,7 @@ import {
   POI_STORAGE_PREFIX,
   TRACK_STORAGE_PREFIX,
   USER_STORAGE_KEY,
+  MBTILES_STORAGE_PREFIX
 } from 'src/app/constants/storage';
 import { IGeojsonFeature, IGeojsonFeatureDownloaded, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { Md5 } from 'ts-md5/dist/md5'
@@ -121,7 +122,7 @@ export class StorageService {
   }
 
   async setImage(url: string, filedata: string): Promise<void> {
-    const path = this.urlTofileName(url);
+    const path = this.stringTofileName(url,'img');
     await this._fileWrite(path, filedata);
     return this._set(`${IMAGE_STORAGE_PREFIX}-${url}`, path);
   }
@@ -145,8 +146,38 @@ export class StorageService {
     return;
   }
 
-  urlTofileName(url: string) {
-    return `${Md5.hashStr(url)}.img`;
+  async setMBTiles(tileId: string, filedata: ArrayBuffer): Promise<void> {
+    const path = this.stringTofileName(tileId,'mbt');
+    await this._fileWrite(path, filedata);
+    return this._set(`${MBTILES_STORAGE_PREFIX}-${tileId}`, path);
+  }
+
+  async getMBTiles(tileId: string): Promise<string> {
+    const path = await this.getMBTileFilename(tileId);
+    if (path) {
+      console.log("------- ~ StorageService ~ getMBTiles ~ path", path);
+      return this._fileRead(path)
+    } else {
+      return '';
+    }
+  }
+
+  async getMBTileFilename(tileId: string): Promise<string> {
+    const path = await this._get(`${MBTILES_STORAGE_PREFIX}-${tileId}`);
+    return path;
+  }
+
+  async removeMBTiles(tileId: string): Promise<void> {
+    const path = await this._get(`${MBTILES_STORAGE_PREFIX}-${tileId}`);
+    if (path) {
+      this._fileDelete(path);
+      this._remove(`${MBTILES_STORAGE_PREFIX}-${tileId}`);
+    }
+    return;
+  }
+
+  stringTofileName(url: string, filetype: string) {
+    return `${Md5.hashStr(url)}.${filetype}`;
   }
 
   getByKey(key: string): Promise<any> {

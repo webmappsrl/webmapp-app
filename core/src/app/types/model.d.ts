@@ -31,7 +31,7 @@ export interface IGeojsonProperties {
   [_: string]: any; // allow to work with custom properties when needed
   id: number;
 
-  mbtiles?:number[];
+  mbtiles?:string[];
   created_at?: Date;
   updated_at?: Date;
   name?: iLocalString;
