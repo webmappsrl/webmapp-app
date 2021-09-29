@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IGeojsonCluster, IGeojsonPoi } from '../types/model';
-import { UtilsService } from './utils.service';
+import { DownloadService } from './download.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { UtilsService } from './utils.service';
 export class MarkerService {
 
   constructor(
-    private utilsService: UtilsService
+    private download: DownloadService
   ) { }
 
   
@@ -16,7 +16,7 @@ export class MarkerService {
 
   public async createPoiMarkerHtmlForCanvas(value: IGeojsonPoi): Promise<string> {
 
-    let img1b64: string | ArrayBuffer = !value.isSmall ? await this.utilsService.getB64img(value.properties.image) : '';
+    let img1b64: string | ArrayBuffer = !value.isSmall ? await this.download.getB64img(value.properties.image) : '';
 
 
     let html = `
@@ -68,12 +68,12 @@ export class MarkerService {
     let img2b64: string | ArrayBuffer = null;
     let img3b64: string | ArrayBuffer = null;
 
-    let img1b64: string | ArrayBuffer = await this.utilsService.getB64img(value.properties.images[0]);
+    let img1b64: string | ArrayBuffer = await this.download.getB64img(value.properties.images[0]);
     if (value.properties.images.length > 1) {
-      img2b64 = await this.utilsService.getB64img(value.properties.images[1]);
+      img2b64 = await this.download.getB64img(value.properties.images[1]);
     }
     if (value.properties.images.length > 2) {
-      img3b64 = await this.utilsService.getB64img(value.properties.images[2]);
+      img3b64 = await this.download.getB64img(value.properties.images[2]);
     }
     const clusterCount = value.properties.ids.length;
 

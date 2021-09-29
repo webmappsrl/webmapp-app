@@ -1102,8 +1102,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     poi: IGeojsonPoi,
     geometry = null
   ): Promise<{ marker: PoiMarker; style: Style }> {
-    // TODO check object type
-
     const img = await this._createPoiCavasImage(poi);
     const { iconFeature, style } = await this._createIconFeature(
       geometry ? geometry : poi.geometry,
@@ -1124,8 +1122,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     cluster: IGeojsonCluster,
     transparent: boolean = false
   ): Promise<ClusterMarker> {
-    // TODO check object type
-
     const img = await this._createClusterCavasImage(cluster);
 
     const { iconFeature } = await this._createIconFeature(

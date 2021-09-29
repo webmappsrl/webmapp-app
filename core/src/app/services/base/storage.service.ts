@@ -49,6 +49,11 @@ export class StorageService {
     );
   }
 
+  init() {
+    console.log("------- ~ StorageService ~ init ~ init");
+
+  }
+
   setConfig(value: IConfig): Promise<void> {
     return this._set(CONFIG_JSON_STORAGE_KEY, value);
   }
@@ -122,23 +127,28 @@ export class StorageService {
   }
 
   async setImage(url: string, filedata: string): Promise<void> {
-    const path = this.stringTofileName(url,'img');
+    const path = this.stringTofileName(url, 'img');
     await this._fileWrite(path, filedata);
     return this._set(`${IMAGE_STORAGE_PREFIX}-${url}`, path);
   }
 
-  async getImage(url: string): Promise<string> {
+  async getImageFilename(url: string): Promise<string> {
     const path = await this._get(`${IMAGE_STORAGE_PREFIX}-${url}`);
+    return path;
+  }
+
+  async getImage(url: string): Promise<string> {
+    const path = await this.getImageFilename(url);
     if (path) {
       console.log("------- ~ StorageService ~ getImage ~ path", path);
-      return this._fileRead(path)
+      return await this._fileRead(path)
     } else {
-      return '';
+      return null;
     }
   }
 
   async removeImage(url: string): Promise<void> {
-    const path = await this._get(`${IMAGE_STORAGE_PREFIX}-${url}`);
+    const path = await this.getImageFilename(url);
     if (path) {
       this._fileDelete(path);
       this._remove(`${IMAGE_STORAGE_PREFIX}-${url}`);
@@ -147,7 +157,7 @@ export class StorageService {
   }
 
   async setMBTiles(tileId: string, filedata: ArrayBuffer): Promise<void> {
-    const path = this.stringTofileName(tileId,'mbt');
+    const path = this.stringTofileName(tileId, 'mbt');
     await this._fileWrite(path, filedata);
     return this._set(`${MBTILES_STORAGE_PREFIX}-${tileId}`, path);
   }
@@ -201,9 +211,7 @@ export class StorageService {
    */
   private _set(key: string, value: any): Promise<void> {
     const stringValue: string = JSON.stringify(value);
-    // this._utilsService.encryptAES(
-    //   JSON.stringify(value)
-    // );
+
     if (this._ready) return this._store.set(key, stringValue);
     else {
       return new Promise<void>((resolve, reject) => {
@@ -241,11 +249,7 @@ export class StorageService {
           // console.log('------- ~ file: storage.service.ts ~ line 150 ~ StorageService ~ _storeGet ~ value', value);
           if (value) {
             try {
-              result = JSON.parse(
-                // this._utilsService.decryptAES(
-                value
-                // )
-              );
+              result = JSON.parse(value);
             } catch (e) {
               result = value;
             }

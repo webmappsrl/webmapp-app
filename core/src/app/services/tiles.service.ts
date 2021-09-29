@@ -51,6 +51,7 @@ export class TilesService {
 
   async getFromMBTilesDownloaded(tileId: string): Promise<string> {
     const mbTileFileName = await this.getMbTileFileName(tileId);
+    console.log("------- ~ TilesService ~ getFromMBTilesDownloaded ~ mbTileFileName", mbTileFileName);
     if (mbTileFileName) {
       return this.getBase64fromMBtile(tileId, mbTileFileName);
     }
@@ -80,7 +81,7 @@ export class TilesService {
   }
 
   async getBase64fromMBtile(tileId: string, mbTileFileName): Promise<string> {
-    if (this.platform.is('mobile')) {
+    if (!this.platform.is('mobile')) {
       return null;
     }
 
