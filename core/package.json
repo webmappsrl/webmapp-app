@@ -39,6 +39,7 @@
     "cordova.plugins.diagnostic": "^6.0.3",
     "ol": "^6.5.0",
     "rxjs": "~6.6.0",
+    "ts-md5": "^1.2.9",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
