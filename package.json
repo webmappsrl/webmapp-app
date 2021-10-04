@@ -7,7 +7,8 @@
   "private": true,
   "dependencies": {
     "@angular-devkit/schematics": "^12.1.0",
-    "@types/ol": "^6.5.0"
+    "@types/ol": "^6.5.0",
+    "ts-md5": "^1.2.9"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.1.0",

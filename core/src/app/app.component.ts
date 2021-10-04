@@ -5,6 +5,8 @@ import { LanguagesService } from './services/languages.service';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './services/auth.service';
+import { StorageService } from './services/base/storage.service';
+import { DownloadService } from './services/download.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -16,7 +18,8 @@ export class AppComponent {
     private _languagesService: LanguagesService,
     private _platform: Platform,
     private _googleAnalytics: GoogleAnalytics,
-    private _authService : AuthService
+    private _authService: AuthService,
+    private _downloadService: DownloadService,
   ) {
     this._languagesService.initialize();
 
@@ -28,15 +31,17 @@ export class AppComponent {
         Plugins.SplashScreen.hide();
       }
     );
+    
+    this._downloadService.init();
 
     this._googleAnalytics.startTrackerWithId(environment.analyticsId)
-   .then(() => {
-     console.log('Google analytics is ready now');
-      this._googleAnalytics.trackView('test');
-     // Tracker is ready
-     // You can now track pages or set additional information such as AppVersion or UserId
-   })
-   .catch(e => console.log('Error starting GoogleAnalytics', e));
+      .then(() => {
+        console.log('Google analytics is ready now');
+        this._googleAnalytics.trackView('test');
+        // Tracker is ready
+        // You can now track pages or set additional information such as AppVersion or UserId
+      })
+      .catch(e => console.log('Error starting GoogleAnalytics', e));
 
   }
 }

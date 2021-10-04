@@ -12,6 +12,8 @@ import {
 } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
+import { CoinService } from 'src/app/services/coin.service';
+import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
@@ -30,6 +32,7 @@ export class RoutePage implements OnInit {
   public route: IGeojsonFeature;
   public isFavourite: boolean = false;
   public useAnimation = false;
+  public useCache = false;
 
   public track;
   public pois: Array<IGeojsonPoi> = null;
@@ -80,7 +83,9 @@ export class RoutePage implements OnInit {
     private _platform: Platform,
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
-    private _shareService: ShareService
+    private _shareService: ShareService,
+    private _coinService: CoinService,
+    private downloadService: DownloadService
   ) { }
 
   async ngOnInit() {
@@ -96,9 +101,11 @@ export class RoutePage implements OnInit {
 
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
-      const id = params.id ? params.id : 3; //TODO only for debug
+      const id = params.id ? params.id : 4; //TODO only for debug
       this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
+
+
     }
 
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
@@ -109,6 +116,8 @@ export class RoutePage implements OnInit {
     this.setAnimations();
 
     this.getRelatedPois();
+
+    this.useCache = await this.downloadService.isDownloadedTrack(this.route.properties.id);
 
     setTimeout(() => { this.track = this.route.geometry; }, 400);
     setTimeout(() => { this.useAnimation = true; }, 500);
@@ -171,6 +180,7 @@ export class RoutePage implements OnInit {
 
   async getRelatedPois() {
     this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
+    this._statusService.setPois(this.relatedPois, 0);
   }
 
   handleClick() {
@@ -197,9 +207,9 @@ export class RoutePage implements OnInit {
   }
 
   async favourite() {
-    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);
+    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite', this.isFavourite);
     this.isFavourite = await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
-    console.log(      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',this.isFavourite);    
+    console.log('------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite', this.isFavourite);
   }
 
   navigate() {
@@ -323,12 +333,13 @@ export class RoutePage implements OnInit {
     return this.clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
   }
 
-  public download(){
+  public download() {
     console.log("------- ~ RoutePage ~ download ~ download");
-    this.showDownload = true;    
+    // this._coinService.openModal(); // TODO show coin modal??
+    this.showDownload = true;
   }
 
-  public endDownload(){
+  public endDownload() {
     this.showDownload = false;
   }
 }

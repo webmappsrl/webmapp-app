@@ -16,8 +16,8 @@
     <div *ngFor="let element of downloadElements" class="webmapp-downloadpanel-element">
       <ion-label class="webmapp-downloadpanel-element-title">{{'pages.route.downloadpanel.' + element.name | translate}}
       </ion-label>
-      <ion-label class="webmapp-downloadpanel-element-value">{{element.value | number : "0.0-0"}}% </ion-label>
-      <ion-progress-bar class="webmapp-downloadpanel-element-progress" color="secondary" [value]="element.value/100"></ion-progress-bar>
+      <ion-label class="webmapp-downloadpanel-element-value">{{element.value*100 | number : "0.0-0"}}% </ion-label>
+      <ion-progress-bar class="webmapp-downloadpanel-element-progress" color="secondary" [value]="element.value"></ion-progress-bar>
     </div>
   </div>
 
