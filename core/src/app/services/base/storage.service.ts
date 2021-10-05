@@ -16,12 +16,20 @@ import {
   POI_STORAGE_PREFIX,
   TRACK_STORAGE_PREFIX,
   USER_STORAGE_KEY,
-  MBTILES_STORAGE_PREFIX
+  MBTILES_STORAGE_PREFIX,
 } from 'src/app/constants/storage';
-import { IGeojsonFeature, IGeojsonFeatureDownloaded, IGeojsonPoiDetailed } from 'src/app/types/model';
-import { Md5 } from 'ts-md5/dist/md5'
+import {
+  IGeojsonFeature,
+  IGeojsonFeatureDownloaded,
+  IGeojsonPoiDetailed,
+} from 'src/app/types/model';
+import { Md5 } from 'ts-md5/dist/md5';
 
-import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+import {
+  Plugins,
+  FilesystemDirectory,
+  FilesystemEncoding,
+} from '@capacitor/core';
 const { Filesystem } = Plugins;
 
 @Injectable({
@@ -50,8 +58,7 @@ export class StorageService {
   }
 
   init() {
-    console.log("------- ~ StorageService ~ init ~ init");
-
+    console.log('------- ~ StorageService ~ init ~ init');
   }
 
   setConfig(value: IConfig): Promise<void> {
@@ -102,7 +109,10 @@ export class StorageService {
     return this._remove(USER_STORAGE_KEY);
   }
 
-  async setTrack(id: string | number, track: IGeojsonFeature | IGeojsonFeatureDownloaded): Promise<void> {
+  async setTrack(
+    id: string | number,
+    track: IGeojsonFeature | IGeojsonFeatureDownloaded
+  ): Promise<void> {
     return this._set(`${TRACK_STORAGE_PREFIX}-${id}`, track);
   }
 
@@ -140,8 +150,8 @@ export class StorageService {
   async getImage(url: string): Promise<string> {
     const path = await this.getImageFilename(url);
     if (path) {
-      console.log("------- ~ StorageService ~ getImage ~ path", path);
-      return await this._fileRead(path)
+      console.log('------- ~ StorageService ~ getImage ~ path', path);
+      return await this._fileRead(path);
     } else {
       return null;
     }
@@ -165,8 +175,8 @@ export class StorageService {
   async getMBTiles(tileId: string): Promise<string> {
     const path = await this.getMBTileFilename(tileId);
     if (path) {
-      console.log("------- ~ StorageService ~ getMBTiles ~ path", path);
-      return this._fileRead(path)
+      console.log('------- ~ StorageService ~ getMBTiles ~ path', path);
+      return this._fileRead(path);
     } else {
       return '';
     }
@@ -333,8 +343,8 @@ export class StorageService {
         path: path,
         data: data,
         directory: FilesystemDirectory.Documents,
-        encoding: FilesystemEncoding.UTF8
-      })
+        encoding: FilesystemEncoding.UTF8,
+      });
     } catch (e) {
       console.error('Unable to write file', e);
     }
@@ -344,7 +354,7 @@ export class StorageService {
     let contents = await Filesystem.readFile({
       path: path,
       directory: FilesystemDirectory.Documents,
-      encoding: FilesystemEncoding.UTF8
+      encoding: FilesystemEncoding.UTF8,
     });
     return contents.data;
   }
@@ -354,14 +364,14 @@ export class StorageService {
       path: path,
       data: data,
       directory: FilesystemDirectory.Documents,
-      encoding: FilesystemEncoding.UTF8
+      encoding: FilesystemEncoding.UTF8,
     });
   }
 
   private async _fileDelete(path) {
     await Filesystem.deleteFile({
       path: path,
-      directory: FilesystemDirectory.Documents
+      directory: FilesystemDirectory.Documents,
     });
   }
 }
