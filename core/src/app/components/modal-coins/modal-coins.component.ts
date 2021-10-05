@@ -14,4 +14,9 @@ export class ModalCoinsComponent implements OnInit {
 
   ngOnInit() { }
 
+  buyone() {
+    console.log("------- ~ ModalCoinsComponent ~ buyone ~ buyone");
+
+  }
+
 }

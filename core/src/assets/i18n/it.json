@@ -66,7 +66,15 @@
   },
   "modals": {
     "coin": {
-      "defaultmessage": "Acquista coins per utilizzare contenuti offline"
+      "defaultmessage": "Acquista coins per scaricare contenuti offline",
+      "info1":"Puoi acquistare un singolo percorso",
+      "subinfo1":"Acquista un singolo coin a 1€",
+      "info2":"Hai tutto a disposizione anche senza copertura",
+      "subinfo2":"Navigazione precis aanche queando sei offline",
+      "info3":"Ricevi notifiche di prossimità",
+      "subinfo3":"Ti avvisiamo in prossimità di punti di interesse sul percorso",
+      "button":"Acquista 1 Coin / 1€"
+
     },
     "login": {
       "email": "E-mail",

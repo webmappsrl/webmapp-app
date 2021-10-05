@@ -1,0 +1,26 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-modalcoins {
+    //   width: 100%;
+    //   height: 100%;
+    //   --background: var(--wm-color-secondary);
+    padding: 16px;
+
+    .webmapp-modalcoins-header {
+        .webmapp-modalcoins-closebtn {
+            width: 24px;
+            height: 24px;
+            color: var(--wm-color-dark);
+        }
+    }
+
+    .webmapp-modalcoins-title {
+        font-weight: var(--wm-font-weight-bold);
+        font-size: var(--wm-font-xxxlg);
+        color: var(--wm-color-dark);
+        padding-top: 5px;
+        display: block;
+    }
+
+    
+}
