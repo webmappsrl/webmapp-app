@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { Plugins } from '@capacitor/core';
+import { DownloadService } from 'src/app/services/download.service';
 
 const { Browser } = Plugins;
 
@@ -18,9 +19,13 @@ export class PoiPage implements OnInit {
   public selectedPoi: IGeojsonPoiDetailed;
   public track;
 
+  public useCache = false;
+
   public useAnimation = false;
 
   public poiIdx: number;
+
+  private cache = {};
 
   public sliderOptions: any = {
     slidesPerView: 2.2,
@@ -28,19 +33,24 @@ export class PoiPage implements OnInit {
 
   constructor(
     private _statusService: StatusService,
-    private _navController: NavController
+    private _navController: NavController,
+    private downloadService: DownloadService,
+    private download: DownloadService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route = this._statusService.route;
     this.pois = this._statusService.getRelatedPois();
     this.selectPoiById(this._statusService.getSelectedPoiId());
-    setTimeout(() => { 
-      this.track = this.route.geometry; 
+    
+    this.useCache = await this.downloadService.isDownloadedTrack(this.route.properties.id);
+
+    setTimeout(() => {
+      this.track = this.route.geometry;
       this.updatePoiMarkers();
     }, 0);
-    
-    setTimeout(() => { 
+
+    setTimeout(() => {
       this.useAnimation = true;
     }, 1000);
   }
@@ -84,7 +94,7 @@ export class PoiPage implements OnInit {
   }
 
   phone(phoneNumber) {
-    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone',phoneNumber);
+    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone', phoneNumber);
 
   }
 
@@ -94,8 +104,21 @@ export class PoiPage implements OnInit {
   }
 
   async url(url) {
-    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url',url);
-    await Browser.open({url});
+    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url', url);
+    await Browser.open({ url });
+  }
+
+  getImage(url) {
+    if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
+    else {
+      if (this.cache[url] !== 'waiting') {
+        this.cache[url] = 'waiting';
+        this.download.getB64img(url).then(val => {
+          this.cache[url] = val;
+        })
+      }
+    }
+    return '';
   }
 
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { DownloadService } from 'src/app/services/download.service';
@@ -20,19 +20,21 @@ export class DownloadPanelComponent implements OnInit {
 
   public downloadElements;
 
+  @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
+
   constructor(
     private _statusService: StatusService,
-    private _downloadService :  DownloadService,
+    private _downloadService: DownloadService,
     private _navController: NavController
   ) { }
 
   async ngOnInit() {
-    setTimeout(() => {      
-      this.track = this._statusService.route;  
-      if(this._downloadService.isDownloadedTrack(this.track.properties.id)){
+    setTimeout(async () => {
+      this.track = this._statusService.route;
+      if (this.track && await this._downloadService.isDownloadedTrack(this.track.properties.id)) {
         this.completeDownloads();
       }
-    }, 500);
+    }, 1000);
 
   }
 
@@ -41,48 +43,47 @@ export class DownloadPanelComponent implements OnInit {
     this.isDownloading = true;
     this.isDownloaded = false;
 
-    this._downloadService.onChangeStatus.subscribe(x=>{
+    this._downloadService.onChangeStatus.subscribe(x => {
       this.updateStatus(x);
     })
 
-    this._downloadService.startDownload(this.track.properties.id);
+    this._downloadService.startDownload(this.track);
     this.updateStatus(null);
   }
 
-  updateStatus(status : DownloadStatus){
-    console.log("------- ~ DownloadPanelComponent ~ updateStatus ~ status", status);
+  updateStatus(status: DownloadStatus) {
     this.downloadElements = [
       {
         name: 'downsetup',
-        value: status? status.setup : 0
+        value: status ? status.setup : 0
       },
       {
         name: 'downmap',
-        value: status? status.map : 0
+        value: status ? status.map : 0
       },
       {
         name: 'downdata',
-        value: status? status.data : 0
+        value: status ? status.data : 0
       },
       {
         name: 'downmedia',
-        value: status? status.media : 0
+        value: status ? status.media : 0
       },
       {
         name: 'install',
-        value: status? status.install : 0
+        value: status ? status.install : 0
       }
     ]
-    if(status && status.finish){
+    if (status && status.finish) {
       this.completeDownloads();
     }
   }
-gotoDownloads() {
-  this._navController.navigateForward(['/downloadlist']);
-}
+  gotoDownloads() {
+    this._navController.navigateForward(['/downloadlist']);
+    this.exit.emit(null);
+  }
 
   completeDownloads() {
-
     this._downloadService.onChangeStatus.unsubscribe();
 
     this.isInit = false;

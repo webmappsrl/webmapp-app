@@ -1,0 +1,14 @@
+<ion-content>
+  
+  <ion-label *ngIf="message">
+    {{message}}
+  </ion-label>
+
+  <div *ngIf="!message">
+    <ion-label>
+      {{ 'modals.coin.defaultmessage' | translate }}
+    </ion-label>
+
+  </div>
+
+</ion-content>

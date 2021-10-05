@@ -1,6 +1,6 @@
 <ion-item button detail lines="none" class="webmapp-cardtrack-card">
 
-  <ion-img [src]="track.properties?.feature_image?.url" (click)="open(track)" class="webmapp-cardtrack-image">
+  <ion-img [src]="getImage(track.properties?.feature_image?.url)" (click)="open(track)" class="webmapp-cardtrack-image">
 
   </ion-img>
   <div class="webmapp-cardtrack-info" (click)="open(track)">
@@ -9,7 +9,7 @@
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
       {{track.properties.duration_forward | minutetime}}</ion-label>
     <ion-label *ngIf="isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
-      {{track.size}} MB</ion-label>
+      {{sizeInMB(track.size)}} MB</ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
       <i class="webmapp-cardtrack-info-icon webmapp-icon-heart-outline"> </i>
       {{track.properties.difficulty | wmtrans }}

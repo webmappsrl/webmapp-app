@@ -68,6 +68,8 @@ import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
 import { getVectorContext } from 'ol/render';
+import { MarkerService } from 'src/app/services/marker.service';
+import { TilesService } from 'src/app/services/tiles.service';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -98,6 +100,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
   @Input('animation') useAnimation: boolean = true;
+
+  @Input('cache') useCache: boolean = false;
 
   @Input('static') set setStatic(value: boolean) {
     this.static = value;
@@ -286,7 +290,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     private _mapService: MapService,
     private geohubSErvice: GeohubService,
     // private resolver: ComponentFactoryResolver,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private markerService: MarkerService,
+    private tileservice: TilesService
   ) {
     this._locationIcon = {
       layer: null,
@@ -488,7 +494,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) {}
+    } catch (e) { }
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
@@ -706,18 +712,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxZoom: DEF_MAP_MAX_ZOOM,
       minZoom: DEF_MAP_MIN_ZOOM,
       tileLoadFunction: (tile: any, url: string) => {
-        tile.getImage().src = url;
+
+        const coords = this.tileservice.getCoordsFromUr(url);
+
+        this.tileservice.getTile(coords, this.useCache).
+          then((tileString: string) => {
+            tile.getImage().src = tileString;
+          })
+          .catch(() => {
+            tile.getImage().src = url;
+          });
+
       },
       tileUrlFunction: (c) => {
-        return (
-          'https://api.webmapp.it/tiles/' +
-          c[0] +
-          '/' +
-          c[1] +
-          '/' +
-          c[2] +
-          '.png'
-        );
+        return this.tileservice.getTileFromWeb(c);
       },
       projection: 'EPSG:3857',
       tileSize: [256, 256],
@@ -752,18 +760,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-              this._locationAnimationState.goalLocation.longitude -
-              this._locationAnimationState.startLocation.longitude,
+            this._locationAnimationState.goalLocation.longitude -
+            this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : this._locationAnimationState.goalLocation.accuracy
-              ? this._locationAnimationState.goalLocation.accuracy -
+                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-              : 0;
+                : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -782,27 +790,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-                delta * deltaLongitude,
+              delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-                delta * deltaLatitude,
+              delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-            'number'
+              'number'
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -813,7 +821,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+            delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -869,9 +877,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-        location?.longitude,
-        location?.latitude,
-      ]),
+      location?.longitude,
+      location?.latitude,
+    ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -904,7 +912,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
@@ -1094,13 +1102,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     poi: IGeojsonPoi,
     geometry = null
   ): Promise<{ marker: PoiMarker; style: Style }> {
-    // TODO check object type
-
     const img = await this._createPoiCavasImage(poi);
     const { iconFeature, style } = await this._createIconFeature(
       geometry ? geometry : poi.geometry,
       img,
-      PoiMarkerComponent.markerSize
+      this.markerService.poiMarkerSize
     );
     return {
       marker: {
@@ -1116,14 +1122,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     cluster: IGeojsonCluster,
     transparent: boolean = false
   ): Promise<ClusterMarker> {
-    // TODO check object type
-
     const img = await this._createClusterCavasImage(cluster);
 
     const { iconFeature } = await this._createIconFeature(
       cluster.geometry,
       img,
-      ClusterMarkerComponent.markerSize,
+      this.markerService.clusterMarkerSize,
       transparent
     );
 
@@ -1173,26 +1177,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       );
     }
     const htmlTextCanvas =
-      await ClusterMarkerComponent.createMarkerHtmlForCanvas(
+      await this.markerService.createClusterMarkerHtmlForCanvas(
         cluster,
         isFavourite
       );
 
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      ClusterMarkerComponent.markerSize
+      this.markerService.clusterMarkerSize
     );
   }
 
   private async _createPoiCavasImage(
     poi: IGeojsonPoi
   ): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await PoiMarkerComponent.createMarkerHtmlForCanvas(
+    const htmlTextCanvas = await this.markerService.createPoiMarkerHtmlForCanvas(
       poi
     );
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      PoiMarkerComponent.markerSize
+      this.markerService.poiMarkerSize
     );
   }
 
@@ -1399,10 +1403,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         if (track) {
           let trackGeometry: LineString = new LineString(
-              (<ILineString>track.geometry.coordinates).map((value) =>
-                this._mapService.coordsFromLonLat(value)
-              )
-            ),
+            (<ILineString>track.geometry.coordinates).map((value) =>
+              this._mapService.coordsFromLonLat(value)
+            )
+          ),
             trackColor: string = track?.properties?.color;
 
           if (this._slopeChartTrack) {

@@ -24,8 +24,19 @@ import localeIt from '@angular/common/locales/it';
 import { ModalphotosModule } from './components/modalphotos/modalphotos.module';
 import { ModalSuccessModule } from './components/modal-success/modal-success.module';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import { ModalCoinsModule } from './components/modal-coins/modal-coins.module';
+import { SQLite, SQLiteDatabaseConfig, SQLiteObject } from '@ionic-native/sqlite/ngx';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
+
+class SQLiteMock {
+  public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
+  
+      return new Promise((resolve,reject)=>{
+          resolve(new SQLiteObject(new Object()));
+      });
+  }
+  } 
 
 @NgModule({
   declarations: [
@@ -54,6 +65,7 @@ registerLocaleData(localeIt);
     SettingsModule,
     ModalphotosModule,
     ModalSuccessModule,
+    ModalCoinsModule,
     MapModule,
   ],
   providers: [
@@ -69,6 +81,7 @@ registerLocaleData(localeIt);
     Diagnostic,
     ImagePicker,
     GoogleAnalytics,
+    SQLite
   ],
   bootstrap: [AppComponent],
 })

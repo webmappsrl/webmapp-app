@@ -7,3 +7,9 @@ export interface DownloadStatus {
   media?: number,
   install?: number,
 }
+export interface DownloadedTrackComponents {
+  trackId: number,
+  tiles: string[],
+  images: string[],
+  pois: number[]
+}
