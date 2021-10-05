@@ -53,6 +53,10 @@ const routes: Routes = [
   {
     path: 'downloadlist',
     loadChildren: () => import('./pages/downloadlist/downloadlist.module').then( m => m.DownloadlistPageModule)
+  },
+  {
+    path: 'store',
+    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
   }
 
 ];
