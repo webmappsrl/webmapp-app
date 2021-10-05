@@ -66,15 +66,15 @@
   },
   "modals": {
     "coin": {
+      "buttonall": "Vedi tutti i coin pack",
+      "buttonone": "Acquista 1 Coin / 1€",
       "defaultmessage": "Acquista coins per scaricare contenuti offline",
-      "info1":"Puoi acquistare un singolo percorso",
-      "subinfo1":"Acquista un singolo coin a 1€",
-      "info2":"Hai tutto a disposizione anche senza copertura",
-      "subinfo2":"Navigazione precis aanche queando sei offline",
-      "info3":"Ricevi notifiche di prossimità",
-      "subinfo3":"Ti avvisiamo in prossimità di punti di interesse sul percorso",
-      "button":"Acquista 1 Coin / 1€"
-
+      "info1": "Puoi acquistare un singolo percorso",
+      "info2": "Hai tutto a disposizione anche senza copertura",
+      "info3": "Ricevi notifiche di prossimità",
+      "subinfo1": "Acquista un singolo coin a 1€",
+      "subinfo2": "Navigazione precis aanche queando sei offline",
+      "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
     },
     "login": {
       "email": "E-mail",
@@ -283,6 +283,16 @@
         "info": "Altre info",
         "title": "Praticabilità del percorso"
       }
+    },
+    "store": {
+      "button1":"1 Singolo Coin",
+      "button10":" Pack 10 Coins",
+      "button50":"Pack 50 coins",
+      "button100":"Pack 100 coins",
+      "main": "Webmapp Coins",      
+      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",      
+      "text2": "I coin servono per scaricare percorsi e contenuti offline, e accedere a numerosi vantaggi!",
+      "title": "Store"
     },
     "trackdetail": {
       "avgspeed": "Velocità media",

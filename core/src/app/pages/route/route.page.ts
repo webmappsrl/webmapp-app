@@ -335,7 +335,7 @@ export class RoutePage implements OnInit {
 
   public download() {
     console.log("------- ~ RoutePage ~ download ~ download");
-    // this._coinService.openModal(); // TODO show coin modal??
+    this._coinService.openModal(); // TODO show coin modal??
     this.showDownload = true;
   }
 

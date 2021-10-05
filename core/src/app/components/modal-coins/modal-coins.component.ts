@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController, NavController } from '@ionic/angular';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-modal-coins',
@@ -10,13 +12,29 @@ export class ModalCoinsComponent implements OnInit {
   public message: string;
   public coins: number;
 
-  constructor() { }
+  constructor(
+    private _modalController: ModalController,
+    private store: StoreService,
+    private navController: NavController
+  ) { }
 
   ngOnInit() { }
 
-  buyone() {
-    console.log("------- ~ ModalCoinsComponent ~ buyone ~ buyone");
+  async buyone() {
+    await this.store.buy(1);
+    this._modalController.dismiss({
+      dismissed: true,
+    });
 
   }
+  
+  buyall() {
+    this.navController.navigateForward('store');
+    this._modalController.dismiss({
+      dismissed: true,
+    });
+  }
+
+  
 
 }
