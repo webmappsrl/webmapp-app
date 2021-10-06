@@ -77,9 +77,9 @@
       "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
     },
     "giftcoin": {
-      "title": "Benvenuto in webmapp!",
+      "button": "Inizia a esplorare",
       "info": "Hai subito in regalo 2 webmapp coins per scaricare contenuti offline!",
-      "button": "Inizia a esplorare"
+      "title": "Benvenuto in webmapp!"
     },
     "login": {
       "email": "E-mail",
@@ -251,6 +251,31 @@
       "stopbtn": "Termina",
       "time": "In movimento",
       "title": "Registra una traccia"
+    },
+    "registeruser": {
+      "title": "Unisciti alla community di webmapp!",
+      "email": "Email",
+      "emailph": "esempio@email.com",
+      "errors": {
+        "form.emailRequired": "E' necessario inserire un'email",
+        "form.emailInvalid": "L'email non è valida",
+        "form.cfInvalid": "Il codice fiscale non è valido",
+        "form.passwordRequired": "E' necessario inserire una password",
+        "form.confirmPasswordRequired": "E' necessario confermare la password",
+        "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra"
+      },
+      "cf": "Codice Fiscale",
+      "cfph": "XXXXXXXXXXXXXXXX",
+      "password": "Password",
+      "passwordph": "inserisci password",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordph": "Ripeti password",
+      "registerbutton": "Registrati",
+      "privacy1": "Cliccando su \"Registrati\" accetti la nostra ",
+      "privacylink1": "Privacy Policy",
+      "privacy2": "e i",
+      "privacylink2": "Termini e condizioni",
+      "privacy3": ""
     },
     "route": {
       "description": {
