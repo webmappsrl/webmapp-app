@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { NavController } from '@ionic/angular';
+import { NavController, PopoverController } from '@ionic/angular';
 import { CoinService } from 'src/app/services/coin.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { CoinService } from 'src/app/services/coin.service';
 })
 export class RegisteruserPage implements OnInit {
 
+  @
 
   public registerForm: FormGroup;
   public isSubmitted = false;
@@ -20,6 +21,7 @@ export class RegisteruserPage implements OnInit {
     private coinService: CoinService,
     private _navController: NavController,
     private _formBuilder: FormBuilder,
+    public popoverController: PopoverController
   ) {
     this.registerForm = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -56,5 +58,15 @@ export class RegisteruserPage implements OnInit {
 
   back() {
     this._navController.back();
+  }
+
+  async showCfInfo(ev){
+    const popover = await this.popoverController.create({
+      component: this.cfinfo,
+      event: ev,
+      translucent: true
+    });
+    return popover.present();
+
   }
 }

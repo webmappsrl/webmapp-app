@@ -35,6 +35,14 @@
       <ion-label class="webmapp-registeruser-label">
         {{ "pages.registeruser.cf" | translate }}
       </ion-label>
+
+      <div class="webmapp-registeruser-extrainfo" (click)="showCfInfo($event)">
+        <i class="webmapp-icon-play"></i>
+        {{ "pages.registeruser.cfextra" | translate }}
+      </div>
+
+      <ng-component #cfinfo>this info</ng-component>
+
       <ion-item class="webmapp-registeruser-field"
         [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.cf.errors}">
         <ion-input type="text" #cf placeholder="{{ 'pages.registeruser.cfph' | translate }}"

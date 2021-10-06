@@ -253,29 +253,30 @@
       "title": "Registra una traccia"
     },
     "registeruser": {
-      "title": "Unisciti alla community di webmapp!",
+      "cf": "Codice Fiscale",
+      "cfextra": "Perché ti chiediamo il CF?",
+      "cfph": "XXXXXXXXXXXXXXXX",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordph": "Ripeti password",
       "email": "Email",
       "emailph": "esempio@email.com",
       "errors": {
-        "form.emailRequired": "E' necessario inserire un'email",
-        "form.emailInvalid": "L'email non è valida",
         "form.cfInvalid": "Il codice fiscale non è valido",
-        "form.passwordRequired": "E' necessario inserire una password",
+        "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra",
         "form.confirmPasswordRequired": "E' necessario confermare la password",
-        "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra"
+        "form.emailInvalid": "L'email non è valida",
+        "form.emailRequired": "E' necessario inserire un'email",
+        "form.passwordRequired": "E' necessario inserire una password"
       },
-      "cf": "Codice Fiscale",
-      "cfph": "XXXXXXXXXXXXXXXX",
       "password": "Password",
       "passwordph": "inserisci password",
-      "confirmPassword": "Conferma password",
-      "confirmPasswordph": "Ripeti password",
-      "registerbutton": "Registrati",
       "privacy1": "Cliccando su \"Registrati\" accetti la nostra ",
-      "privacylink1": "Privacy Policy",
       "privacy2": "e i",
+      "privacy3": "",
+      "privacylink1": "Privacy Policy",
       "privacylink2": "Termini e condizioni",
-      "privacy3": ""
+      "registerbutton": "Registrati",
+      "title": "Unisciti alla community di webmapp!"
     },
     "route": {
       "description": {
