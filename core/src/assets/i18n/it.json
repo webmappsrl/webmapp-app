@@ -76,6 +76,11 @@
       "subinfo2": "Navigazione precis aanche queando sei offline",
       "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
     },
+    "giftcoin": {
+      "title": "Benvenuto in webmapp!",
+      "info": "Hai subito in regalo 2 webmapp coins per scaricare contenuti offline!",
+      "button": "Inizia a esplorare"
+    },
     "login": {
       "email": "E-mail",
       "errors": {
@@ -117,13 +122,13 @@
       "version": "Versione"
     },
     "storesuccess": {
-      "title": "Grazie per aver acquistato il tuo primo coin!",
-      "info": "Puoi controllare il saldo dei tuoi coin direttamente nella tua area personale!",
+      "back": "Torna alla ricerca",
+      "buttondownload": "Scarica adesso",
       "continue": "Vuoi utilizzare subito il tuo Coin per scaricare ",
       "continue2": "?",
-      "buttondownload": "Scarica adesso",
+      "info": "Puoi controllare il saldo dei tuoi coin direttamente nella tua area personale!",
       "or": "Oppure",
-      "back": "Torna alla ricerca"
+      "title": "Grazie per aver acquistato il tuo primo coin!"
     },
     "success": {
       "photos": {

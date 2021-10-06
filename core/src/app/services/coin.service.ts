@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalCoinsComponent } from '../components/modal-coins/modal-coins.component';
+import { ModalGiftCoinsComponent } from '../components/modal-gift-coins/modal-gift-coins.component';
 import { ModalStoreSuccessComponent } from '../components/modal-store-success/modal-store-success.component';
 
 @Injectable({
@@ -37,9 +38,24 @@ export class CoinService {
     }
 
     return true;
-
-
-
-
   }
+
+  async openGiftModal(coins: number = null) {
+    const modalGiftCoins = await this._modalController.create({
+      component: ModalGiftCoinsComponent,
+      componentProps: {
+        coins
+      },
+    });
+    await modalGiftCoins.present();
+    const GiftRes = await modalGiftCoins.onDidDismiss();
+    if (GiftRes.data.dismissed) {
+      return false;
+    }
+    return true;
+
+   
+  }
+
+
 }
