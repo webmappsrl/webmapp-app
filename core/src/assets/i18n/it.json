@@ -116,6 +116,15 @@
       "title": "Impostazioni",
       "version": "Versione"
     },
+    "storesuccess": {
+      "title": "Grazie per aver acquistato il tuo primo coin!",
+      "info": "Puoi controllare il saldo dei tuoi coin direttamente nella tua area personale!",
+      "continue": "Vuoi utilizzare subito il tuo Coin per scaricare ",
+      "continue2": "?",
+      "buttondownload": "Scarica adesso",
+      "or": "Oppure",
+      "back": "Torna alla ricerca"
+    },
     "success": {
       "photos": {
         "text": "Le tue foto sono state salvate correttamente. Puoi visualizzarle accedendo al to profilo.",
@@ -285,12 +294,12 @@
       }
     },
     "store": {
-      "button1":"1 Singolo Coin",
-      "button10":" Pack 10 Coins",
-      "button50":"Pack 50 coins",
-      "button100":"Pack 100 coins",
-      "main": "Webmapp Coins",      
-      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",      
+      "button1": "1 Singolo Coin",
+      "button10": " Pack 10 Coins",
+      "button100": "Pack 100 coins",
+      "button50": "Pack 50 coins",
+      "main": "Webmapp Coins",
+      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",
       "text2": "I coin servono per scaricare percorsi e contenuti offline, e accedere a numerosi vantaggi!",
       "title": "Store"
     },

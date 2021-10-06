@@ -26,6 +26,7 @@ import { ModalSuccessModule } from './components/modal-success/modal-success.mod
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { ModalCoinsModule } from './components/modal-coins/modal-coins.module';
 import { SQLite, SQLiteDatabaseConfig, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { ModalStoreSuccessModule } from './components/modal-store-success/modal-store-success.module';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
@@ -66,6 +67,7 @@ class SQLiteMock {
     ModalphotosModule,
     ModalSuccessModule,
     ModalCoinsModule,
+    ModalStoreSuccessModule,
     MapModule,
   ],
   providers: [

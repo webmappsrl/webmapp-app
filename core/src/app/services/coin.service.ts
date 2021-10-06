@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ModalCoinsComponent } from '../components/modal-coins/modal-coins.component';
+import { ModalStoreSuccessComponent } from '../components/modal-store-success/modal-store-success.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +12,34 @@ export class CoinService {
     private _modalController: ModalController
   ) { }
 
-  async openModal(coins: number = null, cause: string = null) {
+  async openModal(coins: number = null, cause: string = null): Promise<boolean> {
     let message: string = null;
-    const modaSuccess = await this._modalController.create({
+    const modalAskCoins = await this._modalController.create({
       component: ModalCoinsComponent,
       componentProps: {
         message,
         coins
       },
     });
+    await modalAskCoins.present();
+    const AskRes = await modalAskCoins.onDidDismiss();
+    if (AskRes.data.dismissed) {
+      return false;
+    }
+
+    const modaSuccess = await this._modalController.create({
+      component: ModalStoreSuccessComponent     
+    });
     await modaSuccess.present();
-    await modaSuccess.onDidDismiss();
+    const successRes = await modaSuccess.onDidDismiss();
+    if (successRes.data.dismissed) {
+      return false;
+    }
+
+    return true;
+
+
+
 
   }
 }

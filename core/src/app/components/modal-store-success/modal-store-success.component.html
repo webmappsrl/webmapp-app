@@ -1,0 +1,48 @@
+<ion-content>
+  <div class="webmapp-modalstoresuccess">
+
+    <div class="ios-filling"></div>
+
+   
+      <ion-label class="webmapp-modalstoresuccess-title">
+        {{ 'modals.storesuccess.title' | translate }}
+      </ion-label>
+
+      <ion-img class="webmapp-modalstoresuccess-image" src="assets/images/storesuccess.png"></ion-img>
+
+      
+        <ion-label class="webmapp-modalstoresuccess-info-main">
+          {{ 'modals.storesuccess.info' | translate }}
+        </ion-label>
+
+        <ion-label *ngIf="trackname" class="webmapp-modalstoresuccess-info-sub">
+          {{ 'modals.storesuccess.continue' | translate }}
+          "{{trackname}}"
+          {{ 'modals.storesuccess.continue2' | translate }}
+        </ion-label>
+     
+
+      <div class="wwebmapp-modalstoresuccess-buttoncontainer">
+
+        <ion-button expand="block" class="wwebmapp-modalstoresuccess-buttondownload"  (click)="download()">          
+          {{ 'modals.storesuccess.buttondownload' | translate }}
+          <i class="webmapp-modalstoresuccess-buttondownload-icon webmapp-icon-download-outline"> </i>
+        </ion-button>
+
+        <ion-label class="webmapp-modalstoresuccess-buttonor">
+          {{ 'modals.storesuccess.or' | translate }}
+        </ion-label>
+
+       
+        <a (click)="close()" class="webmapp-modalstoresuccess-anchorback">
+          {{ 'modals.storesuccess.back' | translate }}
+          <i class="webmapp-modalstoresuccess-button-icon webmapp-icon-arrow-right-outline"> </i>
+        </a>
+
+      </div>
+
+
+
+    </div>
+
+</ion-content>
