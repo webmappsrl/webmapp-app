@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NavController, PopoverController } from '@ionic/angular';
+import { GenericPopoverComponent } from 'src/app/components/shared/generic-popover/generic-popover.component';
 import { CoinService } from 'src/app/services/coin.service';
 
 @Component({
@@ -9,8 +10,6 @@ import { CoinService } from 'src/app/services/coin.service';
   styleUrls: ['./registeruser.page.scss'],
 })
 export class RegisteruserPage implements OnInit {
-
-  @
 
   public registerForm: FormGroup;
   public isSubmitted = false;
@@ -62,9 +61,13 @@ export class RegisteruserPage implements OnInit {
 
   async showCfInfo(ev){
     const popover = await this.popoverController.create({
-      component: this.cfinfo,
+      component: GenericPopoverComponent,
       event: ev,
-      translucent: true
+      translucent: true,
+      componentProps:{
+        title:'pages.registeruser.cfpopovertitle',
+        message:'pages.registeruser.cfpopovermessage',
+      }
     });
     return popover.present();
 

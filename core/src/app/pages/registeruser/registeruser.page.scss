@@ -10,6 +10,7 @@
     }
     .webmapp-registeruser-field-container {
         margin-bottom: 15px;
+        position: relative;
         .webmapp-registeruser-field {
             --padding-start: 0;
 
@@ -23,6 +24,13 @@
         .webmapp-registeruser-field-error {
             color: var(--ion-color-danger);
             font-size: var(--wm-font-sm);
+        }
+
+        .webmapp-registeruser-extrainfo{
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: var(--wm-font-xsm);
         }
     }
 

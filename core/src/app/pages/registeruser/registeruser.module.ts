@@ -9,6 +9,7 @@ import { RegisteruserPageRoutingModule } from './registeruser-routing.module';
 import { RegisteruserPage } from './registeruser.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipeModule } from 'src/app/pipes/pipe.module';
+import { SharedModule } from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { PipeModule } from 'src/app/pipes/pipe.module';
     RegisteruserPageRoutingModule,
     ReactiveFormsModule,
     TranslateModule,
+    SharedModule,
     PipeModule
   ],
   declarations: [RegisteruserPage]

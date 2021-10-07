@@ -5,9 +5,10 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalHeaderComponent } from './partials/modal-header/modal-header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GenericPopoverComponent } from './generic-popover/generic-popover.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent],
+  declarations: [LoginComponent, ModalHeaderComponent,GenericPopoverComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -15,6 +16,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent],
+  exports: [LoginComponent, ModalHeaderComponent,GenericPopoverComponent],
 })
 export class SharedModule {}

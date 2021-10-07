@@ -258,6 +258,8 @@
       "cfph": "XXXXXXXXXXXXXXXX",
       "confirmPassword": "Conferma password",
       "confirmPasswordph": "Ripeti password",
+      "cfpopovertitle":"Perchè ti chiediamo il Codice Fiscale?",
+      "cfpopovermessage":"Se sei Socia/o CAI inserisci il tuo CF al momento della registrazione. Per te il download delle tappe del Sentiero Italia CAI sarà automaticamente gratuito!",
       "email": "Email",
       "emailph": "esempio@email.com",
       "errors": {
