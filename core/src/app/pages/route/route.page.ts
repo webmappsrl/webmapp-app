@@ -17,7 +17,6 @@ import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
-import { ILocation } from 'src/app/types/location';
 import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
@@ -333,10 +332,13 @@ export class RoutePage implements OnInit {
     return this.clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
   }
 
-  public download() {
-    console.log("------- ~ RoutePage ~ download ~ download");
-    this._coinService.openModal(); // TODO show coin modal??
-    this.showDownload = true;
+  public async download() {
+
+    const modalres = await this._coinService.openModal();
+
+    if (modalres) {
+      this.showDownload = true;
+    }
   }
 
   public endDownload() {

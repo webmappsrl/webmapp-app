@@ -76,6 +76,11 @@
       "subinfo2": "Navigazione precis aanche queando sei offline",
       "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
     },
+    "giftcoin": {
+      "button": "Inizia a esplorare",
+      "info": "Hai subito in regalo 2 webmapp coins per scaricare contenuti offline!",
+      "title": "Benvenuto in webmapp!"
+    },
     "login": {
       "email": "E-mail",
       "errors": {
@@ -115,6 +120,15 @@
       "logout": "Log out",
       "title": "Impostazioni",
       "version": "Versione"
+    },
+    "storesuccess": {
+      "back": "Torna alla ricerca",
+      "buttondownload": "Scarica adesso",
+      "continue": "Vuoi utilizzare subito il tuo Coin per scaricare ",
+      "continue2": "?",
+      "info": "Puoi controllare il saldo dei tuoi coin direttamente nella tua area personale!",
+      "or": "Oppure",
+      "title": "Grazie per aver acquistato il tuo primo coin!"
     },
     "success": {
       "photos": {
@@ -238,6 +252,34 @@
       "time": "In movimento",
       "title": "Registra una traccia"
     },
+    "registeruser": {
+      "cf": "Codice Fiscale",
+      "cfextra": "Perché ti chiediamo il CF?",
+      "cfph": "XXXXXXXXXXXXXXXX",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordph": "Ripeti password",
+      "cfpopovertitle":"Perchè ti chiediamo il Codice Fiscale?",
+      "cfpopovermessage":"Se sei Socia/o CAI inserisci il tuo CF al momento della registrazione. Per te il download delle tappe del Sentiero Italia CAI sarà automaticamente gratuito!",
+      "email": "Email",
+      "emailph": "esempio@email.com",
+      "errors": {
+        "form.cfInvalid": "Il codice fiscale non è valido",
+        "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra",
+        "form.confirmPasswordRequired": "E' necessario confermare la password",
+        "form.emailInvalid": "L'email non è valida",
+        "form.emailRequired": "E' necessario inserire un'email",
+        "form.passwordRequired": "E' necessario inserire una password"
+      },
+      "password": "Password",
+      "passwordph": "inserisci password",
+      "privacy1": "Cliccando su \"Registrati\" accetti la nostra ",
+      "privacy2": "e i",
+      "privacy3": "",
+      "privacylink1": "Privacy Policy",
+      "privacylink2": "Termini e condizioni",
+      "registerbutton": "Registrati",
+      "title": "Unisciti alla community di webmapp!"
+    },
     "route": {
       "description": {
         "description": "Descrizione",
@@ -285,12 +327,12 @@
       }
     },
     "store": {
-      "button1":"1 Singolo Coin",
-      "button10":" Pack 10 Coins",
-      "button50":"Pack 50 coins",
-      "button100":"Pack 100 coins",
-      "main": "Webmapp Coins",      
-      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",      
+      "button1": "1 Singolo Coin",
+      "button10": " Pack 10 Coins",
+      "button100": "Pack 100 coins",
+      "button50": "Pack 50 coins",
+      "main": "Webmapp Coins",
+      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",
       "text2": "I coin servono per scaricare percorsi e contenuti offline, e accedere a numerosi vantaggi!",
       "title": "Store"
     },

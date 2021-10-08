@@ -23,11 +23,11 @@ export class ModalCoinsComponent implements OnInit {
   async buyone() {
     await this.store.buy(1);
     this._modalController.dismiss({
-      dismissed: true,
+      dismissed: false,
     });
 
   }
-  
+
   buyall() {
     this.navController.navigateForward('store');
     this._modalController.dismiss({
@@ -35,6 +35,12 @@ export class ModalCoinsComponent implements OnInit {
     });
   }
 
-  
+  close() {
+    this._modalController.dismiss({
+      dismissed: true,
+    });
+  }
+
+
 
 }

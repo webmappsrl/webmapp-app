@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { first } from 'rxjs/operators';
+import { CoinService } from 'src/app/services/coin.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -28,7 +29,7 @@ export class HomePage implements OnInit {
     })
   }
 
-  start() {
+  start() {    
     this._navCtrl.navigateForward('/map');
   }
 }
