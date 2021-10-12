@@ -10,6 +10,8 @@ import { DOWNLOAD_INDEX_KEY } from '../constants/storage';
 import { first } from 'rxjs/operators';
 import { Platform } from '@ionic/angular';
 
+import {image as defaultImage} from '../../assets/images/defaultImageB64.json';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -301,7 +303,7 @@ export class DownloadService {
   }
 
   async getB64img(url: string): Promise<string | ArrayBuffer> {
-    if (!url) { return null; }
+    if (!url) { return defaultImage; }
     const cached = this.imgCache.find(x => {
       return x.key == url
     });
