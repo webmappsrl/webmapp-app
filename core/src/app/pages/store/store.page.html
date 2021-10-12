@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button text="" class="webmapp-backbutton webmapp-store-backbutton"></ion-back-button>
+      <ion-back-button text="" defaultHref="map" class="webmapp-backbutton webmapp-store-backbutton" ></ion-back-button>
       <!-- <ion-icon name="arrow-back-outline" [routerLink]="['/profile/profile-records']" class="webmapp-backbutton"></ion-icon> -->
     </ion-buttons>
     <ion-title>{{'pages.store.title'|translate}}</ion-title>
@@ -21,7 +21,7 @@
   <div class="webmapp-store-buttoncontainer">
     <ion-button *ngFor="let coinSize of coinSizes" expand="block" size="large" class="webmapp-store-button"
       (click)="buy(coinSize.quantity)">
-      <ion-img class="webmapp-store-button-image" src="assets/images/coins1.png"></ion-img>
+      <ion-img class="webmapp-store-button-image" src="assets/images/coins{{coinSize.quantity}}.png"></ion-img>
       <div class="webmapp-store-button-value">
         <ion-label class="webmapp-store-button-text">{{ 'pages.store.button'+coinSize.quantity | translate }}
         </ion-label>
