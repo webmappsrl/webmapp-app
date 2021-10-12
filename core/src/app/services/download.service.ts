@@ -311,7 +311,6 @@ export class DownloadService {
     else {
 
       let base64data = await this.storage.getImage(url);
-      console.log("------- ~ DownloadService ~ getB64img ~ base64data", base64data);
 
       if (!base64data) {
         base64data = await this.downloadBase64Img(url) as string;

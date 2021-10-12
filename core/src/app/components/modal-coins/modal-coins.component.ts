@@ -29,10 +29,10 @@ export class ModalCoinsComponent implements OnInit {
   }
 
   buyall() {
-    this.navController.navigateForward('store');
     this._modalController.dismiss({
       dismissed: true,
     });
+    this.navController.navigateForward('store');
   }
 
   close() {

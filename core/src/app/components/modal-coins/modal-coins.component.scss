@@ -7,10 +7,16 @@
     padding: 16px;
 
     .webmapp-modalcoins-header {
+        width: 50px;
+        border-radius: 25px;
+        margin-left: -10px;
+
         .webmapp-modalcoins-closebtn {
             width: 24px;
             height: 24px;
             color: var(--wm-color-dark);
+
+            padding: 10px;
         }
     }
 
@@ -56,7 +62,7 @@
         .wwebmapp-modalcoins-buttonone {
             --border-radius: 20px;
             margin: 20px 0;
-            .webmapp-modalcoins-button-image{
+            .webmapp-modalcoins-button-image {
                 margin-right: 15px;
             }
         }
