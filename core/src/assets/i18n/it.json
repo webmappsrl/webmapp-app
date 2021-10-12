@@ -173,6 +173,7 @@
       "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
     },
     "map": {
+      "loading": "ricerca in corso...",
       "recordingbtn": "Reg. in corso",
       "searchherebtn": "Cerca in quest'area"
     },
@@ -335,8 +336,8 @@
     },
     "store": {
       "button1": "1 Singolo Coin",
-      "button20": " Pack 20 Coins",
       "button100": "Pack 100 coins",
+      "button20": " Pack 20 Coins",
       "button50": "Pack 50 coins",
       "main": "Webmapp Coins",
       "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",
