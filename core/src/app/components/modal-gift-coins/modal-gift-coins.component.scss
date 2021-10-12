@@ -6,6 +6,10 @@
     //   --background: var(--wm-color-secondary);
     padding: 16px;
 
+    .webmapp-modalgiftcoin-closebtn {
+        font-size: 24px;
+    }
+
     .webmapp-modalgiftcoin-title {
         font-weight: var(--wm-font-weight-bold);
         font-size: var(--wm-font-xxxlg);
@@ -27,12 +31,15 @@
     }
 
     .wwebmapp-modalgiftcoin-buttoncontainer {
+        position: absolute;
+        bottom: 60px;
+        left: 0%;
+        width: 100%;
         text-align: center;
-        padding: 20px;
+        padding: 0 20px;
 
         .wwebmapp-modalgiftcoin-button {
             --border-radius: 20px;
-            margin: 100px 0 0 0;
-        }        
+        }
     }
 }

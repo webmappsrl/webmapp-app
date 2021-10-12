@@ -256,13 +256,16 @@
       "cf": "Codice Fiscale",
       "cfextra": "Perché ti chiediamo il CF?",
       "cfph": "XXXXXXXXXXXXXXXX",
+      "cfpopovermessage": "Se sei Socia/o CAI inserisci il tuo CF al momento della registrazione. Per te il download delle tappe del Sentiero Italia CAI sarà automaticamente gratuito!",
+      "cfpopovertitle": "Perchè ti chiediamo il Codice Fiscale?",
       "confirmPassword": "Conferma password",
       "confirmPasswordph": "Ripeti password",
-      "cfpopovertitle":"Perchè ti chiediamo il Codice Fiscale?",
-      "cfpopovermessage":"Se sei Socia/o CAI inserisci il tuo CF al momento della registrazione. Per te il download delle tappe del Sentiero Italia CAI sarà automaticamente gratuito!",
       "email": "Email",
       "emailph": "esempio@email.com",
       "errors": {
+        "form": {
+          "nameRequired": "E' necessario inserire un nome"
+        },
         "form.cfInvalid": "Il codice fiscale non è valido",
         "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra",
         "form.confirmPasswordRequired": "E' necessario confermare la password",
@@ -270,6 +273,10 @@
         "form.emailRequired": "E' necessario inserire un'email",
         "form.passwordRequired": "E' necessario inserire una password"
       },
+      "genericError": "Errore durante la registrazione dell'utente",
+      "loading": "Registrazione in corso",
+      "name": "Nome",
+      "nameph": "inserisci il tuo nome",
       "password": "Password",
       "passwordph": "inserisci password",
       "privacy1": "Cliccando su \"Registrati\" accetti la nostra ",
