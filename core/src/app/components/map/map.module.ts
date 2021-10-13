@@ -26,7 +26,8 @@ import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.componen
     TranslateModule
   ],
   exports:[
-    MapComponent
+    MapComponent,
+    BtnRegisterComponent,
   ]
 })
 export class MapModule { }

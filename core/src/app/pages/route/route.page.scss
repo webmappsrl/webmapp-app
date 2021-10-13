@@ -58,14 +58,24 @@
 }
 .webmapp-pageroute-infopanel-icon {
   color: var(--wm-color-secondary);
+  font-size: var(--wm-font-icon);
+  display: inline;
+  padding: 0;
+  position: absolute;
 }
 .webmapp-pageroute-infopanel-value {
-  padding: 6px;
+  padding: 3px 6px 0 30px;
   font-size: var(--wm-font-sm);
+  display: inline-block;
 }
 
 .webmapp-pageroute-fabbottom {
   bottom: 178px;
+  .webmapp-pageroute-btnbottomregister {
+    margin-left: 7px;
+    display: block;
+  }
+
   .webmapp-pageroute-btnbottom {
     --color: var(--wm-color-primary);
     --background: var(--wm-color-light);
@@ -114,6 +124,9 @@
   --background-hover: var(--wm-color-primary);
   --background-hover-opacity: 0;
 }
+.webmapp-pageroute-navigatelbl {
+  padding-left: 8px;
+}
 
 .webmapp-pageroute-menuopen {
   padding: 15px;
@@ -161,7 +174,6 @@
   background-color: #333;
   opacity: 0.4;
 }
-
 
 .webmapp-pageroute-downloadpanel {
   position: absolute;

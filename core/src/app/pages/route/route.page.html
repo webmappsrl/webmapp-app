@@ -116,6 +116,8 @@
       [animation]="useAnimation"
       [track]="track"
       [hideRegister]="true"
+      [hidePosition]="true"
+      [btnposition]="'middle'"
       [pois]="pois"
       (clickpoi)="clickPoi($event)"
       [height]="mapHeigth()"
@@ -279,6 +281,12 @@
     <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>
     </ion-fab-button> -->
+
+    <webmapp-btn-register
+    class="webmapp-pageroute-btnbottomregister"
+    [color]="'primary'"    
+  ></webmapp-btn-register>
+
     <ion-fab-button
       (click)="download()"
       size="small"
@@ -314,7 +322,7 @@
     [ngStyle]="{      'opacity': opacity    }"
   >
     <i class="webmapp-icon-nav-outline"></i>
-    <ion-label>{{'pages.route.navigate' | translate}} </ion-label>
+    <ion-label class="webmapp-pageroute-navigatelbl">{{'pages.route.navigate' | translate}} </ion-label>
   </ion-button>
 
   <ion-fab

@@ -99,6 +99,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
+  @Input('hidePosition') hidePosition: boolean = false;
   @Input('animation') useAnimation: boolean = true;
 
   @Input('cache') useCache: boolean = false;
@@ -464,6 +465,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     clearInterval(this.timer);
     this._destroyer.next(true);
   }
+
+  
+  // isRecording() {
+  //   return this.geolocationService.recording;
+  // }
 
   /**
    * Draw a track in the map, remove a prevoius track
