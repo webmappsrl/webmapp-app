@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp-icons';
-  src:  url('fonts/webmapp-icons.eot?smcu9o');
-  src:  url('fonts/webmapp-icons.eot?smcu9o#iefix') format('embedded-opentype'),
-    url('fonts/webmapp-icons.ttf?smcu9o') format('truetype'),
-    url('fonts/webmapp-icons.woff?smcu9o') format('woff'),
-    url('fonts/webmapp-icons.svg?smcu9o#webmapp-icons') format('svg');
+  src:  url('fonts/webmapp-icons.eot?rmaecu');
+  src:  url('fonts/webmapp-icons.eot?rmaecu#iefix') format('embedded-opentype'),
+    url('fonts/webmapp-icons.ttf?rmaecu') format('truetype'),
+    url('fonts/webmapp-icons.woff?rmaecu') format('woff'),
+    url('fonts/webmapp-icons.svg?rmaecu#webmapp-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.webmapp-icon-compass .path1:before {
+  content: "\e972";
+  color: rgb(192, 57, 43);
+}
+.webmapp-icon-compass .path2:before {
+  content: "\e973";
+  margin-left: -1em;
+  color: rgb(189, 195, 199);
+}
+.webmapp-icon-compass .path3:before {
+  content: "\e974";
+  margin-left: -1em;
+  color: rgb(231, 76, 60);
+}
+.webmapp-icon-compass .path4:before {
+  content: "\e975";
+  margin-left: -1em;
+  color: rgb(236, 240, 241);
+}
 .webmapp-icon-activities:before {
   content: "\e900";
 }
