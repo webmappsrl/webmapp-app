@@ -10,7 +10,7 @@ import { DOWNLOAD_INDEX_KEY } from '../constants/storage';
 import { first } from 'rxjs/operators';
 import { Platform } from '@ionic/angular';
 
-import {image as defaultImage} from '../../assets/images/defaultImageB64.json';
+import { image as defaultImage } from '../../assets/images/defaultImageB64.json';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +101,9 @@ export class DownloadService {
     if (track.properties.image_gallery) {
       track.properties.image_gallery.forEach(img => {
         imageUrlList.push(img.url);
+        for (let p in img.sizes) {
+          imageUrlList.push(img.sizes[p]);
+        }
       })
     }
 

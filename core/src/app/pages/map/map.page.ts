@@ -99,7 +99,7 @@ export class MapPage implements OnInit {
       this.clusters = this._cleanResultsFromSelected(res);
     }
     await this.loadingComponent.dismiss();
-    this.loading--;   
+    this.loading--;
   }
 
   async mapMove(moveEvent: MapMoveEvent) {
@@ -160,6 +160,8 @@ export class MapPage implements OnInit {
           this._zoneAllClusters.push(this._createClusterForEcTrack(ectrack))
         })
 
+        this._statuService.showingMapResults = !!this.selectedTracks.length;
+
       }
       console.log("let's select");
       this.selectTrack(trackId);
@@ -198,6 +200,9 @@ export class MapPage implements OnInit {
     this._statuService.isSelectedMapTrack = !!id;
     this.selectedTracks = id ? this.selectedTracks : [];
 
+
+    this._statuService.showingMapResults = !!id;
+
     if (id) {
       // this.clusters = this._zoneAllClusters.filter(cl => cl.properties.ids[0] != id);
 
@@ -225,6 +230,7 @@ export class MapPage implements OnInit {
     this.selectTrack(null);
     this._statuService.route = track;
     this._navController.navigateForward('route');
+    this._statuService.showingMapResults = false;
   }
 
   goToBBox(ev) {

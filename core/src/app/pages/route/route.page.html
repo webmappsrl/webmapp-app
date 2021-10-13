@@ -133,15 +133,14 @@
     <ion-card
       class="webmapp-pageroute-infopanel-card"
       style="height:{{maxInfoheight}}px"
-    >
-      <div
+    >   
+    <div
         class="webmapp-pageroute-infopanel-drag"
         #dragHandleIcon
         (click)="handleClick()"
       >
         <div class="webmapp-pageroute-infopanel-drag-handle"></div>
-      </div>
-      <div #lessdetails>
+      <div #lessdetails class="webmapp-pageroute-infopanel-lessdetails">
         <ion-label class="webmapp-pageroute-infopanel-name" *ngIf="opacity>0">
           {{route?.properties?.name | wmtrans}}
         </ion-label>
@@ -187,6 +186,8 @@
           </ion-row>
         </ion-grid>
       </div>
+      
+    </div>
       <div #moredetails>
         <ion-tabs #routeTabs *ngIf="opacity < 1" class="webmapp-route-tabs">
           <ion-tab-bar slot="top" class="webmapp-pageroute-infopanel-tabs">

@@ -94,6 +94,7 @@ export interface IWmImage {
     '108x148': string;
     '108x137': string;
     '225x100': string;
+    '250x150': string;
     '118x138': string;
     '108x139': string;
     '118x117': string;

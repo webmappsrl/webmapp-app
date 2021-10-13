@@ -283,6 +283,8 @@ export class RoutePage implements OnInit {
 
     this.opacity = shouldComplete ? 0 : 1;
 
+    this._statusService.showingRouteDetails = shouldComplete ;
+
     this.initialStep = shouldComplete
       ? this.maxInfoheight - this.minInfoheight
       : 0;
