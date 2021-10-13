@@ -4,7 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { DownloadService } from 'src/app/services/download.service';
 import { StatusService } from 'src/app/services/status.service';
 import { DownloadStatus } from 'src/app/types/download';
+import { downloadPanelStatus } from 'src/app/types/downloadpanel.enum';
 import { IGeojsonFeature } from 'src/app/types/model';
+
 
 @Component({
   selector: 'webmapp-download-panel',
@@ -12,6 +14,7 @@ import { IGeojsonFeature } from 'src/app/types/model';
   styleUrls: ['./download-panel.component.scss'],
 })
 export class DownloadPanelComponent implements OnInit {
+ 
 
   public track: IGeojsonFeature;
   public isInit = true;
@@ -21,6 +24,7 @@ export class DownloadPanelComponent implements OnInit {
   public downloadElements;
 
   @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
+  @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> = new EventEmitter<downloadPanelStatus>();
 
   constructor(
     private _statusService: StatusService,
@@ -35,6 +39,7 @@ export class DownloadPanelComponent implements OnInit {
         this.completeDownloads();
       }
     }, 1000);
+    this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
 
   }
 
@@ -42,6 +47,8 @@ export class DownloadPanelComponent implements OnInit {
     this.isInit = false;
     this.isDownloading = true;
     this.isDownloaded = false;
+
+    this.changeStatus.emit(downloadPanelStatus.DOWNLOADING);
 
     this._downloadService.onChangeStatus.subscribe(x => {
       this.updateStatus(x);
@@ -85,6 +92,7 @@ export class DownloadPanelComponent implements OnInit {
 
   completeDownloads() {
     this._downloadService.onChangeStatus.unsubscribe();
+    this.changeStatus.emit(downloadPanelStatus.FINISH);
 
     this.isInit = false;
     this.isDownloading = false;

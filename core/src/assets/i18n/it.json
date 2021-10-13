@@ -321,6 +321,12 @@
         "isFavourite": "Aggiunto ai preferiti!",
         "isNotFavourite": "Rimosso dai preferiti!"
       },
+      "modalconfirm": {
+        "title": "Interrompere il download?",
+        "text": "Uscire senza terminare il download della traccia?",
+        "cancel": "Annulla",
+        "confirm": "Uscire"
+      },
       "navigate": "Naviga",
       "share": "Condividi",
       "tabdescription": "Descrizione",

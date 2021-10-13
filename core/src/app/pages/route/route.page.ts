@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertController,
   Animation,
   AnimationController,
   Gesture,
@@ -10,6 +11,7 @@ import {
   NavController,
   Platform,
 } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
 import { CoinService } from 'src/app/services/coin.service';
@@ -17,6 +19,7 @@ import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
+import { downloadPanelStatus } from 'src/app/types/downloadpanel.enum';
 import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
@@ -71,6 +74,8 @@ export class RoutePage implements OnInit {
   private started: boolean = false;
   private initialStep: number = 0;
 
+  private actualDownloadStatus: downloadPanelStatus;
+
   private relatedPois: IGeojsonPoiDetailed[] = null;
 
   constructor(
@@ -84,7 +89,9 @@ export class RoutePage implements OnInit {
     private gestureCtrl: GestureController,
     private _shareService: ShareService,
     private _coinService: CoinService,
-    private downloadService: DownloadService
+    private downloadService: DownloadService,
+    private _alertController: AlertController,
+    private translate: TranslateService
   ) { }
 
   async ngOnInit() {
@@ -283,7 +290,7 @@ export class RoutePage implements OnInit {
 
     this.opacity = shouldComplete ? 0 : 1;
 
-    this._statusService.showingRouteDetails = shouldComplete ;
+    this._statusService.showingRouteDetails = shouldComplete;
 
     this.initialStep = shouldComplete
       ? this.maxInfoheight - this.minInfoheight
@@ -344,7 +351,46 @@ export class RoutePage implements OnInit {
     }
   }
 
-  public endDownload() {
-    this.showDownload = false;
+  public downloadStatus(status: downloadPanelStatus) {
+    this.actualDownloadStatus = status;
+  }
+
+  public async endDownload(requireConfirm = false) {
+    if (requireConfirm && this.actualDownloadStatus == downloadPanelStatus.DOWNLOADING) {
+      const translation = await this.translate
+        .get([
+          'pages.route.modalconfirm.title',
+          'pages.route.modalconfirm.text',
+          'pages.route.modalconfirm.confirm',
+          'pages.route.modalconfirm.cancel',
+        ])
+        .toPromise();
+
+      const alert = await this._alertController.create({
+        cssClass: 'my-custom-class',
+        header: translation['pages.route.modalconfirm.title'],
+        message: translation['pages.route.modalconfirm.text'],
+        buttons: [
+          {
+            text: translation['pages.route.modalconfirm.cancel'],
+            cssClass: 'webmapp-modalconfirm-btn',
+            role: 'cancel',
+            handler: () => { },
+          },
+          {
+            text: translation['pages.route.modalconfirm.confirm'],
+            cssClass: 'webmapp-modalconfirm-btn',
+            handler: () => {
+              this.showDownload = false;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+
+    } else {
+      this.showDownload = false;
+    }
   }
 }
