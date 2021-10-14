@@ -1,6 +1,6 @@
 <ion-content scrollY="true">
 
-  <div>
+  <div *ngIf="route?.properties.image_gallery?.length">
     <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.gallery' | translate}}
     </ion-label>
 

@@ -11,7 +11,7 @@ export class CardTrackComponent implements OnInit {
 
   // private cache = {};
 
-  public imageSrc : string | ArrayBuffer = '';
+  public imageSrc: string | ArrayBuffer = '';
 
   @Input('track') track: IGeojsonFeature;
   @Input('isDownload') isDownload: boolean = false;
@@ -23,7 +23,8 @@ export class CardTrackComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.imageSrc = await this.download.getB64img(this.track.properties?.feature_image?.url)
+    let src = this.track.properties?.feature_image?.sizes['118x138'] || this.track.properties?.feature_image?.url;
+    this.imageSrc = await this.download.getB64img(src)
   }
 
   open() {

@@ -172,6 +172,9 @@ export class MapPage implements OnInit {
 
 
   private _createClusterForEcTrack(ectrack: CGeojsonLineStringFeature): IGeojsonCluster {
+    
+    let src = ectrack.properties.feature_image.sizes['108x137'] || ectrack.properties.feature_image.url;
+    
     const simpleCluster: IGeojsonCluster = {
       type: 'Feature',
       geometry: {
@@ -180,7 +183,7 @@ export class MapPage implements OnInit {
       },
       properties: {
         ids: [ectrack.properties.id],
-        images: [ectrack.properties.feature_image.url],
+        images: [src],
         bbox: []
       }
     };

@@ -98,6 +98,9 @@ export class DownloadService {
     sizeMb += await this.saveTrack(track, dataTotal); // TODO async
     console.log("------- ~ DownloadService ~ startDownload ~ track.properties", track.properties);
     imageUrlList.push(track.properties.feature_image.url);
+    for (let p in track.properties.feature_image.sizes) {
+      imageUrlList.push(track.properties.feature_image.sizes[p]);
+    }
     if (track.properties.image_gallery) {
       track.properties.image_gallery.forEach(img => {
         imageUrlList.push(img.url);
