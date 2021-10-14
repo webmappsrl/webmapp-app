@@ -42,7 +42,6 @@ export interface IGeojsonProperties {
   source?: string;
   distance_comp?: number;
   user_id?: number;
-  // feature_image?: number;
   audio?: string;
   distance?: number;
   ascent?: number;
