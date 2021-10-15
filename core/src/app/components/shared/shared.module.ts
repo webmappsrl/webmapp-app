@@ -6,9 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ModalHeaderComponent } from './partials/modal-header/modal-header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GenericPopoverComponent } from './generic-popover/generic-popover.component';
+import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent,GenericPopoverComponent],
+  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -16,6 +17,6 @@ import { GenericPopoverComponent } from './generic-popover/generic-popover.compo
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent,GenericPopoverComponent],
+  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent],
 })
-export class SharedModule {}
+export class SharedModule { }

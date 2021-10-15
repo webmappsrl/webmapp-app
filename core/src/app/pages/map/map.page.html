@@ -18,9 +18,6 @@
     <!-- [static]="selectedTrackId?true:false"  -->
   </webmapp-map>
 
-  <webmapp-recording-btn class="webmapp-pagemap-recordingbtn" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
-  </webmapp-recording-btn>
-
   <ion-slides pager="false" (ionSlideDidChange)="sliderChange($event)" [options]="sliderOptions"
     [hidden]="!selectedTracks || !selectedTracks.length" class="webmapp-pagemap-cardslider" #slider>
     <ion-slide *ngFor="let track of selectedTracks">

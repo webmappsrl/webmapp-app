@@ -42,7 +42,6 @@ export interface IGeojsonProperties {
   source?: string;
   distance_comp?: number;
   user_id?: number;
-  // feature_image?: number;
   audio?: string;
   distance?: number;
   ascent?: number;
@@ -94,6 +93,7 @@ export interface IWmImage {
     '108x148': string;
     '108x137': string;
     '225x100': string;
+    '250x150': string;
     '118x138': string;
     '108x139': string;
     '118x117': string;

@@ -1,9 +1,10 @@
 <ion-item button detail lines="none" class="webmapp-cardtrack-card">
 
-  <ion-img [src]="getImage(track.properties?.feature_image?.url)" (click)="open(track)" class="webmapp-cardtrack-image">
+  <!-- <ion-img [src]="getImage(track.properties?.feature_image?.url)" (click)="open()" class="webmapp-cardtrack-image"> -->
+  <ion-img [src]="imageSrc" (click)="open()" class="webmapp-cardtrack-image">
 
   </ion-img>
-  <div class="webmapp-cardtrack-info" (click)="open(track)">
+  <div class="webmapp-cardtrack-info" (click)="open()">
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-name">{{track.properties.name | wmtrans
       }}</ion-label>
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
@@ -22,7 +23,8 @@
   </div>
 
 
-  <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)">{{"components.cardtrack.remove" |
+  <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)">
+    {{"components.cardtrack.remove" |
     translate}}
   </ion-label>
   <ion-label *ngIf="isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)">{{

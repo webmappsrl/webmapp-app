@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { NavController, PopoverController } from '@ionic/angular';
+import { LoadingController, NavController, PopoverController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { GenericPopoverComponent } from 'src/app/components/shared/generic-popover/generic-popover.component';
+import { AuthService } from 'src/app/services/auth.service';
 import { CoinService } from 'src/app/services/coin.service';
 
 @Component({
@@ -13,6 +15,8 @@ export class RegisteruserPage implements OnInit {
 
   public registerForm: FormGroup;
   public isSubmitted = false;
+  public showError = false;
+  public loadingString = '';
 
   private cfregex = '/^(?:[A-Z][AEIOU][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$/i'
 
@@ -20,9 +24,13 @@ export class RegisteruserPage implements OnInit {
     private coinService: CoinService,
     private _navController: NavController,
     private _formBuilder: FormBuilder,
-    public popoverController: PopoverController
+    private _authservice: AuthService,
+    public popoverController: PopoverController,
+    public loadingController: LoadingController,
+    private translate: TranslateService
   ) {
     this.registerForm = this._formBuilder.group({
+      name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       cf: ['', [Validators.pattern(this.cfregex),]],
       password: ['', [Validators.required]],
@@ -31,6 +39,7 @@ export class RegisteruserPage implements OnInit {
   }
 
   ngOnInit() {
+    this.translate.get('pages.registeruser.loading').subscribe(t => this.loadingString = t);
   }
 
   get errorControl() {
@@ -43,15 +52,32 @@ export class RegisteruserPage implements OnInit {
     return pass === confirmPass ? null : { notSame: true }
   }
 
-  register() {
+  async register() {
     this.isSubmitted = true;
-    
+    this.showError = false;
+
     if (this.registerForm.valid) {
+      const loading = await this.loadingController.create({
+        message: this.loadingString
+      });
+      await loading.present();
 
-      //TODO register user
+      const registered = await this._authservice.register(
+        this.registerForm.get('name').value,
+        this.registerForm.get('email').value,
+        this.registerForm.get('password').value,
+        this.registerForm.get('cf').value,
+      )
 
-      this.coinService.openGiftModal();
-      this._navController.navigateForward('home');
+      loading.dismiss();
+
+      console.log("------- ~ RegisteruserPage ~ register ~ registered", registered);
+      if (registered) {
+        this.coinService.openGiftModal();
+        this._navController.navigateForward('home');
+      } else {
+        this.showError = true;
+      }
     }
   }
 
@@ -59,14 +85,14 @@ export class RegisteruserPage implements OnInit {
     this._navController.back();
   }
 
-  async showCfInfo(ev){
+  async showCfInfo(ev) {
     const popover = await this.popoverController.create({
       component: GenericPopoverComponent,
       event: ev,
       translucent: true,
-      componentProps:{
-        title:'pages.registeruser.cfpopovertitle',
-        message:'pages.registeruser.cfpopovermessage',
+      componentProps: {
+        title: 'pages.registeruser.cfpopovertitle',
+        message: 'pages.registeruser.cfpopovermessage',
       }
     });
     return popover.present();

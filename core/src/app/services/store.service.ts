@@ -14,16 +14,16 @@ export class StoreService {
       price: 1
     },
     {
-      quantity: 10,
+      quantity: 20,
       price: 10
     },
     {
       quantity: 50,
-      price: 45
+      price: 20
     },
     {
       quantity: 100,
-      price: 80
+      price: 40
     }
   ];
 

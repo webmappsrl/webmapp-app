@@ -9,7 +9,9 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class CardTrackComponent implements OnInit {
 
-  private cache = {};
+  // private cache = {};
+
+  public imageSrc: string | ArrayBuffer = '';
 
   @Input('track') track: IGeojsonFeature;
   @Input('isDownload') isDownload: boolean = false;
@@ -20,7 +22,10 @@ export class CardTrackComponent implements OnInit {
     private download: DownloadService
   ) { }
 
-  ngOnInit() { }
+  async ngOnInit() {
+    let src = this.track.properties?.feature_image?.sizes['118x138'] || this.track.properties?.feature_image?.url;
+    this.imageSrc = await this.download.getB64img(src)
+  }
 
   open() {
     this.openClick.emit(this.track);
@@ -30,18 +35,18 @@ export class CardTrackComponent implements OnInit {
     this.removeClick.emit(this.track);
   }
 
-  getImage(url) {
-    if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
-    else {
-      if (this.cache[url] !== 'waiting') {
-        this.cache[url] = 'waiting';
-        this.download.getB64img(url).then(val => {
-          this.cache[url] = val;
-        })
-      }
-    }
-    return '';
-  }
+  // getImage(url) {
+  //   if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
+  //   else {
+  //     if (this.cache[url] !== 'waiting') {
+  //       this.cache[url] = 'waiting';
+  //       this.download.getB64img(url).then(val => {
+  //         this.cache[url] = val;
+  //       })
+  //     }
+  //   }
+  //   return '';
+  // }
 
   sizeInMB(size) {
     const million = 1000000;

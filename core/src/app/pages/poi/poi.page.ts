@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { StatusService } from 'src/app/services/status.service';
-import { IGeojsonFeature, IGeojsonPoiDetailed } from 'src/app/types/model';
+import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
 import { Plugins } from '@capacitor/core';
 import { DownloadService } from 'src/app/services/download.service';
 
@@ -69,7 +69,7 @@ export class PoiPage implements OnInit {
     this.pois = res;
   }
 
-  async clickPoi(poi: IGeojsonPoiDetailed) {
+  async clickPoi(poi: IGeojsonPoi) {
     this.selectPoi(poi)
     // this.updatePoiMarkers();
   }
@@ -87,7 +87,7 @@ export class PoiPage implements OnInit {
     this.selectPoi(selectedPoi)
   }
 
-  selectPoi(poi: IGeojsonPoiDetailed) {
+  selectPoi(poi: IGeojsonPoi) {
     this.selectedPoi = this.pois.find(p => p.properties.id == poi.properties.id);
     this.poiIdx = this.pois.findIndex(p => p.properties.id == poi.properties.id);
     // this.updatePoiMarkers();

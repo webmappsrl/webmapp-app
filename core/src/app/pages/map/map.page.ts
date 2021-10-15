@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, NavController } from '@ionic/angular';
+import { IonSlides, LoadingController, NavController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { textHeights } from 'ol/render/canvas';
 import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import { DEF_MAP_LOCATION_ZOOM, DEF_MAP_MAX_BOUNDINGBOX, DEF_MAP_MAX_ZOOM } from 'src/app/constants/map';
@@ -40,14 +42,24 @@ export class MapPage implements OnInit {
 
   private _actualBooundingbox
 
+  private loadingString = '';
+  private loadingComponent: HTMLIonLoadingElement;
+  private loading = 0;
+
   constructor(
     private _navController: NavController,
     private _geolocationService: GeolocationService,
     private _geohubService: GeohubService,
-    private _statuService: StatusService
+    private _statuService: StatusService,
+    private _loadingController: LoadingController,
+    private translate: TranslateService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.translate.get('pages.map.loading').subscribe(async t => {
+      this.loadingString = t;
+    });
+  }
 
   recordingClick(ev) {
     const location: ILocation = this._geolocationService.location;
@@ -73,12 +85,21 @@ export class MapPage implements OnInit {
 
   async updateSearch() {
     //TODO get filters
+
+    if (this.loading <= 0) {
+      this.loading++;
+      this.loadingComponent = await this._loadingController.create({
+        message: this.loadingString
+      })
+      await this.loadingComponent.present();
+    }
     const filters = this._statuService.getFilters();
     const res = await this._geohubService.search(this._actualBooundingbox, filters, this.referenceTrackId)
     if (res && res.features) {
       this.clusters = this._cleanResultsFromSelected(res);
-
     }
+    await this.loadingComponent.dismiss();
+    this.loading--;
   }
 
   async mapMove(moveEvent: MapMoveEvent) {
@@ -139,6 +160,8 @@ export class MapPage implements OnInit {
           this._zoneAllClusters.push(this._createClusterForEcTrack(ectrack))
         })
 
+        this._statuService.showingMapResults = !!this.selectedTracks.length;
+
       }
       console.log("let's select");
       this.selectTrack(trackId);
@@ -149,6 +172,9 @@ export class MapPage implements OnInit {
 
 
   private _createClusterForEcTrack(ectrack: CGeojsonLineStringFeature): IGeojsonCluster {
+    
+    let src = ectrack.properties.feature_image.sizes['108x137'] || ectrack.properties.feature_image.url;
+    
     const simpleCluster: IGeojsonCluster = {
       type: 'Feature',
       geometry: {
@@ -157,7 +183,7 @@ export class MapPage implements OnInit {
       },
       properties: {
         ids: [ectrack.properties.id],
-        images: [ectrack.properties.feature_image.url],
+        images: [src],
         bbox: []
       }
     };
@@ -176,6 +202,9 @@ export class MapPage implements OnInit {
     this.selectedTrackId = id;
     this._statuService.isSelectedMapTrack = !!id;
     this.selectedTracks = id ? this.selectedTracks : [];
+
+
+    this._statuService.showingMapResults = !!id;
 
     if (id) {
       // this.clusters = this._zoneAllClusters.filter(cl => cl.properties.ids[0] != id);
@@ -204,6 +233,7 @@ export class MapPage implements OnInit {
     this.selectTrack(null);
     this._statuService.route = track;
     this._navController.navigateForward('route');
+    this._statuService.showingMapResults = false;
   }
 
   goToBBox(ev) {

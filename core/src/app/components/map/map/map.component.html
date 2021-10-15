@@ -26,7 +26,7 @@
     class="webmapp-map-fab"
     color="light"
     [state]="locationState"
-    *ngIf="!static"
+    *ngIf="!static && !hidePosition"
     (btn-click)="btnLocationClick()"
   >
   </webmapp-btn-geolocation>
@@ -50,6 +50,7 @@
 <!-- <div *ngFor="let cm of clusterMarkers" [id]="'clustermarker'+cm.properties.ids[0]">
   <webmapp-cluster-marker [item]="cm" (clickcluster)="clickclusterFn($event)"></webmapp-cluster-marker>  
 </div> -->
+
 
 <template #clusterContainer></template>
 

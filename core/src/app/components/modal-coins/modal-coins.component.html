@@ -3,8 +3,9 @@
 
     <div class="ios-filling"></div>
 
-    <div class="webmapp-modalcoins-header">
+    <div class="webmapp-modalcoins-header ripple-parent ion-activatable">
       <ion-icon name="close-outline" class="webmapp-modalcoins-closebtn" (click)="close()"></ion-icon>
+      <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <ion-label *ngIf="message">
@@ -15,7 +16,7 @@
       <ion-label class="webmapp-modalcoins-title">
         {{ 'modals.coin.defaultmessage' | translate }}
       </ion-label>
-      <ion-img class="webmapp-modalcoins-image" src="assets/images/coinsexample.png"></ion-img>
+      <ion-img class="webmapp-modalcoins-image" src="assets/animations/coins.gif"></ion-img>
 
       <div class="webmapp-modalcoins-info">
         <i class="wwebmapp-modalcoins-info-check webmapp-icon-check-outline"> </i>

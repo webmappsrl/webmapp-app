@@ -6,9 +6,11 @@ import {
   GEOHUB_DOMAIN,
   GEOHUB_LOGIN_ENDPOINT,
   GEOHUB_LOGOUT_ENDPOINT,
+  GEOHUB_REGISTER_ENDPOINT,
 } from '../constants/geohub';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
+import config from '../../../config.json'
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,7 @@ export class AuthService {
     private _storageService: StorageService
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
-    
+
     this._onStateChange.subscribe(x => {
       this._communicationService.setToken(x?.token);
     })
@@ -62,6 +64,36 @@ export class AuthService {
 
   get onStateChange(): ReplaySubject<IUser> {
     return this._onStateChange;
+  }
+
+  async register(name: string, email: string, password: string, cf: string): Promise<boolean> {
+    try {
+      const response: IGeohubApiLogin = await this._communicationService.post(
+        GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_REGISTER_ENDPOINT,
+        {
+          name,
+          email,
+          password,
+          referrer: config.APP.id,
+          fiscal_code: cf
+        },
+        {
+          headers: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'Content-Type': 'application/json',
+          },
+        }
+      ).toPromise();
+      this._saveUser(response);
+      console.log("------- ~ AuthService ~ register ~ response", response);
+      return true;
+    }
+    catch (err) {
+      console.warn(err);
+      this._userData = undefined;
+      this._onStateChange.next(this._userData);
+      return false;
+    }
   }
 
   /**

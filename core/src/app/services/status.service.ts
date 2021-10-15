@@ -21,13 +21,34 @@ export class StatusService {
   }
 
   private _isSelectedMapTrack: boolean;
-
   public set isSelectedMapTrack(val: boolean) {
     this._isSelectedMapTrack = val;
   }
   public get isSelectedMapTrack(): boolean {
     return this._isSelectedMapTrack;
   }
+
+  
+  private _showingRouteDetails: boolean;
+  public set showingRouteDetails(val: boolean) {
+    this._showingRouteDetails = val;
+  }
+  public get showingRouteDetails(): boolean {
+    return this._showingRouteDetails;
+  }
+
+  
+  private _showingMapResults: boolean;
+  public set showingMapResults(val: boolean) {
+    this._showingMapResults = val;
+  }
+  public get showingMapResults(): boolean {
+    return this._showingMapResults;
+  }
+  
+
+
+
   constructor() { }
 
   public setPois(relatedPois: IGeojsonPoiDetailed[], id: number) {
