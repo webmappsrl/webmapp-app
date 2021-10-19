@@ -31,11 +31,11 @@
 </ion-menu>
 
 <ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
-  <div #header style="opacity: 0" [hidden]="opacity == 1" class="webmapp-pageroute-header">
+  <div #header style="opacity: 0" [hidden]="opacity >= 0.95" class="webmapp-pageroute-header">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button  mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark">
+          <ion-back-button mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark">
           </ion-back-button>
         </ion-buttons>
         <ion-title>{{route?.properties?.name | wmtrans}}</ion-title>
@@ -129,7 +129,7 @@
 
       </div>
       <div #moredetails>
-        <ion-tabs #routeTabs *ngIf="opacity < 1" class="webmapp-route-tabs">
+        <ion-tabs #routeTabs *ngIf="opacity < 0.95" class="webmapp-route-tabs">
           <ion-tab-bar slot="top" class="webmapp-pageroute-infopanel-tabs">
             <ion-slides pager="false" [options]="slideOpts" #slideTab>
               <ion-slide>
@@ -196,7 +196,7 @@
     </div>
   </div>
 
-  <ion-fab [vertical]="opacity==1?'bottom':'top'" horizontal="end"
+  <ion-fab [vertical]="opacity>=0.95?'bottom':'top'" horizontal="end"
     class="webmapp-pageroute-fabbottom {{opacity<1?'webmapp-pageroute-fabbottom-top':''}}">
     <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>

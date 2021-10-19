@@ -339,7 +339,6 @@ export class RoutePage implements OnInit {
 
   private clamp(min, n, max) {
     const val = Math.max(min, Math.min(n, max));
-
     this.opacity = 1 - val;
     return val;
   }

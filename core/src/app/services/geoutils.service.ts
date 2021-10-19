@@ -166,7 +166,6 @@ export class GeoutilsService {
   }
 
   getDistance(point1: Coordinate, point2: Coordinate): number {
-    console.log("------- ~ GeoutilsService ~ getDistance ~ point1, point2", point1, point2);
     return this._calcDistanceM(point1, point2);
   }
 
