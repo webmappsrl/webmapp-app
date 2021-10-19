@@ -181,6 +181,13 @@ export class RoutePage implements OnInit {
       onMove: (ev) => this.onMove(ev),
       onEnd: (ev) => this.onEnd(ev),
     });
+    this.gesture = this.gestureCtrl.create({
+      el: this.lessDetails.nativeElement,
+      threshold: 0,
+      gestureName: 'handler-drag',
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
+    });
 
     this.gesture.enable(true);
   }
