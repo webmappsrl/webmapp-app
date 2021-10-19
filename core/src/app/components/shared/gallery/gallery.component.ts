@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IonSlides } from '@ionic/angular';
+import { IonSlides, LoadingController } from '@ionic/angular';
 import { DownloadService } from 'src/app/services/download.service';
 
 @Component({
@@ -19,18 +19,16 @@ export class GalleryComponent implements OnInit {
 
   @Output("closing") closing = new EventEmitter();
 
-  @Input("images") set setImages(images:any[]){
+  @Input("images") set setImages(images: any[]) {
     this.images = images;
-    images.forEach(img=>{
-      this.getImage(img.u);
-    })
+    this.loadImages(images);
   }
 
   @Input("startImage") set setStart(imgIdx: number) {
     setTimeout(() => {
       if (this.slider) {
         this.slider.slideTo(imgIdx);
-        this.actualIndex = imgIdx+1;
+        this.actualIndex = imgIdx + 1;
       }
       else {
         console.log("------- ~ GalleryComponent ~ setTimeout ~ this.slider", this.slider, imgIdx);
@@ -45,12 +43,15 @@ export class GalleryComponent implements OnInit {
     // spaceBetween: 10,
     // slidesOffsetAfter: 15,
     // slidesOffsetBefore: 15,
-    slidesPerView: 1
+    slidesPerView: 1,
+    // autoHeight: true,
+    // preloadImages: true
   };
 
 
   constructor(
-    private download: DownloadService
+    private download: DownloadService,
+    private _loadingController: LoadingController
   ) { }
 
   ngOnInit() { }
@@ -59,8 +60,23 @@ export class GalleryComponent implements OnInit {
     this.closing.emit(true)
   }
 
+  async loadImages(images) {
+    const loadingComponent = await this._loadingController.create({
+      // message: this.loadingString
 
-  getImage(url) {
+    })
+    await loadingComponent.present();
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
+      const url = img.url || img;
+      this.cache[url] = await this.download.getB64img(url);
+    }
+    loadingComponent.dismiss();
+  }
+
+
+  getImage(image) {
+    let url = image.url || image;
     if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
     else {
       if (this.cache[url] !== 'waiting') {
@@ -73,9 +89,9 @@ export class GalleryComponent implements OnInit {
     return '';
   }
 
-  async changeIndex(ev){
+  async changeIndex(ev) {
     const idx = await this.slider.getActiveIndex();
-    this.actualIndex = idx+1;
+    this.actualIndex = idx + 1;
   }
 
 }

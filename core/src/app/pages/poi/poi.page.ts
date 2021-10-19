@@ -121,6 +121,11 @@ export class PoiPage implements OnInit {
     return '';
   }
 
+  
+  showPhoto(idx) {
+    this._statusService.showPhoto(true, this.selectedPoi.properties.images, idx);
+  } 
+
 
 
 }

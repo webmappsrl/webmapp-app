@@ -46,9 +46,5 @@ export class TabDescriptionComponent implements OnInit {
 
   showPhoto(idx) {
     this._statusService.showPhoto(true, this.route?.properties.image_gallery, idx);
-  }
-
-  hidePhoto() {
-    this._statusService.showPhoto(false, [], 0);
-  }
+  } 
 }
