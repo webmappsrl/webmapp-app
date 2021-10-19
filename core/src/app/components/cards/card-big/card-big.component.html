@@ -25,6 +25,9 @@
       <ion-card-title class="webmapp-card-big-title">
         {{ title  | wmtrans }}
       </ion-card-title>
+      <ion-label *ngIf="showDistance" class="webmapp-card-big-distance">
+        {{distance}} Km
+      </ion-label>
     </ng-container>
   </ion-card-header>
 </ion-card>
