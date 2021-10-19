@@ -7,9 +7,10 @@ import { ModalHeaderComponent } from './partials/modal-header/modal-header.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GenericPopoverComponent } from './generic-popover/generic-popover.component';
 import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
+import { GalleryComponent } from './gallery/gallery.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent],
+  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -17,6 +18,6 @@ import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent],
+  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent],
 })
 export class SharedModule { }

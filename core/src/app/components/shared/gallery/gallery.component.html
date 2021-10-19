@@ -1,0 +1,19 @@
+<div class="webmapp-gallery-backdrop">
+
+  <ion-icon name="close-outline" class="webmapp-gallery-closebtn" (click)="close()"></ion-icon>
+
+
+  <ion-slides #slider [options]="sliderOptions" class="webmapp-gallery-slider" (ionSlideDidChange)="changeIndex($event)">
+
+    <ion-slide *ngFor="let image of images; let idx = index" class="webmapp-gallery-slide">
+      <ion-img [src]="getImage(image.url)" class="webmapp-gallery-image">
+
+      </ion-img>
+    </ion-slide>
+
+  </ion-slides>
+
+  <ion-label class="webmapp-gallery-legend">
+    {{actualIndex}} / {{images?.length}}
+  </ion-label>
+</div>

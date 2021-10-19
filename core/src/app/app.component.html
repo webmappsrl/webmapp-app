@@ -5,3 +5,11 @@
   </webmapp-recording-btn>
 
 </ion-app>
+
+
+<webmapp-gallery
+  [hidden]="!showingPhotos"
+  [images]="image_gallery"
+  [startImage]="photoIndex"
+  (closing)="closePhoto()"
+></webmapp-gallery>
