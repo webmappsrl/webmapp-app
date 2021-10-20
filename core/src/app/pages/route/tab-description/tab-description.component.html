@@ -6,9 +6,9 @@
 
     <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pageroute-tabdescription-photoslider" #slider>
       <ion-slide *ngFor="let photo of route?.properties.image_gallery; let idx = index">
-        <div class="webmapp-pageroute-tabdescription-photocontainer">
-          <ion-img [src]="getImage(photo.sizes)" class="webmapp-pageroute-tabdescription-photo" (click)="showPhoto(idx)"></ion-img>
-        </div>
+        
+          <webmapp-img [src]="photo" size="250x150" class="webmapp-pageroute-tabdescription-photo" (click)="showPhoto(idx)"></webmapp-img>
+        
       </ion-slide>
     </ion-slides>
 

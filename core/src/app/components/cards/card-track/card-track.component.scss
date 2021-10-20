@@ -11,10 +11,6 @@
         height: 138px;
         border-radius: 15px;
         overflow: hidden;
-
-        &::part(image) {
-            object-fit: cover;
-        }
     }
 
     .webmapp-cardtrack-info {

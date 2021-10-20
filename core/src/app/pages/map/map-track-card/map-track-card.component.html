@@ -12,12 +12,13 @@
     #favouriteanimation
     class="webmapp-maptrackcard-favourite-animation"
   ></div>
-  <ion-img
-    [src]="image"
+  <webmapp-img
+    [src]="track.properties?.feature_image"
+    size="108x137"
     class="webmapp-maptrackcard-image"
     (click)="open()"
   >
-  </ion-img>
+  </webmapp-img>
   <div class="webmapp-maptrackcard-info" (click)="open()">
     <ion-label
       class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-name"

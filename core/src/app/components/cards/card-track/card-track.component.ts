@@ -9,10 +9,6 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class CardTrackComponent implements OnInit {
 
-  // private cache = {};
-
-  public imageSrc: string | ArrayBuffer = '';
-
   @Input('track') track: IGeojsonFeature;
   @Input('isDownload') isDownload: boolean = false;
   @Output('open') openClick: EventEmitter<IGeojsonFeature> = new EventEmitter<IGeojsonFeature>();
@@ -23,8 +19,6 @@ export class CardTrackComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    let src = this.track.properties?.feature_image?.sizes['118x138'] || this.track.properties?.feature_image?.url;
-    this.imageSrc = await this.download.getB64img(src)
   }
 
   open() {

@@ -8,9 +8,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GenericPopoverComponent } from './generic-popover/generic-popover.component';
 import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 import { GalleryComponent } from './gallery/gallery.component';
+import { ImgComponent } from './img/img.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent],
+  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,6 +19,6 @@ import { GalleryComponent } from './gallery/gallery.component';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent],
+  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
 })
 export class SharedModule { }

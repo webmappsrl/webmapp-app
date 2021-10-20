@@ -25,17 +25,14 @@ export class PoiPage implements OnInit {
 
   public poiIdx: number;
 
-  private cache = {};
-
   public sliderOptions: any = {
-    slidesPerView: 2.2,
+    slidesPerView: 1.3,
   };
 
   constructor(
     private _statusService: StatusService,
     private _navController: NavController,
-    private downloadService: DownloadService,
-    private download: DownloadService
+    private downloadService: DownloadService
   ) { }
 
   async ngOnInit() {
@@ -107,20 +104,6 @@ export class PoiPage implements OnInit {
     console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url', url);
     await Browser.open({ url });
   }
-
-  getImage(url) {
-    if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
-    else {
-      if (this.cache[url] !== 'waiting') {
-        this.cache[url] = 'waiting';
-        this.download.getB64img(url).then(val => {
-          this.cache[url] = val;
-        })
-      }
-    }
-    return '';
-  }
-
   
   showPhoto(idx) {
     this._statusService.showPhoto(true, this.selectedPoi.properties.images, idx);

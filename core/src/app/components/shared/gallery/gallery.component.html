@@ -6,9 +6,9 @@
   <ion-slides #slider [options]="sliderOptions" class="webmapp-gallery-slider" (ionSlideDidChange)="changeIndex($event)">
 
     <ion-slide *ngFor="let image of images; let idx = index" class="webmapp-gallery-slide">
-      <ion-img [src]="getImage(image)" class="webmapp-gallery-image" alt="loading">
+      <webmapp-img [src]="image" class="webmapp-gallery-image" alt="loading">
 
-      </ion-img>
+      </webmapp-img>
     </ion-slide>
 
   </ion-slides>

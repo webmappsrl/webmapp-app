@@ -11,7 +11,7 @@ import { IGeojsonFeature } from 'src/app/types/model';
 export class TabDescriptionComponent implements OnInit {
 
 
-  private cache: any = {};
+  // private cache: any = {};
 
   public sliderOptions: any = {
     slidesPerView: 1.3,
@@ -21,28 +21,28 @@ export class TabDescriptionComponent implements OnInit {
 
   constructor(
     private _statusService: StatusService,
-    private download: DownloadService
+    // private download: DownloadService
   ) { }
 
   ngOnInit() {
     this.route = this._statusService.route;
   }
 
-  getImage(sizes) {
-    let url = sizes['250x150'];
-    if (!url) { url = sizes['225x100'] }
+  // getImage(sizes) {
+  //   let url = sizes['250x150'];
+  //   if (!url) { url = sizes['225x100'] }
 
-    if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
-    else {
-      if (this.cache[url] !== 'waiting') {
-        this.cache[url] = 'waiting';
-        this.download.getB64img(url).then(val => {
-          this.cache[url] = val;
-        })
-      }
-    }
-    return '';
-  }
+  //   if (this.cache[url] && this.cache[url] != 'waiting') return this.cache[url]
+  //   else {
+  //     if (this.cache[url] !== 'waiting') {
+  //       this.cache[url] = 'waiting';
+  //       this.download.getB64img(url).then(val => {
+  //         this.cache[url] = val;
+  //       })
+  //     }
+  //   }
+  //   return '';
+  // }
 
   showPhoto(idx) {
     this._statusService.showPhoto(true, this.route?.properties.image_gallery, idx);

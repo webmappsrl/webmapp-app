@@ -15,7 +15,7 @@ import { IGeojsonFeature, iLocalString } from 'src/app/types/model';
 export class CardBigComponent implements OnInit {
   @Input('showDistance') showDistance: boolean;
 
-  public imageUrl: string;
+  public feature_image;
   public title: iLocalString;
   public where: any;
 
@@ -34,9 +34,7 @@ export class CardBigComponent implements OnInit {
   @Input('item') set item(value: IGeojsonFeature) {
     this._item = value;
     this.title = value.properties.name;
-    if (value.properties.feature_image && value.properties.feature_image.url) {
-      this.imageUrl = value.properties.feature_image.url;
-    }
+    this.feature_image = value.properties.feature_image;
     this._setTaxonomy(value);
   }
 
