@@ -38,6 +38,7 @@ import {
   DEF_MAP_MAX_ZOOM,
   DEF_MAP_MIN_ZOOM,
   DEF_MAP_MAX_CENTER_ZOOM,
+  DEF_MAP_ROTATION_DURATION
 } from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -92,6 +93,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
   @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
+  @Output() rotate: EventEmitter<number> = new EventEmitter();
 
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
@@ -231,6 +233,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   public sortedComponent: any[] = [];
 
   public timer: any;
+
+  public mapDegrees: number;
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
@@ -412,6 +416,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
 
     if (!this.static) {
+      this._map.on('postrender', () => {
+        const degree = this._map.getView().getRotation() / (2 * Math.PI) * 360;
+        if (degree != this.mapDegrees) { this.rotate.emit(degree); }
+        this.mapDegrees = degree
+      });
       this._map.on('moveend', () => {
         this.move.emit({
           boundingbox: this._mapService.extentToLonLat(
@@ -466,7 +475,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._destroyer.next(true);
   }
 
-  
+
   // isRecording() {
   //   return this.geolocationService.recording;
   // }
@@ -505,6 +514,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this._centerMapToTrack();
     }
     //}
+  }
+
+
+  public orientNorth() {
+
+    this._view.animate({
+      duration: DEF_MAP_ROTATION_DURATION,
+      rotation: 0
+    });
   }
 
   deleteTrack() {

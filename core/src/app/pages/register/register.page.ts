@@ -207,7 +207,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   backToMap() {
-    this._navCtrl.navigateBack('map');
+    this._navCtrl.navigateForward('map');
   }
 
   ngOnDestroy() {
