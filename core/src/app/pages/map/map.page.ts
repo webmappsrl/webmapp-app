@@ -42,9 +42,7 @@ export class MapPage implements OnInit {
 
   private _actualBooundingbox
 
-  private loadingString = '';
-  private loadingComponent: HTMLIonLoadingElement;
-  private loading = 0;
+  public loading: boolean = false;
 
   constructor(
     private _navController: NavController,
@@ -56,9 +54,6 @@ export class MapPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.translate.get('pages.map.loading').subscribe(async t => {
-      this.loadingString = t;
-    });
   }
 
   recordingClick(ev) {
@@ -83,29 +78,26 @@ export class MapPage implements OnInit {
     return this._geolocationService.recording;
   }
 
-  async updateSearch() {
+  async updateSearch(useLoader = false) {
     //TODO get filters
 
-    if (this.loading <= 0) {
-      this.loading++;
-      this.loadingComponent = await this._loadingController.create({
-        message: this.loadingString
-      })
-      await this.loadingComponent.present();
+    if (useLoader) {
+      this.loading = true;     
     }
     const filters = this._statuService.getFilters();
     const res = await this._geohubService.search(this._actualBooundingbox, filters, this.referenceTrackId)
     if (res && res.features) {
       this.clusters = this._cleanResultsFromSelected(res);
     }
-    await this.loadingComponent.dismiss();
-    this.loading--;
+    
+      this.loading = false;
+    
   }
 
   async mapMove(moveEvent: MapMoveEvent) {
     this.actualZoom = moveEvent.zoom;
     this._actualBooundingbox = moveEvent.boundingbox;
-    this.updateSearch()
+    this.updateSearch(true);
   }
 
 
@@ -172,9 +164,9 @@ export class MapPage implements OnInit {
 
 
   private _createClusterForEcTrack(ectrack: CGeojsonLineStringFeature): IGeojsonCluster {
-    
+
     let src = ectrack.properties.feature_image.sizes['108x137'] || ectrack.properties.feature_image.url;
-    
+
     const simpleCluster: IGeojsonCluster = {
       type: 'Feature',
       geometry: {

@@ -25,3 +25,8 @@
     </ion-slide>
   </ion-slides>
 </ion-content>
+
+<div class="webmapp-pagemap-loading" *ngIf="loading">
+  <ion-spinner></ion-spinner>
+  <div>{{'pages.map.loading' | translate}}</div>
+</div>
