@@ -30,6 +30,16 @@
     (btn-click)="btnLocationClick()"
   >
   </webmapp-btn-geolocation>
+
+  
+  <webmapp-btn-orientation
+    class="webmapp-map-fab"
+    *ngIf=" !static && !hidePosition"
+    [degrees]="mapDegrees"
+    (click)="orientNorth()"
+  >
+  </webmapp-btn-orientation>
+
 </div>
 
 <div

@@ -1,3 +1,12 @@
+
+
+<webmapp-gallery
+  [hidden]="!showingPhotos"
+  [images]="image_gallery"
+  [startImage]="photoIndex"
+  (closing)="closePhoto()"
+></webmapp-gallery>
+
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
   

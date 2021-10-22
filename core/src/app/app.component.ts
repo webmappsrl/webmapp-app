@@ -20,6 +20,10 @@ import { StatusService } from './services/status.service';
 })
 export class AppComponent {
 
+  public showingPhotos = false;
+  public image_gallery: any[];
+  public photoIndex: number = 0;
+
   constructor(
     private _languagesService: LanguagesService,
     private _platform: Platform,
@@ -52,6 +56,16 @@ export class AppComponent {
         // You can now track pages or set additional information such as AppVersion or UserId
       })
       .catch(e => console.log('Error starting GoogleAnalytics', e));
+
+    this.status.showPhotos.subscribe(x => {
+      this.showingPhotos = x.showingPhotos;
+      this.image_gallery = x.image_gallery;
+      this.photoIndex = x.photoIndex;
+    })
+  }
+
+  closePhoto(){
+    this.showingPhotos = false;
   }
 
   recordingClick(ev) {

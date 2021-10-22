@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { IGeojsonFeature, IGeojsonPoiDetailed } from '../types/model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatusService {
+
+  public showPhotos = new BehaviorSubject({
+    showingPhotos: false,
+    image_gallery: [],
+    photoIndex: 0
+  })
 
   private _route: IGeojsonFeature;
 
@@ -28,7 +35,7 @@ export class StatusService {
     return this._isSelectedMapTrack;
   }
 
-  
+
   private _showingRouteDetails: boolean;
   public set showingRouteDetails(val: boolean) {
     this._showingRouteDetails = val;
@@ -37,7 +44,7 @@ export class StatusService {
     return this._showingRouteDetails;
   }
 
-  
+
   private _showingMapResults: boolean;
   public set showingMapResults(val: boolean) {
     this._showingMapResults = val;
@@ -45,7 +52,7 @@ export class StatusService {
   public get showingMapResults(): boolean {
     return this._showingMapResults;
   }
-  
+
 
 
 
@@ -75,8 +82,13 @@ export class StatusService {
       this._filters.splice(idx, 1);
     }
   }
+
   public getFilters() {
     // TODO set search filters
     return this._filters;
+  }
+
+  public showPhoto(showingPhotos: boolean, image_gallery: any[], photoIndex: number) {
+    this.showPhotos.next({ showingPhotos, image_gallery, photoIndex });
   }
 }

@@ -14,6 +14,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
+import { MapComponent } from 'src/app/components/map/map/map.component';
 import { CoinService } from 'src/app/services/coin.service';
 import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
@@ -51,6 +52,7 @@ export class RoutePage implements OnInit {
 
   private _tabChildEventSubscriptions: Array<Subscription> = [];
 
+  public mapDegrees = 0;
 
   public slideOpts = {
     initialSlide: 0,
@@ -64,6 +66,7 @@ export class RoutePage implements OnInit {
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
   @ViewChild('mapcontainer') mapControl: ElementRef;
+  @ViewChild('map') mapComponent: MapComponent;
   @ViewChild('headerPageRoute') headerControl: ElementRef;
   @ViewChild('header') header: ElementRef;
   @ViewChild('lessdetails') lessDetails: ElementRef;
@@ -181,6 +184,13 @@ export class RoutePage implements OnInit {
       onMove: (ev) => this.onMove(ev),
       onEnd: (ev) => this.onEnd(ev),
     });
+    this.gesture = this.gestureCtrl.create({
+      el: this.lessDetails.nativeElement,
+      threshold: 0,
+      gestureName: 'handler-drag',
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
+    });
 
     this.gesture.enable(true);
   }
@@ -188,6 +198,14 @@ export class RoutePage implements OnInit {
   async getRelatedPois() {
     this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
     this._statusService.setPois(this.relatedPois, 0);
+  }
+
+  mapRotation(deg) {
+    this.mapDegrees = deg;
+  }
+
+  orientNorth() {
+    this.mapComponent.orientNorth();
   }
 
   handleClick() {
@@ -332,7 +350,6 @@ export class RoutePage implements OnInit {
 
   private clamp(min, n, max) {
     const val = Math.max(min, Math.min(n, max));
-
     this.opacity = 1 - val;
     return val;
   }

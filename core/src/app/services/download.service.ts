@@ -69,10 +69,12 @@ export class DownloadService {
   }
 
   async startDownload(track: IGeojsonFeature | IGeojsonFeatureDownloaded) {
+    console.log("------- ~ DownloadService ~ startDownload ~ track", track);
     let sizeMb = 0
     //check already downloaded and connection
     if (await this.isDownloadedTrack(track.properties.id)) {
       this.updateStatus({ finish: true })
+      console.log("------- ~ DownloadService ~ startDownload ~ finish");
       return;
     }
 
@@ -98,8 +100,11 @@ export class DownloadService {
     sizeMb += await this.saveTrack(track, dataTotal); // TODO async
     console.log("------- ~ DownloadService ~ startDownload ~ track.properties", track.properties);
     imageUrlList.push(track.properties.feature_image.url);
-    for (let p in track.properties.feature_image.sizes) {
-      imageUrlList.push(track.properties.feature_image.sizes[p]);
+    if (track.properties.feature_image && track.properties.feature_image.sizes) {
+      imageUrlList.push(track.properties.feature_image.url);
+      for (let p in track.properties.feature_image.sizes) {
+        imageUrlList.push(track.properties.feature_image.sizes[p]);
+      }
     }
     if (track.properties.image_gallery) {
       track.properties.image_gallery.forEach(img => {
@@ -116,11 +121,13 @@ export class DownloadService {
       const poi = pois[i];
       poisIds.push(poi.properties.id);
       imageUrlList.push(poi.properties.image);
-      for (let j = 0; j < poi.properties.images.length; j++) {
-        const imgUrl = poi.properties.images[j];
-        imageUrlList.push(imgUrl);
-        sizeMb += await this.savePoi(poi, dataTotal) // TODO async
-      };
+      if (poi.properties.images) {
+        for (let j = 0; j < poi.properties.images.length; j++) {
+          const imgUrl = poi.properties.images[j];
+          imageUrlList.push(imgUrl);
+          sizeMb += await this.savePoi(poi, dataTotal) // TODO async
+        };
+      }
     }
 
     sizeMb += await this.downloadImages(imageUrlList, track); // TODO async
@@ -244,23 +251,29 @@ export class DownloadService {
     if (trackindex) {
       this.removeFromIndex(trackId);
 
-      trackindex.tiles.forEach(tile => {
-        if (!this.downloadIndex.find(x => x.tiles.includes(tile))) {
-          this.storage.removeMBTiles(tile);
-        }
-      })
+      if (trackindex.tiles) {
+        trackindex.tiles.forEach(tile => {
+          if (!this.downloadIndex.find(x => x.tiles && x.tiles.includes(tile))) {
+            this.storage.removeMBTiles(tile);
+          }
+        })
+      }
 
-      trackindex.pois.forEach(poi => {
-        if (!this.downloadIndex.find(x => x.pois.includes(poi))) {
-          this.storage.removePoi(poi);
-        }
-      })
+      if (trackindex.pois) {
+        trackindex.pois.forEach(poi => {
+          if (!this.downloadIndex.find(x => x.pois.includes(poi))) {
+            this.storage.removePoi(poi);
+          }
+        })
+      }
 
-      trackindex.images.forEach(image => {
-        if (!this.downloadIndex.find(x => x.images.includes(image))) {
-          this.storage.removeImage(image);
-        }
-      })
+      if (trackindex.images) {
+        trackindex.images.forEach(image => {
+          if (!this.downloadIndex.find(x => x.images.includes(image))) {
+            this.storage.removeImage(image);
+          }
+        })
+      }
 
       this.storage.removeTrack(trackId);
 
@@ -306,6 +319,11 @@ export class DownloadService {
     }
 
     this.onChangeStatus.next(this._status);
+
+    if (this._status.finish) {
+      this.createNewStatus();
+      this.onChangeStatus.next(this._status);
+    }
   }
 
   async getB64img(url: string): Promise<string | ArrayBuffer> {
@@ -353,7 +371,7 @@ export class DownloadService {
   }
 
   static async downloadFile(url): Promise<ArrayBuffer> {
-    console.log("------- ~ DownloadService ~ downloadFile ~ url", url);
+    // console.log("------- ~ DownloadService ~ downloadFile ~ url", url);
     const data = await fetch(url, { mode: 'no-cors' });
 
     return data.arrayBuffer();

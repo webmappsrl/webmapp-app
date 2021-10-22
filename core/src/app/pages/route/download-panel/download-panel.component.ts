@@ -14,7 +14,7 @@ import { IGeojsonFeature } from 'src/app/types/model';
   styleUrls: ['./download-panel.component.scss'],
 })
 export class DownloadPanelComponent implements OnInit {
- 
+
 
   public track: IGeojsonFeature;
   public isInit = true;
@@ -22,6 +22,8 @@ export class DownloadPanelComponent implements OnInit {
   public isDownloaded = false;
 
   public downloadElements;
+
+  private myEventSubscription;
 
   @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> = new EventEmitter<downloadPanelStatus>();
@@ -44,18 +46,20 @@ export class DownloadPanelComponent implements OnInit {
   }
 
   start() {
+    // console.log("------- ~ DownloadPanelComponent ~ start ~ start");
     this.isInit = false;
     this.isDownloading = true;
     this.isDownloaded = false;
 
     this.changeStatus.emit(downloadPanelStatus.DOWNLOADING);
 
-    this._downloadService.onChangeStatus.subscribe(x => {
+    this.updateStatus(null);
+    this.myEventSubscription = this._downloadService.onChangeStatus.subscribe(x => {
       this.updateStatus(x);
     })
 
     this._downloadService.startDownload(this.track);
-    this.updateStatus(null);
+    // this.updateStatus(null);
   }
 
   updateStatus(status: DownloadStatus) {
@@ -91,12 +95,15 @@ export class DownloadPanelComponent implements OnInit {
   }
 
   completeDownloads() {
-    this._downloadService.onChangeStatus.unsubscribe();
+    if (this.myEventSubscription) {
+      this.myEventSubscription.unsubscribe();
+    }
     this.changeStatus.emit(downloadPanelStatus.FINISH);
 
     this.isInit = false;
     this.isDownloading = false;
     this.isDownloaded = true;
+
   }
 
 }

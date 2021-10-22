@@ -2,15 +2,16 @@ import { Injectable } from '@angular/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { getDistance } from 'ol/sphere';
 import { Coordinate } from 'ol/coordinate';
-import { IPoint } from '../types/model';
+import { ILineString, IMultiLineString, IMultiPolygon, IPoint, IPolygon } from '../types/model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeoutilsService {
+
   private _maxCurrentSpeedPoint = 5;
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Transform a second period into object with hours/minutes/seconds
@@ -152,6 +153,20 @@ export class GeoutilsService {
       return res;
     }
     return 0;
+  }
+
+  getFirstPoint(coordinates: any): Coordinate {
+    if (Array.isArray(coordinates) && typeof (coordinates[0]) == 'number') {
+      return [coordinates[1], coordinates[0]];
+    } else {
+      return this.getFirstPoint(coordinates[0]);
+    }
+
+
+  }
+
+  getDistance(point1: Coordinate, point2: Coordinate): number {
+    return this._calcDistanceM(point1, point2);
   }
 
   private _calcDistanceM(point1: Coordinate, point2: Coordinate): number {

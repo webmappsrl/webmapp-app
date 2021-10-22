@@ -11,6 +11,7 @@ export class CardSliderComponent implements OnInit {
   @Input('title') title: string;
   @Input('nodata') nodata: string;
   @Input('data') data: Array<IGeojsonFeature>;
+  @Input('showDistance') showDistance: boolean;
 
   public sliderOptions: any;
 

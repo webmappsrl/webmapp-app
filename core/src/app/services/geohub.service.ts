@@ -140,7 +140,7 @@ export class GeohubService {
           "properties": {
             "id": 1,
             "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg",
-            images: ['https://picsum.photos/500/750', 'https://picsum.photos/550/800'],
+            images: ['https://picsum.photos/250/150', 'https://picsum.photos/250/150'],
             name: { it: 'esempio', en: 'example' },
             description: { it: 'descrizione poi', en: 'desc' },
             email: 'pippo@gmail.com',
@@ -157,7 +157,7 @@ export class GeohubService {
           "properties": {
             "id": 2,
             "image": "https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg",
-            images: ['https://picsum.photos/550/750', 'https://picsum.photos/500/800', 'https://picsum.photos/550/650', 'https://picsum.photos/500/200'],
+            images: ['https://picsum.photos/250/150', 'https://picsum.photos/250/150', 'https://picsum.photos/250/150', 'https://picsum.photos/250/150'],
             name: { it: 'esempio 2 ', en: 'example' },
             description: {
               it: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu. Vestibulum vehicula porttitor lacus, et sodales lorem vehicula vel. Quisque commodo mi id faucibus mollis. Nam porttitor, enim nec consequat commodo, dui lacus suscipit ante, in scelerisque lectus nibh eu turpis. Nulla metus risus, tristique vitae cursus vitae, hendrerit quis dolor. Donec tincidunt quis nulla sed lobortis. Aliquam eget nunc fringilla, fermentum sem ac, condimentum neque. Phasellus id aliquet sem, nec facilisis orci. Maecenas ultricies sollicitudin auctor. Cras quis orci placerat neque viverra tempor. Mauris et dolor rutrum, rutrum elit a, consectetur sem. Sed a erat nunc. Aliquam suscipit tincidunt semper. Morbi maximus eros diam.

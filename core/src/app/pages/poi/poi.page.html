@@ -25,11 +25,8 @@
 
   <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
     <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pagepoi-info-body-photoslider" #slider>
-      <ion-slide *ngFor="let image of selectedPoi.properties.images">
-        <div class="webmapp-pagepoi-info-body-photocontainer" >
-          <ion-img [src]="getImage(image)" class="webmapp-pagepoi-info-body-photo"></ion-img>
-        </div>
-      </ion-slide>
+      <ion-slide *ngFor="let image of selectedPoi.properties.images;let idx = index">
+          <webmapp-img [src]="image" size="250x150" class="webmapp-pagepoi-info-body-photo"  (click)="showPhoto(idx)"></webmapp-img>      </ion-slide>
     </ion-slides>
 
     <div [hidden]="!selectedPoi.properties.address"

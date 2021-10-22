@@ -11,16 +11,13 @@
 .webmapp-pageroute-tabdescription-photoslider {
   padding: 20px 0;
   overflow: visible;
-  .webmapp-pageroute-tabdescription-photocontainer {
-    position: relative;
+  
     .webmapp-pageroute-tabdescription-photo {
       height: 150px;
       width: 250px;
-      // width: 200px;
       &::part(image) {
-        object-fit: cover;
         border-radius: 15px;
       }
     }
-  }
+  
 }
