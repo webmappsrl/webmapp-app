@@ -563,6 +563,26 @@ function updateAndroidPlatform(instanceName, appId, appName) {
       })
     );
 
+    // variables.gradle
+    promises.push(
+      new Promise((resolve, reject) => {
+        gulp
+          .src(instancesDir + instanceName + "/android/variables.gradle")
+          .pipe(
+            replace(/compileSdkVersion = ([0-9]{2})/g, "compileSdkVersion = 30")
+          )
+          .pipe(
+            replace(/targetSdkVersion = ([0-9]{2})/g, "targetSdkVersion = 30")
+          )
+          .pipe(gulp.dest(instancesDir + instanceName + "/android/"))
+          .on("end", () => {
+            if (verbose) debug("variables.gradle updated successfully");
+            resolve();
+          })
+          .on("error", reject);
+      })
+    );
+
     // AndroidManifest.xml
     promises.push(
       new Promise((resolve, reject) => {
