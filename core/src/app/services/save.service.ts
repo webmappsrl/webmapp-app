@@ -6,6 +6,7 @@ import { ESaveObjType } from '../types/save.enum';
 import { IRegisterItem, ITrack } from '../types/track';
 import { WaypointSave } from '../types/waypoint';
 import { StorageService } from './base/storage.service';
+import { GeohubService } from './geohub.service';
 import { IPhotoItem, PhotoService } from './photo.service';
 
 
@@ -21,7 +22,8 @@ export class SaveService {
 
   constructor(
     private _photoService: PhotoService,
-    private _storage: StorageService
+    private _storage: StorageService,
+    private geohub: GeohubService
   ) {
     this._recoverIndex();
   }
@@ -89,21 +91,46 @@ export class SaveService {
     this._updateGeneric(trackToSave.key, trackToSave);
   }
 
+  public async uploadUnsavedContents() {
+    //TODO what for edited or deleted contents?
+    const contents = await this.getUnsavedObjects();
+    for (let i = 0; i < contents.length; i++) {
+      const indexObj = this._index.objects.find((x) => x.key === contents[i].key);
+      switch (contents[i].type) {
+        case ESaveObjType.WAYPOINT:
+          const waypoint: WaypointSave = await this._getGenericById(contents[i].key);
+          const res = await this.geohub.saveWaypoint(waypoint);
+          console.log("------- ~ SaveService ~ uploadUnsavedContents ~ res", res);
+          if (res && !res.error && res.id) {
+            indexObj.saved = true;
+            // waypoint.id = res.id 
+          }
+          break;
+        //TODO save each type of content
+      }
+      await this._updateIndex();
+
+    }
+  }
+
   /**
    * Get all the object save on storage but not on the cloud
    */
-  public async getUnsavedObjects() { }
+  public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
+    let ret = this._index.objects.filter(X => X.saved === false);
+    return ret;
+  }
 
   public async getWaypoints(): Promise<WaypointSave[]> {
-    return this.getGeneric(ESaveObjType.WAYPOINT);
+    return this.getGenerics(ESaveObjType.WAYPOINT);
   }
 
   public async getPhotos(): Promise<IPhotoItem[]> {
-    return this.getGeneric(ESaveObjType.PHOTO);
+    return this.getGenerics(ESaveObjType.PHOTO);
   }
 
   public async getTracks(): Promise<ITrack[]> {
-    const ret: ITrack[] = await this.getGeneric(ESaveObjType.TRACK);
+    const ret: ITrack[] = await this.getGenerics(ESaveObjType.TRACK);
     ret.forEach((t) => {
       this._initTrack(t);
     });
@@ -125,7 +152,7 @@ export class SaveService {
     return coll;
   }
 
-  public async getGeneric(type: ESaveObjType): Promise<any[]> {
+  public async getGenerics(type: ESaveObjType): Promise<any[]> {
     const res = [];
     for (const obj of this._index.objects) {
       if (obj.type === type && !obj.deleted) {
@@ -182,6 +209,10 @@ export class SaveService {
     this._index.objects.push(insertObj);
     await this._storage.setByKey(key, object);
     await this._updateIndex();
+
+    //async call
+    this.uploadUnsavedContents();
+
     return key;
   }
 
@@ -190,17 +221,17 @@ export class SaveService {
   }
 
   private async _recoverIndex() {
-    const ret = await this._storage.getByKey(this._indexKey);    
+    const ret = await this._storage.getByKey(this._indexKey);
     if (ret) {
       this._index = ret;
-    }    
+    }
   }
 
   private async _updateIndex() {
     await this._storage.setByKey(
       this._indexKey,
       this._index
-    );    
+    );
   }
 
   private _initTrack(track: ITrack) {

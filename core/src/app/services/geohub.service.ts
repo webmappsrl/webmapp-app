@@ -4,11 +4,14 @@ import { map } from 'rxjs/operators';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
+import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
 import { ILocation } from '../types/location';
 import { SearchStringResult } from '../types/map';
 import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed, WhereTaxonomy } from '../types/model';
+import { WaypointSave } from '../types/waypoint';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
+import { ConfigService } from './config.service';
 
 const FAVOURITE_PAGESIZE = 3;
 
@@ -19,7 +22,8 @@ export class GeohubService {
 
   constructor(
     private _communicationService: CommunicationService,
-    private _storageService: StorageService
+    private _storageService: StorageService,
+    private configService: ConfigService
   ) { }
 
   /**
@@ -119,6 +123,53 @@ export class GeohubService {
       .toPromise();
     return res;
   }
+
+
+  async saveWaypoint(waypoint: WaypointSave) {
+    const data = {
+      type: 'Feature',
+      geometry: 
+      {
+      type: EGeojsonGeometryTypes.POINT,
+      coordinates:[waypoint.position.latitude, waypoint.position.longitude]},
+      properties: {
+        name: waypoint.title,
+        description: waypoint.description,
+        app_id: this.configService.appId,
+        // gallery:,
+      }
+    }
+    const res = await this._communicationService.post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/poi/store`, data).toPromise();
+    return res;
+  }
+
+  // api/ugc/poi/store api-auth 
+  // geojson
+  // prop.name string
+  // prop.description string
+  // prop.app_id da config
+  // prop.gallery (array di id già aggiunti con add media)
+  // geometry=point
+
+
+
+  // api/ugc/track/store api-auth 
+  // geojson
+  // prop.name string
+  // prop.description string
+  // prop.app_id da config
+  // prop.gallery (array di id già aggiunti con add media)
+  // geometry=point
+
+
+  // api/ugc/media/store api-auth 
+  // geojson
+  // properties.image
+  // properties.app_id da config
+  // propoerties.description (name?)
+  // geometry opzionale (=null)
+
+
 
   /**
    * Get an array with the closest ec tracks to the specified location
