@@ -115,7 +115,7 @@ export class GeohubService {
    */
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`,).pipe(map(x => x.features))
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`).pipe(map(x => x.features))
       .toPromise();
     return res;
   }
