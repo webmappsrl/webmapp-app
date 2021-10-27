@@ -12,6 +12,8 @@ import { ILocation } from './types/location';
 import { DEF_MAP_LOCATION_ZOOM } from './constants/map';
 import { Router } from '@angular/router';
 import { StatusService } from './services/status.service';
+import { SaveService } from './services/save.service';
+import { GEOHUB_SAVING_TRY_INTERVAL } from './constants/geohub';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -33,12 +35,14 @@ export class AppComponent {
     private _geolocationService: GeolocationService,
     private _navController: NavController,
     private router: Router,
-    private status: StatusService
+    private status: StatusService,
+    private saveService: SaveService
   ) {
     this._languagesService.initialize();
 
     this._platform.ready().then(
       () => {
+        this.saveGeneratedContentsNowAndInterval();
         Plugins.SplashScreen.hide();
       },
       (err) => {
@@ -64,7 +68,7 @@ export class AppComponent {
     })
   }
 
-  closePhoto(){
+  closePhoto() {
     this.showingPhotos = false;
   }
 
@@ -108,5 +112,10 @@ export class AppComponent {
       }
     }
     return 'low';
+  }
+
+  saveGeneratedContentsNowAndInterval() {
+    setInterval(()=>{this.saveService.uploadUnsavedContents()}, GEOHUB_SAVING_TRY_INTERVAL)
+    setTimeout(()=>{this.saveService.uploadUnsavedContents()},2000);
   }
 }

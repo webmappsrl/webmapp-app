@@ -1,3 +1,4 @@
+import { StringMap } from '@angular/compiler/src/compiler_facade_interface';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { IPhotoItem } from '../services/photo.service';
 
@@ -13,4 +14,5 @@ export interface ITrack extends IRegisterItem {
   title: string;
   description?: string;
   activity: string;
+  id?: string;
 }

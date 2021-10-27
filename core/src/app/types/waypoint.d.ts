@@ -9,4 +9,5 @@ export interface WaypointSave extends IRegisterItem {
   waypointtype: string;
   city: string;
   date: Date;
+  id?: string;
 }

@@ -7,11 +7,13 @@ import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
 import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
 import { ILocation } from '../types/location';
 import { SearchStringResult } from '../types/map';
-import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed, WhereTaxonomy } from '../types/model';
+import { IGeojsonClusterApiResponse, IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed, ILineString, IPoint, WhereTaxonomy } from '../types/model';
+import { ITrack } from '../types/track';
 import { WaypointSave } from '../types/waypoint';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
 import { ConfigService } from './config.service';
+import { IPhotoItem } from './photo.service';
 
 const FAVOURITE_PAGESIZE = 3;
 
@@ -128,10 +130,11 @@ export class GeohubService {
   async saveWaypoint(waypoint: WaypointSave) {
     const data = {
       type: 'Feature',
-      geometry: 
+      geometry:
       {
-      type: EGeojsonGeometryTypes.POINT,
-      coordinates:[waypoint.position.latitude, waypoint.position.longitude]},
+        type: EGeojsonGeometryTypes.POINT,
+        coordinates: [waypoint.position.latitude, waypoint.position.longitude]
+      },
       properties: {
         name: waypoint.title,
         description: waypoint.description,
@@ -143,13 +146,44 @@ export class GeohubService {
     return res;
   }
 
-  // api/ugc/poi/store api-auth 
-  // geojson
-  // prop.name string
-  // prop.description string
-  // prop.app_id da config
-  // prop.gallery (array di id già aggiunti con add media)
-  // geometry=point
+
+  async savePhoto(photo: IPhotoItem) {
+    const geojson = {
+      type: 'Feature',
+      geometry: null,
+      properties: {
+        description: photo.description,
+        app_id: this.configService.appId,
+      }
+    }
+
+    const data = new FormData();
+    data.append('image', photo.rawData);
+    data.append('geojson', JSON.stringify(geojson));
+
+
+    const res = await this._communicationService.post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/media/store`, data).toPromise();
+    return res;
+  }
+
+
+  async saveTrack(track: ITrack) {
+    const geometry = JSON.parse(JSON.stringify(track.geojson.geometry));
+    geometry.coordinates = geometry.coordinates.map((x: any) => { return [x[0], x[1]] })
+    const data = {
+      type: 'Feature',
+      geometry: geometry,
+      properties: {
+        name: track.title,
+        description: track.description,
+        app_id: this.configService.appId,
+        gallery: (track.photos) ? track.photos.map(x => x.id) : [],
+      }
+    }
+    const res = await this._communicationService.post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/track/store`, data).toPromise();
+    return res;
+  }
+
 
 
 
@@ -161,13 +195,6 @@ export class GeohubService {
   // prop.gallery (array di id già aggiunti con add media)
   // geometry=point
 
-
-  // api/ugc/media/store api-auth 
-  // geojson
-  // properties.image
-  // properties.app_id da config
-  // propoerties.description (name?)
-  // geometry opzionale (=null)
 
 
 
