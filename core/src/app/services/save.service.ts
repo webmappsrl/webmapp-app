@@ -9,7 +9,6 @@ import { StorageService } from './base/storage.service';
 import { GeohubService } from './geohub.service';
 import { IPhotoItem, PhotoService } from './photo.service';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -94,12 +93,21 @@ export class SaveService {
   public async uploadUnsavedContents() {
     //TODO what for edited or deleted contents?
 
-    let contents = await this.getUnsavedObjects()
-    contents = contents.sort((a, b) => a.type == (ESaveObjType.PHOTO || a.type == ESaveObjType.PHOTOTRACK) ? 1 : -1);
-    console.log("------- ~ SaveService ~ uploadUnsavedContents ~ contents", contents);
+    let contents = await this.getUnsavedObjects();
+    contents = contents.sort((a, b) =>
+      a.type == (ESaveObjType.PHOTO || a.type == ESaveObjType.PHOTOTRACK)
+        ? 1
+        : -1
+    );
+    console.log(
+      '------- ~ SaveService ~ uploadUnsavedContents ~ contents',
+      contents
+    );
 
     for (let i = 0; i < contents.length; i++) {
-      const indexObj = this._index.objects.find((x) => x.key === contents[i].key);
+      const indexObj = this._index.objects.find(
+        (x) => x.key === contents[i].key
+      );
       switch (contents[i].type) {
         case ESaveObjType.PHOTO:
         case ESaveObjType.PHOTOTRACK:
@@ -107,36 +115,35 @@ export class SaveService {
           const resP = await this.geohub.savePhoto(photo);
           if (resP && !resP.error && resP.id) {
             indexObj.saved = true;
-            photo.id = resP.id
-            this._updateGeneric(contents[i].key,photo)
+            photo.id = resP.id;
+            this._updateGeneric(contents[i].key, photo);
           }
           break;
 
-
         case ESaveObjType.WAYPOINT:
-          const waypoint: WaypointSave = await this._getGenericById(contents[i].key);
+          const waypoint: WaypointSave = await this._getGenericById(
+            contents[i].key
+          );
           const resW = await this.geohub.saveWaypoint(waypoint);
           if (resW && !resW.error && resW.id) {
             indexObj.saved = true;
-            waypoint.id = resW.id
-            this._updateGeneric(contents[i].key,waypoint)
+            waypoint.id = resW.id;
+            this._updateGeneric(contents[i].key, waypoint);
           }
           break;
 
-          
         case ESaveObjType.TRACK:
           const track: ITrack = await this.getTrack(contents[i].key);
           const resT = await this.geohub.saveTrack(track);
           if (resT && !resT.error && resT.id) {
             indexObj.saved = true;
-            track.id = resT.id
-            this._updateGeneric(contents[i].key,track)
+            track.id = resT.id;
+            this._updateGeneric(contents[i].key, track);
           }
           break;
         //TODO save each type of content
       }
       await this._updateIndex();
-
     }
   }
 
@@ -144,8 +151,11 @@ export class SaveService {
    * Get all the object save on storage but not on the cloud
    */
   public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
-    let ret = this._index.objects.filter(X => X.saved === false);
-    console.log("------- ~ SaveService ~ getUnsavedObjects ~ his._index.objects", this._index.objects);
+    let ret = this._index.objects.filter((X) => X.saved === false);
+    console.log(
+      '------- ~ SaveService ~ getUnsavedObjects ~ his._index.objects',
+      this._index.objects
+    );
     return ret;
   }
 
@@ -256,10 +266,7 @@ export class SaveService {
   }
 
   private async _updateIndex() {
-    await this._storage.setByKey(
-      this._indexKey,
-      this._index
-    );
+    await this._storage.setByKey(this._indexKey, this._index);
   }
 
   private _initTrack(track: ITrack) {

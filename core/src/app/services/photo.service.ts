@@ -130,11 +130,11 @@ export class PhotoService {
       .toPromise();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.readAsDataURL(filegot);
+      reader.readAsBinaryString(filegot);
       reader.onloadend = () => {
-        const b64 = reader.result;
-        // console.log('Sync b64', b64);
-        resolve(b64);
+        const binaryValue = reader.result;
+        // console.log('Sync binary', binaryValue);
+        resolve(binaryValue);
       };
       reader.onerror = reject;
     });

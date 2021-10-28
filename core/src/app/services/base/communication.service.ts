@@ -13,10 +13,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CommunicationService {
-
   private _token: string;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) {}
 
   setToken(token: string) {
     this._token = token;
@@ -37,11 +36,13 @@ export class CommunicationService {
 
   private _setAuthToken(options) {
     if (this._token) {
-      const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this._token}`
-      })
-      options = Object.assign({ headers: headers }, options);
+      if (!options) options = {};
+      if (!options.headers) options.headers = new HttpHeaders();
+
+      options.headers = options.headers.set(
+        'Authorization',
+        `Bearer ${this._token}`
+      );
     }
     return options;
   }
