@@ -126,30 +126,57 @@ export class PhotoService {
   }
 
   public async getPhotoData(photoUrl: string): Promise<any> {
-    const filegot = await this._http
+    const blob = await this._http
       .get(photoUrl, { responseType: 'blob' })
       .toPromise();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.readAsBinaryString(filegot);
+      reader.readAsArrayBuffer(blob);
       reader.onloadend = () => {
-        const binaryValue = reader.result;
-        // console.log('Sync binary', binaryValue);
-        resolve(binaryValue);
+        resolve(
+          JSON.stringify({
+            arrayBuffer: Array.from(new Uint8Array(<ArrayBuffer>reader.result)),
+            blobType: blob.type,
+          })
+        );
       };
       reader.onerror = reject;
     });
   }
 
-  public async getPhotoFile(photoUrl: string): Promise<Blob> {
-    const filegot = await this._http
-      .get(photoUrl, { responseType: 'blob' })
-      .toPromise();
-    return filegot;
+  /**
+   * Return the photo blob to send
+   *
+   * @param {IPhotoItem} photo
+   *
+   * @returns {Blob} the blob
+   */
+  public async getPhotoFile(photo: IPhotoItem): Promise<Blob> {
+    let blob: Blob, arrayBuffer: ArrayBuffer, blobType: string;
+
+    if (photo.rawData) {
+      let rawData = JSON.parse(photo.rawData);
+      if (rawData.arrayBuffer)
+        arrayBuffer = new Uint8Array(rawData.arrayBuffer).buffer;
+      if (rawData.blobType) blobType = rawData.blobType;
+    }
+
+    if (!!arrayBuffer) {
+      blob = new Blob([arrayBuffer]);
+      blob = blob.slice(0, blob.size, blobType);
+    } else {
+      blob = await this._http
+        .get(photo.photoURL, { responseType: 'blob' })
+        .toPromise();
+    }
+    return blob;
   }
 
   public async setPhotoData(photo: IPhotoItem) {
-    photo.image = await this.getPhotoFile(photo.photoURL);
-    photo.rawData = await this.getPhotoData(photo.photoURL);
+    if (!photo.rawData) photo.rawData = JSON.stringify({});
+    let rawData = JSON.parse(photo.rawData);
+    if (!rawData?.arrayBuffer)
+      photo.rawData = await this.getPhotoData(photo.photoURL);
+    photo.image = await this.getPhotoFile(photo);
   }
 }
