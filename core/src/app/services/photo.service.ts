@@ -16,6 +16,7 @@ export interface IPhotoItem extends IRegisterItem {
   data: string;
   description?: string;
   rawData?: string;
+  image?: Blob;
 }
 
 @Injectable({
@@ -140,7 +141,15 @@ export class PhotoService {
     });
   }
 
+  public async getPhotoFile(photoUrl: string): Promise<Blob> {
+    const filegot = await this._http
+      .get(photoUrl, { responseType: 'blob' })
+      .toPromise();
+    return filegot;
+  }
+
   public async setPhotoData(photo: IPhotoItem) {
+    photo.image = await this.getPhotoFile(photo.photoURL);
     photo.rawData = await this.getPhotoData(photo.photoURL);
   }
 }

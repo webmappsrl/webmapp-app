@@ -182,7 +182,8 @@ export class GeohubService {
     };
 
     const data = new FormData();
-    // data.append('image', photo.rawData);
+
+    if (photo.image) data.append('image', photo.image, 'image.jpg');
     data.append('geojson', JSON.stringify(geojson));
 
     // The content type multipart/form-data is not set because there could be problems

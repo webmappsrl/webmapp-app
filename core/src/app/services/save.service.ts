@@ -112,6 +112,7 @@ export class SaveService {
         case ESaveObjType.PHOTO:
         case ESaveObjType.PHOTOTRACK:
           const photo: IPhotoItem = await this._getGenericById(contents[i].key);
+          await this._photoService.setPhotoData(photo);
           const resP = await this.geohub.savePhoto(photo);
           if (resP && !resP.error && resP.id) {
             indexObj.saved = true;
