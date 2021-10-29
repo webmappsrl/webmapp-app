@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { Plugins } from '@capacitor/core';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { NavController, Platform } from '@ionic/angular';
 import { LanguagesService } from './services/languages.service';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './services/auth.service';
-import { StorageService } from './services/base/storage.service';
 import { DownloadService } from './services/download.service';
 import { GeolocationService } from './services/geolocation.service';
 import { ILocation } from './types/location';
@@ -21,7 +20,6 @@ import { GEOHUB_SAVING_TRY_INTERVAL } from './constants/geohub';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-
   public showingPhotos = false;
   public image_gallery: any[];
   public photoIndex: number = 0;
@@ -43,29 +41,30 @@ export class AppComponent {
     this._platform.ready().then(
       () => {
         this.saveGeneratedContentsNowAndInterval();
-        Plugins.SplashScreen.hide();
+        SplashScreen.hide();
       },
       (err) => {
-        Plugins.SplashScreen.hide();
+        SplashScreen.hide();
       }
     );
 
     this._downloadService.init();
 
-    this._googleAnalytics.startTrackerWithId(environment.analyticsId)
+    this._googleAnalytics
+      .startTrackerWithId(environment.analyticsId)
       .then(() => {
         console.log('Google analytics is ready now');
         this._googleAnalytics.trackView('test');
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => console.log('Error starting GoogleAnalytics', e));
+      .catch((e) => console.log('Error starting GoogleAnalytics', e));
 
-    this.status.showPhotos.subscribe(x => {
+    this.status.showPhotos.subscribe((x) => {
       this.showingPhotos = x.showingPhotos;
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
-    })
+    });
   }
 
   closePhoto() {
@@ -115,7 +114,11 @@ export class AppComponent {
   }
 
   saveGeneratedContentsNowAndInterval() {
-    setInterval(()=>{this.saveService.uploadUnsavedContents()}, GEOHUB_SAVING_TRY_INTERVAL)
-    setTimeout(()=>{this.saveService.uploadUnsavedContents()},2000);
+    setInterval(() => {
+      this.saveService.uploadUnsavedContents();
+    }, GEOHUB_SAVING_TRY_INTERVAL);
+    setTimeout(() => {
+      this.saveService.uploadUnsavedContents();
+    }, 2000);
   }
 }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Plugins } from '@capacitor/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
 import { ISaveIndexObj } from '../types/save';
 import { ESaveObjType } from '../types/save.enum';

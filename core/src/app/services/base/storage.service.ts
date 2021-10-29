@@ -25,12 +25,7 @@ import {
 } from 'src/app/types/model';
 import { Md5 } from 'ts-md5/dist/md5';
 
-import {
-  Plugins,
-  FilesystemDirectory,
-  FilesystemEncoding,
-} from '@capacitor/core';
-const { Filesystem } = Plugins;
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 
 @Injectable({
   providedIn: 'root',
@@ -342,8 +337,8 @@ export class StorageService {
       const result = await Filesystem.writeFile({
         path: path,
         data: data,
-        directory: FilesystemDirectory.Documents,
-        encoding: FilesystemEncoding.UTF8,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
       });
     } catch (e) {
       console.error('Unable to write file', e);
@@ -353,8 +348,8 @@ export class StorageService {
   private async _fileRead(path): Promise<string> {
     let contents = await Filesystem.readFile({
       path: path,
-      directory: FilesystemDirectory.Documents,
-      encoding: FilesystemEncoding.UTF8,
+      directory: Directory.Documents,
+      encoding: Encoding.UTF8,
     });
     return contents.data;
   }
@@ -363,15 +358,15 @@ export class StorageService {
     await Filesystem.appendFile({
       path: path,
       data: data,
-      directory: FilesystemDirectory.Documents,
-      encoding: FilesystemEncoding.UTF8,
+      directory: Directory.Documents,
+      encoding: Encoding.UTF8,
     });
   }
 
   private async _fileDelete(path) {
     await Filesystem.deleteFile({
       path: path,
-      directory: FilesystemDirectory.Documents,
+      directory: Directory.Documents,
     });
   }
 }

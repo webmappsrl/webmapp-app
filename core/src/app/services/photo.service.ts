@@ -4,9 +4,13 @@ import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
-import { CameraDirection, Plugins } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
-import { Camera, CameraResultType } from '@capacitor/core';
+import {
+  Camera,
+  CameraResultType,
+  CameraDirection,
+  CameraSource,
+} from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
 import { IRegisterItem } from '../types/track';
 
@@ -106,7 +110,7 @@ export class PhotoService {
       // height: 100,//	number	The height of the saved image
       preserveAspectRatio: true, //	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
       // correctOrientation: true,	//boolean	Whether to automatically rotate the image “up” to correct for orientation in portrait mode Default: true
-      // source: CameraSource.Camera,	//CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
+      source: CameraSource.Camera, //CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
       direction: CameraDirection.Rear, //CameraDirection	iOS and Web only: The camera direction.Default: CameraDirection.Rear
       // presentationStyle: 'fullscreen',	//"fullscreen" | "popover"	iOS only: The presentation style of the Camera.Defaults to fullscreen.
       webUseInput: this._deviceService.isBrowser ? null : true, //boolean	Web only: Whether to use the PWA Element experience or file input.The default is to use PWA Elements if installed and fall back to file input.To always use file input, set this to true.Learn more about PWA Elements: https://capacitorjs.com/docs/pwa-elements
