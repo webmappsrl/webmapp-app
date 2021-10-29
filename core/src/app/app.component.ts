@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
-import { Plugins } from '@capacitor/core';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { NavController, Platform } from '@ionic/angular';
 import { LanguagesService } from './services/languages.service';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { environment } from 'src/environments/environment';
 import { AuthService } from './services/auth.service';
-import { StorageService } from './services/base/storage.service';
 import { DownloadService } from './services/download.service';
 import { GeolocationService } from './services/geolocation.service';
 import { ILocation } from './types/location';
 import { DEF_MAP_LOCATION_ZOOM } from './constants/map';
 import { Router } from '@angular/router';
 import { StatusService } from './services/status.service';
+import { SaveService } from './services/save.service';
+import { GEOHUB_SAVING_TRY_INTERVAL } from './constants/geohub';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -19,7 +20,6 @@ import { StatusService } from './services/status.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-
   public showingPhotos = false;
   public image_gallery: any[];
   public photoIndex: number = 0;
@@ -33,38 +33,41 @@ export class AppComponent {
     private _geolocationService: GeolocationService,
     private _navController: NavController,
     private router: Router,
-    private status: StatusService
+    private status: StatusService,
+    private saveService: SaveService
   ) {
     this._languagesService.initialize();
 
     this._platform.ready().then(
       () => {
-        Plugins.SplashScreen.hide();
+        this.saveGeneratedContentsNowAndInterval();
+        SplashScreen.hide();
       },
       (err) => {
-        Plugins.SplashScreen.hide();
+        SplashScreen.hide();
       }
     );
 
     this._downloadService.init();
 
-    this._googleAnalytics.startTrackerWithId(environment.analyticsId)
+    this._googleAnalytics
+      .startTrackerWithId(environment.analyticsId)
       .then(() => {
         console.log('Google analytics is ready now');
         this._googleAnalytics.trackView('test');
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch(e => console.log('Error starting GoogleAnalytics', e));
+      .catch((e) => console.log('Error starting GoogleAnalytics', e));
 
-    this.status.showPhotos.subscribe(x => {
+    this.status.showPhotos.subscribe((x) => {
       this.showingPhotos = x.showingPhotos;
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
-    })
+    });
   }
 
-  closePhoto(){
+  closePhoto() {
     this.showingPhotos = false;
   }
 
@@ -108,5 +111,14 @@ export class AppComponent {
       }
     }
     return 'low';
+  }
+
+  saveGeneratedContentsNowAndInterval() {
+    setInterval(() => {
+      this.saveService.uploadUnsavedContents();
+    }, GEOHUB_SAVING_TRY_INTERVAL);
+    setTimeout(() => {
+      this.saveService.uploadUnsavedContents();
+    }, 2000);
   }
 }
