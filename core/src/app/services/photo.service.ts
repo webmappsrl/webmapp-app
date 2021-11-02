@@ -178,9 +178,11 @@ export class PhotoService {
 
   public async setPhotoData(photo: IPhotoItem) {
     if (!photo.rawData) photo.rawData = JSON.stringify({});
-    let rawData = JSON.parse(photo.rawData);
-    if (!rawData?.arrayBuffer)
-      photo.rawData = await this.getPhotoData(photo.photoURL);
-    photo.image = await this.getPhotoFile(photo);
+    try {
+      let rawData = JSON.parse(photo.rawData);
+      if (!rawData?.arrayBuffer)
+        photo.rawData = await this.getPhotoData(photo.photoURL);
+      photo.image = await this.getPhotoFile(photo);
+    } catch (e) {}
   }
 }

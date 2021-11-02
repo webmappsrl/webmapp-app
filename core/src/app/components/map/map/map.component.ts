@@ -1,7 +1,6 @@
 import {
   AfterViewInit,
   Component,
-  ComponentFactoryResolver,
   ElementRef,
   EventEmitter,
   Input,
@@ -156,6 +155,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  @Input('rightPadding') set rightPadding(value: number) {
+    if (this._rightPadding != value) {
+      this._rightPadding = value;
+      if (this._track.registeredTrack && this.centerToTrack)
+        this._centerMapToTrack();
+    }
+  }
+
+  @Input('leftPadding') set leftPadding(value: number) {
+    if (this._leftPadding != value) {
+      this._leftPadding = value;
+      if (this._track.registeredTrack && this.centerToTrack)
+        this._centerMapToTrack();
+    }
+  }
+
   @Input('track') set track(value: ITrack) {
     if (value) {
       setTimeout(() => {
@@ -249,12 +264,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _height: number;
   private _bottomPadding: number = 0;
   private _topPadding: number = 0;
+  private _rightPadding: number = 0;
+  private _leftPadding: number = 0;
 
   private _view: View;
   private _map: Map;
   public static: boolean;
 
-  private _lastlusterMarkerTransparency;
+  private _lastClusterMarkerTransparency;
 
   // Location Icon
   private _locationIconArrow: Icon;
@@ -715,9 +732,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       const padding = [
         verticalPadding + this._topPadding,
-        Math.min(Math.max(this._map.getSize()[1] * 0.1, 10), 20),
+        this._rightPadding > 0
+          ? this._rightPadding
+          : Math.min(Math.max(this._map.getSize()[0] * 0.1, 10), 20),
         verticalPadding + this._bottomPadding,
-        Math.min(Math.max(this._map.getSize()[1] * 0.1, 10), 20),
+        this._rightPadding > 0
+          ? this._rightPadding
+          : Math.min(Math.max(this._map.getSize()[0] * 0.1, 10), 20),
       ];
 
       this._view.fit(this._track.layer.getSource().getExtent(), {
@@ -1084,7 +1105,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this._clusterLayer,
       CLUSTERLAYERZINDEX
     );
-    const reset = this._lastlusterMarkerTransparency != transparent;
+    const reset = this._lastClusterMarkerTransparency != transparent;
 
     if (values) {
       for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
@@ -1119,7 +1140,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this._lastlusterMarkerTransparency = transparent;
+    this._lastClusterMarkerTransparency = transparent;
   }
 
   private async _createPoiCanvasIcon(
