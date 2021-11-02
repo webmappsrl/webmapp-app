@@ -38,7 +38,7 @@ import {
   DEF_MAP_MAX_ZOOM,
   DEF_MAP_MIN_ZOOM,
   DEF_MAP_MAX_CENTER_ZOOM,
-  DEF_MAP_ROTATION_DURATION
+  DEF_MAP_ROTATION_DURATION,
 } from '../../../constants/map';
 
 import { GeolocationService } from 'src/app/services/geolocation.service';
@@ -417,9 +417,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if (!this.static) {
       this._map.on('postrender', () => {
-        const degree = this._map.getView().getRotation() / (2 * Math.PI) * 360;
-        if (degree != this.mapDegrees) { this.rotate.emit(degree); }
-        this.mapDegrees = degree
+        const degree =
+          (this._map.getView().getRotation() / (2 * Math.PI)) * 360;
+        if (degree != this.mapDegrees) {
+          this.rotate.emit(degree);
+        }
+        this.mapDegrees = degree;
       });
       this._map.on('moveend', () => {
         this.move.emit({
@@ -475,7 +478,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._destroyer.next(true);
   }
 
-
   // isRecording() {
   //   return this.geolocationService.recording;
   // }
@@ -509,19 +511,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) { }
+    } catch (e) {}
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
     //}
   }
 
-
   public orientNorth() {
-
     this._view.animate({
       duration: DEF_MAP_ROTATION_DURATION,
-      rotation: 0
+      rotation: 0,
     });
   }
 
@@ -711,12 +711,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _centerMapToTrack() {
     if (this._track.layer) {
       const verticalPadding =
-        !this._height || this._height > 500 ? 120 : this._height * 0.25;
+        !this._height || this._height > 500 ? 120 : this._height * 0.1;
+
       const padding = [
         verticalPadding + this._topPadding,
-        70,
+        Math.min(Math.max(this._map.getSize()[1] * 0.1, 10), 20),
         verticalPadding + this._bottomPadding,
-        20,
+        Math.min(Math.max(this._map.getSize()[1] * 0.1, 10), 20),
       ];
 
       this._view.fit(this._track.layer.getSource().getExtent(), {
@@ -736,17 +737,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxZoom: DEF_MAP_MAX_ZOOM,
       minZoom: DEF_MAP_MIN_ZOOM,
       tileLoadFunction: (tile: any, url: string) => {
-
         const coords = this.tileservice.getCoordsFromUr(url);
 
-        this.tileservice.getTile(coords, this.useCache).
-          then((tileString: string) => {
+        this.tileservice
+          .getTile(coords, this.useCache)
+          .then((tileString: string) => {
             tile.getImage().src = tileString;
           })
           .catch(() => {
             tile.getImage().src = url;
           });
-
       },
       tileUrlFunction: (c) => {
         return this.tileservice.getTileFromWeb(c);
@@ -784,18 +784,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-            this._locationAnimationState.goalLocation.longitude -
-            this._locationAnimationState.startLocation.longitude,
+              this._locationAnimationState.goalLocation.longitude -
+              this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : this._locationAnimationState.goalLocation.accuracy
-                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-                : 0;
+              : this._locationAnimationState.goalLocation.accuracy
+              ? this._locationAnimationState.goalLocation.accuracy -
+                this._locationAnimationState.startLocation.accuracy
+              : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -814,27 +814,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-              delta * deltaLongitude,
+                delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-              delta * deltaLatitude,
+                delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+                delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-              'number'
+            'number'
               ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
+                this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -845,7 +845,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-            delta * deltaAccuracy
+              delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -901,9 +901,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location?.longitude,
-      location?.latitude,
-    ]),
+        location?.longitude,
+        location?.latitude,
+      ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -936,7 +936,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
+    } catch (e) {}
   }
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
@@ -1215,9 +1215,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private async _createPoiCavasImage(
     poi: IGeojsonPoi
   ): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await this.markerService.createPoiMarkerHtmlForCanvas(
-      poi
-    );
+    const htmlTextCanvas =
+      await this.markerService.createPoiMarkerHtmlForCanvas(poi);
     return this._createCanvasForHtml(
       htmlTextCanvas,
       this.markerService.poiMarkerSize
@@ -1427,10 +1426,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         if (track) {
           let trackGeometry: LineString = new LineString(
-            (<ILineString>track.geometry.coordinates).map((value) =>
-              this._mapService.coordsFromLonLat(value)
-            )
-          ),
+              (<ILineString>track.geometry.coordinates).map((value) =>
+                this._mapService.coordsFromLonLat(value)
+              )
+            ),
             trackColor: string = track?.properties?.color;
 
           if (this._slopeChartTrack) {
