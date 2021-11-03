@@ -1,19 +1,32 @@
 <ion-header class="webmapp-pagewaypoint-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark"></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        defaultHref="map"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.waypoint.title' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="false">
-  <webmapp-map class="webmapp-pagewaypoint-map-container" #map [btnposition]="'middle'" [showLayer]="true"
-    [hideRegister]="true" [position]="position"></webmapp-map>
+  <webmapp-map
+    class="webmapp-pagewaypoint-map-container"
+    #map
+    [btnposition]="'middle'"
+    [showLayer]="true"
+    [hideRegister]="true"
+    [position]="location"
+  ></webmapp-map>
 
   <ion-card class="webmapp-pagewaypoint-infopanel">
     <div class="webmapp-pagewaypoint-infopanel-top">
-      <div class="webmapp-pagewaypoint-infopanel-top-title">{{'pages.waypoint.here' | translate}}</div>
+      <div class="webmapp-pagewaypoint-infopanel-top-title">
+        {{'pages.waypoint.here' | translate}}
+      </div>
     </div>
     <div class="webmapp-pagewaypoint-infopanel-bottom">
       <div class="webmapp-pagewaypoint-infopanel-bottom-title">
@@ -23,14 +36,15 @@
         {{position2}}
       </div>
       <div class="webmapp-pagewaypoint-infopanel-bottom-data">
-        {{location}}
+        {{locationString}}
       </div>
     </div>
-
   </ion-card>
 
-  <ion-button class="webmapp-pagewaypoint-savebtn" [disabled]="!location" (click)="save()">{{'pages.waypoint.save' |
-    translate}}</ion-button>
-
-
+  <ion-button
+    class="webmapp-pagewaypoint-savebtn"
+    [disabled]="!locationString"
+    (click)="save()"
+    >{{'pages.waypoint.save' | translate}}</ion-button
+  >
 </ion-content>
