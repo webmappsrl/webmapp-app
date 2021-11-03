@@ -14,8 +14,8 @@ import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint
 export class WaypointPage implements OnInit, OnDestroy {
   public position1: string = 'nome città';
   public position2: string = 'indirizzo';
-  public location: string;
-  private _location: ILocation;
+  public locationString: string;
+  public location: ILocation;
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
@@ -39,15 +39,15 @@ export class WaypointPage implements OnInit, OnDestroy {
   }
 
   onChangeLocation(location: ILocation) {
-    this.location = `${location.latitude}, ${location.longitude}`;
-    this._location = location;
+    this.locationString = `${location.latitude}, ${location.longitude}`;
+    this.location = location;
   }
 
   async save() {
     const modaSuccess = await this._modalController.create({
       component: ModalWaypointSaveComponent,
       componentProps: {
-        position: this._location,
+        position: this.location,
       },
     });
     await modaSuccess.present();

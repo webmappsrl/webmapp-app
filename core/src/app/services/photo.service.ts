@@ -13,6 +13,7 @@ import {
 } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
 import { IRegisterItem } from '../types/track';
+import { Filesystem, Directory, GetUriResult } from '@capacitor/filesystem';
 
 export interface IPhotoItem extends IRegisterItem {
   id: string;
@@ -22,6 +23,8 @@ export interface IPhotoItem extends IRegisterItem {
   rawData?: string;
   image?: Blob;
 }
+
+export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
 
 @Injectable({
   providedIn: 'root',
@@ -131,7 +134,7 @@ export class PhotoService {
 
   public async getPhotoData(photoUrl: string): Promise<any> {
     const blob = await this._http
-      .get(photoUrl, { responseType: 'blob' })
+      .get(Capacitor.convertFileSrc(photoUrl), { responseType: 'blob' })
       .toPromise();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -176,11 +179,66 @@ export class PhotoService {
     return blob;
   }
 
+  /**
+   * Copy the photo to a local stable directory
+   *
+   * @param photo the photo to save
+   *
+   * @returns {Promise<string>} with the new photo location
+   */
+  public async savePhotoToDataDirectory(photo: IPhotoItem): Promise<string> {
+    let split: Array<string> = photo.photoURL.split('/'),
+      filename: string = split.pop(),
+      directoryExists: boolean = false;
+    // TODO: Understand how to copy the file from a http url
+    if (photo.photoURL.substring(0, 4) !== 'file' && photo.photoURL[0] !== '/')
+      return photo.photoURL;
+
+    if (this._deviceService.isIos && photo.photoURL[0] === '/')
+      photo.photoURL = 'file://' + photo.photoURL;
+
+    try {
+      await Filesystem.readdir({
+        path: UGC_MEDIA_DIRECTORY,
+        directory: Directory.Data,
+      });
+      directoryExists = true;
+    } catch (e) {
+      directoryExists = false;
+    }
+
+    if (!directoryExists) {
+      await Filesystem.mkdir({
+        path: UGC_MEDIA_DIRECTORY,
+        directory: Directory.Data,
+        recursive: true,
+      });
+    }
+
+    await Filesystem.copy({
+      from: photo.photoURL,
+      to: UGC_MEDIA_DIRECTORY + '/' + filename,
+      toDirectory: Directory.Data,
+    });
+
+    const uriResult: GetUriResult = await Filesystem.getUri({
+      path: UGC_MEDIA_DIRECTORY + '/' + filename,
+      directory: Directory.Data,
+    });
+
+    return Capacitor.convertFileSrc(uriResult.uri);
+  }
+
   public async setPhotoData(photo: IPhotoItem) {
+    if (photo.photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1)
+      photo.photoURL = await this.savePhotoToDataDirectory(photo);
+
     if (!photo.rawData) photo.rawData = JSON.stringify({});
-    let rawData = JSON.parse(photo.rawData);
-    if (!rawData?.arrayBuffer)
-      photo.rawData = await this.getPhotoData(photo.photoURL);
-    photo.image = await this.getPhotoFile(photo);
+    try {
+      let rawData = JSON.parse(photo.rawData);
+      if (!rawData?.arrayBuffer)
+        photo.rawData = await this.getPhotoData(photo.photoURL);
+      photo.image = await this.getPhotoFile(photo);
+    } catch (e) {}
   }
 }

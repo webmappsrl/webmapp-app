@@ -151,7 +151,7 @@ export class GeohubService {
       type: 'Feature',
       geometry: {
         type: EGeojsonGeometryTypes.POINT,
-        coordinates: [waypoint.position.latitude, waypoint.position.longitude],
+        coordinates: [waypoint.position.longitude, waypoint.position.latitude],
       },
       properties: {
         name: waypoint.title,
