@@ -191,7 +191,11 @@ export class PhotoService {
       filename: string = split.pop(),
       directoryExists: boolean = false;
     // TODO: Understand how to copy the file from a http url
-    if (photo.photoURL.substring(0, 4) === 'http') return photo.photoURL;
+    if (photo.photoURL.substring(0, 4) !== 'file' && photo.photoURL[0] !== '/')
+      return photo.photoURL;
+
+    if (this._deviceService.isIos && photo.photoURL[0] === '/')
+      photo.photoURL = 'file://' + photo.photoURL;
 
     try {
       await Filesystem.readdir({
@@ -209,12 +213,6 @@ export class PhotoService {
         directory: Directory.Data,
         recursive: true,
       });
-    }
-
-    if (photo.photoURL.indexOf('storage') !== -1) {
-      const permissions = await Filesystem.requestPermissions();
-
-      if (permissions.publicStorage !== 'granted') throw 'Permission denied';
     }
 
     await Filesystem.copy({
