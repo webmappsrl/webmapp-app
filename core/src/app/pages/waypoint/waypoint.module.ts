@@ -10,6 +10,7 @@ import { WaypointPage } from './waypoint.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { MapModule } from 'src/app/components/map/map.module';
 import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint-save.component';
+import { ModalWaypointSelectphotosComponent } from './modal-waypoint-selectphotos/modal-waypoint-selectphotos.component';
 
 @NgModule({
   imports: [
@@ -20,6 +21,10 @@ import { ModalWaypointSaveComponent } from './modal-waypoint-save/modal-waypoint
     TranslateModule,
     MapModule,
   ],
-  declarations: [WaypointPage,ModalWaypointSaveComponent]
+  declarations: [
+    WaypointPage,
+    ModalWaypointSaveComponent,
+    ModalWaypointSelectphotosComponent,
+  ],
 })
 export class WaypointPageModule {}

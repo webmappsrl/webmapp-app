@@ -37,12 +37,26 @@ export class SaveService {
   }
 
   /**
+   * Save a photo into the storage
+   *
+   * @param photo the photo to be saved
+   */
+  public async savePhotos(photos: Array<IPhotoItem>) {
+    for (let photo of photos) {
+      await this._photoService.setPhotoData(photo);
+      await this._saveGeneric(photo, ESaveObjType.PHOTO, true);
+    }
+    this.uploadUnsavedContents();
+  }
+
+  /**
    * Save a waypoint into the storage
    *
    * @param waypoint the waypoint to be saved
    */
   public async saveWaypoint(waypoint: WaypointSave) {
-    await this._saveGeneric(waypoint, ESaveObjType.WAYPOINT);
+    const waypointCopy = Object.assign({}, waypoint);
+    await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
   }
 
   /**
@@ -51,14 +65,7 @@ export class SaveService {
    * @param track the track to be saved
    */
   public async saveTrack(track: ITrack) {
-    const photoKeys: string[] = [];
-    for (const photoTrack of track.photos) {
-      const photoKey = await this._savePhotoTrack(photoTrack);
-      photoKeys.push(photoKey);
-    }
     const trackCopy = Object.assign({}, track);
-    trackCopy.photoKeys = photoKeys;
-    trackCopy.photos = null;
     await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
   }
 
@@ -98,10 +105,6 @@ export class SaveService {
         ? 1
         : -1
     );
-    console.log(
-      '------- ~ SaveService ~ uploadUnsavedContents ~ contents',
-      contents
-    );
 
     for (let i = 0; i < contents.length; i++) {
       const indexObj = this._index.objects.find(
@@ -109,7 +112,6 @@ export class SaveService {
       );
       switch (contents[i].type) {
         case ESaveObjType.PHOTO:
-        case ESaveObjType.PHOTOTRACK:
           const photo: IPhotoItem = await this._getGenericById(contents[i].key);
           await this._photoService.setPhotoData(photo);
           const resP = await this.geohub.savePhoto(photo);
@@ -124,22 +126,76 @@ export class SaveService {
           const waypoint: WaypointSave = await this._getGenericById(
             contents[i].key
           );
-          const resW = await this.geohub.saveWaypoint(waypoint);
-          if (resW && !resW.error && resW.id) {
-            indexObj.saved = true;
-            waypoint.id = resW.id;
-            this._updateGeneric(contents[i].key, waypoint);
+
+          if (waypoint?.photos?.length) {
+            let i: number = 0;
+            while (i < waypoint.photos.length) {
+              const photo: IPhotoItem = waypoint.photos[i];
+              await this._photoService.setPhotoData(photo);
+              try {
+                const resP = await this.geohub.savePhoto(photo);
+                if (resP && !resP.error && resP.id) {
+                  if (!waypoint.photoKeys) waypoint.photoKeys = [];
+                  waypoint.photoKeys.push(resP.id);
+                  waypoint.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
+                } else {
+                  console.warn('A waypoint photo could not be uploaded');
+                  i++;
+                }
+              } catch (e) {
+                console.warn('A waypoint photo could not be uploaded');
+                i++;
+              }
+            }
           }
+
+          if (!waypoint?.photos?.length) {
+            const resW = await this.geohub.saveWaypoint(waypoint);
+            if (resW && !resW.error && resW.id) {
+              indexObj.saved = true;
+              waypoint.id = resW.id;
+              this._updateGeneric(contents[i].key, waypoint);
+            } else this._updateGeneric(contents[i].key, waypoint);
+          } else this._updateGeneric(contents[i].key, waypoint);
           break;
 
         case ESaveObjType.TRACK:
           const track: ITrack = await this.getTrack(contents[i].key);
-          const resT = await this.geohub.saveTrack(track);
-          if (resT && !resT.error && resT.id) {
-            indexObj.saved = true;
-            track.id = resT.id;
-            this._updateGeneric(contents[i].key, track);
+
+          if (track?.photos?.length) {
+            let i: number = 0;
+            while (i < track.photos.length) {
+              const photo: IPhotoItem = track.photos[i];
+              await this._photoService.setPhotoData(photo);
+              try {
+                const resP = await this.geohub.savePhoto(photo);
+                if (resP && !resP.error && resP.id) {
+                  if (!track.photoKeys) track.photoKeys = [];
+                  track.photoKeys.push(resP.id);
+                  track.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
+                } else {
+                  console.warn('A track photo could not be uploaded');
+                  i++;
+                }
+              } catch (e) {
+                console.warn('A track photo could not be uploaded');
+                i++;
+              }
+            }
           }
+
+          if (!track?.photos?.length) {
+            const resT = await this.geohub.saveTrack(track);
+            if (resT && !resT.error && resT.id) {
+              indexObj.saved = true;
+              track.id = resT.id;
+              this._updateGeneric(contents[i].key, track);
+            } else this._updateGeneric(contents[i].key, track);
+          } else this._updateGeneric(contents[i].key, track);
+          break;
+
+        case ESaveObjType.PHOTOTRACK:
+          console.warn('PHOTOTRACK elements should not exists');
           break;
         //TODO save each type of content
       }
@@ -152,10 +208,6 @@ export class SaveService {
    */
   public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
     let ret = this._index.objects.filter((X) => X.saved === false);
-    console.log(
-      '------- ~ SaveService ~ getUnsavedObjects ~ his._index.objects',
-      this._index.objects
-    );
     return ret;
   }
 
@@ -235,7 +287,8 @@ export class SaveService {
 
   private async _saveGeneric(
     object: IRegisterItem,
-    type: ESaveObjType
+    type: ESaveObjType,
+    skipUpload?: boolean
   ): Promise<string> {
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
@@ -248,8 +301,10 @@ export class SaveService {
     await this._storage.setByKey(key, object);
     await this._updateIndex();
 
-    //async call
-    this.uploadUnsavedContents();
+    if (!skipUpload) {
+      //async call
+      this.uploadUnsavedContents();
+    }
 
     return key;
   }

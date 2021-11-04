@@ -8,7 +8,6 @@ import { PopoverRegisterComponent } from '../popover-register/popover-register.c
   styleUrls: ['./btn-register.component.scss'],
 })
 export class BtnRegisterComponent implements OnInit {
-
   @Input('color') color: string = 'primary';
   @Input('registering') registering: boolean = false;
 
@@ -16,25 +15,22 @@ export class BtnRegisterComponent implements OnInit {
 
   private popover: HTMLIonPopoverElement;
 
-  constructor(public popoverController: PopoverController) { }
+  constructor(public popoverController: PopoverController) {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   async presentPopOver(ev: any) {
-
     this.popover = await this.popoverController.create({
       component: PopoverRegisterComponent,
       cssClass: 'popover-register',
       event: ev,
       translucent: true,
       mode: 'ios',
-      componentProps: { registering: this.registering }
+      componentProps: { registering: this.registering },
     });
     await this.popover.present();
     this.isPopOverPresented = true;
     const { role } = await this.popover.onDidDismiss();
     this.isPopOverPresented = false;
-
   }
-
 }

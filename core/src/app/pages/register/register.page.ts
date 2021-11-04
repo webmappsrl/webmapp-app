@@ -170,7 +170,6 @@ export class RegisterPage implements OnInit, OnDestroy {
         },
         res.data.trackData
       );
-      console.log('TRACK TO SAVE', track);
 
       await this._saveService.saveTrack(track);
 
