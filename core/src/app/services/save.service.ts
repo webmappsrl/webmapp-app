@@ -64,14 +64,7 @@ export class SaveService {
    * @param track the track to be saved
    */
   public async saveTrack(track: ITrack) {
-    const photoKeys: string[] = [];
-    // for (const photoTrack of track.photos) {
-    //   const photoKey = await this._savePhotoTrack(photoTrack);
-    //   photoKeys.push(photoKey);
-    // }
     const trackCopy = Object.assign({}, track);
-    trackCopy.photoKeys = photoKeys;
-    trackCopy.photos = null;
     await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
   }
 
@@ -118,7 +111,6 @@ export class SaveService {
       );
       switch (contents[i].type) {
         case ESaveObjType.PHOTO:
-        case ESaveObjType.PHOTOTRACK:
           const photo: IPhotoItem = await this._getGenericById(contents[i].key);
           await this._photoService.setPhotoData(photo);
           const resP = await this.geohub.savePhoto(photo);
@@ -143,12 +135,38 @@ export class SaveService {
 
         case ESaveObjType.TRACK:
           const track: ITrack = await this.getTrack(contents[i].key);
-          const resT = await this.geohub.saveTrack(track);
-          if (resT && !resT.error && resT.id) {
-            indexObj.saved = true;
-            track.id = resT.id;
-            this._updateGeneric(contents[i].key, track);
+
+          if (track?.photos?.length) {
+            let i: number = 0;
+            while (i < track.photos.length) {
+              const photo: IPhotoItem = track.photos[i];
+              await this._photoService.setPhotoData(photo);
+              try {
+                const resP = await this.geohub.savePhoto(photo);
+                if (resP && !resP.error && resP.id) {
+                  if (!track.photoKeys) track.photoKeys = [];
+                  track.photoKeys.push(resP.id);
+                  track.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
+                }
+              } catch (e) {
+                console.warn('A track photo could not be uploaded');
+                i++;
+              }
+            }
           }
+
+          if (!track?.photos?.length) {
+            const resT = await this.geohub.saveTrack(track);
+            if (resT && !resT.error && resT.id) {
+              indexObj.saved = true;
+              track.id = resT.id;
+              this._updateGeneric(contents[i].key, track);
+            }
+          } else this._updateGeneric(contents[i].key, track);
+          break;
+
+        case ESaveObjType.PHOTOTRACK:
+          console.warn('PHOTOTRACK elements should not exists');
           break;
         //TODO save each type of content
       }

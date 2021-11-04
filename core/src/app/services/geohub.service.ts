@@ -206,7 +206,7 @@ export class GeohubService {
         name: track.title,
         description: track.description,
         app_id: this.configService.appId,
-        gallery: track.photos ? track.photos.map((x) => x.id) : [],
+        image_gallery: track.photoKeys ? track.photoKeys : [],
       },
     };
     const res = await this._communicationService
