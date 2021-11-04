@@ -85,18 +85,6 @@ export class ModalSaveComponent implements OnInit {
     });
   }
 
-  // async addPhotos() {
-  //   const modal = await this.modalController.create({
-  //     component: ModalSelectphotosComponent,
-  //     // cssClass: 'my-custom-class'
-  //   });
-  //   await modal.present();
-  //   const res = await modal.onDidDismiss();
-  //   if (res.data && res.data.photos) {
-  //     this.photos = res.data.photos;
-  //   }
-  // }
-
   async addPhotos() {
     const library = await this._photoService.getPhotos();
     library.forEach(async (libraryItem) => {

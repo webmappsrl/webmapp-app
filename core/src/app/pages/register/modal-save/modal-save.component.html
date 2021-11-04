@@ -1,12 +1,22 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" defaultHref="register" icon="close-outline" text=""
-        class="webmapp-backbutton webmapp-backbutton-dark" (click)="close()">
+      <ion-back-button
+        mode="ios"
+        defaultHref="register"
+        icon="close-outline"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+        (click)="close()"
+      >
       </ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="!track">{{'pages.register.modalsave.title' | translate}}</ion-title>
-    <ion-title *ngIf="track">{{'pages.register.modalsave.titleEdit' | translate}}</ion-title>
+    <ion-title *ngIf="!track">{{
+      "pages.register.modalsave.title" | translate
+    }}</ion-title>
+    <ion-title *ngIf="track">{{
+      "pages.register.modalsave.titleEdit" | translate
+    }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,48 +24,66 @@
   <ion-list>
     <ion-item class="webmapp-register-modalsave-item">
       <!-- <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon> -->
-      <i class="webmapp-icon-list webmapp-register-modalsave-icon secondary"></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formtitle' |
-        translate}}</ion-label>
+      <i
+        class="webmapp-icon-list webmapp-register-modalsave-icon secondary"
+      ></i>
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{
+        "pages.register.modalsave.formtitle" | translate
+      }}</ion-label>
       <ion-input [(ngModel)]="title"></ion-input>
     </ion-item>
     <ion-item class="webmapp-register-modalsave-item">
       <!-- <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon> -->
-      <i class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"></i>
+      <i
+        class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"
+      ></i>
       <ion-label class="webmapp-register-modalsave-label" position="stacked">
-        {{'pages.register.modalsave.formdescription' | translate}}</ion-label>
+        {{ "pages.register.modalsave.formdescription" | translate }}</ion-label
+      >
       <ion-input [(ngModel)]="description"></ion-input>
     </ion-item>
     <ion-item class="webmapp-register-modalsave-item">
-      <i class="webmapp-icon-activities webmapp-register-modalsave-icon primary"></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{'pages.register.modalsave.formactivity' |
-        translate}}</ion-label>
+      <i
+        class="webmapp-icon-activities webmapp-register-modalsave-icon primary"
+      ></i>
+      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{
+        "pages.register.modalsave.formactivity" | translate
+      }}</ion-label>
       <ion-select [(ngModel)]="activity">
         <ion-select-option value="run">Corsa</ion-select-option>
         <ion-select-option value="bike">Bicicletta</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item lines="none" class="webmapp-register-modalsave-item">
-      <i class="webmapp-icon-camera webmapp-register-modalsave-icon  secondary"></i>
-      <ion-label class="webmapp-register-modalsave-label webmapp-register-modalsave-labelphoto" position="stacked">{{'pages.register.modalsave.formphotos' |
-        translate}}</ion-label>
+      <i
+        class="webmapp-icon-camera webmapp-register-modalsave-icon secondary"
+      ></i>
+      <ion-label
+        class="
+          webmapp-register-modalsave-label webmapp-register-modalsave-labelphoto
+        "
+        position="stacked"
+        >{{ "pages.register.modalsave.formphotos" | translate }}</ion-label
+      >
     </ion-item>
   </ion-list>
 
   <ion-grid>
-
     <ion-row *ngIf="!photos?.length && !track">
       <ion-col size="12">
         <div class="webmapp-register-modalsave-loadphoto-wrapper">
-          <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
+          <div
+            class="webmapp-register-modalsave-loadphoto"
+            (click)="addPhotos()"
+          >
             <div class="webmapp-register-modalsave-loadphoto-text">
               <div class="webmapp-register-modalsave-loadphoto-action">
-                {{'pages.register.modalsave.photoaction' | translate}}
+                {{ "pages.register.modalsave.photoaction" | translate }}
               </div>
-              {{'pages.register.modalsave.phototext' | translate}}
+              {{ "pages.register.modalsave.phototext" | translate }}
             </div>
             <div class="webmapp-register-modalsave-loadphoto-advice">
-              {{'pages.register.modalsave.photoadvice' | translate}}
+              {{ "pages.register.modalsave.photoadvice" | translate }}
             </div>
           </div>
         </div>
@@ -64,32 +92,50 @@
 
     <ion-row>
       <ion-col size="4" *ngIf="photos?.length && !track">
-        <div class="webmapp-register-modalsave-imagecontainer webmapp-register-modalsave-addimagecontainer webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
+        <div
+          class="
+            webmapp-register-modalsave-imagecontainer
+            webmapp-register-modalsave-addimagecontainer
+            webmapp-register-modalsave-loadphoto
+          "
+          (click)="addPhotos()"
+        >
           <div class="webmapp-register-modalsave-loadphoto-text">
             <div class="webmapp-register-modalsave-loadphoto-action">
-              {{'pages.register.modalsave.photoactionshort' | translate}}
+              {{ "pages.register.modalsave.photoactionshort" | translate }}
             </div>
-            {{'pages.register.modalsave.phototextshort' | translate}}
+            {{ "pages.register.modalsave.phototextshort" | translate }}
           </div>
           <div class="webmapp-register-modalsave-loadphoto-advice">
-            {{'pages.register.modalsave.photoadviceshort' | translate}}
+            {{ "pages.register.modalsave.photoadviceshort" | translate }}
           </div>
         </div>
       </ion-col>
       <ion-col size="4" *ngFor="let image of photos">
         <div class="webmapp-register-modalsave-imagecontainer">
-          <ion-icon name="close-outline" class="webmapp-register-modalsave-remove" (click)="remove(image)">
+          <ion-icon
+            name="close-outline"
+            class="webmapp-register-modalsave-remove"
+            (click)="remove(image)"
+          >
           </ion-icon>
           <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-          <ion-img class="webmapp-register-modalsave-image" [src]="image?.rawData ? image?.rawData : image?.data"></ion-img>
+          <ion-img
+            class="webmapp-register-modalsave-image"
+            [src]="image?.rawData ? image?.rawData : image?.data"
+          ></ion-img>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
-
 </ion-content>
 
 <ion-footer class="webmapp-register-modalsave-footer">
-  <ion-button class="webmapp-register-modalsave-savebtn" (click)="save()" [disabled]="!isValid()">
-    {{'pages.register.modalsave.savebtn' | translate}}</ion-button>
+  <ion-button
+    class="webmapp-register-modalsave-savebtn"
+    (click)="save()"
+    [disabled]="!isValid()"
+  >
+    {{ "pages.register.modalsave.savebtn" | translate }}</ion-button
+  >
 </ion-footer>

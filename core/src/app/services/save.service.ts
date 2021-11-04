@@ -55,7 +55,8 @@ export class SaveService {
    * @param waypoint the waypoint to be saved
    */
   public async saveWaypoint(waypoint: WaypointSave) {
-    await this._saveGeneric(waypoint, ESaveObjType.WAYPOINT);
+    const waypointCopy = Object.assign({}, waypoint);
+    await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
   }
 
   /**
@@ -125,12 +126,37 @@ export class SaveService {
           const waypoint: WaypointSave = await this._getGenericById(
             contents[i].key
           );
-          const resW = await this.geohub.saveWaypoint(waypoint);
-          if (resW && !resW.error && resW.id) {
-            indexObj.saved = true;
-            waypoint.id = resW.id;
-            this._updateGeneric(contents[i].key, waypoint);
+
+          if (waypoint?.photos?.length) {
+            let i: number = 0;
+            while (i < waypoint.photos.length) {
+              const photo: IPhotoItem = waypoint.photos[i];
+              await this._photoService.setPhotoData(photo);
+              try {
+                const resP = await this.geohub.savePhoto(photo);
+                if (resP && !resP.error && resP.id) {
+                  if (!waypoint.photoKeys) waypoint.photoKeys = [];
+                  waypoint.photoKeys.push(resP.id);
+                  waypoint.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
+                } else {
+                  console.warn('A waypoint photo could not be uploaded');
+                  i++;
+                }
+              } catch (e) {
+                console.warn('A waypoint photo could not be uploaded');
+                i++;
+              }
+            }
           }
+
+          if (!waypoint?.photos?.length) {
+            const resW = await this.geohub.saveWaypoint(waypoint);
+            if (resW && !resW.error && resW.id) {
+              indexObj.saved = true;
+              waypoint.id = resW.id;
+              this._updateGeneric(contents[i].key, waypoint);
+            } else this._updateGeneric(contents[i].key, waypoint);
+          } else this._updateGeneric(contents[i].key, waypoint);
           break;
 
         case ESaveObjType.TRACK:
@@ -147,6 +173,9 @@ export class SaveService {
                   if (!track.photoKeys) track.photoKeys = [];
                   track.photoKeys.push(resP.id);
                   track.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
+                } else {
+                  console.warn('A track photo could not be uploaded');
+                  i++;
                 }
               } catch (e) {
                 console.warn('A track photo could not be uploaded');
@@ -161,7 +190,7 @@ export class SaveService {
               indexObj.saved = true;
               track.id = resT.id;
               this._updateGeneric(contents[i].key, track);
-            }
+            } else this._updateGeneric(contents[i].key, track);
           } else this._updateGeneric(contents[i].key, track);
           break;
 

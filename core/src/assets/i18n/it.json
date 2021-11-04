@@ -373,6 +373,13 @@
         "formoptional": "Facoltativo",
         "formtitle": "Titolo waypoint",
         "formtype": "Tipo di Waypoint",
+        "formphotos": "Aggiungi foto del Waypoint",
+        "photoaction": "Carica",
+        "photoactionshort": "Aggiungi",
+        "photoadvice": "Dimensione massime: 200Mb",
+        "photoadviceshort": "(max 200mb)",
+        "phototext": "foto dalla galleria del telefono",
+        "phototextshort": "Foto",
         "save": "Salva ",
         "title": "Registra un waypoint"
       },

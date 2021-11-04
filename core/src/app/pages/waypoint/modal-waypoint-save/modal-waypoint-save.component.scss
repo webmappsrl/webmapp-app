@@ -1,86 +1,162 @@
 @import "src/theme/mixins.scss";
 
 .webmapp-modalwaypoint-map {
-    height: 210px;
-    width: 100%;
-    display: block;
+  height: 210px;
+  width: 100%;
+  display: block;
 }
 
 .webmapp-modalwaypoint-icon {
-    position: absolute;
-    left: -28px;
-    top: 10px;
+  position: absolute;
+  left: -28px;
+  top: 10px;
 
-    &.primary {
-        color: var(--wm-color-primary);
-    }
+  &.primary {
+    color: var(--wm-color-primary);
+  }
 
-    &.secondary {
-        color: var(--wm-color-secondary);
-    }
+  &.secondary {
+    color: var(--wm-color-secondary);
+  }
 
-    &.tertiary {
-        color: var(--wm-color-tertiary);
-    }
+  &.tertiary {
+    color: var(--wm-color-tertiary);
+  }
 }
 
 .webmapp-modalwaypoint-extrinfo {
-    position: absolute;
-    background-color: var(--wm-color-secondary);
-    color: var(--wm-color-light);
-    top: 182px;
-    height: 56px;
-    width: 221px;
-    padding: 10px;
-    border-radius: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
-    @include box-shadow-light;
-    z-index: 99;
+  position: absolute;
+  background-color: var(--wm-color-secondary);
+  color: var(--wm-color-light);
+  top: 182px;
+  height: 56px;
+  width: 221px;
+  padding: 10px;
+  border-radius: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  @include box-shadow-light;
+  z-index: 99;
 
-    .webmapp-modalwaypoint-extrinfo-icon {
-        font-size: var(--wm-font-xxxlg);
-        display: inline-block;
-        padding: 5px;
+  .webmapp-modalwaypoint-extrinfo-icon {
+    font-size: var(--wm-font-xxxlg);
+    display: inline-block;
+    padding: 5px;
+  }
+  .webmapp-modalwaypoint-extrinfo-text {
+    display: inline-block;
+    .webmapp-modalwaypoint-extrinfo-textcity {
+      color: var(--wm-color-light);
     }
-    .webmapp-modalwaypoint-extrinfo-text {
-        display: inline-block;
-        .webmapp-modalwaypoint-extrinfo-textcity {
-            color: var(--wm-color-light);
-        }
-        .webmapp-modalwaypoint-extrinfo-textposition {
-            color: var(--wm-color-lightgray);
-        }
+    .webmapp-modalwaypoint-extrinfo-textposition {
+      color: var(--wm-color-lightgray);
     }
+  }
 }
 
 .webmapp-modalwaypoint-itemlist {
-    padding-top: 30px;
-    .webmapp-modalwaypoint-item {
-        padding: 22px 15px 10px 22px;
-        overflow: visible;
+  padding-top: 30px;
+  .webmapp-modalwaypoint-item {
+    padding: 22px 15px 10px 22px;
+    overflow: visible;
 
-        .webmapp-modalwaypoint-label {
-            font-weight: var(--wm-font-weight-bold);
-            .webmapp-modalwaypoint-label-secondary {
-                font-weight: var(--wm-font-weight-light);
-            }
-        }
+    .webmapp-modalwaypoint-label {
+      font-weight: var(--wm-font-weight-bold);
+      .webmapp-modalwaypoint-label-secondary {
+        font-weight: var(--wm-font-weight-light);
+      }
+      &.webmapp-modalwaypoint-labelphoto {
+        height: 30px;
+        top: 0px;
+        position: absolute;
+      }
     }
+  }
 }
 .webmapp-modalwaypoint-footer {
-    text-align: center;
-    min-height: 80px;
+  text-align: center;
+  min-height: 80px;
 
-    .webmapp-modalwaypoint-savebtn {
-        margin-top: 20px;
-        --border-radius: 20px;
+  .webmapp-modalwaypoint-savebtn {
+    margin-top: 20px;
+    --border-radius: 20px;
 
-        --padding-start: 100px;
-        --padding-end: 100px;
+    --padding-start: 100px;
+    --padding-end: 100px;
 
-        @include box-shadow-light;
-        border-radius: 20px;
+    @include box-shadow-light;
+    border-radius: 20px;
+  }
+}
+
+.webmapp-waypoint-modalsave-loadphoto {
+  padding: 20px;
+  &.webmapp-waypoint-modalsave-addimagecontainer {
+    padding: 20px 10px;
+  }
+  border-radius: 15px;
+  border: 2px var(--ion-color-light-shade) dashed;
+  text-align: center;
+  width: 100%;
+
+  .webmapp-waypoint-modalsave-loadphoto-text {
+    font-size: var(--wm-font-sm);
+
+    .webmapp-waypoint-modalsave-loadphoto-action {
+      display: inline;
+      color: var(--wm-color-primary);
+      font-weight: var(--wm-font-weight-bold);
     }
+  }
+
+  .webmapp-waypoint-modalsave-loadphoto-advice {
+    margin-top: 5px;
+    font-size: var(--wm-font-xsm);
+  }
+}
+
+.webmapp-waypoint-modalsave-imagecontainer {
+  text-align: center;
+  height: 100px;
+  width: 108px;
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+
+  &.webmapp-waypoint-modalsave-addimagecontainer {
+    border: dashed var(--wm-color-grey) 2px;
+  }
+
+  .webmapp-waypoint-modalsave-image {
+    height: 100px;
+    width: 108px;
+    &::part(image) {
+      object-fit: cover;
+    }
+  }
+
+  .webmapp-waypoint-modalsave-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    @include box-shadow-light;
+  }
+
+  .webmapp-waypoint-modalsave-add {
+    font-size: 45px;
+    color: var(--wm-color-dark);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 }

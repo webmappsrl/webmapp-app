@@ -157,7 +157,7 @@ export class GeohubService {
         name: waypoint.title,
         description: waypoint.description,
         app_id: this.configService.appId,
-        // gallery:,
+        image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
       },
     };
     const res = await this._communicationService
