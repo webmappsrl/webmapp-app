@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, PopoverController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonSlides, ModalController, PopoverController } from '@ionic/angular';
 import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
 import { SaveService } from 'src/app/services/save.service';
 import { EPopoverPhotoType, ESuccessType } from '../../types/esuccess.enum';
 import { ModalSuccessComponent } from '../modal-success/modal-success.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'webmapp-modalphotos',
@@ -14,12 +15,13 @@ import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 })
 export class ModalphotosComponent implements OnInit {
   public photoCollection: IPhotoItem[] = [];
-  public photo: IPhotoItem;
+  public selectedPhoto: IPhotoItem;
 
-  sliderOptions: any = {
+  public sliderOptions: any = {
     slidesPerView: 5,
     distanceBetween: 2,
   };
+  @ViewChild('slider', { static: true }) slider: IonSlides;
 
   constructor(
     private _photoService: PhotoService,
@@ -30,8 +32,13 @@ export class ModalphotosComponent implements OnInit {
 
   ngOnInit() {
     if (this.photoCollection && this.photoCollection.length) {
-      this.photo = this.photoCollection[this.photoCollection.length - 1];
+      this.selectedPhoto =
+        this.photoCollection[this.photoCollection.length - 1];
     }
+    setTimeout(() => {
+      this.slider.options = this.sliderOptions;
+      this.slider.update();
+    }, 0);
   }
 
   close() {
@@ -67,27 +74,40 @@ export class ModalphotosComponent implements OnInit {
   async addFromLibrary() {
     const photos = await this._photoService.getPhotos();
     if (photos && photos.length) {
-      photos.forEach((photo) => {
-        this.photoCollection.push(photo);
-        this.select(photo);
+      photos.forEach(async (photo) => {
+        const photoData = await this._photoService.getPhotoData(photo.photoURL),
+          md5 = Md5.hashStr(JSON.stringify(photoData));
+        let exists: boolean = false;
+        for (let p of this.photoCollection) {
+          const pData = await this._photoService.getPhotoData(p.photoURL),
+            pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+          if (md5 === pictureMd5) {
+            exists = true;
+            break;
+          }
+        }
+        if (!exists) {
+          this.photoCollection.push(photo);
+          this.select(photo);
+        }
       });
     }
   }
 
   select(photo) {
-    this.photo = photo;
+    this.selectedPhoto = photo;
   }
 
   delete() {
     const idx = this.photoCollection.findIndex(
-      (x) => x.data === this.photo.data
+      (x) => x.data === this.selectedPhoto.data
     );
     this.photoCollection.splice(idx, 1);
     if (this.photoCollection.length) {
-      this.photo =
+      this.selectedPhoto =
         this.photoCollection[Math.min(this.photoCollection.length - 1, idx)];
     } else {
-      this.photo = null;
+      this.selectedPhoto = null;
       this.addPhoto();
     }
   }
@@ -104,9 +124,7 @@ export class ModalphotosComponent implements OnInit {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed) {
-      for (const photo of res.data.photos) {
-        await this._saveService.savePhoto(photo);
-      }
+      await this._saveService.savePhotos(res.data.photos);
 
       await this.openModalSuccess(res.data.photos);
     }

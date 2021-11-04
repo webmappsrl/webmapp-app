@@ -1,34 +1,66 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" defaultHref="" icon="close-outline" text="" class="webmapp-backbutton webmapp-backbutton-dark" (click)="close()">
+      <ion-back-button
+        mode="ios"
+        defaultHref=""
+        icon="close-outline"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+        (click)="close()"
+      >
       </ion-back-button>
     </ion-buttons>
-    <ion-title  class="webmapp-modalphotosave-title">{{'modals.photo.save.title' | translate}}</ion-title>
-    <ion-buttons slot="end">      
-    </ion-buttons>
+    <ion-title class="webmapp-modalphotosave-title">{{
+      "modals.photo.save.title" | translate
+    }}</ion-title>
+    <ion-buttons slot="end"> </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="webmapp-modalphotosave-formtitle">{{'modals.photo.save.formtitle' | translate}}</div>
+  <div class="webmapp-modalphotosave-formtitle">
+    {{ "modals.photo.save.formtitle" | translate }}
+  </div>
   <ion-list>
-    <ng-container *ngFor="let photo of photos;let idx = index">
-      <ion-item class="webmapp-modalphotosave-item" lines="none" >
-        <ion-img slot="start" class="webmapp-modalphotosave-item-photo" [src]="photo?.rawData ? photo?.rawData : photo?.data"></ion-img>
+    <ng-container *ngFor="let photo of photos; let idx = index">
+      <ion-item class="webmapp-modalphotosave-item" lines="none">
+        <ion-img
+          slot="start"
+          class="webmapp-modalphotosave-item-photo"
+          [src]="photo?.data"
+        ></ion-img>
         <div class="webmapp-modalphotosave-item-inputwrapper">
-          <i class="webmapp-icon-camera webmapp-modalphotosave-item-icon secondary"></i>
-          <ion-label class="webmapp-modalphotosave-item-label" position="stacked">{{'modals.photo.save.formphototitle' |
-            translate}} {{idx+1}}</ion-label>
-          <ion-input class="webmapp-modalphotosave-item-input" [(ngModel)]="photo.description" (input)="valChange($event.target.value, idx)" type="text"></ion-input>
+          <i
+            class="
+              webmapp-icon-camera webmapp-modalphotosave-item-icon
+              secondary
+            "
+          ></i>
+          <ion-label
+            class="webmapp-modalphotosave-item-label"
+            position="stacked"
+            >{{ "modals.photo.save.formphototitle" | translate }}
+            {{ idx + 1 }}</ion-label
+          >
+          <ion-input
+            class="webmapp-modalphotosave-item-input"
+            [(ngModel)]="photo.description"
+            (input)="valChange($event.target.value, idx)"
+            type="text"
+          ></ion-input>
         </div>
       </ion-item>
     </ng-container>
   </ion-list>
 </ion-content>
 
-
 <ion-footer class="webmapp-modalphotosave-footer">
-  <ion-button class="webmapp-modalphotosave-savebtn" (click)="save()" [disabled]="!isValid()">
-    {{'modals.photo.save.savebtn' | translate}}</ion-button>
+  <ion-button
+    class="webmapp-modalphotosave-savebtn"
+    (click)="save()"
+    [disabled]="!isValid()"
+  >
+    {{ "modals.photo.save.savebtn" | translate }}</ion-button
+  >
 </ion-footer>

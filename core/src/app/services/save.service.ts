@@ -37,6 +37,19 @@ export class SaveService {
   }
 
   /**
+   * Save a photo into the storage
+   *
+   * @param photo the photo to be saved
+   */
+  public async savePhotos(photos: Array<IPhotoItem>) {
+    for (let photo of photos) {
+      await this._photoService.setPhotoData(photo);
+      await this._saveGeneric(photo, ESaveObjType.PHOTO, true);
+    }
+    this.uploadUnsavedContents();
+  }
+
+  /**
    * Save a waypoint into the storage
    *
    * @param waypoint the waypoint to be saved
@@ -52,10 +65,10 @@ export class SaveService {
    */
   public async saveTrack(track: ITrack) {
     const photoKeys: string[] = [];
-    for (const photoTrack of track.photos) {
-      const photoKey = await this._savePhotoTrack(photoTrack);
-      photoKeys.push(photoKey);
-    }
+    // for (const photoTrack of track.photos) {
+    //   const photoKey = await this._savePhotoTrack(photoTrack);
+    //   photoKeys.push(photoKey);
+    // }
     const trackCopy = Object.assign({}, track);
     trackCopy.photoKeys = photoKeys;
     trackCopy.photos = null;
@@ -97,10 +110,6 @@ export class SaveService {
       a.type == (ESaveObjType.PHOTO || a.type == ESaveObjType.PHOTOTRACK)
         ? 1
         : -1
-    );
-    console.log(
-      '------- ~ SaveService ~ uploadUnsavedContents ~ contents',
-      contents
     );
 
     for (let i = 0; i < contents.length; i++) {
@@ -152,10 +161,6 @@ export class SaveService {
    */
   public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
     let ret = this._index.objects.filter((X) => X.saved === false);
-    console.log(
-      '------- ~ SaveService ~ getUnsavedObjects ~ his._index.objects',
-      this._index.objects
-    );
     return ret;
   }
 
@@ -235,7 +240,8 @@ export class SaveService {
 
   private async _saveGeneric(
     object: IRegisterItem,
-    type: ESaveObjType
+    type: ESaveObjType,
+    skipUpload?: boolean
   ): Promise<string> {
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
@@ -248,8 +254,10 @@ export class SaveService {
     await this._storage.setByKey(key, object);
     await this._updateIndex();
 
-    //async call
-    this.uploadUnsavedContents();
+    if (!skipUpload) {
+      //async call
+      this.uploadUnsavedContents();
+    }
 
     return key;
   }
