@@ -236,13 +236,15 @@ export class SlopeChartComponent implements OnInit {
         });
       }
 
-      this._createChart(
-        labels,
-        trackLength,
-        maxAlt,
-        surfaceValues,
-        slopeValues
-      );
+      setTimeout(() => {
+        this._createChart(
+          labels,
+          trackLength,
+          maxAlt,
+          surfaceValues,
+          slopeValues
+        );
+      }, 100);
     }
   }
 
