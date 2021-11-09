@@ -117,4 +117,14 @@ export class ConfigService {
   get availableLanguages(): Array<string> {
     return ['it'];
   }
+
+  /**
+   * @returns {boolean} true if the ugc records should be enabled
+   */
+  isRecordEnabled(): boolean {
+    return (
+      this.appId === 'it.webmapp.webmapp' ||
+      !!this._config?.GEOLOCATION?.record?.enable
+    );
+  }
 }

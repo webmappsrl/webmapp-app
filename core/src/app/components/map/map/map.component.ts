@@ -54,7 +54,6 @@ import {
   ILineString,
 } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
-import { ClusterMarkerComponent } from '../cluster-marker/cluster-marker.component';
 import { ClusterMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
@@ -66,10 +65,9 @@ import LineString from 'ol/geom/LineString';
 import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 import { GeohubService } from 'src/app/services/geohub.service';
-import { PoiMarkerComponent } from '../poi-marker/poi-marker.component';
-import { getVectorContext } from 'ol/render';
 import { MarkerService } from 'src/app/services/marker.service';
 import { TilesService } from 'src/app/services/tiles.service';
+import { ConfigService } from 'src/app/services/config.service';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -245,6 +243,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   public isLoggedIn: boolean = false;
 
+  public isRecordEnabled: boolean = false;
+
   public sortedComponent: any[] = [];
 
   public timer: any;
@@ -308,13 +308,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _slopeChartTrack: Feature<LineString>;
 
   constructor(
-    private geolocationService: GeolocationService,
-    private _mapService: MapService,
-    private geohubSErvice: GeohubService,
-    // private resolver: ComponentFactoryResolver,
     private _authService: AuthService,
-    private markerService: MarkerService,
-    private tileservice: TilesService
+    private _configService: ConfigService,
+    private _geohubService: GeohubService,
+    private _geolocationService: GeolocationService,
+    private _mapService: MapService,
+    private _markerService: MarkerService,
+    private _tilesService: TilesService
   ) {
     this._locationIcon = {
       layer: null,
@@ -352,6 +352,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       image: this._locationIconArrow,
       zIndex: DEF_LOCATION_Z_INDEX,
     });
+
+    this.isRecordEnabled = this._configService.isRecordEnabled();
   }
 
   ngAfterViewInit() {
@@ -407,7 +409,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       })
     );
 
-    this.isRecording = this.geolocationService.recording;
+    this.isRecording = this._geolocationService.recording;
 
     //TODO: figure out why this must be called inside a timeout
     setTimeout(() => {
@@ -471,12 +473,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       });
 
       if (this.registering) {
-        this.geolocationService.start();
+        this._geolocationService.start();
         this.locationState = EMapLocationState.FOLLOW;
         this._centerMapToLocation();
       }
 
-      this.geolocationService.onLocationChange.subscribe((location) => {
+      this._geolocationService.onLocationChange.subscribe((location) => {
         this._location = location;
         this.animateLocation(this._location);
 
@@ -758,9 +760,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       maxZoom: DEF_MAP_MAX_ZOOM,
       minZoom: DEF_MAP_MIN_ZOOM,
       tileLoadFunction: (tile: any, url: string) => {
-        const coords = this.tileservice.getCoordsFromUr(url);
+        const coords = this._tilesService.getCoordsFromUr(url);
 
-        this.tileservice
+        this._tilesService
           .getTile(coords, this.useCache)
           .then((tileString: string) => {
             tile.getImage().src = tileString;
@@ -770,7 +772,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           });
       },
       tileUrlFunction: (c) => {
-        return this.tileservice.getTileFromWeb(c);
+        return this._tilesService.getTileFromWeb(c);
       },
       projection: 'EPSG:3857',
       tileSize: [256, 256],
@@ -1151,7 +1153,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const { iconFeature, style } = await this._createIconFeature(
       geometry ? geometry : poi.geometry,
       img,
-      this.markerService.poiMarkerSize
+      this._markerService.poiMarkerSize
     );
     return {
       marker: {
@@ -1172,7 +1174,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const { iconFeature } = await this._createIconFeature(
       cluster.geometry,
       img,
-      this.markerService.clusterMarkerSize,
+      this._markerService.clusterMarkerSize,
       transparent
     );
 
@@ -1217,19 +1219,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   ): Promise<HTMLImageElement> {
     let isFavourite = false;
     if (cluster.properties.ids.length == 1) {
-      isFavourite = await this.geohubSErvice.isFavouriteTrack(
+      isFavourite = await this._geohubService.isFavouriteTrack(
         cluster.properties.ids[0]
       );
     }
     const htmlTextCanvas =
-      await this.markerService.createClusterMarkerHtmlForCanvas(
+      await this._markerService.createClusterMarkerHtmlForCanvas(
         cluster,
         isFavourite
       );
 
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      this.markerService.clusterMarkerSize
+      this._markerService.clusterMarkerSize
     );
   }
 
@@ -1237,10 +1239,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     poi: IGeojsonPoi
   ): Promise<HTMLImageElement> {
     const htmlTextCanvas =
-      await this.markerService.createPoiMarkerHtmlForCanvas(poi);
+      await this._markerService.createPoiMarkerHtmlForCanvas(poi);
     return this._createCanvasForHtml(
       htmlTextCanvas,
-      this.markerService.poiMarkerSize
+      this._markerService.poiMarkerSize
     );
   }
 
