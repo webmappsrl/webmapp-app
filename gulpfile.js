@@ -108,6 +108,13 @@ const argv = yargs(hideBin(process.argv)).options({
     describe: "Set the instance to work with",
     type: "string",
   },
+  g: {
+    alias: "geohubInstanceId",
+    demandOption: true,
+    default: "",
+    describe: "Set the geohub instance id to work with",
+    type: "string",
+  },
   a: {
     alias: "alias",
     demandOption: true,
@@ -281,9 +288,14 @@ function create(instanceName, force) {
   });
 }
 
-function update(instanceName) {
+function update(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
+      reject("Instance name required. See gulp --help");
+      return;
+    }
+
+    if (!geohubInstanceId) {
       reject("Instance name required. See gulp --help");
       return;
     }
@@ -293,7 +305,7 @@ function update(instanceName) {
 
     if (argv.url) url = argv.url;
     else {
-      url = "https://k.webmapp.it/" + instanceName + "/";
+      url = "https://geohub.webmapp.it/api/app/webmapp/" + geohubInstanceId;
       if (verbose) debug("Using default url: " + url);
     }
 
@@ -339,13 +351,13 @@ function update(instanceName) {
                 ),
                 getUrlFile(
                   "homepage-logo.svg",
-                  resources + "homepage-logo.svg",
+                  resources + "logo_homepage.svg",
                   dir + "/src/assets/images/"
                 ),
                 new Promise((resolve, reject) => {
                   getUrlFile(
                     "notification_icon.png",
-                    resources + "notification_icon.png",
+                    resources + "icon_notify.png",
                     dir + "/resources/"
                   ).then(
                     () => {
@@ -495,7 +507,7 @@ function updateResources(instanceName, platform) {
 
 function initCapacitor(instanceName, id, name) {
   info("Initializing capacitor project");
-  sh.exec("npx cap init --npm-client npm " + name + " " + id + outputRedirect, {
+  sh.exec("npx cap init " + name + " " + id + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
   info("Capacitor project initialized");
@@ -696,9 +708,19 @@ function updateAndroidPlatform(instanceName, appId, appName) {
   });
 }
 
-function build(instanceName) {
+function build(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
-    if (verbose) debug("Starting `build(" + instanceName + ")`");
+    if (!instanceName) {
+      reject("Instance name requred. See gulp --help");
+      return;
+    }
+    if (!geohubInstanceId) {
+      reject("Geohub instance id requred. See gulp --help");
+      return;
+    }
+
+    if (verbose)
+      debug("Starting `build(" + instanceName + "," + geohubInstanceId + ")`");
     if (verbose) debug("`build()`- running `create()`");
     var force = false;
     if (!!argv.force || !fs.existsSync(instancesDir + instanceName))
@@ -707,7 +729,7 @@ function build(instanceName) {
       function () {
         if (verbose) debug("`build()` - create completed");
         if (verbose) debug("`build()`- running `update()`");
-        update(instanceName, force).then(
+        update(instanceName, geohubInstanceId).then(
           (result) => {
             if (verbose) debug("`build()` - update completed");
             if (verbose) debug("`build()` completed");
@@ -727,9 +749,9 @@ function build(instanceName) {
   });
 }
 
-function buildAndroid(instanceName) {
+function buildAndroid(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
-    build(instanceName).then(
+    build(instanceName, geohubInstanceId).then(
       (result) => {
         if (!result.id) {
           abort("The app id could not be found");
@@ -758,14 +780,14 @@ function buildAndroid(instanceName) {
   });
 }
 
-function buildAndroidApk(instanceName, type) {
+function buildAndroidApk(instanceName, geohubInstanceId, type) {
   return new Promise((resolve, reject) => {
     if (type !== "Debug" && type !== "Release") {
       error("Cannot build " + type + " apk");
       reject("Cannot build " + type + " apk");
     }
 
-    buildAndroid(instanceName).then(
+    buildAndroid(instanceName, geohubInstanceId).then(
       () => {
         if (verbose) debug("Assembling the " + type + " apk");
         var gradlecom = "./gradlew tasks app:assemble";
@@ -875,7 +897,7 @@ function checkKeystore(alias) {
   return true;
 }
 
-function buildSignedApk(instanceName) {
+function buildSignedApk(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
     var alias = argv.alias ? argv.alias : instanceName;
 
@@ -887,7 +909,7 @@ function buildSignedApk(instanceName) {
           instanceName +
           " to an available device"
       );
-    buildAndroidApk(instanceName, "Release").then(
+    buildAndroidApk(instanceName, geohubInstanceId, "Release").then(
       () => {
         checkBuildsFolder();
 
@@ -910,14 +932,14 @@ function buildSignedApk(instanceName) {
   });
 }
 
-function buildAndroidBundle(instanceName, type) {
+function buildAndroidBundle(instanceName, geohubInstanceId, type) {
   return new Promise((resolve, reject) => {
     if (type !== "Debug" && type !== "Release") {
       error("Cannot build " + type + " app bundle");
       reject("Cannot build " + type + " app bundle");
     }
 
-    buildAndroid(instanceName).then(
+    buildAndroid(instanceName, geohubInstanceId).then(
       () => {
         if (verbose) debug("Assembling the debug apk");
         var gradlecom = "./gradlew tasks app:bundle";
@@ -1020,13 +1042,13 @@ function signAndroidBundle(instanceName, alias) {
   );
 }
 
-function buildSignedBundle(instanceName) {
+function buildSignedBundle(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
     var alias = argv.alias ? argv.alias : instanceName;
 
     if (!checkKeystore(alias)) return;
 
-    buildAndroidBundle(instanceName, "Release").then(
+    buildAndroidBundle(instanceName, geohubInstanceId, "Release").then(
       () => {
         checkBuildsFolder();
 
@@ -1201,9 +1223,9 @@ function updateIosPlatform(instanceName, appId, appName) {
   });
 }
 
-function buildIos(instanceName) {
+function buildIos(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
-    build(instanceName).then(
+    build(instanceName, geohubInstanceId).then(
       (result) => {
         if (!result.id) {
           abort("The app id could not be found");
@@ -1354,9 +1376,9 @@ function buildAndUploadIos(
   });
 }
 
-function uploadIos(instanceName) {
+function uploadIos(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
-    buildIos(instanceName).then(
+    buildIos(instanceName, geohubInstanceId).then(
       (result) => {
         buildAndUploadIos(instanceName, result.name, result.id, false).then(
           () => {
@@ -1380,13 +1402,18 @@ function uploadIos(instanceName) {
  */
 gulp.task("set", function (done) {
   var config,
-    instanceName = argv.instance;
+    instanceName = argv.instance,
+    geohubInstanceId = argv.geohubInstanceId;
 
   if (instanceName) {
     if (instanceName.substring(0, 4) === "http") config = instanceName;
-    else {
-      config = "https://k.webmapp.it/" + instanceName;
+    else if (geohubInstanceId) {
+      config = "https://geohub.webmapp.it/api/app/webmapp/" + geohubInstanceId;
       if (verbose) debug("Using default url: " + config);
+    } else {
+      abort("Missing geohub instance id. See gulp --help");
+      done();
+      return;
     }
   } else {
     abort("Missing config. See gulp --help");
@@ -1413,11 +1440,22 @@ gulp.task("set", function (done) {
  * Update the core and the configuration for the specified instance
  */
 gulp.task("build", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (verbose) debug("Running build function for " + instanceName);
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
 
-  build(instanceName).then(
+  build(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
@@ -1432,10 +1470,22 @@ gulp.task("build", function (done) {
  * Build the android platform for the given instance
  */
 gulp.task("build-android", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (verbose) debug("Building android platform for instance " + instanceName);
-  buildAndroid(instanceName).then(
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
+
+  buildAndroid(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
@@ -1449,15 +1499,27 @@ gulp.task("build-android", function (done) {
  * Build an android apk to use for debugging purposes
  */
 gulp.task("build-android-apk-debug", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
   if (verbose)
     debug("Building the android debug apk for instance " + instanceName);
-  buildAndroidApk(instanceName, "Debug").then(
+  buildAndroidApk(instanceName, geohubInstanceId, "Debug").then(
     () => {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1467,15 +1529,26 @@ gulp.task("build-android-apk-debug", function (done) {
  * Build and deploy an android apk to use for debugging purposes in a device/simulator
  */
 gulp.task("deploy-android-apk-debug", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
   if (verbose)
     debug(
       "Deploying the android debug apk for instance " +
         instanceName +
         " to an available device"
     );
-  buildAndroidApk(instanceName, "Debug").then(
+  buildAndroidApk(instanceName, geohubInstanceId, "Debug").then(
     () => {
       if (verbose) debug("Deploying the apk to the device/simulator");
       sh.exec("adb install app/build/outputs/apk/debug/app-debug.apk", {
@@ -1485,6 +1558,7 @@ gulp.task("deploy-android-apk-debug", function (done) {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1494,15 +1568,27 @@ gulp.task("deploy-android-apk-debug", function (done) {
  * Build the android apk to use when testing a prerelease version
  */
 gulp.task("build-android-apk", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
   if (verbose)
     debug("Building the android release apk for instance " + instanceName);
-  buildSignedApk(instanceName).then(
+  buildSignedApk(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1512,15 +1598,26 @@ gulp.task("build-android-apk", function (done) {
  * Build and deploy the android apk to use when testing a prerelease version
  */
 gulp.task("deploy-android-apk", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
   if (verbose)
     debug(
       "Deploying the android release apk for instance " +
         instanceName +
         " to an available device/simulator"
     );
-  buildSignedApk(instanceName).then(
+  buildSignedApk(instanceName, geohubInstanceId).then(
     (relativePath) => {
       if (verbose) debug("Deploying the apk to the device/simulator");
       sh.exec("adb install " + relativePath);
@@ -1528,6 +1625,7 @@ gulp.task("deploy-android-apk", function (done) {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1537,15 +1635,27 @@ gulp.task("deploy-android-apk", function (done) {
  * Build the android apk to use when testing a prerelease version
  */
 gulp.task("build-android-bundle", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
 
   if (verbose)
     debug("Building the android release bundle for instance " + instanceName);
-  buildSignedBundle(instanceName).then(
+  buildSignedBundle(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1555,14 +1665,26 @@ gulp.task("build-android-bundle", function (done) {
  * Build the ios platform for the given instance
  */
 gulp.task("build-ios", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
 
   if (verbose) debug("Building iOS platform for instance " + instanceName);
-  buildIos(instanceName).then(
+  buildIos(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1572,17 +1694,30 @@ gulp.task("build-ios", function (done) {
  * Build the ios platform for the given instance
  */
 gulp.task("upload-ios", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
+
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
 
   if (verbose)
     debug(
       "Building and uploading the iOS version for instance " + instanceName
     );
-  uploadIos(instanceName).then(
+  uploadIos(instanceName, geohubInstanceId).then(
     () => {
       done();
     },
     (err) => {
+      abort(err);
       done();
     }
   );
@@ -1592,26 +1727,39 @@ gulp.task("upload-ios", function (done) {
  * Perform all the needed operation to release the ios and android version of the specified app
  */
 gulp.task("release", function (done) {
-  var instanceName = argv.instance ? argv.instance : "";
+  var instanceName = argv.instance ? argv.instance : "",
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
+  if (!instanceName) {
+    abort("Instance name requred. See gulp --help");
+    done();
+    return;
+  }
+  if (!geohubInstanceId) {
+    abort("Geohub instance id requred. See gulp --help");
+    done();
+    return;
+  }
 
   title("Building and uploading the iOS version for instance " + instanceName);
-  uploadIos(instanceName).then(
+  uploadIos(instanceName, geohubInstanceId).then(
     () => {
       success(instanceName + " ios version uploaded successfully");
       title(
         "Building the android release app bundle for instance " + instanceName
       );
-      buildSignedBundle(instanceName).then(
+      buildSignedBundle(instanceName, geohubInstanceId).then(
         () => {
           success(instanceName + " android version built successfully");
           done();
         },
         (err) => {
+          abort(err);
           done();
         }
       );
     },
     (err) => {
+      abort(err);
       done();
     }
   );
