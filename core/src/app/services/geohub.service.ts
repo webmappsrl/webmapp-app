@@ -13,8 +13,6 @@ import {
   IGeojsonFeature,
   IGeojsonPoi,
   IGeojsonPoiDetailed,
-  ILineString,
-  IPoint,
   WhereTaxonomy,
 } from '../types/model';
 import { ITrack } from '../types/track';
@@ -33,7 +31,7 @@ export class GeohubService {
   constructor(
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
-    private configService: ConfigService
+    private _configService: ConfigService
   ) {}
 
   /**
@@ -78,17 +76,6 @@ export class GeohubService {
     return res;
   }
 
-  // /**
-  //  * Get an instance of the specified ec track
-  //  *
-  //  * @param {string} id the ec track id
-  //  *
-  //  * @returns {IGeojsonFeature}
-  //  */
-  // async getEcRoute(id: string): Promise<IGeojsonFeature> {
-  //   return this._getMockFeature();
-  // }
-
   /**
    * Get an instance of the specified ec poi
    *
@@ -121,7 +108,7 @@ export class GeohubService {
     filters,
     referenceTrackId: number
   ): Promise<IGeojsonClusterApiResponse> {
-    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}`;
+    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
     if (referenceTrackId) {
       url += `&reference_id=${referenceTrackId}`;
     }
@@ -139,13 +126,35 @@ export class GeohubService {
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}`
+        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`
       )
       .pipe(map((x) => x.features))
       .toPromise();
     return res;
   }
 
+  /**
+   * Get an array with the closest ec tracks to the specified location
+   *
+   * @returns {Array<IGeojsonFeature>}
+   */
+  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
+    const res = await this._communicationService
+      .get(
+        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed?app_id=${this._configService.appId}`
+      )
+      .pipe(map((x) => x.features))
+      .toPromise();
+    return res;
+  }
+
+  /**
+   * Save a waypoint as a EC POI to the Geohub
+   *
+   * @param waypoint the waypoint to save
+   *
+   * @returns
+   */
   async saveWaypoint(waypoint: WaypointSave) {
     const data = {
       type: 'Feature',
@@ -156,7 +165,7 @@ export class GeohubService {
       properties: {
         name: waypoint.title,
         description: waypoint.description,
-        app_id: this.configService.appId,
+        app_id: this._configService.appId,
         image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
       },
     };
@@ -170,6 +179,13 @@ export class GeohubService {
     return res;
   }
 
+  /**
+   * Save a photo as a EC MEDIA to the Geohub
+   *
+   * @param photo the photo to save
+   *
+   * @returns
+   */
   async savePhoto(photo: IPhotoItem) {
     const geojson = {
       type: 'Feature',
@@ -177,7 +193,7 @@ export class GeohubService {
       properties: {
         description: photo.description,
         name: photo.description,
-        app_id: this.configService.appId,
+        app_id: this._configService.appId,
       },
     };
 
@@ -194,6 +210,13 @@ export class GeohubService {
     return res;
   }
 
+  /**
+   * Save a track as a EC TRACK to the Geohub
+   *
+   * @param track the track to save
+   *
+   * @returns
+   */
   async saveTrack(track: ITrack) {
     const geometry = JSON.parse(JSON.stringify(track.geojson.geometry));
     geometry.coordinates = geometry.coordinates.map((x: any) => {
@@ -205,7 +228,7 @@ export class GeohubService {
       properties: {
         name: track.title,
         description: track.description,
-        app_id: this.configService.appId,
+        app_id: this._configService.appId,
         image_gallery: track.photoKeys ? track.photoKeys : [],
       },
     };
@@ -217,27 +240,6 @@ export class GeohubService {
           'Content-Type': 'application/json',
         })
       )
-      .toPromise();
-    return res;
-  }
-
-  // api/ugc/track/store api-auth
-  // geojson
-  // prop.name string
-  // prop.description string
-  // prop.app_id da config
-  // prop.gallery (array di id già aggiunti con add media)
-  // geometry=point
-
-  /**
-   * Get an array with the closest ec tracks to the specified location
-   *
-   * @returns {Array<IGeojsonFeature>}
-   */
-  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
-    const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed`)
-      .pipe(map((x) => x.features))
       .toPromise();
     return res;
   }
