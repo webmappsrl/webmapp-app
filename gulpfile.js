@@ -99,40 +99,37 @@ const argv = yargs(hideBin(process.argv))
   //   "set -g [id]",
   //   "set the development instance to use the specified configuration from the Geohub"
   // )
-  // .command(
-  //   "build -i [instance] -g [id]",
-  //   "update the app code and apply the configuration"
-  // )
-  // .command("build-android -i [instance] -g [id]", "update the android platform")
-  // .command(
-  //   "build-android-apk-debug -i [instance] -g [id]",
-  //   "update the android platform and create a debug apk"
-  // )
-  // .command(
-  //   "deploy-android-apk-debug -i [instance] -g [id]",
-  //   "update the android platform, create a debug apk and deploy it to a running emulator/connected device"
-  // )
-  // .command(
-  //   "build-android-apk -i [instance] -g [id] {-a [alias]}",
-  //   "update the android platform and create a signed release apk in the builds folder"
-  // )
-  // .command(
-  //   "deploy-android-apk -i [instance] -g [id] {-a [alias]}",
-  //   "update the android platform, create a signed release apk in the builds folder and deploy it to a running emulator/connected device"
-  // )
-  // .command(
-  //   "build-android-bundle -i [instance] -g [id] {-a [alias]}",
-  //   "update the android platform and create a signed release bundle for the store release"
-  // )
-  // .command("build-ios -i [instance] -g [id]", "update the ios platform")
-  // .command(
-  //   "upload-ios -i [instance] -g [id]",
-  //   "update the ios platform and upload a build to the App Store Connect"
-  // )
-  // .command(
-  //   "release -i [instance] -g [id] {-a [alias]} {-b [bundleVersion]}",
-  //   "create a signed release bundle and upload the ios build to the App Store Connect"
-  // )
+  .command("build", "update the app code and apply the configuration")
+  .command("build-android", "update the android platform")
+  .command(
+    "build-android-apk-debug",
+    "update the android platform and create a debug apk"
+  )
+  .command(
+    "deploy-android-apk-debug",
+    "update the android platform, create a debug apk and deploy it to a running emulator/connected device"
+  )
+  .command(
+    "build-android-apk",
+    "update the android platform and create a signed release apk in the builds folder"
+  )
+  .command(
+    "deploy-android-apk",
+    "update the android platform, create a signed release apk in the builds folder and deploy it to a running emulator/connected device"
+  )
+  .command(
+    "build-android-bundle",
+    "update the android platform and create a signed release bundle for the store release"
+  )
+  .command("build-ios", "update the ios platform")
+  .command(
+    "upload-ios",
+    "update the ios platform and upload a build to the App Store Connect"
+  )
+  .command(
+    "release",
+    "create a signed release bundle and upload the ios build to the App Store Connect"
+  )
   .options({
     verbose: {
       demandOption: false,
@@ -1448,6 +1445,10 @@ function uploadIos(instanceName, geohubInstanceId) {
  * Update the configuration in the core for development purposes
  */
 gulp.task("set", function (done) {
+  abort("Command currently not supported");
+  done();
+  return;
+
   var config,
     instanceName = argv.instance,
     geohubInstanceId = argv.geohubInstanceId;
