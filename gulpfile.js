@@ -94,42 +94,86 @@ function error(message) {
   );
 }
 
-const argv = yargs(hideBin(process.argv)).options({
-  verbose: {
-    demandOption: false,
-    default: false,
-    describe: "Show a verbose output",
-    type: "boolean",
-  },
-  i: {
-    alias: "instance",
-    demandOption: true,
-    default: "",
-    describe: "Set the instance to work with",
-    type: "string",
-  },
-  g: {
-    alias: "geohubInstanceId",
-    demandOption: true,
-    default: "",
-    describe: "Set the geohub instance id to work with",
-    type: "string",
-  },
-  a: {
-    alias: "alias",
-    demandOption: true,
-    default: "",
-    describe: "Set the alias of the android key",
-    type: "string",
-  },
-  b: {
-    alias: "bundle",
-    demandOption: true,
-    default: "1",
-    describe: "Set the bundle version for the ios build",
-    type: "string",
-  },
-}).argv;
+const argv = yargs(hideBin(process.argv))
+  // .command(
+  //   "set -g [id]",
+  //   "set the development instance to use the specified configuration from the Geohub"
+  // )
+  .command("build", "update the app code and apply the configuration")
+  .command("build-android", "update the android platform")
+  .command(
+    "build-android-apk-debug",
+    "update the android platform and create a debug apk"
+  )
+  .command(
+    "deploy-android-apk-debug",
+    "update the android platform, create a debug apk and deploy it to a running emulator/connected device"
+  )
+  .command(
+    "build-android-apk",
+    "update the android platform and create a signed release apk in the builds folder"
+  )
+  .command(
+    "deploy-android-apk",
+    "update the android platform, create a signed release apk in the builds folder and deploy it to a running emulator/connected device"
+  )
+  .command(
+    "build-android-bundle",
+    "update the android platform and create a signed release bundle for the store release"
+  )
+  .command("build-ios", "update the ios platform")
+  .command(
+    "upload-ios",
+    "update the ios platform and upload a build to the App Store Connect"
+  )
+  .command(
+    "release",
+    "create a signed release bundle and upload the ios build to the App Store Connect"
+  )
+  .options({
+    verbose: {
+      demandOption: false,
+      optional: true,
+      default: false,
+      describe: "Show a more detailed output",
+      type: "boolean",
+    },
+    i: {
+      alias: "instance",
+      demandOption: true,
+      default: "",
+      describe: "Set the instance to work with",
+      type: "string",
+    },
+    g: {
+      alias: "geohubInstanceId",
+      demandOption: true,
+      default: "",
+      describe: "Set the geohub instance id to work with",
+      type: "string",
+    },
+    a: {
+      alias: "alias",
+      demandOption: true,
+      default: "",
+      describe: "Set the alias of the android key",
+      type: "string",
+    },
+    b: {
+      alias: "bundle",
+      demandOption: true,
+      default: "1",
+      describe: "Set the bundle version for the ios build",
+      type: "boolean",
+    },
+    force: {
+      demandOption: false,
+      default: false,
+      describe:
+        "Force the update of the instance reinstalling npm, plugins and the capacitor project",
+      type: "string",
+    },
+  }).argv;
 
 const instancesDir = "instances/",
   verbose = argv.verbose ? true : false,
@@ -215,7 +259,7 @@ function updateCapacitorConfigJson(instanceName, id, name) {
 
     if (instanceName) dir = instancesDir + instanceName;
     else {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
@@ -240,7 +284,7 @@ function updateIndex(instanceName, name) {
     if (instanceName) {
       dir = instancesDir + instanceName + "/src";
     } else {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
@@ -260,7 +304,7 @@ function create(instanceName, force) {
   return new Promise((resolve, reject) => {
     if (verbose) debug("Starting `create(" + instanceName + ")`");
     if (!instanceName) {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
@@ -291,12 +335,12 @@ function create(instanceName, force) {
 function update(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
     if (!geohubInstanceId) {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
@@ -407,7 +451,7 @@ function update(instanceName, geohubInstanceId) {
         })
         .on("data", () => {});
     } else {
-      reject("Missing instance. See gulp --help for more");
+      reject("Missing instance. See gulp help for more");
     }
   });
 }
@@ -711,11 +755,11 @@ function updateAndroidPlatform(instanceName, appId, appName) {
 function build(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
-      reject("Instance name requred. See gulp --help");
+      reject("Instance name requred. See gulp help");
       return;
     }
     if (!geohubInstanceId) {
-      reject("Geohub instance id requred. See gulp --help");
+      reject("Geohub instance id requred. See gulp help");
       return;
     }
 
@@ -1257,7 +1301,7 @@ function buildIos(instanceName, geohubInstanceId) {
 function createExportOptionsPlist(instanceName, appId, provisioningProfile) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
-      reject("Instance name required. See gulp --help");
+      reject("Instance name required. See gulp help");
       return;
     }
 
@@ -1401,6 +1445,10 @@ function uploadIos(instanceName, geohubInstanceId) {
  * Update the configuration in the core for development purposes
  */
 gulp.task("set", function (done) {
+  abort("Command currently not supported");
+  done();
+  return;
+
   var config,
     instanceName = argv.instance,
     geohubInstanceId = argv.geohubInstanceId;
@@ -1411,12 +1459,12 @@ gulp.task("set", function (done) {
       config = "https://geohub.webmapp.it/api/app/webmapp/" + geohubInstanceId;
       if (verbose) debug("Using default url: " + config);
     } else {
-      abort("Missing geohub instance id. See gulp --help");
+      abort("Missing geohub instance id. See gulp help");
       done();
       return;
     }
   } else {
-    abort("Missing config. See gulp --help");
+    abort("Missing config. See gulp help");
     done();
     return;
   }
@@ -1445,12 +1493,12 @@ gulp.task("build", function (done) {
 
   if (verbose) debug("Running build function for " + instanceName);
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1475,12 +1523,12 @@ gulp.task("build-android", function (done) {
 
   if (verbose) debug("Building android platform for instance " + instanceName);
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1503,12 +1551,12 @@ gulp.task("build-android-apk-debug", function (done) {
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1533,12 +1581,12 @@ gulp.task("deploy-android-apk-debug", function (done) {
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1572,12 +1620,12 @@ gulp.task("build-android-apk", function (done) {
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1602,12 +1650,12 @@ gulp.task("deploy-android-apk", function (done) {
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1638,12 +1686,12 @@ gulp.task("build-android-bundle", function (done) {
   var instanceName = argv.instance ? argv.instance : "",
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1668,12 +1716,12 @@ gulp.task("build-ios", function (done) {
   var instanceName = argv.instance ? argv.instance : "",
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1698,12 +1746,12 @@ gulp.task("upload-ios", function (done) {
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
 
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }
@@ -1730,12 +1778,12 @@ gulp.task("release", function (done) {
   var instanceName = argv.instance ? argv.instance : "",
     geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : "";
   if (!instanceName) {
-    abort("Instance name requred. See gulp --help");
+    abort("Instance name requred. See gulp help");
     done();
     return;
   }
   if (!geohubInstanceId) {
-    abort("Geohub instance id requred. See gulp --help");
+    abort("Geohub instance id requred. See gulp help");
     done();
     return;
   }

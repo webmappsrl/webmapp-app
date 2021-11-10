@@ -1,6 +1,7 @@
 interface IAPP {
   name: string;
   id: string;
+  geohubId: number;
 }
 
 interface IGEOLOCATION {

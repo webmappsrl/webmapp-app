@@ -14,6 +14,7 @@ import { timeout } from 'rxjs/operators';
 import { StorageService } from './base/storage.service';
 import { CommunicationService } from './base/communication.service';
 import { DeviceService } from './base/device.service';
+import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,13 @@ export class ConfigService {
             () => {}
           )
           .finally(() => {
-            const url = 'https://k.webmapp.it/webmapp/config.json';
+            const url =
+              GEOHUB_PROTOCOL +
+              '://' +
+              GEOHUB_DOMAIN +
+              '/api/app/webmapp/' +
+              this._config.APP.geohubId +
+              '/config.json';
 
             this._communicationService
               .get(url + '?t=' + Date.now())
