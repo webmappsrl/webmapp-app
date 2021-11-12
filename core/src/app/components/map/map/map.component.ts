@@ -289,6 +289,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _map: Map;
   public static: boolean;
 
+  private _styleFunctions: {
+    [sourceId: string]: {
+      [layerId: string]: Style;
+    };
+  };
+
   private _lastClusterMarkerTransparency;
 
   // Location Icon
@@ -426,7 +432,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       )
       .pipe(take(1))
       .subscribe(async (styleJson: IVectorMapStyle) => {
-        const layers: Array<any> = await this._createVectorTilesFromStyleJson(
+        // const layers: Array<any> = await this._createVectorTilesFromStyleJson(
+        //   styleJson
+        // );
+        this._styleFunctions = {};
+        const layers: Array<any> = await this._createLayersFromStyleJson(
           styleJson
         );
 
@@ -434,7 +444,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         for (let layer of layers) {
           this._map.addLayer(layer);
         }
-        // this._map.addLayer(this._initializeVectorTileBaseLayer(tileJson));
       });
 
     this.isRecording = this._geolocationService.recording;
@@ -779,7 +788,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _createVectorTilesFromStyleJson(
     style: IVectorMapStyle
-  ): Promise<any> {
+  ): Promise<Array<any>> {
+    console.log(style);
     return new Promise<Array<any>>((resolve, reject) => {
       resolve([
         new TileLayer({
@@ -806,56 +816,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         return;
       }
 
-      let promises: Array<Promise<VectorTileLayer | TileLayer>> = [],
-        styleFunctions: {
-          [sourceId: string]: {
-            [layerId: string]: Array<Style>;
-          };
-        } = {};
+      let promises: Array<Promise<VectorTileLayer | TileLayer>> = [];
 
-      if (style?.layers?.length) {
-        for (let layer of style.layers) {
-          let styles: Array<Style> = [],
-            lineColor: string,
-            lineWidth: number,
-            fillColor: string,
-            fillOpacity: number;
-          switch (layer.type) {
-            case EVectorLayerType.LINE:
-              lineColor = layer?.paint?.['line-color'] ?? '#000000';
-              lineWidth = layer?.paint?.['line-width']?.base ?? 1;
-              styles.push(
-                new Style({
-                  stroke: new Stroke({ color: lineColor, width: lineWidth }),
-                })
-              );
-              break;
-            case EVectorLayerType.FILL:
-              fillColor = layer?.paint?.['fill-color'] ?? '#000000';
-              fillOpacity = layer?.paint?.['fill-opacity'] ?? 0.3;
-              lineColor = layer?.paint?.['line-color'] ?? '#000000';
-              lineWidth = layer?.paint?.['line-width']?.base ?? 1;
-
-              styles.push(
-                new Style({
-                  fill: new Fill({
-                    color: fillColor,
-                  }),
-                  stroke: new Stroke({ color: lineColor, width: lineWidth }),
-                })
-              );
-              break;
-            case EVectorLayerType.SYMBOL:
-              break;
-          }
-
-          if (!styleFunctions[layer.source]) styleFunctions[layer.source] = {};
-          if (!styleFunctions[layer.source][layer['source-layer']])
-            styleFunctions[layer.source][layer['source-layer']] = [];
-
-          styleFunctions[layer.source][layer['source-layer']].push(...styles);
-        }
-      }
+      this._buildStyleFunctions(style);
 
       for (let sourceId in style.sources) {
         if (style.sources[sourceId]?.type) {
@@ -877,7 +840,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                     this._createVectorTileLayer(
                       sourceId,
                       style.sources[sourceId],
-                      styleFunctions,
                       zIndex
                     )
                   )
@@ -887,7 +849,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
                   this._createVectorTileLayerFromJsonSource(
                     sourceId,
                     style.sources[sourceId],
-                    styleFunctions,
                     zIndex
                   )
                 );
@@ -902,6 +863,65 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         resolve(layers);
       });
     });
+  }
+
+  private _buildStyleFunctions(style: IVectorMapStyle) {
+    if (style?.layers?.length) {
+      for (let layer of style.layers) {
+        let newStyle: Style = new Style(),
+          lineColor: string,
+          lineWidth: number,
+          fillColor: string,
+          fillOpacity: number;
+        switch (layer.type) {
+          case EVectorLayerType.LINE:
+            lineColor = layer?.paint?.['line-color'] ?? '#000000';
+            lineWidth = layer?.paint?.['line-width']?.base ?? 1;
+            newStyle.setStroke(
+              new Stroke({
+                color: lineColor,
+                width: lineWidth,
+              })
+            );
+            break;
+          case EVectorLayerType.FILL:
+            fillColor = layer?.paint?.['fill-color'] ?? '#000000';
+            fillOpacity = layer?.paint?.['fill-opacity'] ?? 0.3;
+            lineColor = layer?.paint?.['line-color'] ?? '#000000';
+            lineWidth = layer?.paint?.['line-width']?.base ?? 1;
+
+            newStyle.setFill(
+              new Fill({
+                color: fillColor,
+              })
+            );
+            newStyle.setStroke(
+              new Stroke({
+                color: lineColor,
+                width: lineWidth,
+              })
+            );
+            break;
+          case EVectorLayerType.SYMBOL:
+            break;
+        }
+
+        if (!this._styleFunctions[layer.source])
+          this._styleFunctions[layer.source] = {};
+        if (!this._styleFunctions[layer.source][layer['source-layer']])
+          this._styleFunctions[layer.source][layer['source-layer']] = newStyle;
+        else {
+          if (newStyle.getStroke())
+            this._styleFunctions[layer.source][layer['source-layer']].setStroke(
+              newStyle.getStroke()
+            );
+          if (newStyle.getFill())
+            this._styleFunctions[layer.source][layer['source-layer']].setFill(
+              newStyle.getFill()
+            );
+        }
+      }
+    }
   }
 
   private _createRasterTileLayer(
@@ -924,11 +944,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _createVectorTileLayer(
     sourceId: string,
     source: IVectorMapSource | IVectorMapSourceJson,
-    styleFunctions: {
-      [sourceId: string]: {
-        [layerId: string]: Array<Style>;
-      };
-    },
     zIndex: number
   ): VectorTileLayer {
     return new VectorTileLayer({
@@ -942,9 +957,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         urls: source.tiles,
       }),
       style: (feature, resolution) => {
-        // const layerId = feature.get('layer');
-        // if (!styleFunctions?.[sourceId]?.[layerId]) return null;
-        // return styleFunctions[sourceId][layerId];
+        const layerId = feature.get('layer');
+        if (!this._styleFunctions?.[sourceId]?.[layerId]) return null;
+        return this._styleFunctions[sourceId][layerId];
         return new Style({
           stroke: new Stroke({
             color: '#ff00ff',
@@ -958,11 +973,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _createVectorTileLayerFromJsonSource(
     sourceId: string,
     source: IVectorMapSource,
-    styleFunctions: {
-      [sourceId: string]: {
-        [layerId: string]: Array<Style>;
-      };
-    },
     zIndex: number
   ): Promise<VectorTileLayer> {
     return new Promise<VectorTileLayer>((resolve, reject) => {
@@ -971,35 +981,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         .toPromise()
         .then(
           (json: IVectorMapSourceJson) => {
-            // for (let i in json.vector_layers) {
-            //   let layerId: string = json.vector_layers[i].id;
-            //   for (let j in styleFunctions) {
-            //     if (
-            //       styleFunctions[j].source === sourceId &&
-            //       styleFunctions[j].sourceLayer === layerId
-            //     ) {
-            //       console.log(sourceId, layerId);
-            //       if (!styleFunctions[layerId])
-            //         styleFunctions[layerId] = styleFunctions[j];
-            //       else
-            //         styleFunctions[layerId].style.push(
-            //           ...styleFunctions[j].style
-            //         );
-            //       break;
-            //     }
-            //   }
-            // }
-
-            // console.log(styleFunctions['water']);
-
-            resolve(
-              this._createVectorTileLayer(
-                sourceId,
-                json,
-                styleFunctions,
-                zIndex
-              )
-            );
+            resolve(this._createVectorTileLayer(sourceId, json, zIndex));
           },
           () => {
             resolve(null);

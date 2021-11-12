@@ -1,6 +1,7 @@
 {
   "APP": {
     "name": "Webmapp",
-    "id": "it.webmapp.webmapp"
+    "id": "it.webmapp.webmapp",
+    "geohubId": 3
   }
 }
