@@ -2,24 +2,33 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <!-- <ion-back-button defaultHref="/profile/profile-records" text="" class="webmapp-backbutton"></ion-back-button> -->
-      <ion-icon name="arrow-back-outline" [routerLink]="['/profile/profile-records']" class="webmapp-backbutton"></ion-icon>
+      <ion-icon
+        name="chevron-back"
+        [routerLink]="['/profile/profile-records']"
+        class="webmapp-backbutton webmapp-backbutton-chevron"
+      ></ion-icon>
     </ion-buttons>
     <ion-title>{{'pages.photolist.title'|translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div class="webmapp-photolist-noitem" *ngIf="!photos?.length>0">
+  <div class="webmapp-photolist-noitem" *ngIf="!photos?.length">
     {{'pages.photolist.noitem'|translate}}
-  </div> 
+  </div>
   <ion-list>
     <ion-item *ngFor="let photo of photos" button detail (click)="open(photo)">
-      <ion-img [src]="photo.rawData" start class="webmapp-photolist-item-image"></ion-img>
+      <ion-img
+        [src]="photo.photoURL"
+        start
+        class="webmapp-photolist-item-image"
+      ></ion-img>
       <div>
         <div class="webmapp-photolist-item-title">{{photo.description}}</div>
-        <div class="webmapp-photolist-item-date">{{photo.date | date : "d MMMM YYYY - HH:mm"}}</div>
+        <div class="webmapp-photolist-item-date">
+          {{photo.date | date : "d MMMM YYYY - HH:mm"}}
+        </div>
       </div>
     </ion-item>
   </ion-list>
-
 </ion-content>

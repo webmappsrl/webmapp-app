@@ -10,6 +10,7 @@ import { PoiPage } from './poi.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipeModule } from 'src/app/pipes/pipe.module';
 import { MapModule } from 'src/app/components/map/map.module';
+import { SharedModule } from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { MapModule } from 'src/app/components/map/map.module';
     PoiPageRoutingModule,
     TranslateModule,
     PipeModule,
-    MapModule
+    MapModule,
+    SharedModule
   ],
   declarations: [PoiPage]
 })

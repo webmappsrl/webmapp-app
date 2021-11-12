@@ -1,0 +1,67 @@
+<ion-content>
+  <div class="webmapp-modalcoins">
+
+    <div class="ios-filling"></div>
+
+    <div class="webmapp-modalcoins-header ripple-parent ion-activatable">
+      <ion-icon name="close-outline" class="webmapp-modalcoins-closebtn" (click)="close()"></ion-icon>
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+
+    <ion-label *ngIf="message">
+      {{message}}
+    </ion-label>
+
+    <div *ngIf="!message">
+      <ion-label class="webmapp-modalcoins-title">
+        {{ 'modals.coin.defaultmessage' | translate }}
+      </ion-label>
+      <ion-img class="webmapp-modalcoins-image" src="assets/animations/coins.gif"></ion-img>
+
+      <div class="webmapp-modalcoins-info">
+        <i class="wwebmapp-modalcoins-info-check webmapp-icon-check-outline"> </i>
+        <ion-label class="webmapp-modalcoins-info-main">
+          {{ 'modals.coin.info1' | translate }}
+        </ion-label>
+        <ion-label class="webmapp-modalcoins-info-sub">
+          {{ 'modals.coin.subinfo1' | translate }}
+        </ion-label>
+      </div>
+
+      <div class="webmapp-modalcoins-info">
+        <i class="wwebmapp-modalcoins-info-check webmapp-icon-check-outline"> </i>
+        <ion-label class="webmapp-modalcoins-info-main">
+          {{ 'modals.coin.info2' | translate }}
+        </ion-label>
+        <ion-label class="webmapp-modalcoins-info-sub">
+          {{ 'modals.coin.subinfo2' | translate }}
+        </ion-label>
+      </div>
+
+      <div class="webmapp-modalcoins-info">
+        <i class="wwebmapp-modalcoins-info-check webmapp-icon-check-outline"> </i>
+        <ion-label class="webmapp-modalcoins-info-main">
+          {{ 'modals.coin.info3' | translate }}
+        </ion-label>
+        <ion-label class="webmapp-modalcoins-info-sub">
+          {{ 'modals.coin.subinfo3' | translate }}
+        </ion-label>
+      </div>
+
+      <div class="wwebmapp-modalcoins-buttoncontainer">
+
+        <ion-button expand="block" class="wwebmapp-modalcoins-buttonone" fill="outline" (click)="buyone()">
+          <ion-img class="webmapp-modalcoins-button-image" src="assets/images/coins1.png"></ion-img>
+          {{ 'modals.coin.buttonone' | translate }}
+        </ion-button>
+        <ion-button expand="block" class="wwebmapp-modalcoins-buttonall" (click)="buyall()">
+          {{ 'modals.coin.buttonall' | translate }}
+        </ion-button>
+
+      </div>
+
+
+
+    </div>
+  </div>
+</ion-content>

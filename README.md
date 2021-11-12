@@ -9,6 +9,8 @@ Firstly you need to clone the repo
 
 `git clone git@github.com:webmappsrl/wm-app.git`
 
+You can use the `gulp help` command to check how you can proceed
+
 ### Prerequisites
 
 To run this project you need:
@@ -58,18 +60,6 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 - **Pedram Katanchi** - _Web developer_ - [Webmapp](https://github.com/padramkat)
 
 See also the list of [contributors](https://github.com/webmappsrl/wm-app/graphs/contributors) who participated in this project.
-
-## Geolocation
-
-Add to 
-\android\app\src\main\res\values
-
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="mauron85_bgloc_account_name">$ACCOUNT_NAME</string>
-    <string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string>
-    <string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>
-</resources>
 
 ## License
 

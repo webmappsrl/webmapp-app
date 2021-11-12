@@ -9,6 +9,7 @@ import { FavouritesPageRoutingModule } from './favourites-routing.module';
 import { FavouritesPage } from './favourites.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { PipeModule } from 'src/app/pipes/pipe.module';
+import { CardsModule } from 'src/app/components/cards/cards.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PipeModule } from 'src/app/pipes/pipe.module';
     IonicModule,
     FavouritesPageRoutingModule,
     TranslateModule,
-    PipeModule
+    PipeModule,
+    CardsModule
   ],
   declarations: [FavouritesPage]
 })

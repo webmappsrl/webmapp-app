@@ -5,6 +5,8 @@ import { SaveService } from 'src/app/services/save.service';
 import { ILocation } from 'src/app/types/location';
 import { ESuccessType } from 'src/app/types/esuccess.enum';
 import { WaypointSave } from 'src/app/types/waypoint';
+import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'webmapp-modal-waypoint-save',
@@ -17,12 +19,14 @@ export class ModalWaypointSaveComponent implements OnInit {
   public title: string;
   public description: string;
   public waypointtype: string;
+  public photos: any[] = [];
 
   public positionString: string;
   public positionCity: string = 'città';
 
   constructor(
     private _modalController: ModalController,
+    private _photoService: PhotoService,
     private _saveService: SaveService
   ) {}
 
@@ -42,6 +46,7 @@ export class ModalWaypointSaveComponent implements OnInit {
       waypointtype: this.waypointtype,
       city: this.positionCity,
       date: new Date(),
+      photos: this.photos,
     };
 
     await this._saveService.saveWaypoint(waypoint);
@@ -67,6 +72,38 @@ export class ModalWaypointSaveComponent implements OnInit {
     });
     await modaSuccess.present();
     await modaSuccess.onDidDismiss();
+  }
+
+  async addPhotos() {
+    const library = await this._photoService.getPhotos();
+    library.forEach(async (libraryItem) => {
+      const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
+      const photoData = await this._photoService.getPhotoData(
+          libraryItemCopy.photoURL
+        ),
+        md5 = Md5.hashStr(JSON.stringify(photoData));
+      let exists: boolean = false;
+      for (let p of this.photos) {
+        const pData = await this._photoService.getPhotoData(p.photoURL),
+          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        if (md5 === pictureMd5) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) this.photos.push(libraryItemCopy);
+    });
+  }
+
+  remove(image: IPhotoItem) {
+    const i = this.photos.findIndex(
+      (x) =>
+        x.photoURL === image.photoURL ||
+        (!!x.key && !!image.key && x.key === image.key)
+    );
+    if (i > -1) {
+      this.photos.splice(i, 1);
+    }
   }
 
   isValid() {

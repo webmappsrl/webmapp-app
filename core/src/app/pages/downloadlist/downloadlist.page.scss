@@ -1,0 +1,44 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-downloadlist-command-container {
+    width: 100%;
+    text-align: right;
+    padding: 10px 0;
+    .webmapp-downloadlist-command {
+        padding: 10px 20px;
+        color: var(--wm-color-secondary);
+    }
+}
+
+.webmapp-downloadlist-list-container {
+    position: relative;
+    text-align: right;
+    .webmapp-downloadlist-list-checkbox {
+        position: absolute;
+        top: 16px;
+        left: 5px;
+    }
+    .webmapp-downloadlist-list-card {
+        display: inherit;
+        &.webmapp-downloadlist-list-card-selecion {
+            margin-left: 15px;
+        }
+    }
+}
+
+.webmapp-downloadlist-nodata {
+    padding: 15px;
+    ion-label {
+        margin-bottom: 20px;
+        /* padding-bottom: 20px; */
+        display: block;
+    }
+    .webmapp-downloadlist-nodata-button {
+        position: absolute;
+        bottom: 40px;
+        @include box-shadow-light;
+        --border-radius: 20px;
+        width: 70%;
+        left: 15%;
+    }
+}

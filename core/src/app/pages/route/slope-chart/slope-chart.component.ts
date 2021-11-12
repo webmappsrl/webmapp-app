@@ -236,52 +236,16 @@ export class SlopeChartComponent implements OnInit {
         });
       }
 
-      this._createChart(
-        labels,
-        trackLength,
-        maxAlt,
-        surfaceValues,
-        slopeValues
-      );
+      setTimeout(() => {
+        this._createChart(
+          labels,
+          trackLength,
+          maxAlt,
+          surfaceValues,
+          slopeValues
+        );
+      }, 100);
     }
-  }
-
-  /**
-   * Set the surface value on a specific surface
-   *
-   * @param surface the surface type
-   * @param value the value
-   * @param values the current values
-   * @returns
-   */
-  private _setSurfaceValueOld(
-    surface: string,
-    value: number,
-    values: {
-      [id: string]: Array<number>;
-    }
-  ): {
-    [id: string]: Array<number>;
-  } {
-    let length: number =
-      Object.keys(values).length > 0
-        ? values[Object.keys(values)[0]].length
-        : 0;
-
-    if (length > 0) {
-      for (let i in values) {
-        if (typeof values[i][values[i].length - 1] === 'number') {
-          values[surface][values[surface].length - 1] =
-            values[i][values[i].length - 1];
-          break;
-        }
-      }
-    }
-
-    for (let i in values) {
-      values[i].push(i === surface ? value : null);
-    }
-    return values;
   }
 
   /**

@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ITrack } from 'src/app/types/track';
-import { PhotoService } from 'src/app/services/photo.service';
+import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -84,37 +85,32 @@ export class ModalSaveComponent implements OnInit {
     });
   }
 
-  // async addPhotos() {
-  //   const modal = await this.modalController.create({
-  //     component: ModalSelectphotosComponent,
-  //     // cssClass: 'my-custom-class'
-  //   });
-  //   await modal.present();
-  //   const res = await modal.onDidDismiss();
-  //   if (res.data && res.data.photos) {
-  //     this.photos = res.data.photos;
-  //   }
-  // }
-
   async addPhotos() {
     const library = await this._photoService.getPhotos();
-    library.forEach((libraryItem) => {
+    library.forEach(async (libraryItem) => {
       const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
-      console.log(
-        '------- ~ file: modal-save.component.ts ~ line 100 ~ ModalSaveComponent ~ library.forEach ~ libraryItemCopy',
-        libraryItemCopy
-      );
-      this.photos.push(libraryItemCopy);
+      const photoData = await this._photoService.getPhotoData(
+          libraryItemCopy.photoURL
+        ),
+        md5 = Md5.hashStr(JSON.stringify(photoData));
+      let exists: boolean = false;
+      for (let p of this.photos) {
+        const pData = await this._photoService.getPhotoData(p.photoURL),
+          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        if (md5 === pictureMd5) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) this.photos.push(libraryItemCopy);
     });
-    console.log(
-      '------- ~ file: modal-save.component.ts ~ line 101 ~ ModalSaveComponent ~ library.forEach ~ this.photos',
-      this.photos
-    );
   }
 
-  remove(image) {
+  remove(image: IPhotoItem) {
     const i = this.photos.findIndex(
-      (x) => x.id === image.id || x.key === image.key
+      (x) =>
+        x.photoURL === image.photoURL ||
+        (!!x.key && !!image.key && x.key === image.key)
     );
     if (i > -1) {
       this.photos.splice(i, 1);

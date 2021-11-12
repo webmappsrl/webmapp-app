@@ -49,6 +49,18 @@ const routes: Routes = [
   {
     path: 'poi',
     loadChildren: () => import('./pages/poi/poi.module').then( m => m.PoiPageModule)
+  },
+  {
+    path: 'downloadlist',
+    loadChildren: () => import('./pages/downloadlist/downloadlist.module').then( m => m.DownloadlistPageModule)
+  },
+  {
+    path: 'store',
+    loadChildren: () => import('./pages/store/store.module').then( m => m.StorePageModule)
+  },
+  {
+    path: 'registeruser',
+    loadChildren: () => import('./pages/registeruser/registeruser.module').then( m => m.RegisteruserPageModule)
   }
 
 ];

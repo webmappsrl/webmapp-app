@@ -18,6 +18,8 @@ import { TabWalkableComponent } from './tab-walkable/tab-walkable.component';
 import { PipeModule } from 'src/app/pipes/pipe.module';
 import { SlopeChartComponent } from './slope-chart/slope-chart.component';
 import { FavBtnComponent } from './fav-btn/fav-btn.component';
+import { DownloadPanelComponent } from './download-panel/download-panel.component';
+import { SharedModule } from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -28,6 +30,7 @@ import { FavBtnComponent } from './fav-btn/fav-btn.component';
     TranslateModule,
     MapModule,
     PipeModule,
+    SharedModule
   ],
   declarations: [
     RoutePage,
@@ -38,6 +41,7 @@ import { FavBtnComponent } from './fav-btn/fav-btn.component';
     TabDescriptionComponent,
     TabViabilityComponent,
     SlopeChartComponent,
+    DownloadPanelComponent,
     FavBtnComponent
   ],
 })

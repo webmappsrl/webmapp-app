@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { StatusService } from 'src/app/services/status.service';
-import { IGeojsonFeature, IGeojsonPoiDetailed } from 'src/app/types/model';
-import { Plugins } from '@capacitor/core';
-
-const { Browser } = Plugins;
+import {
+  IGeojsonFeature,
+  IGeojsonPoi,
+  IGeojsonPoiDetailed,
+} from 'src/app/types/model';
+import { Browser } from '@capacitor/browser';
+import { DownloadService } from 'src/app/services/download.service';
 
 @Component({
   selector: 'app-poi',
@@ -12,33 +15,45 @@ const { Browser } = Plugins;
   styleUrls: ['./poi.page.scss'],
 })
 export class PoiPage implements OnInit {
-
   public route: IGeojsonFeature;
   public pois: Array<IGeojsonPoiDetailed>;
   public selectedPoi: IGeojsonPoiDetailed;
   public track;
 
+  public useCache = false;
+
+  public useAnimation = false;
+
   public poiIdx: number;
 
   public sliderOptions: any = {
-    slidesPerView: 2.2,
+    slidesPerView: 1.3,
   };
 
   constructor(
     private _statusService: StatusService,
-    private _navController: NavController
-  ) { }
+    private _navController: NavController,
+    private downloadService: DownloadService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.route = this._statusService.route;
     this.pois = this._statusService.getRelatedPois();
     this.selectPoiById(this._statusService.getSelectedPoiId());
-    setTimeout(() => { 
-      this.track = this.route.geometry; 
+
+    this.useCache = await this.downloadService.isDownloadedTrack(
+      this.route.properties.id
+    );
+
+    setTimeout(() => {
+      this.track = this.route.geometry;
       this.updatePoiMarkers();
     }, 0);
-  }
 
+    setTimeout(() => {
+      this.useAnimation = true;
+    }, 1000);
+  }
 
   back() {
     this._navController.back();
@@ -46,20 +61,22 @@ export class PoiPage implements OnInit {
 
   private updatePoiMarkers() {
     const res = [];
-    this.pois.forEach(poi => {
+    this.pois.forEach((poi) => {
       poi.isSmall = true; // poi != this.selectedPoi;
       res.push(poi);
     });
     this.pois = res;
   }
 
-  async clickPoi(poi: IGeojsonPoiDetailed) {
-    this.selectPoi(poi)
+  async clickPoi(poi: IGeojsonPoi) {
+    this.selectPoi(poi);
     // this.updatePoiMarkers();
   }
 
   prevPoi() {
-    this.selectPoi(this.pois[(this.poiIdx + this.pois.length - 1) % this.pois.length]);
+    this.selectPoi(
+      this.pois[(this.poiIdx + this.pois.length - 1) % this.pois.length]
+    );
   }
 
   nextPoi() {
@@ -67,31 +84,46 @@ export class PoiPage implements OnInit {
   }
 
   selectPoiById(id: number) {
-    const selectedPoi = this.pois.find(p => p.properties.id == id);
-    this.selectPoi(selectedPoi)
+    const selectedPoi = this.pois.find((p) => p.properties.id == id);
+    this.selectPoi(selectedPoi);
   }
 
-  selectPoi(poi: IGeojsonPoiDetailed) {
-    this.selectedPoi = this.pois.find(p => p.properties.id == poi.properties.id);
-    this.poiIdx = this.pois.findIndex(p => p.properties.id == poi.properties.id);
+  selectPoi(poi: IGeojsonPoi) {
+    this.selectedPoi = this.pois.find(
+      (p) => p.properties.id == poi.properties.id
+    );
+    this.poiIdx = this.pois.findIndex(
+      (p) => p.properties.id == poi.properties.id
+    );
     // this.updatePoiMarkers();
   }
 
   phone(phoneNumber) {
-    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone',phoneNumber);
-
+    console.log(
+      '------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone',
+      phoneNumber
+    );
   }
 
   email(email) {
-    console.log('------- ~ file: poi.page.ts ~ line 80 ~ PoiPage ~ email ~ email');
-
+    console.log(
+      '------- ~ file: poi.page.ts ~ line 80 ~ PoiPage ~ email ~ email'
+    );
   }
 
   async url(url) {
-    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url',url);
-    await Browser.open({url});
+    console.log(
+      '------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url',
+      url
+    );
+    await Browser.open({ url });
   }
 
-
-
+  showPhoto(idx) {
+    this._statusService.showPhoto(
+      true,
+      this.selectedPoi.properties.images,
+      idx
+    );
+  }
 }

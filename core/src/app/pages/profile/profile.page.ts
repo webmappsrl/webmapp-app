@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SettingsComponent } from 'src/app/components/settings/settings.component';
@@ -24,7 +24,8 @@ export class ProfilePage implements OnInit, OnDestroy {
   constructor(
     private _authService: AuthService,
     private _modalController: ModalController,
-    private _router: Router
+    private _router: Router,
+    private _navController: NavController
   ) {
     this.loggedOutSliderOptions = {
       initialSlide: 0,
@@ -79,7 +80,9 @@ export class ProfilePage implements OnInit, OnDestroy {
     }
   }
 
-  signup(): void {}
+  signup(): void {
+    this._navController.navigateForward('registeruser');
+  }
 
   ngOnDestroy(): void {
     this._destroyer.next(true);

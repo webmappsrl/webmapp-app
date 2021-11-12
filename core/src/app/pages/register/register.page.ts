@@ -170,7 +170,6 @@ export class RegisterPage implements OnInit, OnDestroy {
         },
         res.data.trackData
       );
-      console.log('TRACK TO SAVE', track);
 
       await this._saveService.saveTrack(track);
 
@@ -207,7 +206,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   backToMap() {
-    this._navCtrl.navigateBack('map');
+    this._navCtrl.navigateForward('map');
   }
 
   ngOnDestroy() {

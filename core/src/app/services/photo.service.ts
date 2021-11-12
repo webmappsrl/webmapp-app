@@ -4,11 +4,16 @@ import { DeviceService } from './base/device.service';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
-import { CameraDirection, Plugins } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
-import { Camera, CameraResultType } from '@capacitor/core';
+import {
+  Camera,
+  CameraResultType,
+  CameraDirection,
+  CameraSource,
+} from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
 import { IRegisterItem } from '../types/track';
+import { Filesystem, Directory, GetUriResult } from '@capacitor/filesystem';
 
 export interface IPhotoItem extends IRegisterItem {
   id: string;
@@ -16,7 +21,10 @@ export interface IPhotoItem extends IRegisterItem {
   data: string;
   description?: string;
   rawData?: string;
+  image?: Blob;
 }
+
+export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
 
 @Injectable({
   providedIn: 'root',
@@ -105,7 +113,7 @@ export class PhotoService {
       // height: 100,//	number	The height of the saved image
       preserveAspectRatio: true, //	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
       // correctOrientation: true,	//boolean	Whether to automatically rotate the image “up” to correct for orientation in portrait mode Default: true
-      // source: CameraSource.Camera,	//CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
+      source: CameraSource.Camera, //CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
       direction: CameraDirection.Rear, //CameraDirection	iOS and Web only: The camera direction.Default: CameraDirection.Rear
       // presentationStyle: 'fullscreen',	//"fullscreen" | "popover"	iOS only: The presentation style of the Camera.Defaults to fullscreen.
       webUseInput: this._deviceService.isBrowser ? null : true, //boolean	Web only: Whether to use the PWA Element experience or file input.The default is to use PWA Elements if installed and fall back to file input.To always use file input, set this to true.Learn more about PWA Elements: https://capacitorjs.com/docs/pwa-elements
@@ -125,22 +133,112 @@ export class PhotoService {
   }
 
   public async getPhotoData(photoUrl: string): Promise<any> {
-    const filegot = await this._http
-      .get(photoUrl, { responseType: 'blob' })
+    const blob = await this._http
+      .get(Capacitor.convertFileSrc(photoUrl), { responseType: 'blob' })
       .toPromise();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.readAsDataURL(filegot);
+      reader.readAsArrayBuffer(blob);
       reader.onloadend = () => {
-        const b64 = reader.result;
-        // console.log('Sync b64', b64);
-        resolve(b64);
+        resolve(
+          JSON.stringify({
+            arrayBuffer: Array.from(new Uint8Array(<ArrayBuffer>reader.result)),
+            blobType: blob.type,
+          })
+        );
       };
       reader.onerror = reject;
     });
   }
 
+  /**
+   * Return the photo blob to send
+   *
+   * @param {IPhotoItem} photo
+   *
+   * @returns {Blob} the blob
+   */
+  public async getPhotoFile(photo: IPhotoItem): Promise<Blob> {
+    let blob: Blob, arrayBuffer: ArrayBuffer, blobType: string;
+
+    if (photo.rawData) {
+      let rawData = JSON.parse(photo.rawData);
+      if (rawData.arrayBuffer)
+        arrayBuffer = new Uint8Array(rawData.arrayBuffer).buffer;
+      if (rawData.blobType) blobType = rawData.blobType;
+    }
+
+    if (!!arrayBuffer) {
+      blob = new Blob([arrayBuffer]);
+      blob = blob.slice(0, blob.size, blobType);
+    } else {
+      blob = await this._http
+        .get(photo.photoURL, { responseType: 'blob' })
+        .toPromise();
+    }
+    return blob;
+  }
+
+  /**
+   * Copy the photo to a local stable directory
+   *
+   * @param photo the photo to save
+   *
+   * @returns {Promise<string>} with the new photo location
+   */
+  public async savePhotoToDataDirectory(photo: IPhotoItem): Promise<string> {
+    let split: Array<string> = photo.photoURL.split('/'),
+      filename: string = split.pop(),
+      directoryExists: boolean = false;
+    // TODO: Understand how to copy the file from a http url
+    if (photo.photoURL.substring(0, 4) !== 'file' && photo.photoURL[0] !== '/')
+      return photo.photoURL;
+
+    if (this._deviceService.isIos && photo.photoURL[0] === '/')
+      photo.photoURL = 'file://' + photo.photoURL;
+
+    try {
+      await Filesystem.readdir({
+        path: UGC_MEDIA_DIRECTORY,
+        directory: Directory.Data,
+      });
+      directoryExists = true;
+    } catch (e) {
+      directoryExists = false;
+    }
+
+    if (!directoryExists) {
+      await Filesystem.mkdir({
+        path: UGC_MEDIA_DIRECTORY,
+        directory: Directory.Data,
+        recursive: true,
+      });
+    }
+
+    await Filesystem.copy({
+      from: photo.photoURL,
+      to: UGC_MEDIA_DIRECTORY + '/' + filename,
+      toDirectory: Directory.Data,
+    });
+
+    const uriResult: GetUriResult = await Filesystem.getUri({
+      path: UGC_MEDIA_DIRECTORY + '/' + filename,
+      directory: Directory.Data,
+    });
+
+    return Capacitor.convertFileSrc(uriResult.uri);
+  }
+
   public async setPhotoData(photo: IPhotoItem) {
-    photo.rawData = await this.getPhotoData(photo.photoURL);
+    if (photo.photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1)
+      photo.photoURL = await this.savePhotoToDataDirectory(photo);
+
+    if (!photo.rawData) photo.rawData = JSON.stringify({});
+    try {
+      let rawData = JSON.parse(photo.rawData);
+      if (!rawData?.arrayBuffer)
+        photo.rawData = await this.getPhotoData(photo.photoURL);
+      photo.image = await this.getPhotoFile(photo);
+    } catch (e) {}
   }
 }

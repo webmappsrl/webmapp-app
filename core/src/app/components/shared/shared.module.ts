@@ -5,9 +5,13 @@ import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalHeaderComponent } from './partials/modal-header/modal-header.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GenericPopoverComponent } from './generic-popover/generic-popover.component';
+import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
+import { GalleryComponent } from './gallery/gallery.component';
+import { ImgComponent } from './img/img.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent],
+  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -15,6 +19,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent],
+  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
 })
-export class SharedModule {}
+export class SharedModule { }

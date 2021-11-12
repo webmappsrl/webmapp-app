@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  AlertController,
   Animation,
   AnimationController,
   Gesture,
@@ -10,13 +11,21 @@ import {
   NavController,
   Platform,
 } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
+import { MapComponent } from 'src/app/components/map/map/map.component';
+import { CoinService } from 'src/app/services/coin.service';
+import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { ShareService } from 'src/app/services/share.service';
 import { StatusService } from 'src/app/services/status.service';
-import { ILocation } from 'src/app/types/location';
-import { IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed } from 'src/app/types/model';
+import { downloadPanelStatus } from 'src/app/types/downloadpanel.enum';
+import {
+  IGeojsonFeature,
+  IGeojsonPoi,
+  IGeojsonPoiDetailed,
+} from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
 
 @Component({
@@ -30,6 +39,7 @@ export class RoutePage implements OnInit {
   public route: IGeojsonFeature;
   public isFavourite: boolean = false;
   public useAnimation = false;
+  public useCache = false;
 
   public track;
   public pois: Array<IGeojsonPoi> = null;
@@ -40,9 +50,13 @@ export class RoutePage implements OnInit {
   public maxInfoheight = 350; //from CCS????
   public minInfoheight = 120; //from CCS????
 
+  public showDownload = false;
+
   public slopeChartHoverElements: ISlopeChartHoverElements;
 
   private _tabChildEventSubscriptions: Array<Subscription> = [];
+
+  public mapDegrees = 0;
 
   public slideOpts = {
     initialSlide: 0,
@@ -56,6 +70,7 @@ export class RoutePage implements OnInit {
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
   @ViewChild('mapcontainer') mapControl: ElementRef;
+  @ViewChild('map') mapComponent: MapComponent;
   @ViewChild('headerPageRoute') headerControl: ElementRef;
   @ViewChild('header') header: ElementRef;
   @ViewChild('lessdetails') lessDetails: ElementRef;
@@ -65,6 +80,8 @@ export class RoutePage implements OnInit {
 
   private started: boolean = false;
   private initialStep: number = 0;
+
+  private actualDownloadStatus: downloadPanelStatus;
 
   private relatedPois: IGeojsonPoiDetailed[] = null;
 
@@ -77,8 +94,12 @@ export class RoutePage implements OnInit {
     private _platform: Platform,
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
-    private _shareService: ShareService
-  ) { }
+    private _shareService: ShareService,
+    private _coinService: CoinService,
+    private downloadService: DownloadService,
+    private _alertController: AlertController,
+    private translate: TranslateService
+  ) {}
 
   async ngOnInit() {
     // this._actRoute.queryParams.subscribe(async (params) => {
@@ -93,26 +114,40 @@ export class RoutePage implements OnInit {
 
     if (!this.route) {
       const params = await this._actRoute.queryParams.pipe(take(1)).toPromise();
-      const id = params.id ? params.id : 3; //TODO only for debug
+      const id = params.id ? params.id : 4; //TODO only for debug
       this.route = await this._geohubService.getEcTrack(id);
       this._statusService.route = this.route;
     }
 
-    this.isFavourite = await this._geohubService.isFavouriteTrack(this.route.properties.id);
+    this.isFavourite = await this._geohubService.isFavouriteTrack(
+      this.route.properties.id
+    );
 
-    this.pois = await this._geohubService.getPoiForTrack(this.route.properties.id);
-    this.updatePoiMarkers(false);
+    this.pois = await this._geohubService.getPoiForTrack(
+      this.route.properties.id
+    );
+    // this.updatePoiMarkers(false);
 
     this.setAnimations();
 
     this.getRelatedPois();
 
-    setTimeout(() => { this.track = this.route.geometry; }, 400);
-    setTimeout(() => { this.useAnimation = true; }, 500);
+    this.useCache = await this.downloadService.isDownloadedTrack(
+      this.route.properties.id
+    );
+
+    setTimeout(() => {
+      this.updatePoiMarkers(false);
+    }, 300);
+    setTimeout(() => {
+      this.track = this.route.geometry;
+    }, 400);
+    setTimeout(() => {
+      this.useAnimation = true;
+    }, 500);
   }
 
   async setAnimations() {
-
     await this._platform.ready();
     this.height = this._platform.height();
     this.maxInfoheight = this.height / 2;
@@ -128,35 +163,36 @@ export class RoutePage implements OnInit {
     const animationHeader = this.animationCtrl
       .create()
       .addElement(this.header.nativeElement)
-      .fromTo(
-        'opacity',
-        '0',
-        '1'
-      );
+      .fromTo('opacity', '0', '1');
 
     const animationDetails = this.animationCtrl
       .create()
       .addElement(this.lessDetails.nativeElement)
-      .fromTo(
-        'opacity',
-        '1',
-        '0'
-      );
+      .fromTo('opacity', '1', '0');
     const animationMoreDetails = this.animationCtrl
       .create()
       .addElement(this.moreDetails.nativeElement)
-      .fromTo(
-        'opacity',
-        '0',
-        '1'
-      );
+      .fromTo('opacity', '0', '1');
 
-    this.animation = this.animationCtrl.create()
+    this.animation = this.animationCtrl
+      .create()
       .duration(1000)
-      .addAnimation([animationHeader, animationPanel, animationDetails, animationMoreDetails,]);
+      .addAnimation([
+        animationHeader,
+        animationPanel,
+        animationDetails,
+        animationMoreDetails,
+      ]);
 
     this.gesture = this.gestureCtrl.create({
       el: this.dragHandleIcon.nativeElement,
+      threshold: 0,
+      gestureName: 'handler-drag',
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
+    });
+    this.gesture = this.gestureCtrl.create({
+      el: this.lessDetails.nativeElement,
       threshold: 0,
       gestureName: 'handler-drag',
       onMove: (ev) => this.onMove(ev),
@@ -167,7 +203,18 @@ export class RoutePage implements OnInit {
   }
 
   async getRelatedPois() {
-    this.relatedPois = await this._geohubService.getDetailsPoisForTrack(this.route.properties.id);
+    this.relatedPois = await this._geohubService.getDetailsPoisForTrack(
+      this.route.properties.id
+    );
+    this._statusService.setPois(this.relatedPois, 0);
+  }
+
+  mapRotation(deg) {
+    this.mapDegrees = deg;
+  }
+
+  orientNorth() {
+    this.mapComponent.orientNorth();
   }
 
   handleClick() {
@@ -185,26 +232,26 @@ export class RoutePage implements OnInit {
   }
 
   share() {
-    console.log(
-      '------- ~ file: route.page.ts ~ line 34 ~ RoutePage ~ share ~ share'
-    );
-
-    this._shareService.shareRoute(this.route)
-
+    this._shareService.shareRoute(this.route);
   }
 
   async favourite() {
     console.log(
-      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite'
+      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',
+      this.isFavourite
     );
-    await this._geohubService.setFavouriteTrack(this.route.properties.id, !this.isFavourite);
-    this.isFavourite = !this.isFavourite;
+    this.isFavourite = await this._geohubService.setFavouriteTrack(
+      this.route.properties.id,
+      !this.isFavourite
+    );
+    console.log(
+      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ favourite ~ favourite',
+      this.isFavourite
+    );
   }
 
   navigate() {
-    console.log(
-      '------- ~ file: route.page.ts ~ line 38 ~ RoutePage ~ navigate ~ navigate'
-    );
+    console.log('navigate function not implemented');
   }
 
   back() {
@@ -212,9 +259,13 @@ export class RoutePage implements OnInit {
   }
 
   mapHeigth() {
-    const mapHeight = this.height - ((this.headerHeight + this.maxInfoheight) * (1 - this.opacity));
+    const mapHeight =
+      this.height -
+      (this.headerHeight + this.maxInfoheight) * (1 - this.opacity);
     const mapPaddingTop = this.headerHeight * (1 - this.opacity);
-    const mapPaddingBottom = (this.maxInfoheight * (1 - this.opacity)) + (this.minInfoheight * this.opacity);
+    const mapPaddingBottom =
+      this.maxInfoheight * (1 - this.opacity) +
+      this.minInfoheight * this.opacity;
     let ret = [mapHeight, mapPaddingTop, mapPaddingBottom];
     return ret;
   }
@@ -243,21 +294,19 @@ export class RoutePage implements OnInit {
 
   private updatePoiMarkers(isSmall) {
     const res = [];
-    this.pois.forEach(poi => {
+    this.pois.forEach((poi) => {
       poi.isSmall = isSmall;
       res.push(poi);
     });
     this.pois = res;
   }
 
-
   async clickPoi(poi: IGeojsonPoi) {
-    console.log('------- ~ file: route.page.ts ~ line 251 ~ RoutePage ~ clickPoi ~ poi', poi);
     this._statusService.setPois(this.relatedPois, poi.properties.id);
     this._navController.navigateForward(['poi']);
   }
 
-  private endAnimation(shouldComplete, step) {
+  private endAnimation(shouldComplete: boolean, step: number) {
     this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
@@ -271,6 +320,8 @@ export class RoutePage implements OnInit {
     // this.animationMapHeight.onFinish(() => { this.gesture.enable(true); });
 
     this.opacity = shouldComplete ? 0 : 1;
+
+    this._statusService.showingRouteDetails = shouldComplete;
 
     this.initialStep = shouldComplete
       ? this.maxInfoheight - this.minInfoheight
@@ -310,9 +361,8 @@ export class RoutePage implements OnInit {
     } else this.slopeChartHoverElements = undefined;
   }
 
-  private clamp(min, n, max) {
+  private clamp(min: number, n: number, max: number) {
     const val = Math.max(min, Math.min(n, max));
-
     this.opacity = 1 - val;
     return val;
   }
@@ -320,5 +370,58 @@ export class RoutePage implements OnInit {
   private getStep(ev) {
     const delta = this.initialStep - ev.deltaY;
     return this.clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
+  }
+
+  public async download() {
+    const modalres = await this._coinService.openModal();
+
+    if (modalres) {
+      this.showDownload = true;
+    }
+  }
+
+  public downloadStatus(status: downloadPanelStatus) {
+    this.actualDownloadStatus = status;
+  }
+
+  public async endDownload(requireConfirm = false) {
+    if (
+      requireConfirm &&
+      this.actualDownloadStatus == downloadPanelStatus.DOWNLOADING
+    ) {
+      const translation = await this.translate
+        .get([
+          'pages.route.modalconfirm.title',
+          'pages.route.modalconfirm.text',
+          'pages.route.modalconfirm.confirm',
+          'pages.route.modalconfirm.cancel',
+        ])
+        .toPromise();
+
+      const alert = await this._alertController.create({
+        cssClass: 'my-custom-class',
+        header: translation['pages.route.modalconfirm.title'],
+        message: translation['pages.route.modalconfirm.text'],
+        buttons: [
+          {
+            text: translation['pages.route.modalconfirm.cancel'],
+            cssClass: 'webmapp-modalconfirm-btn',
+            role: 'cancel',
+            handler: () => {},
+          },
+          {
+            text: translation['pages.route.modalconfirm.confirm'],
+            cssClass: 'webmapp-modalconfirm-btn',
+            handler: () => {
+              this.showDownload = false;
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+    } else {
+      this.showDownload = false;
+    }
   }
 }

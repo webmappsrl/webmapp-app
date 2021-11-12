@@ -1,250 +1,33 @@
 {
-  "generic": {
-    "error": "Si è verificato un errore. Riprova più tardi",
-    "warning": "Attenzione",
-    "ok": "ok",
-    "confirm": "conferma",
-    "cancel": "annulla",
-    "delete": "cancella",
-    "retry": "riprova",
-    "minute": "min",
-    "hour": "h"
-  },
-  "modals": {
-    "login": {
-      "title": "Accedi",
-      "welcome": "Bentornato!",
-      "message": "Accedi con le tue credenziali per continuare.",
-      "email": "E-mail",
-      "password": "Password",
-      "rememberLogin": "Ricorda le credenziali",
-      "forgotPassword": "Hai dimenticato la password?",
-      "login": "Accedi",
-      "errors": {
-        "form": {
-          "emailInvalid": "Hai inserito un'e-mail non valida",
-          "emailRequired": "L'e-mail è obbligatoria",
-          "passwordRequired": "La password è obbligatoria"
-        },
-        "401": "Le credenziali che hai inserito non sono corrette. Controlla e-mail e password e riprova",
-        "generic": "Oops! Qualcosa è andato storto! Attendi qualche minuto e riprova."
-      }
-    },
-    "settings": {
-      "title": "Impostazioni",
-      "logout": "Log out",
-      "alert": {
-        "logout": "Sicuro di voler disconnettere il tuo account?"
-      }
-    },
-    "photo": {
-      "next": "Avanti",
-      "popover": {
-        "shot": "Scatta una foto",
-        "library": "Dalla libreria"
-      },
-      "save": {
-        "title": "Registra foto",
-        "formtitle": "Dai un titolo alle tue foto",
-        "formphototitle": "Titolo foto ",
-        "savebtn": "Salva"
-      }
-    },
-    "success": {
-      "photos": {
-        "title": "Foto registrate con successo!",
-        "text": "Le tue foto sono state salvate correttamente. Puoi visualizzarle accedendo al to profilo."
-      },
-      "waypoint": {
-        "title": "Waypoint registrato con successo!",
-        "text": "Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo."
-      },
-      "track": {
-        "title": "Attività registrata con successo!",
-        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
-        "time": "Tempo",
-        "odo": "Km percorsi",
-        "slope": "Dislivello",
-        "avgspeed": "Velocità media",
-        "topspeed": "Velocità massima"
-      },
-      "return": "Torna ad esplorare"
-    }
-  },
-  "pages": {
-    "home": {
-      "mostViewedTracks": "Percorsi più visti",
-      "closerTracks": "Percorsi nelle vicinanze",
-      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
-      "intro": "Pianifichiamo insieme la tua prossima avventura",
-      "button": "Scegli un punto di partenza"
-    },
-    "profile": {
-      "title": "Profilo",
-      "loggedOut": {
-        "slides": {
-          "0": "Accedi e scarica i tuoi percorsi preferiti",
-          "1": "Puoi anche condividerli con i tuoi compagni di viaggio"
-        },
-        "login": "Accedi",
-        "signup": "Registrati"
-      },
-      "records": {
-        "title": "Registrazioni",
-        "tracks": "Tracce",
-        "photos": "Photos",
-        "waypoints": "Waypoint",
-        "vocals": "Note vocali"
-      }
-    },
-    "register": {
-      "title": "Registra una traccia",
-      "time": "In movimento",
-      "currentspeed": "Velocità attuale",
-      "averagespeed": "Velocità media",
-      "odo": "Km percorsi",
-      "backgroundbtn": "Registra in background",
-      "resumebtn": "Riprendi",
-      "stopbtn": "Termina",
-      "modalconfirm": {
-        "title": "Confermi di voler terminare la registrazione?",
-        "text": "Una volta confermato non potrai più riprendere questa navigazione",
-        "confirm": "Conferma",
-        "cancel": "Annulla"
-      },
-      "modalsave": {
-        "title": "Salva traccia",
-        "titleEdit": "Modifica traccia",
-        "formtitle": "Titolo traccia",
-        "formdescription": "Descrizione",
-        "formactivity": "Tipo di attività",
-        "formphotos": "Aggiungi foto scattate durante il percorso",
-        "photoaction": "Carica",
-        "phototext": "foto dalla galleria del telefono",
-        "photoadvice": "Dimensione massime: 200Mb",
-        "photoactionshort": "Aggiungi",
-        "phototextshort": "Foto",
-        "photoadviceshort": "(max 200mb)",
-        "savebtn": "Salva"
-      },
-      "modalphotos": {
-        "title": "Carica foto",
-        "noimages": "Non sono presenti immagini scattate durante la registrazione del percorso",
-        "selectall": "Seleziona tutto",
-        "deselectall": "Deseleziona tutto",
-        "savebtn": "Carica"
-      },
-      "modalexit": {
-        "title": "Vuoi uscire senza salvare la tua registrazione?",
-        "text": "Se esci adesso la registrazione andarà persa",
-        "confirm": "Conferma",
-        "cancel": "Annulla"
-      }
-    },
-    "map": {
-      "recordingbtn": "Reg. in corso",
-      "searchherebtn": "Cerca in quest'area"
-    },
-    "waypoint": {
-      "title": "Registra un waypoint",
-      "here": "Ti trovi qui:",
-      "save": "Salva waypoint",
-      "modalsave": {
-        "title": "Registra un waypoint",
-        "save": "Salva ",
-        "formtitle": "Titolo waypoint",
-        "formdescription": "Descrizione",
-        "formtype": "Tipo di Waypoint",
-        "formoptional": "Facoltativo"
-      }
-    },
-    "waypointlist": {
-      "title": "Waypoint registrati",
-      "noitem": "Al momento non sono presenti waypoint registrati"
-    },
-    "waypointdetail": {
-      "title": "Waypoint registrato",
-      "edit": "Modifica registrazione",
-      "delete": "Elimina registrazione"
-    },
-    "photolist": {
-      "title": "Foto registrate",
-      "noitem": "Al momento non sono presenti foto registrate"
-    },
-    "photodetail": {
-      "title": "Foto registrata",
-      "edit": "Modifica registrazione",
-      "delete": "Elimina registrazione"
-    },
-    "tracklist": {
-      "title": "Tracce registrate",
-      "noitem": "Al momento non sono presenti tracce registrate"
-    },
-    "trackdetail": {
-      "title": "Traccia registrata",
-      "edit": "Modifica registrazione",
-      "delete": "Elimina registrazione",
-      "photos": "Foto",
-      "details": "Dettagli",
-      "time": "Tempo",
-      "distance": "Km percorsi",
-      "slope": "Dislivello",
-      "avgspeed": "Velocità media",
-      "topspeed": "Velocità massima"
-    },
-    "route": {
-      "navigate": "Naviga",
-      "directions": "Ottieni indicazioni",
-      "download": "Scarica",
-      "share": "Condividi",
-      "tabdetail": "Dettagli",
-      "tabviability": "Percorribilità",
-      "tabhowto": "Come arrivare",
-      "tabeat": "Dove mangiare",
-      "tabdescription": "Descrizione",
-      "tabwalkable": "Accessibilità",
-      "detail": {
-        "distance": "Lunghezza",
-        "ascent": "Dislivello +",
-        "descent": "Dislivello -",
-        "ele_max": "Quota massima",
-        "ele_min": "Quota minima",
-        "ele_from": "Quota di partenza",
-        "ele_to": "Quota di arrivo"
-      },
-      "description": {
-        "gallery": "Gallery",
-        "description": "Descrizione"
-      },
-      "viability":{
-        "title":"Praticabilità del percorso",
-        "info":"Altre info"
-      },
-      "favbtn":{
-        "isFavourite":"Aggiunto ai preferiti!",
-        "isNotFavourite":"Rimosso dai preferiti!"
-      }
-    },
-    "favourites":{
-      "title":"Preferiti",
-      "nodata":"Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
-      "remove":"Rimuovi"
-    }
-  },
   "components": {
+    "cardtrack": {
+      "delete": "Elimina",
+      "remove": "Rimuovi"
+    },
     "map": {
-      "register": {
-        "title": "Registra",
-        "track": "Tracciato",
-        "photo": "Foto",
-        "waypoint": "Waypoint",
-        "vocal": "Nota vocale"
-      },
       "btnrec": {
         "slide": "Scorri per registrare"
+      },
+      "register": {
+        "photo": "Foto",
+        "title": "Registra",
+        "track": "Tracciato",
+        "vocal": "Nota vocale",
+        "waypoint": "Waypoint"
       }
     },
+    "searchbar": {
+      "filters": "Filtra per",
+      "nofilters": "Nessun filtro corrisponde alla ricerca effetuata",
+      "noplaces": "Nessun luogo corrisponde alla ricerca effetuata",
+      "notracks": "Nessun percorso corrisponde alla ricerca effetuata",
+      "places": "Luoghi",
+      "tracks": "Percorsi"
+    },
     "slopechart": {
+      "slope": {
+        "label": "pendenza"
+      },
       "surfaces": {
         "asphalt": {
           "label": "asfalto"
@@ -267,42 +50,374 @@
         "sand": {
           "label": "sabbia"
         }
-      },
-      "slope": {
-        "label": "pendenza"
       }
-    },
-    "searchbar":{
-      "places":"Luoghi",
-      "noplaces":"Nessun luogo corrisponde alla ricerca effetuata",
-      "tracks":"Percorsi",
-      "notracks":"Nessun percorso corrisponde alla ricerca effetuata",
-      "filters":"Filtra per",
-      "nofilters":"Nessun filtro corrisponde alla ricerca effetuata"
     }
   },
-  "tabs": {
-    "home": "home",
-    "map": "mappa",
-    "favourites": "preferiti",
-    "profile": "profilo"
+  "generic": {
+    "cancel": "annulla",
+    "confirm": "conferma",
+    "delete": "cancella",
+    "error": "Si è verificato un errore. Riprova più tardi",
+    "hour": "h",
+    "minute": "min",
+    "ok": "ok",
+    "retry": "riprova",
+    "warning": "Attenzione"
+  },
+  "modals": {
+    "coin": {
+      "buttonall": "Vedi tutti i coin pack",
+      "buttonone": "Acquista 1 Coin / 1€",
+      "defaultmessage": "Acquista coins per scaricare contenuti offline",
+      "info1": "Puoi acquistare un singolo percorso",
+      "info2": "Hai tutto a disposizione anche senza copertura",
+      "info3": "Ricevi notifiche di prossimità",
+      "subinfo1": "Acquista un singolo coin a 1€",
+      "subinfo2": "Navigazione precis aanche queando sei offline",
+      "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
+    },
+    "giftcoin": {
+      "button": "Inizia a esplorare",
+      "info": "Hai subito in regalo 2 webmapp coins per scaricare contenuti offline!",
+      "title": "Benvenuto in webmapp!"
+    },
+    "login": {
+      "email": "E-mail",
+      "errors": {
+        "401": "Le credenziali che hai inserito non sono corrette. Controlla e-mail e password e riprova",
+        "form": {
+          "emailInvalid": "Hai inserito un'e-mail non valida",
+          "emailRequired": "L'e-mail è obbligatoria",
+          "passwordRequired": "La password è obbligatoria"
+        },
+        "generic": "Oops! Qualcosa è andato storto! Attendi qualche minuto e riprova."
+      },
+      "forgotPassword": "Hai dimenticato la password?",
+      "login": "Accedi",
+      "message": "Accedi con le tue credenziali per continuare.",
+      "password": "Password",
+      "rememberLogin": "Ricorda le credenziali",
+      "title": "Accedi",
+      "welcome": "Bentornato!"
+    },
+    "photo": {
+      "next": "Avanti",
+      "popover": {
+        "library": "Dalla libreria",
+        "shot": "Scatta una foto"
+      },
+      "save": {
+        "formphototitle": "Titolo foto ",
+        "formtitle": "Dai un titolo alle tue foto",
+        "savebtn": "Salva",
+        "title": "Registra foto"
+      }
+    },
+    "settings": {
+      "alert": {
+        "logout": "Sicuro di voler disconnettere il tuo account?"
+      },
+      "logout": "Log out",
+      "title": "Impostazioni",
+      "version": "Versione"
+    },
+    "storesuccess": {
+      "back": "Torna alla ricerca",
+      "buttondownload": "Scarica adesso",
+      "continue": "Vuoi utilizzare subito il tuo Coin per scaricare ",
+      "continue2": "?",
+      "info": "Puoi controllare il saldo dei tuoi coin direttamente nella tua area personale!",
+      "or": "Oppure",
+      "title": "Grazie per aver acquistato il tuo primo coin!"
+    },
+    "success": {
+      "photos": {
+        "text": "Le tue foto sono state salvate correttamente. Puoi visualizzarle accedendo al to profilo.",
+        "title": "Foto registrate con successo!"
+      },
+      "return": "Torna ad esplorare",
+      "track": {
+        "avgspeed": "Velocità media",
+        "odo": "Km percorsi",
+        "slope": "Dislivello",
+        "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
+        "time": "Tempo",
+        "title": "Attività registrata con successo!",
+        "topspeed": "Velocità massima"
+      },
+      "waypoint": {
+        "text": "Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.",
+        "title": "Waypoint registrato con successo!"
+      }
+    }
+  },
+  "pages": {
+    "downloadlist": {
+      "cancel": "Annulla",
+      "deleteselected": "Elimina selezionati",
+      "nodata": "Non hai ancora scaricato nessuna traccia",
+      "nodata2": "Con i contenuti per uso offline navighi in tranquillità anche senza connessione!",
+      "nodatabtn": "Esplora",
+      "select": "Seleziona",
+      "title": "Downloads"
+    },
+    "favourites": {
+      "nodata": "Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
+      "title": "Preferiti"
+    },
+    "home": {
+      "button": "Scegli un punto di partenza",
+      "closerTracks": "Percorsi nelle vicinanze",
+      "intro": "Pianifichiamo insieme la tua prossima avventura",
+      "mostViewedTracks": "Percorsi più visti",
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
+    },
+    "map": {
+      "loading": "ricerca in corso...",
+      "recordingbtn": "Reg. in corso",
+      "searchherebtn": "Cerca in quest'area"
+    },
+    "photodetail": {
+      "delete": "Elimina registrazione",
+      "edit": "Modifica registrazione",
+      "title": "Foto registrata"
+    },
+    "photolist": {
+      "noitem": "Al momento non sono presenti foto registrate",
+      "title": "Foto registrate"
+    },
+    "profile": {
+      "data": {
+        "data": "Utilizzo dati",
+        "downloads": "Downloads",
+        "tracks": "Tracce scaricate"
+      },
+      "loggedOut": {
+        "login": "Accedi",
+        "signup": "Registrati",
+        "slides": {
+          "0": "Accedi e scarica i tuoi percorsi preferiti",
+          "1": "Puoi anche condividerli con i tuoi compagni di viaggio"
+        }
+      },
+      "records": {
+        "photos": "Photos",
+        "title": "Registrazioni",
+        "tracks": "Tracce",
+        "vocals": "Note vocali",
+        "waypoints": "Waypoint"
+      },
+      "title": "Profilo"
+    },
+    "register": {
+      "averagespeed": "Velocità media",
+      "backgroundbtn": "Registra in background",
+      "currentspeed": "Velocità attuale",
+      "modalconfirm": {
+        "cancel": "Annulla",
+        "confirm": "Conferma",
+        "text": "Una volta confermato non potrai più riprendere questa navigazione",
+        "title": "Confermi di voler terminare la registrazione?"
+      },
+      "modalexit": {
+        "cancel": "Annulla",
+        "confirm": "Conferma",
+        "text": "Se esci adesso la registrazione andarà persa",
+        "title": "Vuoi uscire senza salvare la tua registrazione?"
+      },
+      "modalphotos": {
+        "deselectall": "Deseleziona tutto",
+        "noimages": "Non sono presenti immagini scattate durante la registrazione del percorso",
+        "savebtn": "Carica",
+        "selectall": "Seleziona tutto",
+        "title": "Carica foto"
+      },
+      "modalsave": {
+        "formactivity": "Tipo di attività",
+        "formdescription": "Descrizione",
+        "formphotos": "Aggiungi foto scattate durante il percorso",
+        "formtitle": "Titolo traccia",
+        "photoaction": "Carica",
+        "photoactionshort": "Aggiungi",
+        "photoadvice": "Dimensione massime: 200Mb",
+        "photoadviceshort": "(max 200mb)",
+        "phototext": "foto dalla galleria del telefono",
+        "phototextshort": "Foto",
+        "savebtn": "Salva",
+        "title": "Salva traccia",
+        "titleEdit": "Modifica traccia"
+      },
+      "odo": "Km percorsi",
+      "resumebtn": "Riprendi",
+      "stopbtn": "Termina",
+      "time": "In movimento",
+      "title": "Registra una traccia"
+    },
+    "registeruser": {
+      "cf": "Codice Fiscale",
+      "cfextra": "Perché ti chiediamo il CF?",
+      "cfph": "XXXXXXXXXXXXXXXX",
+      "cfpopovermessage": "Se sei Socia/o CAI inserisci il tuo CF al momento della registrazione. Per te il download delle tappe del Sentiero Italia CAI sarà automaticamente gratuito!",
+      "cfpopovertitle": "Perchè ti chiediamo il Codice Fiscale?",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordph": "Ripeti password",
+      "email": "Email",
+      "emailph": "esempio@email.com",
+      "errors": {
+        "form": {
+          "nameRequired": "E' necessario inserire un nome"
+        },
+        "form.cfInvalid": "Il codice fiscale non è valido",
+        "form.confirmPasswordInvalid": "La conferma non corrisponde con la password inserita sopra",
+        "form.confirmPasswordRequired": "E' necessario confermare la password",
+        "form.emailInvalid": "L'email non è valida",
+        "form.emailRequired": "E' necessario inserire un'email",
+        "form.passwordRequired": "E' necessario inserire una password"
+      },
+      "genericError": "Errore durante la registrazione dell'utente",
+      "loading": "Registrazione in corso",
+      "name": "Nome",
+      "nameph": "inserisci il tuo nome",
+      "password": "Password",
+      "passwordph": "inserisci password",
+      "privacy1": "Cliccando su \"Registrati\" accetti la nostra ",
+      "privacy2": "e i",
+      "privacy3": "",
+      "privacylink1": "Privacy Policy",
+      "privacylink2": "Termini e condizioni",
+      "registerbutton": "Registrati",
+      "title": "Unisciti alla community di webmapp!"
+    },
+    "route": {
+      "description": {
+        "description": "Descrizione",
+        "gallery": "Gallery"
+      },
+      "detail": {
+        "ascent": "Dislivello +",
+        "descent": "Dislivello -",
+        "distance": "Lunghezza",
+        "ele_from": "Quota di partenza",
+        "ele_max": "Quota massima",
+        "ele_min": "Quota minima",
+        "ele_to": "Quota di arrivo"
+      },
+      "directions": "Ottieni indicazioni",
+      "download": "Scarica",
+      "downloadpanel": {
+        "complete": "Download completato",
+        "dontclose": "Non chiudere l'applicazione durante la fase di installazione dei dati",
+        "downdata": "Download dei dati",
+        "download": "Download",
+        "downloadbtn": "Scarica",
+        "downloading": "Downloading",
+        "downmap": "Download della mappa",
+        "downmedia": "Download dei media",
+        "downsetup": "Setup iniziale",
+        "gotobtn": "Vai ai miei download",
+        "install": "Istallazione"
+      },
+      "favbtn": {
+        "isFavourite": "Aggiunto ai preferiti!",
+        "isNotFavourite": "Rimosso dai preferiti!"
+      },
+      "modalconfirm": {
+        "title": "Interrompere il download?",
+        "text": "Uscire senza terminare il download della traccia?",
+        "cancel": "Annulla",
+        "confirm": "Uscire"
+      },
+      "navigate": "Naviga",
+      "share": "Condividi",
+      "tabdescription": "Descrizione",
+      "tabdetail": "Dettagli",
+      "tabeat": "Dove mangiare",
+      "tabhowto": "Come arrivare",
+      "tabviability": "Percorribilità",
+      "tabwalkable": "Accessibilità",
+      "viability": {
+        "info": "Altre info",
+        "title": "Praticabilità del percorso"
+      }
+    },
+    "store": {
+      "button1": "1 Singolo Coin",
+      "button100": "Pack 100 coins",
+      "button20": " Pack 20 Coins",
+      "button50": "Pack 50 coins",
+      "main": "Webmapp Coins",
+      "text": "Puoi acquistare un singolo Coin, oppure scegliere fra uno o più pacchetti!",
+      "text2": "I coin servono per scaricare percorsi e contenuti offline, e accedere a numerosi vantaggi!",
+      "title": "Store"
+    },
+    "trackdetail": {
+      "avgspeed": "Velocità media",
+      "delete": "Elimina registrazione",
+      "details": "Dettagli",
+      "distance": "Km percorsi",
+      "edit": "Modifica registrazione",
+      "photos": "Foto",
+      "slope": "Dislivello",
+      "time": "Tempo",
+      "title": "Traccia registrata",
+      "topspeed": "Velocità massima"
+    },
+    "tracklist": {
+      "noitem": "Al momento non sono presenti tracce registrate",
+      "title": "Tracce registrate"
+    },
+    "waypoint": {
+      "here": "Ti trovi qui:",
+      "modalsave": {
+        "formdescription": "Descrizione",
+        "formoptional": "Facoltativo",
+        "formtitle": "Titolo waypoint",
+        "formtype": "Tipo di Waypoint",
+        "formphotos": "Aggiungi foto del Waypoint",
+        "photoaction": "Carica",
+        "photoactionshort": "Aggiungi",
+        "photoadvice": "Dimensione massime: 200Mb",
+        "photoadviceshort": "(max 200mb)",
+        "phototext": "foto dalla galleria del telefono",
+        "phototextshort": "Foto",
+        "save": "Salva ",
+        "title": "Registra un waypoint"
+      },
+      "save": "Salva waypoint",
+      "title": "Registra un waypoint"
+    },
+    "waypointdetail": {
+      "delete": "Elimina registrazione",
+      "edit": "Modifica registrazione",
+      "title": "Waypoint registrato"
+    },
+    "waypointlist": {
+      "noitem": "Al momento non sono presenti waypoint registrati",
+      "title": "Waypoint registrati"
+    }
   },
   "services": {
     "geolocation": {
       "notification": {
-        "title": {
-          "newTrackRecord": "Registrazione in corso"
-        },
         "text": {
           "newTrackRecord": "Tocca la notifica per aprire l'applicazione"
+        },
+        "title": {
+          "newTrackRecord": "Registrazione in corso"
         }
       }
     },
     "share": {
-      "title": "Hai visto questo percorso?",
+      "dialogTitle": "Condividi con i tuoi amici",
       "text": "Ecco un percorso interessante di webmapp",
-      "url": "www.webmapp.it",
-      "dialogTitle": "Condividi con i tuoi amici"
+      "title": "Hai visto questo percorso?",
+      "url": "www.webmapp.it"
     }
+  },
+  "tabs": {
+    "favourites": "preferiti",
+    "home": "home",
+    "map": "mappa",
+    "profile": "profilo"
   }
 }

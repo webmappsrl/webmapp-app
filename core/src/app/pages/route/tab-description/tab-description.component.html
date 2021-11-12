@@ -1,14 +1,14 @@
 <ion-content scrollY="true">
 
-  <div>
+  <div *ngIf="route?.properties.image_gallery?.length">
     <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.gallery' | translate}}
     </ion-label>
 
     <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pageroute-tabdescription-photoslider" #slider>
-      <ion-slide *ngFor="let photo of route?.properties.image_gallery">
-        <div class="webmapp-pageroute-tabdescription-photocontainer">
-          <ion-img [src]="photo.url" class="webmapp-pageroute-tabdescription-photo"></ion-img>
-        </div>
+      <ion-slide *ngFor="let photo of route?.properties.image_gallery; let idx = index">
+        
+          <webmapp-img [src]="photo" size="250x150" class="webmapp-pageroute-tabdescription-photo" (click)="showPhoto(idx)"></webmapp-img>
+        
       </ion-slide>
     </ion-slides>
 

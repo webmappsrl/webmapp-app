@@ -9,6 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BtnLayerComponent } from './btn-layer/btn-layer.component';
 import { BtnRecComponent } from './btn-rec/btn-rec.component';
 import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.component';
+import { BtnOrientationComponent } from './btn-orientation/btn-orientation.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.componen
     BtnRegisterComponent,
     BtnLayerComponent,
     BtnRecComponent,
+    BtnOrientationComponent,
     PopoverRegisterComponent,
     ClusterMarkerComponent
   ],
@@ -26,7 +28,9 @@ import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.componen
     TranslateModule
   ],
   exports:[
-    MapComponent
+    MapComponent,
+    BtnRegisterComponent,
+    BtnOrientationComponent,
   ]
 })
 export class MapModule { }

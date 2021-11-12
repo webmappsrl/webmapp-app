@@ -61,7 +61,11 @@
 
 .webmapp-backbutton {
   padding: 5px 20px;  
-  font-size: 24px;
+  --icon-font-size: var(--wm-font-icon);
+  &.webmapp-backbutton-chevron{
+    font-size: var(--wm-font-icon);
+  } 
+
   &.webmapp-backbutton-dark {
     --color: var(--ion-color-dark) !important;
   }

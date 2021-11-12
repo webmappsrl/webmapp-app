@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
+import { ConfigService } from 'src/app/services/config.service';
 import { LanguagesService } from 'src/app/services/languages.service';
 
 @Component({
@@ -9,14 +10,20 @@ import { LanguagesService } from 'src/app/services/languages.service';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
+
+  public version = '0.0.0';
+
   constructor(
     private _alertController: AlertController,
     private _authService: AuthService,
     private _languagesService: LanguagesService,
-    private _modalController: ModalController
+    private _modalController: ModalController,
+    private _configService : ConfigService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.version = this._configService.version;
+  }
 
   logout(): void {
     this._alertController

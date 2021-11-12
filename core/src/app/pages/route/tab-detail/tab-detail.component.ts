@@ -17,10 +17,6 @@ export class TabDetailComponent implements OnInit {
 
   ngOnInit() {
     this.route = this._statusService.route;
-    console.log(
-      '------- ~ file: tab-detail.component.ts ~ line 19 ~ TabDetailComponent ~ ngOnInit ~ this.route',
-      this.route
-    );
   }
 
   onLocationHover(event: ISlopeChartHoverElements) {

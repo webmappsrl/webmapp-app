@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'webmapp-profile-data',
@@ -6,7 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile-data.component.scss'],
 })
 export class ProfileDataComponent implements OnInit {
-  constructor() {}
 
-  ngOnInit() {}
+  constructor(
+    private _navController: NavController
+  ) { }
+
+  ngOnInit() { }
+
+  open(section) {
+    switch (section) {
+      case 'tracks':
+        this._navController.navigateForward(['downloadlist']);
+        break;
+      case 'data':
+        // this._navController.navigateForward(['downloaddata']);
+        break;
+
+    }
+  }
 }

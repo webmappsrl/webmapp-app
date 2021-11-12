@@ -2,50 +2,66 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-icon name="close-outline" class="webmapp-photodetail-menuclose" (click)="closeMenu()"></ion-icon>
+        <ion-icon
+          name="close-outline"
+          class="webmapp-photodetail-menuclose"
+          (click)="closeMenu()"
+        ></ion-icon>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
       <ion-item>
-        <i class="webmapp-icon-edit-outline " start></i>
-        <div class="webmapp-photodetail-menuitem">{{'pages.photodetail.edit'|translate}}</div>
+        <i class="webmapp-icon-edit-outline" start></i>
+        <div class="webmapp-photodetail-menuitem">
+          {{'pages.photodetail.edit'|translate}}
+        </div>
       </ion-item>
       <ion-item>
         <ion-icon name="trash-outline" start></ion-icon>
-        <div class="webmapp-photodetail-menuitem">{{'pages.photodetail.delete'|translate}}</div>
+        <div class="webmapp-photodetail-menuitem">
+          {{'pages.photodetail.delete'|translate}}
+        </div>
       </ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
 
-
-
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark"></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        defaultHref="map"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.photodetail.title'|translate}}</ion-title>
     <ion-buttons slot="end">
-      <ion-icon name="ellipsis-vertical" class="webmapp-photodetail-menuopen" (click)="menu()"></ion-icon>
+      <ion-icon
+        name="ellipsis-vertical"
+        class="webmapp-photodetail-menuopen"
+        (click)="menu()"
+      ></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+<ion-content id="main">
+  <ion-img [src]="photo.photoURL" lass="webmapp-photodetail-image"></ion-img>
 
-<ion-content  id="main">
-
-  <ion-img [src]="photo.rawData" lass="webmapp-photodetail-image"></ion-img>
-
-  <div class="webmapp-photodetail-date">{{photo.date | date : "dd MMMM YYYY"}}</div>
+  <div class="webmapp-photodetail-date">
+    {{photo.date | date : "dd MMMM YYYY"}}
+  </div>
 
   <ion-list class="webmapp-photodetail-itemlist">
     <ion-item class="webmapp-photodetail-item" lines="none">
       <i class="webmapp-icon-list webmapp-photodetail-icon secondary" start></i>
-      <div class="webmapp-photodetail-item-description">{{photo.description}}</div>
+      <div class="webmapp-photodetail-item-description">
+        {{photo.description}}
+      </div>
     </ion-item>
   </ion-list>
-
 </ion-content>

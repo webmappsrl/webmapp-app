@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import {
@@ -6,9 +6,11 @@ import {
   GEOHUB_DOMAIN,
   GEOHUB_LOGIN_ENDPOINT,
   GEOHUB_LOGOUT_ENDPOINT,
+  GEOHUB_REGISTER_ENDPOINT,
 } from '../constants/geohub';
 import { CommunicationService } from './base/communication.service';
 import { StorageService } from './base/storage.service';
+import config from '../../../config.json';
 
 @Injectable({
   providedIn: 'root',
@@ -22,8 +24,12 @@ export class AuthService {
     private _storageService: StorageService
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
-    this._onStateChange.next(this._userData);
 
+    this._onStateChange.subscribe((x) => {
+      this._communicationService.setToken(x?.token);
+    });
+
+    this._onStateChange.next(this._userData);
     this._storageService.getUser().then(
       (user: IUser) => {
         this._userData = user;
@@ -59,6 +65,42 @@ export class AuthService {
     return this._onStateChange;
   }
 
+  async register(
+    name: string,
+    email: string,
+    password: string,
+    cf: string
+  ): Promise<boolean> {
+    try {
+      const response: IGeohubApiLogin = await this._communicationService
+        .post(
+          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_REGISTER_ENDPOINT,
+          {
+            name,
+            email,
+            password,
+            referrer: config.APP.id,
+            fiscal_code: cf,
+          },
+          {
+            headers: new HttpHeaders({
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'Content-Type': 'application/json',
+            }),
+          }
+        )
+        .toPromise();
+      this._saveUser(response);
+      console.log('------- ~ AuthService ~ register ~ response', response);
+      return true;
+    } catch (err) {
+      console.warn(err);
+      this._userData = undefined;
+      this._onStateChange.next(this._userData);
+      return false;
+    }
+  }
+
   /**
    * Perform the login with the geohub
    *
@@ -76,10 +118,10 @@ export class AuthService {
             password,
           },
           {
-            headers: {
+            headers: new HttpHeaders({
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/json',
-            },
+            }),
           }
         )
         .subscribe(
@@ -112,12 +154,12 @@ export class AuthService {
           GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGOUT_ENDPOINT,
           undefined,
           {
-            headers: {
+            headers: new HttpHeaders({
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/json',
               // eslint-disable-next-line @typescript-eslint/naming-convention
               Authorization: 'Bearer ' + token,
-            },
+            }),
           }
         )
         .subscribe(

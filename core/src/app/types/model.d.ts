@@ -31,6 +31,7 @@ export interface IGeojsonProperties {
   [_: string]: any; // allow to work with custom properties when needed
   id: number;
 
+  mbtiles?:string[];
   created_at?: Date;
   updated_at?: Date;
   name?: iLocalString;
@@ -41,7 +42,6 @@ export interface IGeojsonProperties {
   source?: string;
   distance_comp?: number;
   user_id?: number;
-  // feature_image?: number;
   audio?: string;
   distance?: number;
   ascent?: number;
@@ -80,6 +80,10 @@ export interface IGeojsonFeature {
   geometry: IGeojsonGeometry;
 }
 
+export interface IGeojsonFeatureDownloaded extends IGeojsonFeature{
+  size:number;
+}
+
 export interface IWmImage {
   id: number;
   url: string;
@@ -89,6 +93,7 @@ export interface IWmImage {
     '108x148': string;
     '108x137': string;
     '225x100': string;
+    '250x150': string;
     '118x138': string;
     '108x139': string;
     '118x117': string;

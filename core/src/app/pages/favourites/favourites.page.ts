@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, NavController } from '@ionic/angular';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature } from 'src/app/types/model';
@@ -11,7 +11,11 @@ import { IGeojsonFeature } from 'src/app/types/model';
 })
 export class FavouritesPage implements OnInit {
 
+
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+
   public tracks: IGeojsonFeature[] = [];
+  private page: number = 0;
 
   constructor(
     private _geoHubService: GeohubService,
@@ -20,20 +24,32 @@ export class FavouritesPage implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.doRefresh(null);
+  }
+
+  async doRefresh(event) {
+    this.page = 0;
     this.tracks = await this._geoHubService.getFavouriteTracks();
+    if (event) {
+      event.target.complete();
+    }
   }
 
   open(track: IGeojsonFeature) {
-    console.log('------- ~ file: favourites.page.ts ~ line 27 ~ FavouritesPage ~ open ~ track', track);
     this._statusService.route = track;
     this._navController.navigateForward('/route');
   }
 
-  async remove($event: Event, track: IGeojsonFeature) {
-    $event.preventDefault();
+  async remove(track: IGeojsonFeature) {    
     await this._geoHubService.setFavouriteTrack(track.properties.id, false);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
+  }
+
+  async loadData(event) {
+    const newpageResults = await this._geoHubService.getFavouriteTracks(++this.page);
+    newpageResults.forEach(fav => { this.tracks.push(fav); });
+    event.target.complete();
   }
 
 }

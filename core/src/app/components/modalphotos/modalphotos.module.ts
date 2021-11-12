@@ -7,10 +7,22 @@ import { ModalphotosComponent } from './modalphotos.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { ModalSuccessModule } from '../modal-success/modal-success.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [ModalphotosComponent, PopoverphotoComponent, ModalphotosaveComponent],
-  imports: [CommonModule, IonicModule, TranslateModule, SharedModule, ModalSuccessModule],
+  declarations: [
+    ModalphotosComponent,
+    PopoverphotoComponent,
+    ModalphotosaveComponent,
+  ],
+  imports: [
+    CommonModule,
+    IonicModule,
+    TranslateModule,
+    SharedModule,
+    ModalSuccessModule,
+    FormsModule,
+  ],
   exports: [ModalphotosComponent],
 })
-export class ModalphotosModule { }
+export class ModalphotosModule {}

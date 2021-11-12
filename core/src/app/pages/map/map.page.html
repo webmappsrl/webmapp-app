@@ -1,30 +1,56 @@
 <ion-content scrollY="false">
-
   <div class="webmapp-pagemap-searcharea">
-    
-    <webmapp-search-bar class="webmapp-pagemap-searchbar" (goToBBox)="goToBBox($event)" (searchChange)="updateSearch()"> </webmapp-search-bar>
+    <webmapp-search-bar
+      class="webmapp-pagemap-searchbar"
+      (goToBBox)="goToBBox($event)"
+      (searchChange)="updateSearch()"
+    >
+    </webmapp-search-bar>
 
-    <ion-button (click)="closeCard()" class="webmapp-pagemap-searchherebtn"
-      [hidden]="!selectedTracks || !selectedTracks.length">
+    <ion-button
+      (click)="closeCard()"
+      class="webmapp-pagemap-searchherebtn"
+      [hidden]="!selectedTracks || !selectedTracks.length"
+    >
       <i class="webmapp-icon-search-outline"></i>
-      <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>    
+      <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>
     </ion-button>
-
   </div>
 
-  <webmapp-map class="webmapp-pagemap-map-container" (move)="mapMove($event)" (clickcluster)="clickcluster($event)"
-    (touch)="mapTouch($event)" [start-view]="[10.4147, 43.7118,9]" [clusters]="clusters" [boundingbox]="boundingbox"
-    [btnposition]="selectedTrackId?'middle':'bottom'" [track]="selectedTrack">
+  <webmapp-map
+    class="webmapp-pagemap-map-container"
+    (move)="mapMove($event)"
+    (clickcluster)="clickcluster($event)"
+    (touch)="mapTouch($event)"
+    [start-view]="[10.4147, 43.7118,9]"
+    [clusters]="clusters"
+    [boundingbox]="boundingbox"
+    [btnposition]="selectedTrackId?'middle':'bottom'"
+    [rightPadding]="70"
+    [track]="selectedTrack"
+  >
     <!-- [static]="selectedTrackId?true:false"  -->
   </webmapp-map>
 
-  <webmapp-recording-btn class="webmapp-pagemap-recordingbtn" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
-  </webmapp-recording-btn>
-
-  <ion-slides pager="false" (ionSlideDidChange)="sliderChange($event)" [options]="sliderOptions"
-    [hidden]="!selectedTracks || !selectedTracks.length" class="webmapp-pagemap-cardslider" #slider>
+  <ion-slides
+    pager="false"
+    (ionSlideDidChange)="sliderChange($event)"
+    [options]="sliderOptions"
+    [hidden]="!selectedTracks || !selectedTracks.length"
+    class="webmapp-pagemap-cardslider"
+    #slider
+  >
     <ion-slide *ngFor="let track of selectedTracks">
-      <webmapp-map-track-card [track]="track" (close)="closeCard()" (openClick)="openTrack(track)"></webmapp-map-track-card>
+      <webmapp-map-track-card
+        [track]="track"
+        (close)="closeCard()"
+        (openClick)="openTrack(track)"
+      ></webmapp-map-track-card>
     </ion-slide>
   </ion-slides>
 </ion-content>
+
+<div class="webmapp-pagemap-loading" *ngIf="loading">
+  <ion-spinner></ion-spinner>
+  <div>{{'pages.map.loading' | translate}}</div>
+</div>

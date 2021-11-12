@@ -1,0 +1,76 @@
+@import "src/theme/mixins.scss";
+
+.webmapp-backbutton.webmapp-store-backbutton {
+    color: var(--wm-color-dark);
+    font-size: 14px;
+}
+
+.webmapp-store-main {
+    display: block;
+    font-size: var(--wm-font-lg);
+    font-weight: var(--wm-font-weight-bold);
+    padding: 10px 15px;
+}
+.webmapp-store-text {
+    display: block;
+    font-size: var(--wm-font-md);
+    padding: 10px 15px;
+}
+.webmapp-store-buttoncontainer {
+    text-align: center;
+    padding: 10px 15px;
+
+    .webmapp-store-button {
+        --border-radius: 15px;
+        border-radius: 15px;
+        margin: 20px 0;
+        position: relative;
+        @include box-shadow-light;
+        text-align: left;
+        background-color: var(--wm-color-light);
+        --background: var(--wm-color-light);
+
+        .webmapp-store-button-image {
+            position: absolute;
+            left: -5px;
+            top: 10px;
+            width: 35px;        
+        }
+        .webmapp-store-button-value {
+            position: absolute;
+            left: 0px;
+            top:0;
+            display: block;            
+            text-align: left;
+            .webmapp-store-button-text {
+                display: block;
+                width: 100%;
+                padding: 5px 40px;  
+                text-align: left;
+                font-size: var(--wm-font-md);
+                color: var(--wm-color-primary);
+                font-weight: var(--wm-font-weight-bold);
+            }
+            .webmapp-store-button-price {
+                display: block;
+                width: 100%;
+                padding: 5px 40px; 
+                text-align: left;  
+                font-size: var(--wm-font-sm);
+                color: var(--wm-color-dark);
+            }
+        }
+        .webmapp-store-button-icon {
+            position: absolute;
+            right: -5px;
+            top: 6px;
+            height: 38px;
+            width: 38px;
+            padding: 8px;
+            border-radius: 20px;
+            background-color: var(--wm-color-primary);
+            color: var(--wm-color-light);
+            font-size: 21px;
+        }
+    }
+}

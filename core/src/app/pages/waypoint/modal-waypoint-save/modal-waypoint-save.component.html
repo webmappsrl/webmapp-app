@@ -1,59 +1,150 @@
 <ion-header class="webmapp-modalwaypoint-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="waypoint" (click)="close()" text="" class="webmapp-backbutton webmapp-backbutton-dark"></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        defaultHref="waypoint"
+        (click)="close()"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+      ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{'pages.waypoint.modalsave.title' | translate}}</ion-title>
+    <ion-title>{{ "pages.waypoint.modalsave.title" | translate }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <webmapp-map class="webmapp-modalwaypoint-map" #map [static]="true" [position]="displayPosition"></webmapp-map>
+  <webmapp-map
+    class="webmapp-modalwaypoint-map"
+    #map
+    [static]="true"
+    [position]="displayPosition"
+  ></webmapp-map>
 
   <div class="webmapp-modalwaypoint-extrinfo">
     <div class="webmapp-modalwaypoint-extrinfo-icon">
       <i class="webmapp-icon-pin-outline"></i>
     </div>
     <div class="webmapp-modalwaypoint-extrinfo-text">
-      <div class="webmapp-modalwaypoint-extrinfo-textcity">{{positionCity}}</div>
-      <div class="webmapp-modalwaypoint-extrinfo-textposition">{{positionString}}</div>
+      <div class="webmapp-modalwaypoint-extrinfo-textcity">
+        {{ positionCity }}
+      </div>
+      <div class="webmapp-modalwaypoint-extrinfo-textposition">
+        {{ positionString }}
+      </div>
     </div>
   </div>
 
   <ion-list class="webmapp-modalwaypoint-itemlist">
     <ion-item class="webmapp-modalwaypoint-item">
       <i class="webmapp-icon-list webmapp-modalwaypoint-icon secondary"></i>
-      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{'pages.waypoint.modalsave.formtitle' |
-        translate}}</ion-label>
+      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{
+        "pages.waypoint.modalsave.formtitle" | translate
+      }}</ion-label>
       <ion-input [(ngModel)]="title"></ion-input>
     </ion-item>
     <ion-item class="webmapp-modalwaypoint-item">
       <i class="webmapp-icon-document webmapp-modalwaypoint-icon tertiary"></i>
       <ion-label class="webmapp-modalwaypoint-label" position="stacked">
-        {{'pages.waypoint.modalsave.formdescription' | translate}}
-        <span class="webmapp-modalwaypoint-label-secondary">({{'pages.waypoint.modalsave.formoptional' |
-          translate}})</span>
+        {{ "pages.waypoint.modalsave.formdescription" | translate }}
+        <span class="webmapp-modalwaypoint-label-secondary"
+          >({{ "pages.waypoint.modalsave.formoptional" | translate }})</span
+        >
       </ion-label>
       <ion-input [(ngModel)]="description"></ion-input>
     </ion-item>
     <ion-item class="webmapp-modalwaypoint-item">
       <i class="webmapp-icon-activities webmapp-modalwaypoint-icon primary"></i>
-      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{'pages.waypoint.modalsave.formtype' |
-        translate}}</ion-label>
+      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{
+        "pages.waypoint.modalsave.formtype" | translate
+      }}</ion-label>
       <ion-select [(ngModel)]="waypointtype">
         <ion-select-option value="waypoint">Segnavia</ion-select-option>
         <ion-select-option value="sightseen">Panorama</ion-select-option>
       </ion-select>
     </ion-item>
 
-  </ion-list>
+    <ion-item class="webmapp-modalwaypoint-item">
+      <i class="webmapp-icon-camera webmapp-modalwaypoint-icon secondary"></i>
+      <ion-label
+        class="webmapp-modalwaypoint-label webmapp-modalwaypoint-labelphoto"
+        position="stacked"
+      >
+        {{ "pages.waypoint.modalsave.formphotos" | translate }}
+      </ion-label>
+    </ion-item>
 
+    <ion-grid>
+      <ion-row *ngIf="!photos?.length">
+        <ion-col size="12">
+          <div class="webmapp-waypoint-modalsave-loadphoto-wrapper">
+            <div
+              class="webmapp-waypoint-modalsave-loadphoto"
+              (click)="addPhotos()"
+            >
+              <div class="webmapp-waypoint-modalsave-loadphoto-text">
+                <div class="webmapp-waypoint-modalsave-loadphoto-action">
+                  {{ "pages.waypoint.modalsave.photoaction" | translate }}
+                </div>
+                {{ "pages.waypoint.modalsave.phototext" | translate }}
+              </div>
+              <div class="webmapp-waypoint-modalsave-loadphoto-advice">
+                {{ "pages.waypoint.modalsave.photoadvice" | translate }}
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="4" *ngIf="photos?.length">
+          <div
+            class="
+              webmapp-waypoint-modalsave-imagecontainer
+              webmapp-waypoint-modalsave-addimagecontainer
+              webmapp-waypoint-modalsave-loadphoto
+            "
+            (click)="addPhotos()"
+          >
+            <div class="webmapp-waypoint-modalsave-loadphoto-text">
+              <div class="webmapp-waypoint-modalsave-loadphoto-action">
+                {{ "pages.waypoint.modalsave.photoactionshort" | translate }}
+              </div>
+              {{ "pages.waypoint.modalsave.phototextshort" | translate }}
+            </div>
+            <div class="webmapp-waypoint-modalsave-loadphoto-advice">
+              {{ "pages.waypoint.modalsave.photoadviceshort" | translate }}
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size="4" *ngFor="let image of photos">
+          <div class="webmapp-waypoint-modalsave-imagecontainer">
+            <ion-icon
+              name="close-outline"
+              class="webmapp-waypoint-modalsave-remove"
+              (click)="remove(image)"
+            >
+            </ion-icon>
+            <!-- <img class="webmapp-waypoint-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
+            <ion-img
+              class="webmapp-waypoint-modalsave-image"
+              [src]="image?.rawData ? image?.rawData : image?.data"
+            ></ion-img>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar class="webmapp-modalwaypoint-footer">
-    <ion-button class="webmapp-modalwaypoint-savebtn" (click)="save()" [disabled]="!isValid()">
-      {{'pages.waypoint.modalsave.save' | translate}}
+    <ion-button
+      class="webmapp-modalwaypoint-savebtn"
+      (click)="save()"
+      [disabled]="!isValid()"
+    >
+      {{ "pages.waypoint.modalsave.save" | translate }}
     </ion-button>
   </ion-toolbar>
 </ion-footer>

@@ -1,0 +1,62 @@
+.webmapp-cardtrack-card {
+    width: 100%;
+    padding: 15px;
+    // height: 137px;
+    position: relative;
+    --detail-icon-color: var(--wm-color-primary);
+    --detail-icon-opacity: 1;
+    // @include box-shadow-light;
+    .webmapp-cardtrack-image {
+        width: 118px;
+        height: 138px;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .webmapp-cardtrack-info {
+        left: 116px;
+        position: absolute;
+        padding: 10px;
+        top: 0px;
+
+        .webmapp-cardtrack-info-label {
+            display: block;
+            color: var(--wm-color-dark);
+            text-align: left;
+            min-height: 30px;
+        }
+
+        .webmapp-cardtrack-info-name {
+            font-weight: var(--wm-font-weight-bold);
+            font-size: var(--wm-font-sm);
+            min-height: 40px;
+        }
+        .webmapp-cardtrack-info-time {
+            font-size: var(--wm-font-xsm);
+        }
+        .webmapp-cardtrack-info-difficulty {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-cardtrack-info-distance {
+            font-size: var(--wm-font-sm);
+            font-weight: var(--wm-font-weight-light);
+        }
+        .webmapp-cardtrack-info-icon {
+            color: var(--wm-color-secondary);
+        }
+    }
+    .webmapp-cardtrack-remove {
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        display: block;
+        padding: 10px;
+        text-decoration: underline;
+        cursor: pointer;
+        z-index: 900;
+        color: var(--wm-color-darkgrey);
+        font-size: var(--wm-font-sm);
+        font-weight: var(--wm-font-weight-light);
+    }
+}

@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
-import { PlaceResult, TrackResult } from 'src/app/types/map';
+import { PlaceResult, SearchStringResult, TrackResult } from 'src/app/types/map';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',
@@ -35,9 +35,7 @@ export class SearchBarComponent implements OnInit {
   public searchstring: string = null;
   public inputInFocus: boolean = false;
 
-  public places = [];
-  public tracks = [];
-  public filters = [];
+  public results: SearchStringResult = null;
 
   public sliderOptions: any = {
     slidesPerView: 2.8,
@@ -66,26 +64,21 @@ export class SearchBarComponent implements OnInit {
   }
 
   async inputChange(ev) {
-    let results = [];
     if (this.searchstring) {
-      results = await this._geoHubService.stringSearch(this.searchstring);
+      this.results = await this._geoHubService.stringSearch(this.searchstring);
+      console.log("------- ~ SearchBarComponent ~ inputChange ~ this.results", this.results);
     }
-    this.places = results;
-    this.tracks = results;
-    this.filters = results;
   }
 
   selectPlace(place: PlaceResult) {
     console.log('------- ~ file: search-bar.component.ts ~ line 69 ~ SearchBarComponent ~ selectPlace ~ place', place);
-    const bbox = place.properties.boundingbox;
-    console.log('------- ~ file: search-bar.component.ts ~ line 79 ~ SearchBarComponent ~ selectPlace ~ place.properties', place.properties);
-    console.log('------- ~ file: search-bar.component.ts ~ line 79 ~ SearchBarComponent ~ selectPlace ~ bbox', bbox);
+    const bbox = place.bbox;    
     this.goToBBox.emit(bbox)
   }
 
   async selectTrack(track: TrackResult) {
     console.log('------- ~ file: search-bar.component.ts ~ line 69 ~ SearchBarComponent ~ selecttrack ~ track', track);
-    const route = await this._geoHubService.getEcTrack(track.properties.id);
+    const route = await this._geoHubService.getEcTrack(track.id);
     this._statusService.route = route;
     this.navCtrl.navigateForward('route');
   }

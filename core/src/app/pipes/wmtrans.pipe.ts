@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class WmTransPipe implements PipeTransform {
   constructor(private _translate: TranslateService) { }
 
-  transform(value: any, ...args: unknown[]): unknown {
+  transform(value: any, ...args: unknown[]): string {
     if (value) {
       if (value[this._translate.currentLang]) {
         return value[this._translate.currentLang];
