@@ -24,17 +24,15 @@ As an example we take this simplified configuration which set a label and a colo
 
 ```json
 "config": {
-  "buttonLabel": "Button",
-  "buttonColor": "#ff0000",
-  "locale": "en",
-  "translations": {
+  "buttonLabel": {
     "it": {
       "buttonLabel": "Bottone"
     },
     "es": {
       "buttonLabel": "Botón"
     }
-  }
+  },
+  "buttonColor": "#ff0000"
 }
 ```
 
