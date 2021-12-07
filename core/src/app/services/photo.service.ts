@@ -23,8 +23,8 @@ export interface IPhotoItem extends IRegisterItem {
   datasrc: string;
   description?: string;
   rawData?: string;
-  image?: Blob;
-  position: ILocation
+  blob?: Blob;
+  position: ILocation;
 }
 
 export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
@@ -63,7 +63,7 @@ export class PhotoService {
     private _deviceService: DeviceService,
     private _http: HttpClient, // private file: File, // private filePath: FilePath,
     private geoLocationService: GeolocationService
-  ) { }
+  ) {}
 
   async getPhotos(dateLimit: Date = null): Promise<IPhotoItem[]> {
     const res: IPhotoItem[] = [];
@@ -86,10 +86,10 @@ export class PhotoService {
         res.push({
           id: i + '',
           photoURL: filePath,
-          datasrc : data,
+          datasrc: data,
           description: '',
           date: new Date(),
-          position: this.geoLocationService.location
+          position: this.geoLocationService.location,
         });
       }
       return res;
@@ -102,7 +102,7 @@ export class PhotoService {
           datasrc: `https://picsum.photos/50${i}/75${i}`,
           description: '',
           date: new Date(),
-          position: this.geoLocationService.location
+          position: this.geoLocationService.location,
         });
       }
       return res;
@@ -110,8 +110,7 @@ export class PhotoService {
   }
 
   async shotPhoto(allowlibrary): Promise<IPhotoItem> {
-    if (!this.geoLocationService.active)
-      (await this.geoLocationService.start())
+    if (!this.geoLocationService.active) await this.geoLocationService.start();
     const photo = await Camera.getPhoto({
       quality: 90,
       allowEditing: true,
@@ -130,14 +129,14 @@ export class PhotoService {
       // promptLabelPhoto: null,	//string
       // promptLabelPicture: null,	//string
     });
-    console.log("------- ~ PhotoService ~ shotPhoto ~ photo", photo);
+    console.log('------- ~ PhotoService ~ shotPhoto ~ photo', photo);
     const res: IPhotoItem = {
       id: '1',
       photoURL: photo.path,
       datasrc: Capacitor.convertFileSrc(photo.webPath),
       description: '',
       date: new Date(),
-      position: this.geoLocationService.location
+      position: this.geoLocationService.location,
     };
     return res;
   }
@@ -240,7 +239,8 @@ export class PhotoService {
   }
 
   public async setPhotoData(photo: IPhotoItem) {
-    console.log("------- ~ PhotoService ~ setPhotoData ~ photo", photo);
+    console.log('------- ~ PhotoService ~ setPhotoData ~ photo', photo);
+    let photoURL = photo.photoURL;
     if (photo.photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1)
       photo.photoURL = await this.savePhotoToDataDirectory(photo);
 
@@ -249,7 +249,9 @@ export class PhotoService {
       let rawData = JSON.parse(photo.rawData);
       if (!rawData?.arrayBuffer)
         photo.rawData = await this.getPhotoData(photo.photoURL);
-      photo.image = await this.getPhotoFile(photo);
-    } catch (e) { }
+      photo.blob = await this.getPhotoFile(photo);
+    } catch (e) {
+      console.log('Error setting photo blob', e);
+    }
   }
 }

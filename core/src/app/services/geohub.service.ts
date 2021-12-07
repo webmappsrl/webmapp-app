@@ -32,7 +32,7 @@ export class GeohubService {
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService
-  ) { }
+  ) {}
 
   /**
    * Get an instance of the specified ec track
@@ -187,12 +187,15 @@ export class GeohubService {
    * @returns
    */
   async savePhoto(photo: IPhotoItem) {
+    console.log('save photo to geohub', photo);
     const geojson = {
       type: 'Feature',
-      geometry: photo.position && 0 ? {
-        type: EGeojsonGeometryTypes.POINT,
-        coordinates: [photo.position.longitude, photo.position.latitude, photo.position.altitude],
-      } : null,
+      geometry: photo.position
+        ? {
+            type: EGeojsonGeometryTypes.POINT,
+            coordinates: [photo.position.longitude, photo.position.latitude],
+          }
+        : null,
       properties: {
         description: photo.description,
         name: photo.description,
@@ -203,7 +206,7 @@ export class GeohubService {
 
     const data = new FormData();
 
-    if (photo.image) data.append('image', photo.image, 'image.jpg');
+    if (photo.blob) data.append('image', photo.blob, 'image.jpg');
     data.append('geojson', JSON.stringify(geojson));
 
     // The content type multipart/form-data is not set because there could be problems
