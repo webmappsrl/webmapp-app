@@ -7,7 +7,7 @@ This software is developed and mantained by WEBMAPP TEAM (see authors). Please f
 
 Firstly you need to clone the repo
 
-`git clone git@github.com:webmappsrl/wm-app.git`
+`git clone git@github.com:webmappsrl/webmapp-app.git`
 
 You can use the `gulp help` command to check how you can proceed
 
