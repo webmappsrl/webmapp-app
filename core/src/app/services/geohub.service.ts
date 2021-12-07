@@ -32,7 +32,7 @@ export class GeohubService {
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService
-  ) {}
+  ) { }
 
   /**
    * Get an instance of the specified ec track
@@ -189,11 +189,15 @@ export class GeohubService {
   async savePhoto(photo: IPhotoItem) {
     const geojson = {
       type: 'Feature',
-      geometry: null,
+      geometry: photo.position && 0 ? {
+        type: EGeojsonGeometryTypes.POINT,
+        coordinates: [photo.position.longitude, photo.position.latitude, photo.position.altitude],
+      } : null,
       properties: {
         description: photo.description,
         name: photo.description,
         app_id: this._configService.appId,
+        // position: photo.position,
       },
     };
 

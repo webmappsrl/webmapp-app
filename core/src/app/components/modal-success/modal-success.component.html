@@ -84,7 +84,7 @@
       #slider>
       <ion-slide *ngFor="let photo of photos;let idx = index">
         <div class="webmapp-modalsuccess-photocontainer" style="padding-top: {{topValues[idx]}}px;">
-          <ion-img [src]="photo.data" class="webmapp-modalsuccess-photo"></ion-img>
+          <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-photo"></ion-img>
           <div class="webmapp-modalsuccess-photodescription">{{photo.description}}</div>
         </div>
       </ion-slide>

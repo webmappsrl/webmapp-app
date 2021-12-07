@@ -100,7 +100,7 @@ export class ModalphotosComponent implements OnInit {
 
   delete() {
     const idx = this.photoCollection.findIndex(
-      (x) => x.data === this.selectedPhoto.data
+      (x) => x.datasrc === this.selectedPhoto.datasrc
     );
     this.photoCollection.splice(idx, 1);
     if (this.photoCollection.length) {
