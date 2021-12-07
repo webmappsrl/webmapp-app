@@ -29,7 +29,7 @@
 
 <ion-content class="webmapp-modalphoto-content">
   <ion-img
-    [src]="selectedPhoto?.data"
+    [src]="selectedPhoto?.datasrc"
     class="webmapp-modalphoto-img"
     *ngIf="selectedPhoto"
   ></ion-img>
@@ -61,7 +61,7 @@
         <ion-img
           class="webmapp-modalphoto-footer-photo"
           (click)="select(photo)"
-          [src]="photo?.rawData ? photo?.rawData : photo?.data"
+          [src]="photo?.rawData ? photo?.rawData : photo?.datasrc"
         ></ion-img>
       </ion-slide>
     </ion-slides>
