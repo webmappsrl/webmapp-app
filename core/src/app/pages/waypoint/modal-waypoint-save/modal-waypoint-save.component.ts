@@ -20,6 +20,8 @@ export class ModalWaypointSaveComponent implements OnInit {
   public description: string;
   public waypointtype: string;
   public photos: any[] = [];
+  public validate = false;
+  public isValidArray:boolean[] = [false,false];
 
   public positionString: string;
   public positionCity: string = 'città';
@@ -38,6 +40,9 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   async save() {
+    if(!this.isValid()){
+      return;
+    }
     const waypoint: WaypointSave = {
       position: this.position,
       displayPosition: this.displayPosition,
@@ -106,7 +111,14 @@ export class ModalWaypointSaveComponent implements OnInit {
     }
   }
 
+
+setIsValid(idx:number,isValid:boolean){
+  this.isValidArray[idx]=isValid;
+}
+
   isValid() {
-    return this.title && this.waypointtype;
+    this.validate = true;
+    const allValid = this.isValidArray.reduce((x,curr)=>{return curr && x},true);
+    return allValid;
   }
 }

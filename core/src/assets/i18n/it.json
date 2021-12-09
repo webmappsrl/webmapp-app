@@ -372,6 +372,7 @@
         "formdescription": "Descrizione",
         "formoptional": "Facoltativo",
         "formtitle": "Titolo waypoint",
+        "formtitleerror": "Titolo waypont richiesto",
         "formtype": "Tipo di Waypoint",
         "formphotos": "Aggiungi foto del Waypoint",
         "photoaction": "Carica",

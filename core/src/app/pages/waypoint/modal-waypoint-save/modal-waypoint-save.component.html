@@ -36,23 +36,25 @@
   </div>
 
   <ion-list class="webmapp-modalwaypoint-itemlist">
-    <ion-item class="webmapp-modalwaypoint-item">
-      <i class="webmapp-icon-list webmapp-modalwaypoint-icon secondary"></i>
-      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{
-        "pages.waypoint.modalsave.formtitle" | translate
-      }}</ion-label>
-      <ion-input [(ngModel)]="title"></ion-input>
-    </ion-item>
-    <ion-item class="webmapp-modalwaypoint-item">
-      <i class="webmapp-icon-document webmapp-modalwaypoint-icon tertiary"></i>
-      <ion-label class="webmapp-modalwaypoint-label" position="stacked">
-        {{ "pages.waypoint.modalsave.formdescription" | translate }}
-        <span class="webmapp-modalwaypoint-label-secondary"
-          >({{ "pages.waypoint.modalsave.formoptional" | translate }})</span
-        >
-      </ion-label>
-      <ion-input [(ngModel)]="description"></ion-input>
-    </ion-item>
+    <webmapp-form-field
+      [(value)]="title"
+      [icon]="'webmapp-icon-list'"
+      [iconColor]="'secondary'"
+      [label]="'pages.waypoint.modalsave.formtitle'"
+      [required]="true"
+      [error]="'pages.waypoint.modalsave.formtitleerror'"
+      [validate]="validate"
+      (validChange)="setIsValid(0,$event)"
+    ></webmapp-form-field>
+
+    <webmapp-form-field
+    [(value)]="description"
+    [icon]="'webmapp-icon-document'"
+    [iconColor]="'tertiary'"
+    [label]="'pages.waypoint.modalsave.formdescription'"
+    [textArea]='true'
+  ></webmapp-form-field>
+
     <ion-item class="webmapp-modalwaypoint-item">
       <i class="webmapp-icon-activities webmapp-modalwaypoint-icon primary"></i>
       <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{
@@ -142,7 +144,6 @@
     <ion-button
       class="webmapp-modalwaypoint-savebtn"
       (click)="save()"
-      [disabled]="!isValid()"
     >
       {{ "pages.waypoint.modalsave.save" | translate }}
     </ion-button>
