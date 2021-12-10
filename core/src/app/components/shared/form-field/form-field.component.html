@@ -1,0 +1,23 @@
+<ion-item class="webmapp-formfield-item" [lines]="noline?'none':'inset'">
+  <i class="{{icon}} webmapp-formfield-icon {{iconColor}}"></i>
+  <ion-label class="webmapp-formfield-label" position="stacked">
+    {{ label | translate }}
+    <span *ngIf="secondary" class="webmapp-formfield-label-secondary">
+      ({{ secondary | translate }})
+    </span>
+    <span *ngIf="required" class="webmapp-formfield-label-required">
+      *
+    </span>
+  </ion-label>
+  <ion-input *ngIf="!textArea && !hasContent()" placeholder="{{placeholder | translate}}" 
+  [(ngModel)]="value" (ngModelChange)="valueChanged()"></ion-input>
+  <ion-textarea [autoGrow]="!!value" placeholder="{{placeholder | translate}}" *ngIf="textArea  && !hasContent()" [(ngModel)]="value" (ngModelChange)="valueChanged()"></ion-textarea>
+  
+  <div #content class="webmapp-formfield-content">
+    <ng-content></ng-content>
+  </div>
+
+</ion-item>
+  <div class="webmapp-formfield-error" *ngIf="!isValid && validate">
+    {{ error | translate }}
+  </div>

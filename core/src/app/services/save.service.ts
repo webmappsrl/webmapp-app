@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
+import { ILocation } from '../types/location';
 import { ISaveIndexObj } from '../types/save';
 import { ESaveObjType } from '../types/save.enum';
 import { IRegisterItem, ITrack } from '../types/track';

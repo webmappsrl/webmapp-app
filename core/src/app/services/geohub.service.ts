@@ -187,19 +187,26 @@ export class GeohubService {
    * @returns
    */
   async savePhoto(photo: IPhotoItem) {
+    console.log('save photo to geohub', photo);
     const geojson = {
       type: 'Feature',
-      geometry: null,
+      geometry: photo.position
+        ? {
+            type: EGeojsonGeometryTypes.POINT,
+            coordinates: [photo.position.longitude, photo.position.latitude],
+          }
+        : null,
       properties: {
         description: photo.description,
         name: photo.description,
         app_id: this._configService.appId,
+        // position: photo.position,
       },
     };
 
     const data = new FormData();
 
-    if (photo.image) data.append('image', photo.image, 'image.jpg');
+    if (photo.blob) data.append('image', photo.blob, 'image.jpg');
     data.append('geojson', JSON.stringify(geojson));
 
     // The content type multipart/form-data is not set because there could be problems

@@ -9,9 +9,16 @@ import { GenericPopoverComponent } from './generic-popover/generic-popover.compo
 import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { ImgComponent } from './img/img.component';
+import { FormFieldComponent } from './form-field/form-field.component';
 
 @NgModule({
-  declarations: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
+  declarations: [LoginComponent,
+     ModalHeaderComponent,
+     GenericPopoverComponent,
+     RecordingBtnComponent,
+    GalleryComponent,
+    ImgComponent,
+    FormFieldComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -19,6 +26,12 @@ import { ImgComponent } from './img/img.component';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  exports: [LoginComponent, ModalHeaderComponent, GenericPopoverComponent, RecordingBtnComponent,GalleryComponent,ImgComponent],
+  exports: [LoginComponent,
+     ModalHeaderComponent,
+     GenericPopoverComponent,
+     RecordingBtnComponent,
+    GalleryComponent,
+    ImgComponent,
+    FormFieldComponent],
 })
 export class SharedModule { }

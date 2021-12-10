@@ -1,0 +1,50 @@
+.webmapp-formfield-item{
+  
+    padding: 22px 15px 10px 22px;
+    overflow: visible;
+
+    // border: 1px solid var(--ion-color-danger);
+
+    .webmapp-formfield-label {
+      font-weight: var(--wm-font-weight-bold);
+      .webmapp-formfield-label-secondary {
+        font-weight: var(--wm-font-weight-light);
+      }
+      .webmapp-formfield-label-required{
+        color: var(--ion-color-danger)
+      }
+      &.webmapp-formfield-labelphoto {
+        height: 30px;
+        top: 0px;
+        position: absolute;
+      }
+    }
+  
+
+  .webmapp-formfield-icon {
+    position: absolute;
+    left: -28px;
+    top: 10px;
+  
+    &.primary {
+      color: var(--wm-color-primary);
+    }
+  
+    &.secondary {
+      color: var(--wm-color-secondary);
+    }
+  
+    &.tertiary {
+      color: var(--wm-color-tertiary);
+    }
+  }
+}
+  .webmapp-formfield-error{
+    padding: 0px 25px 8px 41px;
+    color: var(--ion-color-danger);
+    display: inline-block;
+  }
+
+  .webmapp-formfield-content{
+    width: 100%;
+  }

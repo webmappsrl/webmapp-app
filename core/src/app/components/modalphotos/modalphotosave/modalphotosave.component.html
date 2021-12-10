@@ -28,7 +28,7 @@
         <ion-img
           slot="start"
           class="webmapp-modalphotosave-item-photo"
-          [src]="photo?.data"
+          [src]="photo?.datasrc"
         ></ion-img>
         <div class="webmapp-modalphotosave-item-inputwrapper">
           <i
@@ -59,7 +59,6 @@
   <ion-button
     class="webmapp-modalphotosave-savebtn"
     (click)="save()"
-    [disabled]="!isValid()"
   >
     {{ "modals.photo.save.savebtn" | translate }}</ion-button
   >
