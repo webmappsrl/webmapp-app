@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollY="true">
   <webmapp-map
     class="webmapp-modalwaypoint-map"
     #map
@@ -32,6 +32,7 @@
       <div class="webmapp-modalwaypoint-extrinfo-textposition">
         {{ positionString }}
       </div>
+
     </div>
   </div>
 
@@ -41,42 +42,46 @@
       [icon]="'webmapp-icon-list'"
       [iconColor]="'secondary'"
       [label]="'pages.waypoint.modalsave.formtitle'"
+      [placeholder]="'pages.waypoint.modalsave.formtitleplaceholder'"
       [required]="true"
       [error]="'pages.waypoint.modalsave.formtitleerror'"
       [validate]="validate"
       (validChange)="setIsValid(0,$event)"
     ></webmapp-form-field>
 
+  <webmapp-form-field
+  [(value)]="waypointtype"
+  [required]="true"
+  [icon]="'webmapp-icon-activities'"
+  [iconColor]="'primary'"
+  [label]="'pages.waypoint.modalsave.formtype'"
+  [error]="'pages.waypoint.modalsave.formtypeerror'"
+  [validate]="validate"
+  (validChange)="setIsValid(1,$event)"
+>
+<ion-select [(ngModel)]="waypointtype" placeholder="{{'pages.waypoint.modalsave.formtypeplaceholder'|translate}}">
+        <ion-select-option value="waypoint">Segnavia</ion-select-option>
+        <ion-select-option value="sightseen">Panorama</ion-select-option>
+      </ion-select>
+</webmapp-form-field>
+
     <webmapp-form-field
     [(value)]="description"
     [icon]="'webmapp-icon-document'"
     [iconColor]="'tertiary'"
     [label]="'pages.waypoint.modalsave.formdescription'"
+    [placeholder]="'pages.waypoint.modalsave.formdescriptionplaceholder'"
     [textArea]='true'
   ></webmapp-form-field>
+    
+<webmapp-form-field
+[icon]="'webmapp-icon-camera'"
+[iconColor]="'secondary'"
+[label]="'pages.waypoint.modalsave.formphotos'"
+[noline]="true"
+><span></span></webmapp-form-field>
 
-    <ion-item class="webmapp-modalwaypoint-item">
-      <i class="webmapp-icon-activities webmapp-modalwaypoint-icon primary"></i>
-      <ion-label class="webmapp-modalwaypoint-label" position="stacked">{{
-        "pages.waypoint.modalsave.formtype" | translate
-      }}</ion-label>
-      <ion-select [(ngModel)]="waypointtype">
-        <ion-select-option value="waypoint">Segnavia</ion-select-option>
-        <ion-select-option value="sightseen">Panorama</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item class="webmapp-modalwaypoint-item">
-      <i class="webmapp-icon-camera webmapp-modalwaypoint-icon secondary"></i>
-      <ion-label
-        class="webmapp-modalwaypoint-label webmapp-modalwaypoint-labelphoto"
-        position="stacked"
-      >
-        {{ "pages.waypoint.modalsave.formphotos" | translate }}
-      </ion-label>
-    </ion-item>
-
-    <ion-grid>
+ <ion-grid>
       <ion-row *ngIf="!photos?.length">
         <ion-col size="12">
           <div class="webmapp-waypoint-modalsave-loadphoto-wrapper">
@@ -86,7 +91,7 @@
             >
               <div class="webmapp-waypoint-modalsave-loadphoto-text">
                 <div class="webmapp-waypoint-modalsave-loadphoto-action">
-                  {{ "pages.waypoint.modalsave.photoaction" | translate }}
+                  {{ "pages.waypoint.modalsave.photoaction" | translate }} 
                 </div>
                 {{ "pages.waypoint.modalsave.phototext" | translate }}
               </div>
@@ -135,7 +140,9 @@
           </div>
         </ion-col>
       </ion-row>
-    </ion-grid>
+    </ion-grid>  
+
+   
   </ion-list>
 </ion-content>
 

@@ -22,50 +22,53 @@
 
 <ion-content>
   <ion-list>
-    <ion-item class="webmapp-register-modalsave-item">
-      <!-- <ion-icon name="list" class="webmapp-register-modalsave-icon secondary"></ion-icon> -->
-      <i
-        class="webmapp-icon-list webmapp-register-modalsave-icon secondary"
-      ></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{
-        "pages.register.modalsave.formtitle" | translate
-      }}</ion-label>
-      <ion-input [(ngModel)]="title"></ion-input>
-    </ion-item>
-    <ion-item class="webmapp-register-modalsave-item">
-      <!-- <ion-icon name="journal" class="webmapp-register-modalsave-icon tertiary"></ion-icon> -->
-      <i
-        class="webmapp-icon-document webmapp-register-modalsave-icon tertiary"
-      ></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">
-        {{ "pages.register.modalsave.formdescription" | translate }}</ion-label
-      >
-      <ion-input [(ngModel)]="description"></ion-input>
-    </ion-item>
-    <ion-item class="webmapp-register-modalsave-item">
-      <i
-        class="webmapp-icon-activities webmapp-register-modalsave-icon primary"
-      ></i>
-      <ion-label class="webmapp-register-modalsave-label" position="stacked">{{
-        "pages.register.modalsave.formactivity" | translate
-      }}</ion-label>
-      <ion-select [(ngModel)]="activity">
-        <ion-select-option value="run">Corsa</ion-select-option>
-        <ion-select-option value="bike">Bicicletta</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item lines="none" class="webmapp-register-modalsave-item">
-      <i
-        class="webmapp-icon-camera webmapp-register-modalsave-icon secondary"
-      ></i>
-      <ion-label
-        class="
-          webmapp-register-modalsave-label webmapp-register-modalsave-labelphoto
-        "
-        position="stacked"
-        >{{ "pages.register.modalsave.formphotos" | translate }}</ion-label
-      >
-    </ion-item>
+      
+    <webmapp-form-field
+      [required]="true"
+      [(value)]="title"
+      [icon]="'webmapp-icon-list'"
+      [iconColor]="'secondary'"
+      [label]="'pages.register.modalsave.formtitle'"
+      [placeholder]="'pages.register.modalsave.formtitleplaceholder'"
+      [error]="'pages.register.modalsave.formtitleerror'"
+      [validate]="validate"
+      (validChange)="setIsValid(0,$event)"
+    ></webmapp-form-field>
+
+    <webmapp-form-field
+    [required]="true"
+    [(value)]="activity"
+    [icon]="'webmapp-icon-activities'"
+    [iconColor]="'primary'"
+    [label]="'pages.register.modalsave.formactivity'"
+    [error]="'pages.register.modalsave.formactivityerror'"
+    [validate]="validate"
+    (validChange)="setIsValid(1,$event)"
+  >
+  <ion-select [(ngModel)]="activity" placeholder="{{'pages.register.modalsave.formactivityplaceholder'|translate}}">
+    <ion-select-option value="run">Corsa</ion-select-option>
+    <ion-select-option value="bike">Bicicletta</ion-select-option>
+        </ion-select>
+  </webmapp-form-field>
+
+    <webmapp-form-field
+    [(value)]="description"
+    [icon]="'webmapp-icon-document'"
+    [iconColor]="'tertiary'"
+    [label]="'pages.register.modalsave.formdescription'"
+    [placeholder]="'pages.register.modalsave.formdescriptionplaceholder'"
+    [textArea]='true'
+  ></webmapp-form-field>
+
+
+      
+<webmapp-form-field
+[icon]="'webmapp-icon-camera'"
+[iconColor]="'secondary'"
+[label]="'pages.register.modalsave.formphotos'"
+[noline]="true"
+><span></span></webmapp-form-field>
+
   </ion-list>
 
   <ion-grid>
@@ -93,8 +96,7 @@
     <ion-row>
       <ion-col size="4" *ngIf="photos?.length && !track">
         <div
-          class="
-            webmapp-register-modalsave-imagecontainer
+          class="            webmapp-register-modalsave-imagecontainer
             webmapp-register-modalsave-addimagecontainer
             webmapp-register-modalsave-loadphoto
           "
@@ -134,7 +136,6 @@
   <ion-button
     class="webmapp-register-modalsave-savebtn"
     (click)="save()"
-    [disabled]="!isValid()"
   >
     {{ "pages.register.modalsave.savebtn" | translate }}</ion-button
   >

@@ -25,13 +25,16 @@ export class ModalphotosaveComponent implements OnInit {
   }
 
   save() {
+    if(!this.isValid()){
+      return;
+    }
+
     this.modalController.dismiss({
       photos: this.photos,
     });
   }
 
   isValid() {
-    const res = this.photos.find((x) => !x.description);
-    return !res;
+    return true;
   }
 }

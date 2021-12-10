@@ -3,6 +3,8 @@
     padding: 22px 15px 10px 22px;
     overflow: visible;
 
+    // border: 1px solid var(--ion-color-danger);
+
     .webmapp-formfield-label {
       font-weight: var(--wm-font-weight-bold);
       .webmapp-formfield-label-secondary {
@@ -41,4 +43,8 @@
     padding: 0px 25px 8px 41px;
     color: var(--ion-color-danger);
     display: inline-block;
+  }
+
+  .webmapp-formfield-content{
+    width: 100%;
   }

@@ -12,6 +12,7 @@ import { MapModule } from 'src/app/components/map/map.module';
 import { ModalSaveComponent } from './modal-save/modal-save.component';
 import { ModalSelectphotosComponent } from './modal-selectphotos/modal-selectphotos.component';
 import { ModalSuccessModule } from 'src/app/components/modal-success/modal-success.module';
+import { SharedModule } from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { ModalSuccessModule } from 'src/app/components/modal-success/modal-succe
     TranslateModule,
     RegisterPageRoutingModule,
     MapModule,
-    ModalSuccessModule
+    ModalSuccessModule,
+    SharedModule
   ],
   declarations: [
     RegisterPage,
