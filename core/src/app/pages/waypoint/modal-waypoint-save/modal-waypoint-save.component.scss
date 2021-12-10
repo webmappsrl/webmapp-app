@@ -6,24 +6,6 @@
   display: block;
 }
 
-.webmapp-modalwaypoint-icon {
-  position: absolute;
-  left: -28px;
-  top: 10px;
-
-  &.primary {
-    color: var(--wm-color-primary);
-  }
-
-  &.secondary {
-    color: var(--wm-color-secondary);
-  }
-
-  &.tertiary {
-    color: var(--wm-color-tertiary);
-  }
-}
-
 .webmapp-modalwaypoint-extrinfo {
   position: absolute;
   background-color: var(--wm-color-secondary);
@@ -57,22 +39,7 @@
 
 .webmapp-modalwaypoint-itemlist {
   padding-top: 30px;
-  .webmapp-modalwaypoint-item {
-    padding: 22px 15px 10px 22px;
-    overflow: visible;
 
-    .webmapp-modalwaypoint-label {
-      font-weight: var(--wm-font-weight-bold);
-      .webmapp-modalwaypoint-label-secondary {
-        font-weight: var(--wm-font-weight-light);
-      }
-      &.webmapp-modalwaypoint-labelphoto {
-        height: 30px;
-        top: 0px;
-        position: absolute;
-      }
-    }
-  }
 }
 .webmapp-modalwaypoint-footer {
   text-align: center;

@@ -14,6 +14,8 @@ export class ModalSaveComponent implements OnInit {
   public title: string;
   public description: string;
   public activity: string;
+  public validate = false;
+  public isValidArray:boolean[] = [false,false];
 
   public photos: any[] = [];
 
@@ -71,6 +73,9 @@ export class ModalSaveComponent implements OnInit {
   }
 
   save() {
+    if(!this.isValid()){
+      return;
+    }
     const trackData: ITrack = {
       photos: this.photos,
       photoKeys: null,
@@ -117,7 +122,13 @@ export class ModalSaveComponent implements OnInit {
     }
   }
 
-  isValid() {
-    return !!this.title && !!this.activity;
+  setIsValid(idx:number,isValid:boolean){
+    this.isValidArray[idx]=isValid;
   }
+  
+    isValid() {
+      this.validate = true;
+      const allValid = this.isValidArray.reduce((x,curr)=>{return curr && x},true);
+      return allValid;
+    }
 }
