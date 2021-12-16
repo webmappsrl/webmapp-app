@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { IPhotoItem } from 'src/app/services/photo.service';
+import { ModalphotosComponent } from '../modalphotos.component';
 
 @Component({
   selector: 'webmapp-modalphotosave',
@@ -9,10 +11,16 @@ import { IPhotoItem } from 'src/app/services/photo.service';
 })
 export class ModalphotosaveComponent implements OnInit {
   public photos: IPhotoItem[];
+  public showList = false;
 
-  constructor(private modalController: ModalController) {}
 
-  ngOnInit() {}
+  constructor(
+    private modalController: ModalController,
+    private _translate: TranslateService,
+    private _alertController: AlertController,
+    ) { }
+
+  ngOnInit() { }
 
   close() {
     this.modalController.dismiss({
@@ -24,8 +32,63 @@ export class ModalphotosaveComponent implements OnInit {
     this.photos[idx].description = value;
   }
 
+  async remove(photo) {
+
+    const translation = await this._translate
+      .get([
+        'modals.photo.save.modalconfirm.title',
+        'modals.photo.save.modalconfirm.text',
+        'modals.photo.save.modalconfirm.confirm',
+        'modals.photo.save.modalconfirm.cancel',
+      ])
+      .toPromise();
+
+    const alert = await this._alertController.create({
+      cssClass: 'webmapp-modalconfirm',
+      header: translation['modals.photo.save.modalconfirm.title'],
+      message: translation['modals.photo.save.modalconfirm.text'],
+      buttons: [
+        {
+          text: translation['modals.photo.save.modalconfirm.cancel'],
+          cssClass: 'webmapp-modalconfirm-btn',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: translation['modals.photo.save.modalconfirm.confirm'],
+          cssClass: 'webmapp-modalconfirm-btn',
+          handler: () => {
+            const idx = this.photos.findIndex(x=>x.id == photo.id);
+            if(idx>=0){this.photos.splice(idx,1);}
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+    
+  }
+
+  async addPhotos(){
+    const modalPhotos = await this.modalController.create({
+      component: ModalphotosComponent,
+      componentProps: {
+        photoCollection: this.photos,
+      },
+    });
+    await modalPhotos.present();
+    const resPhoto = await modalPhotos.onDidDismiss()
+    this.photos = resPhoto.data.photos;
+    // const photoCollection = resPhoto.data.photos;
+    // this.photos = [...this.photos,...photoCollection]
+  }
+
+  edit(photo) {
+
+  }
+
   save() {
-    if(!this.isValid()){
+    if (!this.isValid()) {
       return;
     }
 
@@ -36,5 +99,9 @@ export class ModalphotosaveComponent implements OnInit {
 
   isValid() {
     return true;
+  }
+
+  setShowModeList(isList: boolean) {
+    this.showList = isList;
   }
 }

@@ -97,7 +97,7 @@ export class PhotoService {
       const max = 1 + Math.random() * 8;
       for (let i = 0; i < max; i++) {
         res.push({
-          id: '1',
+          id: ''+i+1,
           photoURL: `https://picsum.photos/50${i}/75${i}`,
           datasrc: `https://picsum.photos/50${i}/75${i}`,
           description: '',

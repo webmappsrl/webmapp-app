@@ -8,9 +8,12 @@ import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { PhotoService } from 'src/app/services/photo.service';
 import { ILocation } from 'src/app/types/location';
-import { EPopoverPhotoType } from 'src/app/types/esuccess.enum';
+import { EPopoverPhotoType, ESuccessType } from 'src/app/types/esuccess.enum';
 import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
+import { ModalphotosaveComponent } from '../../modalphotos/modalphotosave/modalphotosave.component';
+import { SaveService } from 'src/app/services/save.service';
+import { ModalSuccessComponent } from '../../modal-success/modal-success.component';
 
 @Component({
   selector: 'webmapp-popover-register',
@@ -25,10 +28,11 @@ export class PopoverRegisterComponent implements OnInit {
     private _modalController: ModalController,
     private _navCtrl: NavController,
     private _photoService: PhotoService,
-    private _popoverController: PopoverController
-  ) {}
+    private _popoverController: PopoverController,
+    private _saveService: SaveService
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   track() {
     const location: ILocation = this._geolocationService.location;
@@ -67,6 +71,8 @@ export class PopoverRegisterComponent implements OnInit {
       photos = await this._photoService.getPhotos();
     }
 
+    let photoCollection = [];
+
     if (photos.length) {
       const modalPhotos = await this._modalController.create({
         component: ModalphotosComponent,
@@ -75,7 +81,26 @@ export class PopoverRegisterComponent implements OnInit {
         },
       });
       await modalPhotos.present();
+      const resPhoto = await modalPhotos.onDidDismiss()
+      photoCollection = resPhoto.data.photos;
     }
+
+    const modal = await this._modalController.create({
+      component: ModalphotosaveComponent,
+      componentProps: {
+        photos: photoCollection,
+      },
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
+
+    if (!res.data.dismissed) {
+      await this._saveService.savePhotos(res.data.photos);
+
+      await this.openModalSuccess(res.data.photos);
+    }
+
+
 
     // Can be set to the src of an image now
     // imageElement.src = imageUrl;
@@ -95,5 +120,17 @@ export class PopoverRegisterComponent implements OnInit {
 
   dismiss() {
     this._popoverController.dismiss();
+  }
+
+  async openModalSuccess(photos) {
+    const modaSuccess = await this._modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.PHOTOS,
+        photos,
+      },
+    });
+    await modaSuccess.present();
+    await modaSuccess.onDidDismiss();
   }
 }
