@@ -8,12 +8,14 @@ import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 import { ModalphotosaveComponent } from './modalphotosave/modalphotosave.component';
 import { ModalSuccessModule } from '../modal-success/modal-success.module';
 import { FormsModule } from '@angular/forms';
+import { ModalPhotoSingleComponent } from './modal-photo-single/modal-photo-single.component';
 
 @NgModule({
   declarations: [
     ModalphotosComponent,
     PopoverphotoComponent,
     ModalphotosaveComponent,
+    ModalPhotoSingleComponent,
   ],
   imports: [
     CommonModule,

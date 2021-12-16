@@ -26,6 +26,7 @@ export class BtnRegisterComponent implements OnInit {
       event: ev,
       translucent: true,
       mode: 'ios',
+      // side: PositionSide1.left,
       componentProps: { registering: this.registering },
     });
     await this.popover.present();

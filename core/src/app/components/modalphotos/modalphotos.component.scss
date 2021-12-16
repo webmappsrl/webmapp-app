@@ -49,6 +49,16 @@
 .webmapp-modalphoto-footer {
   --background: var(--wm-color-dark);
   padding: 12px 25px;
+
+  .webmapp-modalphoto-slider {
+    // padding: 10px 0;
+    overflow: visible;
+  }
+
+  .webmapp-modalphoto-footer-photocontainer{    
+    width: 20%;
+  }
+
   .webmapp-modalphoto-footer-photo{    
     width: 51px;
     height: 49px;

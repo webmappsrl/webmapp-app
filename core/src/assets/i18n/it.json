@@ -107,10 +107,24 @@
         "shot": "Scatta una foto"
       },
       "save": {
-        "formphototitle": "Titolo foto ",
+        "addphoto": "Aggiungi foto",
+        "formphototitle": "Titolo ",
+        "placeholder":"Qui puoi inserrire un titolo",        
         "formtitle": "Dai un titolo alle tue foto",
+        "modalconfirm": {
+          "cancel": "Annulla",
+          "confirm": "Sì, elimina",
+          "text": "Se la elimini non verrà aggiunta a questa registrazione",
+          "title": "Sei sicuro di voler eliminare le foto di questa registrazione?"
+        },
         "savebtn": "Salva",
         "title": "Registra foto"
+      },
+      "single": {
+        "formphototitle": "Titolo",
+        "placeholder":"Qui puoi inserrire un titolo",
+        "savebtn": "Fatto",
+        "title": "Modifica foto"
       }
     },
     "settings": {
@@ -234,14 +248,14 @@
       },
       "modalsave": {
         "formactivity": "Tipo di attività",
-        "formactivityplaceholder":"Seleziona",
-        "formactivityerror":"Il tipo di attività è un campo obbligatorio",
+        "formactivityerror": "Il tipo di attività è un campo obbligatorio",
+        "formactivityplaceholder": "Seleziona",
         "formdescription": "Descrizione",
-        "formdescriptionplaceholder":"Se vuoi puoi aggiungere una descrizione",
+        "formdescriptionplaceholder": "Se vuoi puoi aggiungere una descrizione",
         "formphotos": "Aggiungi foto scattate durante il percorso",
         "formtitle": "Titolo traccia",
-        "formtitleplaceholder":"Inserisci un titolo",
-        "formtitleerror":"Il campo titolo è obbligatorio",
+        "formtitleerror": "Il campo titolo è obbligatorio",
+        "formtitleplaceholder": "Inserisci un titolo",
         "photoaction": "Carica",
         "photoactionshort": "Aggiungi",
         "photoadvice": "Dimensione massime: 200Mb",
@@ -327,10 +341,10 @@
         "isNotFavourite": "Rimosso dai preferiti!"
       },
       "modalconfirm": {
-        "title": "Interrompere il download?",
-        "text": "Uscire senza terminare il download della traccia?",
         "cancel": "Annulla",
-        "confirm": "Uscire"
+        "confirm": "Uscire",
+        "text": "Uscire senza terminare il download della traccia?",
+        "title": "Interrompere il download?"
       },
       "navigate": "Naviga",
       "share": "Condividi",
@@ -375,15 +389,15 @@
       "here": "Ti trovi qui:",
       "modalsave": {
         "formdescription": "Descrizione",
-        "formdescriptionplaceholder":"Se vuoi puoi aggiungere una descrizione",
+        "formdescriptionplaceholder": "Se vuoi puoi aggiungere una descrizione",
         "formoptional": "Facoltativo",
+        "formphotos": "Aggiungi foto del Waypoint",
         "formtitle": "Titolo waypoint",
         "formtitleerror": "Titolo waypont richiesto",
-        "formtitleplaceholder":"Inserisci un titolo",
+        "formtitleplaceholder": "Inserisci un titolo",
         "formtype": "Tipo di Waypoint",
-        "formtypeplaceholder":"Seleziona",
-        "formtypeerror":"Tipo del waypoint richiesto",
-        "formphotos": "Aggiungi foto del Waypoint",
+        "formtypeerror": "Tipo del waypoint richiesto",
+        "formtypeplaceholder": "Seleziona",
         "photoaction": "Carica",
         "photoactionshort": "Aggiungi",
         "photoadvice": "Dimensione massime: 200Mb",
