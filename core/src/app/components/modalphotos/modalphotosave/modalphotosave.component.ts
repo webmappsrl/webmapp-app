@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { IPhotoItem } from 'src/app/services/photo.service';
+import { ModalPhotoSingleComponent } from '../modal-photo-single/modal-photo-single.component';
 import { ModalphotosComponent } from '../modalphotos.component';
 
 @Component({
@@ -82,9 +83,17 @@ export class ModalphotosaveComponent implements OnInit {
     // const photoCollection = resPhoto.data.photos;
     // this.photos = [...this.photos,...photoCollection]
   }
-
-  edit(photo) {
-
+  
+  async edit(photo) {
+    const modalSinglePhoto = await this.modalController.create({
+      component: ModalPhotoSingleComponent,
+      componentProps: {
+        photo,
+        photos:this.photos
+      },
+    });
+    await modalSinglePhoto.present();
+    // const resPhoto = await modalSinglePhoto.onDidDismiss()    
   }
 
   save() {

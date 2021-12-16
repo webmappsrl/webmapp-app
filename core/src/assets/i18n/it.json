@@ -108,16 +108,23 @@
       },
       "save": {
         "addphoto": "Aggiungi foto",
-        "formphototitle": "Titolo foto ",
+        "formphototitle": "Titolo ",
+        "placeholder":"Qui puoi inserrire un titolo",        
         "formtitle": "Dai un titolo alle tue foto",
         "modalconfirm": {
-          "title": "Sei sicuro di voler eliminare le foto di questa registrazione?",
-          "text": "Se la elimini non verrà aggiunta a questa registrazione",
+          "cancel": "Annulla",
           "confirm": "Sì, elimina",
-          "cancel": "Annulla"
+          "text": "Se la elimini non verrà aggiunta a questa registrazione",
+          "title": "Sei sicuro di voler eliminare le foto di questa registrazione?"
         },
         "savebtn": "Salva",
         "title": "Registra foto"
+      },
+      "single": {
+        "formphototitle": "Titolo",
+        "placeholder":"Qui puoi inserrire un titolo",
+        "savebtn": "Fatto",
+        "title": "Modifica foto"
       }
     },
     "settings": {

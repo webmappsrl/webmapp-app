@@ -19,7 +19,7 @@
         font-size: var(--wm-font-sm);
         --border-radius: 30px;
         margin: 11px 15px 0;
-        .webmapp-modalphotosave-btnaddphotoicon{
+        .webmapp-modalphotosave-btnaddphotoicon {
             border-radius: 10px;
             background-color: var(--wm-color-secondary);
             color: var(--wm-color-light);
@@ -114,8 +114,29 @@
         }
     }
 
+    .webmapp-modalphotosave-item-imagedrop {
+        width: 108px;
+        height: 100px;
+        background: linear-gradient(0deg, black 0%, transparent 30%);
+        border-radius: 15px;
+        position: absolute;
+        bottom: -1px;
+    }
+
+    .webmapp-modalphotosave-item-edit {
+        position: absolute;
+        left: 29px;
+        bottom: 7px;
+        background: transparent;
+        color: var(--wm-color-light);
+        font-size: 16px;
+    }
+
     .webmapp-modalphotosave-item-inputwrapper {
         padding: 10px 10px;
+        position: absolute;
+        bottom: -8px;
+        width: 95%;
 
         .webmapp-modalphotosave-item-icon {
             font-size: var(--wm-font-lg);
@@ -130,6 +151,7 @@
         }
         .webmapp-modalphotosave-item-input {
             border-bottom: 1px solid var(--wm-color-grey);
+            font-size: 14px;
         }
     }
 }
