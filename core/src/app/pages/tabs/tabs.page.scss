@@ -1,12 +1,16 @@
-i[class^="webmapp-icon-"] {
-  font-size: calc(var(--wm-font-xxxlg-multiplier) * 1em);
-}
+// i[class^="webmapp-icon-"] {
+//   font-size: calc(var(--wm-font-xxxlg-multiplier) * 1em);
+// }
 
 .webmapp-tabs-label {
   font-size: var(--wm-font-xsm);
   &::first-letter {
     text-transform: capitalize;
   }
+}
+
+i.webmapp-tabs-icon{
+  font-size: var(--wm-font-tabicon);
 }
 
 ion-tab-button {

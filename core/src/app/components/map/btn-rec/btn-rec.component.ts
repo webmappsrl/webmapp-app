@@ -13,7 +13,7 @@ export class BtnRecComponent implements OnInit {
   public sliderPercentual = 0;
   public yetUnlocked = false;
 
-  public rationEnd = -0.535;
+  public rationEnd = -0.635;
   public threshold = 0.93;
 
   setIntID;

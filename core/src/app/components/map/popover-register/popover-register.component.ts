@@ -62,14 +62,14 @@ export class PopoverRegisterComponent implements OnInit {
       event: null, //ev,
       translucent: true,
     });
-    await popover.present();
-    const { role } = await popover.onDidDismiss();
-    if (role === EPopoverPhotoType.PHOTOS) {
+    // await popover.present();
+    // const { role } = await popover.onDidDismiss();
+    // if (role === EPopoverPhotoType.PHOTOS) {
       const image = await this._photoService.shotPhoto(false);
       photos = [image];
-    } else if (role === EPopoverPhotoType.LIBRARY) {
-      photos = await this._photoService.getPhotos();
-    }
+    // } else if (role === EPopoverPhotoType.LIBRARY) {
+    //   photos = await this._photoService.getPhotos();
+    // }
 
     let photoCollection = [];
 

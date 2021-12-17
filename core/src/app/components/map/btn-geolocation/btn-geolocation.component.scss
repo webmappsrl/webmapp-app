@@ -5,6 +5,11 @@
   @include box-shadow-light;
   border-radius: 20px;
 
+  i{
+    padding-top: 3px;
+    padding-right: 3px;
+  }
+
   &.webmapp-btn-geolocation-fab-light {
     --background: var(--wm-color-light);
     --color: var(--wm-color-dark);

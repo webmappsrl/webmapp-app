@@ -4,6 +4,9 @@
     position: relative;
     width: 29px;
     height: 44px;
+
+    font-size: var(--wm-font-icon);
+    
     .webmapp-route-favbtn-left {
         position: absolute;
         right: 00px;
@@ -16,7 +19,7 @@
         .webmapp-route-favbtn-icon {
             color: var(--wm-color-primary);
             display: inline-block;
-            margin: 13px;
+            margin: 10px;
         }
     }
     .webmapp-route-favbtn-text {
