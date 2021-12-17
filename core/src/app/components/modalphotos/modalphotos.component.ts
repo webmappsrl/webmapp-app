@@ -59,11 +59,11 @@ export class ModalphotosComponent implements OnInit {
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
-    if (role === EPopoverPhotoType.PHOTOS) {
+    // if (role === EPopoverPhotoType.PHOTOS) {
       this.addPhoto();
-    } else if (role === EPopoverPhotoType.LIBRARY) {
-      this.addFromLibrary();
-    }
+    // } else if (role === EPopoverPhotoType.LIBRARY) {
+    //   this.addFromLibrary();
+    // }
   }
 
   async addPhoto() {

@@ -103,8 +103,10 @@
     "photo": {
       "next": "Avanti",
       "popover": {
+        "title":"Origine dell'immagine",
         "library": "Dalla libreria",
-        "shot": "Scatta una foto"
+        "shot": "Scatta una foto",
+        "cancel": "Annulla"
       },
       "save": {
         "addphoto": "Aggiungi foto",

@@ -23,7 +23,9 @@ webmapp-app-root {
   --wm-font-weight-bold: 700;
   --wm-font-weight-xbold: 800;
 
+  --wm-font-tabicon: 24px;
   --wm-font-icon: 24px;
+  --wm-font-icon-big: 32px;
   
 }
 
@@ -49,4 +51,5 @@ p {
 
 i[class^="webmapp-icon-"] {
   font-size: calc(var(--wm-font-lg-multiplier) * 1em);
+  font-size: var(--wm-font-icon)
 }
