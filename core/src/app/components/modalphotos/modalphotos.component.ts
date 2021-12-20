@@ -59,11 +59,11 @@ export class ModalphotosComponent implements OnInit {
     });
     await popover.present();
     const { role } = await popover.onDidDismiss();
-    // if (role === EPopoverPhotoType.PHOTOS) {
+    if (role === EPopoverPhotoType.PHOTOS) {
       this.addPhoto();
-    // } else if (role === EPopoverPhotoType.LIBRARY) {
-    //   this.addFromLibrary();
-    // }
+    } else if (role === EPopoverPhotoType.LIBRARY) {
+       this.addFromLibrary();
+    }
   }
 
   async addPhoto() {
@@ -75,7 +75,8 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addFromLibrary() {
-    const photos = await this._photoService.getPhotos(); if (photos && photos.length) {
+    const photos = await this._photoService.getPhotos(); 
+    if (photos && photos.length) {
       photos.forEach(async (photo) => {
         const photoData = await this._photoService.getPhotoData(photo.photoURL);
         const md5 = Md5.hashStr(JSON.stringify(photoData));

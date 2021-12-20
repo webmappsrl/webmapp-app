@@ -208,6 +208,7 @@ export class GeohubService {
 
     if (photo.blob) data.append('image', photo.blob, 'image.jpg');
     data.append('geojson', JSON.stringify(geojson));
+    console.log("------- ~ GeohubService ~ savePhoto ~ data", data);
 
     // The content type multipart/form-data is not set because there could be problems
     // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http

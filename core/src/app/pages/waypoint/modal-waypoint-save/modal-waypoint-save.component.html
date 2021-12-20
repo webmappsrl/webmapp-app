@@ -39,12 +39,12 @@
     <webmapp-form-field [(value)]="waypointtype" [required]="false" [icon]="'webmapp-icon-activities'"
       [iconColor]="'primary'" [label]="'pages.waypoint.modalsave.formtype'"
       [error]="'pages.waypoint.modalsave.formtypeerror'" [validate]="validate" (validChange)="setIsValid(1,$event)">
-      <ion-select [(ngModel)]="waypointtype" placeholder="{{'pages.waypoint.modalsave.formtypeplaceholder'|translate}}">
+      <ion-select class="webmapp-modalwaypoint-itemlist-select" [(ngModel)]="waypointtype" placeholder="{{'pages.waypoint.modalsave.formtypeplaceholder'|translate}}">
         <ion-select-option value="waypoint">Segnavia</ion-select-option>
         <ion-select-option value="sightseen">Panorama</ion-select-option>
       </ion-select>
     </webmapp-form-field>
-
+ 
     <webmapp-form-field [icon]="'webmapp-icon-camera'" [iconColor]="'secondary'"
       [label]="'pages.waypoint.modalsave.formphotos'" [noline]="true"><span></span></webmapp-form-field>
 

@@ -32,14 +32,17 @@
       color: var(--wm-color-light);
     }
     .webmapp-modalwaypoint-extrinfo-textposition {
-      color: var(--wm-color-lightgray);
+      color: var(--wm-color-lightgray); 
     }
   }
 }
 
 .webmapp-modalwaypoint-itemlist {
   padding-top: 30px;
-
+  .webmapp-modalwaypoint-itemlist-select{
+    width: 100%;
+    min-width: 100%;
+  }
 }
 .webmapp-modalwaypoint-footer {
   text-align: center;

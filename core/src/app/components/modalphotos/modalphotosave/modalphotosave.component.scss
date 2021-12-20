@@ -44,15 +44,17 @@
 .webmapp-modalphotosave-itemboxlist {
     width: 100%;
     .webmapp-modalphotosave-itembox {
-        width: 168px;
+        width: 95%;
         height: 142px;
         border-radius: 15px;
         overflow: hidden;
+        margin: auto;
+        position: relative;
 
         .webmapp-modalphotosave-itembox-remove {
             position: absolute;
-            right: 20px;
-            top: 15px;
+            right: 10px;
+            top: 10px;
             background: var(--wm-color-light);
             border-radius: 15px;
             width: 19px;
@@ -62,14 +64,15 @@
 
         .webmapp-modalphotosave-itembox-edit {
             position: absolute;
-            left: 20px;
-            bottom: 15px;
+            left: 10px;
+            bottom: 10px;
             background: transparent;
             color: var(--wm-color-light);
+            font-size: var(--wm-font-md);
         }
 
         .webmapp-modalphotosave-itembox-image {
-            width: 168px;
+            // width: 168px;
             height: 142px;
             &::part(image) {
                 object-fit: cover;
@@ -78,19 +81,19 @@
 
         .webmapp-modalphotosave-itembox-imagedrop {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 168px;
+            top: 0px;
+            left: 0px;
+            width: 100%;
             height: 142px;
-            background: linear-gradient(0deg, black 0%, transparent 38%);
+            background: linear-gradient(0deg, black 0%, transparent 32%);
             border-radius: 15px;
         }
 
         .webmapp-modalphotosave-itembox-imagetitle {
             position: absolute;
-            left: 45px;
-            bottom: 15px;
-            max-width: 120px;
+            left: 35px;
+            bottom: 10px;
+            max-width: 75%;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
