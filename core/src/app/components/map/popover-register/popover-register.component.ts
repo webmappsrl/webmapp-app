@@ -9,7 +9,7 @@ import { GeolocationService } from 'src/app/services/geolocation.service';
 import { PhotoService } from 'src/app/services/photo.service';
 import { ILocation } from 'src/app/types/location';
 import { EPopoverPhotoType, ESuccessType } from 'src/app/types/esuccess.enum';
-import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
+// import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
 import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
 import { ModalphotosaveComponent } from '../../modalphotos/modalphotosave/modalphotosave.component';
 import { SaveService } from 'src/app/services/save.service';
@@ -55,35 +55,35 @@ export class PopoverRegisterComponent implements OnInit {
   async photo(ev) {
     this.dismiss();
 
-    let photos = null;
+    // let photos = [];
 
-    const popover = await this._popoverController.create({
-      component: PopoverphotoComponent,
-      event: null, //ev,
-      translucent: true,
-    });
+    // const popover = await this._popoverController.create({
+    //   component: PopoverphotoComponent,
+    //   event: null, //ev,
+    //   translucent: true,
+    // });
     // await popover.present();
     // const { role } = await popover.onDidDismiss();
     // if (role === EPopoverPhotoType.PHOTOS) {
-      const image = await this._photoService.shotPhoto(false);
-      photos = [image];
+    //   const image = await this._photoService.shotPhoto(false);
+    //   photos = [image];
     // } else if (role === EPopoverPhotoType.LIBRARY) {
-    //   photos = await this._photoService.getPhotos();
+    //    photos = await this._photoService.getPhotos();
     // }
 
-    let photoCollection = [];
+    let photoCollection = await this._photoService.addPhotos();
 
-    if (photos.length) {
-      const modalPhotos = await this._modalController.create({
-        component: ModalphotosComponent,
-        componentProps: {
-          photoCollection: photos,
-        },
-      });
-      await modalPhotos.present();
-      const resPhoto = await modalPhotos.onDidDismiss()
-      photoCollection = resPhoto.data.photos;
-    }
+    // if (photos.length) {
+    //   const modalPhotos = await this._modalController.create({
+    //     component: ModalphotosComponent,
+    //     componentProps: {
+    //       photoCollection: photos,
+    //     },
+    //   });
+    //   await modalPhotos.present();
+    //   const resPhoto = await modalPhotos.onDidDismiss()
+    //   photoCollection = resPhoto.data.photos;
+    // }
 
     const modal = await this._modalController.create({
       component: ModalphotosaveComponent,

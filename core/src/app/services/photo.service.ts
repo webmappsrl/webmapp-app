@@ -10,6 +10,7 @@ import {
   CameraResultType,
   CameraDirection,
   CameraSource,
+  GalleryImageOptions,
 } from '@capacitor/camera';
 import { HttpClient } from '@angular/common/http';
 import { IRegisterItem } from '../types/track';
@@ -17,6 +18,7 @@ import { Filesystem, Directory, GetUriResult } from '@capacitor/filesystem';
 import { ILocation } from '../types/location';
 import { GeolocationService } from './geolocation.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ActionSheetController } from '@ionic/angular';
 
 export interface IPhotoItem extends IRegisterItem {
   id: string;
@@ -26,6 +28,7 @@ export interface IPhotoItem extends IRegisterItem {
   rawData?: string;
   blob?: Blob;
   position: ILocation;
+  exif?: any
 }
 
 export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
@@ -67,14 +70,100 @@ export class PhotoService {
     private _http: HttpClient, // private file: File, // private filePath: FilePath,
     private geoLocationService: GeolocationService,
     private translate: TranslateService,
+    private actionSheetController: ActionSheetController
   ) {
 
     setTimeout(() => {
       this.translate.get(['modals.photo.popover.title', 'modals.photo.popover.library', 'modals.photo.popover.shot', 'modals.photo.popover.cancel']).subscribe(t => { this.translations = t; })
-      }, 2000);
-    }
+    }, 2000);
+  }
+
+  async addPhotos(): Promise<IPhotoItem[]> {
+    let retProm = new Promise<IPhotoItem[]>((resolve, reject) => {
+      this.actionSheetController.create({
+        header: this.translations['modals.photo.popover.title'],
+        buttons: [
+          {
+            text: this.translations['modals.photo.popover.shot'],
+            handler: () => {
+              this.shotPhoto(false).then(photo => resolve([photo]));
+            },
+          },
+          {
+            text: this.translations['modals.photo.popover.library'],
+            handler: () => {
+              this.getPhotos(null).then(photos => resolve(photos))
+            },
+          },
+          {  
+            text: this.translations['modals.photo.popover.cancel'],      
+            role: 'cancel',
+            handler: () => {
+              reject();
+            },
+          },
+        ],
+      }).then(actionSheet => {
+        actionSheet.present();
+      });
+
+
+    })
+
+    return retProm;
+
+
+  }
 
   async getPhotos(dateLimit: Date = null): Promise<IPhotoItem[]> {
+    const res: IPhotoItem[] = [];
+    let filePath = null;
+    if (!this._deviceService.isBrowser) {
+      if (!(await this._imagePicker.hasReadPermission())) {
+        await this._imagePicker.requestReadPermission();
+        if (!(await this._imagePicker.hasReadPermission())) return res;
+      }
+      const options: GalleryImageOptions = {
+        quality: 100, //	number	The quality of image to return as JPEG, from 0-100		1.2.0
+        // width:	10000, //number	The width of the saved image		1.2.0
+        // height:10000,	//number	The height of the saved image		1.2.0
+        // correctOrientation: false, // 	boolean	Whether to automatically rotate the image “up” to correct for orientation in portrait mode	: true	1.2.0
+        // presentationStyle:	'fullscreen' | 'popover'	// iOS only: The presentation style of the Camera.	: 'fullscreen'	1.2.0
+        // limit : 100 //	number	iOS only: Maximum number of pictures the user will be able to choose.	0 (unlimited)	1.2.0
+      };
+      const gallery = await Camera.pickImages(options);
+      for (let i = 0; i < gallery.photos.length; i++) {
+        let data = Capacitor.convertFileSrc(gallery.photos[i].webPath); //TODO check source of file
+        filePath = gallery.photos[i].path;
+
+        res.push({
+          id: i + '',
+          photoURL: filePath,
+          datasrc: data,
+          description: '',
+          date: new Date(),
+          position: this.geoLocationService.location,
+          exif: gallery.photos[i].exif
+        });
+      }
+      return res;
+    } else {
+      const max = 1 + Math.random() * 8;
+      for (let i = 0; i < max; i++) {
+        res.push({
+          id: '' + i + 1,
+          photoURL: `https://picsum.photos/50${i}/75${i}`,
+          datasrc: `https://picsum.photos/50${i}/75${i}`,
+          description: '',
+          date: new Date(),
+          position: this.geoLocationService.location,
+        });
+      }
+      return res;
+    }
+  }
+
+  async getPhotosOld(dateLimit: Date = null): Promise<IPhotoItem[]> {
     const res: IPhotoItem[] = [];
     let filePath = null;
     if (!this._deviceService.isBrowser) {
@@ -129,7 +218,7 @@ export class PhotoService {
       // height: 10000,//	number	The height of the saved image
       // preserveAspectRatio: true, //	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
       // correctOrientation: true,	//boolean	Whether to automatically rotate the image “up” to correct for orientation in portrait mode Default: true
-      source: CameraSource.Prompt, //CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
+      source: CameraSource.Camera, //CameraSource	The source to get the photo from.By default this prompts the user to select either the photo album or take a photo.Default: CameraSource.Prompt
       direction: CameraDirection.Rear, //CameraDirection	iOS and Web only: The camera direction.Default: CameraDirection.Rear
       // presentationStyle: 'fullscreen',	//"fullscreen" | "popover"	iOS only: The presentation style of the Camera.Defaults to fullscreen.
       webUseInput: this._deviceService.isBrowser ? null : true, //boolean	Web only: Whether to use the PWA Element experience or file input.The default is to use PWA Elements if installed and fall back to file input.To always use file input, set this to true.Learn more about PWA Elements: https://capacitorjs.com/docs/pwa-elements
@@ -146,6 +235,7 @@ export class PhotoService {
       description: '',
       date: new Date(),
       position: this.geoLocationService.location,
+      exif: photo.exif
     };
     return res;
   }

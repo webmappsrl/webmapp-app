@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { IPhotoItem } from 'src/app/services/photo.service';
+import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
 import { ModalPhotoSingleComponent } from '../modal-photo-single/modal-photo-single.component';
-import { ModalphotosComponent } from '../modalphotos.component';
 
 @Component({
   selector: 'webmapp-modalphotosave',
@@ -19,7 +18,9 @@ export class ModalphotosaveComponent implements OnInit {
     private modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    ) { }
+    public actionSheetController: ActionSheetController,
+    private _photoService:PhotoService
+  ) { }
 
   ngOnInit() { }
 
@@ -53,43 +54,55 @@ export class ModalphotosaveComponent implements OnInit {
           text: translation['modals.photo.save.modalconfirm.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
-          handler: () => {},
+          handler: () => { },
         },
         {
           text: translation['modals.photo.save.modalconfirm.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
-            const idx = this.photos.findIndex(x=>x.id == photo.id);
-            if(idx>=0){this.photos.splice(idx,1);}
+            const idx = this.photos.findIndex(x => x.id == photo.id);
+            if (idx >= 0) { this.photos.splice(idx, 1); }
           },
         },
       ],
     });
 
     await alert.present();
-    
-  }
 
-  async addPhotos(){
-    const modalPhotos = await this.modalController.create({
-      component: ModalphotosComponent,
-      componentProps: {
-        photoCollection: this.photos,
-      },
-    });
-    await modalPhotos.present();
-    const resPhoto = await modalPhotos.onDidDismiss()
-    this.photos = resPhoto.data.photos;
-    // const photoCollection = resPhoto.data.photos;
-    // this.photos = [...this.photos,...photoCollection]
   }
   
+  async addPhotos() {
+    try{
+    const photos = await this._photoService.addPhotos();
+    this.photos = [...this.photos,...photos]
+    }
+    catch{}
+  }
+
+  // async addPhotos() {
+  //   const modalPhotos = await this.modalController.create({
+  //     component: ModalphotosComponent,
+  //     componentProps: {
+  //       photoCollection: this.photos,
+  //     },
+  //   });
+  //   await modalPhotos.present();
+  //   const resPhoto = await modalPhotos.onDidDismiss();
+  //   if (!resPhoto.data.dismissed && resPhoto.data.photos) {
+  //     this.photos = resPhoto.data.photos;
+  //   }
+  //   // const photoCollection = resPhoto.data.photos;
+  //   // this.photos = [...this.photos,...photoCollection]
+  // }
+
+  
+
   async edit(photo) {
     const modalSinglePhoto = await this.modalController.create({
       component: ModalPhotoSingleComponent,
       componentProps: {
         photo,
-        photos:this.photos
+        photos: this.photos
       },
     });
     await modalSinglePhoto.present();
