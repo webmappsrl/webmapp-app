@@ -117,14 +117,14 @@
           "cancel": "Annulla",
           "confirm": "Sì, elimina",
           "text": "Se la elimini non verrà aggiunta a questa registrazione",
-          "title": "Sei sicuro di voler eliminare le foto di questa registrazione?"
+          "title": "Sei sicuro di voler eliminare questa foto dalla registrazione?"
         },
         "savebtn": "Salva",
         "title": "Registra foto"
       },
       "single": {
         "formphototitle": "Titolo",
-        "placeholder":"Qui puoi inserrire un titolo",
+        "placeholder":"Qui puoi inserire un titolo",
         "savebtn": "Fatto",
         "title": "Modifica foto"
       }

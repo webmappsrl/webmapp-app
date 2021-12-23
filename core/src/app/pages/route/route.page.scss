@@ -62,7 +62,14 @@
   padding: 5px 15px;
   font-weight: var(--wm-font-weight-xbold);
   font-size: var(--wm-font-lg);
+
+  max-height: 50px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
+
 .webmapp-pageroute-infopanel-icon {
   color: var(--wm-color-secondary);
   font-size: var(--wm-font-icon);
