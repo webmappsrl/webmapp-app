@@ -117,6 +117,17 @@
         }
     }
 
+    .webmapp-modalphotosave-item-remove {
+        position: absolute;
+        left: 104px;
+        top: 0px;
+        background: var(--wm-color-light);
+        border-radius: 15px;
+        width: 19px;
+        height: 19px;
+        @include box-shadow-light;
+    }
+
     .webmapp-modalphotosave-item-imagedrop {
         width: 108px;
         height: 100px;

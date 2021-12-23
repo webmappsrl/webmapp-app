@@ -59,6 +59,8 @@
       <ion-item class="webmapp-modalphotosave-item" lines="none">
         <ion-img slot="start" class="webmapp-modalphotosave-item-photo" [src]="photo?.datasrc"></ion-img>
         <div slot="start" class="webmapp-modalphotosave-item-imagedrop"></div>
+        <ion-icon slot="start" name="close-outline" class="webmapp-modalphotosave-item-remove" (click)="remove(photo)">
+        </ion-icon>
             <i slot="start" class="webmapp-icon-edit-outline webmapp-modalphotosave-item-edit" (click)="edit(photo)"></i>
         <div class="webmapp-modalphotosave-item-inputwrapper">
           <ion-label class="webmapp-modalphotosave-item-label" position="stacked">{{ "modals.photo.save.formphototitle"
