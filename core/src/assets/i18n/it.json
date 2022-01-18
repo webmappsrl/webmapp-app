@@ -9,6 +9,7 @@
         "slide": "Scorri per registrare"
       },
       "register": {
+        "cancel": "annulla",
         "photo": "Foto",
         "title": "Registra",
         "track": "Tracciato",
@@ -103,15 +104,14 @@
     "photo": {
       "next": "Avanti",
       "popover": {
-        "title":"Origine dell'immagine",
+        "cancel": "Annulla",
         "library": "Dalla libreria",
         "shot": "Scatta una foto",
-        "cancel": "Annulla"
+        "title": "Origine dell'immagine"
       },
       "save": {
         "addphoto": "Aggiungi foto",
         "formphototitle": "Titolo ",
-        "placeholder":"Qui puoi inserire un titolo",        
         "formtitle": "Dai un titolo alle tue foto",
         "modalconfirm": {
           "cancel": "Annulla",
@@ -119,12 +119,13 @@
           "text": "Se la elimini non verrà aggiunta a questa registrazione",
           "title": "Sei sicuro di voler eliminare questa foto dalla registrazione?"
         },
+        "placeholder": "Qui puoi inserire un titolo",
         "savebtn": "Salva",
         "title": "Registra foto"
       },
       "single": {
         "formphototitle": "Titolo",
-        "placeholder":"Qui puoi inserire un titolo",
+        "placeholder": "Qui puoi inserire un titolo",
         "savebtn": "Fatto",
         "title": "Modifica foto"
       }

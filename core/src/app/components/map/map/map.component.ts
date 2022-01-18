@@ -54,7 +54,7 @@ import {
   ILineString,
 } from 'src/app/types/model';
 import { fromLonLat } from 'ol/proj';
-import { ClusterMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
+import { ClusterMarker, iMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
 import { AuthService } from 'src/app/services/auth.service';
@@ -68,6 +68,8 @@ import { GeohubService } from 'src/app/services/geohub.service';
 import { MarkerService } from 'src/app/services/marker.service';
 import { TilesService } from 'src/app/services/tiles.service';
 import { ConfigService } from 'src/app/services/config.service';
+import layerVector from 'ol/layer/Vector';
+import sourceVector from 'ol/source/Vector';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -75,6 +77,9 @@ const CLUSTERLAYERZINDEX = 400;
 const POISLAYERZINDEX = 460;
 const SELECTEDPOILAYERZINDEX = 500;
 const TRACKLAYERZINDEX = 450;
+const TRACKMARKERLAYERZINDEX = 470;
+
+const CIRCULARTOLERANCE = 0.001;
 
 @Component({
   selector: 'webmapp-map',
@@ -288,6 +293,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private _track: {
     layer: VectorLayer;
+    markerslayer: VectorLayer;
     track: Feature[];
     registeredTrack: ITrack;
   };
@@ -328,6 +334,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._track = {
       layer: null,
       track: null,
+      markerslayer: null,
       registeredTrack: null,
     };
 
@@ -506,8 +513,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    *
    * @param geojson geojson of the track
    */
-  drawTrack(trackgeojson: any) {
+  async drawTrack(trackgeojson: any) {
     const geojson: any = this.getGeoJson(trackgeojson);
+    console.log("------- ~ MapComponent ~ drawTrack ~ trackgeojson", trackgeojson);
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
     }).readFeatures(geojson);
@@ -518,23 +526,44 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           features,
         }),
         style: () => {
-          return this._getLineStyle();
+          return this._getLineStyle('#CA1551');
         },
         updateWhileAnimating: true,
         updateWhileInteracting: true,
         zIndex: TRACKLAYERZINDEX,
       });
+
     } else {
       this._track.layer.getSource().clear();
       this._track.layer.getSource().addFeatures(features);
     }
+
+    this._track.markerslayer = this._createLayer(this._track.markerslayer, TRACKMARKERLAYERZINDEX);
+    this._track.markerslayer.getSource().clear();
+
+    const startmark = await this._createStartTrackIcon(trackgeojson,);
+    this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
+    if (!this.isCircular(trackgeojson)) {
+      const endmark = await this._createEndTrackIcon(trackgeojson,);
+      this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
+    }
+
     try {
       this._map.addLayer(this._track.layer);
-    } catch (e) {}
+      this._map.addLayer(this._track.markerslayer);
+      console.log("added layers");
+    } catch (e) { }
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
     //}
+  }
+
+  private isCircular(trackgeojson):boolean{
+    console.log("------- ~ isCircular ~ rackgeojson.coordinates", trackgeojson.coordinates[trackgeojson.coordinates.length - 1],trackgeojson.coordinates[0]);
+    let ret = Math.abs(trackgeojson.coordinates[trackgeojson.coordinates.length - 1][0] -  trackgeojson.coordinates[0][0]) < CIRCULARTOLERANCE;
+    ret = ret &&  ((trackgeojson.coordinates[trackgeojson.coordinates.length - 1][1] - trackgeojson.coordinates[0][1]) < CIRCULARTOLERANCE);
+    return ret;
   }
 
   public orientNorth() {
@@ -547,6 +576,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   deleteTrack() {
     if (this._map && this._track.layer) {
       this._map.removeLayer(this._track.layer);
+      this._map.removeLayer(this._track.markerslayer);
     }
     this._track.registeredTrack = null;
   }
@@ -807,18 +837,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (delta < 1) {
         if (this._locationAnimationState.goalLocation) {
           const deltaLongitude: number =
-              this._locationAnimationState.goalLocation.longitude -
-              this._locationAnimationState.startLocation.longitude,
+            this._locationAnimationState.goalLocation.longitude -
+            this._locationAnimationState.startLocation.longitude,
             deltaLatitude: number =
               this._locationAnimationState.goalLocation.latitude -
               this._locationAnimationState.startLocation.latitude,
             deltaAccuracy: number = this._locationAnimationState.goalAccuracy
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : this._locationAnimationState.goalLocation.accuracy
-              ? this._locationAnimationState.goalLocation.accuracy -
+                ? this._locationAnimationState.goalLocation.accuracy -
                 this._locationAnimationState.startLocation.accuracy
-              : 0;
+                : 0;
 
           if (
             deltaLongitude === 0 &&
@@ -837,27 +867,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             this._locationAnimationState.goalLocation = undefined;
             this._setLocationAccuracy(
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
           } else {
             // Update location
             const newLocation: CLocation = new CLocation(
               this._locationAnimationState.startLocation.longitude +
-                delta * deltaLongitude,
+              delta * deltaLongitude,
               this._locationAnimationState.startLocation.latitude +
-                delta * deltaLatitude,
+              delta * deltaLatitude,
               undefined,
               this._locationAnimationState.startLocation.accuracy +
-                delta * deltaAccuracy
+              delta * deltaAccuracy
             );
             this._setLocation(newLocation);
           }
         } else {
           const deltaAccuracy: number =
             typeof this._locationAnimationState.startLocation.accuracy ===
-            'number'
+              'number'
               ? this._locationAnimationState.goalAccuracy -
-                this._locationAnimationState.startLocation.accuracy
+              this._locationAnimationState.startLocation.accuracy
               : 0;
 
           if (deltaAccuracy === 0) {
@@ -868,7 +898,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           this._setLocationAccuracy(
             this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
+            delta * deltaAccuracy
           );
         }
         this._map.once('postrender', () => {
@@ -924,9 +954,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   private _setLocation(location: ILocation): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-        location?.longitude,
-        location?.latitude,
-      ]),
+      location?.longitude,
+      location?.latitude,
+    ]),
       accuracy: number =
         typeof location !== 'undefined' && typeof location.accuracy === 'number'
           ? location.accuracy
@@ -959,7 +989,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
     try {
       this._map.addLayer(this._locationIcon.layer);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   private _idOfClusterMarker(ig: IGeojsonCluster): string {
@@ -1145,13 +1175,48 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._lastClusterMarkerTransparency = transparent;
   }
 
+  private async _createStartTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
+    const img = await this._createStartTrackImage(trackgeojson);
+    const { iconFeature, style } = await this._createIconFeature(
+      geometry ? geometry : trackgeojson.coordinates[0],
+      img,
+      this._markerService.trackMarkerSize
+    );
+    return {
+      marker: {
+        icon: iconFeature,
+        id: '',
+      },
+      style,
+    };
+  }
+
+  private async _createEndTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
+    const img = await this._createEndTrackImage(trackgeojson);
+    const { iconFeature, style } = await this._createIconFeature(
+      geometry ? geometry : trackgeojson.coordinates[trackgeojson.coordinates.length - 1],
+      img,
+      this._markerService.trackMarkerSize
+    );
+    return {
+      marker: {
+        icon: iconFeature,
+        id: '',
+      },
+      style,
+    };
+  }
   private async _createPoiCanvasIcon(
     poi: IGeojsonPoi,
     geometry = null
   ): Promise<{ marker: PoiMarker; style: Style }> {
     const img = await this._createPoiCavasImage(poi);
     const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry : poi.geometry,
+      geometry ? geometry :
+        [
+          poi.geometry.coordinates[0] as number,
+          poi.geometry.coordinates[1] as number,
+        ],
       img,
       this._markerService.poiMarkerSize
     );
@@ -1172,7 +1237,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const img = await this._createClusterCavasImage(cluster);
 
     const { iconFeature } = await this._createIconFeature(
-      cluster.geometry,
+      [
+        cluster.geometry.coordinates[0] as number,
+        cluster.geometry.coordinates[1] as number,
+      ]
+      ,
       img,
       this._markerService.clusterMarkerSize,
       transparent
@@ -1187,14 +1256,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private async _createIconFeature(
-    geometry: IGeojsonGeometry,
+    coordinates: number[],
     img: HTMLImageElement,
     size: number,
     transparent: boolean = false
   ): Promise<{ iconFeature: Feature<Geometry>; style: Style }> {
     const position = fromLonLat([
-      geometry.coordinates[0] as number,
-      geometry.coordinates[1] as number,
+      coordinates[0] as number,
+      coordinates[1] as number,
     ]);
 
     const iconFeature = new Feature({
@@ -1235,6 +1304,27 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     );
   }
 
+  private async _createStartTrackImage(
+    trackgeojson: any
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas =
+      await this._markerService.createStartTrackMarkerHtmlForCanvas(trackgeojson);
+    return this._createCanvasForHtml(
+      htmlTextCanvas,
+      this._markerService.poiMarkerSize
+    );
+  }
+
+  private async _createEndTrackImage(
+    trackgeojson: any
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas =
+      await this._markerService.createEndTrackMarkerHtmlForCanvas(trackgeojson);
+    return this._createCanvasForHtml(
+      htmlTextCanvas,
+      this._markerService.poiMarkerSize
+    );
+  }
   private async _createPoiCavasImage(
     poi: IGeojsonPoi
   ): Promise<HTMLImageElement> {
@@ -1449,10 +1539,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
         if (track) {
           let trackGeometry: LineString = new LineString(
-              (<ILineString>track.geometry.coordinates).map((value) =>
-                this._mapService.coordsFromLonLat(value)
-              )
-            ),
+            (<ILineString>track.geometry.coordinates).map((value) =>
+              this._mapService.coordsFromLonLat(value)
+            )
+          ),
             trackColor: string = track?.properties?.color;
 
           if (this._slopeChartTrack) {
