@@ -18,7 +18,7 @@ export class ModalphotosaveComponent implements OnInit {
     private modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    public actionSheetController: ActionSheetController,
+    // public actionSheetController: ActionSheetController,
     private _photoService:PhotoService
   ) { }
 

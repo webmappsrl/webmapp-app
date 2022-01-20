@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { ITrack } from 'src/app/types/track';
 import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
@@ -25,7 +25,8 @@ export class ModalSaveComponent implements OnInit {
     private _modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    private _photoService: PhotoService
+    private _photoService: PhotoService,
+    private actionSheetController:ActionSheetController
   ) {}
 
   ngOnInit() {
@@ -36,7 +37,46 @@ export class ModalSaveComponent implements OnInit {
     }
   }
 
-  async close() {
+  async close(){
+
+    const translation = await this._translate
+      .get([
+        'pages.register.modalsave.closemodal.title',
+        'pages.register.modalsave.closemodal.back',
+        'pages.register.modalsave.closemodal.delete',
+        'pages.register.modalsave.closemodal.cancel',
+      ])
+      .toPromise();
+
+    this.actionSheetController.create({
+      // header: translation['pages.register.modalsave.closemodal.title'],
+      buttons: [
+        {
+          text: translation['pages.register.modalsave.closemodal.back'],
+          handler: () => {
+            this.backToRecording();
+          },
+        },
+        {
+          text: translation['pages.register.modalsave.closemodal.delete'],
+          role: 'destructive',
+          handler: () => {
+            this.exit();
+          },
+        },        
+        {
+          text: translation['pages.register.modalsave.closemodal.cancel'],
+          role: 'cancel',
+          handler: () => { },
+        },
+      ],
+    }).then(actionSheet => {
+      actionSheet.present();
+    });
+
+  }
+
+  async exit() {
     const translation = await this._translate
       .get([
         'pages.register.modalexit.title',
@@ -52,19 +92,18 @@ export class ModalSaveComponent implements OnInit {
       message: translation['pages.register.modalexit.text'],
       buttons: [
         {
+          text: translation['pages.register.modalexit.confirm'],
+          cssClass: 'webmapp-modalconfirm-btn',
+          role: 'destructive',
+          handler: () => {
+            this.backToMap();
+          },
+        },
+        {
           text: translation['pages.register.modalexit.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
           handler: () => {},
-        },
-        {
-          text: translation['pages.register.modalexit.confirm'],
-          cssClass: 'webmapp-modalconfirm-btn',
-          handler: () => {
-            this._modalController.dismiss({
-              dismissed: true,
-            });
-          },
         },
       ],
     });
@@ -84,9 +123,28 @@ export class ModalSaveComponent implements OnInit {
       activity: this.activity,
       date: new Date(),
     };
+    this.backToSuccess(trackData);
+  }
+
+  backToRecording(){
+    this._modalController.dismiss({
+      dismissed: true,
+    });
+  }
+
+  backToMap(){
+    this._modalController.dismiss({
+      dismissed: false,
+      save:false
+    });
+  }
+
+  backToSuccess(trackData){
+
     this._modalController.dismiss({
       trackData,
       dismissed: false,
+      save:true
     });
   }
 

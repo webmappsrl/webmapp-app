@@ -36,18 +36,19 @@
     position: absolute;
     left: -28px;
     top: 10px;
+    color: var(--wm-color-grey);
 
-    &.primary {
-      color: var(--wm-color-primary);
-    }
+    // &.primary {
+    //   color: var(--wm-color-primary);
+    // }
 
-    &.secondary {
-      color: var(--wm-color-secondary);
-    }
+    // &.secondary {
+    //   color: var(--wm-color-secondary);
+    // }
 
-    &.tertiary {
-      color: var(--wm-color-tertiary);
-    }
+    // &.tertiary {
+    //   color: var(--wm-color-tertiary);
+    // }
   }
 }
 .webmapp-formfield-error {

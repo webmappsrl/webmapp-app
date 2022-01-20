@@ -66,6 +66,7 @@
 
 .webmapp-register-modalsave-footer {
   text-align: center;
+  height: 130px;
 
   .webmapp-register-modalsave-savebtn {
     --border-radius: 22px;
@@ -76,6 +77,11 @@
     @include box-shadow-light;
     border-radius: 32px;
     letter-spacing: 1px;
+  }
+
+  .webmapp-register-modalsave-deletebtn{
+    display: inline-block;
+    color:var(--wm-color-darkgrey);
   }
 }
 

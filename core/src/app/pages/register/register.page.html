@@ -26,6 +26,7 @@
     (moveBtn)="recordMove($event)"
     (unlocked)="recordStart($event)"
     [start-view]="location"
+    [hideEndMarker]="true"
   ></webmapp-map>
 
   <ion-card
@@ -102,34 +103,35 @@
       </div>
     </ion-fab-button>
 
+
+  
+    <ion-fab-button
+    *ngIf="isRecording && !isPaused"
+      (click)="pause($event)"
+      class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-pausebtn"
+    >
+
+
+      <div class="webmapp-pageregister-btncontent">
+        <i class="webmapp-icon-pause-outline webmapp-pageregister-btnicon"></i>
+        <div class="webmapp-pageregister-btntext">
+          {{'pages.register.pausebtn' | translate}}
+        </div>
+      </div>
+    </ion-fab-button>
+
     <ion-fab-button
       (click)="stop($event)"
       size="big"
       class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-stopbtn"
-      [ngClass]="{'webmapp-pageregister-recording':isRecording && !isPaused}"
     >
       <div class="webmapp-pageregister-btncontent">
         <i class="webmapp-icon-stop webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext" *ngIf="isPaused">
+        <div class="webmapp-pageregister-btntext" >
           {{'pages.register.stopbtn' | translate}}
         </div>
       </div>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab
-    vertical="bottom"
-    class="webmapp-pageregister-bottomfab"
-    horizontal="start"
-    slot="fixed"
-    *ngIf="isRecording && !isPaused"
-  >
-    <ion-fab-button
-      (click)="pause($event)"
-      class="webmapp-pageregister-pausebtn"
-      size="small"
-    >
-      <i class="webmapp-icon-pause-outline webmapp-pageregister-btnicon"></i>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

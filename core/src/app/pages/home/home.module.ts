@@ -9,6 +9,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { HomePage } from './home.page';
 import { CardsModule } from 'src/app/components/cards/cards.module';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModule } from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
     CardsModule,
     HomePageRoutingModule,
     TranslateModule.forChild(),
+    SharedModule
   ],
   declarations: [HomePage],
   entryComponents: [],

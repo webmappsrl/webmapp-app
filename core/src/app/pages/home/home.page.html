@@ -1,10 +1,15 @@
 <ion-content class="webmapp-home-content">
   <div class="wm-home-header-container">
-    <div class="wm-home-logo-container">
+    <!-- <div class="wm-home-logo-container">
       <img id="wm-home-logo" src="assets/images/homepage-logo.svg" />
-    </div>
-    <ion-label class="wm-home-hader-label">{{'pages.home.intro' | translate}}</ion-label>
-    <ion-button class="wm-home-hader-button" (click)="start()">{{'pages.home.button' | translate}}</ion-button>
+    </div> -->
+    <ion-label class="wm-home-hader-label">{{'pages.home.welcome' | translate}}</ion-label>
+    <!-- <ion-button class="wm-home-hader-button" (click)="start()">{{'pages.home.button' | translate}}</ion-button> -->
+    <webmapp-search-bar
+      class="webmapp-home-searchbar"
+      (searchChange)="updateSearch()"
+    >
+    </webmapp-search-bar>
   </div>
 
   <webmapp-card-slider

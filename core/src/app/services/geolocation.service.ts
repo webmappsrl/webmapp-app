@@ -156,7 +156,7 @@ export class GeolocationService {
   }
 
   /**
-   * Start the geolocation service
+   * Stop the geolocation service
    */
   stopRecording(): Promise<CGeojsonLineStringFeature> {
     this._recordStopwatch.stop();

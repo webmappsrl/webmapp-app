@@ -105,6 +105,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('hideRegister') hideRegister: boolean = false;
   @Input('hidePosition') hidePosition: boolean = false;
   @Input('animation') useAnimation: boolean = true;
+  @Input('hideEndMarker') hideEndMarker: boolean = true;
 
   @Input('cache') useCache: boolean = false;
 
@@ -515,7 +516,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
    */
   async drawTrack(trackgeojson: any) {
     const geojson: any = this.getGeoJson(trackgeojson);
-    console.log("------- ~ MapComponent ~ drawTrack ~ trackgeojson", trackgeojson);
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
     }).readFeatures(geojson);
@@ -541,12 +541,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._track.markerslayer = this._createLayer(this._track.markerslayer, TRACKMARKERLAYERZINDEX);
     this._track.markerslayer.getSource().clear();
 
+    if(!this.static){
     const startmark = await this._createStartTrackIcon(trackgeojson,);
     this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
-    if (!this.isCircular(trackgeojson)) {
+    if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
       const endmark = await this._createEndTrackIcon(trackgeojson,);
       this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
-    }
+    }}
 
     try {
       this._map.addLayer(this._track.layer);
@@ -560,9 +561,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private isCircular(trackgeojson):boolean{
-    console.log("------- ~ isCircular ~ rackgeojson.coordinates", trackgeojson.coordinates[trackgeojson.coordinates.length - 1],trackgeojson.coordinates[0]);
-    let ret = Math.abs(trackgeojson.coordinates[trackgeojson.coordinates.length - 1][0] -  trackgeojson.coordinates[0][0]) < CIRCULARTOLERANCE;
-    ret = ret &&  ((trackgeojson.coordinates[trackgeojson.coordinates.length - 1][1] - trackgeojson.coordinates[0][1]) < CIRCULARTOLERANCE);
+    let coordinates = trackgeojson.coordinates;
+    if(!coordinates){
+      coordinates = trackgeojson.geometry.coordinates;
+    }
+    let ret = Math.abs(coordinates[coordinates.length - 1][0] -  coordinates[0][0]) < CIRCULARTOLERANCE;
+    ret = ret &&  ((coordinates[coordinates.length - 1][1] - coordinates[0][1]) < CIRCULARTOLERANCE);
     return ret;
   }
 
@@ -1178,7 +1182,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private async _createStartTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
     const img = await this._createStartTrackImage(trackgeojson);
     const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry : trackgeojson.coordinates[0],
+      geometry ? geometry : trackgeojson?.geometry?.coordinates[0],
       img,
       this._markerService.trackMarkerSize
     );

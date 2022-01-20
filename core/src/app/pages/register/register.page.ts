@@ -48,7 +48,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _alertController: AlertController,
     private _modalController: ModalController,
     private _saveService: SaveService
-  ) {}
+  ) { }
 
   ngOnInit() {
     if (this._geolocationService.location) {
@@ -118,6 +118,8 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async stop(event: MouseEvent) {
+    this.stopRecording();
+    return;
     const translation = await this._translate
       .get([
         'pages.register.modalconfirm.title',
@@ -136,7 +138,7 @@ export class RegisterPage implements OnInit, OnDestroy {
           text: translation['pages.register.modalconfirm.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
-          handler: () => {},
+          handler: () => { },
         },
         {
           text: translation['pages.register.modalconfirm.confirm'],
@@ -154,8 +156,10 @@ export class RegisterPage implements OnInit, OnDestroy {
   async stopRecording() {
     try {
       clearInterval(this._timerInterval);
-    } catch (e) {}
-    const geojson = await this._geolocationService.stopRecording();
+    } catch (e) { }
+    await this._geolocationService.pauseRecording();
+
+
 
     const modal = await this._modalController.create({
       component: ModalSaveComponent,
@@ -163,21 +167,26 @@ export class RegisterPage implements OnInit, OnDestroy {
     await modal.present();
     const res = await modal.onDidDismiss();
 
-    if (!res.data.dismissed) {
+    if (!res.data.dismissed && res.data.save) {
+      const geojson = await this._geolocationService.stopRecording();
       const track: ITrack = Object.assign(
         {
           geojson,
         },
         res.data.trackData
       );
-
-      await this._saveService.saveTrack(track);
-
-      await this.openModalSuccess(track);
+      const saved = await this._saveService.saveTrack(track);
+      await this.openModalSuccess(saved);
+      this.backToMap();
+    } else if (!res.data.dismissed) {
+      await this._geolocationService.stopRecording();
+      this.backToMap();
     }
 
-    this.backToMap();
+
   }
+
+
 
   async resume(event: MouseEvent) {
     await this._geolocationService.resumeRecording();
@@ -212,6 +221,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     try {
       clearInterval(this._timerInterval);
-    } catch (e) {}
+    } catch (e) { }
   }
 }

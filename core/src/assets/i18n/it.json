@@ -187,7 +187,8 @@
       "closerTracks": "Percorsi nelle vicinanze",
       "intro": "Pianifichiamo insieme la tua prossima avventura",
       "mostViewedTracks": "Percorsi più visti",
-      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
+      "welcome": "Benvenuto!"
     },
     "map": {
       "loading": "ricerca in corso...",
@@ -238,9 +239,9 @@
       },
       "modalexit": {
         "cancel": "Annulla",
-        "confirm": "Conferma",
-        "text": "Se esci adesso la registrazione andarà persa",
-        "title": "Vuoi uscire senza salvare la tua registrazione?"
+        "confirm": "Elimina",
+        "text": "Completando l’azione la traccia verrà eliminata dal tuo profilo e da Webmapp. L’operazione non può essere annullata.",
+        "title": "Elimina per sempre?"
       },
       "modalphotos": {
         "deselectall": "Deseleziona tutto",
@@ -250,6 +251,12 @@
         "title": "Carica foto"
       },
       "modalsave": {
+        "closemodal": {
+          "back": "Torna alla registrazione",
+          "cancel": "Annulla",
+          "delete": "Elimina registrazione"
+        },
+        "deletebtn": "ESCI SENZA SALVARE",
         "formactivity": "Tipo di attività",
         "formactivityerror": "Il tipo di attività è un campo obbligatorio",
         "formactivityplaceholder": "Seleziona",
@@ -270,6 +277,7 @@
         "titleEdit": "Modifica traccia"
       },
       "odo": "Km percorsi",
+      "pausebtn": "Pausa",
       "resumebtn": "Riprendi",
       "stopbtn": "Termina",
       "time": "In movimento",
