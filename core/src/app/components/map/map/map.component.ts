@@ -105,7 +105,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   @Input('hideRegister') hideRegister: boolean = false;
   @Input('hidePosition') hidePosition: boolean = false;
   @Input('animation') useAnimation: boolean = true;
-  @Input('hideEndMarker') hideEndMarker: boolean = true;
+  @Input('hideEndMarker') hideEndMarker: boolean = false;
 
   @Input('cache') useCache: boolean = false;
 
@@ -541,13 +541,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._track.markerslayer = this._createLayer(this._track.markerslayer, TRACKMARKERLAYERZINDEX);
     this._track.markerslayer.getSource().clear();
 
-    if(!this.static){
-    const startmark = await this._createStartTrackIcon(trackgeojson,);
-    this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
-    if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
-      const endmark = await this._createEndTrackIcon(trackgeojson,);
-      this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
-    }}
+    if (!this.static) {
+      const startmark = await this._createStartTrackIcon(trackgeojson,);
+      this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
+      console.log("------- ~ MapComponent ~ drawTrack ~ this.isCircular(trackgeojson) && this.hideEndMarker", this.isCircular(trackgeojson) ,this.hideEndMarker);
+        if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
+        const endmark = await this._createEndTrackIcon(trackgeojson,);
+        this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
+      }
+    }
 
     try {
       this._map.addLayer(this._track.layer);
@@ -560,13 +562,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //}
   }
 
-  private isCircular(trackgeojson):boolean{
+  private isCircular(trackgeojson): boolean {
     let coordinates = trackgeojson.coordinates;
-    if(!coordinates){
+    if (!coordinates) {
       coordinates = trackgeojson.geometry.coordinates;
     }
-    let ret = Math.abs(coordinates[coordinates.length - 1][0] -  coordinates[0][0]) < CIRCULARTOLERANCE;
-    ret = ret &&  ((coordinates[coordinates.length - 1][1] - coordinates[0][1]) < CIRCULARTOLERANCE);
+    let ret = Math.abs(coordinates[coordinates.length - 1][0] - coordinates[0][0]) < CIRCULARTOLERANCE;
+    ret = ret && ((coordinates[coordinates.length - 1][1] - coordinates[0][1]) < CIRCULARTOLERANCE);
     return ret;
   }
 
@@ -1181,10 +1183,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   private async _createStartTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
     const img = await this._createStartTrackImage(trackgeojson);
+
+    let coordinate = trackgeojson?.geometry?.coordinates[0] ? trackgeojson?.geometry?.coordinates[0] : trackgeojson?.coordinates[0];
     const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry : trackgeojson?.geometry?.coordinates[0],
+      geometry ? geometry : coordinate,
       img,
-      this._markerService.trackMarkerSize
+      this._markerService.trackMarkerSize,
+      false,
+      [0.5,1]
     );
     return {
       marker: {
@@ -1200,7 +1206,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const { iconFeature, style } = await this._createIconFeature(
       geometry ? geometry : trackgeojson.coordinates[trackgeojson.coordinates.length - 1],
       img,
-      this._markerService.trackMarkerSize
+      this._markerService.trackMarkerSize,
+      false,
+      [0.27,1]
     );
     return {
       marker: {
@@ -1263,8 +1271,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     coordinates: number[],
     img: HTMLImageElement,
     size: number,
-    transparent: boolean = false
+    transparent: boolean = false,
+    anchor: number[] = [0.5, 0.5]
   ): Promise<{ iconFeature: Feature<Geometry>; style: Style }> {
+    if (!coordinates) return;
     const position = fromLonLat([
       coordinates[0] as number,
       coordinates[1] as number,
@@ -1275,7 +1285,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
     const style = new Style({
       image: new Icon({
-        anchor: [0.5, 0.5],
+        anchor,
         img: img,
         imgSize: [size, size],
         opacity: transparent ? 0.5 : 1,
