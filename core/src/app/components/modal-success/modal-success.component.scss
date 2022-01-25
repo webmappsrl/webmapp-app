@@ -46,7 +46,7 @@
           width: 120px;
           &::part(image) {
             object-fit: cover;
-            border-radius: 15px;
+            border-radius: 8px;
           }
         }
         .webmapp-modalsuccess-photodescription {
@@ -67,38 +67,41 @@
       }
     }
 
-    .webmapp-modalsuccess-photogallery{
+    .webmapp-modalsuccess-photogallery {
       text-align: center;
-      padding-top:32px;
-    .webmapp-modalsuccess-photocontainer{
-      position: relative;
-      width: 33%;
-      display: inline-block;
-      text-align: center;
-    .webmapp-modalsuccess-photo{
-      height: 108px;
-      width: 108px;
-      display: inline-block;
-      border: solid 1px var(--wm-color-light);
-      border-radius: 8px;
-      &::part(image) {
-        object-fit: cover;
-        border-radius: 8px;
-      }}
-    .webmapp-modalsuccess-photoextra{
-      position: absolute;
-      width: 108px;
-      height: 108px;
-      top: 0;
-      vertical-align: middle;
-      background: #00000088;
-      border-radius: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 31px;
-      color: #fff;
-      padding-top: 20px;}
-    }}
+      padding-top: 32px;
+      .webmapp-modalsuccess-photocontainer {
+        position: relative;
+        width: 33%;
+        display: inline-block;
+        text-align: center;
+        .webmapp-modalsuccess-photo {
+          height: 108px;
+          width: 108px;
+          display: inline-block;
+          border: solid 1px var(--wm-color-light);
+          border-radius: 8px;
+          &::part(image) {
+            object-fit: cover;
+            border-radius: 8px;
+          }
+        }
+        .webmapp-modalsuccess-photoextra {
+          position: absolute;
+          width: 108px;
+          height: 108px;
+          top: 0;
+          vertical-align: middle;
+          background: #00000088;
+          border-radius: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 31px;
+          color: #fff;
+          padding-top: 20px;
+        }
+      }
+    }
 
     .webmapp-modalsuccess-infopanel {
       border-radius: 15px;
@@ -115,6 +118,7 @@
           height: 100px;
           border-radius: 15px;
           overflow: hidden;
+          transform: translateZ(0);
         }
 
         .webmapp-modalsuccess-infopanel-top-info {
@@ -131,7 +135,7 @@
           }
 
           .webmapp-modalsuccess-infopanel-top-date {
-            padding: 5px;
+            padding: 8px 5px;
             font-weight: var(--wm-font-weight-light);
             font-size: var(--wm-font-sm);
             color: var(--wm-color-darkgrey);
@@ -180,7 +184,8 @@
       .webmapp-modalsuccess-infopanel-photobottom {
         border-top: solid 1px var(--wm-color-grey);
         padding-top: 20px;
-        height: 120px;
+        padding-bottom: 10px;
+        // height: 120px;
         text-align: center;
 
         .webmapp-modalsuccess-infopanel-photocontainer {
@@ -188,11 +193,13 @@
           width: 33%;
           display: inline-block;
           text-align: center;
+          padding: 8px;
         }
 
         .webmapp-modalsuccess-infopanel-photo {
-          height: 77px;
-          width: 92px;
+          height: 100px;
+          // width: 92px;
+          width: 100%;
           display: inline-block;
           &::part(image) {
             object-fit: cover;
@@ -202,17 +209,24 @@
 
         .webmapp-modalsuccess-infopanel-photoextra {
           position: absolute;
-          width: 92px;
-          height: 77px;
+          /* width: 92px; */
+          /* height: 77px; */
           top: 0;
           vertical-align: middle;
           background: #00000088;
           border-radius: 8px;
-          left: 50%;
-          transform: translateX(-50%);
+          /* left: 50%; */
+          /* transform: translateX(-50%); */
           font-size: 31px;
           color: #fff;
-          padding-top: 20px;
+          /* height: 100px; */
+          /* width: 100%; */
+          /* margin: 8px 8px 8px 0px; */
+          padding-top: 32px;
+          bottom: 11px;
+          top: 8px;
+          right: 8px;
+          left: 8px;
         }
       }
 

@@ -1190,7 +1190,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       img,
       this._markerService.trackMarkerSize,
       false,
-      [0.5,1]
+      [0.45,1]
     );
     return {
       marker: {
@@ -1208,7 +1208,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       img,
       this._markerService.trackMarkerSize,
       false,
-      [0.27,1]
+      [0.20,0.95]
     );
     return {
       marker: {

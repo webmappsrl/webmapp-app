@@ -19,11 +19,14 @@
 <ion-img class="webmapp-modalphotosingle-item-photo" [src]="photo?.datasrc"></ion-img>
 
   <div class="webmapp-modalphotosingle-item-inputwrapper">
-    <ion-label class="webmapp-modalphotosingle-item-label" position="stacked">{{ "modals.photo.single.formphototitle"
+    <!-- <ion-label class="webmapp-modalphotosingle-item-label" position="stacked">{{ "modals.photo.single.formphototitle"
       | translate }}</ion-label>
     <ion-input class="webmapp-modalphotosingle-item-input"
       placeholder="{{ 'modals.photo.single.placeholder'  | translate }}" [(ngModel)]="photo.description" type="text">
-    </ion-input>
+    </ion-input> -->
+
+    <webmapp-form-field [(value)]="photo.description" 
+      [label]="'modals.photo.single.formphototitle'" [placeholder]="'modals.photo.single.placeholder'"></webmapp-form-field>
   </div>
     <!-- </ion-slide>
 

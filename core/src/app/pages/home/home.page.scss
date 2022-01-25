@@ -1,7 +1,9 @@
 .webmapp-home-content {
   --padding-bottom: 15px;
+  --background:var(--wm-color-greybackground);
   .wm-home-header-container {
-    height: 164px;
+    height: 200px;
+    padding-top: 36px;
 
     // &:before {
     //   content: "";

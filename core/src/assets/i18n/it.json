@@ -9,7 +9,7 @@
         "slide": "Scorri per registrare"
       },
       "register": {
-        "cancel": "annulla",
+        "cancel": "Annulla",
         "photo": "Foto",
         "title": "Registra",
         "track": "Tracciato",
@@ -22,6 +22,7 @@
       "nofilters": "Nessun filtro corrisponde alla ricerca effetuata",
       "noplaces": "Nessun luogo corrisponde alla ricerca effetuata",
       "notracks": "Nessun percorso corrisponde alla ricerca effetuata",
+      "placeholder": "cerca",
       "places": "Luoghi",
       "tracks": "Percorsi"
     },

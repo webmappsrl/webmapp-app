@@ -158,6 +158,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       clearInterval(this._timerInterval);
     } catch (e) { }
     await this._geolocationService.pauseRecording();
+    this.isPaused = true;
 
 
 

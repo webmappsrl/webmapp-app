@@ -7,7 +7,7 @@
   </div>
 
   <div class="webmapp-modalsuccess-body">
-    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.png" *ngIf="isTrack">
+    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" *ngIf="isTrack">
     <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos">
     <img class="webmapp-modalsuccess-img" src="assets/images/waypointsuccess.png" *ngIf="isWaypoint">
     <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
@@ -69,11 +69,11 @@
       </div> -->
 
       <div class="webmapp-modalsuccess-infopanel-photobottom" *ngIf="track.photos && track.photos.length">
-        <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of track.photos;let idx = index">
+        <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of track.photos  | slice:0:3;let idx = index">
 
           <div *ngIf="idx<3">
             <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
-            <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2">
+            <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2 && track.photos.length>3">
               +{{track.photos.length-3}}
             </div>
           </div>
@@ -109,10 +109,10 @@
     </ion-card>
 
     <div class="webmapp-modalsuccess-photogallery" *ngIf="isPhotos" (click)="gotoPhotos()">
-      <div class="webmapp-modalsuccess-photocontainer" *ngFor="let photo of photos;let idx = index">
+      <div class="webmapp-modalsuccess-photocontainer" *ngFor="let photo of photos | slice:0:3;let idx = index;">
         <div *ngIf="idx<3">
           <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-photo"></ion-img>
-          <div class="webmapp-modalsuccess-photoextra" *ngIf="idx===2">
+          <div class="webmapp-modalsuccess-photoextra" *ngIf="idx===2 && photos.length>3">
             +{{photos.length-3}}
           </div>
         </div>
@@ -167,11 +167,11 @@
       </div>
 
         <div class="webmapp-modalsuccess-infopanel-photobottom" *ngIf="waypoint.photos && waypoint.photos.length">
-          <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of waypoint.photos;let idx = index">
+          <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of waypoint.photos | slice:0:3;let idx = index">
   
             <div *ngIf="idx<3">
               <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
-              <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2">
+              <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2 && waypoint.photos.length>3">
                 +{{waypoint.photos.length-3}}
               </div>
             </div>

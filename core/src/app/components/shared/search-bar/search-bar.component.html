@@ -1,10 +1,10 @@
 <div class="webmapp-searchbar-main">
   <ion-item class="webmapp-searchbar-textcontainer">
     <i slot="start" class="webmapp-icon-search-outline"></i>
-    <ion-input type="text" class="webmapp-searchbar-textinput" [(ngModel)]="searchstring" clear-input="true"
+    <ion-input type="text" class="webmapp-searchbar-textinput" [(ngModel)]="searchstring" clear-input="true" placeholder="{{'components.searchbar.placeholder'|translate}}"
       debounce="200" (ionBlur)="inputFocus(false)" (ionChange)="inputChange($event)" (ionFocus)="inputFocus(true)">
     </ion-input>
-    <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn"></i>
+    <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn" *ngIf="showSettings"></i>
   </ion-item>
 </div>
 

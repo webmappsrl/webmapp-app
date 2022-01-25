@@ -1,4 +1,4 @@
-<ion-item class="webmapp-formfield-item" [ngClass]="{'compiled':value,'error':!isValid && validate}" [lines]="noline?'none':'inset'">
+<ion-item class="webmapp-formfield-item" [ngClass]="{'compiled':value,'error':!isValid && validate, 'webmapp-formfield-item-noicon':!icon}" [lines]="noline?'none':'inset'">
   <i class="{{icon}} webmapp-formfield-icon {{iconColor}}"></i>
   
   <ion-label class="webmapp-formfield-label" position="stacked">

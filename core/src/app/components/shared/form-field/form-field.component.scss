@@ -1,6 +1,9 @@
 .webmapp-formfield-item {
   padding: 22px 15px 10px 22px;
   overflow: visible;
+  &.webmapp-formfield-item-noicon{
+    padding: 0px;
+  }
 
   &.compiled {
     --border-color: var(--wm-color-primary);
