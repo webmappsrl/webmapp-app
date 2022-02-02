@@ -328,7 +328,7 @@ export class SaveService {
   }
 
   private _initTrack(track: ITrack) {
-    console.log("------- ~ SaveService ~ _initTrack ~ track", track);
+    // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
     const gj = track.geojson;
     track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }

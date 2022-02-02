@@ -40,24 +40,24 @@
   <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
 
   <ion-list class="webmapp-trackdetail-itemlist">
-    <ion-item class="webmapp-trackdetail-item" lines="none">
+    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.title">
       <i class="webmapp-icon-list webmapp-trackdetail-icon secondary" start></i>
       <div class="webmapp-trackdetail-item-title">{{track?.title}}</div>
     </ion-item>
 
-    <ion-item class="webmapp-trackdetail-item" lines="none">
+    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.description">
       <i class="webmapp-icon-document webmapp-trackdetail-icon tertiary" start></i>
       <div>
         <div class="webmapp-trackdetail-item-description">{{track?.description}}</div>
       </div>
     </ion-item>
 
-    <ion-item class="webmapp-trackdetail-item" lines="none">
+    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.activity">
       <i class="webmapp-icon-document webmapp-trackdetail-icon primary" start></i>
       {{track?.activity}}
     </ion-item>
 
-    <ion-item class="webmapp-trackdetail-item" lines="none">
+    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="photos && photos.length">
       <i class="webmapp-icon-camera webmapp-trackdetail-icon secondary" start></i>
       {{'pages.trackdetail.photos'|translate}}
     </ion-item>

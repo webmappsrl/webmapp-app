@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ITrack } from 'src/app/types/track';
 import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
 import { Md5 } from 'ts-md5';
+import { activities } from 'src/app/constants/activities';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -16,6 +17,8 @@ export class ModalSaveComponent implements OnInit {
   public activity: string;
   public validate = false;
   public isValidArray:boolean[] = [false,false];
+
+  public activities = activities;
 
   public photos: any[] = [];
 

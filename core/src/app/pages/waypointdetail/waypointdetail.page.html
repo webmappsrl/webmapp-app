@@ -40,18 +40,18 @@
   <div class="webmapp-waypointdetail-date">{{waypoint.date | date : "dd MMMM YYYY"}}</div>
 
   <ion-list class="webmapp-waypointdetail-itemlist">
-    <ion-item class="webmapp-waypointdetail-item" lines="none">
+    <ion-item class="webmapp-waypointdetail-item" lines="none" *ngIf="waypoint?.title">
       <i class="webmapp-icon-list webmapp-waypointdetail-icon secondary" start></i>
       <div class="webmapp-waypointdetail-item-title">{{waypoint.title}}</div>
     </ion-item>
 
-    <ion-item class="webmapp-waypointdetail-item" lines="none">
+    <ion-item class="webmapp-waypointdetail-item" lines="none" *ngIf="waypoint?.waypointtype">
       <i class="webmapp-icon-activities webmapp-waypointdetail-icon primary" start></i>
       {{waypoint.waypointtype}}
     </ion-item>
 
 
-    <ion-item class="webmapp-waypointdetail-item" lines="none">
+    <ion-item class="webmapp-waypointdetail-item" lines="none" >
       <i class="webmapp-icon-pin-outline webmapp-waypointdetail-icon secondary" start></i>
       <div>
         <div class="webmapp-waypointdetail-item-city">{{waypoint?.city}}</div>
@@ -61,7 +61,7 @@
     </ion-item>
 
 
-    <ion-item class="webmapp-waypointdetail-item" lines="none">
+    <ion-item class="webmapp-waypointdetail-item" lines="none" *ngIf="waypoint?.description">
       <i class="webmapp-icon-document webmapp-waypointdetail-icon tertiary" start></i>
       {{waypoint.description}}
     </ion-item>

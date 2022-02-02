@@ -544,8 +544,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (!this.static) {
       const startmark = await this._createStartTrackIcon(trackgeojson,);
       this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
-      console.log("------- ~ MapComponent ~ drawTrack ~ this.isCircular(trackgeojson) && this.hideEndMarker", this.isCircular(trackgeojson) ,this.hideEndMarker);
-        if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
+       if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
         const endmark = await this._createEndTrackIcon(trackgeojson,);
         this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
       }
@@ -641,6 +640,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   recBtnUnlocked(val) {
     this.showRecBtn = false;
     this.unlocked.emit(val);
+  }
+
+  reset(){
+    this.showRecBtn = true;
   }
 
   private getGeoJson(trackgeojson: any): any {

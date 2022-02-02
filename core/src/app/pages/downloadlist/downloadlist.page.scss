@@ -6,7 +6,10 @@
     padding: 10px 0;
     .webmapp-downloadlist-command {
         padding: 10px 20px;
-        color: var(--wm-color-secondary);
+        color: var(--wm-color-darkgrey);
+        &.webmapp-downloadlist-command-delete {
+            color: var(--wm-color-red);
+        }
     }
 }
 
@@ -16,12 +19,12 @@
     .webmapp-downloadlist-list-checkbox {
         position: absolute;
         top: 16px;
-        left: 5px;
+        left: 8px;
     }
     .webmapp-downloadlist-list-card {
         display: inherit;
         &.webmapp-downloadlist-list-card-selecion {
-            margin-left: 15px;
+            margin-left: 25px;
         }
     }
 }

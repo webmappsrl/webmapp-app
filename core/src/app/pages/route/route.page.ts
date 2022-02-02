@@ -44,11 +44,17 @@ export class RoutePage implements OnInit {
   public track;
   public pois: Array<IGeojsonPoi> = null;
 
+  public modeFullMap = false;
+  public showToolBarOver = false;
+  public scrollThreshold = 50;
+  public scrollShowButtonThreshold = 400;
+
   public opacity = 1;
   public headerHeight = 105;
   public height = 700; //will be updated by real screen height
-  public maxInfoheight = 350; //from CCS????
-  public minInfoheight = 120; //from CCS????
+  public maxInfoHeigtDifference = 80;
+  public maxInfoheight = 850; //from CCS????
+  public minInfoheight = 350; //from CCS????
 
   public showDownload = false;
 
@@ -99,7 +105,7 @@ export class RoutePage implements OnInit {
     private downloadService: DownloadService,
     private _alertController: AlertController,
     private translate: TranslateService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     // this._actRoute.queryParams.subscribe(async (params) => {
@@ -128,7 +134,7 @@ export class RoutePage implements OnInit {
     );
     // this.updatePoiMarkers(false);
 
-    this.setAnimations();
+    await this.setAnimations();
 
     this.getRelatedPois();
 
@@ -150,7 +156,7 @@ export class RoutePage implements OnInit {
   async setAnimations() {
     await this._platform.ready();
     this.height = this._platform.height();
-    this.maxInfoheight = this.height / 2;
+    this.maxInfoheight = this.height - this.maxInfoHeigtDifference;
     const animationPanel = this.animationCtrl
       .create()
       .addElement(this.dragHandleContainer.nativeElement)
@@ -160,37 +166,37 @@ export class RoutePage implements OnInit {
         `translateY(-${this.maxInfoheight - this.minInfoheight}px)`
       );
 
-    const animationHeader = this.animationCtrl
-      .create()
-      .addElement(this.header.nativeElement)
-      .fromTo('opacity', '0', '1');
+    // const animationHeader = this.animationCtrl
+    //   .create()
+    //   .addElement(this.header.nativeElement)
+    //   .fromTo('opacity', '0', '1');
 
-    const animationDetails = this.animationCtrl
-      .create()
-      .addElement(this.lessDetails.nativeElement)
-      .fromTo('opacity', '1', '0');
-    const animationMoreDetails = this.animationCtrl
-      .create()
-      .addElement(this.moreDetails.nativeElement)
-      .fromTo('opacity', '0', '1');
+    // const animationDetails = this.animationCtrl
+    //   .create()
+    //   .addElement(this.lessDetails.nativeElement)
+    //   .fromTo('opacity', '1', '0');
+    // const animationMoreDetails = this.animationCtrl
+    //   .create()
+    //   .addElement(this.moreDetails.nativeElement)
+    //   .fromTo('opacity', '0', '1');
 
     this.animation = this.animationCtrl
       .create()
-      .duration(1000)
+      .duration(500)
       .addAnimation([
-        animationHeader,
+        // animationHeader,
         animationPanel,
-        animationDetails,
-        animationMoreDetails,
+        // animationDetails,
+        // animationMoreDetails,
       ]);
 
-    this.gesture = this.gestureCtrl.create({
-      el: this.dragHandleIcon.nativeElement,
-      threshold: 0,
-      gestureName: 'handler-drag',
-      onMove: (ev) => this.onMove(ev),
-      onEnd: (ev) => this.onEnd(ev),
-    });
+    // this.gesture = this.gestureCtrl.create({
+    //   el: this.dragHandleIcon.nativeElement,
+    //   threshold: 0,
+    //   gestureName: 'handler-drag',
+    //   onMove: (ev) => this.onMove(ev),
+    //   onEnd: (ev) => this.onEnd(ev),
+    // });
     this.gesture = this.gestureCtrl.create({
       el: this.lessDetails.nativeElement,
       threshold: 0,
@@ -407,7 +413,7 @@ export class RoutePage implements OnInit {
             text: translation['pages.route.modalconfirm.cancel'],
             cssClass: 'webmapp-modalconfirm-btn',
             role: 'cancel',
-            handler: () => {},
+            handler: () => { },
           },
           {
             text: translation['pages.route.modalconfirm.confirm'],
@@ -423,5 +429,28 @@ export class RoutePage implements OnInit {
     } else {
       this.showDownload = false;
     }
+  }
+
+  public toogleFullMap() {
+    this.modeFullMap = !this.modeFullMap;
+  }
+
+  public lastScroll = 0;
+  public scroll(ev) {
+    const scrolled = ev.detail.currentY;
+    console.log("------- ~ RoutePage ~ scroll ~ scrolled", scrolled, this.lastScroll);
+    if(scrolled > this.scrollThreshold && this.lastScroll <= this.scrollThreshold && this.opacity == 1){
+      this.endAnimation(true,0.5);
+    }
+    if(scrolled <= 0 && this.lastScroll > 0 && this.opacity == 0){
+      this.endAnimation(false,0.5);
+    }
+
+    this.showToolBarOver = scrolled > this.scrollShowButtonThreshold;
+
+    
+
+    this.lastScroll = scrolled;
+
   }
 }

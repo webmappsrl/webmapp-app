@@ -1,5 +1,6 @@
 webmapp-app-root {
   font-size: 16px;
+  letter-spacing: 0px;
   --wm-font-xxxlg-multiplier: 1.625;
   --wm-font-xxxlg: calc(var(--wm-font-xxxlg-multiplier) * 1rem); //26
   --wm-font-xxlg-multiplier: 1.437;
@@ -17,7 +18,7 @@ webmapp-app-root {
   --wm-font-xxsm-multiplier: 0.6;
   --wm-font-xxsm: calc(var(--wm-font-xxsm-multiplier) * 1rem);
 
-  --wm-font-weight-light: 300;
+  --wm-font-weight-light: 200;
   --wm-font-weight-normal: 500;
   --wm-font-weight-normalplus: 600;
   --wm-font-weight-bold: 700;
@@ -27,6 +28,9 @@ webmapp-app-root {
   --wm-font-icon: 24px;
   --wm-font-icon-big: 32px;
   
+}
+.ios{
+  letter-spacing: -1px;
 }
 
 h1 {

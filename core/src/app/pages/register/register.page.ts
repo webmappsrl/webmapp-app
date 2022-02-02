@@ -35,6 +35,7 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   public isRecording = false;
   public isPaused = false;
+  public isRegestering = true;
 
   public location: number[];
 
@@ -113,6 +114,7 @@ export class RegisterPage implements OnInit, OnDestroy {
    */
 
   async recordStart(event: boolean) {
+    this.isPaused = false;
     await this._geolocationService.startRecording();
     this.checkRecording();
   }
@@ -154,9 +156,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async stopRecording() {
-    try {
-      clearInterval(this._timerInterval);
-    } catch (e) { }
+    
     await this._geolocationService.pauseRecording();
     this.isPaused = true;
 
@@ -169,6 +169,9 @@ export class RegisterPage implements OnInit, OnDestroy {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed && res.data.save) {
+      try {
+      clearInterval(this._timerInterval);
+    } catch (e) { }
       const geojson = await this._geolocationService.stopRecording();
       const track: ITrack = Object.assign(
         {
@@ -183,8 +186,6 @@ export class RegisterPage implements OnInit, OnDestroy {
       await this._geolocationService.stopRecording();
       this.backToMap();
     }
-
-
   }
 
 
@@ -217,6 +218,19 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   backToMap() {
     this._navCtrl.navigateForward('map');
+    this.reset();
+  }
+
+  reset() {
+    this.isRegestering = true
+    this.opacity = 0;
+    this.time = { hours: 0, minutes: 0, seconds: 0, };
+    this.actualSpeed = 0;
+    this.averageSpeed = 0;
+    this.length = 0;
+    this.isRecording = false;
+    this.isPaused = false;
+    this._geolocationService.stopRecording();
   }
 
   ngOnDestroy() {

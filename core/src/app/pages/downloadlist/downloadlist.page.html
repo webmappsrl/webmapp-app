@@ -14,7 +14,7 @@
   <div class="webmapp-downloadlist-command-container">
     <ion-label class="webmapp-downloadlist-command" [hidden]="isSelectedActive || !tracks?.length"
       (click)="isSelectedActive = !isSelectedActive">{{ 'pages.downloadlist.select' | translate }}</ion-label>
-    <ion-label class="webmapp-downloadlist-command" [hidden]="!isSelectedActive" (click)="deleteSelected()">{{
+    <ion-label class="webmapp-downloadlist-command webmapp-downloadlist-command-delete" [hidden]="!isSelectedActive" (click)="deleteSelected()">{{
       'pages.downloadlist.deleteselected' | translate }}</ion-label>
     <ion-label class="webmapp-downloadlist-command" [hidden]="!isSelectedActive"
       (click)="isSelectedActive = !isSelectedActive">{{ 'pages.downloadlist.cancel' | translate }}</ion-label>

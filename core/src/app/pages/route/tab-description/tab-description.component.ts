@@ -4,7 +4,7 @@ import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
-  selector: 'app-tab-description',
+  selector: 'webmapp-tab-description',
   templateUrl: './tab-description.component.html',
   styleUrls: ['./tab-description.component.scss'],
 })

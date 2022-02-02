@@ -46,8 +46,7 @@
     (validChange)="setIsValid(1,$event)"
   >
   <ion-select class="webmapp-register-modalsave-select" [(ngModel)]="activity" placeholder="{{'pages.register.modalsave.formactivityplaceholder'|translate}}">
-    <ion-select-option value="run">Corsa</ion-select-option>
-    <ion-select-option value="bike">Bicicletta</ion-select-option>
+    <ion-select-option *ngFor="let activity of activities" [value]="activity">{{'activities.'+ activity | translate}}</ion-select-option>
         </ion-select>
   </webmapp-form-field>
 

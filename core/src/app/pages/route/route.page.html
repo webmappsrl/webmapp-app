@@ -2,11 +2,7 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-icon
-          name="close-outline"
-          class="webmapp-pageroute-menuclose"
-          (click)="closeMenu()"
-        ></ion-icon>
+        <ion-icon name="close-outline" class="webmapp-pageroute-menuclose" (click)="closeMenu()"></ion-icon>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -34,38 +30,21 @@
   </ion-content>
 </ion-menu>
 
-<ion-content
-  scrollY="false"
-  class="webmapp-pageroute-content"
-  id="webmapp-pageroute-main"
->
-  <div
-    #header
-    style="opacity: 0"
-    [hidden]="opacity >= 0.95"
-    class="webmapp-pageroute-header"
-  >
+<ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
+  <div #header *ngIf="!modeFullMap" class="webmapp-pageroute-header">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button
-            mode="ios"
-            defaultHref="map"
-            text=""
-            class="webmapp-backbutton webmapp-backbutton-dark"
-          >
+          <ion-back-button mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark">
           </ion-back-button>
         </ion-buttons>
         <ion-title>{{route?.properties?.name | wmtrans}}</ion-title>
         <ion-buttons slot="end">
-          <ion-icon
-            name="ellipsis-vertical"
-            class="webmapp-pageroute-menuopen"
-            (click)="menu()"
-          ></ion-icon>
+          <ion-icon name="ellipsis-vertical" class="webmapp-pageroute-menuopen" (click)="menu()"></ion-icon>
         </ion-buttons>
       </ion-toolbar>
-      <ion-toolbar>
+      <div class="webmapp-pageroute-header-backdrop" [hidden]="opacity>0.5"></div>
+      <!-- <ion-toolbar>
         <ion-grid>
           <ion-row>
             <ion-col size="4">
@@ -106,52 +85,30 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-toolbar>
+      </ion-toolbar> -->
     </ion-header>
   </div>
+
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <webmapp-map
-      class=""
-      #map
-      [static]="false"
-      [animation]="useAnimation"
-      [track]="track"
-      [hideRegister]="true"
-      [hidePosition]="true"
-      [btnposition]="'middle'"
-      [pois]="pois"
-      (clickpoi)="clickPoi($event)"
-      [height]="mapHeigth()"
-      [slopeChartElements]="slopeChartHoverElements"
-      [cache]="useCache"
-      (rotate)="mapRotation($event)"
-    ></webmapp-map>
+    <webmapp-map class="" #map [static]="false" [animation]="useAnimation" [track]="track" [hideRegister]="true"
+      [hidePosition]="true" [btnposition]="'middle'" [pois]="pois" (clickpoi)="clickPoi($event)" [height]="mapHeigth()"
+      [slopeChartElements]="slopeChartHoverElements" [cache]="useCache" (rotate)="mapRotation($event)"></webmapp-map>
   </div>
-  <div
-    class="webmapp-pageroute-infopanel"
-    #dragHandleContainer
-    [ngStyle]="{
+
+  <div class="webmapp-pageroute-infopanel" #dragHandleContainer *ngIf="!modeFullMap" [ngStyle]="{
       'bottom': (minInfoheight-maxInfoheight) + 'px'
-    }"
-  >
-    <ion-card
-      class="webmapp-pageroute-infopanel-card"
-      [ngStyle]="{
+    }">
+    <ion-card class="webmapp-pageroute-infopanel-card" [ngStyle]="{
         'height': maxInfoheight + 'px'
-      }"
-    >
-      <div
-        class="webmapp-pageroute-infopanel-drag"
-        #dragHandleIcon
-        (click)="handleClick()"
-      >
+      }">
+      <div class="webmapp-pageroute-infopanel-drag" #dragHandleIcon (click)="handleClick()">
         <div class="webmapp-pageroute-infopanel-drag-handle"></div>
         <div #lessdetails class="webmapp-pageroute-infopanel-lessdetails">
-          <ion-label class="webmapp-pageroute-infopanel-name" *ngIf="opacity>0">
+          <ion-label class="webmapp-pageroute-infopanel-name">
             {{route?.properties?.name | wmtrans}}
           </ion-label>
 
-          <ion-grid *ngIf="opacity>0">
+          <!-- <ion-grid >
             <ion-row>
               <ion-col size="4">
                 <i
@@ -190,11 +147,17 @@
                 </ion-label>
               </ion-col>
             </ion-row>
-          </ion-grid>
+          </ion-grid> -->
         </div>
       </div>
-      <div #moredetails>
-        <ion-tabs #routeTabs *ngIf="opacity < 0.95" class="webmapp-route-tabs">
+      <ion-content #moredetails scrollY="true" scroll-events="true" (ionScroll)="scroll($event)">
+        <webmapp-tab-detail class="webmapp-route-tab"></webmapp-tab-detail>
+        <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
+        <webmapp-tab-eat class="webmapp-route-tab"></webmapp-tab-eat>
+        <webmapp-tab-howto class="webmapp-route-tab"></webmapp-tab-howto>
+        <webmapp-tab-viability class="webmapp-route-tab"></webmapp-tab-viability>
+        <webmapp-tab-walkable class="webmapp-route-tab"></webmapp-tab-walkable>
+        <!-- <ion-tabs #routeTabs *ngIf="opacity < 0.95" class="webmapp-route-tabs">
           <ion-tab-bar slot="top" class="webmapp-pageroute-infopanel-tabs">
             <ion-slides pager="false" [options]="slideOpts" #slideTab>
               <ion-slide>
@@ -265,49 +228,31 @@
               </ion-slide>
             </ion-slides>
           </ion-tab-bar>
-        </ion-tabs>
-      </div>
+        </ion-tabs> -->
+      </ion-content>
     </ion-card>
   </div>
 
-  <div
-    class="webmapp-pageroute-downloadbackpanel"
-    [hidden]="!showDownload"
-  ></div>
+  <div class="webmapp-pageroute-downloadbackpanel" [hidden]="!showDownload"></div>
   <div class="webmapp-pageroute-downloadpanel" [hidden]="!showDownload">
     <div class="webmapp-pageroute-downloadpanel-container">
-      <ion-img
-        class="webmapp-pageroute-downloadpanel-logo"
-        src="assets/images/logo46.png"
-      ></ion-img>
-      <i
-        class="webmapp-pageroute-downloadpanel-exit webmapp-icon-close-outline"
-        (click)="endDownload(true)"
-      >
+      <ion-img class="webmapp-pageroute-downloadpanel-logo" src="assets/images/logo46.png"></ion-img>
+      <i class="webmapp-pageroute-downloadpanel-exit webmapp-icon-close-outline" (click)="endDownload(true)">
       </i>
-      <webmapp-download-panel
-        (changeStatus)="downloadStatus($event)"
-        (exit)="endDownload()"
-      ></webmapp-download-panel>
+      <webmapp-download-panel (changeStatus)="downloadStatus($event)" (exit)="endDownload()"></webmapp-download-panel>
     </div>
   </div>
 
-  <ion-fab
-    [vertical]="opacity>=0.95?'bottom':'top'"
-    horizontal="end"
-    class="webmapp-pageroute-fabbottom {{opacity<1?'webmapp-pageroute-fabbottom-top':''}}"
-  >
+  <ion-fab [vertical]="'top'" horizontal="end" class="webmapp-pageroute-fabbottom webmapp-pageroute-fabbottom-top"
+    [ngClass]="{'webmapp-pageroute-fabbottom-top-fullmap':modeFullMap}">
     <!-- <ion-fab-button (click)="favourite()" size="small" class="webmapp-pageroute-btnbottom">
       <i [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i>
     </ion-fab-button> -->
 
-    <webmapp-btn-orientation
-      class="webmapp-pageroute-btnorient"
-      [degrees]="mapDegrees"
-      (click)="orientNorth()"
-    >
+    <webmapp-btn-orientation class="webmapp-pageroute-btnorient" [degrees]="mapDegrees" (click)="orientNorth()"
+      [hidden]="opacity < 0.5">
     </webmapp-btn-orientation>
-
+    <!-- 
     <webmapp-btn-register
       class="webmapp-pageroute-btnbottomregister webmapp-pageroute-btnbottom"      
     ></webmapp-btn-register>
@@ -338,9 +283,9 @@
       [ngStyle]="{      'opacity': 1-opacity    }"
     >
       <i class="webmapp-icon-nav-outline"></i>
-    </ion-fab-button>
+    </ion-fab-button>-->
   </ion-fab>
-  <ion-button
+  <!-- <ion-button
     (click)="navigate()"
     class="webmapp-pageroute-btnnavigate webmapp-pageroute-btnnavbottom"
     *ngIf="opacity > 0"
@@ -350,33 +295,59 @@
     <ion-label class="webmapp-pageroute-navigatelbl"
       >{{'pages.route.navigate' | translate}}
     </ion-label>
-  </ion-button>
+  </ion-button>  -->
 
-  <ion-fab
-    vertical="top"
-    horizontal="end"
-    [ngStyle]="{      'opacity': opacity    }"
-  >
-    <ion-fab-button
-      (click)="menu()"
-      size="small"
-      class="webmapp-pageroute-btntop"
-    >
+  <ion-fab vertical="top" horizontal="end" [ngStyle]="{      'opacity': opacity    }" *ngIf="false">
+    <ion-fab-button (click)="menu()" size="small" class="webmapp-pageroute-btntop">
       <i class="webmapp-icon-kebab"></i>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-fab
-    vertical="top"
-    horizontal="start"
-    [ngStyle]="{      'opacity': opacity    }"
-  >
-    <ion-fab-button
-      (click)="back()"
-      size="small"
-      class="webmapp-pageroute-btntop"
-    >
+  <ion-fab vertical="top" horizontal="start" [ngStyle]="{      'opacity': opacity    }" *ngIf="false">
+    <ion-fab-button (click)="back()" size="small" class="webmapp-pageroute-btntop">
       <i class="webmapp-icon-chevron-left-outline"></i>
     </ion-fab-button>
   </ion-fab>
+
+  <div class="webmapp-pageroute-toolbox"
+    [ngClass]="{'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.5,'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
+    
+    <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
+      <i class="webmapp-icon-donwload-outline"></i>
+      {{ 'pages.route.btndownload' | translate }}
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+
+    <div (click)="share()" class="webmapp-pageroute-toolbox-button ion-activatable">
+      <i class="webmapp-icon-share-outline"></i>
+      {{ 'pages.route.btnshare' | translate }}
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+
+    <div (click)="navigate()" class="webmapp-pageroute-toolbox-button ion-activatable">
+      <i class="webmapp-icon-nav-outline"></i>
+      {{ 'pages.route.btndnavigate' | translate }}
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+
+    <div (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
+      <i  *ngIf="isFavourite" class="webmapp-icon-heart"></i>
+      <i  *ngIf="!isFavourite" class="webmapp-icon-heart-outline"></i>
+      {{ 'pages.route.btnfavourite' | translate }}
+      <ion-ripple-effect></ion-ripple-effect>
+    </div>
+
+  </div>
+
+  <ion-button class="webmapp-pageroute-btnfullmap" [hidden]="opacity < 0.5"
+    [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}" (click)="toogleFullMap()">
+    <div *ngIf="modeFullMap">
+      <ion-icon name="close-outline"></ion-icon>
+      {{ 'pages.route.btnFullMapReduce' | translate }}
+    </div>
+    <div *ngIf="!modeFullMap">
+      <ion-icon name="resize-outline"></ion-icon>
+      {{ 'pages.route.btnFullMapExpand' | translate }}
+    </div>
+  </ion-button>
 </ion-content>

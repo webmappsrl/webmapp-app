@@ -3,7 +3,7 @@ import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature } from 'src/app/types/model';
 
 @Component({
-  selector: 'app-tab-viability',
+  selector: 'webmapp-tab-viability',
   templateUrl: './tab-viability.component.html',
   styleUrls: ['./tab-viability.component.scss'],
 })

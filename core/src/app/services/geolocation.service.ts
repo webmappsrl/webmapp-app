@@ -485,6 +485,7 @@ export class GeolocationService {
 
       this._state.isActive = false;
       this._state.isLoading = false;
+      this._state.isPaused = false;
 
       this.onGeolocationStateChange.next(this._state);
       resolve(this._state);
@@ -524,6 +525,7 @@ export class GeolocationService {
 
       promise.then(() => {
         this._state.isRecording = true;
+        this._state.isPaused = false;
         this._recordedFeature = new CGeojsonLineStringFeature();
         this._addLocationToRecordedFeature(this._currentLocation);
         resolve();

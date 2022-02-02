@@ -1,4 +1,11 @@
 {
+  "activities": {
+    "cycling": "Bicicletta",
+    "hiking": "Hiking",
+    "running": "Corsa",
+    "skitouring": "Scialpinismo",
+    "walking": "Passeggiata"
+  },
   "components": {
     "cardtrack": {
       "delete": "Elimina",
@@ -320,6 +327,12 @@
       "title": "Unisciti alla community di webmapp!"
     },
     "route": {
+      "btnFullMapExpand": "Espandi",
+      "btnFullMapReduce": "Riduci",
+      "btndnavigate": "Naviga",
+      "btndownload": "Scarica",
+      "btnfavourite": "Preferiti",
+      "btnshare": "Condividi",
       "description": {
         "description": "Descrizione",
         "gallery": "Gallery"

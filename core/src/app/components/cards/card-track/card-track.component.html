@@ -12,11 +12,11 @@
     <ion-label *ngIf="isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
       {{sizeInMB(track.size)}} MB</ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
-      <i class="webmapp-cardtrack-info-icon webmapp-icon-heart-outline"> </i>
+      <i class="webmapp-cardtrack-info-icon webmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"> </i>
       {{track.properties.difficulty | wmtrans }}
     </ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-distance">
-      <i class="webmapp-cardtrack-info-icon webmapp-icon-heart-outline"> </i>
+      <i class="webmapp-cardtrack-info-icon webmapp-icon-distance"> </i>
       {{track.properties.distance}} Km
     </ion-label>
 
