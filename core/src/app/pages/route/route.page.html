@@ -31,8 +31,8 @@
 </ion-menu>
 
 <ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
-  <div #header *ngIf="!modeFullMap" class="webmapp-pageroute-header">
-    <ion-header>
+  <div #header  class="webmapp-pageroute-header">
+    <ion-header class="webmapp-pageroute-header" [ngClass]="{'webmapp-pageroute-header-hide':modeFullMap}">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-back-button mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark">
@@ -95,7 +95,7 @@
       [slopeChartElements]="slopeChartHoverElements" [cache]="useCache" (rotate)="mapRotation($event)"></webmapp-map>
   </div>
 
-  <div class="webmapp-pageroute-infopanel" #dragHandleContainer *ngIf="!modeFullMap" [ngStyle]="{
+  <div class="webmapp-pageroute-infopanel" #dragHandleContainer [ngClass]="{'webmapp-pageroute-infopanel-hide':modeFullMap}" [ngStyle]="{
       'bottom': (minInfoheight-maxInfoheight) + 'px'
     }">
     <ion-card class="webmapp-pageroute-infopanel-card" [ngStyle]="{
@@ -310,7 +310,7 @@
   </ion-fab>
 
   <div class="webmapp-pageroute-toolbox"
-    [ngClass]="{'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.5,'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
+    [ngClass]="{'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.5,'webmapp-pageroute-toolbox-hide':opacity < 0.5,'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
     
     <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="webmapp-icon-donwload-outline"></i>
@@ -341,11 +341,11 @@
 
   <ion-button class="webmapp-pageroute-btnfullmap" [hidden]="opacity < 0.5"
     [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}" (click)="toogleFullMap()">
-    <div *ngIf="modeFullMap">
+    <div [hidden]="!modeFullMap">
       <ion-icon name="close-outline"></ion-icon>
       {{ 'pages.route.btnFullMapReduce' | translate }}
     </div>
-    <div *ngIf="!modeFullMap">
+    <div [hidden]="modeFullMap">
       <ion-icon name="resize-outline"></ion-icon>
       {{ 'pages.route.btnFullMapExpand' | translate }}
     </div>

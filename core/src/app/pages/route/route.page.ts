@@ -313,7 +313,8 @@ export class RoutePage implements OnInit {
   }
 
   private endAnimation(shouldComplete: boolean, step: number) {
-    this.animation.progressEnd(shouldComplete ? 1 : 0, step);
+    console.log("------- ~ RoutePage ~ endAnimation ~ this.maxInfoheight - this.minInfoheight", this.maxInfoheight, this.minInfoheight);
+      this.animation.progressEnd(shouldComplete ? 1 : 0, step);
     this.animation.onFinish(() => {
       this.gesture.enable(true);
       this.updatePoiMarkers(this.opacity < 0.5);
@@ -438,7 +439,6 @@ export class RoutePage implements OnInit {
   public lastScroll = 0;
   public scroll(ev) {
     const scrolled = ev.detail.currentY;
-    console.log("------- ~ RoutePage ~ scroll ~ scrolled", scrolled, this.lastScroll);
     if(scrolled > this.scrollThreshold && this.lastScroll <= this.scrollThreshold && this.opacity == 1){
       this.endAnimation(true,0.5);
     }
