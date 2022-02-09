@@ -225,7 +225,7 @@ export class MapPage implements OnInit {
       const trackIdx = this._zoneAllClusters.findIndex(
         (x) => x.properties.ids[0] == id
       );
-      this.selectedTrack = this.selectedTracks[trackIdx].geometry;
+      this.selectedTrack = this.selectedTracks[trackIdx]?.geometry;
       const sliderIdx = await this.slider.getActiveIndex();
       if (sliderIdx != trackIdx) {
         setTimeout(() => {

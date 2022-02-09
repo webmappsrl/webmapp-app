@@ -1,10 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { IonSlides, ModalController } from '@ionic/angular';
+import { IonSlides, ModalController,NavController } from '@ionic/angular';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { IPhotoItem } from 'src/app/services/photo.service';
 import { ESuccessType } from '../../types/esuccess.enum';
 import { ITrack } from 'src/app/types/track';
 import { WaypointSave } from 'src/app/types/waypoint';
+import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',
@@ -47,7 +48,8 @@ export class ModalSuccessComponent implements OnInit {
 
   constructor(
     private _modalController: ModalController,
-    private _geoUtils: GeoutilsService
+    private _geoUtils: GeoutilsService,
+    private _navController: NavController
   ) {}
 
   ngOnInit() {
@@ -95,8 +97,36 @@ export class ModalSuccessComponent implements OnInit {
     }
   }
 
-  close() {
-    this._modalController.dismiss({
+  async openTrack(track:ITrack){
+    await this.close();
+
+    const navigationExtras: NavigationOptions = {
+      queryParams: {
+        track: JSON.stringify(track),
+      },
+    };
+    this._navController.navigateForward('trackdetail', navigationExtras);  
+  }
+
+  async openWaypoint(waypoint : WaypointSave){
+    await this.close();
+
+    const navigationExtras: NavigationOptions = {
+      queryParams: {
+        waypoint: JSON.stringify(waypoint),
+      },
+    };
+    this._navController.navigateForward('waypointdetail', navigationExtras);  
+  }
+
+  async gotoPhotos(){
+    await this.close();
+    this._navController.navigateForward('photolist');  
+
+  }
+
+  async close() {
+    return this._modalController.dismiss({
       dismissed: true,
     });
   }

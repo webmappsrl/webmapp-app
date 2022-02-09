@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { StatusService } from 'src/app/services/status.service';
@@ -31,6 +31,7 @@ export class SearchBarComponent implements OnInit {
 
   @Output() goToBBox: EventEmitter<number[]> = new EventEmitter();
   @Output() searchChange: EventEmitter<any> = new EventEmitter();
+  @Input() showSettings: boolean = false;
 
   public searchstring: string = null;
   public inputInFocus: boolean = false;

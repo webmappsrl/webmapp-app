@@ -7,7 +7,8 @@
 
     .webmapp-searchbar-textcontainer {
         border-radius: 30px;
-        @include box-shadow-light;
+        @include box-shadow-light; 
+        --border-style: none;
 
         .webmapp-searchbar-rightbtn {
             border-left: 1px solid var(--wm-color-grey);

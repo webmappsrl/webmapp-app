@@ -3,7 +3,7 @@
 .webmapp-modalsuccess {
   width: 100%;
   height: 100%;
-  --background: var(--wm-color-secondary);
+  --background: var(--wm-color-dark);
 
   .webmapp-modalsuccess-header {
     .webmapp-modalsuccess-closebtn {
@@ -46,7 +46,7 @@
           width: 120px;
           &::part(image) {
             object-fit: cover;
-            border-radius: 15px;
+            border-radius: 8px;
           }
         }
         .webmapp-modalsuccess-photodescription {
@@ -67,6 +67,42 @@
       }
     }
 
+    .webmapp-modalsuccess-photogallery {
+      text-align: center;
+      padding-top: 32px;
+      .webmapp-modalsuccess-photocontainer {
+        position: relative;
+        width: 33%;
+        display: inline-block;
+        text-align: center;
+        .webmapp-modalsuccess-photo {
+          height: 108px;
+          width: 108px;
+          display: inline-block;
+          border: solid 1px var(--wm-color-light);
+          border-radius: 8px;
+          &::part(image) {
+            object-fit: cover;
+            border-radius: 8px;
+          }
+        }
+        .webmapp-modalsuccess-photoextra {
+          position: absolute;
+          width: 108px;
+          height: 108px;
+          top: 0;
+          vertical-align: middle;
+          background: #00000088;
+          border-radius: 8px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 31px;
+          color: #fff;
+          padding-top: 20px;
+        }
+      }
+    }
+
     .webmapp-modalsuccess-infopanel {
       border-radius: 15px;
 
@@ -74,6 +110,7 @@
         display: inline-block;
         width: 100%;
         padding: 16px;
+        border-bottom: solid 1px var(--wm-color-grey);
 
         .webmapp-modalsuccess-infopanel-top-map {
           display: inline-block;
@@ -81,6 +118,7 @@
           height: 100px;
           border-radius: 15px;
           overflow: hidden;
+          transform: translateZ(0);
         }
 
         .webmapp-modalsuccess-infopanel-top-info {
@@ -97,7 +135,7 @@
           }
 
           .webmapp-modalsuccess-infopanel-top-date {
-            padding: 5px;
+            padding: 8px 5px;
             font-weight: var(--wm-font-weight-light);
             font-size: var(--wm-font-sm);
             color: var(--wm-color-darkgrey);
@@ -106,22 +144,28 @@
       }
 
       .webmapp-modalsuccess-infopanel-middle {
-        width: 50%;
+        width: 33%;
         display: inline-block;
         text-align: center;
         padding: 10px 5px;
-        border: 1px solid var(--wm-color-lightgray);
-        border-right: 0px;
+        // border: 1px solid var(--wm-color-lightgray);
+        // border-right: 0px;
+        font-weight: bold;
+        font-size: 16px;
+        color: var(--wm-color-dark);
+        .webmapp-modalsuccess-infopanel-icon {
+          vertical-align: sub;
+        }
       }
 
-      .webmapp-modalsuccess-infopanel-content{
+      .webmapp-modalsuccess-infopanel-content {
         width: 100%;
         padding: 15px;
         display: inline-block;
         border: 1px solid var(--wm-color-lightgray);
       }
 
-      .webmapp-modalsuccess-infopanel-top-info-limited{
+      .webmapp-modalsuccess-infopanel-top-info-limited {
         width: 60%;
       }
 
@@ -137,6 +181,55 @@
         }
       }
 
+      .webmapp-modalsuccess-infopanel-photobottom {
+        border-top: solid 1px var(--wm-color-grey);
+        padding-top: 20px;
+        padding-bottom: 10px;
+        // height: 120px;
+        text-align: center;
+
+        .webmapp-modalsuccess-infopanel-photocontainer {
+          position: relative;
+          width: 33%;
+          display: inline-block;
+          text-align: center;
+          padding: 8px;
+        }
+
+        .webmapp-modalsuccess-infopanel-photo {
+          height: 100px;
+          // width: 92px;
+          width: 100%;
+          display: inline-block;
+          &::part(image) {
+            object-fit: cover;
+            border-radius: 8px;
+          }
+        }
+
+        .webmapp-modalsuccess-infopanel-photoextra {
+          position: absolute;
+          /* width: 92px; */
+          /* height: 77px; */
+          top: 0;
+          vertical-align: middle;
+          background: #00000088;
+          border-radius: 8px;
+          /* left: 50%; */
+          /* transform: translateX(-50%); */
+          font-size: 31px;
+          color: #fff;
+          /* height: 100px; */
+          /* width: 100%; */
+          /* margin: 8px 8px 8px 0px; */
+          padding-top: 32px;
+          bottom: 11px;
+          top: 8px;
+          right: 8px;
+          left: 8px;
+        }
+      }
+
       .webmapp-modalsuccess-infopanel-section {
         text-align: start;
         padding: 3px 1px;
@@ -145,6 +238,7 @@
         .webmapp-modalsuccess-infopanel-sectionicon {
           display: inline-block;
           vertical-align: top;
+          color: var(--wm-color-grey);
           &.primary {
             color: var(--wm-color-primary);
           }
@@ -169,10 +263,10 @@
         .webmapp-modalsuccess-infopanel-top-text {
           display: inline-block;
           // width: 60%;
-          padding: 0 8px ;
+          padding: 0 8px;
         }
-        
-        .webmapp-modalsuccess-infopanel-text{
+
+        .webmapp-modalsuccess-infopanel-text {
           padding: 0 10px;
         }
       }

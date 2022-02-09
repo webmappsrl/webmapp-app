@@ -10,6 +10,7 @@ import { RecordingBtnComponent } from './recording-btn/recording-btn.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { ImgComponent } from './img/img.component';
 import { FormFieldComponent } from './form-field/form-field.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({
   declarations: [LoginComponent,
@@ -18,7 +19,8 @@ import { FormFieldComponent } from './form-field/form-field.component';
      RecordingBtnComponent,
     GalleryComponent,
     ImgComponent,
-    FormFieldComponent],
+    FormFieldComponent,
+    SearchBarComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -32,6 +34,7 @@ import { FormFieldComponent } from './form-field/form-field.component';
      RecordingBtnComponent,
     GalleryComponent,
     ImgComponent,
-    FormFieldComponent],
+    FormFieldComponent,
+    SearchBarComponent],
 })
 export class SharedModule { }

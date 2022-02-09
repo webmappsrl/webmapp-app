@@ -65,9 +65,11 @@ export class SaveService {
    *
    * @param track the track to be saved
    */
-  public async saveTrack(track: ITrack) {
+  public async saveTrack(track: ITrack) : Promise<ITrack> {
     const trackCopy = Object.assign({}, track);
-    await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
+    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
+    trackCopy.key = key;
+    return trackCopy;
   }
 
   public async updateTrack(newTrack: ITrack) {
@@ -326,6 +328,7 @@ export class SaveService {
   }
 
   private _initTrack(track: ITrack) {
+    // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
     const gj = track.geojson;
     track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-tab-eat',
+  selector: 'webmapp-tab-eat',
   templateUrl: './tab-eat.component.html',
   styleUrls: ['./tab-eat.component.scss'],
 })

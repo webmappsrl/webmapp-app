@@ -7,7 +7,28 @@
 .webmapp-pageroute-header {
   position: absolute;
   width: 100%;
-  z-index: 9999;
+  z-index: 999;
+    opacity: 1;
+    transition: height 0.3s, opacity 0.3s;
+
+  .webmapp-pageroute-header-hide{
+    opacity: 0;
+    height: 0;
+  }
+
+  ion-header {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .webmapp-pageroute-header-backdrop {
+    position: absolute;
+    width: 100%;
+    height: 152px;
+    background-color: var(--wm-color-backdrop);
+    z-index: 1500;
+    top: 0;
+  }
 }
 
 .webmapp-pageroute-map-container {
@@ -30,11 +51,18 @@
   width: 100%;
   min-height: 40px;
   // bottom: -261px;
+  z-index: 10100;
+  transition: bottom 0.3s;
+
+  &.webmapp-pageroute-infopanel-hide{
+    bottom: -840px !important;
+  }
 
   .webmapp-pageroute-infopanel-card {
     margin: 0;
     // height: 350px;
     border-radius: 15px 15px 0 0;
+    padding-bottom: 125px;
   }
 
   .webmapp-pageroute-infopanel-drag {
@@ -51,7 +79,7 @@
     }
   }
 
-  .webmapp-pageroute-infopanel-lessdetails{
+  .webmapp-pageroute-infopanel-lessdetails {
     width: 100%;
     text-align: left;
     padding: 15px;
@@ -62,16 +90,17 @@
   padding: 5px 15px;
   font-weight: var(--wm-font-weight-xbold);
   font-size: var(--wm-font-lg);
+  color: var(--wm-color-dark);
 
   max-height: 50px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .webmapp-pageroute-infopanel-icon {
-  color: var(--wm-color-secondary);
+  color: var(--wm-color-primary);
   font-size: var(--wm-font-icon);
   display: inline;
   padding: 0;
@@ -86,6 +115,7 @@
 .webmapp-pageroute-fabbottom {
   bottom: 178px;
   .webmapp-pageroute-btnbottomregister {
+    --color: var(--wm-color-primary);
     margin-left: 7px;
     display: block;
   }
@@ -109,6 +139,11 @@
     top: calc(115px + constant(safe-area-inset-top));
     top: calc(115px + env(safe-area-inset-top));
     bottom: auto;
+    transition: top 0.3s;
+    &.webmapp-pageroute-fabbottom-top-fullmap {
+      top: calc(65px + constant(safe-area-inset-top));
+      top: calc(65px + env(safe-area-inset-top));
+    }
   }
 }
 
@@ -142,7 +177,6 @@
   --background-focused-opacity: 0;
   --background-hover: var(--wm-color-primary);
   --background-hover-opacity: 0;
-  
 }
 .webmapp-pageroute-navigatelbl {
   padding-left: 8px;
@@ -157,6 +191,11 @@
 }
 .webmapp-pageroute-menuitem {
   padding: 5px 20px;
+}
+
+.webmapp-route-tab {
+  width: 100%;
+  display: block;
 }
 
 .webmapp-route-tabs {
@@ -229,6 +268,72 @@
       top: 6px;
       left: 6px;
       font-size: 15px;
+    }
+  }
+}
+
+.webmapp-pageroute-btnfullmap {
+  position: absolute;
+  top: calc(55px + constant(safe-area-inset-top));
+  top: calc(55px + env(safe-area-inset-top));
+  right: 10px;
+  --border-radius: 30px;
+  --color: var(--wm-color-dark);
+  --background: var(--wm-color-light);
+  --background-activated: var(--wm-color-dark);
+  --background-activated-opacity: 0.25; 
+  --background-focused: var(--wm-color-light);
+  --background-focused-opacity: 0;
+  --background-hover: var(--wm-color-light);
+  --background-hover-opacity: 0;
+  transition: top 0.3s;
+  &.webmapp-pageroute-btnfullmap-full {
+    top: calc(5px + constant(safe-area-inset-top));
+    top: calc(5px + env(safe-area-inset-top));
+  }
+}
+
+.webmapp-pageroute-toolbox {
+  padding: 4px 8px;
+  position: absolute;
+  width: 94%;
+  height: 53px;
+  left: 3%;
+  background: var(--wm-color-dark);
+  border-radius: 30px;
+  bottom: 360px;
+  transition: bottom 0.3s,opacity 0.3s;
+  opacity: 1;
+    z-index: 10500;
+  &.webmapp-pageroute-toolbox-hide {
+    opacity: 0;
+  }
+  &.webmapp-pageroute-toolbox-fullmap {
+    bottom: 10px;
+    opacity: 1;
+  }
+  &.webmapp-pageroute-toolbox-over {
+    transition: bottom 0s,opacity 0.3s ;
+    opacity: 1;
+    bottom: 10px;
+  }
+
+  .webmapp-pageroute-toolbox-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    color: var(--wm-color-light);
+    width: 25%;
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 4px;
+
+    i {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
     }
   }
 }

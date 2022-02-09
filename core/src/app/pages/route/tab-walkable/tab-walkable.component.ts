@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-tab-walkable',
+  selector: 'webmapp-tab-walkable',
   templateUrl: './tab-walkable.component.html',
   styleUrls: ['./tab-walkable.component.scss'],
 })

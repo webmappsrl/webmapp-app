@@ -39,4 +39,8 @@ export class HomePage implements OnInit {
   start() {    
     this._navCtrl.navigateForward('/map');
   }
+
+  updateSearch(){
+
+  }
 }

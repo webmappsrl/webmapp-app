@@ -1,4 +1,11 @@
 {
+  "activities": {
+    "cycling": "Bicicletta",
+    "hiking": "Hiking",
+    "running": "Corsa",
+    "skitouring": "Scialpinismo",
+    "walking": "Passeggiata"
+  },
   "components": {
     "cardtrack": {
       "delete": "Elimina",
@@ -9,6 +16,7 @@
         "slide": "Scorri per registrare"
       },
       "register": {
+        "cancel": "Annulla",
         "photo": "Foto",
         "title": "Registra",
         "track": "Tracciato",
@@ -21,6 +29,7 @@
       "nofilters": "Nessun filtro corrisponde alla ricerca effetuata",
       "noplaces": "Nessun luogo corrisponde alla ricerca effetuata",
       "notracks": "Nessun percorso corrisponde alla ricerca effetuata",
+      "placeholder": "cerca",
       "places": "Luoghi",
       "tracks": "Percorsi"
     },
@@ -103,15 +112,14 @@
     "photo": {
       "next": "Avanti",
       "popover": {
-        "title":"Origine dell'immagine",
+        "cancel": "Annulla",
         "library": "Dalla libreria",
         "shot": "Scatta una foto",
-        "cancel": "Annulla"
+        "title": "Origine dell'immagine"
       },
       "save": {
         "addphoto": "Aggiungi foto",
         "formphototitle": "Titolo ",
-        "placeholder":"Qui puoi inserire un titolo",        
         "formtitle": "Dai un titolo alle tue foto",
         "modalconfirm": {
           "cancel": "Annulla",
@@ -119,12 +127,13 @@
           "text": "Se la elimini non verrà aggiunta a questa registrazione",
           "title": "Sei sicuro di voler eliminare questa foto dalla registrazione?"
         },
+        "placeholder": "Qui puoi inserire un titolo",
         "savebtn": "Salva",
         "title": "Registra foto"
       },
       "single": {
         "formphototitle": "Titolo",
-        "placeholder":"Qui puoi inserire un titolo",
+        "placeholder": "Qui puoi inserire un titolo",
         "savebtn": "Fatto",
         "title": "Modifica foto"
       }
@@ -186,7 +195,8 @@
       "closerTracks": "Percorsi nelle vicinanze",
       "intro": "Pianifichiamo insieme la tua prossima avventura",
       "mostViewedTracks": "Percorsi più visti",
-      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale"
+      "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
+      "welcome": "Benvenuto!"
     },
     "map": {
       "loading": "ricerca in corso...",
@@ -237,9 +247,9 @@
       },
       "modalexit": {
         "cancel": "Annulla",
-        "confirm": "Conferma",
-        "text": "Se esci adesso la registrazione andarà persa",
-        "title": "Vuoi uscire senza salvare la tua registrazione?"
+        "confirm": "Elimina",
+        "text": "Completando l’azione la traccia verrà eliminata dal tuo profilo e da Webmapp. L’operazione non può essere annullata.",
+        "title": "Elimina per sempre?"
       },
       "modalphotos": {
         "deselectall": "Deseleziona tutto",
@@ -249,6 +259,12 @@
         "title": "Carica foto"
       },
       "modalsave": {
+        "closemodal": {
+          "back": "Torna alla registrazione",
+          "cancel": "Annulla",
+          "delete": "Elimina registrazione"
+        },
+        "deletebtn": "ESCI SENZA SALVARE",
         "formactivity": "Tipo di attività",
         "formactivityerror": "Il tipo di attività è un campo obbligatorio",
         "formactivityplaceholder": "Seleziona",
@@ -269,6 +285,7 @@
         "titleEdit": "Modifica traccia"
       },
       "odo": "Km percorsi",
+      "pausebtn": "Pausa",
       "resumebtn": "Riprendi",
       "stopbtn": "Termina",
       "time": "In movimento",
@@ -310,6 +327,12 @@
       "title": "Unisciti alla community di webmapp!"
     },
     "route": {
+      "btnFullMapExpand": "Espandi",
+      "btnFullMapReduce": "Riduci",
+      "btndnavigate": "Naviga",
+      "btndownload": "Scarica",
+      "btnfavourite": "Preferiti",
+      "btnshare": "Condividi",
       "description": {
         "description": "Descrizione",
         "gallery": "Gallery"
