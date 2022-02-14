@@ -310,7 +310,11 @@
   </ion-fab>
 
   <div class="webmapp-pageroute-toolbox"
-    [ngClass]="{'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.5,'webmapp-pageroute-toolbox-hide':opacity < 0.5,'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
+    [ngClass]="
+    {'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.9,
+    'webmapp-pageroute-toolbox-hide':opacity < 0.9,
+    'webmapp-pageroute-toolbox-hideover':hideToolBarOver,
+    'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
     
     <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="webmapp-icon-donwload-outline"></i>

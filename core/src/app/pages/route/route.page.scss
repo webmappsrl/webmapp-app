@@ -291,6 +291,15 @@
     top: calc(5px + constant(safe-area-inset-top));
     top: calc(5px + env(safe-area-inset-top));
   }
+
+
+  --padding-start: 32px;
+  ion-icon{
+    font-size: var(--wm-font-xxlg);
+    position: absolute;
+    left: -24px;
+    top: 10px;
+  }
 }
 
 .webmapp-pageroute-toolbox {
@@ -302,20 +311,26 @@
   background: var(--wm-color-dark);
   border-radius: 30px;
   bottom: 360px;
-  transition: bottom 0.3s,opacity 0.3s;
+  transition: bottom 0.3s,opacity 0.5s;
   opacity: 1;
     z-index: 10500;
   &.webmapp-pageroute-toolbox-hide {
     opacity: 0;
+    transition: opacity 0.5s ;
   }
   &.webmapp-pageroute-toolbox-fullmap {
     bottom: 10px;
     opacity: 1;
   }
+  &.webmapp-pageroute-toolbox-hideover {
+    opacity: 0;
+    bottom: 10px;
+    transition: bottom 0s,opacity 0.6s ;
+  }
   &.webmapp-pageroute-toolbox-over {
-    transition: bottom 0s,opacity 0.3s ;
     opacity: 1;
     bottom: 10px;
+    transition: bottom 0s,opacity 0.6s ;
   }
 
   .webmapp-pageroute-toolbox-button {

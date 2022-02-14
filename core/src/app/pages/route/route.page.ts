@@ -46,8 +46,9 @@ export class RoutePage implements OnInit {
 
   public modeFullMap = false;
   public showToolBarOver = false;
+  public hideToolBarOver = false;
   public scrollThreshold = 50;
-  public scrollShowButtonThreshold = 400;
+  public scrollShowButtonThreshold = 450;
 
   public opacity = 1;
   public headerHeight = 105;
@@ -445,6 +446,8 @@ export class RoutePage implements OnInit {
     if(scrolled <= 0 && this.lastScroll > 0 && this.opacity == 0){
       this.endAnimation(false,0.5);
     }
+    
+    this.hideToolBarOver = scrolled > this.scrollShowButtonThreshold/2;
 
     this.showToolBarOver = scrolled > this.scrollShowButtonThreshold;
 
