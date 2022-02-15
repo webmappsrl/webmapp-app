@@ -48,7 +48,9 @@ class SQLiteMock {
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      mode: 'md'
+    }),
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {

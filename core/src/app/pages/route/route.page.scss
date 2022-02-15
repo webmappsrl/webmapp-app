@@ -274,9 +274,10 @@
 
 .webmapp-pageroute-btnfullmap {
   position: absolute;
-  top: calc(55px + constant(safe-area-inset-top));
-  top: calc(55px + env(safe-area-inset-top));
+  top: calc(64px + constant(safe-area-inset-top));
+  top: calc(64px + env(safe-area-inset-top));
   right: 10px;
+  height: 40px;
   --border-radius: 30px;
   --color: var(--wm-color-dark);
   --background: var(--wm-color-light);
@@ -288,8 +289,8 @@
   --background-hover-opacity: 0;
   transition: top 0.3s;
   &.webmapp-pageroute-btnfullmap-full {
-    top: calc(5px + constant(safe-area-inset-top));
-    top: calc(5px + env(safe-area-inset-top));
+    top: calc(14px + constant(safe-area-inset-top));
+    top: calc(14px + env(safe-area-inset-top));
   }
 
 
@@ -298,7 +299,7 @@
     font-size: var(--wm-font-xxlg);
     position: absolute;
     left: -24px;
-    top: 10px;
+    top: 9px;
   }
 }
 
