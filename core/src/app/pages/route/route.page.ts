@@ -382,6 +382,7 @@ export class RoutePage implements OnInit {
 
   public async download() {
     const modalres = await this._coinService.openModal();
+    console.log("------- ~ RoutePage ~ download ~ modalres", modalres);
 
     if (modalres) {
       this.showDownload = true;
