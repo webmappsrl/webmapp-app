@@ -10,7 +10,7 @@ import { DOWNLOAD_INDEX_KEY } from '../constants/storage';
 import { first } from 'rxjs/operators';
 import { Platform } from '@ionic/angular';
 
-import { image as defaultImage } from '../../assets/images/defaultImageB64.json';
+import  defaultImage  from '../../assets/images/defaultImageB64.json';
 
 @Injectable({
   providedIn: 'root'
@@ -116,7 +116,7 @@ export class DownloadService {
     }
 
     const poisIds = [];
-    // download poi (data) - DB key=poiId ??    
+    // download poi (data) - DB key=poiId ??
     for (let i = 0; i < pois.length; i++) {
       const poi = pois[i];
       poisIds.push(poi.properties.id);
@@ -327,7 +327,7 @@ export class DownloadService {
   }
 
   async getB64img(url: string): Promise<string | ArrayBuffer> {
-    if (!url) { return defaultImage; }
+    if (!url) { return defaultImage.image; }
     const cached = this.imgCache.find(x => {
       return x.key == url
     });

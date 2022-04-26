@@ -6,8 +6,7 @@
  * */
 
 import * as CONFIG from '../../../config.json';
-import * as VERSION from 'version.json';
-
+import pkg from 'package.json'
 import { Injectable } from '@angular/core';
 
 import { timeout } from 'rxjs/operators';
@@ -77,9 +76,10 @@ export class ConfigService {
                       err.message
                         .toLowerCase()
                         .indexOf('http failure during parsing') !== -1
-                    )
+                    ) {
                       console.warn('WARNING: Malformed config.json');
-                    else console.warn(err);
+                    }
+                    else {console.warn(err);}
                   }
                   this._storageService.setConfig(this._config);
                   resolve();
@@ -106,7 +106,7 @@ export class ConfigService {
   }
 
   get version(): string {
-    return VERSION.version;
+    return pkg.version;
   }
 
   get appName(): string {
