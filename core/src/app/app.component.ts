@@ -13,6 +13,11 @@ import { Router } from '@angular/router';
 import { StatusService } from './services/status.service';
 import { SaveService } from './services/save.service';
 import { GEOHUB_SAVING_TRY_INTERVAL } from './constants/geohub';
+import { IConfRootState } from './store/conf/conf.reducer';
+import { IElasticAllRootState } from './store/elastic/elastic.reducer';
+import { Store } from '@ngrx/store';
+import { loadConf } from './store/conf/conf.actions';
+import { allElastic } from './store/elastic/elastic.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -34,9 +39,13 @@ export class AppComponent {
     private _navController: NavController,
     private router: Router,
     private status: StatusService,
-    private saveService: SaveService
+    private saveService: SaveService,
+    private _storeConf: Store<IConfRootState>,
+    private _storeElasticAll: Store<IElasticAllRootState>,
   ) {
     this._languagesService.initialize();
+    this._storeConf.dispatch(loadConf());
+    this._storeElasticAll.dispatch(allElastic());
 
     this._platform.ready().then(
       () => {

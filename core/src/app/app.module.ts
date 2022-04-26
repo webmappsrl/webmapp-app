@@ -28,17 +28,26 @@ import { ModalCoinsModule } from './components/modal-coins/modal-coins.module';
 import { SQLite, SQLiteDatabaseConfig, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { ModalStoreSuccessModule } from './components/modal-store-success/modal-store-success.module';
 import { ModalGiftCoinsModule } from './components/modal-gift-coins/modal-gift-coin.module';
+import { StoreModule } from '@ngrx/store';
+import { confReducer } from './store/conf/conf.reducer';
+import { elasticAllReducer, elasticSearchReducer } from './store/elastic/elastic.reducer';
+import { UIReducer } from './store/UI/UI.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { ConfEffects } from './store/conf/conf.effects';
+import { ElasticEffects } from './store/elastic/elastic.effects';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
 class SQLiteMock {
   public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
-  
+
       return new Promise((resolve,reject)=>{
           resolve(new SQLiteObject(new Object()));
       });
   }
-  } 
+  }
 
 @NgModule({
   declarations: [
@@ -63,6 +72,20 @@ class SQLiteMock {
     IonicStorageModule.forRoot({
       name: 'webmapp_app_storage',
       driverOrder: ['indexeddb', 'sqlite', 'websql', 'localstorage'],
+    }),
+    StoreModule.forRoot(
+      {
+        conf: confReducer,
+        search: elasticSearchReducer,
+        all: elasticAllReducer,
+        UI: UIReducer,
+      },
+      {},
+    ),
+    EffectsModule.forRoot([ConfEffects, ElasticEffects]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production, // Restrict extension to log-only mode
     }),
     AppRoutingModule,
     SharedModule,
