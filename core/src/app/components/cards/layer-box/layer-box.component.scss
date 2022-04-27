@@ -5,7 +5,8 @@ webmapp-layer-box {
     border-radius: 15px;
     box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.1);
     transition: all 500ms;
-    height: 176px;
+    height: 100%;
+    max-height: 176px;
     cursor: pointer;
 
     display: flex;
@@ -14,14 +15,17 @@ webmapp-layer-box {
     justify-content: flex-start;
     align-content: stretch;
     align-items: stretch;
-
-    img {
-      border-radius: 15px;
-      object-fit: cover;
-      align-self: stretch;
+    webmapp-img {
       height: 100%;
-      width: 100%;
-      filter: brightness(75%);
+      img {
+        position: absolute;
+        border-radius: 15px;
+        object-fit: cover;
+        align-self: stretch;
+        height: 100%;
+        width: 100%;
+        filter: brightness(75%);
+      }
     }
 
     .wm-box-title {

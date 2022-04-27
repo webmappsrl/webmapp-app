@@ -2,21 +2,25 @@
   <div class="webmapp-pagemap-searcharea">
     <webmapp-search-bar
       class="webmapp-pagemap-searchbar"
-      (goToBBox)="goToBBox($event)"
-      (searchChange)="updateSearch()"
     >
     </webmapp-search-bar>
 
     <ion-button
-      (click)="closeCard()"
       class="webmapp-pagemap-searchherebtn"
-      [hidden]="!selectedTracks || !selectedTracks.length"
     >
       <i class="webmapp-icon-search-outline"></i>
       <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>
     </ion-button>
   </div>
-
+  <webmapp-map
+  [padding]="mapPadding$|async"
+  [track]="track$|async"
+  [poi]="currentPoiIDToMap$|async"
+  [trackElevationChartElements]="trackElevationChartHoverElements$|async"
+  (feature-click)="toggleDetails($event)"
+  (poi-click)="setCurrentPoi($event)"
+></webmapp-map>
+<!--
   <webmapp-map
     class="webmapp-pagemap-map-container"
     (move)="mapMove($event)"
@@ -29,9 +33,8 @@
     [rightPadding]="70"
     [track]="selectedTrack"
   >
-    <!-- [static]="selectedTrackId?true:false"  -->
+    [static]="selectedTrackId?true:false"
   </webmapp-map>
-
   <ion-slides
     pager="false"
     (ionSlideDidChange)="sliderChange($event)"
@@ -54,3 +57,4 @@
   <ion-spinner></ion-spinner>
   <div>{{'pages.map.loading' | translate}}</div>
 </div>
+ -->

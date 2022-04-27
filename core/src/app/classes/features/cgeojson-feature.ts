@@ -1,4 +1,6 @@
 import { EGeojsonGeometryTypes } from 'src/app/types/egeojson-geometry-types.enum';
+import {Feature} from 'ol';
+import Geometry from 'ol/geom/Geometry';
 import {
   IGeojsonFeature,
   IGeojsonGeometry,
@@ -45,4 +47,13 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
   setProperty(property: string, value: any): void {
     this._properties[property] = value;
   }
+}
+
+export interface IMarker {
+  icon: Feature<Geometry>;
+  id: string;
+}
+
+export interface IPoiMarker extends IMarker {
+  poi: IGeojsonFeature;
 }

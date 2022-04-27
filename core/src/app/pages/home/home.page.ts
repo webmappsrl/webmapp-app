@@ -51,6 +51,7 @@ export class HomePage implements OnInit {
     private _StoreUi: Store<IUIRootState>,
     private _router: Router,
     private _route: ActivatedRoute,
+    private _navController: NavController,
   ) {
     this.cards$ = merge(this.elasticSearch$, this.layerCards$).pipe(startWith([]));
    }
@@ -72,6 +73,7 @@ export class HomePage implements OnInit {
     }
     this._StoreUi.dispatch(setCurrentLayer({currentLayer: layer}));
     this.currentLayer$.next(layer);
+    this._navController.navigateForward('map');
   }
 
   async ngOnInit() {

@@ -14,7 +14,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
-import { MapComponent } from 'src/app/components/map/map/map.component';
+import { MapComponent } from 'src/app/components/map/old-map/map.component';
 import { CoinService } from 'src/app/services/coin.service';
 import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
@@ -447,12 +447,12 @@ export class RoutePage implements OnInit {
     if(scrolled <= 0 && this.lastScroll > 0 && this.opacity == 0){
       this.endAnimation(false,0.5);
     }
-    
+
     this.hideToolBarOver = scrolled > this.scrollShowButtonThreshold/2;
 
     this.showToolBarOver = scrolled > this.scrollShowButtonThreshold;
 
-    
+
 
     this.lastScroll = scrolled;
 

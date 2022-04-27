@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MapComponent } from './map/map.component';
 import { IonicModule } from '@ionic/angular';
 import { BtnGeolocationComponent } from './btn-geolocation/btn-geolocation.component';
 import { BtnRegisterComponent } from './btn-register/btn-register.component';
@@ -10,27 +9,27 @@ import { BtnLayerComponent } from './btn-layer/btn-layer.component';
 import { BtnRecComponent } from './btn-rec/btn-rec.component';
 import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.component';
 import { BtnOrientationComponent } from './btn-orientation/btn-orientation.component';
-
+import { MapComponent } from './map/map.component';
 @NgModule({
   declarations: [
-    MapComponent,
     BtnGeolocationComponent,
     BtnRegisterComponent,
     BtnLayerComponent,
     BtnRecComponent,
     BtnOrientationComponent,
     PopoverRegisterComponent,
-    ClusterMarkerComponent
+    ClusterMarkerComponent,
+    MapComponent
   ],
   imports: [
     CommonModule,
     IonicModule,
-    TranslateModule
+    TranslateModule,
   ],
   exports:[
-    MapComponent,
     BtnRegisterComponent,
     BtnOrientationComponent,
+    MapComponent
   ]
 })
 export class MapModule { }

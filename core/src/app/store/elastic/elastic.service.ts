@@ -7,7 +7,7 @@ const baseUrl = 'https://elastic-passtrough.herokuapp.com/search';
   providedIn: 'root',
 })
 export class ElasticService {
-  private _geohubAppId: number = 4;
+  private _geohubAppId: number = 10;
 
   constructor(private _http: HttpClient) {
     const hostname: string = window.location.hostname;

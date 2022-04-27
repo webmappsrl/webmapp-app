@@ -1,1138 +1,382 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable max-len */
 import {
-  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnDestroy,
   Output,
   ViewChild,
-  ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
+import {Store} from '@ngrx/store';
 
-import { buffer } from 'ol/extent';
-
-// ol imports
-import { Coordinate } from 'ol/coordinate';
-import Circle from 'ol/geom/Circle';
-import Feature from 'ol/Feature';
-import Icon from 'ol/style/Icon';
-import Map from 'ol/Map';
+import {Collection, MapBrowserEvent} from 'ol';
+import ScaleLineControl from 'ol/control/ScaleLine';
+import ZoomControl from 'ol/control/Zoom';
+import {Coordinate} from 'ol/coordinate';
+import {stopPropagation} from 'ol/events/Event';
+import {buffer, Extent} from 'ol/extent';
+import Feature, {FeatureLike} from 'ol/Feature';
+import GeoJSON from 'ol/format/GeoJSON';
+import MVT from 'ol/format/MVT';
+import Geometry from 'ol/geom/Geometry';
+import LineString from 'ol/geom/LineString';
 import Point from 'ol/geom/Point';
-import Style from 'ol/style/Style';
-import CircleStyle from 'ol/style/Circle';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import {defaults as defaultInteractions} from 'ol/interaction.js';
+import Interaction from 'ol/interaction/Interaction';
+import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
+import Layer from 'ol/layer/Layer';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import Map from 'ol/Map';
+import {fromLonLat} from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
-import View from 'ol/View';
+import VectorTileSource from 'ol/source/VectorTile';
 import XYZ from 'ol/source/XYZ';
-import GeoJSON from 'ol/format/GeoJSON';
-import { defaults as defaultInteractions } from 'ol/interaction.js';
+import {getDistance} from 'ol/sphere.js';
+import CircleStyle from 'ol/style/Circle';
+import FillStyle from 'ol/style/Fill';
+import Icon from 'ol/style/Icon';
+import StrokeStyle from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import TextStyle from 'ol/style/Text';
+import TextPlacement from 'ol/style/TextPlacement';
+import View, {FitOptions} from 'ol/View';
 
-import {
-  DEF_LOCATION_ACCURACY,
-  DEF_LOCATION_Z_INDEX,
-  DEF_MAP_CLUSTER_ZOOM_DURATION,
-  DEF_MAP_CLUSTER_CLICK_TOLERANCE,
-  DEF_MAP_MAX_ZOOM,
-  DEF_MAP_MIN_ZOOM,
-  DEF_MAP_MAX_CENTER_ZOOM,
-  DEF_MAP_ROTATION_DURATION,
-} from '../../../constants/map';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {filter, switchMap, take, tap} from 'rxjs/operators';
 
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { ILocation } from 'src/app/types/location';
-import { CLocation } from 'src/app/classes/clocation';
-import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
+import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CommunicationService } from 'src/app/services/base/communication.service';
 import { MapService } from 'src/app/services/base/map.service';
-import Stroke from 'ol/style/Stroke';
-import { ITrack } from 'src/app/types/track';
-import {
-  IGeojsonCluster,
-  IGeojsonGeometry,
-  IGeojsonPoi,
-  ILineString,
-} from 'src/app/types/model';
-import { fromLonLat } from 'ol/proj';
-import { ClusterMarker, iMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
-import Geometry from 'ol/geom/Geometry';
-import { AuthService } from 'src/app/services/auth.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import Fill from 'ol/style/Fill';
-import LineString from 'ol/geom/LineString';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
-import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
-import { GeohubService } from 'src/app/services/geohub.service';
-import { MarkerService } from 'src/app/services/marker.service';
-import { TilesService } from 'src/app/services/tiles.service';
-import { ConfigService } from 'src/app/services/config.service';
-import layerVector from 'ol/layer/Vector';
-import sourceVector from 'ol/source/Vector';
+import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {confMAP, confTHEME} from 'src/app/store/conf/conf.selector';
+import {ConfService} from 'src/app/store/conf/conf.service';
+import {IUIRootState} from 'src/app/store/UI/UI.reducer';
+import {UICurrentLAyer} from 'src/app/store/UI/UI.selector';
+import {ILocation} from 'src/app/types/location';
+import {IGeojsonFeature, ILineString} from 'src/app/types/model';
+import { ITrackElevationChartHoverElements } from 'src/app/types/track-elevation-charts';
 
-const SELECTEDPOIANIMATIONDURATION = 300;
-
-const CLUSTERLAYERZINDEX = 400;
-const POISLAYERZINDEX = 460;
-const SELECTEDPOILAYERZINDEX = 500;
-const TRACKLAYERZINDEX = 450;
-const TRACKMARKERLAYERZINDEX = 470;
-
-const CIRCULARTOLERANCE = 0.001;
-
+const initPadding = [0, 0, 0, 0];
+const zoomDuration = 500;
+const startView = [10.4147, 43.7118, 9];
+const initExtent: Extent = [-180, -85, 180, 85];
+const initMaxZoom = 17;
+const initMinZoom = 10;
+const projection = 'EPSG:3857';
+const scaleUnits = 'metric';
+const scaleMinWidth = 50;
+const DEF_MAP_CLUSTER_CLICK_TOLERANCE: number = 40;
+const DEF_LINE_COLOR = 'green';
+const DEF_LINE_COLOR_SELECTED = 'rgba(226, 249, 0, 0.6)';
 @Component({
   selector: 'webmapp-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('map') mapDiv: ElementRef;
+export class MapComponent implements OnDestroy {
+  @ViewChild('mapContainer') mapContainer: ElementRef;
+  @ViewChild('zoomContainer') zoomContainer: ElementRef;
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
 
-  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
-  @Output() moveBtn: EventEmitter<number> = new EventEmitter();
-  @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
-  @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
-  @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
-  @Output() touch: EventEmitter<any> = new EventEmitter();
-  @Output() rotate: EventEmitter<number> = new EventEmitter();
+  @Input('padding') set mapPadding(padding: number[]) {
+    this._padding$.next(padding);
+    if (padding != null && padding[3] != null) {
+      this.scaleLineStyle$.next(padding[3]);
+    }
 
-  @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
-  @Input('btnposition') btnposition: string = 'bottom';
-  @Input('registering') registering: boolean = false;
-
-  @Input('showLayer') showLayer: boolean = false;
-  @Input('hideRegister') hideRegister: boolean = false;
-  @Input('hidePosition') hidePosition: boolean = false;
-  @Input('animation') useAnimation: boolean = true;
-  @Input('hideEndMarker') hideEndMarker: boolean = false;
-
-  @Input('cache') useCache: boolean = false;
-
-  @Input('static') set setStatic(value: boolean) {
-    this.static = value;
-    if (this._map) {
-      const interactions = defaultInteractions({
-        doubleClickZoom: !value,
-        dragPan: !value,
-        mouseWheelZoom: !value,
-        pinchRotate: false,
-      });
-      this._map.getInteractions().forEach((inter) => {
-        this._map.removeInteraction(inter);
-      });
-      interactions.forEach((interaction) => {
-        this._map.addInteraction(interaction);
+    if (this._view != null) {
+      this._fitView(new Point(this._view.getCenter()), {
+        padding: this._padding$.value,
+        duration: zoomDuration,
       });
     }
-  }
 
-  @Input('height') set height(value: number[] | number) {
-    let height = value as number;
-    let topPadding = this._bottomPadding;
-    let bottomPadding = this._topPadding;
-    if (Array.isArray(value)) {
-      height = value[0];
-      topPadding = value[1] ? value[1] : this._topPadding;
-      bottomPadding = value[2] ? value[2] : this._bottomPadding;
+    if (this._map != null) {
+      this._map.updateSize();
     }
-    if (
-      this._height != height ||
-      this._bottomPadding != bottomPadding ||
-      this._topPadding != topPadding
-    ) {
-      this._height = height;
-      this._bottomPadding = bottomPadding;
-      this._topPadding = topPadding;
-      if (this._track.registeredTrack && this.centerToTrack) {
-        this._centerMapToTrack();
-      }
+  }
+  @Input('resize') set resizeMap(_) {
+    console.log(_);
+    if (this._map != null) {
+      this._map.updateSize();
     }
   }
 
-  @Input('bottomPadding') set bottomPadding(value: number) {
-    if (this._bottomPadding != value) {
-      this._bottomPadding = value;
-      if (this._track.registeredTrack && this.centerToTrack) {
-        this._centerMapToTrack();
-      }
-    }
-  }
-
-  @Input('rightPadding') set rightPadding(value: number) {
-    if (this._rightPadding != value) {
-      this._rightPadding = value;
-      if (this._track.registeredTrack && this.centerToTrack)
-        this._centerMapToTrack();
-    }
-  }
-
-  @Input('leftPadding') set leftPadding(value: number) {
-    if (this._leftPadding != value) {
-      this._leftPadding = value;
-      if (this._track.registeredTrack && this.centerToTrack)
-        this._centerMapToTrack();
-    }
-  }
-
-  @Input('track') set track(value: ITrack) {
-    if (value) {
-      setTimeout(() => {
-        this._track.registeredTrack = value;
-        this.centerToTrack = true;
-        if (value.geojson) {
-          this.drawTrack(value.geojson);
-        } else {
-          this.drawTrack(value);
-        }
-      }, 0);
-    } else {
-      this.deleteTrack();
-    }
-  }
-
-  @Input('pois') set pois(value: IGeojsonPoi[]) {
-    if (value) {
-      const valueClone = JSON.parse(JSON.stringify(value));
-      setTimeout(() => {
-        this._addPoisMarkers(valueClone);
-      }, 0);
-    }
-  }
-
-  @Input('selectedpoi') set selectedpoi(value: IGeojsonPoi) {
-    setTimeout(() => {
-      this._selectedPoiMarker(value);
-    }, 0);
-  }
-
-  @Input('position') set position(value: ILocation) {
-    if (value) {
-      setTimeout(() => {
-        this._position = value;
-        this._location = value;
-        this.animateLocation(value);
-        this._centerMapToLocation();
-      }, 0);
-    }
-  }
-
-  @Input('boundingbox') set boundingbox(value: number[]) {
-    if (value) {
-      this._centerMapToBoundingBox(value);
-    }
-  }
-
-  @Input('clusters') set clusters(value: Array<IGeojsonCluster>) {
-    if (value) {
-      setTimeout(() => {
-        this._addClusterMarkers(value);
-      }, 0);
-    }
-  }
-
-  @Input('slopeChartElements') set slopeChartElements(
-    value: ISlopeChartHoverElements
+  @Input('trackElevationChartElements') set trackElevationChartElements(
+    value: ITrackElevationChartHoverElements,
   ) {
     this._drawTemporaryLocationFeature(value?.location, value?.track);
   }
-
-  @ViewChild('clusterContainer', { read: ViewContainerRef }) clusterContainer;
-
-  public locationState: EMapLocationState;
-
-  public centerToTrack: boolean = false;
-
-  public showRecBtn: boolean = true;
-
-  public isRecording: boolean = false;
-
-  public isLoggedIn: boolean = false;
-
-  public isRecordEnabled: boolean = false;
-
-  public sortedComponent: any[] = [];
-
-  public timer: any;
-
-  public mapDegrees: number;
-
-  private _destroyer: Subject<boolean> = new Subject<boolean>();
-
-  private _clusterMarkers: ClusterMarker[] = [];
-  private _clusterLayer: VectorLayer;
-
-  private _poiMarkers: PoiMarker[] = [];
-  private _poisLayer: VectorLayer;
-  private _slectedPoiLayer: VectorLayer;
-
-  private _position: ILocation = null;
-  private _height: number;
-  private _bottomPadding: number = 0;
-  private _topPadding: number = 0;
-  private _rightPadding: number = 0;
-  private _leftPadding: number = 0;
-
-  private _view: View;
-  private _map: Map;
-  public static: boolean;
-
-  private _lastClusterMarkerTransparency;
-
-  // Location Icon
-  private _locationIconArrow: Icon;
-  private _locationIconStyle: Style;
-  private _locationIconArrowStyle: Style;
-  private _locationIcon: {
-    layer: VectorLayer;
-    location: Feature;
-    accuracy: Feature;
-    point: Point;
-    circle: Circle;
-    icon: string;
-  };
-
-  private _track: {
-    layer: VectorLayer;
-    markerslayer: VectorLayer;
-    track: Feature[];
-    registeredTrack: ITrack;
-  };
-
-  private _locationAnimationState: {
-    goalLocation?: ILocation;
-    goalAccuracy?: number;
-    animating: boolean;
-    startTime?: number;
-    startLocation?: ILocation;
-  };
-
-  private _location: ILocation;
-
-  private _slopeChartLayer: VectorLayer;
-  private _slopeChartSource: VectorSource;
-  private _slopeChartPoint: Feature<Point>;
-  private _slopeChartTrack: Feature<LineString>;
-
-  constructor(
-    private _authService: AuthService,
-    private _configService: ConfigService,
-    private _geohubService: GeohubService,
-    private _geolocationService: GeolocationService,
-    private _mapService: MapService,
-    private _markerService: MarkerService,
-    private _tilesService: TilesService
-  ) {
-    this._locationIcon = {
-      layer: null,
-      location: null,
-      accuracy: null,
-      point: null,
-      circle: null,
-      icon: 'locationIcon',
-    };
-
-    this._track = {
-      layer: null,
-      track: null,
-      markerslayer: null,
-      registeredTrack: null,
-    };
-
-    this._locationAnimationState = {
-      animating: false,
-    };
-    this._locationIconArrow = new Icon({
-      src: 'assets/images/location-icon-arrow.png',
-      scale: 0.33,
-      size: [125, 125],
-      rotateWithView: false,
-    });
-    this._locationIconStyle = new Style({
-      image: new Icon({
-        src: 'assets/images/location-icon.png',
-        scale: 0.29,
-        size: [125, 125],
-      }),
-      zIndex: DEF_LOCATION_Z_INDEX,
-    });
-    this._locationIconArrowStyle = new Style({
-      image: this._locationIconArrow,
-      zIndex: DEF_LOCATION_Z_INDEX,
-    });
-
-    this.isRecordEnabled = this._configService.isRecordEnabled();
+  @Input('start-view') startView: number[] = startView;
+  @Input('track') set setTrack(track: CGeojsonLineStringFeature) {
+    console.log('track', track);
+    this._currentTrack$.next(track);
+    if (track == null) {
+      if (this._mapInit$.value) {
+        this._map.removeLayer(this._selectedPoiLayer);
+        this._selectedPoiLayer = undefined;
+        this._removePoiLayer();
+        this._updateMap();
+        this._fitView(new Point(this._view.getCenter()), {
+          maxZoom: this._defZoom + 2,
+          duration: zoomDuration * 2,
+        });
+      }
+    }
+  }
+  @Input('poi') set setPoi(id: number) {
+    if (id === -1 && this._selectedPoiLayer != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
+    } else {
+      const currentPoi = this._poiMarkers.find(p => +p.id === +id);
+      if (currentPoi != null) {
+        this._fitView(currentPoi.icon.getGeometry() as any);
+        this._selectCurrentPoi(currentPoi);
+      }
+    }
   }
 
-  ngAfterViewInit() {
-    this._authService.onStateChange
-      .pipe(takeUntil(this._destroyer))
-      .subscribe((user: IUser) => {
-        this.isLoggedIn = this._authService.isLoggedIn;
+  @Output('feature-click') featureClick: EventEmitter<number> = new EventEmitter<number>();
+  @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
+
+  scaleLineStyle$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+  private _padding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
+  private _view: View;
+  private _map: Map;
+  private _dataLayers: Array<VectorTileLayer>;
+  private _selectedFeature$: BehaviorSubject<FeatureLike | null> =
+    new BehaviorSubject<FeatureLike | null>(null);
+  private _currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> =
+    new BehaviorSubject<CGeojsonLineStringFeature | null>(null);
+  private _currentLayer$: BehaviorSubject<ILAYER | null> = new BehaviorSubject<ILAYER | null>(null);
+  private _mapInit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _selectInteraction: SelectInteraction;
+  private _styleJson: any;
+  private _elevationChartLayer: VectorLayer;
+  private _elevationChartSource: VectorSource;
+  private _elevationChartPoint: Feature<Point>;
+  private _elevationChartTrack: Feature<LineString>;
+  private _poisLayer: VectorLayer;
+  private _selectedPoiLayer: VectorLayer;
+  private _selectedPoiMarker: IPoiMarker;
+  private _poiMarkers: IPoiMarker[] = [];
+  private _updateMapSub: Subscription = Subscription.EMPTY;
+  private _confTHEME$: Observable<ITHEME> = this._store.select(confTHEME);
+  private _confMap$: Observable<any> = this._store.select(confMAP);
+  private _UICurrentLayer$: Observable<any> = this._UIstore.select(UICurrentLAyer);
+  private _maxZoom: number = initMaxZoom;
+  private _minZoom: number = initMaxZoom;
+  private _defZoom: number = initMinZoom;
+  private _defaultFeatureColor = DEF_LINE_COLOR;
+
+  constructor(
+    private _communicationService: CommunicationService,
+    private _mapService: MapService,
+    private _zone: NgZone,
+    private _store: Store<IConfRootState>,
+    private _UIstore: Store<IUIRootState>,
+    private _confService: ConfService,
+  ) {
+    this._UICurrentLayer$.subscribe(val => {
+      this._currentLayer$.next(val);
+
+      if (this._view != null) {
+        if (val != null) {
+          this._fitView(new Point(this._view.getCenter()), {
+            maxZoom: this._view.getZoom() + 0.1,
+            duration: zoomDuration,
+          });
+        } else {
+          this._fitView(new Point(this._view.getCenter()), {
+            maxZoom: this._defZoom,
+            duration: zoomDuration,
+          });
+        }
+      }
+    });
+    this._updateMapSub = this._mapInit$
+      .pipe(
+        filter(init => init),
+        switchMap(_ => this._currentTrack$),
+        filter(trackid => trackid != null),
+        tap(selectedGeohubFeature => {
+          this._selectedFeature$.next(
+            new GeoJSON({
+              featureProjection: 'EPSG:3857',
+            }).readFeatures(selectedGeohubFeature)[0],
+          );
+          this._addPoisMarkers(selectedGeohubFeature.properties.related_pois);
+        }),
+        tap(() => this._updateMap()),
+      )
+      .subscribe(() => {
+        this._fitView(this._selectedFeature$.value.getGeometry().getExtent(), {
+          padding: this._padding$.value,
+          duration: zoomDuration,
+        });
       });
 
-    if (!this.startView) this.startView = [10.4147, 43.7118, 9];
-
-    this._view = new View({
-      center: this._mapService.coordsFromLonLat([
-        this.startView[0],
-        this.startView[1],
-      ]),
-      zoom: this.startView[2],
-      maxZoom: DEF_MAP_MAX_ZOOM,
-      minZoom: DEF_MAP_MIN_ZOOM,
-      projection: 'EPSG:3857',
-      constrainOnlyCenter: true,
-      extent: this._mapService.extentFromLonLat([-180, -85, 180, 85]),
+    this._confTHEME$.pipe(take(2)).subscribe(theme => {
+      this._defaultFeatureColor = theme.defaultFeatureColor;
     });
 
-    let interactions = null;
-    if (this.static) {
-      interactions = defaultInteractions({
-        doubleClickZoom: false,
-        // dragAndDrop: false,
-        dragPan: false,
-        // keyboardPan: false,
-        // keyboardZoom: false,
-        mouseWheelZoom: false,
-        // pointer: false,
-        // select: false
-        pinchRotate: false,
+    this._confMap$
+      .pipe(
+        filter(f => f != null),
+        take(1),
+      )
+      .subscribe((map: IMAP) => {
+        this._zone.run(() => this._initMap(map));
       });
+  }
+
+  ngOnDestroy(): void {
+    this._updateMapSub.unsubscribe();
+  }
+
+  private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
+    if (optOptions == null) {
+      optOptions = {
+        duration: zoomDuration,
+        maxZoom: this._view.getZoom(),
+      };
+    }
+    this._view.fit(geometryOrExtent, optOptions);
+  }
+  private _updateMap() {
+    for (const layer of this._dataLayers) {
+      layer.changed();
+    }
+  }
+  private async _initMap(map: IMAP) {
+    this._view = new View({
+      center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
+      zoom: map.defZoom,
+      maxZoom: map.maxZoom,
+      minZoom: map.minZoom,
+      projection,
+      constrainOnlyCenter: true,
+      extent: this._mapService.extentFromLonLat(map.bbox ?? initExtent),
+      padding: this._padding$.value || undefined,
+    });
+
+    if (map.maxZoom) {
+      this._maxZoom = map.maxZoom;
+    }
+    if (map.minZoom) {
+      this._minZoom = map.minZoom;
+    }
+    if (map.defZoom) {
+      this._view.setZoom(map.defZoom);
+      this._defZoom = map.defZoom;
     }
 
+    const baseLayers: Array<Layer> = this._initializeBaseLayers();
+    this._dataLayers = await this._initializeDataLayers(map);
+    const interactions: Collection<Interaction> = this._initializeMapInteractions(this._dataLayers);
+
     this._map = new Map({
-      target: this.mapDiv.nativeElement,
+      target: this.mapContainer.nativeElement,
       view: this._view,
-      controls: [],
+      controls: [
+        new ZoomControl({
+          target: this.zoomContainer.nativeElement,
+        }),
+        new ScaleLineControl({
+          units: scaleUnits,
+          minWidth: scaleMinWidth,
+          target: this.scaleLineContainer.nativeElement,
+        }),
+      ],
+      layers: [...baseLayers, ...this._dataLayers],
       interactions,
       moveTolerance: 3,
     });
 
-    this._map.addLayer(
-      new TileLayer({
-        source: this._initializeBaseSource(),
-        visible: true,
-        zIndex: 1,
-      })
-    );
-
-    this.isRecording = this._geolocationService.recording;
-
-    //TODO: figure out why this must be called inside a timeout
-    setTimeout(() => {
-      this._map.updateSize();
-    }, 0);
-
-    //TODO: test for ensure presence of map
-    this.timer = setInterval(() => {
-      if (this.static) {
-        if (
-          this._track.registeredTrack &&
-          this._track.registeredTrack.geojson
-        ) {
-          this.centerToTrack = true;
-          this.drawTrack(this._track.registeredTrack.geojson);
-        }
+    this._selectInteraction.on('select', async (event: SelectEvent) => {
+      const clickedFeature = event?.selected?.[0] ?? undefined;
+      const clickedFeatureId: number = clickedFeature?.getProperties()?.id ?? undefined;
+      if (clickedFeatureId > -1) {
+        this.featureClick.emit(clickedFeatureId);
       }
-      this._map.updateSize();
-    }, 1000);
-
-    this._map.on('click', (evt) => {
-      this._mapClick(evt);
     });
 
-    if (!this.static) {
-      this._map.on('postrender', () => {
-        const degree =
-          (this._map.getView().getRotation() / (2 * Math.PI)) * 360;
-        if (degree != this.mapDegrees) {
-          this.rotate.emit(degree);
-        }
-        this.mapDegrees = degree;
-      });
-      this._map.on('moveend', () => {
-        this.move.emit({
-          boundingbox: this._mapService.extentToLonLat(
-            this._map.getView().calculateExtent(this._map.getSize())
-          ),
-          zoom: this._view.getZoom(),
-        });
-        if (
-          [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
-            this.locationState
-          ) !== -1 &&
-          this._location?.latitude &&
-          this._location?.longitude
-        ) {
-          const centerCoordinates: Coordinate = this._mapService.coordsToLonLat(
-            this._view.getCenter()
-          );
-
-          if (
-            this._mapService.getFixedDistance(
-              new CLocation(centerCoordinates[0], centerCoordinates[1]),
-              this._location,
-              this._view.getResolution()
-            ) > 30
-          )
-            this.locationState = EMapLocationState.ACTIVE;
-        }
-      });
-
-      if (this.registering) {
-        this._geolocationService.start();
-        this.locationState = EMapLocationState.FOLLOW;
-        this._centerMapToLocation();
-      }
-
-      this._geolocationService.onLocationChange.subscribe((location) => {
-        this._location = location;
-        this.animateLocation(this._location);
-
-        if (
-          [EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(
-            this.locationState
-          ) !== -1
-        )
-          this._centerMapToLocation();
-      });
-    }
-  }
-
-  ngOnDestroy() {
-    clearInterval(this.timer);
-    this._destroyer.next(true);
-  }
-
-  // isRecording() {
-  //   return this.geolocationService.recording;
-  // }
-
-  /**
-   * Draw a track in the map, remove a prevoius track
-   *
-   * @param geojson geojson of the track
-   */
-  async drawTrack(trackgeojson: any) {
-    const geojson: any = this.getGeoJson(trackgeojson);
-    const features = new GeoJSON({
-      featureProjection: 'EPSG:3857',
-    }).readFeatures(geojson);
-    if (!this._track.layer) {
-      this._track.layer = new VectorLayer({
-        source: new VectorSource({
-          format: new GeoJSON(),
-          features,
-        }),
-        style: () => {
-          return this._getLineStyle('#CA1551');
-        },
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: TRACKLAYERZINDEX,
-      });
-
-    } else {
-      this._track.layer.getSource().clear();
-      this._track.layer.getSource().addFeatures(features);
-    }
-
-    this._track.markerslayer = this._createLayer(this._track.markerslayer, TRACKMARKERLAYERZINDEX);
-    this._track.markerslayer.getSource().clear();
-
-    if (!this.static) {
-      const startmark = await this._createStartTrackIcon(trackgeojson,);
-      this._addIconToLayer(this._track.markerslayer, startmark.marker.icon);
-       if (!this.isCircular(trackgeojson) && !this.hideEndMarker) {
-        const endmark = await this._createEndTrackIcon(trackgeojson,);
-        this._addIconToLayer(this._track.markerslayer, endmark.marker.icon);
-      }
-    }
-
-    try {
-      this._map.addLayer(this._track.layer);
-      this._map.addLayer(this._track.markerslayer);
-      console.log("added layers");
-    } catch (e) { }
-    if (this.centerToTrack) {
-      this._centerMapToTrack();
-    }
-    //}
-  }
-
-  private isCircular(trackgeojson): boolean {
-    let coordinates = trackgeojson.coordinates;
-    if (!coordinates) {
-      coordinates = trackgeojson.geometry.coordinates;
-    }
-    let ret = Math.abs(coordinates[coordinates.length - 1][0] - coordinates[0][0]) < CIRCULARTOLERANCE;
-    ret = ret && ((coordinates[coordinates.length - 1][1] - coordinates[0][1]) < CIRCULARTOLERANCE);
-    return ret;
-  }
-
-  public orientNorth() {
-    this._view.animate({
-      duration: DEF_MAP_ROTATION_DURATION,
-      rotation: 0,
+    this._map.on('pointerdrag', () => {
+      this._map.getTargetElement().style.cursor = 'grabbing';
     });
-  }
 
-  deleteTrack() {
-    if (this._map && this._track.layer) {
-      this._map.removeLayer(this._track.layer);
-      this._map.removeLayer(this._track.markerslayer);
-    }
-    this._track.registeredTrack = null;
-  }
-
-  /**
-   * Move the location icon to the specified new location
-   *
-   * @param location the new location
-   */
-  animateLocation(location?: ILocation) {
-    if (typeof location?.accuracy === 'number' && location.accuracy >= 0)
-      this._locationAnimationState.goalAccuracy = location.accuracy;
-
-    if (location?.latitude && location?.longitude)
-      this._locationAnimationState.goalLocation = location;
-
-    if (!this._locationIcon.layer) this._setLocation(location);
-    else {
-      this._locationAnimationState.startTime = Date.now();
-      const coordinates: Coordinate = this._mapService.coordsToLonLat(
-        this._locationIcon.point.getCoordinates()
-      );
-      this._locationAnimationState.startLocation = new CLocation(
-        coordinates[0],
-        coordinates[1],
-        undefined,
-        this._locationIcon.circle.getRadius()
-      );
-      if (!this._locationAnimationState.animating) {
-        this._locationAnimationState.animating = true;
-      }
-
-      this._map.once('postrender', () => {
-        this._animateLocation();
-      });
-    }
-    this._updateLocationLayer();
-  }
-
-  /**
-   * Make the map follow the location icon
-   */
-  btnLocationClick(): void {
-    if (this.locationState === EMapLocationState.FOLLOW) {
-      this.locationState = EMapLocationState.ACTIVE;
-    } else {
-      this.locationState = EMapLocationState.FOLLOW;
-      this._centerMapToLocation();
-    }
-  }
-
-  recBtnMove(val) {
-    this.moveBtn.emit(val);
-  }
-
-  recBtnUnlocked(val) {
-    this.showRecBtn = false;
-    this.unlocked.emit(val);
-  }
-
-  reset(){
-    this.showRecBtn = true;
-  }
-
-  private getGeoJson(trackgeojson: any): any {
-    if (trackgeojson?.geoJson) {
-      return trackgeojson.geoJson;
-    }
-    if (trackgeojson?.geometry) {
-      return trackgeojson.geometry;
-    }
-    if (trackgeojson?._geometry) {
-      return trackgeojson._geometry;
-    }
-    return trackgeojson;
-  }
-
-  private _getLineStyle(color?: string): Array<Style> {
-    const style: Array<Style> = [],
-      selected: boolean = false;
-
-    if (!color) color = '255, 177, 0'; // this._featuresService.color(id),
-    if (color[0] === '#') {
-      color =
-        parseInt(color.substring(1, 3), 16) +
-        ', ' +
-        parseInt(color.substring(3, 5), 16) +
-        ', ' +
-        parseInt(color.substring(5, 7), 16);
-    }
-    const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
-      strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
-      lineDash: Array<number> = [], // this._featuresService.lineDash(id),
-      lineCap: CanvasLineCap = 'round', // this._featuresService.lineCap(id),
-      currentZoom: number = this._view.getZoom();
-
-    color = 'rgba(' + color + ',' + strokeOpacity + ')';
-
-    // if (
-    //   ("" + this._selectedFeatureId === "" + id ||
-    //     "" + this._hoveredFeatureId === "" + id) &&
-    //   !forceDeselect
-    // ) {
-    //   selected = true;
-    //   strokeWidth = useWmtStyle ? strokeWidth : Math.min(5, strokeWidth + 2);
-    //   strokeOpacity = useWmtStyle
-    //     ? strokeOpacity
-    //     : Math.min(1, strokeOpacity + 0.1);
-    //   if (!useWmtStyle) color = this._themeService.getSelectColor();
-    // }
-
-    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
-
-    if (selected) {
-      style.push(
-        new Style({
-          stroke: new Stroke({
-            color: 'rgba(226, 249, 0, 0.6)',
-            width: 10,
-          }),
-          zIndex: zIndex + 5,
-        })
-      );
-    }
-
-    style.push(
-      new Style({
-        stroke: new Stroke({
-          color: 'rgba(255, 255, 255, 0.9)',
-          width: strokeWidth * 2,
-        }),
-        zIndex: zIndex + 1,
-      })
-    );
-
-    style.push(
-      new Style({
-        stroke: new Stroke({
-          color,
-          width: strokeWidth,
-          lineDash,
-          lineCap,
-        }),
-        zIndex: zIndex + 2,
-      })
-    );
-
-    return style;
-  }
-
-  /**
-   * Center the current map view to the current physical location
-   */
-  private _centerMapToLocation() {
-    if (this._location) {
-      this._view.animate({
-        duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
-        center: this._mapService.coordsFromLonLat([
-          this._location.longitude,
-          this._location.latitude,
-        ]),
-        zoom:
-          this._view.getZoom() >= DEF_MAP_MAX_CENTER_ZOOM
-            ? this._view.getZoom()
-            : DEF_MAP_MAX_CENTER_ZOOM,
-      });
-    }
-  }
-
-  /**
-   * Set the current map view to a specific bounding box
-   */
-  private _centerMapToBoundingBox(boundingbox) {
-    const latlon = this._mapService.extentFromLonLat(boundingbox);
-    this._view.fit(latlon, {
-      duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
-      maxZoom: DEF_MAP_MAX_ZOOM,
-      padding: [50, 50, 50, 50],
+    this._map.on('moveend', () => {
+      this._map.getTargetElement().style.cursor = 'grab';
     });
-  }
 
-  /**
-   * Center the current map view to the current physical location
-   */
-  private _centerMapToTrack() {
-    if (this._track.layer) {
-      const verticalPadding =
-        !this._height || this._height > 500 ? 120 : this._height * 0.1;
-
-      const padding = [
-        verticalPadding + this._topPadding,
-        this._rightPadding > 0
-          ? this._rightPadding
-          : Math.min(Math.max(this._map.getSize()[0] * 0.1, 10), 20),
-        verticalPadding + this._bottomPadding,
-        this._rightPadding > 0
-          ? this._rightPadding
-          : Math.min(Math.max(this._map.getSize()[0] * 0.1, 10), 20),
-      ];
-
-      this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: padding,
-        duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
-      });
-    }
-  }
-
-  /**
-   * Initialize the base source of the map
-   *
-   * @returns the XYZ source to use
-   */
-  private _initializeBaseSource() {
-    return new XYZ({
-      maxZoom: DEF_MAP_MAX_ZOOM,
-      minZoom: DEF_MAP_MIN_ZOOM,
-      tileLoadFunction: (tile: any, url: string) => {
-        const coords = this._tilesService.getCoordsFromUr(url);
-
-        this._tilesService
-          .getTile(coords, this.useCache)
-          .then((tileString: string) => {
-            tile.getImage().src = tileString;
-          })
-          .catch(() => {
-            tile.getImage().src = url;
-          });
-      },
-      tileUrlFunction: (c) => {
-        return this._tilesService.getTileFromWeb(c);
-      },
-      projection: 'EPSG:3857',
-      tileSize: [256, 256],
-    });
-  }
-
-  /**
-   * Handle the location animation
-   */
-  private _animateLocation(): void {
-    if (
-      !this._locationAnimationState.startTime ||
-      !this._locationAnimationState.startLocation
-    ) {
-      if (this._locationAnimationState.goalLocation) {
-        this._setLocation(this._locationAnimationState.goalLocation);
-      } else if (
-        typeof this._locationAnimationState.goalAccuracy === 'number'
-      ) {
-        this._setLocationAccuracy(this._locationAnimationState.goalAccuracy);
-      }
-      this._stopLocationAnimation();
-    } else if (
-      !this._locationAnimationState.goalLocation &&
-      typeof this._locationAnimationState.goalAccuracy !== 'number'
-    ) {
-      this._stopLocationAnimation();
-    } else {
-      const delta: number =
-        Math.min(Date.now() - this._locationAnimationState.startTime, 500) /
-        500;
-      if (delta < 1) {
-        if (this._locationAnimationState.goalLocation) {
-          const deltaLongitude: number =
-            this._locationAnimationState.goalLocation.longitude -
-            this._locationAnimationState.startLocation.longitude,
-            deltaLatitude: number =
-              this._locationAnimationState.goalLocation.latitude -
-              this._locationAnimationState.startLocation.latitude,
-            deltaAccuracy: number = this._locationAnimationState.goalAccuracy
-              ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : this._locationAnimationState.goalLocation.accuracy
-                ? this._locationAnimationState.goalLocation.accuracy -
-                this._locationAnimationState.startLocation.accuracy
-                : 0;
-
-          if (
-            deltaLongitude === 0 &&
-            deltaLatitude === 0 &&
-            deltaAccuracy === 0
-          ) {
-            // No movement needed
-            this._stopLocationAnimation();
-            this._updateLocationLayer();
-          } else if (deltaLongitude === 0 && deltaLatitude === 0) {
-            // Update accuracy
-            this._locationAnimationState.goalAccuracy = this
-              ._locationAnimationState.goalAccuracy
-              ? this._locationAnimationState.goalAccuracy
-              : this._locationAnimationState.goalLocation.accuracy;
-            this._locationAnimationState.goalLocation = undefined;
-            this._setLocationAccuracy(
-              this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
-            );
-          } else {
-            // Update location
-            const newLocation: CLocation = new CLocation(
-              this._locationAnimationState.startLocation.longitude +
-              delta * deltaLongitude,
-              this._locationAnimationState.startLocation.latitude +
-              delta * deltaLatitude,
-              undefined,
-              this._locationAnimationState.startLocation.accuracy +
-              delta * deltaAccuracy
-            );
-            this._setLocation(newLocation);
-          }
+    this._map.on('pointermove', (event: MapBrowserEvent) => {
+      try {
+        const features: Array<FeatureLike> = this._map.getFeaturesAtPixel(event.pixel);
+        if (features.length) {
+          this._map.getTargetElement().style.cursor = 'pointer';
         } else {
-          const deltaAccuracy: number =
-            typeof this._locationAnimationState.startLocation.accuracy ===
-              'number'
-              ? this._locationAnimationState.goalAccuracy -
-              this._locationAnimationState.startLocation.accuracy
-              : 0;
-
-          if (deltaAccuracy === 0) {
-            this._stopLocationAnimation();
-            this._updateLocationLayer();
-            return;
-          }
-
-          this._setLocationAccuracy(
-            this._locationAnimationState.startLocation.accuracy +
-            delta * deltaAccuracy
-          );
+          this._map.getTargetElement().style.cursor = 'grab';
         }
-        this._map.once('postrender', () => {
-          this._animateLocation();
-        });
-      } else this._stopLocationAnimation();
-
-      this._updateLocationLayer();
-    }
-  }
-
-  /**
-   * Force the location layer update
-   */
-  private _updateLocationLayer(): void {
-    this._locationIcon?.location?.changed();
-    this._locationIcon?.accuracy?.changed();
-    this._locationIcon?.point?.changed();
-    this._locationIcon?.circle?.changed();
-    this._locationIcon?.layer?.changed();
-    this._map?.render();
-  }
-
-  /**
-   * Change the accuracy around the location visible in the map
-   *
-   * @param accuracy the accuracy of the position
-   */
-  private _setLocationAccuracy(accuracy: number): void {
-    if (!this._locationIcon.accuracy) return;
-    else {
-      if (typeof accuracy === 'number' && !Number.isNaN(accuracy))
-        this._locationIcon.circle.setRadius(accuracy);
-      else this._locationIcon.circle.setRadius(DEF_LOCATION_ACCURACY);
-    }
-  }
-
-  /**
-   * Perform the needed actions to stop the current location animation
-   */
-  private _stopLocationAnimation(): void {
-    this._locationAnimationState.animating = false;
-    this._locationAnimationState.startLocation = undefined;
-    this._locationAnimationState.startTime = undefined;
-    this._locationAnimationState.goalAccuracy = undefined;
-    this._locationAnimationState.goalLocation = undefined;
-  }
-
-  /**
-   * Show in the map the current location using the blue circle and the semi-transparent accuracy circle
-   *
-   * @param location the location
-   */
-  private _setLocation(location: ILocation): void {
-    const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
-      location?.longitude,
-      location?.latitude,
-    ]),
-      accuracy: number =
-        typeof location !== 'undefined' && typeof location.accuracy === 'number'
-          ? location.accuracy
-          : DEF_LOCATION_ACCURACY;
-
-    // Handle point
-    if (!this._locationIcon.location) {
-      this._locationIcon.location = new Feature();
-      this._locationIcon.point = new Point(mapLocation);
-      this._locationIcon.location.setGeometry(this._locationIcon.point);
-      this._locationIcon.location.setStyle(this._locationIconStyle);
-    } else this._locationIcon.point.setCoordinates(mapLocation);
-
-    // Handle accuracy
-    if (!this._locationIcon.accuracy) {
-      this._locationIcon.accuracy = new Feature();
-      this._locationIcon.circle = new Circle(mapLocation, accuracy);
-      this._locationIcon.accuracy.setGeometry(this._locationIcon.circle);
-    } else this._locationIcon.circle.setCenterAndRadius(mapLocation, accuracy);
-
-    if (!this._locationIcon.layer) {
-      this._locationIcon.layer = new VectorLayer({
-        source: new VectorSource({
-          features: [this._locationIcon.location, this._locationIcon.accuracy],
-        }),
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex: Number.MAX_SAFE_INTEGER,
-      });
-    }
-    try {
-      this._map.addLayer(this._locationIcon.layer);
-    } catch (e) { }
-  }
-
-  private _idOfClusterMarker(ig: IGeojsonCluster): string {
-    return ig.properties.ids.sort((a, b) => a - b).join('-');
-  }
-
-  private _selectedPoi: {
-    lastSelectedPoi?: IGeojsonPoi;
-    newSelectedPoi?: IGeojsonPoi;
-    marker?: PoiMarker;
-    style?: Style;
-    animating?;
-    startTime?;
-  } = {};
-  private async _selectedPoiMarker(poi?: IGeojsonPoi) {
-    this._slectedPoiLayer = this._createLayer(
-      this._slectedPoiLayer,
-      SELECTEDPOILAYERZINDEX
-    );
-
-    let markerGeometry = null;
-    if (this._selectedPoi.marker) {
-      this._removeIconFromLayer(
-        this._slectedPoiLayer,
-        this._selectedPoi.marker.icon
-      );
-      markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
-    }
-    poi.isSmall = false;
-    this._selectedPoi.newSelectedPoi = poi;
-    const { marker, style } = await this._createPoiCanvasIcon(
-      poi,
-      markerGeometry
-    );
-    this._selectedPoi.marker = marker;
-    this._selectedPoi.style = style;
-    this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-    if (!this._selectedPoi.lastSelectedPoi) {
-      //insert
-      //this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-      this._selectedPoi.lastSelectedPoi = poi;
-    } else {
-      //animate
-      this._selectedPoiStartAnimation();
-    }
-  }
-
-  _selectedPoiMove(event) {
-    if (this._selectedPoi.animating) {
-      const time = event.frameState.time;
-      const elapsedTime = time - this._selectedPoi.startTime;
-      const distance = elapsedTime / SELECTEDPOIANIMATIONDURATION;
-
-      if (distance > 1) {
-        this._selectedPoistopAnimation();
-        return;
+      } catch (e) {
+        this._map.getTargetElement().style.cursor = 'pointer';
       }
+    });
+    this._map.on('click', event => {
+      stopPropagation(event);
+      try {
+        const poiFeature = this._getNearestFeatureOfLayer(this._poisLayer, event);
+        if (poiFeature) {
+          const currentID = +poiFeature.getId() || -1;
+          this.poiClick.emit(currentID);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    });
 
-      const newPositionCoords = this.newAnimationPosition(
-        this._selectedPoi.lastSelectedPoi.geometry.coordinates,
-        this._selectedPoi.newSelectedPoi.geometry.coordinates,
-        distance
-      );
+    this._mapInit$.next(true);
+  }
 
-      this._selectedPoi.marker.icon.setGeometry(
-        this._getPoint(newPositionCoords)
-      );
-
-      // this._selectedPoi.marker.icon.setGeometry();
-      // const vectorContext = getVectorContext(event);
-      // vectorContext.setStyle(this._selectedPoi.style);
-      // vectorContext.drawGeometry(this._selectedPoi.position);
-      // tell OpenLayers to continue the postrender animation
-      this._map.render();
+  private async _selectCurrentPoi(poiMarker: IPoiMarker) {
+    if (this._selectedPoiMarker != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
     }
+    this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, 9999);
+    this._selectedPoiMarker = poiMarker;
+    const {marker} = await this._createPoiCanvasIcon(poiMarker.poi, null, true);
+    this._addIconToLayer(this._selectedPoiLayer, marker.icon);
   }
-
-  newAnimationPosition(coordStart, coordEnd, distance) {
-    const deltaX = (coordEnd[0] - coordStart[0]) * distance;
-    const deltaY = (coordEnd[1] - coordStart[1]) * distance;
-
-    return [coordStart[0] + deltaX, coordStart[1] + deltaY];
-  }
-
-  _selectedPoiStartAnimation() {
-    this._selectedPoi.animating = true;
-    this._selectedPoi.startTime = Date.now();
-    this._slectedPoiLayer.on('postrender', (event) => {
-      this._selectedPoiMove(event);
-    });
-    // this._selectedPoi.marker.icon.setGeometry(null);
-  }
-
-  _getPoint(coordinates) {
-    const position = fromLonLat(coordinates);
-    return new Point([position[0], position[1]]);
-  }
-
-  _selectedPoistopAnimation() {
-    this._selectedPoi.animating = false;
-
-    this._selectedPoi.marker.icon.setGeometry(
-      this._getPoint(this._selectedPoi.newSelectedPoi.geometry.coordinates)
-    );
-
-    this._slectedPoiLayer.un('postrender', (event) => {
-      this._selectedPoiMove(event);
-    });
-    this._selectedPoi.lastSelectedPoi = this._selectedPoi.newSelectedPoi;
-  }
-
-  private async _addPoisMarkers(poiCollection: Array<IGeojsonPoi>) {
-    this._poisLayer = this._createLayer(this._poisLayer, POISLAYERZINDEX);
-
+  private async _addPoisMarkers(poiCollection: Array<IGeojsonFeature>) {
+    this._poisLayer = this._createLayer(this._poisLayer, 9998);
+    for (let i = this._poiMarkers?.length - 1; i >= 0; i--) {
+      const ov = this._poiMarkers[i];
+      if (!poiCollection?.find(x => x.properties.id + '' === ov.id)) {
+        this._removeIconFromLayer(this._poisLayer, ov.icon);
+        this._poiMarkers.splice(i, 1);
+      }
+    }
     if (poiCollection) {
-      for (let i = this._poiMarkers.length - 1; i >= 0; i--) {
-        const ov = this._poiMarkers[i];
-        if (
-          !poiCollection.find(
-            (x) => x.properties.id + '' == ov.id && ov.poi.isSmall == x.isSmall
-          )
-        ) {
-          this._removeIconFromLayer(this._poisLayer, ov.icon);
-          this._poiMarkers.splice(i, 1);
-        }
-      }
       for (const poi of poiCollection) {
         if (
-          !this._poiMarkers.find(
-            (x) =>
-              x.id == poi.properties.id + '' && poi.isSmall == x.poi.isSmall
+          !this._poiMarkers?.find(
+            x => x.id === poi.properties.id + '' && poi.properties?.feature_image?.sizes,
           )
         ) {
-          const { marker } = await this._createPoiCanvasIcon(poi);
+          const {marker} = await this._createPoiCanvasIcon(poi);
           this._addIconToLayer(this._poisLayer, marker.icon);
           this._poiMarkers.push(marker);
         }
@@ -1140,101 +384,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  private async _addClusterMarkers(values: Array<IGeojsonCluster>) {
-    let transparent: boolean = !!this._track.registeredTrack;
-    this._clusterLayer = this._createLayer(
-      this._clusterLayer,
-      CLUSTERLAYERZINDEX
-    );
-    const reset = this._lastClusterMarkerTransparency != transparent;
-
-    if (values) {
-      for (let i = this._clusterMarkers.length - 1; i >= 0; i--) {
-        const ov = this._clusterMarkers[i];
-        if (
-          !values.find(
-            (x) =>
-              this._idOfClusterMarker(x) == this._idOfClusterMarker(ov.cluster)
-          ) ||
-          reset
-        ) {
-          this._removeIconFromLayer(this._clusterLayer, ov.icon);
-          this._clusterMarkers.splice(i, 1);
-        }
-      }
-
-      for (const cluster of values) {
-        if (
-          !this._clusterMarkers.find(
-            (x) =>
-              this._idOfClusterMarker(x.cluster) ==
-              this._idOfClusterMarker(cluster)
-          )
-        ) {
-          const icon = await this._createClusterCanvasIcon(
-            cluster,
-            transparent
-          );
-          this._addIconToLayer(this._clusterLayer, icon.icon);
-          this._clusterMarkers.push(icon);
-        }
-      }
-    }
-
-    this._lastClusterMarkerTransparency = transparent;
-  }
-
-  private async _createStartTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
-    const img = await this._createStartTrackImage(trackgeojson);
-
-    let coordinate = trackgeojson?.geometry?.coordinates[0] ? trackgeojson?.geometry?.coordinates[0] : trackgeojson?.coordinates[0];
-    const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry : coordinate,
-      img,
-      this._markerService.trackMarkerSize,
-      false,
-      [0.45,1]
-    );
-    return {
-      marker: {
-        icon: iconFeature,
-        id: '',
-      },
-      style,
-    };
-  }
-
-  private async _createEndTrackIcon(trackgeojson, geometry = null): Promise<{ marker: iMarker; style: Style }> {
-    const img = await this._createEndTrackImage(trackgeojson);
-    const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry : trackgeojson.coordinates[trackgeojson.coordinates.length - 1],
-      img,
-      this._markerService.trackMarkerSize,
-      false,
-      [0.20,0.95]
-    );
-    return {
-      marker: {
-        icon: iconFeature,
-        id: '',
-      },
-      style,
-    };
-  }
   private async _createPoiCanvasIcon(
-    poi: IGeojsonPoi,
-    geometry = null
-  ): Promise<{ marker: PoiMarker; style: Style }> {
-    const img = await this._createPoiCavasImage(poi);
-    const { iconFeature, style } = await this._createIconFeature(
-      geometry ? geometry :
-        [
-          poi.geometry.coordinates[0] as number,
-          poi.geometry.coordinates[1] as number,
-        ],
+    poi: any,
+    geometry = null,
+    selected = false,
+  ): Promise<{marker: IPoiMarker; style: Style}> {
+    const img = await this._createPoiCavasImage(poi, selected);
+    const {iconFeature, style} = await this._createIconFeature(
+      geometry
+        ? geometry
+        : [poi.geometry.coordinates[0] as number, poi.geometry.coordinates[1] as number],
       img,
-      this._markerService.poiMarkerSize
+      46,
     );
+    iconFeature.setId(poi.properties.id);
     return {
       marker: {
         poi,
@@ -1244,52 +407,33 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       style,
     };
   }
-
-  private async _createClusterCanvasIcon(
-    cluster: IGeojsonCluster,
-    transparent: boolean = false
-  ): Promise<ClusterMarker> {
-    const img = await this._createClusterCavasImage(cluster);
-
-    const { iconFeature } = await this._createIconFeature(
-      [
-        cluster.geometry.coordinates[0] as number,
-        cluster.geometry.coordinates[1] as number,
-      ]
-      ,
-      img,
-      this._markerService.clusterMarkerSize,
-      transparent
-    );
-
-    return {
-      cluster,
-      icon: iconFeature,
-      // component: componentRef,
-      id: this._idOfClusterMarker(cluster),
-    };
+  private _removePoiLayer() {
+    this._poisLayer.getSource().clear();
+    if (this._elevationChartLayer != null) {
+      this._elevationChartLayer.getSource().clear();
+    }
+    this._poiMarkers = [];
   }
-
   private async _createIconFeature(
     coordinates: number[],
     img: HTMLImageElement,
     size: number,
     transparent: boolean = false,
-    anchor: number[] = [0.5, 0.5]
-  ): Promise<{ iconFeature: Feature<Geometry>; style: Style }> {
-    if (!coordinates) return;
-    const position = fromLonLat([
-      coordinates[0] as number,
-      coordinates[1] as number,
-    ]);
+    anchor: number[] = [0.5, 0.5],
+  ): Promise<{iconFeature: Feature<Geometry>; style: Style}> {
+    if (!coordinates) {
+      return;
+    }
+    const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
 
     const iconFeature = new Feature({
+      type: 'icon',
       geometry: new Point([position[0], position[1]]),
     });
     const style = new Style({
       image: new Icon({
         anchor,
-        img: img,
+        img,
         imgSize: [size, size],
         opacity: transparent ? 0.5 : 1,
       }),
@@ -1297,68 +441,66 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     iconFeature.setStyle(style);
 
-    return { iconFeature, style };
+    return {iconFeature, style};
   }
 
-  private async _createClusterCavasImage(
-    cluster: IGeojsonCluster
-  ): Promise<HTMLImageElement> {
-    let isFavourite = false;
-    if (cluster.properties.ids.length == 1) {
-      isFavourite = await this._geohubService.isFavouriteTrack(
-        cluster.properties.ids[0]
-      );
-    }
-    const htmlTextCanvas =
-      await this._markerService.createClusterMarkerHtmlForCanvas(
-        cluster,
-        isFavourite
-      );
-
-    return this._createCanvasForHtml(
-      htmlTextCanvas,
-      this._markerService.clusterMarkerSize
-    );
-  }
-
-  private async _createStartTrackImage(
-    trackgeojson: any
-  ): Promise<HTMLImageElement> {
-    const htmlTextCanvas =
-      await this._markerService.createStartTrackMarkerHtmlForCanvas(trackgeojson);
-    return this._createCanvasForHtml(
-      htmlTextCanvas,
-      this._markerService.poiMarkerSize
-    );
-  }
-
-  private async _createEndTrackImage(
-    trackgeojson: any
-  ): Promise<HTMLImageElement> {
-    const htmlTextCanvas =
-      await this._markerService.createEndTrackMarkerHtmlForCanvas(trackgeojson);
-    return this._createCanvasForHtml(
-      htmlTextCanvas,
-      this._markerService.poiMarkerSize
-    );
-  }
   private async _createPoiCavasImage(
-    poi: IGeojsonPoi
+    poi: IGeojsonFeature,
+    selected = false,
   ): Promise<HTMLImageElement> {
-    const htmlTextCanvas =
-      await this._markerService.createPoiMarkerHtmlForCanvas(poi);
-    return this._createCanvasForHtml(
-      htmlTextCanvas,
-      this._markerService.poiMarkerSize
-    );
+    const htmlTextCanvas = await this._createPoiMarkerHtmlForCanvas(poi, selected);
+    return this._createCanvasForHtml(htmlTextCanvas, 46);
   }
 
-  private async _createCanvasForHtml(
-    html: string,
-    size: number
-  ): Promise<HTMLImageElement> {
-    const canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+  private async _createPoiMarkerHtmlForCanvas(
+    value: IGeojsonFeature,
+    selected = false,
+  ): Promise<string> {
+    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
+      value.properties?.feature_image?.sizes['108x137'],
+    );
+
+    let html = `
+    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
+
+    html += `
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
+          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="${
+      this._defaultFeatureColor
+    }"/>
+          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
+          <defs>
+            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
+              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
+              </image>
+            </pattern>
+          </defs>
+        </svg>`;
+    html += ` </div>`;
+
+    return html;
+  }
+
+  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
+    const opt = {};
+    const data = await fetch(url, opt);
+    const blob = await data.blob();
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          resolve(base64data);
+        };
+      } catch (error) {
+        resolve('');
+      }
+    });
+  }
+
+  private async _createCanvasForHtml(html: string, size: number): Promise<HTMLImageElement> {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 
     const canvasHtml =
       `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
@@ -1369,21 +511,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       '</foreignObject>' +
       '</svg>';
 
-    const DOMURL = window.URL; // || window.webkitURL || window;
+    const domUrl = window.URL; // || window.webkitURL || window;
 
     const img = new Image();
     const svg = new Blob([canvasHtml], {
       type: 'image/svg+xml', //;charset=utf-8',
     });
-    const url = DOMURL.createObjectURL(svg);
+    const url = domUrl.createObjectURL(svg);
 
     img.onload = () => {
-      ctx.drawImage(img, 0, 0);
-      DOMURL.revokeObjectURL(url);
+      domUrl.revokeObjectURL(url);
     };
-
     img.src = url;
-    img.crossOrigin = 'Anonymous';
 
     return img;
   }
@@ -1404,7 +543,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
 
   private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
-    const source = layer.getSource();
     layer.getSource().addFeature(icon);
   }
 
@@ -1413,44 +551,512 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (source.hasFeature(icon)) {
       source.removeFeature(icon);
     }
-    // this._map.removeOverlay(cm.icon);
-    //cm.component.destroy();
   }
 
-  private _mapClick(evt: MapBrowserEvent<UIEvent>) {
-    const clusterFeature = this._getNearestFeatureOfLayer(
-      this._clusterLayer,
-      evt
-    );
-    const poiFeature = this._getNearestFeatureOfLayer(this._poisLayer, evt);
+  private _initializeBaseLayers(): Array<TileLayer> {
+    return [
+      new TileLayer({
+        source: this._initializeBaseSource(),
+        visible: true,
+        zIndex: 1,
+      }),
+    ];
+  }
 
-    const clusterMarker = this._clusterMarkers.find(
-      (x) => x.icon == clusterFeature
-    );
-    if (clusterMarker) {
-      this.clickcluster.emit(clusterMarker.cluster);
+  /**
+   * Initialize the base source of the map
+   *
+   * @returns the XYZ source to use
+   */
+  private _initializeBaseSource() {
+    return new XYZ({
+      maxZoom: this._maxZoom,
+      minZoom: 0,
+      url: 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+      projection: 'EPSG:3857',
+      tileSize: [256, 256],
+    });
+  }
+
+  /**
+   * Create the layers containing the map interactive data
+   *
+   * @returns the array of created layers
+   */
+  private async _initializeDataLayers(map: IMAP): Promise<Array<VectorTileLayer>> {
+    const vectorLayerUrl = this._confService.vectorLayerUrl;
+    const styleJson: any = {
+      version: 8,
+      name: 'tracks',
+      metadata: {'maputnik:renderer': 'ol'},
+      sources: {
+        tracks1: {
+          type: 'vector',
+          url: vectorLayerUrl,
+        },
+      },
+      sprite: '',
+      glyphs: 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
+      layers: [
+        {
+          id: 'EEA',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'EEA']],
+          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
+          paint: {
+            'line-color': 'rgba(255, 0, 218, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [0.001, 2],
+          },
+        },
+        {
+          id: 'EE',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'EE']],
+          layout: {'line-join': 'round', 'line-cap': 'round'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [0.01, 2],
+          },
+        },
+        {
+          id: 'E',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'E']],
+          layout: {'line-join': 'round', 'line-cap': 'round'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [2, 2],
+          },
+        },
+        {
+          id: 'T',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'T']],
+          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+          },
+        },
+        {
+          id: 'ref',
+          type: 'symbol',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          minzoom: 10,
+          maxzoom: 16,
+          layout: {
+            'text-field': '{ref}',
+            visibility: 'visible',
+            'symbol-placement': 'line',
+            'text-size': 12,
+            'text-allow-overlap': true,
+          },
+          paint: {'text-color': 'rgba(255, 57, 0,0.8)'},
+        },
+      ],
+      id: '63fa0rhhq',
+    };
+
+    const layers: Array<VectorTileLayer> = [];
+
+    if (styleJson.sources) {
+      this._styleJson = styleJson;
+      for (const i in styleJson.sources) {
+        layers.push(await this._initializeDataLayer(styleJson.sources[i], map));
+      }
     }
 
-    const poiMarker = this._poiMarkers.find((x) => x.icon == poiFeature);
-    console.log(
-      '------- ~ file: map.component.ts ~ line 1082 ~ _mapClick ~ poiMarker',
-      poiMarker
-    );
-    if (poiMarker) {
-      this.clickpoi.emit(poiMarker.poi);
+    return layers;
+  }
+
+  /**
+   * Initialize a specific layer with interactive data
+   *
+   * @returns the created layer
+   */
+  private async _initializeDataLayer(layerConfig: any, map: IMAP): Promise<VectorTileLayer> {
+    if (!layerConfig.url) {
+      return;
     }
 
-    if (!clusterFeature && !poiFeature) {
-      this.touch.emit();
+    const layerJson = await this._communicationService.get(layerConfig.url).toPromise();
+
+    if (!layerJson.tiles) {
+      return;
+    }
+
+    const layer = new VectorTileLayer({
+      declutter: true,
+      source: new VectorTileSource({
+        format: new MVT(),
+        urls: layerJson.tiles,
+      }),
+      style: (feature: FeatureLike) => {
+        const properties = feature.getProperties();
+        const layers: number[] = JSON.parse(properties.layers);
+        const activatedLayers: ILAYER[] = (map.layers ?? []).filter(
+          l => layers.indexOf(+l.id) > -1,
+        );
+        let featureStyle: any;
+        let featureSymbolStyle: any;
+
+        for (const layerStyle of this._styleJson.layers) {
+          if (layerStyle.id === properties.cai_scale) {
+            featureStyle = layerStyle;
+          } else if (layerStyle.type === 'symbol') {
+            featureSymbolStyle = layerStyle;
+          }
+        }
+
+        const strokeStyle: StrokeStyle = new StrokeStyle();
+
+        if (
+          activatedLayers[0] != null &&
+          activatedLayers[0].style != null &&
+          activatedLayers[0].style.color != null
+        ) {
+          // strokeStyle.setColor(featureStyle.paint['line-color']);
+          // strokeStyle.setColor(activatedLayers[0].style.color);
+          strokeStyle.setColor(activatedLayers[0].style.color);
+        } else {
+          strokeStyle.setColor(this._defaultFeatureColor);
+        }
+        if (featureStyle?.layout?.['line-cap']) {
+          strokeStyle.setLineCap(featureStyle.layout['line-cap']);
+        }
+        if (featureStyle?.layout?.['line-join']) {
+          strokeStyle.setLineJoin(featureStyle.layout['line-join']);
+        }
+        if (featureStyle?.paint?.['line-dasharray']) {
+          strokeStyle.setLineDash(featureStyle.layout['line-dasharray']);
+        }
+
+        const currentZoom: number = this._view.getZoom();
+
+        const minW = 0.1;
+        const maxW = 5;
+        const delta = (currentZoom - map.minZoom) / (map.maxZoom - map.minZoom);
+        const newWidth = minW + (maxW - minW) * delta;
+        strokeStyle.setWidth(newWidth);
+
+        let style: Style = new Style({
+          stroke: strokeStyle,
+          zIndex: 100,
+        });
+        if (this._currentLayer$.value != null) {
+          const currentIDLayer = +this._currentLayer$.value.id;
+          if (layers.indexOf(currentIDLayer) < 0) {
+            style = new Style({});
+          } else {
+            strokeStyle.setColor(this._currentLayer$.value.style.color);
+            style = new Style({
+              stroke:strokeStyle
+            });
+          }
+        }
+
+        if (
+          (!featureSymbolStyle?.minzoom || featureSymbolStyle?.minzoom <= this._view.getZoom()) &&
+          (!featureSymbolStyle?.maxzoom || featureSymbolStyle?.maxzoom >= this._view.getZoom())
+        ) {
+          // Apply symbol style
+          let text: string = '';
+          let mapping: string = featureSymbolStyle?.layout?.['text-field'];
+
+          while (mapping.length > 0) {
+            if (mapping[0] === '{') {
+              const length: number = mapping.indexOf('}') > 0 ? mapping.indexOf('}') - 1 : -1;
+
+              if (length >= 0) {
+                const property: string = mapping.substring(1, length + 1);
+                mapping = mapping.substring(length + 2);
+                text += properties?.[property] ?? '';
+              }
+            } else {
+              const length: number =
+                mapping.indexOf('{') >= 0 ? mapping.indexOf('{') : mapping.length;
+              text += mapping.substring(0, length);
+              mapping = mapping.substring(length);
+            }
+          }
+
+          if (text) {
+            const textStyle: TextStyle = new TextStyle({
+              text,
+              font: (featureSymbolStyle?.layout?.['text-size'] ?? '12') + 'px sans',
+              placement:
+                featureSymbolStyle?.layout?.['symbol-placement'] &&
+                [TextPlacement.LINE, TextPlacement.POINT].indexOf(
+                  featureSymbolStyle?.layout?.['symbol-placement'],
+                ) >= 0
+                  ? featureSymbolStyle?.layout?.['symbol-placement']
+                  : TextPlacement.LINE,
+              textBaseline: 'bottom',
+              maxAngle: Math.PI / 10,
+              fill: new FillStyle({
+                color: featureSymbolStyle?.paint?.['text-color'] ?? strokeStyle.getColor(),
+              }),
+            });
+
+            style.setText(textStyle);
+          }
+        }
+
+        if (
+          this._currentTrack$.value != null &&
+          properties.id === this._currentTrack$.value.properties.id
+        ) {
+          style.setZIndex(1000);
+          const selectedStyle = new Style({
+            stroke: new StrokeStyle({
+              width: Math.max(10, strokeStyle.getWidth() + 8),
+              color: DEF_LINE_COLOR_SELECTED,
+            }),
+            zIndex: 999,
+          });
+
+          if (style.getText()) {
+            style.getText().setStroke(
+              new StrokeStyle({
+                width: 4,
+                color: DEF_LINE_COLOR_SELECTED,
+              }),
+            );
+          }
+
+          return [style, selectedStyle];
+        } else {
+          return style;
+        }
+      },
+      minZoom: 7,
+      zIndex: 100,
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+    });
+
+    return layer;
+  }
+
+  /**
+   * Initialize the default map interactions
+   *
+   * @returns the collection of interactions
+   */
+  private _initializeMapInteractions(selectLayers: Array<Layer>): Collection<Interaction> {
+    const interactions = defaultInteractions({
+      doubleClickZoom: true,
+      dragPan: true,
+      mouseWheelZoom: true,
+      pinchRotate: false,
+      altShiftDragRotate: false,
+    });
+    this._selectInteraction = new SelectInteraction({
+      layers: selectLayers,
+      hitTolerance: 1,
+      style: null,
+    });
+
+    interactions.push(this._selectInteraction);
+
+    return interactions;
+  }
+
+  /**
+   * Return a value for the distance between the two point using a screen-fixed unit
+   *
+   * @param point1 the first location
+   * @param point2 the second location
+   */
+  private _getFixedDistance(point1: ILocation, point2: ILocation): number {
+    return (
+      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
+      this._view.getResolution()
+    );
+  }
+
+  private _drawTemporaryLocationFeature(
+    location?: ILocation,
+    track?: CGeojsonLineStringFeature,
+  ): void {
+    if (location) {
+      if (!this._elevationChartSource) {
+        this._elevationChartSource = new VectorSource({
+          format: new GeoJSON(),
+        });
+      }
+      if (!this._elevationChartLayer) {
+        this._elevationChartLayer = new VectorLayer({
+          source: this._elevationChartSource,
+          style: feature => {
+            if (feature.getGeometry().getType() === 'Point') {
+              return [
+                new Style({
+                  image: new CircleStyle({
+                    fill: new FillStyle({
+                      color: '#000',
+                    }),
+                    radius: 7,
+                    stroke: new StrokeStyle({
+                      width: 2,
+                      color: '#fff',
+                    }),
+                  }),
+                  zIndex: 100,
+                }),
+              ];
+            } else {
+              return this._getLineStyle(this._elevationChartTrack.get('color'));
+            }
+          },
+          updateWhileAnimating: false,
+          updateWhileInteracting: false,
+          zIndex: 150,
+        });
+        this._map.addLayer(this._elevationChartLayer);
+      }
+
+      if (location) {
+        const pointGeometry: Point = new Point(
+          this._mapService.coordsFromLonLat([location.longitude, location.latitude]),
+        );
+
+        if (this._elevationChartPoint) {
+          this._elevationChartPoint.setGeometry(pointGeometry);
+        } else {
+          this._elevationChartPoint = new Feature(pointGeometry);
+          this._elevationChartSource.addFeature(this._elevationChartPoint);
+        }
+
+        if (track) {
+          const trackGeometry: LineString = new LineString(
+            (track.geometry.coordinates as ILineString).map(value =>
+              this._mapService.coordsFromLonLat(value),
+            ),
+          );
+          const trackColor: string = track?.properties?.color;
+
+          if (this._elevationChartTrack) {
+            this._elevationChartTrack.setGeometry(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+          } else {
+            this._elevationChartTrack = new Feature(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+            this._elevationChartSource.addFeature(this._elevationChartTrack);
+          }
+        }
+      } else {
+        this._elevationChartPoint = undefined;
+        this._elevationChartTrack = undefined;
+        this._elevationChartSource.clear();
+      }
+
+      this._map.render();
+    } else if (this._elevationChartSource && this._map) {
+      this._elevationChartPoint = undefined;
+      this._elevationChartTrack = undefined;
+      this._elevationChartSource.clear();
+      this._map.render();
     }
   }
 
-  _getNearestFeatureOfLayer(
+  private _getLineStyle(color?: string): Array<Style> {
+    const style: Array<Style> = [];
+    const selected: boolean = false;
+
+    if (!color) {
+      color = '255, 177, 0';
+    }
+    if (color[0] === '#') {
+      color =
+        parseInt(color.substring(1, 3), 16) +
+        ', ' +
+        parseInt(color.substring(3, 5), 16) +
+        ', ' +
+        parseInt(color.substring(5, 7), 16);
+    }
+    const strokeWidth: number = 3; // this._featuresService.strokeWidth(id),
+    const strokeOpacity: number = 1; // this._featuresService.strokeOpacity(id),
+    const lineDash: Array<number> = []; // this._featuresService.lineDash(id),
+    const lineCap: CanvasLineCap = 'round'; // this._featuresService.lineCap(id),
+    color = 'rgba(' + color + ',' + strokeOpacity + ')';
+
+    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
+
+    if (selected) {
+      style.push(
+        new Style({
+          stroke: new StrokeStyle({
+            color: DEF_LINE_COLOR_SELECTED,
+            width: 10,
+          }),
+          zIndex: zIndex + 5,
+        }),
+      );
+    }
+
+    style.push(
+      new Style({
+        stroke: new StrokeStyle({
+          color: 'rgba(255, 255, 255, 0.9)',
+          width: strokeWidth * 2,
+        }),
+        zIndex: zIndex + 1,
+      }),
+    );
+
+    style.push(
+      new Style({
+        stroke: new StrokeStyle({
+          color,
+          width: strokeWidth,
+          lineDash,
+          lineCap,
+        }),
+        zIndex: zIndex + 2,
+      }),
+    );
+
+    return style;
+  }
+
+  private _getNearestFeatureOfLayer(
     layer: VectorLayer,
-    evt: MapBrowserEvent<UIEvent>
+    evt: MapBrowserEvent<UIEvent>,
   ): Feature<Geometry> {
-    const precision =
-      this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
+    const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     let nearestFeature = null;
     const features: Feature<Geometry>[] = [];
 
@@ -1459,17 +1065,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         .getSource()
         .forEachFeatureInExtent(
           buffer(
-            [
-              evt.coordinate[0],
-              evt.coordinate[1],
-              evt.coordinate[0],
-              evt.coordinate[1],
-            ],
-            precision
+            [evt.coordinate[0], evt.coordinate[1], evt.coordinate[0], evt.coordinate[1]],
+            precision,
           ),
-          (feature) => {
+          feature => {
             features.push(feature);
-          }
+          },
         );
     }
 
@@ -1480,12 +1081,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return nearestFeature;
   }
 
-  _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
+  private _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
     let ret: Feature<Geometry> = features[0];
     let minDistance = Number.MAX_VALUE;
-    features.forEach((feature) => {
+    features.forEach(feature => {
       const geom = feature.getGeometry() as Point;
-      let distance = this._distance(geom.getFlatCoordinates(), coordinate);
+      const distance = this._distance(geom.getFlatCoordinates(), coordinate);
       if (distance < minDistance) {
         minDistance = distance;
         ret = feature;
@@ -1493,96 +1094,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     });
     return ret;
   }
-
-  _distance(c1: Coordinate, c2: Coordinate) {
+  private _distance(c1: Coordinate, c2: Coordinate) {
     return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2));
-  }
-
-  private _drawTemporaryLocationFeature(
-    location?: ILocation,
-    track?: CGeojsonLineStringFeature
-  ): void {
-    if (location) {
-      if (!this._slopeChartSource) {
-        this._slopeChartSource = new VectorSource({
-          format: new GeoJSON(),
-        });
-      }
-      if (!this._slopeChartLayer) {
-        this._slopeChartLayer = new VectorLayer({
-          source: this._slopeChartSource,
-          style: (feature) => {
-            if (feature.getGeometry().getType() === 'Point') {
-              return [
-                new Style({
-                  image: new CircleStyle({
-                    fill: new Fill({
-                      color: '#000',
-                    }),
-                    radius: 7,
-                    stroke: new Stroke({
-                      width: 2,
-                      color: '#fff',
-                    }),
-                  }),
-                  zIndex: 100,
-                }),
-              ];
-            } else {
-              return this._getLineStyle(this._slopeChartTrack.get('color'));
-            }
-          },
-          updateWhileAnimating: false,
-          updateWhileInteracting: false,
-          zIndex: DEF_LOCATION_Z_INDEX - 1,
-        });
-        this._map.addLayer(this._slopeChartLayer);
-      }
-
-      if (location) {
-        let pointGeometry: Point = new Point(
-          this._mapService.coordsFromLonLat([
-            location.longitude,
-            location.latitude,
-          ])
-        );
-
-        if (this._slopeChartPoint)
-          this._slopeChartPoint.setGeometry(pointGeometry);
-        else {
-          this._slopeChartPoint = new Feature(pointGeometry);
-          this._slopeChartSource.addFeature(this._slopeChartPoint);
-        }
-
-        if (track) {
-          let trackGeometry: LineString = new LineString(
-            (<ILineString>track.geometry.coordinates).map((value) =>
-              this._mapService.coordsFromLonLat(value)
-            )
-          ),
-            trackColor: string = track?.properties?.color;
-
-          if (this._slopeChartTrack) {
-            this._slopeChartTrack.setGeometry(trackGeometry);
-            this._slopeChartTrack.set('color', trackColor);
-          } else {
-            this._slopeChartTrack = new Feature(trackGeometry);
-            this._slopeChartTrack.set('color', trackColor);
-            this._slopeChartSource.addFeature(this._slopeChartTrack);
-          }
-        }
-      } else {
-        this._slopeChartPoint = undefined;
-        this._slopeChartTrack = undefined;
-        this._slopeChartSource.clear();
-      }
-
-      this._map.render();
-    } else if (this._slopeChartSource && this._map) {
-      this._slopeChartPoint = undefined;
-      this._slopeChartTrack = undefined;
-      this._slopeChartSource.clear();
-      this._map.render();
-    }
   }
 }

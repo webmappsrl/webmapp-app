@@ -5,7 +5,7 @@ import {
   NavController,
 } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MapComponent } from 'src/app/components/map/map/map.component';
+import { MapComponent } from 'src/app/components/map/old-map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { ESuccessType } from '../../types/esuccess.enum';
@@ -156,7 +156,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async stopRecording() {
-    
+
     await this._geolocationService.pauseRecording();
     this.isPaused = true;
 

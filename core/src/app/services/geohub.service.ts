@@ -28,11 +28,14 @@ const FAVOURITE_PAGESIZE = 3;
   providedIn: 'root',
 })
 export class GeohubService {
+  private _ecTracks: Array<CGeojsonLineStringFeature>;
   constructor(
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService
-  ) {}
+  ) {
+    this._ecTracks = [];
+  }
 
   /**
    * Get an instance of the specified ec track
@@ -41,7 +44,7 @@ export class GeohubService {
    *
    * @returns {CGeojsonLineStringFeature}
    */
-  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+  async getEcTrackAPP(id: string | number): Promise<CGeojsonLineStringFeature> {
     const fondo = ['asfalto', 'lastricato', 'naturale'];
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
@@ -75,6 +78,39 @@ export class GeohubService {
       .toPromise();
     return res;
   }
+
+    /**
+   * Get an instance of the specified ec track
+   *
+   * @param id the ec track id
+   *
+   * @returns
+   */
+     async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+      const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
+        (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
+      );
+      if (cacheResult) {
+        return cacheResult;
+      }
+      if (id > -1) {
+        const result = await this._communicationService
+          .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+          .pipe(
+            map((apiResult: CGeojsonLineStringFeature) => {
+              return apiResult;
+            }),
+          )
+          .toPromise();
+
+        this._ecTracks.push(result);
+        if (this._ecTracks.length > 10) {
+          this._ecTracks.splice(0, 1);
+        }
+
+        return result;
+      }
+    }
 
   /**
    * Get an instance of the specified ec poi
