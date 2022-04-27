@@ -1,5 +1,5 @@
 @import "src/theme/mixins.scss";
-
+webmapp-card-big {
 .webmapp-card-big-container {
   overflow: hidden;
   width: 225px;
@@ -65,4 +65,5 @@
     height: var(--wm-font-sm);
 
   }
+}
 }

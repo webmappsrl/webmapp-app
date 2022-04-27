@@ -1,41 +1,46 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { DownloadService } from 'src/app/services/download.service';
 import { IWmImage } from 'src/app/types/model';
-
+import  defaultImage  from 'src/assets/images/defaultImageB64.json';
 @Component({
   selector: 'webmapp-img',
   templateUrl: './img.component.html',
   styleUrls: ['./img.component.scss'],
-  encapsulation: ViewEncapsulation.ShadowDom
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-export class ImgComponent implements OnInit {
+export class ImgComponent  {
 
-  public image: string | ArrayBuffer = null;
-
+  public image$:Observable< string | ArrayBuffer| null> = of(null);
+  private _loadSrcEVT$: BehaviorSubject<IWmImage|string| null> = new BehaviorSubject<IWmImage|string| null>(null)
   @Input("size") size: string;
 
-  @Input("src") set setSrc(src: IWmImage | string) {
-    this.loadImage(src);
+  @Input("src") set setSrc(src: IWmImage | string | null) {
+    if(src == null) {
+      src = './assets/images/photosuccess.png';
+    }
+    this._loadSrcEVT$.next(src)
   }
 
   constructor(
     private download: DownloadService,
-  ) { }
+  ) {
+    this.image$ = this._loadSrcEVT$.pipe(
+      switchMap((src)=> from(this.loadImage(src))),
+    );
 
-  ngOnInit() {
 
   }
 
-  async loadImage(imageSrc: IWmImage | string) {
+  loadImage(imageSrc: IWmImage | string): Promise<string | ArrayBuffer> {
     if (!imageSrc) return;
     let url = imageSrc as string;
     if (typeof (imageSrc) !== 'string') {
       if (this.size && imageSrc.sizes[this.size]) { url = imageSrc.sizes[this.size] }
-      else {
-        url = imageSrc.url
-      }
     }
-    this.image = await this.download.getB64img(url);
+    return  this.download.getB64img(url);
   }
 
 }

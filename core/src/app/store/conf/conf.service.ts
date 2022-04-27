@@ -7,7 +7,7 @@ import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../../constants/geohub';
   providedIn: 'root',
 })
 export class ConfService {
-  private _geohubAppId: number = 4;
+  private _geohubAppId: number = 10;
 
   constructor(private _http: HttpClient) {
     const hostname: string = window.location.hostname;

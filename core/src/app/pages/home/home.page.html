@@ -1,4 +1,5 @@
 <ion-content class="webmapp-home-content">
+
   <div class="wm-home-header-container">
     <!-- <div class="wm-home-logo-container">
       <img id="wm-home-logo" src="assets/images/homepage-logo.svg" />
@@ -12,6 +13,19 @@
     </webmapp-search-bar>
   </div>
 
+  <ng-container *ngFor="let home of confHOME$|async">
+    <h3 *ngIf="home.view === 'title'" class="webmapp-home-title">
+      {{home.title}}
+    </h3>
+    <ng-container *ngIf="home.view === 'compact-horizontal'">
+        <webmapp-layer-box
+          *ngFor="let term of home.terms"
+          [data]="term"
+          (clickEVT)="setLayer(term)"
+        >
+        </webmapp-layer-box>
+    </ng-container>
+  </ng-container>
   <webmapp-card-slider
     [title]="'pages.home.mostViewedTracks' | translate"
     [data]="mostViewedRoutes"

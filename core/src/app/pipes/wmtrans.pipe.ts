@@ -15,14 +15,15 @@ export class WmTransPipe implements PipeTransform {
       if (value[this._translate.defaultLang]) {
         return value[this._translate.defaultLang];
       }
+      if (typeof (value) === 'string') {
+        return value;
+      }
       for (const val in value) {
         if (value[val]) {
           return value[val];
         }
       }
-      if (typeof (value) === 'string') {
-        return value;
-      }
+
     }
     return '';
   }

@@ -7,10 +7,12 @@ import { PipeModule } from 'src/app/pipes/pipe.module';
 import { CardTrackComponent } from './card-track/card-track.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '../shared/shared.module';
+import { LayerBoxComponent } from './layer-box/layer-box.component';
 
+const cardComponents = [CardBigComponent,CardSliderComponent,CardTrackComponent,LayerBoxComponent]
 @NgModule({
-  declarations: [CardBigComponent, CardSliderComponent,CardTrackComponent],
+  declarations: cardComponents,
   imports: [CommonModule, IonicModule, PipeModule, TranslateModule, SharedModule],
-  exports: [CardBigComponent, CardSliderComponent,CardTrackComponent],
+  exports: cardComponents,
 })
 export class CardsModule { }

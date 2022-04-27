@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
+import { BehaviorSubject } from 'rxjs';
 import { GeohubService } from 'src/app/services/geohub.service';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
@@ -11,17 +12,17 @@ import { IGeojsonFeature, iLocalString } from 'src/app/types/model';
   selector: 'webmapp-card-big',
   templateUrl: './card-big.component.html',
   styleUrls: ['./card-big.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CardBigComponent implements OnInit {
-  @Input('showDistance') showDistance: boolean;
-
-  public feature_image;
-  public title: iLocalString;
-  public where: any;
+  private _item: IGeojsonFeature;
 
   public distance: number = 0;
-
-  private _item: IGeojsonFeature;
+  public feature_image;
+  @Input('showDistance') public showDistance: boolean;
+  public title$: BehaviorSubject<iLocalString|null> = new BehaviorSubject<iLocalString|null>(null);
+  public where: any;
 
   constructor(
     private navCtrl: NavController,
@@ -29,16 +30,28 @@ export class CardBigComponent implements OnInit {
     private _geoHubService: GeohubService,
     private geolocationService: GeolocationService,
     private geolocationUtils: GeoutilsService
-  ) { }
+  ) {
+  }
 
-  @Input('item') set item(value: IGeojsonFeature) {
+  @Input('item') public set item(value: IGeojsonFeature) {
     this._item = value;
-    this.title = value.properties.name;
+    if(value != null && value.properties != null && value.properties.name != null) {
+      this.title$.next(value.properties.name);
+    }
     this.feature_image = value.properties.feature_image;
     this._setTaxonomy(value);
   }
 
-  async ngOnInit(
+  @Input('term') public set term(value: any) {
+    if(value != null && value.title != null) {
+      this.title$.next(value.title);
+    }
+    if(value !=null && value.feature_image != null) {
+      this.feature_image = value.feature_image;
+    }
+  }
+
+  public async ngOnInit(
   ) {
     if (this.showDistance) {
       const loc = await this.geolocationService.location;
@@ -52,7 +65,7 @@ export class CardBigComponent implements OnInit {
     }
   }
 
-  open() {
+  public open() {
     this._statusService.route = this._item;
     // const navigationExtras: NavigationOptions = {
     //   queryParams: {
@@ -62,7 +75,6 @@ export class CardBigComponent implements OnInit {
     // this.navCtrl.navigateForward('route', navigationExtras);
     this.navCtrl.navigateForward('route');
   }
-
 
   private async _setTaxonomy(value: IGeojsonFeature) {
     if (value.properties?.taxonomy?.where && value.properties.taxonomy.where.length) {

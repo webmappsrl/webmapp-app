@@ -1,5 +1,12 @@
-<div class="webmapp-img-spinner-container">
-  <ion-spinner class="webmapp-img-spinner" *ngIf="!image"></ion-spinner>
-</div>
 
-<img part="image" *ngIf="image" [src]="image" class="webmapp-img-image" />
+<ng-container *ngIf="image$|async as image;else spinTemplate">
+  <img part="image" [src]="image" class="webmapp-img-image" />
+</ng-container>
+<ng-template #spinTemplate>
+  <div class="webmapp-img-spinner-container">
+    <ion-spinner class="webmapp-img-spinner"></ion-spinner>
+  </div>
+</ng-template>
+
+
+

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DeviceService } from 'src/app/services/base/device.service';
 import { IGeojsonFeature } from 'src/app/types/model';
 
@@ -6,6 +6,8 @@ import { IGeojsonFeature } from 'src/app/types/model';
   selector: 'webmapp-card-slider',
   templateUrl: './card-slider.component.html',
   styleUrls: ['./card-slider.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CardSliderComponent implements OnInit {
   @Input('title') title: string;

@@ -1,0 +1,11 @@
+<div class="wm-box" (click)="clickEVT.emit()">
+  <webmapp-img
+  class="webmapp-card-big-image-container wm-result-img"
+  [src]="data.feature_image"
+  size="225x100"
+></webmapp-img>
+  <div class="wm-box-title">{{data.title}}</div>
+  <div class="wm-box-click">
+    <i class="webmapp-icon-arrow-right-outline"></i>
+  </div>
+</div>
