@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { Store } from '@ngrx/store';
 import { StatusService } from 'src/app/services/status.service';
 import { setCurrentLayer } from 'src/app/store/UI/UI.actions';
@@ -14,6 +16,7 @@ export class TabsPage {
   constructor(
     private _statusService : StatusService,
     private _storeUi:  Store<IUIRootState>,
+    private _router: Router,
   ) {}
 
   isBarHidden(){
@@ -21,7 +24,14 @@ export class TabsPage {
   }
 
   initLayer() {
-    console.log('ciao')
     this._storeUi.dispatch(setCurrentLayer({currentLayer: null}));
+  }
+
+  goToMap() {
+    this._router.navigate(['map'], {
+      queryParams: {track: -1},
+      queryParamsHandling: 'merge',
+    });
+    console.log('ciao');
   }
 }

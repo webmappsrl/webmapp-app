@@ -191,8 +191,8 @@ export class MapComponent implements OnDestroy {
     private _confService: ConfService,
   ) {
     this._UICurrentLayer$.subscribe(val => {
-      this._currentLayer$.next(val);
 
+      this._currentLayer$.next(val);
       if (this._view != null) {
         if (val != null) {
           this._fitView(new Point(this._view.getCenter()), {
