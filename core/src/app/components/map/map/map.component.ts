@@ -749,7 +749,8 @@ export class MapComponent implements OnDestroy {
         ) {
           // strokeStyle.setColor(featureStyle.paint['line-color']);
           // strokeStyle.setColor(activatedLayers[0].style.color);
-          strokeStyle.setColor(activatedLayers[0].style.color);
+          // strokeStyle.setColor(activatedLayers[0].style.color);
+          strokeStyle.setColor(this._defaultFeatureColor);
         } else {
           strokeStyle.setColor(this._defaultFeatureColor);
         }

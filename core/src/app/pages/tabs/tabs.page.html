@@ -1,6 +1,6 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
-    <ion-tab-button tab="home">
+  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()" >
+    <ion-tab-button tab="home" (click)="initLayer()">
       <i class="webmapp-icon-home-outline webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label">
         {{'tabs.home' | translate}}
