@@ -23,9 +23,9 @@ import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-
 import {GeohubService} from 'src/app/services/geohub.service';
 import { ITrackElevationChartHoverElements } from 'src/app/types/track-elevation-charts';
 
-const menuOpenLeft = 400;
+const menuOpenLeft = 0;
 const menuCloseLeft = 0;
-const initPadding = [20, 50, 20, menuOpenLeft];
+const initPadding = [0, 0, 0, 0];
 const initMenuOpened = true;
 const maxWidth = 600;
 @Component({
@@ -60,7 +60,7 @@ export class MapPage {
   ) {
     if (window.innerWidth < maxWidth) {
       this.isMobile$.next(true);
-      this.mapPadding$.next([initPadding[0], initPadding[1], initPadding[2], menuCloseLeft]);
+      this.mapPadding$.next(initPadding);
       this.resizeEVT.next(!this.resizeEVT.value);
     }
     this.trackid$ = this._route.queryParams.pipe(

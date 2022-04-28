@@ -268,11 +268,9 @@ export class MapComponent implements OnDestroy {
       maxZoom: map.maxZoom,
       minZoom: map.minZoom,
       projection,
-      constrainOnlyCenter: true,
       extent: this._mapService.extentFromLonLat(map.bbox ?? initExtent),
       padding: this._padding$.value || undefined,
     });
-
     if (map.maxZoom) {
       this._maxZoom = map.maxZoom;
     }
