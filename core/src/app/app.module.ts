@@ -31,12 +31,13 @@ import { ModalGiftCoinsModule } from './components/modal-gift-coins/modal-gift-c
 import { StoreModule } from '@ngrx/store';
 import { confReducer } from './store/conf/conf.reducer';
 import { elasticAllReducer, elasticSearchReducer } from './store/elastic/elastic.reducer';
-import { UIReducer } from './store/UI/UI.reducer';
+import { UIReducer } from './store/map/map.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ConfEffects } from './store/conf/conf.effects';
 import { ElasticEffects } from './store/elastic/elastic.effects';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
+import { UIEffects } from './store/map/map.effects';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
@@ -78,11 +79,11 @@ class SQLiteMock {
         conf: confReducer,
         search: elasticSearchReducer,
         all: elasticAllReducer,
-        UI: UIReducer,
+        map: UIReducer,
       },
       {},
     ),
-    EffectsModule.forRoot([ConfEffects, ElasticEffects]),
+    EffectsModule.forRoot([ConfEffects, ElasticEffects, UIEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode

@@ -1,90 +1,12 @@
 <div class="webmapp-searchbar-main">
   <ion-item class="webmapp-searchbar-textcontainer">
     <i slot="start" class="webmapp-icon-search-outline"></i>
-    <ion-input type="text" class="webmapp-searchbar-textinput" [(ngModel)]="searchstring" clear-input="true" placeholder="{{'components.searchbar.placeholder'|translate}}"
-      debounce="200" (ionBlur)="inputFocus(false)" (ionChange)="inputChange($event)" (ionFocus)="inputFocus(true)">
+    <form [formGroup]="searchForm">
+      <ion-input formControlName="search" type="text" class="webmapp-searchbar-textinput" placeholder="{{'components.searchbar.placeholder'|translate}}"
+       >
     </ion-input>
-    <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn" *ngIf="showSettings"></i>
+  </form>
+    <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn" *ngIf="false"></i>
   </ion-item>
 </div>
 
-<ion-slides [hidden]="true" pager="false" [options]="sliderOptions" class="webmapp-searchbar-categoryslider" #slider>
-  <ion-slide *ngFor="let category of categories">
-    <div class="webmapp-searchbar-categorybtn" [ngClass]="{'webmapp-searchbar-categorybtn-selected':category.selected}"
-      (click)="select(category)">
-      <i class="webmapp-icon-{{category.icon}} webmapp-searchbar-categorybtn-icon"></i>
-      <ion-label class="webmapp-searchbar-categorylabel">{{category.name}}</ion-label>
-
-    </div>
-  </ion-slide>
-</ion-slides>
-
-<div class="webmapp-searchbar-results-backpanel" [hidden]="!showResults()">
-  <div class="webmapp-searchbar-results-container">
-    <ion-content class="webmapp-searchbar-results" scrollY="true">
-      <div class="webmapp-searchbar-results-section">
-        <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.places' | translate}}
-        </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.places.length==0">
-          {{'components.searchbar.noplaces' | translate}}</ion-label>
-        <ion-list>
-          <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let place of results?.places" (click)="selectPlace(place)" lines="none">
-            <i class="webmapp-icon-pin-outline"></i>
-            <ion-label class="webmapp-searchbar-results-section-resultname">
-              {{place.name | wmtrans}}
-            </ion-label>
-            <ion-ripple-effect></ion-ripple-effect>
-          </ion-item>
-        </ion-list>
-      </div>
-
-
-      <div class="webmapp-searchbar-results-section">
-        <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.tracks' | translate}}
-        </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.ec_tracks.length==0">
-          {{'components.searchbar.notracks' | translate}}</ion-label>
-        <ion-list>
-          <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let track of results?.ec_tracks" (click)="selectTrack(track)" lines="none">
-
-            <ion-img slot="start" [src]="track.image" class="webmapp-searchbar-results-section-resultimage"></ion-img>
-
-            <div>
-              <ion-label class="webmapp-searchbar-results-section-resultname">
-                {{track.name | wmtrans}}
-              </ion-label>
-              <!-- <ion-label class="webmapp-searchbar-results-section-resultsubtitle ">
-                {{track.properties.description | wmtrans}}
-              </ion-label> -->
-            </div>
-
-            <ion-ripple-effect></ion-ripple-effect>
-          </ion-item>
-        </ion-list>
-      </div>
-
-
-      <div class="webmapp-searchbar-results-section" >
-        <ion-label class="webmapp-searchbar-results-section-name">{{'components.searchbar.filters' | translate}}
-        </ion-label>
-        <ion-label class="webmapp-searchbar-results-section-nodata" *ngIf="results?.poi_types.length==0">
-          {{'components.searchbar.nofilters' | translate}}</ion-label>
-        <ion-list>
-          <ion-item class="ripple-parent ion-activatable webmapp-searchbar-results-section-result"
-            *ngFor="let filter of results?.poi_types" (click)="selectFilter(filter)" lines="none">
-
-            <i class="webmapp-icon-pin-outline"></i>
-
-            <ion-label class="webmapp-searchbar-results-section-resultname">
-              {{filter.name | wmtrans}}
-            </ion-label>
-            <ion-ripple-effect></ion-ripple-effect>
-          </ion-item>
-        </ion-list>
-      </div>
-
-    </ion-content>
-  </div>
-</div>

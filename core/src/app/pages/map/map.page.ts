@@ -6,21 +6,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import { Store } from '@ngrx/store';
 
-import {BehaviorSubject, combineLatest, from, merge, Observable, of} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  shareReplay,
-  startWith,
-  switchMap,
-  tap,
-} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, merge, Observable, of} from 'rxjs';
+import {catchError, map, shareReplay} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {GeohubService} from 'src/app/services/geohub.service';
+import {IMapRootState} from 'src/app/store/map/map';
+import {setCurrentTrackId} from 'src/app/store/map/map.actions';
+import { mapCurrentRelatedPoi, mapCurrentTrack } from 'src/app/store/map/map.selector';
 import { ITrackElevationChartHoverElements } from 'src/app/types/track-elevation-charts';
 
 const menuOpenLeft = 0;
@@ -36,12 +30,12 @@ const maxWidth = 600;
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage {
-  readonly track$: Observable<CGeojsonLineStringFeature | null>;
-  readonly trackid$: Observable<number>;
   caretOutLine$: Observable<'caret-back-outline' | 'caret-forward-outline'>;
   currentPoi$: Observable<any>;
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiIDToMap$: Observable<number | null>;
+  private _currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
+  private _relatedPoi$: Observable<any[]> = this._storeMap.select(mapCurrentRelatedPoi);
   leftPadding$: Observable<number>;
   mapPadding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -55,7 +49,7 @@ export class MapPage {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    private _geohubService: GeohubService,
+    private _storeMap: Store<IMapRootState>,
     private _cdr: ChangeDetectorRef,
   ) {
     if (window.innerWidth < maxWidth) {
@@ -63,38 +57,14 @@ export class MapPage {
       this.mapPadding$.next(initPadding);
       this.resizeEVT.next(!this.resizeEVT.value);
     }
-    this.trackid$ = this._route.queryParams.pipe(
-      filter(params => params != null && params.track != null),
-      map(params => +params.track),
-      startWith(-1),
-    );
-    this.track$ = this.trackid$.pipe(
-      switchMap(trackid =>
-        trackid > -1 ? from(this._geohubService.getEcTrack(trackid)) : of(null),
-      ),
-      tap(track => {
-        if (track != null) {
-          const poiIDs = (track.properties.related_pois || []).map(poi => poi.properties.id);
-          this.poiIDs$.next(poiIDs);
-        } else {
-          this.poiIDs$.next([]);
-        }
-      }),
-    );
+
+
 
     this.caretOutLine$ = this.showMenu$.pipe(
       map(showMenu => (showMenu ? 'caret-back-outline' : 'caret-forward-outline')),
     );
     this.leftPadding$ = this.showMenu$.pipe(map(showMenu => (showMenu ? menuOpenLeft : 0)));
-    const relatedPois$ = this.track$.pipe(
-      map(track => (track != null && track.properties != null ? track.properties : null)),
-      map(properties =>
-        properties != null && properties.related_pois != null ? properties.related_pois : [],
-      ),
-      catchError(e => of([])),
-      shareReplay(1),
-    );
-    const currentPoi = combineLatest([this.currentPoiID$, relatedPois$]).pipe(
+    const currentPoi = combineLatest([this.currentPoiID$, this._relatedPoi$]).pipe(
       map(([id, pois]) => {
         const relatedPois = pois.filter(poi => {
           const poiProperties = poi.properties;
@@ -168,6 +138,7 @@ export class MapPage {
   }
 
   public updateUrl(trackid: number) {
+    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +trackid}))
     this._router.navigate([], {
       relativeTo: this._route,
       queryParams: {track: trackid ? trackid : null},

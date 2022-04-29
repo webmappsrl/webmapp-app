@@ -59,11 +59,12 @@ import { MapService } from 'src/app/services/base/map.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {confMAP, confTHEME} from 'src/app/store/conf/conf.selector';
 import {ConfService} from 'src/app/store/conf/conf.service';
-import {IUIRootState} from 'src/app/store/UI/UI.reducer';
-import {UICurrentLAyer} from 'src/app/store/UI/UI.selector';
+import {IMapRootState} from 'src/app/store/map/map';
+import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {mapCurrentLayer, mapCurrentTrack} from 'src/app/store/map/map.selector';
 import {ILocation} from 'src/app/types/location';
 import {IGeojsonFeature, ILineString} from 'src/app/types/model';
-import { ITrackElevationChartHoverElements } from 'src/app/types/track-elevation-charts';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 
 const initPadding = [0, 0, 0, 0];
 const zoomDuration = 500;
@@ -112,29 +113,14 @@ export class MapComponent implements OnDestroy {
       this._map.updateSize();
     }
   }
-
+  @Input('disableTrackSelection') disableTrackSelection = false;
   @Input('trackElevationChartElements') set trackElevationChartElements(
     value: ITrackElevationChartHoverElements,
   ) {
     this._drawTemporaryLocationFeature(value?.location, value?.track);
   }
   @Input('start-view') startView: number[] = startView;
-  @Input('track') set setTrack(track: CGeojsonLineStringFeature) {
-    console.log('track', track);
-    this._currentTrack$.next(track);
-    if (track == null) {
-      if (this._mapInit$.value) {
-        this._map.removeLayer(this._selectedPoiLayer);
-        this._selectedPoiLayer = undefined;
-        this._removePoiLayer();
-        this._updateMap();
-        this._fitView(new Point(this._view.getCenter()), {
-          maxZoom: this._defZoom + 2,
-          duration: zoomDuration * 2,
-        });
-      }
-    }
-  }
+
   @Input('poi') set setPoi(id: number) {
     if (id === -1 && this._selectedPoiLayer != null) {
       this._map.removeLayer(this._selectedPoiLayer);
@@ -161,6 +147,8 @@ export class MapComponent implements OnDestroy {
     new BehaviorSubject<FeatureLike | null>(null);
   private _currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> =
     new BehaviorSubject<CGeojsonLineStringFeature | null>(null);
+  private _currentTrackFromMap$: Observable<CGeojsonLineStringFeature> =
+    this._storeMap.select(mapCurrentTrack);
   private _currentLayer$: BehaviorSubject<ILAYER | null> = new BehaviorSubject<ILAYER | null>(null);
   private _mapInit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _selectInteraction: SelectInteraction;
@@ -176,7 +164,7 @@ export class MapComponent implements OnDestroy {
   private _updateMapSub: Subscription = Subscription.EMPTY;
   private _confTHEME$: Observable<ITHEME> = this._store.select(confTHEME);
   private _confMap$: Observable<any> = this._store.select(confMAP);
-  private _UICurrentLayer$: Observable<any> = this._UIstore.select(UICurrentLAyer);
+  private _mapCurrentLayer$: Observable<any> = this._storeMap.select(mapCurrentLayer);
   private _maxZoom: number = initMaxZoom;
   private _minZoom: number = initMaxZoom;
   private _defZoom: number = initMinZoom;
@@ -187,11 +175,25 @@ export class MapComponent implements OnDestroy {
     private _mapService: MapService,
     private _zone: NgZone,
     private _store: Store<IConfRootState>,
-    private _UIstore: Store<IUIRootState>,
+    private _storeMap: Store<IMapRootState>,
     private _confService: ConfService,
   ) {
-    this._UICurrentLayer$.subscribe(val => {
-
+    this._currentTrackFromMap$.subscribe(track => {
+      this._currentTrack$.next(track);
+      if (track == null) {
+        if (this._mapInit$.value) {
+          this._map.removeLayer(this._selectedPoiLayer);
+          this._selectedPoiLayer = undefined;
+          this._removePoiLayer();
+          this._updateMap();
+          this._fitView(new Point(this._view.getCenter()), {
+            maxZoom: this._defZoom + 2,
+            duration: zoomDuration * 2,
+          });
+        }
+      }
+    });
+    this._mapCurrentLayer$.subscribe(val => {
       this._currentLayer$.next(val);
       if (this._view != null) {
         if (val != null) {
@@ -218,6 +220,7 @@ export class MapComponent implements OnDestroy {
               featureProjection: 'EPSG:3857',
             }).readFeatures(selectedGeohubFeature)[0],
           );
+          console.log(selectedGeohubFeature);
           this._addPoisMarkers(selectedGeohubFeature.properties.related_pois);
         }),
         tap(() => this._updateMap()),
@@ -308,7 +311,7 @@ export class MapComponent implements OnDestroy {
       const clickedFeature = event?.selected?.[0] ?? undefined;
       const clickedFeatureId: number = clickedFeature?.getProperties()?.id ?? undefined;
       if (clickedFeatureId > -1) {
-        this.featureClick.emit(clickedFeatureId);
+        this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
       }
     });
 
@@ -339,6 +342,7 @@ export class MapComponent implements OnDestroy {
         if (poiFeature) {
           const currentID = +poiFeature.getId() || -1;
           this.poiClick.emit(currentID);
+          this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +currentID}));
         }
       } catch (e) {
         console.log(e);
@@ -781,7 +785,7 @@ export class MapComponent implements OnDestroy {
           } else {
             strokeStyle.setColor(this._currentLayer$.value.style.color);
             style = new Style({
-              stroke:strokeStyle
+              stroke: strokeStyle,
             });
           }
         }
@@ -835,7 +839,8 @@ export class MapComponent implements OnDestroy {
 
         if (
           this._currentTrack$.value != null &&
-          properties.id === this._currentTrack$.value.properties.id
+          properties.id === this._currentTrack$.value.properties.id &&
+          this.disableTrackSelection === false
         ) {
           style.setZIndex(1000);
           const selectedStyle = new Style({

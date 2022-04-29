@@ -82,11 +82,11 @@ const TRACKMARKERLAYERZINDEX = 470;
 const CIRCULARTOLERANCE = 0.001;
 
 @Component({
-  selector: 'webmapp-map',
+  selector: 'old-webmapp-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
+export class OldMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') mapDiv: ElementRef;
 
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();

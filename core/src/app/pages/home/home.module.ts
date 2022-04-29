@@ -10,12 +10,14 @@ import { HomePage } from './home.page';
 import { CardsModule } from 'src/app/components/cards/cards.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from 'src/app/components/shared/shared.module';
+import { BoxModule } from 'src/app/components/box/box.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    BoxModule,
     CardsModule,
     HomePageRoutingModule,
     TranslateModule.forChild(),

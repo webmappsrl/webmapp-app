@@ -5,7 +5,7 @@ import {
   NavController,
 } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
-import { MapComponent } from 'src/app/components/map/old-map/map.component';
+import { OldMapComponent } from 'src/app/components/map/old-map/map.component';
 import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
 import { ESuccessType } from '../../types/esuccess.enum';
@@ -21,7 +21,7 @@ import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
   styleUrls: ['./register.page.scss'],
 })
 export class RegisterPage implements OnInit, OnDestroy {
-  @ViewChild('map') map: MapComponent;
+  @ViewChild('map') map: OldMapComponent;
 
   public opacity: number = 0;
   public time: { hours: number; minutes: number; seconds: number } = {

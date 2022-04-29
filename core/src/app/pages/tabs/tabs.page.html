@@ -1,12 +1,12 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom" [hidden]="isBarHidden()" >
-    <ion-tab-button tab="home" (click)="initLayer()">
+    <ion-tab-button tab="home" (click)="reset()">
       <i class="webmapp-icon-home-outline webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label">
         {{'tabs.home' | translate}}
       </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="map" (click)="goToMap()">
+    <ion-tab-button tab="map" (click)="reset()">
       <i class="webmapp-icon-map-outline webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label">
         {{'tabs.map' | translate}}

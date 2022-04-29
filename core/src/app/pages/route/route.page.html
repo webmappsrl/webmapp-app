@@ -90,9 +90,9 @@
   </div>
 
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <webmapp-map class="" #map [static]="false" [animation]="useAnimation" [track]="track" [hideRegister]="true"
+    <old-webmapp-map class="" #map [static]="false" [animation]="useAnimation" [track]="track" [hideRegister]="true"
       [hidePosition]="true" [btnposition]="'middle'" [pois]="pois" (clickpoi)="clickPoi($event)" [height]="mapHeigth()"
-      [slopeChartElements]="slopeChartHoverElements" [cache]="useCache" (rotate)="mapRotation($event)"></webmapp-map>
+      [slopeChartElements]="slopeChartHoverElements" [cache]="useCache" (rotate)="mapRotation($event)"></old-webmapp-map>
   </div>
 
   <div class="webmapp-pageroute-infopanel" #dragHandleContainer [ngClass]="{'webmapp-pageroute-infopanel-hide':modeFullMap}" [ngStyle]="{
@@ -252,9 +252,9 @@
     <webmapp-btn-orientation class="webmapp-pageroute-btnorient" [degrees]="mapDegrees" (click)="orientNorth()"
       [hidden]="opacity < 0.5">
     </webmapp-btn-orientation>
-    <!-- 
+    <!--
     <webmapp-btn-register
-      class="webmapp-pageroute-btnbottomregister webmapp-pageroute-btnbottom"      
+      class="webmapp-pageroute-btnbottomregister webmapp-pageroute-btnbottom"
     ></webmapp-btn-register>
 
     <ion-fab-button
@@ -315,7 +315,7 @@
     'webmapp-pageroute-toolbox-hide':opacity < 0.9,
     'webmapp-pageroute-toolbox-hideover':hideToolBarOver,
     'webmapp-pageroute-toolbox-fullmap':modeFullMap}">
-    
+
     <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="webmapp-icon-donwload-outline"></i>
       {{ 'pages.route.btndownload' | translate }}

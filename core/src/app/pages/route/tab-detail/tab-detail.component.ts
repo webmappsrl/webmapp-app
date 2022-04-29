@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { StatusService } from 'src/app/services/status.service';
 import { IGeojsonFeature } from 'src/app/types/model';
 import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
@@ -7,6 +7,7 @@ import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
   selector: 'webmapp-tab-detail',
   templateUrl: './tab-detail.component.html',
   styleUrls: ['./tab-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabDetailComponent implements OnInit {
   public route: IGeojsonFeature;
