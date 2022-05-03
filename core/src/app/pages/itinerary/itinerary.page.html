@@ -58,8 +58,7 @@
   </div>
 
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <old-webmapp-map
-      class=""
+    <itinerary-webmapp-map
       #map
       [static]="false"
       [animation]="useAnimation"
@@ -73,7 +72,7 @@
       [slopeChartElements]="slopeChartHoverElements"
       [cache]="useCache"
       (rotate)="mapRotation($event)"
-    ></old-webmapp-map>
+    ></itinerary-webmapp-map>
   </div>
 
   <div
@@ -100,11 +99,9 @@
       </div>
       <ion-content #moredetails scrollY="true" scroll-events="true" (ionScroll)="scroll($event)">
         <webmapp-tab-detail class="webmapp-route-tab"></webmapp-tab-detail>
-        <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
-        <webmapp-tab-eat class="webmapp-route-tab"></webmapp-tab-eat>
         <webmapp-tab-howto class="webmapp-route-tab"></webmapp-tab-howto>
-        <webmapp-tab-viability class="webmapp-route-tab"></webmapp-tab-viability>
-        <webmapp-tab-walkable class="webmapp-route-tab"></webmapp-tab-walkable>
+        <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
+        <webmapp-tab-poi class="webmapp-route-tab"></webmapp-tab-poi>
       </ion-content>
     </ion-card>
   </div>
@@ -168,26 +165,26 @@
     'webmapp-pageroute-toolbox-fullmap':modeFullMap}"
   >
     <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
-      <i class="webmapp-icon-donwload-outline"></i>
+      <i class="icon-outline-donwload"></i>
       {{ 'pages.route.btndownload' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <div (click)="share()" class="webmapp-pageroute-toolbox-button ion-activatable">
-      <i class="webmapp-icon-share-outline"></i>
+      <i class="icon-outline-share-outline"></i>
       {{ 'pages.route.btnshare' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <div (click)="navigate()" class="webmapp-pageroute-toolbox-button ion-activatable">
-      <i class="webmapp-icon-nav-outline"></i>
+      <i class="icon-outline-nav-outline"></i>
       {{ 'pages.route.btndnavigate' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <div (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i *ngIf="isFavourite" class="webmapp-icon-heart"></i>
-      <i *ngIf="!isFavourite" class="webmapp-icon-heart-outline"></i>
+      <i *ngIf="!isFavourite" class="icon-outline-heart"></i>
       {{ 'pages.route.btnfavourite' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>

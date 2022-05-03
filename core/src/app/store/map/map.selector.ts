@@ -1,5 +1,4 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {IMapRootState} from './map';
 
 const feature = createFeatureSelector<IMapRootState | null>('map');
@@ -8,7 +7,10 @@ export const mapCurrentLayer = createSelector(feature, state =>
   state && state.currentLayer ? state.currentLayer : null,
 );
 export const mapCurrentTrack = createSelector(feature, state =>
-  state && state.currentTrack ? state.currentTrack : null
+  state && state.currentTrack ? state.currentTrack : null,
+);
+export const mapCurrentPoi = createSelector(feature, state =>
+  state && state.currentPoi ? state.currentPoi : null,
 );
 export const mapCurrentTrackProperties = createSelector(feature, state =>
   state && state.currentTrackProperties ? state.currentTrackProperties : null,
@@ -18,4 +20,10 @@ export const mapCurrentRelatedPoi = createSelector(feature, state =>
 );
 export const currentPoiID = createSelector(feature, state =>
   state && state.currentPoiId ? state.currentPoiId : null,
+);
+export const nextPoiID = createSelector(feature, state =>
+  state && state.nextPoiIndex ? state.nextPoiIndex : null,
+);
+export const prevPoiID = createSelector(feature, state =>
+  state && state.prevPoiIndex ? state.prevPoiIndex : null,
 );

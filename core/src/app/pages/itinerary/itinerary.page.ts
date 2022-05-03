@@ -17,7 +17,7 @@ import {auditTime} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
 import {IMapRootState} from 'src/app/store/map/map';
-import {setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentTrack, mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {IGeojsonFeature, IGeojsonPoi, IGeojsonProperties} from 'src/app/types/model';
@@ -96,7 +96,9 @@ export class ItineraryPage implements OnDestroy {
     private _alertController: AlertController,
     private translate: TranslateService,
     private _storeMap: Store<IMapRootState>,
-  ) {}
+  ) {
+    this.setAnimations();
+  }
 
   async setAnimations() {
     await this._platform.ready();
@@ -190,6 +192,7 @@ export class ItineraryPage implements OnDestroy {
   }
 
   async clickPoi(poi: IGeojsonPoi) {
+    this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
     this._navController.navigateForward(['poi']);
   }
 

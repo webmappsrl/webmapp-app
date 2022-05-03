@@ -1,0 +1,39 @@
+
+<ng-container *ngIf="currentRelatedPoi$|async as currentRelatedPoi">
+<div class="webmapp-title">Punti di interesse</div>
+<div *ngFor="let item of currentRelatedPoi" class="webmapp-track-poi-list">
+  <ng-container *ngIf="item.properties as properties">
+    <div class="webmapp-track-poi-item">
+      <webmapp-img
+        class="webmapp-track-poi-img"
+        [src]="properties?.feature_image"
+        size="225x100"
+      ></webmapp-img>
+      <div class="webmapp-track-poi-text">
+        <div class="webmapp-track-poi-title">
+          {{ properties.name | wmtrans|lowercase }}
+        </div>
+        <div
+          class="webmapp-track-poi-description"
+          [innerHTML]="properties?.description | wmtrans"
+        ></div>
+        <div class="webmapp-track-poi-btns">
+          <div class="webmapp-poi-popup-btn" >
+            <i class="webmapp-icon icon-fill-pin"></i>
+          </div>
+          <div class="webmapp-poi-popup-btn" target="_blank">
+            <i class="webmapp-icon icon-fill-phone"></i>
+          </div>
+          <div class="webmapp-poi-popup-btn"  target="_blank">
+            <i class="webmapp-icon icon-fill-mail"></i>
+          </div>
+          <div class="webmapp-poi-popup-btn" >
+            <i class="webmapp-icon icon-fill-globe"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+</ng-container>
+

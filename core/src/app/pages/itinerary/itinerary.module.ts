@@ -12,7 +12,7 @@ import {MapModule} from 'src/app/components/map/map.module';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
 import {TabViabilityComponent} from './tab-viability/tab-viability.component';
 import {TabDescriptionComponent} from './tab-description/tab-description.component';
-import {TabEatComponent} from './tab-eat/tab-eat.component';
+import {TabPoiComponent} from './tab-poi/tab-poi.component';
 import {TabHowtoComponent} from './tab-howto/tab-howto.component';
 import {TabWalkableComponent} from './tab-walkable/tab-walkable.component';
 import {PipeModule} from 'src/app/pipes/pipe.module';
@@ -37,7 +37,7 @@ import {SharedModule} from 'src/app/components/shared/shared.module';
     TabDetailComponent,
     TabWalkableComponent,
     TabHowtoComponent,
-    TabEatComponent,
+    TabPoiComponent,
     TabDescriptionComponent,
     TabViabilityComponent,
     SlopeChartComponent,

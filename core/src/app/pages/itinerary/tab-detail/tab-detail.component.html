@@ -5,7 +5,7 @@
 
 <ion-list *ngIf="(currentTrackProperties$|async) as properties">
   <ion-item>
-    <i class="webmapp-icon-distance webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-distance webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.distance" | translate }}
     </ion-label>
@@ -14,7 +14,7 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-difficulty-high webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-dislivello-positivo webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label">{{
         "pages.route.detail.ascent" | translate
     }}</ion-label>
@@ -23,7 +23,7 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-duration-outline webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-dislivello-negativo webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.descent" | translate }}
     </ion-label>
@@ -32,7 +32,7 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-downhill webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-plus webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.ele_max" | translate }}
     </ion-label>
@@ -41,7 +41,7 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-downhill webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-minus webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.ele_min" | translate }}
     </ion-label>
@@ -50,7 +50,9 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-downhill webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-fill-starting-point webmapp-pageroute-tabdetail-icon">
+      <span class="path1"></span><span class="path2"></span>
+     </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.ele_from" | translate }}
     </ion-label>
@@ -59,7 +61,7 @@
     >
   </ion-item>
   <ion-item>
-    <i class="webmapp-icon-downhill webmapp-pageroute-tabdetail-icon"> </i>
+    <i class="icon-outline-flag webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label">{{
         "pages.route.detail.ele_to" | translate
     }}</ion-label>

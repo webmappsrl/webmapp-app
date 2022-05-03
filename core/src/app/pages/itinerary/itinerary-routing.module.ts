@@ -4,7 +4,7 @@ import {Routes, RouterModule} from '@angular/router';
 import {TabViabilityComponent} from './tab-viability/tab-viability.component';
 import {TabDescriptionComponent} from './tab-description/tab-description.component';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
-import {TabEatComponent} from './tab-eat/tab-eat.component';
+import {TabPoiComponent} from './tab-poi/tab-poi.component';
 import {TabHowtoComponent} from './tab-howto/tab-howto.component';
 import {TabWalkableComponent} from './tab-walkable/tab-walkable.component';
 import {ItineraryPage} from './itinerary.page';
@@ -28,7 +28,7 @@ const routes: Routes = [
       },
       {
         path: 'route-eat',
-        component: TabEatComponent,
+        component: TabPoiComponent,
       },
       {
         path: 'route-description',

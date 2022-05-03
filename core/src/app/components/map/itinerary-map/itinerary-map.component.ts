@@ -10,10 +10,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { buffer } from 'ol/extent';
+import {buffer} from 'ol/extent';
 
 // ol imports
-import { Coordinate } from 'ol/coordinate';
+import {Coordinate} from 'ol/coordinate';
 import Circle from 'ol/geom/Circle';
 import Feature from 'ol/Feature';
 import Icon from 'ol/style/Icon';
@@ -27,7 +27,7 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
-import { defaults as defaultInteractions } from 'ol/interaction.js';
+import {defaults as defaultInteractions} from 'ol/interaction.js';
 
 import {
   DEF_LOCATION_ACCURACY,
@@ -40,36 +40,40 @@ import {
   DEF_MAP_ROTATION_DURATION,
 } from '../../../constants/map';
 
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { ILocation } from 'src/app/types/location';
-import { CLocation } from 'src/app/classes/clocation';
-import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
-import { MapService } from 'src/app/services/base/map.service';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {ILocation} from 'src/app/types/location';
+import {CLocation} from 'src/app/classes/clocation';
+import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
+import {MapService} from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
-import { ITrack } from 'src/app/types/track';
+import {ITrack} from 'src/app/types/track';
 import {
   IGeojsonCluster,
   IGeojsonGeometry,
   IGeojsonPoi,
+  IGeojsonPoiDetailed,
   ILineString,
 } from 'src/app/types/model';
-import { fromLonLat } from 'ol/proj';
-import { ClusterMarker, iMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
+import {fromLonLat} from 'ol/proj';
+import {ClusterMarker, iMarker, MapMoveEvent, PoiMarker} from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
-import { AuthService } from 'src/app/services/auth.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {AuthService} from 'src/app/services/auth.service';
+import {take, takeUntil} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
-import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
-import { GeohubService } from 'src/app/services/geohub.service';
-import { MarkerService } from 'src/app/services/marker.service';
-import { TilesService } from 'src/app/services/tiles.service';
-import { ConfigService } from 'src/app/services/config.service';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {MarkerService} from 'src/app/services/marker.service';
+import {TilesService} from 'src/app/services/tiles.service';
+import {ConfigService} from 'src/app/services/config.service';
 import layerVector from 'ol/layer/Vector';
 import sourceVector from 'ol/source/Vector';
+import {Store} from '@ngrx/store';
+import {IMapRootState} from 'src/app/store/map/map';
+import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selector';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -82,11 +86,11 @@ const TRACKMARKERLAYERZINDEX = 470;
 const CIRCULARTOLERANCE = 0.001;
 
 @Component({
-  selector: 'old-webmapp-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  selector: 'itinerary-webmapp-map',
+  templateUrl: './itinerary-map.component.html',
+  styleUrls: ['./itinerary-map.component.scss'],
 })
-export class OldMapComponent implements AfterViewInit, OnDestroy {
+export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('map') mapDiv: ElementRef;
 
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
@@ -310,6 +314,8 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   private _slopeChartPoint: Feature<Point>;
   private _slopeChartTrack: Feature<LineString>;
 
+  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
+  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
   constructor(
     private _authService: AuthService,
     private _configService: ConfigService,
@@ -318,6 +324,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     private _mapService: MapService,
     private _markerService: MarkerService,
     private _tilesService: TilesService,
+    private _storeMap: Store<IMapRootState>,
   ) {
     this._locationIcon = {
       layer: null,
@@ -407,7 +414,9 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
         zIndex: 1,
       }),
     );
-
+    this.relatedPoi$.pipe(take(1)).subscribe(pois => {
+      this._addPoisMarkers(pois);
+    });
     this.isRecording = this._geolocationService.recording;
 
     //TODO: figure out why this must be called inside a timeout
@@ -984,7 +993,6 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
       this._removeIconFromLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
       markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
     }
-    poi.isSmall = false;
     this._selectedPoi.newSelectedPoi = poi;
     const {marker, style} = await this._createPoiCanvasIcon(poi, markerGeometry);
     this._selectedPoi.marker = marker;

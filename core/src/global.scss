@@ -32,7 +32,17 @@
 @import "./theme/fonts.scss";
 @import "./theme/typography.scss";
 @import "./theme/variables.scss";
-
+.webmapp-icon {
+  color: var(--wm-color-primary);
+  padding: 0 5px;
+  flex: 0 1 auto;
+  path1,
+  path2,
+  path1::before,
+  path2::before {
+    color: var(--wm-color-primary);
+    background: var(--wm-color-primary);
+  }}
 /***** popover ****/
 .popover-register {
   border-radius: 16px;
@@ -60,11 +70,11 @@
 /********** back buttons ********/
 
 .webmapp-backbutton {
-  padding: 5px 20px;  
+  padding: 5px 20px;
   --icon-font-size: var(--wm-font-icon);
   &.webmapp-backbutton-chevron{
     font-size: var(--wm-font-icon);
-  } 
+  }
 
   &.webmapp-backbutton-dark {
     --color: var(--ion-color-dark) !important;

@@ -8,5 +8,8 @@ export interface IMapRootState {
   currentRelatedPoi?: IGeojsonPoiDetailed[];
   currentPoiIds?: number[];
   currentPoiId?: number;
+  currentPoiIndex?: number;
   currentPoi?: IGeojsonPoiDetailed;
+  nextPoiIndex?: number;
+  prevPoiIndex?: number;
 }

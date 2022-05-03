@@ -1,9 +1,10 @@
-.webmapp-pagepoi-map-container {
+app-poi {
+  .webmapp-pagepoi-map-container {
     width: 100%;
     height: 53%;
-}
+  }
 
-.webmapp-pagepoi-info-container {
+  .webmapp-pagepoi-info-container {
     position: absolute;
     display: block;
     bottom: 0;
@@ -13,76 +14,78 @@
     width: 100%;
     padding: 10px;
     .webmapp-pagepoi-info-header {
-        padding: 10px;
-        width: 100%;
-        position: relative;
+      padding: 10px;
+      width: 100%;
+      position: relative;
+      color: black;
 
-        .webmapp-pagepoi-info-header-title {
-            font-size: var(--wm-font-lg);
-            font-weight: var(--wm-font-weight-bold);
+      .webmapp-pagepoi-info-header-title {
+        font-size: var(--wm-font-lg);
+        font-weight: var(--wm-font-weight-bold);
+      }
+
+      .webmapp-pagepoi-info-header-arrows {
+        position: absolute;
+        right: 0;
+        top: 0;
+        .webmapp-pagepoi-info-header-arrow {
+          display: inline-block;
+          width: 50px;
+          height: 30px;
+          text-align: center;
+          padding: 6px;
+          border-radius: 30px;
+
+          .webmapp-pagepoi-info-header-arrow-icon {
+            font-size: large;
+          }
         }
-
-        .webmapp-pagepoi-info-header-arrows {
-            position: absolute;
-            right: 0;
-            top: 0;
-            .webmapp-pagepoi-info-header-arrow {
-                display: inline-block;
-                width: 50px;
-                height: 30px;
-                text-align: center;
-                padding: 6px;
-                border-radius: 30px;
-
-                .webmapp-pagepoi-info-header-arrow-icon {
-                    font-size: large;
-                }
-            }
-        }
+      }
     }
 
     .webmapp-pagepoi-info-body {
-        --padding-bottom: 30px;
-        .webmapp-pagepoi-info-reference {
-            padding: 3px 5px;
-            font-size: var(--wm-font-sm);
-            a {
-                text-decoration: none;
-                color: var(--wm-color-dark);
-            }
-            .webmapp-pagepoi-info-icon {
-                color: var(--wm-color-primary);
-            }
+      --padding-bottom: 30px;
+      .webmapp-pagepoi-info-reference {
+        padding: 3px 5px;
+        font-size: var(--wm-font-sm);
+        a {
+          text-decoration: none;
+          color: var(--wm-color-dark);
         }
+        .webmapp-pagepoi-info-icon {
+          color: var(--wm-color-primary);
+        }
+      }
 
-        .webmapp-pagepoi-info-body-photoslider {
-            padding: 10px 0;
-            overflow: visible;
-            .webmapp-pagepoi-info-body-photo {
-                height: 150px;
-                width: 250px;
-                &::part(image) {
-                    border-radius: 15px;
-                }
-            }
+      .webmapp-pagepoi-info-body-photoslider {
+        padding: 10px 0;
+        overflow: visible;
+        .webmapp-pagepoi-info-body-photo {
+          height: 150px;
+          width: 250px;
+          &::part(image) {
+            border-radius: 15px;
+          }
         }
-        .webmapp-pagepoi-info-body-description {
-            padding: 10px 0;
-        }
+      }
+      .webmapp-pagepoi-info-body-description {
+        padding: 10px 0;
+      }
     }
-}
+  }
 
-.webmapp-pagepoi-top {
+  .webmapp-pagepoi-top {
     top: calc(10px + constant(safe-area-inset-top));
     top: calc(10px + env(safe-area-inset-top));
     .webmapp-pagepoi-btntop {
-        --color: var(--wm-color-dark);
-        --background: var(--wm-color-light);
-        --background-activated: var(--wm-color-dark);
-        --background-activated-opacity: 0.25;
-        --background-focused: var(--wm-color-light);
-        --background-focused-opacity: 0;
-        --background-hover: var(--wm-color-light);
-        --background-hover-opacity: 0;
+      --color: var(--wm-color-dark);
+      --background: var(--wm-color-light);
+      --background-activated: var(--wm-color-dark);
+      --background-activated-opacity: 0.25;
+      --background-focused: var(--wm-color-light);
+      --background-focused-opacity: 0;
+      --background-hover: var(--wm-color-light);
+      --background-hover-opacity: 0;
     }
+  }
 }
