@@ -14,6 +14,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import { ConfigService } from './config.service';
 import { StorageService } from './base/storage.service';
+import {Store} from '@ngrx/store';
+import {IConfRootState} from '../store/conf/conf.reducer';
+import {confLANGUAGES} from '../store/conf/conf.selector';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +26,12 @@ export class LanguagesService {
   private _currentLang: string;
   private _available: Array<string>;
   private _onCurrentLangChange: ReplaySubject<string>;
-
+  private _confLANGUAGES$: Observable<ILANGUAGES> = this._storeConf.select(confLANGUAGES);
   constructor(
     private _configService: ConfigService,
     private _translateService: TranslateService,
-    private _storageService: StorageService // private _configService: ConfigService,
+    private _storageService: StorageService, // private _configService: ConfigService,
+    private _storeConf: Store<IConfRootState>,
   ) {
     this._onCurrentLangChange = new ReplaySubject<string>(1);
   }
@@ -37,7 +41,7 @@ export class LanguagesService {
   }
 
   public get currentLang(): string {
-    return this._currentLang;
+    return this._translateService.currentLang;
   }
 
   public get defaultLang(): string {
@@ -70,11 +74,15 @@ export class LanguagesService {
             this._onCurrentLangChange.next(this._currentLang);
             // this._storageService.setLanguage(this._currentLang);
           },
-          (err) => {
+          err => {
             console.warn(err);
-          }
+          },
         );
     }
+  }
+  changeLang(lang: string): void {
+    this._translateService.use(lang);
+    localStorage.setItem('webmapp-language', lang);
   }
 
   /**
@@ -85,16 +93,10 @@ export class LanguagesService {
    * @returns {boolean}
    */
   isAvailable(lang: string): boolean {
-    if (
-      typeof lang === 'undefined' ||
-      lang === null ||
-      lang === '' ||
-      lang.length < 2
-    )
+    if (typeof lang === 'undefined' || lang === null || lang === '' || lang.length < 2)
       return false;
 
-    for (const i of this._available)
-      if (i === lang.substring(0, 2)) return true;
+    for (const i of this._available) if (i === lang.substring(0, 2)) return true;
 
     return false;
   }
@@ -115,10 +117,7 @@ export class LanguagesService {
 
     if (key && (!object || this._translateService.instant(key) !== key))
       value = this._translateService.instant(key);
-    else if (
-      object[key] &&
-      this._translateService.instant(object[key]) !== object[key]
-    )
+    else if (object[key] && this._translateService.instant(object[key]) !== object[key])
       value = this._translateService.instant(object[key]);
     else if (
       object.translations &&
@@ -126,11 +125,7 @@ export class LanguagesService {
       object.translations[this._currentLang][key]
     )
       value = object.translations[this._currentLang][key];
-    else if (
-      object.locale &&
-      object.locale.substring(0, 2) === this._currentLang &&
-      object[key]
-    )
+    else if (object.locale && object.locale.substring(0, 2) === this._currentLang && object[key])
       value = object[key];
     else if (
       fallbackKey &&
@@ -158,6 +153,10 @@ export class LanguagesService {
     return value;
   }
 
+  langs(): string[] {
+    return this._translateService.getLangs();
+  }
+
   /**
    * Initialize the translations and select the language
    */
@@ -165,33 +164,15 @@ export class LanguagesService {
     this._defaultLang = this._configService.defaultLanguage;
     this._available = this._configService.availableLanguages;
 
-    this._translateService.setDefaultLang('it');
-    this._storageService.getLanguage().then((lang) => {
-      // First - previously set language
-      if (this.isAvailable(lang)) this._currentLang = lang;
-      // Second - browser language
-      else if (
-        this._translateService.getBrowserLang() !== undefined &&
-        this.isAvailable(this._translateService.getBrowserLang())
-      )
-        this._currentLang = this._translateService
-          .getBrowserLang()
-          .substring(0, 2);
-      // Third - default language
-      else this._currentLang = this._defaultLang;
-
-      this._translateService
-        .use(this._currentLang)
-        .pipe(take(1))
-        .subscribe(
-          () => {
-            this._onCurrentLangChange.next(this._currentLang);
-            this._storageService.setLanguage(this._currentLang);
-          },
-          (err) => {
-            console.warn(err);
-          }
-        );
+    this._confLANGUAGES$.pipe(take(1)).subscribe(lang => {
+      this._translateService.addLangs(lang.available);
+      const savedLang = localStorage.getItem('webmapp-language');
+      if (savedLang != null) {
+        console.log('ciao', savedLang);
+        this.changeLang(savedLang);
+      } else {
+        this.changeLang(lang.default);
+      }
     });
   }
 }

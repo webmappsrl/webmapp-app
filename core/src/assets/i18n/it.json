@@ -296,7 +296,9 @@
         "vocals": "Note vocali",
         "waypoints": "Waypoint"
       },
-      "title": "Profilo"
+      "title": "Profilo",
+      "lang": "lingua",
+      "langPlaceholder": "seleziona"
     },
     "register": {
       "averagespeed": "Velocità media",
