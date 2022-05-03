@@ -9,7 +9,7 @@ const initialConfState: ICONF = {
   APP: {
     name: 'Webmapp',
     geohubId: 10,
-    id: 'it.webmapp'
+    id: 'it.webmapp',
   },
   OPTIONS: {
     baseUrl: '-',
@@ -85,6 +85,10 @@ const initialConfState: ICONF = {
     defaultFeatureColor: '#000000',
     theme: 'webmapp',
   },
+  LANGUAGES: {
+    default: 'it',
+    available: ['en', 'it'],
+  },
 };
 export const confReducer = createReducer(
   initialConfState,
@@ -97,6 +101,7 @@ export const confReducer = createReducer(
         THEME: {...state.THEME, ...conf.THEME},
         OPTIONS: {...state.OPTIONS, ...conf.OPTIONS},
         MAP: {...state.MAP, ...conf.MAP},
+        LANGUAGES: {...state.LANGUAGES, ...conf.LANGUAGES},
       },
     };
   }),

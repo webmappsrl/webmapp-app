@@ -27,6 +27,14 @@
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
+  <form [formGroup]="langForm">
+    <ion-item>
+      <ion-label> {{'pages.profile.lang' | translate}}</ion-label>
+      <ion-select formControlName="lang" placeholder="{{'pages.profile.langPlaceholder' | translate}}">
+        <ion-select-option [value]="lang" *ngFor="let lang of langs$|async">{{lang}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </form>
   <ng-container *ngIf="!isLoggedIn">
     <div class="webmapp-profile-logged-out-slider-container">
       <ion-slides
@@ -62,10 +70,7 @@
       <button class="webmapp-profile-logged-out-login-button" (click)="login()">
         {{'pages.profile.loggedOut.login' | translate}}
       </button>
-      <button
-        class="webmapp-profile-logged-out-signup-button"
-        (click)="signup()"
-      >
+      <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
         {{'pages.profile.loggedOut.signup' | translate}}
       </button>
     </div>
@@ -93,9 +98,7 @@
           [routerLink]="['profile-data']"
           class="webmapp-profile-tabs-tab-button"
         >
-          <ion-label class="webmapp-profile-tabs-tab-label">
-            I tuoi dati
-          </ion-label>
+          <ion-label class="webmapp-profile-tabs-tab-label"> I tuoi dati </ion-label>
           <div class="webmapp-profile-tabs-tab-button-border"></div>
         </ion-tab-button>
         <ion-tab-button
@@ -104,9 +107,7 @@
           [routerLink]="['profile-records']"
           class="webmapp-profile-tabs-tab-button"
         >
-          <ion-label class="webmapp-profile-tabs-tab-label">
-            Le tue registrazioni
-          </ion-label>
+          <ion-label class="webmapp-profile-tabs-tab-label"> Le tue registrazioni </ion-label>
           <div class="webmapp-profile-tabs-tab-button-border"></div>
         </ion-tab-button>
       </ion-tab-bar>

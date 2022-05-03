@@ -1,89 +1,89 @@
 {
   "activities": {
-    "cycling": "Bicicletta",
+    "cycling": "Cycling",
     "hiking": "Hiking",
-    "running": "Corsa",
-    "skitouring": "Scialpinismo",
-    "walking": "Passeggiata"
+    "running": "Running",
+    "skitouring": "Skitouring",
+    "walking": "Salking"
   },
   "components": {
     "cardtrack": {
-      "delete": "Elimina",
-      "remove": "Rimuovi"
+      "delete": "Selete",
+      "remove": "Remove"
     },
     "map": {
       "btnrec": {
-        "slide": "Scorri per registrare"
+        "slide": "Swipe to register"
       },
       "register": {
-        "cancel": "Annulla",
-        "photo": "Foto",
-        "title": "Registra",
-        "track": "Tracciato",
-        "vocal": "Nota vocale",
+        "cancel": "Cancel",
+        "photo": "Photo",
+        "title": "Record",
+        "track": "Track",
+        "vocal": "Voice note",
         "waypoint": "Waypoint"
       }
     },
     "searchbar": {
-      "filters": "Filtra per",
-      "nofilters": "Nessun filtro corrisponde alla ricerca effetuata",
-      "noplaces": "Nessun luogo corrisponde alla ricerca effetuata",
-      "notracks": "Nessun percorso corrisponde alla ricerca effetuata",
-      "placeholder": "cerca",
-      "places": "Luoghi",
-      "tracks": "Percorsi"
+      "filters": "Filter by",
+      "nofilters": "No filter matches your search",
+      "noplaces": "No place matches to the research carried out",
+      "notracks": "No paths matches to the research carried out",
+      "placeholder": "Search",
+      "places": "Places",
+      "tracks": "Tracks"
     },
     "slopechart": {
       "slope": {
-        "label": "pendenza"
+        "label": "slope"
       },
       "surfaces": {
         "asphalt": {
-          "label": "asfalto"
+          "label": "asphalt"
         },
         "concrete": {
-          "label": "cemento"
+          "label": "concrete"
         },
         "dirt": {
-          "label": "terra"
+          "label": "land"
         },
         "grass": {
-          "label": "erba"
+          "label": "grass"
         },
         "gravel": {
-          "label": "ghiaia"
+          "label": "gravel"
         },
         "paved": {
-          "label": "lastricato"
+          "label": "paved"
         },
         "sand": {
-          "label": "sabbia"
+          "label": "sand"
         }
       }
     }
   },
   "generic": {
-    "cancel": "annulla",
-    "confirm": "conferma",
-    "delete": "cancella",
-    "error": "Si è verificato un errore. Riprova più tardi",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "error": "An error has occurred. Try later",
     "hour": "h",
     "minute": "min",
     "ok": "ok",
-    "retry": "riprova",
-    "warning": "Attenzione"
+    "retry": "Retry",
+    "warning": "Warning"
   },
   "modals": {
     "coin": {
-      "buttonall": "Vedi tutti i coin pack",
-      "buttonone": "Acquista 1 Coin / 1€",
-      "defaultmessage": "Acquista coins per scaricare contenuti offline",
-      "info1": "Puoi acquistare un singolo percorso",
-      "info2": "Hai tutto a disposizione anche senza copertura",
-      "info3": "Ricevi notifiche di prossimità",
-      "subinfo1": "Acquista un singolo coin a 1€",
-      "subinfo2": "Navigazione precis aanche queando sei offline",
-      "subinfo3": "Ti avvisiamo in prossimità di punti di interesse sul percorso"
+      "buttonall": "See all coin packs",
+      "buttonone": "Buy 1 Coin / 1€",
+      "defaultmessage": "Buy coins to download offline content",
+      "info1": "You can purchase a single route",
+      "info2": "You have everything available even without coverage",
+      "info3": "Receive proximity notifications",
+      "subinfo1": "Buy a single coin for € 1",
+      "subinfo2": "Precise navigation even when you are offline",
+      "subinfo3": "We warn you when you are close to points of interest along the route"
     },
     "giftcoin": {
       "button": "Inizia a esplorare",
@@ -164,7 +164,7 @@
       "track": {
         "avgspeed": "Velocità media",
         "odo": "Km percorsi",
-        "slope": "Dislivello",
+        "slope": "Slope",
         "text": "La traccia è stata salvata correttamente. Puoi visualizzarla accedendo al tuo profilo.",
         "time": "Tempo",
         "title": "Attività registrata con successo!",
@@ -187,8 +187,8 @@
       "title": "Downloads"
     },
     "favourites": {
-      "nodata": "Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
-      "title": "Preferiti"
+      "nodata": "There are no favorite heart tracks, click on a track icon to add it to this list",
+      "title": "Favourites"
     },
     "home": {
       "button": "Scegli un punto di partenza",
@@ -196,36 +196,36 @@
       "intro": "Pianifichiamo insieme la tua prossima avventura",
       "mostViewedTracks": "Percorsi più visti",
       "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
-      "welcome": "Benvenuto!"
+      "welcome": "Welcome!"
     },
     "itinerary": {
-      "btnFullMapExpand": "Espandi",
+      "btnFullMapExpand": "Expand",
       "btnFullMapReduce": "Riduci",
-      "btndnavigate": "Naviga",
-      "btndownload": "Scarica",
-      "btnfavourite": "Preferiti",
-      "btnshare": "Condividi",
+      "btndnavigate": "Navigate",
+      "btndownload": "Download",
+      "btnfavourite": "Favourite",
+      "btnshare": "Share",
       "description": {
-        "description": "Descrizione",
+        "description": "Description",
         "gallery": "Gallery"
       },
       "detail": {
-        "ascent": "Dislivello +",
-        "descent": "Dislivello -",
-        "distance": "Lunghezza",
+        "ascent": "Slope +",
+        "descent": "Slope -",
+        "distance": "Distance",
         "ele_from": "Quota di partenza",
         "ele_max": "Quota massima",
         "ele_min": "Quota minima",
         "ele_to": "Quota di arrivo"
       },
       "directions": "Ottieni indicazioni",
-      "download": "Scarica",
+      "download": "Download",
       "downloadpanel": {
         "complete": "Download completato",
         "dontclose": "Non chiudere l'applicazione durante la fase di installazione dei dati",
         "downdata": "Download dei dati",
         "download": "Download",
-        "downloadbtn": "Scarica",
+        "downloadbtn": "Download",
         "downloading": "Downloading",
         "downmap": "Download della mappa",
         "downmedia": "Download dei media",
@@ -248,13 +248,13 @@
         "title": "Attualmente non disponibile",
         "confirm": "ok"
       },
-      "navigate": "Naviga",
-      "share": "Condividi",
-      "tabdescription": "Descrizione",
+      "navigate": "Navigate",
+      "share": "Share",
+      "tabdescription": "Description",
       "tabdetail": "Dettagli",
       "tabeat": "Dove mangiare",
       "tabhowto": "Come arrivare",
-      "tabviability": "Percorribilità",
+      "tabviability": "Viability",
       "tabwalkable": "Accessibilità",
       "viability": {
         "info": "Altre info",
@@ -282,11 +282,11 @@
         "tracks": "Tracce scaricate"
       },
       "loggedOut": {
-        "login": "Accedi",
-        "signup": "Registrati",
+        "login": "Sign in",
+        "signup": "Sign up",
         "slides": {
-          "0": "Accedi e scarica i tuoi percorsi preferiti",
-          "1": "Puoi anche condividerli con i tuoi compagni di viaggio"
+          "0": "Access and download your favorite routes",
+          "1": "You can also share them with your travel companions"
         }
       },
       "records": {
@@ -296,9 +296,9 @@
         "vocals": "Note vocali",
         "waypoints": "Waypoint"
       },
-      "title": "Profilo",
-      "lang": "lingua",
-      "langPlaceholder": "seleziona"
+      "title": "Profile",
+      "lang": "Language",
+      "langPlaceholder": "select"
     },
     "register": {
       "averagespeed": "Velocità media",
@@ -333,7 +333,7 @@
         "formactivity": "Tipo di attività",
         "formactivityerror": "Il tipo di attività è un campo obbligatorio",
         "formactivityplaceholder": "Seleziona",
-        "formdescription": "Descrizione",
+        "formdescription": "Description",
         "formdescriptionplaceholder": "Se vuoi puoi aggiungere una descrizione",
         "formphotos": "Aggiungi foto scattate durante il percorso",
         "formtitle": "Titolo traccia",
@@ -392,33 +392,33 @@
       "title": "Unisciti alla community di webmapp!"
     },
     "route": {
-      "btnFullMapExpand": "Espandi",
+      "btnFullMapExpand": "Expand",
       "btnFullMapReduce": "Riduci",
-      "btndnavigate": "Naviga",
-      "btndownload": "Scarica",
-      "btnfavourite": "Preferiti",
-      "btnshare": "Condividi",
+      "btndnavigate": "Navigate",
+      "btndownload": "Download",
+      "btnfavourite": "Favourite",
+      "btnshare": "Share",
       "description": {
-        "description": "Descrizione",
+        "description": "Description",
         "gallery": "Gallery"
       },
       "detail": {
-        "ascent": "Dislivello +",
-        "descent": "Dislivello -",
-        "distance": "Lunghezza",
-        "ele_from": "Quota di partenza",
-        "ele_max": "Quota massima",
-        "ele_min": "Quota minima",
-        "ele_to": "Quota di arrivo"
+        "ascent": "Slope +",
+        "descent": "Slope -",
+        "distance": "Distance",
+        "ele_from": "Starting elevation",
+        "ele_max": "Max elevation",
+        "ele_min": "Min elevation",
+        "ele_to": "Finishing elevation"
       },
       "directions": "Ottieni indicazioni",
-      "download": "Scarica",
+      "download": "Download",
       "downloadpanel": {
         "complete": "Download completato",
         "dontclose": "Non chiudere l'applicazione durante la fase di installazione dei dati",
         "downdata": "Download dei dati",
         "download": "Download",
-        "downloadbtn": "Scarica",
+        "downloadbtn": "Download",
         "downloading": "Downloading",
         "downmap": "Download della mappa",
         "downmedia": "Download dei media",
@@ -436,13 +436,13 @@
         "text": "Uscire senza terminare il download della traccia?",
         "title": "Interrompere il download?"
       },
-      "navigate": "Naviga",
-      "share": "Condividi",
-      "tabdescription": "Descrizione",
+      "navigate": "Navigate",
+      "share": "Share",
+      "tabdescription": "Description",
       "tabdetail": "Dettagli",
       "tabeat": "Dove mangiare",
       "tabhowto": "Come arrivare",
-      "tabviability": "Percorribilità",
+      "tabviability": "Viability",
       "tabwalkable": "Accessibilità",
       "viability": {
         "info": "Altre info",
@@ -466,7 +466,7 @@
       "distance": "Km percorsi",
       "edit": "Modifica registrazione",
       "photos": "Foto",
-      "slope": "Dislivello",
+      "slope": "Slope",
       "time": "Tempo",
       "title": "Traccia registrata",
       "topspeed": "Velocità massima"
@@ -478,7 +478,7 @@
     "waypoint": {
       "here": "Ti trovi qui:",
       "modalsave": {
-        "formdescription": "Descrizione",
+        "formdescription": "Description",
         "formdescriptionplaceholder": "Se vuoi puoi aggiungere una descrizione",
         "formoptional": "Facoltativo",
         "formphotos": "Aggiungi foto del Waypoint",
@@ -529,9 +529,10 @@
     }
   },
   "tabs": {
-    "favourites": "preferiti",
+    "favourites": "favorites",
     "home": "home",
-    "map": "mappa",
-    "profile": "profilo"
-  }
+    "map": "map",
+    "profile": "profile"
+  },
+  "Percorribilità": "Viability"
 }
