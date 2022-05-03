@@ -10,6 +10,8 @@ import { BtnRecComponent } from './btn-rec/btn-rec.component';
 import { ClusterMarkerComponent } from './cluster-marker/cluster-marker.component';
 import { BtnOrientationComponent } from './btn-orientation/btn-orientation.component';
 import { MapComponent } from './map/map.component';
+import { OldMapComponent } from './old-map/map.component';
+import {ItineraryMapComponent} from './itinerary-map/itinerary-map.component';
 @NgModule({
   declarations: [
     BtnGeolocationComponent,
@@ -19,17 +21,17 @@ import { MapComponent } from './map/map.component';
     BtnOrientationComponent,
     PopoverRegisterComponent,
     ClusterMarkerComponent,
-    MapComponent
+    MapComponent,
+    OldMapComponent,
+    ItineraryMapComponent,
   ],
-  imports: [
-    CommonModule,
-    IonicModule,
-    TranslateModule,
-  ],
-  exports:[
+  imports: [CommonModule, IonicModule, TranslateModule],
+  exports: [
     BtnRegisterComponent,
     BtnOrientationComponent,
-    MapComponent
-  ]
+    MapComponent,
+    OldMapComponent,
+    ItineraryMapComponent,
+  ],
 })
-export class MapModule { }
+export class MapModule {}

@@ -18,6 +18,11 @@ import { IElasticAllRootState } from './store/elastic/elastic.reducer';
 import { Store } from '@ngrx/store';
 import { loadConf } from './store/conf/conf.actions';
 import { allElastic } from './store/elastic/elastic.actions';
+import {Observable} from 'rxjs';
+import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
+import {mapCurrentTrack} from './store/map/map.selector';
+import {IMapRootState} from './store/map/map';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -28,6 +33,8 @@ export class AppComponent {
   public showingPhotos = false;
   public image_gallery: any[];
   public photoIndex: number = 0;
+  private _currentTrack$: Observable<CGeojsonLineStringFeature> =
+    this._storeMap.select(mapCurrentTrack);
 
   constructor(
     private _languagesService: LanguagesService,
@@ -42,6 +49,7 @@ export class AppComponent {
     private saveService: SaveService,
     private _storeConf: Store<IConfRootState>,
     private _storeElasticAll: Store<IElasticAllRootState>,
+    private _storeMap: Store<IMapRootState>,
   ) {
     this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
@@ -52,11 +60,13 @@ export class AppComponent {
         this.saveGeneratedContentsNowAndInterval();
         SplashScreen.hide();
       },
-      (err) => {
+      err => {
         SplashScreen.hide();
-      }
+      },
     );
-
+    this._currentTrack$.pipe(filter(t => t != null)).subscribe(_ => {
+      this._navController.navigateForward('itinerary');
+    });
     this._downloadService.init();
 
     this._googleAnalytics
@@ -67,9 +77,9 @@ export class AppComponent {
         // Tracker is ready
         // You can now track pages or set additional information such as AppVersion or UserId
       })
-      .catch((e) => console.log('Error starting GoogleAnalytics', e));
+      .catch(e => console.log('Error starting GoogleAnalytics', e));
 
-    this.status.showPhotos.subscribe((x) => {
+    this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
@@ -86,11 +96,7 @@ export class AppComponent {
 
     if (location && location.latitude && location.longitude) {
       state = {
-        startView: [
-          location.longitude,
-          location.latitude,
-          DEF_MAP_LOCATION_ZOOM,
-        ],
+        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
       };
     }
     this._navController.navigateForward('register', {

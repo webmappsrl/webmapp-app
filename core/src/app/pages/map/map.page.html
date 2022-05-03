@@ -14,11 +14,7 @@
   </div>
   <webmapp-map
   [padding]="mapPadding$|async"
-  [track]="track$|async"
-  [poi]="currentPoiIDToMap$|async"
-  [trackElevationChartElements]="trackElevationChartHoverElements$|async"
-  (feature-click)="toggleDetails($event)"
-  (poi-click)="setCurrentPoi($event)"
+  [disableTrackSelection]=true
 ></webmapp-map>
 <!--
   <webmapp-map

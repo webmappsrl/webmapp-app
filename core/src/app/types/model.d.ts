@@ -31,7 +31,7 @@ export interface IGeojsonProperties {
   [_: string]: any; // allow to work with custom properties when needed
   id: number;
 
-  mbtiles?:string[];
+  mbtiles?: string[];
   created_at?: Date;
   updated_at?: Date;
   name?: iLocalString;
@@ -60,7 +60,7 @@ export interface IGeojsonProperties {
   image?: IWmImage;
   image_gallery?: IWmImage[];
   taxonomy?: {
-    activity?: string[];
+    activity?: any[];
     where?: string[];
   };
   duration?: {
@@ -121,7 +121,7 @@ export interface IGeojsonPoi extends IGeojsonGeneric {
   type: 'Point';
   properties: {
     id: number; // Id del poi
-    image: string; // url image    
+    image: string; // url image
   };
   isSmall?: boolean
 }
@@ -129,14 +129,15 @@ export interface IGeojsonPoi extends IGeojsonGeneric {
 export interface IGeojsonPoiDetailed extends IGeojsonPoi {
   properties: {
     id: number; // Id del poi
-    image: string; // url image   
+    image: string; // url image
     images: string[]; // url images
     name: iLocalString;
     description: iLocalString;
-    email?: string,
-    phone?: string,
-    address?: string,
-    url?: string
+    image_gallery?: any[];
+    email?: string;
+    phone?: string;
+    address?: string;
+    url?: string;
   };
 }
 export interface IGeojsonClusterApiResponse {
@@ -168,5 +169,5 @@ export interface WhereTaxonomy {
   // min_size: null,
   // max_size: null,
   // icon_zoom: null,
-  // icon_size: null    
+  // icon_size: null
 }

@@ -1,0 +1,36 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": 13,
+    "created_at": "2021-08-02T10:21:15.000000Z",
+    "updated_at": "2021-08-05T11:36:32.000000Z",
+    "name": {
+      "it": "Casetta dei Pinottolai",
+      "en": "Casetta dei Pinottolai"
+    },
+    "description": {
+      "en": null
+    },
+    "excerpt": {
+      "en": null
+    },
+    "user_id": 4,
+    "ele": "7",
+    "pivot": {
+      "ec_track_id": 23,
+      "ec_poi_id": 13,
+      "order": 1
+    },
+    "geojson_url": "https://geohub.webmapp.it/api/ec/poi/download/13.geojson",
+    "gpx_url": "https://geohub.webmapp.it/api/ec/poi/download/13.gpx",
+    "kml_url": "https://geohub.webmapp.it/api/ec/poi/download/13.kml",
+    "taxonomy": {
+      "where": [9, 73, 4048],
+      "poi_type": [8]
+    }
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [11.0432912309498, 42.6632898286994]
+  }
+}

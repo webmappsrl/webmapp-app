@@ -14,7 +14,7 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { auditTime, map, take } from 'rxjs/operators';
-import { MapComponent } from 'src/app/components/map/old-map/map.component';
+import { OldMapComponent } from 'src/app/components/map/old-map/map.component';
 import { CoinService } from 'src/app/services/coin.service';
 import { DownloadService } from 'src/app/services/download.service';
 import { GeohubService } from 'src/app/services/geohub.service';
@@ -77,7 +77,7 @@ export class RoutePage implements OnInit {
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   @ViewChild('dragHandleContainer') dragHandleContainer: ElementRef;
   @ViewChild('mapcontainer') mapControl: ElementRef;
-  @ViewChild('map') mapComponent: MapComponent;
+  @ViewChild('map') mapComponent: OldMapComponent;
   @ViewChild('headerPageRoute') headerControl: ElementRef;
   @ViewChild('header') header: ElementRef;
   @ViewChild('lessdetails') lessDetails: ElementRef;
