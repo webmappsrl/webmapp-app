@@ -33,7 +33,7 @@ import {setCurrentPoiId} from 'src/app/store/map/map.actions';
 })
 export class PoiPage implements OnInit, OnDestroy {
   public route: IGeojsonFeature;
-  public pois: Array<IGeojsonPoiDetailed>;
+  public pois: Array<IGeojsonPoiDetailed> = [];
   public selectedPoi: IGeojsonPoiDetailed;
   public track;
 
@@ -104,7 +104,7 @@ export class PoiPage implements OnInit, OnDestroy {
     if (poi != null) {
       this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
     }
-    // this.updatePoiMarkers();
+    this.updatePoiMarkers();
   }
 
   prevPoi() {

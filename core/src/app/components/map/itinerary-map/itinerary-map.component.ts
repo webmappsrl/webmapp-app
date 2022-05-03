@@ -10,7 +10,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import {buffer} from 'ol/extent';
+import {buffer, Extent} from 'ol/extent';
 
 // ol imports
 import {Coordinate} from 'ol/coordinate';
@@ -24,7 +24,7 @@ import CircleStyle from 'ol/style/Circle';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import View from 'ol/View';
+import View, {FitOptions} from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
@@ -74,6 +74,7 @@ import sourceVector from 'ol/source/Vector';
 import {Store} from '@ngrx/store';
 import {IMapRootState} from 'src/app/store/map/map';
 import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selector';
+import SimpleGeometry from 'ol/geom/SimpleGeometry';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -489,7 +490,15 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
       });
     }
   }
-
+  private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
+    if (optOptions == null) {
+      optOptions = {
+        duration: DEF_MAP_CLUSTER_ZOOM_DURATION,
+        maxZoom: this._view.getZoom(),
+      };
+    }
+    this._view.fit(geometryOrExtent, optOptions);
+  }
   ngOnDestroy() {
     clearInterval(this.timer);
     this._destroyer.next(true);
@@ -991,7 +1000,13 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     let markerGeometry = null;
     if (this._selectedPoi.marker) {
       this._removeIconFromLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-      markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
+      if (
+        this._selectedPoi != null &&
+        this._selectedPoi.lastSelectedPoi != null &&
+        this._selectedPoi.lastSelectedPoi.geometry != null
+      ) {
+        markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
+      }
     }
     this._selectedPoi.newSelectedPoi = poi;
     const {marker, style} = await this._createPoiCanvasIcon(poi, markerGeometry);
@@ -1000,12 +1015,15 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
     if (!this._selectedPoi.lastSelectedPoi) {
       //insert
-      //this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
+      // this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
       this._selectedPoi.lastSelectedPoi = poi;
     } else {
       //animate
       this._selectedPoiStartAnimation();
     }
+
+    const poiMarker = this._poiMarkers.find(x => +x.id == +poi.properties.id);
+    this._fitView(poiMarker.icon.getGeometry() as any);
   }
 
   _selectedPoiMove(event) {
