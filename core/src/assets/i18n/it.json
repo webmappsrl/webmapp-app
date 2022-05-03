@@ -198,6 +198,69 @@
       "nocloserTracks": "Non sembrano esser presenti percorsi vicino alla posizione attuale",
       "welcome": "Benvenuto!"
     },
+    "itinerary": {
+      "btnFullMapExpand": "Espandi",
+      "btnFullMapReduce": "Riduci",
+      "btndnavigate": "Naviga",
+      "btndownload": "Scarica",
+      "btnfavourite": "Preferiti",
+      "btnshare": "Condividi",
+      "description": {
+        "description": "Descrizione",
+        "gallery": "Gallery"
+      },
+      "detail": {
+        "ascent": "Dislivello +",
+        "descent": "Dislivello -",
+        "distance": "Lunghezza",
+        "ele_from": "Quota di partenza",
+        "ele_max": "Quota massima",
+        "ele_min": "Quota minima",
+        "ele_to": "Quota di arrivo"
+      },
+      "directions": "Ottieni indicazioni",
+      "download": "Scarica",
+      "downloadpanel": {
+        "complete": "Download completato",
+        "dontclose": "Non chiudere l'applicazione durante la fase di installazione dei dati",
+        "downdata": "Download dei dati",
+        "download": "Download",
+        "downloadbtn": "Scarica",
+        "downloading": "Downloading",
+        "downmap": "Download della mappa",
+        "downmedia": "Download dei media",
+        "downsetup": "Setup iniziale",
+        "gotobtn": "Vai ai miei download",
+        "install": "Istallazione"
+      },
+      "favbtn": {
+        "isFavourite": "Aggiunto ai preferiti!",
+        "isNotFavourite": "Rimosso dai preferiti!"
+      },
+      "modalconfirm": {
+        "cancel": "Annulla",
+        "confirm": "Uscire",
+        "text": "Uscire senza terminare il download della traccia?",
+        "title": "Interrompere il download?"
+      },
+      "modalNotImpemented": {
+        "text": "Comming soon",
+        "title": "Attualmente non disponibile",
+        "confirm": "ok"
+      },
+      "navigate": "Naviga",
+      "share": "Condividi",
+      "tabdescription": "Descrizione",
+      "tabdetail": "Dettagli",
+      "tabeat": "Dove mangiare",
+      "tabhowto": "Come arrivare",
+      "tabviability": "Percorribilità",
+      "tabwalkable": "Accessibilità",
+      "viability": {
+        "info": "Altre info",
+        "title": "Praticabilità del percorso"
+      }
+    },
     "map": {
       "loading": "ricerca in corso...",
       "recordingbtn": "Reg. in corso",

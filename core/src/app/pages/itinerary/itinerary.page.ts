@@ -152,8 +152,27 @@ export class ItineraryPage implements OnDestroy {
 
   async favourite() {}
 
-  navigate() {
+  async navigate() {
+    const translation = await this.translate
+      .get([
+        'pages.itinerary.modalNotImpemented.title',
+        'pages.itinerary.modalNotImpemented.text',
+        'pages.itinerary.modalconfirm.confirm',
+      ])
+      .toPromise();
+
     console.log('navigate function not implemented');
+    const alert = await this._alertController.create({
+      cssClass: 'my-custom-class',
+      header: translation['pages.itinerary.modalNotImpemented.title'],
+      message: translation['pages.itinerary.modalNotImpemented.text'],
+      buttons: ['OK'],
+    });
+
+    await alert.present();
+
+    const {role} = await alert.onDidDismiss();
+    console.log('onDidDismiss resolved with role', role);
   }
 
   back() {
