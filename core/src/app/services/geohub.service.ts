@@ -32,7 +32,7 @@ export class GeohubService {
   constructor(
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
-    private _configService: ConfigService
+    private _configService: ConfigService,
   ) {
     this._ecTracks = [];
   }
@@ -52,7 +52,7 @@ export class GeohubService {
         map((res: CGeojsonLineStringFeature) => {
           let lastAlt = 0;
           let idx = 0;
-          res.geometry.coordinates.forEach((coord) => {
+          res.geometry.coordinates.forEach(coord => {
             coord.push(Math.abs(coord[2] - lastAlt)); //pendenza
             lastAlt = coord[2];
             coord.push(fondo[Math.round(idx / 30) % 3]);
@@ -60,57 +60,57 @@ export class GeohubService {
           });
           res.properties.praticability = [
             {
-              name: { it: 'Trekking' },
+              name: {it: 'Trekking'},
               icon: 'trekking',
             },
             {
-              name: { it: 'A cavallo' },
+              name: {it: 'A cavallo'},
               icon: 'horse',
             },
             {
-              name: { it: 'In bici' },
+              name: {it: 'In bici'},
               icon: 'bike',
             },
           ];
           return res;
-        })
+        }),
       )
       .toPromise();
     return res;
   }
 
-    /**
+  /**
    * Get an instance of the specified ec track
    *
    * @param id the ec track id
    *
    * @returns
    */
-     async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
-      const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
-        (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
-      );
-      if (cacheResult) {
-        return cacheResult;
-      }
-      if (id > -1) {
-        const result = await this._communicationService
-          .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
-          .pipe(
-            map((apiResult: CGeojsonLineStringFeature) => {
-              return apiResult;
-            }),
-          )
-          .toPromise();
-
-        this._ecTracks.push(result);
-        if (this._ecTracks.length > 10) {
-          this._ecTracks.splice(0, 1);
-        }
-
-        return result;
-      }
+  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+    const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
+      (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
+    );
+    if (cacheResult) {
+      return cacheResult;
     }
+    if (id > -1) {
+      const result = await this._communicationService
+        .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+        .pipe(
+          map((apiResult: CGeojsonLineStringFeature) => {
+            return apiResult;
+          }),
+        )
+        .toPromise();
+
+      this._ecTracks.push(result);
+      if (this._ecTracks.length > 10) {
+        this._ecTracks.splice(0, 1);
+      }
+
+      return result;
+    }
+  }
 
   /**
    * Get an instance of the specified ec poi
@@ -142,7 +142,7 @@ export class GeohubService {
   async search(
     boundingbox: number[],
     filters,
-    referenceTrackId: number
+    referenceTrackId: number,
   ): Promise<IGeojsonClusterApiResponse> {
     let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
     if (referenceTrackId) {
@@ -162,9 +162,9 @@ export class GeohubService {
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`
+        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`,
       )
-      .pipe(map((x) => x.features))
+      .pipe(map(x => x.features))
       .toPromise();
     return res;
   }
@@ -177,9 +177,9 @@ export class GeohubService {
   async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed?app_id=${this._configService.appId}`
+        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed?app_id=${this._configService.appId}`,
       )
-      .pipe(map((x) => x.features))
+      .pipe(map(x => x.features))
       .toPromise();
     return res;
   }
@@ -244,7 +244,7 @@ export class GeohubService {
 
     if (photo.blob) data.append('image', photo.blob, 'image.jpg');
     data.append('geojson', JSON.stringify(geojson));
-    console.log("------- ~ GeohubService ~ savePhoto ~ data", data);
+    console.log('------- ~ GeohubService ~ savePhoto ~ data', data);
 
     // The content type multipart/form-data is not set because there could be problems
     // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http
@@ -282,15 +282,13 @@ export class GeohubService {
         data,
         new HttpHeaders({
           'Content-Type': 'application/json',
-        })
+        }),
       )
       .toPromise();
     return res;
   }
 
-  async getDetailsPoisForTrack(
-    id: number
-  ): Promise<Array<IGeojsonPoiDetailed>> {
+  async getDetailsPoisForTrack(id: number): Promise<Array<IGeojsonPoiDetailed>> {
     const mock = {
       type: 'FeatureCollection',
       features: [
@@ -299,12 +297,9 @@ export class GeohubService {
             id: 1,
             image:
               'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
-            images: [
-              'https://picsum.photos/250/150',
-              'https://picsum.photos/250/150',
-            ],
-            name: { it: 'esempio', en: 'example' },
-            description: { it: 'descrizione poi', en: 'desc' },
+            images: ['https://picsum.photos/250/150', 'https://picsum.photos/250/150'],
+            name: {it: 'esempio', en: 'example'},
+            description: {it: 'descrizione poi', en: 'desc'},
             email: 'pippo@gmail.com',
             phone: '12345678',
             address: 'Via di qua 0',
@@ -326,7 +321,7 @@ export class GeohubService {
               'https://picsum.photos/250/150',
               'https://picsum.photos/250/150',
             ],
-            name: { it: 'esempio 2 ', en: 'example' },
+            name: {it: 'esempio 2 ', en: 'example'},
             description: {
               it: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu. Vestibulum vehicula porttitor lacus, et sodales lorem vehicula vel. Quisque commodo mi id faucibus mollis. Nam porttitor, enim nec consequat commodo, dui lacus suscipit ante, in scelerisque lectus nibh eu turpis. Nulla metus risus, tristique vitae cursus vitae, hendrerit quis dolor. Donec tincidunt quis nulla sed lobortis. Aliquam eget nunc fringilla, fermentum sem ac, condimentum neque. Phasellus id aliquet sem, nec facilisis orci. Maecenas ultricies sollicitudin auctor. Cras quis orci placerat neque viverra tempor. Mauris et dolor rutrum, rutrum elit a, consectetur sem. Sed a erat nunc. Aliquam suscipit tincidunt semper. Morbi maximus eros diam.
                         Praesent dapibus, turpis in pulvinar efficitur, justo elit pulvinar lectus, non varius quam massa et sapien. Integer pulvinar diam lacus, in aliquam massa efficitur at. Suspendisse interdum auctor erat et lobortis. Sed a quam nunc. Mauris vitae erat placerat, interdum magna ac, accumsan urna. Suspendisse eu suscipit dolor. In hac habitasse platea dictumst. Cras volutpat risus a magna scelerisque, sed facilisis leo ullamcorper. In placerat ante a metus molestie euismod. Nulla ante sem, sollicitudin at dolor vel, fermentum ornare erat. Quisque posuere vitae risus ac porta. Nullam dapibus tincidunt quam non dictum. Vestibulum scelerisque nunc et lectus ornare, vitae mattis ante dictum. Aliquam erat volutpat. Praesent congue lacus mi, sed consequat nibh dapibus vel. Suspendisse potenti.
@@ -344,10 +339,10 @@ export class GeohubService {
       ],
     };
     let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`
+      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,
     );
     call = of(mock);
-    const res = await call.pipe(map((x) => x.features)).toPromise();
+    const res = await call.pipe(map(x => x.features)).toPromise();
     return res;
   }
 
@@ -380,10 +375,10 @@ export class GeohubService {
       ],
     };
     let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`
+      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,
     );
     call = of(mock);
-    const res = await call.pipe(map((x) => x.features)).toPromise();
+    const res = await call.pipe(map(x => x.features)).toPromise();
     return res;
   }
 
@@ -393,12 +388,12 @@ export class GeohubService {
       places: [
         {
           id: 1,
-          name: { it: 'esempio 2 ', en: 'example' },
+          name: {it: 'esempio 2 ', en: 'example'},
           bbox: [11.1022, 42.66137, 11.108, 42.658],
         },
         {
           id: 2,
-          name: { it: `Lorem ipsum dolor sit amet, `, en: 'desc' },
+          name: {it: `Lorem ipsum dolor sit amet, `, en: 'desc'},
           bbox: [11.1022, 42.66137, 11.108, 42.658],
         },
       ],
@@ -407,30 +402,30 @@ export class GeohubService {
           id: 22,
           image:
             'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg',
-          name: { it: 'esempio traccia ', en: 'example' },
+          name: {it: 'esempio traccia ', en: 'example'},
           where: [1],
         },
         {
           id: 25,
           image:
             'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
-          name: { it: 'esempio traccia bis  ', en: 'example' },
+          name: {it: 'esempio traccia bis  ', en: 'example'},
           where: [12],
         },
       ],
       poi_types: [
         {
           id: 6,
-          name: { it: 'esempio filtro ', en: 'example' },
+          name: {it: 'esempio filtro ', en: 'example'},
         },
         {
           id: 5,
-          name: { it: 'esempio filtro bis', en: 'example' },
+          name: {it: 'esempio filtro bis', en: 'example'},
         },
       ],
     };
     let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/search/${searchstring}`
+      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/search/${searchstring}`,
     );
     call = of(mock);
     const res = await call.toPromise();
@@ -450,11 +445,11 @@ export class GeohubService {
     const res = await this._communicationService
       .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/taxonomy/where/${id}`)
       .pipe(
-        map((value) => {
+        map(value => {
           delete value.geometry;
           this._setInCache(cacheId, value);
           return value;
-        })
+        }),
       )
       .toPromise();
     return res;
@@ -467,10 +462,7 @@ export class GeohubService {
 
     let ids: number[] = [];
     if (favourites) {
-      ids = favourites.slice(
-        page * FAVOURITE_PAGESIZE,
-        (page + 1) * FAVOURITE_PAGESIZE
-      );
+      ids = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
     }
 
     return this.getTracks(ids);
@@ -478,12 +470,8 @@ export class GeohubService {
 
   async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/multiple?ids=${ids.join(
-          ','
-        )}`
-      )
-      .pipe(map((x) => x.features))
+      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/multiple?ids=${ids.join(',')}`)
+      .pipe(map(x => x.features))
       .toPromise();
     return res;
   }
@@ -491,10 +479,8 @@ export class GeohubService {
   async favourites(): Promise<number[]> {
     if (!this._favourites) {
       try {
-        const { favorites } = await this._communicationService
-          .get(
-            `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/list`
-          )
+        const {favorites} = await this._communicationService
+          .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/list`)
           .toPromise();
         this._favourites = favorites;
       } catch (err) {
@@ -504,10 +490,7 @@ export class GeohubService {
     return this._favourites;
   }
 
-  async setFavouriteTrack(
-    trackId: number,
-    isFavourite: boolean
-  ): Promise<boolean> {
+  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<boolean> {
     if (isFavourite) {
       await this._communicationService
         .post(
@@ -515,7 +498,7 @@ export class GeohubService {
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
-          })
+          }),
         )
         .toPromise();
     } else {
@@ -525,7 +508,7 @@ export class GeohubService {
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
-          })
+          }),
         )
         .toPromise();
     }
@@ -533,7 +516,7 @@ export class GeohubService {
     const favourites = await this.favourites();
     let idx = -1;
     if (favourites && favourites.length) {
-      idx = favourites.findIndex((x) => x === trackId);
+      idx = favourites.findIndex(x => x === trackId);
     }
     if (isFavourite) {
       if (idx < 0) {
@@ -550,7 +533,7 @@ export class GeohubService {
   async isFavouriteTrack(trackId: number): Promise<boolean> {
     const favourites = await this.favourites();
     if (favourites && favourites.length) {
-      return !!favourites.find((x) => x == trackId);
+      return !!favourites.find(x => x == trackId);
     }
     return false;
   }
