@@ -31,7 +31,7 @@ export class ShareService {
         'services.share.url',
         'services.share.dialogTitle',
       ])
-      .subscribe((t) => {
+      .subscribe(t => {
         this.defaultShareObj.title = t['services.share.title'];
         this.defaultShareObj.text = t['services.share.text'];
         this.defaultShareObj.url = t['services.share.url'];
@@ -45,6 +45,12 @@ export class ShareService {
     });
   }
 
+  public async shareTrackByID(id: number) {
+    return this.share({
+      url: DEFAULT_ROUTE_LINK_BASEURL + id,
+    });
+  }
+
   /**
    *
    * Share something with the app sharing system
@@ -55,7 +61,7 @@ export class ShareService {
     let shareRet = await Share.share(so);
     console.log(
       '------- ~ file: share.service.ts ~ line 20 ~ ShareService ~ share ~ shareRet',
-      shareRet
+      shareRet,
     );
   }
 }
