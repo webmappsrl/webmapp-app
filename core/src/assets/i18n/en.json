@@ -8,7 +8,7 @@
   },
   "components": {
     "cardtrack": {
-      "delete": "Selete",
+      "delete": "Delete",
       "remove": "Remove"
     },
     "map": {

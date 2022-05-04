@@ -16,6 +16,7 @@ import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {auditTime, switchMap, take, tap} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
+import {CoinService} from 'src/app/services/coin.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IMapRootState} from 'src/app/store/map/map';
@@ -110,6 +111,7 @@ export class ItineraryPage implements OnDestroy {
     private _storeMap: Store<IMapRootState>,
     private _shareService: ShareService,
     private _geohubService: GeohubService,
+    private _coinService: CoinService,
   ) {
     this.setAnimations();
     this.currentTrackProperties$
@@ -382,8 +384,12 @@ export class ItineraryPage implements OnDestroy {
     this.lastScroll = scrolled;
   }
 
-  download() {
-    console.log('click on download');
+  public async download() {
+    const modalres = await this._coinService.openModal();
+
+    if (modalres) {
+      this.showDownload = true;
+    }
   }
 
   ngOnDestroy(): void {

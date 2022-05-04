@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { DownloadService } from 'src/app/services/download.service';
-import { StatusService } from 'src/app/services/status.service';
-import { IGeojsonFeatureDownloaded } from 'src/app/types/model';
+import {Store} from '@ngrx/store';
+import {DownloadService} from 'src/app/services/download.service';
+import {StatusService} from 'src/app/services/status.service';
+import {IMapRootState} from 'src/app/store/map/map';
+import {setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 
 @Component({
   selector: 'app-downloadlist',
@@ -10,27 +13,28 @@ import { IGeojsonFeatureDownloaded } from 'src/app/types/model';
   styleUrls: ['./downloadlist.page.scss'],
 })
 export class DownloadlistPage implements OnInit {
-
   public tracks: IGeojsonFeatureDownloaded[] = [];
 
   public selected: IGeojsonFeatureDownloaded[] = [];
-
 
   public isSelectedActive = false;
 
   constructor(
     private _downloadService: DownloadService,
     private _statusService: StatusService,
-    private _navController: NavController
-  ) { }
+    private _navController: NavController,
+    private _storeMap: Store<IMapRootState>,
+  ) {}
 
   async ngOnInit() {
     this.tracks = await this._downloadService.getDownloadedTracks();
+    console.log(this.tracks);
   }
 
   open(track: IGeojsonFeatureDownloaded) {
-    this._statusService.route = track;
-    this._navController.navigateForward('/route');
+    const clickedFeatureId = track.properties.id;
+    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
+    this._navController.navigateForward('/itinerary');
   }
 
   select(ev, track) {
@@ -42,7 +46,7 @@ export class DownloadlistPage implements OnInit {
   }
 
   deleteSelected() {
-    console.log("------- ~ DownloadlistPage ~ deleteSelected ~ deleteSelected", this.selected);
+    console.log('------- ~ DownloadlistPage ~ deleteSelected ~ deleteSelected', this.selected);
     this.selected.forEach(track => {
       this.remove(track);
     });
@@ -55,8 +59,7 @@ export class DownloadlistPage implements OnInit {
     this.tracks.splice(idx, 1);
   }
 
-  gotoMap(){
+  gotoMap() {
     this._navController.navigateForward('/map');
   }
-
 }
