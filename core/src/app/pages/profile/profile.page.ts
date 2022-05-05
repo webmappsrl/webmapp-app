@@ -4,13 +4,13 @@ import {Router} from '@angular/router';
 import {ModalController, NavController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {AuthService} from 'src/app/services/auth.service';
 import {LanguagesService} from 'src/app/services/languages.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {confAUTH} from 'src/app/store/conf/conf.selector';
+import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -25,8 +25,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   avatarUrl: string;
   langForm: FormGroup;
   langs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['it']);
-  private _confAuth$: Observable<IAUTH> = this._storeConf.select(confAUTH);
-  authEnable$: Observable<boolean> = this._confAuth$.pipe(map(a => a.enable ?? false));
+  authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
 
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 

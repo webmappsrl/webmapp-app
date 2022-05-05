@@ -12,7 +12,7 @@
         {{'tabs.map' | translate}}
       </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="favourites">
+    <ion-tab-button tab="favourites" *ngIf="authEnable$|async">
       <i class="icon-outline-heart webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label">
         {{'tabs.favourites' | translate}}
