@@ -37,18 +37,19 @@ import { ConfEffects } from './store/conf/conf.effects';
 import { ElasticEffects } from './store/elastic/elastic.effects';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
-import { UIEffects } from './store/map/map.effects';
+import {MapEffects} from './store/map/map.effects';
+import {NetworkEffects} from './store/network/network.effects';
+import {networkReducer} from './store/network/netwotk.reducer';
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
 class SQLiteMock {
   public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
-
-      return new Promise((resolve,reject)=>{
-          resolve(new SQLiteObject(new Object()));
-      });
+    return new Promise((resolve, reject) => {
+      resolve(new SQLiteObject(new Object()));
+    });
   }
-  }
+}
 
 @NgModule({
   declarations: [
@@ -59,14 +60,13 @@ class SQLiteMock {
   imports: [
     BrowserModule,
     IonicModule.forRoot({
-      mode: 'md'
+      mode: 'md',
     }),
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (http: HttpClient) =>
-          new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
         deps: [HttpClient],
       },
     }),
@@ -80,10 +80,11 @@ class SQLiteMock {
         search: elasticSearchReducer,
         all: elasticAllReducer,
         map: UIReducer,
+        network: networkReducer,
       },
       {},
     ),
-    EffectsModule.forRoot([ConfEffects, ElasticEffects, UIEffects]),
+    EffectsModule.forRoot([ConfEffects, ElasticEffects, MapEffects, NetworkEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode
@@ -99,19 +100,18 @@ class SQLiteMock {
     MapModule,
   ],
   providers: [
-    { provide: LOCALE_ID, useValue: 'it' },
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {provide: LOCALE_ID, useValue: 'it'},
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     {
       provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigService) => () =>
-        configService.initialize(),
+      useFactory: (configService: ConfigService) => () => configService.initialize(),
       deps: [ConfigService],
       multi: true,
     },
     Diagnostic,
     ImagePicker,
     GoogleAnalytics,
-    SQLite
+    SQLite,
   ],
   bootstrap: [AppComponent],
 })

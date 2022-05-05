@@ -8,12 +8,12 @@ import { loadTrackFail, loadTrackSuccess, setCurrentTrackId } from './map.action
 @Injectable({
   providedIn: 'root',
 })
-export class UIEffects {
+export class MapEffects {
   loadTrack$ = createEffect(() =>
     this._actions$.pipe(
       ofType(setCurrentTrackId),
-      switchMap((action) =>
-        action.currentTrackId? from(this._geohubSVC.getEcTrack(action.currentTrackId)):of(null),
+      switchMap(action =>
+        action.currentTrackId ? from(this._geohubSVC.getEcTrack(action.currentTrackId)) : of(null),
       ),
       map(currentTrack => loadTrackSuccess({currentTrack})),
       catchError(() => of(loadTrackFail())),

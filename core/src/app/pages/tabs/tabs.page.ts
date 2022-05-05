@@ -6,6 +6,8 @@ import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {online} from 'src/app/store/network/network.selector';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -14,10 +16,12 @@ import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions'
 })
 export class TabsPage {
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  online$: Observable<boolean> = this._storeNetwork.select(online);
   constructor(
     private _statusService: StatusService,
     private _storeMap: Store<IMapRootState>,
     private _storeConf: Store<IConfRootState>,
+    private _storeNetwork: Store<INetworkRootState>,
   ) {}
 
   isBarHidden() {
@@ -27,5 +31,8 @@ export class TabsPage {
   reset() {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: null}));
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
+  }
+  mapOffline(): void {
+    console.log('suca');
   }
 }
