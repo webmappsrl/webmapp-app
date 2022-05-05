@@ -11,30 +11,19 @@ import { GalleryComponent } from './gallery/gallery.component';
 import { ImgComponent } from './img/img.component';
 import { FormFieldComponent } from './form-field/form-field.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
-
+const components = [
+  LoginComponent,
+  ModalHeaderComponent,
+  GenericPopoverComponent,
+  RecordingBtnComponent,
+  GalleryComponent,
+  ImgComponent,
+  FormFieldComponent,
+  SearchBarComponent,
+];
 @NgModule({
-  declarations: [LoginComponent,
-     ModalHeaderComponent,
-     GenericPopoverComponent,
-     RecordingBtnComponent,
-    GalleryComponent,
-    ImgComponent,
-    FormFieldComponent,
-    SearchBarComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ReactiveFormsModule,
-    TranslateModule,
-  ],
-  exports: [LoginComponent,
-     ModalHeaderComponent,
-     GenericPopoverComponent,
-     RecordingBtnComponent,
-    GalleryComponent,
-    ImgComponent,
-    FormFieldComponent,
-    SearchBarComponent],
+  declarations: components,
+  imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule, TranslateModule],
+  exports: components,
 })
-export class SharedModule { }
+export class SharedModule {}

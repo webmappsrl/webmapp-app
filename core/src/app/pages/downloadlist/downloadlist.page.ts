@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {DownloadService} from 'src/app/services/download.service';
-import {StatusService} from 'src/app/services/status.service';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
@@ -21,7 +20,6 @@ export class DownloadlistPage implements OnInit {
 
   constructor(
     private _downloadService: DownloadService,
-    private _statusService: StatusService,
     private _navController: NavController,
     private _storeMap: Store<IMapRootState>,
   ) {}
@@ -33,7 +31,7 @@ export class DownloadlistPage implements OnInit {
 
   open(track: IGeojsonFeatureDownloaded) {
     const clickedFeatureId = track.properties.id;
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
+    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId, track}));
     this._navController.navigateForward('/itinerary');
   }
 

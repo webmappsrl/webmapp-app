@@ -18,6 +18,8 @@ import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
 import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {online} from 'src/app/store/network/network.selector';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {IGeojsonFeature} from 'src/app/types/model';
 
 @Component({
@@ -30,6 +32,7 @@ import {IGeojsonFeature} from 'src/app/types/model';
 export class HomePage implements OnInit {
   cards$: Observable<IHIT[]> = of([]);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
+  online$: Observable<boolean> = this._storeNetwork.select(online);
 
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -50,6 +53,7 @@ export class HomePage implements OnInit {
     private _storeSearch: Store<IElasticSearchRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
+    private _storeNetwork: Store<INetworkRootState>,
     private _navController: NavController,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));

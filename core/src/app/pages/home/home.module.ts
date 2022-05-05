@@ -11,6 +11,7 @@ import { CardsModule } from 'src/app/components/cards/cards.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from 'src/app/components/shared/shared.module';
 import { BoxModule } from 'src/app/components/box/box.module';
+import {DownloadlistPageModule} from '../downloadlist/downloadlist.module';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import { BoxModule } from 'src/app/components/box/box.module';
     CardsModule,
     HomePageRoutingModule,
     TranslateModule.forChild(),
-    SharedModule
+    SharedModule,
   ],
   declarations: [HomePage],
   entryComponents: [],

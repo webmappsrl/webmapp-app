@@ -13,7 +13,11 @@ export class MapEffects {
     this._actions$.pipe(
       ofType(setCurrentTrackId),
       switchMap(action =>
-        action.currentTrackId ? from(this._geohubSVC.getEcTrack(action.currentTrackId)) : of(null),
+        action.currentTrackId
+          ? action.track
+            ? of(action.track)
+            : from(this._geohubSVC.getEcTrack(action.currentTrackId))
+          : of(null),
       ),
       map(currentTrack => loadTrackSuccess({currentTrack})),
       catchError(() => of(loadTrackFail())),

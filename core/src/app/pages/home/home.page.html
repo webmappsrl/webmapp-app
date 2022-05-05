@@ -3,32 +3,39 @@
     <ion-label class="wm-home-hader-label">{{'pages.home.welcome' | translate}}</ion-label>
     <webmapp-search-bar
       class="webmapp-home-searchbar"
-      *ngIf="showSearch"
+      *ngIf="showSearch && online$|async"
       [initSearch]="title"
       (words)="isTyping$.next($event)"
     >
     </webmapp-search-bar>
   </div>
-  <ng-container *ngIf="(isTyping$|async)||(layerCards$|async)!=null; else layers">
-    <wm-search-box *ngFor="let card of cards$|async" [data]="card" (clickEVT)="searchCard(card.id)">
-    </wm-search-box
-  ></ng-container>
+  <ng-container *ngIf="online$|async">
+    <ng-container *ngIf="(isTyping$|async)||(layerCards$|async)!=null; else layers">
+      <wm-search-box *ngFor="let card of cards$|async" [data]="card" (clickEVT)="searchCard(card.id)">
+      </wm-search-box
+    ></ng-container>
 
-  <ng-template #layers>
-    <ng-container *ngFor="let home of confHOME$|async">
-      <h3 *ngIf="home.view === 'title'" class="webmapp-home-title">{{home.title}}</h3>
-      <ng-container *ngIf="home.view === 'compact-horizontal'">
-        <webmapp-layer-box
-          *ngFor="let term of home.terms"
-          [data]="term"
-          (clickEVT)="setLayer(term)"
-        >
-        </webmapp-layer-box>
+    <ng-template #layers>
+      <ng-container *ngFor="let home of confHOME$|async">
+        <h3 *ngIf="home.view === 'title'" class="webmapp-home-title">{{home.title}}</h3>
+        <ng-container *ngIf="home.view === 'compact-horizontal'">
+          <webmapp-layer-box
+            *ngFor="let term of home.terms"
+            [data]="term"
+            (clickEVT)="setLayer(term)"
+          >
+          </webmapp-layer-box>
+        </ng-container>
       </ng-container>
-    </ng-container>
-  </ng-template>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="(online$|async) === false">
+    <downloaded-tracks-box></downloaded-tracks-box>
+  </ng-container>
 
-  <webmapp-card-slider
+
+  <ng-container *ngIf="false">
+    <webmapp-card-slider
     [title]="'pages.home.mostViewedTracks' | translate"
     [data]="mostViewedRoutes"
   ></webmapp-card-slider>
@@ -38,4 +45,7 @@
     [data]="nearRoutes"
     [showDistance]="true"
   ></webmapp-card-slider>
+  </ng-container>
+
+
 </ion-content>
