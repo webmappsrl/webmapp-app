@@ -30,66 +30,97 @@
   <form [formGroup]="langForm">
     <ion-item>
       <ion-label> {{'pages.profile.lang' | translate}}</ion-label>
-      <ion-select formControlName="lang" placeholder="{{'pages.profile.langPlaceholder' | translate}}">
-        <ion-select-option [value]="lang" *ngFor="let lang of langs$|async">{{lang}}</ion-select-option>
+      <ion-select
+        formControlName="lang"
+        placeholder="{{'pages.profile.langPlaceholder' | translate}}"
+      >
+        <ion-select-option [value]="lang" *ngFor="let lang of langs$|async"
+          >{{lang}}</ion-select-option
+        >
       </ion-select>
     </ion-item>
   </form>
-  <ng-container *ngIf="!isLoggedIn">
-    <div class="webmapp-profile-logged-out-slider-container">
-      <ion-slides
-        class="webmapp-profile-logged-out-slider"
-        [options]="loggedOutSliderOptions"
-        pager="true"
-      >
-        <ion-slide class="webmapp-profile-logged-out-slide">
-          <div class="webmapp-profile-logged-out-slide-content">
-            <img
-              class="webmapp-profile-logged-out-slide-image"
-              src="assets/images/profile/logged_out_slide_1.svg"
-            />
-            <div class="webmapp-profile-logged-out-slide-text">
-              {{'pages.profile.loggedOut.slides.0' | translate}}
+  <ng-container *ngIf="(authEnable$|async) === true">
+    <ng-container *ngIf="!isLoggedIn">
+      <div class="webmapp-profile-logged-out-slider-container">
+        <ion-slides
+          class="webmapp-profile-logged-out-slider"
+          [options]="loggedOutSliderOptions"
+          pager="true"
+        >
+          <ion-slide class="webmapp-profile-logged-out-slide">
+            <div class="webmapp-profile-logged-out-slide-content">
+              <img
+                class="webmapp-profile-logged-out-slide-image"
+                src="assets/images/profile/logged_out_slide_1.svg"
+              />
+              <div class="webmapp-profile-logged-out-slide-text">
+                {{'pages.profile.loggedOut.slides.0' | translate}}
+              </div>
             </div>
-          </div>
-        </ion-slide>
-        <ion-slide class="webmapp-profile-logged-out-slide">
-          <div class="webmapp-profile-logged-out-slide-content">
-            <img
-              class="webmapp-profile-logged-out-slide-image"
-              src="assets/images/profile/logged_out_slide_2.svg"
-            />
-            <div class="webmapp-profile-logged-out-slide-text">
-              {{'pages.profile.loggedOut.slides.1' | translate}}
+          </ion-slide>
+          <ion-slide class="webmapp-profile-logged-out-slide">
+            <div class="webmapp-profile-logged-out-slide-content">
+              <img
+                class="webmapp-profile-logged-out-slide-image"
+                src="assets/images/profile/logged_out_slide_2.svg"
+              />
+              <div class="webmapp-profile-logged-out-slide-text">
+                {{'pages.profile.loggedOut.slides.1' | translate}}
+              </div>
             </div>
-          </div>
-        </ion-slide>
-      </ion-slides>
-    </div>
-    <div class="webmapp-profile-logged-out-login-buttons-container">
-      <button class="webmapp-profile-logged-out-login-button" (click)="login()">
-        {{'pages.profile.loggedOut.login' | translate}}
-      </button>
-      <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
-        {{'pages.profile.loggedOut.signup' | translate}}
-      </button>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="isLoggedIn">
-    <div class="webmapp-profile-user-container">
-      <ion-avatar
-        class="webmapp-profile-user-avatar"
-        [ngClass]="{
+          </ion-slide>
+        </ion-slides>
+      </div>
+      <div class="webmapp-profile-logged-out-login-buttons-container">
+        <button class="webmapp-profile-logged-out-login-button" (click)="login()">
+          {{'pages.profile.loggedOut.login' | translate}}
+        </button>
+        <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
+          {{'pages.profile.loggedOut.signup' | translate}}
+        </button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn">
+      <div class="webmapp-profile-user-container">
+        <ion-avatar
+          class="webmapp-profile-user-avatar"
+          [ngClass]="{
           'webmapp-profile-user-avatar-icon': !avatarUrl
         }"
-      >
-        <i class="webmapp-icon-user-outline"></i>
-      </ion-avatar>
-      <div class="webmapp-profile-user-header-container">
-        <h4 class="webmapp-profile-user-name">{{name}}</h4>
-        <div class="webmapp-profile-user-email">{{email}}</div>
+        >
+          <i class="webmapp-icon-user-outline"></i>
+        </ion-avatar>
+        <div class="webmapp-profile-user-header-container">
+          <h4 class="webmapp-profile-user-name">{{name}}</h4>
+          <div class="webmapp-profile-user-email">{{email}}</div>
+        </div>
       </div>
-    </div>
+      <ion-tabs class="webmapp-profile-tabs">
+        <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
+          <ion-tab-button
+            (click)="tabClick($event, 'profile-data')"
+            tab="profile-data"
+            [routerLink]="['profile-data']"
+            class="webmapp-profile-tabs-tab-button"
+          >
+            <ion-label class="webmapp-profile-tabs-tab-label"> I tuoi dati </ion-label>
+            <div class="webmapp-profile-tabs-tab-button-border"></div>
+          </ion-tab-button>
+          <ion-tab-button
+            (click)="tabClick($event, 'profile-records')"
+            tab="profile-records"
+            [routerLink]="['profile-records']"
+            class="webmapp-profile-tabs-tab-button"
+          >
+            <ion-label class="webmapp-profile-tabs-tab-label"> Le tue registrazioni </ion-label>
+            <div class="webmapp-profile-tabs-tab-button-border"></div>
+          </ion-tab-button>
+        </ion-tab-bar>
+      </ion-tabs>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="(authEnable$|async) === false">
     <ion-tabs class="webmapp-profile-tabs">
       <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
         <ion-tab-button

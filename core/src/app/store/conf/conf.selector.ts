@@ -9,12 +9,9 @@ export const confAPP = createSelector(confFeature, state => state.APP);
 export const confLANGUAGES = createSelector(confFeature, state => state.LANGUAGES);
 export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
-
-export const confMAP = createSelector(confFeature, state => {
-  return state.MAP;
-});
-export const confMAPLAYERS = createSelector(confMAP, map => map.layers);
+export const confMAP = createSelector(confFeature, state => state.MAP);
 export const confTHEME = createSelector(confFeature, state => state.THEME);
+export const confMAPLAYERS = createSelector(confMAP, state => state.layers);
 
 export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
   getCSSVariables(theme),
