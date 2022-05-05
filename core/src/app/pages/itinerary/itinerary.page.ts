@@ -12,10 +12,13 @@ import {
 } from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
-import {Observable, Subscription} from 'rxjs';
-import {auditTime} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {auditTime, switchMap, take, tap} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
+import {CoinService} from 'src/app/services/coin.service';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {ShareService} from 'src/app/services/share.service';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentTrack, mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
@@ -84,9 +87,19 @@ export class ItineraryPage implements OnDestroy {
 
   private actualDownloadStatus: downloadPanelStatus;
 
-  currentTrackProperties$: Observable<IGeojsonProperties> =
-    this._storeMap.select(mapCurrentTrackProperties);
+  currentTrackProperties$: Observable<IGeojsonProperties> = this._storeMap
+    .select(mapCurrentTrackProperties)
+    .pipe(
+      tap(p => {
+        if (p != null && p.id != null) {
+          this._trackID.next(p.id);
+        }
+      }),
+    );
   currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
+  isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  private _trackID: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   constructor(
     private _navController: NavController,
     private _menuController: MenuController,
@@ -94,10 +107,27 @@ export class ItineraryPage implements OnDestroy {
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
     private _alertController: AlertController,
-    private translate: TranslateService,
+    private _translate: TranslateService,
     private _storeMap: Store<IMapRootState>,
+    private _shareService: ShareService,
+    private _geohubService: GeohubService,
+    private _coinService: CoinService,
   ) {
     this.setAnimations();
+    this.currentTrackProperties$
+      .pipe(
+        switchMap(t => {
+          const trackId = t != null ? t.id ?? null : null;
+          if (trackId != null) {
+            return this._geohubService.isFavouriteTrack(trackId);
+          }
+          return of(false);
+        }),
+        take(1),
+      )
+      .subscribe(initFav => {
+        this.isFavourite$.next(initFav);
+      });
   }
 
   async setAnimations() {
@@ -148,12 +178,21 @@ export class ItineraryPage implements OnDestroy {
     this._menuController.close('optionMenu');
   }
 
-  share() {}
+  share() {
+    this._shareService.shareTrackByID(this._trackID.value);
+  }
 
-  async favourite() {}
+  async favourite() {
+    this.isFavourite = await this._geohubService.setFavouriteTrack(
+      this._trackID.value,
+      !this.isFavourite$.value,
+    );
+
+    this.isFavourite$.next(!this.isFavourite$.value);
+  }
 
   async navigate() {
-    const translation = await this.translate
+    const translation = await this._translate
       .get([
         'pages.itinerary.modalNotImpemented.title',
         'pages.itinerary.modalNotImpemented.text',
@@ -284,7 +323,7 @@ export class ItineraryPage implements OnDestroy {
 
   public async endDownload(requireConfirm = false) {
     if (requireConfirm && this.actualDownloadStatus == downloadPanelStatus.DOWNLOADING) {
-      const translation = await this.translate
+      const translation = await this._translate
         .get([
           'pages.itinerary.modalconfirm.title',
           'pages.itinerary.modalconfirm.text',
@@ -345,8 +384,12 @@ export class ItineraryPage implements OnDestroy {
     this.lastScroll = scrolled;
   }
 
-  download() {
-    console.log('click on download');
+  public async download() {
+    const modalres = await this._coinService.openModal();
+
+    if (modalres) {
+      this.showDownload = true;
+    }
   }
 
   ngOnDestroy(): void {

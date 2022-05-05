@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Share } from '@capacitor/share';
 import { TranslateService } from '@ngx-translate/core';
-import { IGeojsonFeature } from '../types/model';
+import {ConfService} from '../store/conf/conf.service';
+import {IGeojsonFeature} from '../types/model';
 
 const DEFAULT_ROUTE_LINK_BASEURL = 'https://geohub.webmapp.it/track/';
 
@@ -23,7 +24,7 @@ export class ShareService {
     dialogTitle: 'Share with buddies',
   };
 
-  constructor(private _translate: TranslateService) {
+  constructor(private _translate: TranslateService, private _confSvc: ConfService) {
     this._translate
       .get([
         'services.share.title',
@@ -31,7 +32,7 @@ export class ShareService {
         'services.share.url',
         'services.share.dialogTitle',
       ])
-      .subscribe((t) => {
+      .subscribe(t => {
         this.defaultShareObj.title = t['services.share.title'];
         this.defaultShareObj.text = t['services.share.text'];
         this.defaultShareObj.url = t['services.share.url'];
@@ -41,7 +42,13 @@ export class ShareService {
 
   public async shareRoute(route: IGeojsonFeature) {
     return this.share({
-      url: DEFAULT_ROUTE_LINK_BASEURL + route.properties.id,
+      url: `${DEFAULT_ROUTE_LINK_BASEURL}${route.properties.id}`,
+    });
+  }
+
+  public async shareTrackByID(id: number) {
+    return this.share({
+      url: `${DEFAULT_ROUTE_LINK_BASEURL}${id}?app_id=${this._confSvc.geohubAppId}`,
     });
   }
 
@@ -55,7 +62,7 @@ export class ShareService {
     let shareRet = await Share.share(so);
     console.log(
       '------- ~ file: share.service.ts ~ line 20 ~ ShareService ~ share ~ shareRet',
-      shareRet
+      shareRet,
     );
   }
 }

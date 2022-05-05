@@ -34,7 +34,6 @@ export class MapPage {
   currentPoi$: Observable<any>;
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiIDToMap$: Observable<number | null>;
-  private _currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
   private _relatedPoi$: Observable<any[]> = this._storeMap.select(mapCurrentRelatedPoi);
   leftPadding$: Observable<number>;
   mapPadding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
@@ -57,8 +56,6 @@ export class MapPage {
       this.mapPadding$.next(initPadding);
       this.resizeEVT.next(!this.resizeEVT.value);
     }
-
-
 
     this.caretOutLine$ = this.showMenu$.pipe(
       map(showMenu => (showMenu ? 'caret-back-outline' : 'caret-forward-outline')),
@@ -138,7 +135,7 @@ export class MapPage {
   }
 
   public updateUrl(trackid: number) {
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +trackid}))
+    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +trackid}));
     this._router.navigate([], {
       relativeTo: this._route,
       queryParams: {track: trackid ? trackid : null},

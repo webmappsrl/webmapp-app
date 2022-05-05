@@ -181,9 +181,10 @@
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
+
     <div (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
-      <i *ngIf="isFavourite" class="webmapp-icon-heart"></i>
-      <i *ngIf="!isFavourite" class="icon-outline-heart"></i>
+      <i *ngIf="isFavourite$|async" class="icon-fill-heart"></i>
+      <i *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></i>
       {{ 'pages.route.btnfavourite' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
