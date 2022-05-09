@@ -89,6 +89,9 @@ const initialConfState: ICONF = {
     default: 'it',
     available: ['en', 'it'],
   },
+  AUTH: {
+    enable: false,
+  },
 };
 export const confReducer = createReducer(
   initialConfState,
@@ -102,6 +105,7 @@ export const confReducer = createReducer(
         OPTIONS: {...state.OPTIONS, ...conf.OPTIONS},
         MAP: {...state.MAP, ...conf.MAP},
         LANGUAGES: {...state.LANGUAGES, ...conf.LANGUAGES},
+        AUTH: {...state.AUTH, ...conf.AUTH},
       },
     };
   }),

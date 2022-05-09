@@ -3,8 +3,7 @@ import { SplashScreen } from '@capacitor/splash-screen';
 import { NavController, Platform } from '@ionic/angular';
 import { LanguagesService } from './services/languages.service';
 import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
-import { environment } from 'src/environments/environment';
-import { AuthService } from './services/auth.service';
+import {environment} from 'src/environments/environment';
 import { DownloadService } from './services/download.service';
 import { GeolocationService } from './services/geolocation.service';
 import { ILocation } from './types/location';
@@ -23,6 +22,8 @@ import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string
 import {mapCurrentTrack} from './store/map/map.selector';
 import {IMapRootState} from './store/map/map';
 import {filter} from 'rxjs/operators';
+import {INetworkRootState} from './store/network/netwotk.reducer';
+import {startNetworkMonitoring} from './store/network/network.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -40,7 +41,6 @@ export class AppComponent {
     private _languagesService: LanguagesService,
     private _platform: Platform,
     private _googleAnalytics: GoogleAnalytics,
-    private _authService: AuthService,
     private _downloadService: DownloadService,
     private _geolocationService: GeolocationService,
     private _navController: NavController,
@@ -50,10 +50,12 @@ export class AppComponent {
     private _storeConf: Store<IConfRootState>,
     private _storeElasticAll: Store<IElasticAllRootState>,
     private _storeMap: Store<IMapRootState>,
+    private _storeNetwork: Store<INetworkRootState>,
   ) {
     this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
     this._storeElasticAll.dispatch(allElastic());
+    this._storeNetwork.dispatch(startNetworkMonitoring());
 
     this._platform.ready().then(
       () => {

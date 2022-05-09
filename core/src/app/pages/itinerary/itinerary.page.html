@@ -182,7 +182,7 @@
     </div>
 
 
-    <div (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
+    <div *ngIf="authEnable$|async" (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i *ngIf="isFavourite$|async" class="icon-fill-heart"></i>
       <i *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></i>
       {{ 'pages.route.btnfavourite' | translate }}

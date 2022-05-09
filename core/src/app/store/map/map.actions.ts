@@ -8,7 +8,7 @@ export const setCurrentLayer = createAction(
 
 export const setCurrentTrackId = createAction(
   '[map] Set current tack id',
-  props<{ currentTrackId: number|null }>(),
+  props<{currentTrackId: number | null; track?: any}>(),
 );
 
 export const setCurrentPoiId = createAction(
