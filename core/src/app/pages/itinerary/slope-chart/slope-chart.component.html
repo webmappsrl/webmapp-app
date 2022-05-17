@@ -2,10 +2,7 @@
   <canvas #chartCanvas class="webmapp-slopechart-canvas"></canvas>
 </div>
 <div class="webmapp-slopechart-legend-container">
-  <div
-    class="webmapp-slopechart-legend-slope-container"
-    *ngIf="slope?.available"
-  >
+  <div class="webmapp-slopechart-legend-slope-container" *ngIf="slope?.available">
     <div class="webmapp-slopechart-legend-slope-label">
       {{ "components.slopechart.slope.label" | translate }}
     </div>
@@ -17,21 +14,16 @@
           left: slope.selectedPercentage + '%'
         }"
       >
-        <div class="webmapp-slopechart-legend-slope-selected-text">
-          {{ slope.selectedValue }}%
-        </div>
+        <div class="webmapp-slopechart-legend-slope-selected-text">{{ slope.selectedValue }}%</div>
         <div class="webmapp-slopechart-legend-slope-selected-dot"></div>
       </div>
     </div>
   </div>
   <div
     class="webmapp-slopechart-legend-surface-container"
-    *ngIf="surfaces && surfaces.length > 0"
+    *ngIf="surfaces && surfaces.length > 0 && false"
   >
-    <div
-      *ngFor="let surface of surfaces"
-      class="webmapp-slopechart-legend-surface"
-    >
+    <div *ngFor="let surface of surfaces" class="webmapp-slopechart-legend-surface">
       <span
         [ngStyle]="{
           background: 'rgb(' + surface.backgroundColor + ')'
