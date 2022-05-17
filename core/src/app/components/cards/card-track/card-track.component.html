@@ -10,9 +10,9 @@
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
       {{track.properties.duration_forward | minutetime}}</ion-label>
     <ion-label *ngIf="isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
-      {{sizeInMB(track.size)}} MB</ion-label>
+      {{sizeInMB(track.properties.size)}} MB</ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
-      <i class="webmapp-cardtrack-info-icon webmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"> </i>
+      <i class="webmapp-cardtrack-info-icon wπcard-traebmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"> </i>
       {{track.properties.difficulty | wmtrans }}
     </ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-distance">

@@ -1,7 +1,6 @@
 {
   "name": "core",
-  "version": "2.0.14",
-  "code": 20014,
+  "version": "0.0.1",
   "author": "Webmapp",
   "homepage": "https://webmapp.it/",
   "scripts": {
@@ -47,11 +46,12 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "chart.js": "^3.5.1",
+    "color": "^4.2.0",
     "cordova-background-geolocation-plugin": "^1.1.0",
+    "cordova-plugin-network-information": "^3.0.0",
     "cordova-plugin-telerik-imagepicker": "^2.3.6",
     "cordova-sqlite-storage": "^6.0.0",
     "cordova.plugins.diagnostic": "^6.0.4",
-    "color": "^4.2.0",
     "ol": "^6.5.0",
     "rxjs": "~6.6.0",
     "ts-md5": "^1.2.9",

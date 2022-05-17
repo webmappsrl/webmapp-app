@@ -25,7 +25,12 @@ import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentTrack, mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
-import {IGeojsonFeature, IGeojsonPoi, IGeojsonProperties} from 'src/app/types/model';
+import {
+  IGeojsonFeature,
+  IGeojsonFeatureDownloaded,
+  IGeojsonPoi,
+  IGeojsonProperties,
+} from 'src/app/types/model';
 import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
 
 @Component({
@@ -98,7 +103,8 @@ export class ItineraryPage implements OnDestroy {
         }
       }),
     );
-  currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
+  currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
+    this._storeMap.select(mapCurrentTrack);
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
   private _trackID: BehaviorSubject<number> = new BehaviorSubject<number>(-1);

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -32,7 +33,9 @@ import {IGeojsonFeature} from 'src/app/types/model';
 export class HomePage implements OnInit {
   cards$: Observable<IHIT[]> = of([]);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
-  online$: Observable<boolean> = this._storeNetwork.select(online);
+  online$: Observable<boolean> = this._storeNetwork
+    .select(online)
+    .pipe(tap(() => this._cdr.detectChanges()));
 
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -55,6 +58,7 @@ export class HomePage implements OnInit {
     private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
     private _navController: NavController,
+    private _cdr: ChangeDetectorRef,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
   }

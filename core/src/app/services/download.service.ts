@@ -386,11 +386,12 @@ export class DownloadService {
   }
 
   public async updateTrackSize(track: IGeojsonFeatureDownloaded, size: number) {
-    const newTrack = {...track, ...{size}};
+    const properties = {...track.properties, ...{size}};
+    const newTrack = {...track, ...{properties}};
     this.updateStatus({
       finish: false,
       install: 1,
     });
-    await this.storage.setTrack(newTrack.properties.id, track);
+    await this.storage.setTrack(newTrack.properties.id, newTrack);
   }
 }

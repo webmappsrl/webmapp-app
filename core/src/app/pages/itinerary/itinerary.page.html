@@ -163,7 +163,7 @@
     'webmapp-pageroute-toolbox-hideover':hideToolBarOver,
     'webmapp-pageroute-toolbox-fullmap':modeFullMap}"
   >
-    <div (click)="download()" class="webmapp-pageroute-toolbox-button ion-activatable">
+    <div (click)="download()" *ngIf="(currentTrackProperties$|async)?.size == null" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="icon-outline-donwload"></i>
       {{ 'pages.route.btndownload' | translate }}
       <ion-ripple-effect></ion-ripple-effect>

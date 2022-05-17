@@ -168,7 +168,6 @@ export class LanguagesService {
       this._translateService.addLangs(lang.available);
       const savedLang = localStorage.getItem('webmapp-language');
       if (savedLang != null) {
-        console.log('ciao', savedLang);
         this.changeLang(savedLang);
       } else {
         this.changeLang(lang.default);

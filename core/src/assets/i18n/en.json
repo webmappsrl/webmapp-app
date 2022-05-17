@@ -180,7 +180,7 @@
     "downloadlist": {
       "cancel": "Annulla",
       "deleteselected": "Elimina selezionati",
-      "nodata": "Non hai ancora scaricato nessuna traccia",
+      "nodata": "You haven't downloaded any tracks yet",
       "nodata2": "Con i contenuti per uso offline navighi in tranquillità anche senza connessione!",
       "nodatabtn": "Esplora",
       "select": "Seleziona",
@@ -534,5 +534,6 @@
     "map": "map",
     "profile": "profile"
   },
-  "Percorribilità": "Viability"
+  "Percorribilità": "Viability",
+  "no-tracks": "You haven't downloaded any tracks yet"
 }

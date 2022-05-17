@@ -1,30 +1,20 @@
-  <ion-item
-    button
-    lines="none"
-    class="webmapp-cardtrack-card"
-    *ngFor="let track of tracks$|async"
-  >
+<ng-container *ngIf="tracks$|async as tracks">
+  <ion-item button lines="none" class="webmapp-cardtrack-card" *ngFor="let track of tracks">
     <webmapp-img
       [src]="track.properties?.feature_image"
       size="118x138"
-      (click)="open()"
+      (click)="open(track)"
       class="webmapp-cardtrack-image"
     >
     </webmapp-img>
     <div class="webmapp-cardtrack-info" (click)="open(track)">
       <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-name">{{track.properties.name | wmtrans
       }}</ion-label>
-      <ion-label
-        *ngIf="!isDownload"
-        class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time"
-      >
+      <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
         {{track.properties.duration_forward | minutetime}}</ion-label
       >
-      <ion-label
-        *ngIf="isDownload"
-        class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time"
-      >
-        {{sizeInMB(track.size)}} MB</ion-label
+      <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
+        {{sizeInMB(track.properties.size)}} MB</ion-label
       >
       <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
         <i
@@ -39,3 +29,5 @@
       </ion-label>
     </div>
   </ion-item>
+  <h3 *ngIf="tracks.length == 0">{{'no-tracks'|translate}}</h3>
+</ng-container>
