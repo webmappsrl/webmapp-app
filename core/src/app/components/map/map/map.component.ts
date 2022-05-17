@@ -54,8 +54,8 @@ import {filter, switchMap, take, tap} from 'rxjs/operators';
 
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import { CommunicationService } from 'src/app/services/base/communication.service';
-import { MapService } from 'src/app/services/base/map.service';
+import {CommunicationService} from 'src/app/services/base/communication.service';
+import {MapService} from 'src/app/services/base/map.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {confMAP, confTHEME} from 'src/app/store/conf/conf.selector';
 import {ConfService} from 'src/app/store/conf/conf.service';
@@ -75,7 +75,7 @@ const initMinZoom = 10;
 const projection = 'EPSG:3857';
 const scaleUnits = 'metric';
 const scaleMinWidth = 50;
-const DEF_MAP_CLUSTER_CLICK_TOLERANCE: number = 40;
+const DEF_MAP_CLUSTER_CLICK_TOLERANCE: number = 0.1;
 const DEF_LINE_COLOR = 'green';
 const DEF_LINE_COLOR_SELECTED = 'rgba(226, 249, 0, 0.6)';
 @Component({
@@ -310,6 +310,7 @@ export class MapComponent implements OnDestroy {
     this._selectInteraction.on('select', async (event: SelectEvent) => {
       const clickedFeature = event?.selected?.[0] ?? undefined;
       const clickedFeatureId: number = clickedFeature?.getProperties()?.id ?? undefined;
+      console.log(clickedFeatureId);
       if (clickedFeatureId > -1) {
         this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
       }
@@ -889,7 +890,7 @@ export class MapComponent implements OnDestroy {
     });
     this._selectInteraction = new SelectInteraction({
       layers: selectLayers,
-      hitTolerance: 1,
+      hitTolerance: 100,
       style: null,
     });
 
