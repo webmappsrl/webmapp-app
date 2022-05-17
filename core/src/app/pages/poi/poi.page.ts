@@ -79,10 +79,6 @@ export class PoiPage implements OnInit, OnDestroy {
     this.relatedPoi$.pipe(take(1)).subscribe(r => (this.pois = r));
 
     setTimeout(() => {
-      this.updatePoiMarkers();
-    }, 0);
-
-    setTimeout(() => {
       this.useAnimation = true;
     }, 1000);
   }
@@ -91,20 +87,10 @@ export class PoiPage implements OnInit, OnDestroy {
     this._navController.back();
   }
 
-  private updatePoiMarkers() {
-    const res = [];
-    this.pois.forEach(poi => {
-      // poi.isSmall = true; // poi != this.selectedPoi;
-      res.push(poi);
-    });
-    this.pois = res;
-  }
-
   async clickPoi(poi: IGeojsonPoi) {
     if (poi != null) {
       this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
     }
-    this.updatePoiMarkers();
   }
 
   prevPoi() {

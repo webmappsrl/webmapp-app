@@ -9,7 +9,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-
+import defaultImage from '../../../../assets/images/defaultImageB64.json';
 import {buffer, Extent} from 'ol/extent';
 
 // ol imports
@@ -49,6 +49,7 @@ import Stroke from 'ol/style/Stroke';
 import {ITrack} from 'src/app/types/track';
 import {
   IGeojsonCluster,
+  IGeojsonFeature,
   IGeojsonGeometry,
   IGeojsonPoi,
   IGeojsonPoiDetailed,
@@ -75,6 +76,7 @@ import {Store} from '@ngrx/store';
 import {IMapRootState} from 'src/app/store/map/map';
 import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selector';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
+import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -83,7 +85,7 @@ const POISLAYERZINDEX = 460;
 const SELECTEDPOILAYERZINDEX = 500;
 const TRACKLAYERZINDEX = 450;
 const TRACKMARKERLAYERZINDEX = 470;
-
+const DEF_LINE_COLOR = 'green';
 const CIRCULARTOLERANCE = 0.001;
 
 @Component({
@@ -105,6 +107,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('btnposition') btnposition: string = 'bottom';
   @Input('registering') registering: boolean = false;
+  @Input('noPoiSelection') nopoiSelection: boolean = false;
 
   @Input('showLayer') showLayer: boolean = false;
   @Input('hideRegister') hideRegister: boolean = false;
@@ -204,9 +207,15 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   }
 
   @Input('selectedpoi') set selectedpoi(value: IGeojsonPoi) {
-    setTimeout(() => {
-      this._selectedPoiMarker(value);
-    }, 0);
+    if (this._selectedPoiLayer != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
+    }
+    const currentPoi = this._poiMarkers.find(p => +p.id === value.properties.id);
+    if (currentPoi != null) {
+      this._fitView(currentPoi.icon.getGeometry() as any);
+      this._selectCurrentPoi(currentPoi);
+    }
   }
 
   @Input('position') set position(value: ILocation) {
@@ -265,7 +274,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
 
   private _poiMarkers: PoiMarker[] = [];
   private _poisLayer: VectorLayer;
-  private _slectedPoiLayer: VectorLayer;
+  private _selectedPoiLayer: VectorLayer;
 
   private _position: ILocation = null;
   private _height: number;
@@ -279,7 +288,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   public static: boolean;
 
   private _lastClusterMarkerTransparency;
-
+  private _defaultFeatureColor = DEF_LINE_COLOR;
   // Location Icon
   private _locationIconArrow: Icon;
   private _locationIconStyle: Style;
@@ -312,6 +321,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
 
   private _slopeChartLayer: VectorLayer;
   private _slopeChartSource: VectorSource;
+  private _selectedPoiMarker: IPoiMarker;
   private _slopeChartPoint: Feature<Point>;
   private _slopeChartTrack: Feature<LineString>;
 
@@ -581,6 +591,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     if (this._map && this._track.layer) {
       this._map.removeLayer(this._track.layer);
       this._map.removeLayer(this._track.markerslayer);
+      this._selectedPoiLayer = undefined;
     }
     this._track.registeredTrack = null;
   }
@@ -994,36 +1005,20 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     animating?;
     startTime?;
   } = {};
-  private async _selectedPoiMarker(poi?: IGeojsonPoi) {
-    this._slectedPoiLayer = this._createLayer(this._slectedPoiLayer, SELECTEDPOILAYERZINDEX);
 
-    let markerGeometry = null;
-    if (this._selectedPoi.marker) {
-      this._removeIconFromLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-      if (
-        this._selectedPoi != null &&
-        this._selectedPoi.lastSelectedPoi != null &&
-        this._selectedPoi.lastSelectedPoi.geometry != null
-      ) {
-        markerGeometry = this._selectedPoi.lastSelectedPoi.geometry;
-      }
+  private async _selectCurrentPoi(poiMarker: any) {
+    if (this._selectedPoiMarker != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
     }
-    this._selectedPoi.newSelectedPoi = poi;
-    const {marker, style} = await this._createPoiCanvasIcon(poi, markerGeometry);
-    this._selectedPoi.marker = marker;
-    this._selectedPoi.style = style;
-    this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-    if (!this._selectedPoi.lastSelectedPoi) {
-      //insert
-      // this._addIconToLayer(this._slectedPoiLayer, this._selectedPoi.marker.icon);
-      this._selectedPoi.lastSelectedPoi = poi;
-    } else {
-      //animate
-      this._selectedPoiStartAnimation();
-    }
-
-    const poiMarker = this._poiMarkers.find(x => +x.id == +poi.properties.id);
-    this._fitView(poiMarker.icon.getGeometry() as any);
+    this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, 9999);
+    this._selectedPoiMarker = poiMarker;
+    const {marker} = await this._createPoiCanvasIcon(
+      poiMarker.poi,
+      null,
+      !this.nopoiSelection && true,
+    );
+    this._addIconToLayer(this._selectedPoiLayer, marker.icon);
   }
 
   _selectedPoiMove(event) {
@@ -1064,7 +1059,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   _selectedPoiStartAnimation() {
     this._selectedPoi.animating = true;
     this._selectedPoi.startTime = Date.now();
-    this._slectedPoiLayer.on('postrender', event => {
+    this._selectedPoiLayer.on('postrender', event => {
       this._selectedPoiMove(event);
     });
     // this._selectedPoi.marker.icon.setGeometry(null);
@@ -1082,7 +1077,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
       this._getPoint(this._selectedPoi.newSelectedPoi.geometry.coordinates),
     );
 
-    this._slectedPoiLayer.un('postrender', event => {
+    this._selectedPoiLayer.un('postrender', event => {
       this._selectedPoiMove(event);
     });
     this._selectedPoi.lastSelectedPoi = this._selectedPoi.newSelectedPoi;
@@ -1196,8 +1191,9 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
   private async _createPoiCanvasIcon(
     poi: IGeojsonPoi,
     geometry = null,
+    selected = false,
   ): Promise<{marker: PoiMarker; style: Style}> {
-    const img = await this._createPoiCavasImage(poi);
+    const img = await this._createPoiCavasImage(poi, selected);
     const {iconFeature, style} = await this._createIconFeature(
       geometry
         ? geometry
@@ -1289,8 +1285,11 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     );
     return this._createCanvasForHtml(htmlTextCanvas, this._markerService.poiMarkerSize);
   }
-  private async _createPoiCavasImage(poi: IGeojsonPoi): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await this._markerService.createPoiMarkerHtmlForCanvas(poi);
+  private async _createPoiCavasImage(
+    poi: IGeojsonPoi,
+    selected = false,
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas = await this._createPoiMarkerHtmlForCanvas(poi, selected);
     return this._createCanvasForHtml(htmlTextCanvas, this._markerService.poiMarkerSize);
   }
 
@@ -1354,7 +1353,52 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     // this._map.removeOverlay(cm.icon);
     //cm.component.destroy();
   }
+  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
+    if (url == null) {
+      return defaultImage.image;
+    }
+    const opt = {};
+    const data = await fetch(url, opt);
+    const blob = await data.blob();
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          resolve(base64data);
+        };
+      } catch (error) {
+        resolve('');
+      }
+    });
+  }
 
+  private async _createPoiMarkerHtmlForCanvas(value: any, selected = false): Promise<string> {
+    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
+      value.properties?.feature_image?.sizes['108x137'],
+    );
+
+    let html = `
+    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
+
+    html += `
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
+          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="${
+      this._defaultFeatureColor
+    }"/>
+          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
+          <defs>
+            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
+              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
+              </image>
+            </pattern>
+          </defs>
+        </svg>`;
+    html += ` </div>`;
+
+    return html;
+  }
   private _mapClick(evt: MapBrowserEvent<UIEvent>) {
     const clusterFeature = this._getNearestFeatureOfLayer(this._clusterLayer, evt);
     const poiFeature = this._getNearestFeatureOfLayer(this._poisLayer, evt);
@@ -1368,6 +1412,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     console.log('------- ~ file: map.component.ts ~ line 1082 ~ _mapClick ~ poiMarker', poiMarker);
     if (poiMarker) {
       this.clickpoi.emit(poiMarker.poi);
+      this.selectedpoi = poiMarker.poi;
     }
 
     if (!clusterFeature && !poiFeature) {
