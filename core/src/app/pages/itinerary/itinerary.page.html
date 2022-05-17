@@ -66,7 +66,7 @@
       [hideRegister]="true"
       [hidePosition]="true"
       [btnposition]="'middle'"
-      [pois]="pois"
+      [noPoiSelection]="true"
       (clickpoi)="clickPoi($event)"
       [height]="mapHeigth()"
       [slopeChartElements]="slopeChartHoverElements"
@@ -163,7 +163,11 @@
     'webmapp-pageroute-toolbox-hideover':hideToolBarOver,
     'webmapp-pageroute-toolbox-fullmap':modeFullMap}"
   >
-    <div (click)="download()" *ngIf="(currentTrackProperties$|async)?.size == null" class="webmapp-pageroute-toolbox-button ion-activatable">
+    <div
+      (click)="download()"
+      *ngIf="(currentTrackProperties$|async)?.size == null"
+      class="webmapp-pageroute-toolbox-button ion-activatable"
+    >
       <i class="icon-outline-donwload"></i>
       {{ 'pages.route.btndownload' | translate }}
       <ion-ripple-effect></ion-ripple-effect>
@@ -181,8 +185,11 @@
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
-
-    <div *ngIf="authEnable$|async" (click)="favourite()" class="webmapp-pageroute-toolbox-button ion-activatable">
+    <div
+      *ngIf="authEnable$|async"
+      (click)="favourite()"
+      class="webmapp-pageroute-toolbox-button ion-activatable"
+    >
       <i *ngIf="isFavourite$|async" class="icon-fill-heart"></i>
       <i *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></i>
       {{ 'pages.route.btnfavourite' | translate }}

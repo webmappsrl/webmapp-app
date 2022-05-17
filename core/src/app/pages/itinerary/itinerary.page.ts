@@ -103,6 +103,7 @@ export class ItineraryPage implements OnDestroy {
         }
       }),
     );
+
   currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
     this._storeMap.select(mapCurrentTrack);
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -258,9 +259,11 @@ export class ItineraryPage implements OnDestroy {
     this.endAnimation(shouldComplete, step);
   }
 
-  async clickPoi(poi: IGeojsonPoi) {
-    this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
+  clickPoi(poi: IGeojsonPoi) {
     this._navController.navigateForward(['poi']);
+    setTimeout(() => {
+      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
+    }, 500);
   }
 
   private endAnimation(shouldComplete: boolean, step: number) {
