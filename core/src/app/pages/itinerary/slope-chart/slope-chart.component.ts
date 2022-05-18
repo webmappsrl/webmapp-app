@@ -613,7 +613,7 @@ export class SlopeChartComponent {
                 surfaceTrack.setProperty('color', surfaceColor);
 
                 this.hover.emit({
-                  location: this._chartValues[(<any>tooltip)?._tooltipItems?.[0]?.dataIndex],
+                  location: this._chartValues[(tooltip as any)?._tooltipItems?.[0]?.dataIndex],
                   track: surfaceTrack,
                 });
               } else {

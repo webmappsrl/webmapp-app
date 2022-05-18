@@ -32,6 +32,7 @@ import {
   IGeojsonProperties,
 } from 'src/app/types/model';
 import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 
 @Component({
   selector: 'webmapp-itinerary',
@@ -53,7 +54,8 @@ export class ItineraryPage implements OnDestroy {
   public hideToolBarOver = false;
   public scrollThreshold = 50;
   public scrollShowButtonThreshold = 450;
-
+  trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
+    new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
   public opacity = 1;
   public headerHeight = 105;
   public height = 700; //will be updated by real screen height
@@ -140,6 +142,11 @@ export class ItineraryPage implements OnDestroy {
       });
   }
 
+  public setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
+    if (elements != null) {
+      this.trackElevationChartHoverElements$.next(elements);
+    }
+  }
   async setAnimations() {
     await this._platform.ready();
     this.height = this._platform.height();
