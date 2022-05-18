@@ -9,7 +9,7 @@ import {
 import {Store} from '@ngrx/store';
 import {Chart, ChartDataset, registerables, Tick, TooltipItem, TooltipModel} from 'chart.js';
 import {Observable} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {CLocation} from 'src/app/classes/clocation';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {
@@ -41,9 +41,15 @@ export class SlopeChartComponent {
       this._chart.destroy();
     }
     this._chartCanvas = content.nativeElement;
-    this.currentTrack$.pipe(take(1)).subscribe(track => {
-      this._setChart(track);
-    });
+    this.currentTrack$
+      .pipe(
+        filter(f => f != null),
+        take(1),
+      )
+      .subscribe(track => {
+        console.log(track);
+        this._setChart(track);
+      });
   }
 
   @Output('hover') hover: EventEmitter<ISlopeChartHoverElements> =
@@ -202,7 +208,7 @@ export class SlopeChartComponent {
 
       setTimeout(() => {
         this._createChart(labels, trackLength, maxAlt, surfaceValues, slopeValues);
-      }, 100);
+      }, 400);
     }
   }
 
@@ -607,7 +613,7 @@ export class SlopeChartComponent {
                 surfaceTrack.setProperty('color', surfaceColor);
 
                 this.hover.emit({
-                  location: this._chartValues[(<any>tooltip)?._tooltipItems?.[0]?.dataIndex],
+                  location: this._chartValues[(tooltip as any)?._tooltipItems?.[0]?.dataIndex],
                   track: surfaceTrack,
                 });
               } else {

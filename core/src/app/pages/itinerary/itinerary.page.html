@@ -69,7 +69,7 @@
       [noPoiSelection]="true"
       (clickpoi)="clickPoi($event)"
       [height]="mapHeigth()"
-      [slopeChartElements]="slopeChartHoverElements"
+      [slopeChartElements]="trackElevationChartHoverElements$|async"
       [cache]="useCache"
       (rotate)="mapRotation($event)"
     ></itinerary-webmapp-map>
@@ -98,7 +98,10 @@
         </div>
       </div>
       <ion-content #moredetails scrollY="true" scroll-events="true" (ionScroll)="scroll($event)">
-        <webmapp-tab-detail class="webmapp-route-tab"></webmapp-tab-detail>
+        <webmapp-tab-detail
+          class="webmapp-route-tab"
+          (slopeChartHover)="setTrackElevationChartHoverElements($event)"
+        ></webmapp-tab-detail>
         <webmapp-tab-howto class="webmapp-route-tab"></webmapp-tab-howto>
         <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
       </ion-content>
