@@ -75,8 +75,8 @@ export class HomePage implements OnInit {
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +id}));
   }
 
-  public setLayer(layer: ILAYER | null) {
-    this._storeMap.dispatch(setCurrentLayer({currentLayer: layer}));
+  public setLayer(layer: ILAYER | null | number) {
+    this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
     this._navController.navigateForward('map');
   }
 }
