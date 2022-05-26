@@ -1,3 +1,5 @@
+import {iLocalString} from './model';
+
 interface IGEOLOCATION {
   record: {
     enable: boolean;
@@ -45,8 +47,7 @@ interface ILANGUAGES {
   available?: string[];
 }
 
-
-interface IHOME {
+interface IHOMEOLD {
   view: string;
   title?: string;
   subtitle?: string;
@@ -58,6 +59,39 @@ interface IHOME {
   color?: string;
   noElements?: string;
 }
+
+type IBOX = {
+  box_type: 'title' | 'layer' | 'base';
+  title: iLocalString | string;
+};
+type ITITLEBOX = IBOX & {
+  box_type: 'title';
+};
+type ILAYERBOX = IBOX & {
+  box_type: 'layer';
+  layer: number | ILAYER;
+};
+type IHOMEBASEITEM = {
+  title: iLocalString | string;
+  image_url: string;
+};
+
+type IHOMEITEMTRACK = IHOMEBASEITEM & {
+  track_id: number;
+  taxonomy_activities: string[];
+  taaxonomy_where: string[];
+  distance: string;
+  cai_scale: string;
+};
+type IHOMEITEMURL = IHOMEBASEITEM & {
+  url: string;
+};
+type IHOMEITEM = IHOMEITEMTRACK | IHOMEITEMURL;
+type IBASEBOX = IBOX & {
+  box_type: 'base';
+  items: IHOMEITEM[];
+};
+type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX;
 interface IOPTIONS {
   trackRefLabelZoom: number;
   caiScaleStyleZoom: number;

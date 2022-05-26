@@ -9,43 +9,45 @@
     >
     </webmapp-search-bar>
   </div>
+
+  <ng-container *ngIf="(online$|async) === false">
+    <downloaded-tracks-box></downloaded-tracks-box>
+  </ng-container>
   <ng-container *ngIf="online$|async">
-    <ng-container *ngIf="(isTyping$|async)||(layerCards$|async)!=null; else layers">
-      <wm-search-box *ngFor="let card of cards$|async" [data]="card" (clickEVT)="searchCard(card.id)">
+    <ng-container *ngIf="(isTyping$|async)||(layerCards$|async)!=null; else myhome">
+      <wm-search-box
+        *ngFor="let card of cards$|async"
+        [data]="card"
+        (clickEVT)="searchCard(card.id)"
+      >
       </wm-search-box
     ></ng-container>
 
-    <ng-template #layers>
+    <ng-template #myhome>
       <ng-container *ngFor="let home of confHOME$|async">
-        <h3 *ngIf="home.view === 'title'" class="webmapp-home-title">{{home.title}}</h3>
-        <ng-container *ngIf="home.view === 'compact-horizontal'">
-          <webmapp-layer-box
-            *ngFor="let term of home.terms"
-            [data]="term"
-            (clickEVT)="setLayer(term)"
-          >
-          </webmapp-layer-box>
+        <h3 *ngIf="home.box_type === 'title'" class="webmapp-home-title">{{home.title}}</h3>
+        <webmapp-layer-box
+          *ngIf="home.box_type === 'layer'"
+          [data]="home.layer"
+          (clickEVT)="setLayer(home.layer)"
+        >
+        </webmapp-layer-box>
+        <ng-container *ngIf="home.box_type == 'base'">
+          <webmapp-slider-box [data]="home" (clickEVT)="searchCard($event)"></webmapp-slider-box>
         </ng-container>
       </ng-container>
     </ng-template>
   </ng-container>
-  <ng-container *ngIf="(online$|async) === false">
-    <downloaded-tracks-box></downloaded-tracks-box>
-  </ng-container>
-
-
   <ng-container *ngIf="false">
     <webmapp-card-slider
-    [title]="'pages.home.mostViewedTracks' | translate"
-    [data]="mostViewedRoutes"
-  ></webmapp-card-slider>
-  <webmapp-card-slider
-    [title]="'pages.home.closerTracks' | translate"
-    [nodata]="'pages.home.nocloserTracks' | translate"
-    [data]="nearRoutes"
-    [showDistance]="true"
-  ></webmapp-card-slider>
+      [title]="'pages.home.mostViewedTracks' | translate"
+      [data]="mostViewedRoutes"
+    ></webmapp-card-slider>
+    <webmapp-card-slider
+      [title]="'pages.home.closerTracks' | translate"
+      [nodata]="'pages.home.nocloserTracks' | translate"
+      [data]="nearRoutes"
+      [showDistance]="true"
+    ></webmapp-card-slider>
   </ng-container>
-
-
 </ion-content>
