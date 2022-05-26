@@ -22,45 +22,15 @@ export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
 export const confHOME = createSelector(confFeature, elasticAll, (state, all) => {
   if (state.HOME != null && state.MAP != null && state.MAP.layers != null) {
     const home: IHOME[] = [];
-    (state.HOME as unknown as IHOMEOLD[]).forEach(el => {
-      if (el.terms != null) {
-        const layers = getLayers(el.terms, state.MAP.layers, all);
-        const newLayer: IHOME = {
-          box_type: 'layer',
-          title: el.title,
-          layer: layers[0],
-        };
-        home.push(newLayer);
-      }
-      if (el.view === 'title') {
-        const newTitle: IHOME = {
-          box_type: 'title',
-          title: el.title,
-        };
-        home.push(newTitle);
+    state.HOME.forEach(el => {
+      if (el.box_type === 'layer') {
+        const layers = getLayers([el.layer as number], state.MAP.layers, all);
+        home.push({...el, ...{layer: layers[0]}});
+      } else {
+        home.push(el);
       }
     });
-    home.push({
-      box_type: 'base',
-      title: 'itinerari',
-      items: [
-        {
-          title: 'T3 Poggio Raso in bici',
-          image_url: 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/112.jpg',
-          track_id: 27,
-        },
-        {
-          title: 'T2 Cannelle in bici',
-          image_url: 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/107.jpg',
-          track_id: 26,
-        },
-        {
-          title: 'Alberese - San Rabano',
-          image_url: 'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/104.jpg',
-          track_id: 25,
-        },
-      ],
-    } as any);
+
     return home;
   }
 
