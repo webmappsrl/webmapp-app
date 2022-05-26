@@ -62,6 +62,7 @@ import {ConfService} from 'src/app/store/conf/conf.service';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentLayer, mapCurrentTrack} from 'src/app/store/map/map.selector';
+import {ILAYER, IMAP, ITHEME} from 'src/app/types/config';
 import {ILocation} from 'src/app/types/location';
 import {IGeojsonFeature, ILineString} from 'src/app/types/model';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';

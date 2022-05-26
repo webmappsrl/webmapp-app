@@ -4,10 +4,10 @@
  * It provides access to the application storage for any data
  * */
 
-import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
-import { ReplaySubject } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Storage} from '@ionic/storage-angular';
+import {ReplaySubject} from 'rxjs';
+import {filter, take} from 'rxjs/operators';
 import {
   CONFIG_JSON_STORAGE_KEY,
   IMAGE_STORAGE_PREFIX,
@@ -18,14 +18,11 @@ import {
   USER_STORAGE_KEY,
   MBTILES_STORAGE_PREFIX,
 } from 'src/app/constants/storage';
-import {
-  IGeojsonFeature,
-  IGeojsonFeatureDownloaded,
-  IGeojsonPoiDetailed,
-} from 'src/app/types/model';
-import { Md5 } from 'ts-md5/dist/md5';
+import {IGeojsonFeature, IGeojsonFeatureDownloaded, IGeojsonPoiDetailed} from 'src/app/types/model';
+import {Md5} from 'ts-md5/dist/md5';
 
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import {Filesystem, Directory, Encoding} from '@capacitor/filesystem';
+import {IConfig} from 'src/app/types/config';
 
 @Injectable({
   providedIn: 'root',
@@ -41,14 +38,14 @@ export class StorageService {
     this.onReady.next(false);
     const storage = new Storage();
     storage.create().then(
-      (store) => {
+      store => {
         this._store = store;
         this._ready = true;
         this.onReady.next(this._ready);
       },
-      (err) => {
+      err => {
         console.warn(err);
-      }
+      },
     );
   }
 
@@ -106,7 +103,7 @@ export class StorageService {
 
   async setTrack(
     id: string | number,
-    track: IGeojsonFeature | IGeojsonFeatureDownloaded
+    track: IGeojsonFeature | IGeojsonFeatureDownloaded,
   ): Promise<void> {
     return this._set(`${TRACK_STORAGE_PREFIX}-${id}`, track);
   }
@@ -222,8 +219,8 @@ export class StorageService {
       return new Promise<void>((resolve, reject) => {
         this.onReady
           .pipe(
-            filter((ready) => ready),
-            take(1)
+            filter(ready => ready),
+            take(1),
           )
           .subscribe(() => {
             this._store.set(key, stringValue).then(
@@ -232,7 +229,7 @@ export class StorageService {
               },
               () => {
                 reject();
-              }
+              },
             );
           });
       });
@@ -249,7 +246,7 @@ export class StorageService {
   private _storeGet(key: string): Promise<any> {
     return new Promise<any>((resolve, reject) => {
       this._store.get(key).then(
-        (value) => {
+        value => {
           let result: any;
           // console.log('------- ~ file: storage.service.ts ~ line 150 ~ StorageService ~ _storeGet ~ value', value);
           if (value) {
@@ -261,10 +258,10 @@ export class StorageService {
           }
           resolve(result);
         },
-        (err) => {
+        err => {
           console.warn(err);
           resolve(undefined);
-        }
+        },
       );
     });
   }
@@ -278,32 +275,32 @@ export class StorageService {
     return new Promise<any>((resolve, reject) => {
       if (this._ready) {
         this._storeGet(key).then(
-          (res) => resolve(res),
-          (err) => {
+          res => resolve(res),
+          err => {
             console.warn(err);
             reject(err);
-          }
+          },
         );
       } else {
         this.onReady
           .pipe(
-            filter((ready) => ready),
-            take(1)
+            filter(ready => ready),
+            take(1),
           )
           .subscribe(
             () => {
               this._storeGet(key).then(
-                (res) => resolve(res),
-                (err) => {
+                res => resolve(res),
+                err => {
                   console.warn(err);
                   reject(err);
-                }
+                },
               );
             },
-            (err) => {
+            err => {
               console.warn(err);
               reject();
-            }
+            },
           );
       }
     });
@@ -320,8 +317,8 @@ export class StorageService {
       return new Promise<void>((resolve, reject) => {
         this.onReady
           .pipe(
-            filter((ready) => ready),
-            take(1)
+            filter(ready => ready),
+            take(1),
           )
           .subscribe(() => {
             this._store.remove(key).then(() => {

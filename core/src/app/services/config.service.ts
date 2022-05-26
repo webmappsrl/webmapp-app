@@ -6,14 +6,15 @@
  * */
 
 import * as CONFIG from '../../../config.json';
-import pkg from 'package.json'
-import { Injectable } from '@angular/core';
+import pkg from 'package.json';
+import {Injectable} from '@angular/core';
 
-import { timeout } from 'rxjs/operators';
-import { StorageService } from './base/storage.service';
-import { CommunicationService } from './base/communication.service';
-import { DeviceService } from './base/device.service';
-import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
+import {timeout} from 'rxjs/operators';
+import {StorageService} from './base/storage.service';
+import {CommunicationService} from './base/communication.service';
+import {DeviceService} from './base/device.service';
+import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../constants/geohub';
+import {IConfig} from '../types/config';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class ConfigService {
   constructor(
     private _communicationService: CommunicationService,
     private _deviceService: DeviceService,
-    private _storageService: StorageService
+    private _storageService: StorageService,
   ) {
     console.log('Core v' + this.version);
   }
@@ -34,8 +35,7 @@ export class ConfigService {
    */
   initialize(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const isLocalServer: boolean =
-        window.location.href.indexOf('localhost') !== -1;
+      const isLocalServer: boolean = window.location.href.indexOf('localhost') !== -1;
 
       if (!this._deviceService.isBrowser || isLocalServer) {
         const tmp: any = CONFIG;
@@ -44,12 +44,12 @@ export class ConfigService {
         this._storageService
           .getConfig()
           .then(
-            (value) => {
+            value => {
               if (typeof value !== 'undefined' && value) {
                 this._config = value;
               }
             },
-            () => {}
+            () => {},
           )
           .finally(() => {
             const url =
@@ -64,42 +64,39 @@ export class ConfigService {
               .get(url + '?t=' + Date.now())
               .pipe(timeout(1500))
               .subscribe(
-                (response) => {
+                response => {
                   this._config = response;
 
                   this._storageService.setConfig(this._config);
                   resolve();
                 },
-                (err) => {
+                err => {
                   if (isLocalServer) {
-                    if (
-                      err.message
-                        .toLowerCase()
-                        .indexOf('http failure during parsing') !== -1
-                    ) {
+                    if (err.message.toLowerCase().indexOf('http failure during parsing') !== -1) {
                       console.warn('WARNING: Malformed config.json');
+                    } else {
+                      console.warn(err);
                     }
-                    else {console.warn(err);}
                   }
                   this._storageService.setConfig(this._config);
                   resolve();
-                }
+                },
               );
           });
       } else {
         const url = '/config.json';
 
         this._communicationService.get(url + '?t=' + Date.now()).subscribe(
-          (response) => {
+          response => {
             this._config = response;
 
             this._storageService.setConfig(this._config);
             resolve();
           },
-          (err) => {
+          err => {
             console.error(err);
             resolve();
-          }
+          },
         );
       }
     });
@@ -129,9 +126,6 @@ export class ConfigService {
    * @returns {boolean} true if the ugc records should be enabled
    */
   isRecordEnabled(): boolean {
-    return (
-      this.appId === 'it.webmapp.webmapp' ||
-      !!this._config?.GEOLOCATION?.record?.enable
-    );
+    return this.appId === 'it.webmapp.webmapp' || !!this._config?.GEOLOCATION?.record?.enable;
   }
 }

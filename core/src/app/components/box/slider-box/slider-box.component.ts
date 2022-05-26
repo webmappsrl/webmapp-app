@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DeviceService} from 'src/app/services/base/device.service';
+import {IBASEBOX} from 'src/app/types/config';
 
 @Component({
   selector: 'webmapp-slider-box',

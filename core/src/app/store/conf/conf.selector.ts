@@ -1,4 +1,5 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {ICONF, IHOME, IHOMEOLD, ILAYER, ITHEME} from 'src/app/types/config';
 import {getCSSVariables} from '../../functions/theme';
 import {elasticAll} from '../elastic/elastic.selector';
 import {confFeatureKey} from './conf.reducer';
@@ -59,7 +60,7 @@ export const confHOME = createSelector(confFeature, elasticAll, (state, all) => 
           track_id: 25,
         },
       ],
-    });
+    } as any);
     return home;
   }
 

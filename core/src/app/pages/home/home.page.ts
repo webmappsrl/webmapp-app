@@ -21,6 +21,7 @@ import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
+import {IHOME, ILAYER} from 'src/app/types/config';
 import {IGeojsonFeature} from 'src/app/types/model';
 
 @Component({

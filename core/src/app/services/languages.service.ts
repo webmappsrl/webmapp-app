@@ -8,15 +8,16 @@
  *
  * */
 
-import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
-import { take } from 'rxjs/operators';
-import { ConfigService } from './config.service';
-import { StorageService } from './base/storage.service';
+import {Injectable} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
+import {take} from 'rxjs/operators';
+import {ConfigService} from './config.service';
+import {StorageService} from './base/storage.service';
 import {Store} from '@ngrx/store';
 import {IConfRootState} from '../store/conf/conf.reducer';
 import {confLANGUAGES} from '../store/conf/conf.selector';
+import {ILANGUAGES} from '../types/config';
 
 @Injectable({
   providedIn: 'root',

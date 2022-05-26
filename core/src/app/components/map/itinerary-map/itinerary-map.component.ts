@@ -492,6 +492,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
       }
 
       this._geolocationService.onLocationChange.subscribe(location => {
+        console.log(location);
         this._location = location;
         this.animateLocation(this._location);
 
