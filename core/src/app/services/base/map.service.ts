@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Coordinate } from 'ol/coordinate';
-import { Extent } from 'ol/extent';
-import { transform, transformExtent } from 'ol/proj';
-import { getDistance } from 'ol/sphere.js'; // Throws problems importing normally
-import { ILocation } from 'src/app/types/location';
+import {Injectable} from '@angular/core';
+import {Coordinate} from 'ol/coordinate';
+import {Extent} from 'ol/extent';
+import {transform, transformExtent} from 'ol/proj';
+import {getDistance} from 'ol/sphere.js'; // Throws problems importing normally
+import {ILocation} from 'src/app/types/location';
 
 @Injectable({
   providedIn: 'root',
@@ -20,16 +20,10 @@ export class MapService {
    *
    * @returns {number}
    */
-  getFixedDistance(
-    point1: ILocation,
-    point2: ILocation,
-    resolution: number
-  ): number {
+  getFixedDistance(point1: ILocation, point2: ILocation, resolution: number): number {
     return (
-      getDistance(
-        [point1.longitude, point1.latitude],
-        [point2.longitude, point2.latitude]
-      ) / resolution
+      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
+      resolution
     );
   }
 

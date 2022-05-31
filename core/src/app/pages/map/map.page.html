@@ -1,22 +1,14 @@
 <ion-content scrollY="false">
   <div class="webmapp-pagemap-searcharea">
-    <webmapp-search-bar
-      class="webmapp-pagemap-searchbar"
-    >
-    </webmapp-search-bar>
+    <webmapp-search-bar class="webmapp-pagemap-searchbar"> </webmapp-search-bar>
 
-    <ion-button
-      class="webmapp-pagemap-searchherebtn"
-    >
+    <ion-button class="webmapp-pagemap-searchherebtn">
       <i class="webmapp-icon-search-outline"></i>
       <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>
     </ion-button>
   </div>
-  <webmapp-map
-  [padding]="mapPadding$|async"
-  [disableTrackSelection]=true
-></webmapp-map>
-<!--
+  <webmapp-map [padding]="mapPadding$|async" [disableTrackSelection]="true"></webmapp-map>
+  <!--
   <webmapp-map
     class="webmapp-pagemap-map-container"
     (move)="mapMove($event)"
@@ -54,3 +46,4 @@
   <div>{{'pages.map.loading' | translate}}</div>
 </div>
  -->
+</ion-content>
