@@ -18,8 +18,6 @@ import {
   BackgroundGeolocationLocationProvider,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {POSITION_ZINDEX} from './zIndex';
-import {from} from 'rxjs';
-import {take} from 'rxjs/operators';
 const lat_long = {
   latitude: 37.49484,
   longitude: 14.06052,
@@ -60,36 +58,28 @@ export class NavMapPositionDirective implements OnDestroy {
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      activityType: 'OtherNavigation',
-      distanceFilter: 3,
-      stationaryRadius: 0,
-      locationProvider: BackgroundGeolocationLocationProvider.DISTANCE_FILTER_PROVIDER,
+      desiredAccuracy: 0,
+      locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
       debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: true, // enable this to clear background location settings when the app terminates,
+      stopOnTerminate: false, // enable this to clear background location settings when the app terminates,
     };
-    this._backgroundGeolocation.finish();
     this._backgroundGeolocation
       .configure(config)
       .then(() => {
-        console.log('BACKGROUND CONFIGURED');
+        console.log('BACGROUND CONFIGURED');
         this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
           .subscribe((location: BackgroundGeolocationResponse) => {
-            from(this._backgroundGeolocation.startTask())
-              .pipe(take(1))
-              .subscribe(task => {
-                this.locationEvt.emit(location);
-                console.log('*************************************');
-                console.log('->location');
-                console.log(location);
-                console.log('*************************************');
-                const point = new Point(fromLonLat([location.longitude, location.latitude]));
-                this._locationFeature.setGeometry(point);
-                this._locationIcon.setRotation(location.bearing * (Math.PI / 180));
-                this._backgroundGeolocation.endTask(task);
-              });
+            this.locationEvt.emit(location);
+            console.log('*************************************');
+            console.log('->location');
+            console.log(location);
+            console.log('*************************************');
+            const point = new Point(fromLonLat([location.longitude, location.latitude]));
+            this._locationFeature.setGeometry(point);
+            this._locationIcon.setRotation(location.bearing * (Math.PI / 180));
           });
+        this._backgroundGeolocation.startTask();
         this._backgroundGeolocation.start();
       })
       .catch((e: Error) => {
