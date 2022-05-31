@@ -65,7 +65,7 @@ export class HomePage implements OnInit {
   }
 
   public async ngOnInit() {
-    this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
+    // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
     await this._geoLocation.start();
     this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
       this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);

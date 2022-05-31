@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 import {
   AlertController,
   Animation,
@@ -35,12 +35,13 @@ import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 
 @Component({
-  selector: 'webmapp-itinerary',
-  templateUrl: './itinerary.page.html',
-  styleUrls: ['./itinerary.page.scss'],
+  selector: 'webmapp-navigation',
+  templateUrl: './navigation.page.html',
+  styleUrls: ['./navigation.page.scss'],
 })
-export class ItineraryPage implements OnDestroy {
+export class NavigationPage implements OnDestroy {
   @ViewChild('itineraryTabs') itineraryTabs: IonTabs;
+  @Input() track: any;
 
   public itinerary: IGeojsonFeature;
   public isFavourite: boolean = false;
@@ -125,7 +126,7 @@ export class ItineraryPage implements OnDestroy {
     private _coinService: CoinService,
     private _storeConf: Store<IConfRootState>,
   ) {
-    this.setAnimations();
+    // this.setAnimations();
     this.currentTrackProperties$
       .pipe(
         switchMap(t => {
@@ -209,7 +210,6 @@ export class ItineraryPage implements OnDestroy {
   }
 
   navigate() {
-    console.log('clicco su nav');
     this._navController.navigateForward(['navigation']);
   }
 
@@ -392,7 +392,8 @@ export class ItineraryPage implements OnDestroy {
       this.showDownload = true;
     }
   }
+
   ngOnDestroy(): void {
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
+    //  this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
   }
 }

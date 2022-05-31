@@ -40,7 +40,6 @@ import {
   DEF_MAP_ROTATION_DURATION,
 } from '../../../constants/map';
 
-import {GeolocationService} from 'src/app/services/geolocation.service';
 import {ILocation} from 'src/app/types/location';
 import {CLocation} from 'src/app/classes/clocation';
 import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
@@ -331,7 +330,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     private _authService: AuthService,
     private _configService: ConfigService,
     private _geohubService: GeohubService,
-    private _geolocationService: GeolocationService,
     private _mapService: MapService,
     private _markerService: MarkerService,
     private _tilesService: TilesService,
@@ -428,7 +426,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     this.relatedPoi$.pipe(take(1)).subscribe(pois => {
       this._addPoisMarkers(pois);
     });
-    this.isRecording = this._geolocationService.recording;
 
     //TODO: figure out why this must be called inside a timeout
     setTimeout(() => {
@@ -486,19 +483,9 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
       });
 
       if (this.registering) {
-        this._geolocationService.start();
         this.locationState = EMapLocationState.FOLLOW;
         this._centerMapToLocation();
       }
-
-      this._geolocationService.onLocationChange.subscribe(location => {
-        console.log(location);
-        this._location = location;
-        this.animateLocation(this._location);
-
-        if ([EMapLocationState.FOLLOW, EMapLocationState.ROTATE].indexOf(this.locationState) !== -1)
-          this._centerMapToLocation();
-      });
     }
   }
   private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
@@ -510,6 +497,11 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     }
     this._view.fit(geometryOrExtent, optOptions);
   }
+  ionViewWillLeave() {
+    clearInterval(this.timer);
+    this._destroyer.next(true);
+  }
+
   ngOnDestroy() {
     clearInterval(this.timer);
     this._destroyer.next(true);
@@ -1410,7 +1402,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy {
     }
 
     const poiMarker = this._poiMarkers.find(x => x.icon == poiFeature);
-    console.log('------- ~ file: map.component.ts ~ line 1082 ~ _mapClick ~ poiMarker', poiMarker);
     if (poiMarker) {
       this.clickpoi.emit(poiMarker.poi);
       this.selectedpoi = poiMarker.poi;

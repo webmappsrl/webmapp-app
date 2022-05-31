@@ -1,0 +1,15 @@
+<div
+  id="ol-map"
+  class="map-container"
+  navMapTrack
+  navMapPosition
+  [map]="map"
+  [track]="track"
+  (locationEvt)="setLocation($event)"
+></div>
+<ng-container *ngIf="location$|async as loc">
+  <pre> DEBUG MODE</pre>
+  <pre>long {{loc.longitude}}</pre>
+  <pre>lat {{loc.latitude}}</pre>
+  <pre>bearing {{loc.bearing}}</pre>
+</ng-container>
