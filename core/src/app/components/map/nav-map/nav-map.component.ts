@@ -1,13 +1,21 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  Input,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 // ol imports
 import Map from 'ol/Map';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
+import {defaults as defaultControls} from 'ol/control';
 import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../constants/map';
 import {MapService} from 'src/app/services/base/map.service';
 import {TilesService} from 'src/app/services/tiles.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, fromEvent} from 'rxjs';
 import {BackgroundGeolocationResponse} from '@awesome-cordova-plugins/background-geolocation/ngx';
 const lat_long = {
   latitude: 37.49484,
@@ -24,20 +32,22 @@ export class NavMapComponent implements OnInit {
   @Input() track;
   startView: number[] = [lat_long.longitude, lat_long.latitude, 9];
   map: Map;
-  location$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(null);
-
+  location$: BehaviorSubject<BackgroundGeolocationResponse | null> =
+    new BehaviorSubject<BackgroundGeolocationResponse | null>(null);
+  pi = Math.PI;
   private _view: View;
 
   constructor(private _mapService: MapService, private _tilesService: TilesService) {}
   private _initMap(): void {
     (this._view = new View({
       center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
-      zoom: 15,
+      zoom: 17.5,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,
     })),
       (this.map = new Map({
         view: this._view,
+        controls: defaultControls({rotate: false, attribution: false}),
         layers: [
           new TileLayer({
             source: this._initializeBaseSource(),

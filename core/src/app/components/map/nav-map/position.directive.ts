@@ -18,6 +18,8 @@ import {
   BackgroundGeolocationLocationProvider,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {POSITION_ZINDEX} from './zIndex';
+import {from} from 'rxjs';
+import {take} from 'rxjs/operators';
 const lat_long = {
   latitude: 37.49484,
   longitude: 14.06052,
@@ -27,13 +29,14 @@ const lat_long = {
 })
 export class NavMapPositionDirective implements OnDestroy {
   private _map: Map;
+  private _lastPosition: [number, number] = [0, 0];
+  private _calculatedBearing = 365;
   @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
 
   private _locationIcon = new Icon({
     src: 'assets/images/location-icon-arrow.png',
     scale: 0.4,
     size: [125, 125],
-    rotation: 123,
   });
   private _locationFeature = new Feature();
   private _locationLayer = new VectorLayer({
@@ -58,28 +61,44 @@ export class NavMapPositionDirective implements OnDestroy {
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 0,
+      desiredAccuracy: 10,
+      activityType: 'OtherNavigation',
+      stationaryRadius: 0,
       locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: false, // enable this to clear background location settings when the app terminates,
+      debug: false,
+      stopOnTerminate: true,
     };
+    this._backgroundGeolocation.finish();
     this._backgroundGeolocation
       .configure(config)
       .then(() => {
-        console.log('BACGROUND CONFIGURED');
+        console.log('BACKGROUND CONFIGURED');
         this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
-          .subscribe((location: BackgroundGeolocationResponse) => {
-            this.locationEvt.emit(location);
-            console.log('*************************************');
-            console.log('->location');
-            console.log(location);
-            console.log('*************************************');
-            const point = new Point(fromLonLat([location.longitude, location.latitude]));
-            this._locationFeature.setGeometry(point);
-            this._locationIcon.setRotation(location.bearing * (Math.PI / 180));
+          .subscribe((location: any) => {
+            from(this._backgroundGeolocation.startTask())
+              .pipe(take(1))
+              .subscribe(task => {
+                console.log('*************************************');
+                console.log('->location');
+                console.log(location);
+                console.log('*************************************');
+                this._calculatedBearing = this._bearing(
+                  this._lastPosition[0],
+                  this._lastPosition[1],
+                  location.longitude,
+                  location.latitude,
+                );
+
+                this._lastPosition = [location.longitude, location.latitude];
+                this.locationEvt.emit(location);
+                const point = new Point(fromLonLat([location.longitude, location.latitude]));
+                this._locationFeature.setGeometry(point);
+                this._fitView(point);
+                this._rotate(location.bearing, 500);
+                this._backgroundGeolocation.endTask(task);
+              });
           });
-        this._backgroundGeolocation.startTask();
         this._backgroundGeolocation.start();
       })
       .catch((e: Error) => {
@@ -94,7 +113,7 @@ export class NavMapPositionDirective implements OnDestroy {
             let bearing: number = Math.random() * 360;
             const point = new Point(fromLonLat([res.coords.longitude, res.coords.latitude]));
             this._locationFeature.setGeometry(point);
-            this._locationIcon.setRotation(bearing);
+            this._rotate(bearing, 500);
           },
           function errorCallback(error) {
             // console.log(error);
@@ -104,13 +123,60 @@ export class NavMapPositionDirective implements OnDestroy {
       });
   }
 
-  private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
+  private _fitView(geometryOrExtent: Point, optOptions?: FitOptions): void {
     if (optOptions == null) {
+      const size = this._map.getSize();
+      const height = size != null && size.length > 0 ? size[1] : 0;
       optOptions = {
         maxZoom: this._map.getView().getZoom(),
+        duration: 500,
+        size,
       };
     }
     this._map.getView().fit(geometryOrExtent, optOptions);
+  }
+
+  private _rotate(bearing: number, duration?: number): void {
+    const view = this._map.getView();
+    if (
+      typeof bearing === 'undefined' ||
+      typeof bearing !== 'number' ||
+      Number.isNaN(bearing) ||
+      bearing <= 0
+    ) {
+      return;
+    }
+    if (0 > bearing && bearing > 180) {
+      bearing = 90 - bearing;
+    }
+
+    view.animate({
+      rotation: ((365 - bearing) * Math.PI) / 180,
+      duration: duration ? duration : 0,
+    });
+  }
+
+  private _toRadians(degrees: number): number {
+    return (degrees * Math.PI) / 180;
+  }
+
+  private _toDegrees(radians: number): number {
+    return (radians * 180) / Math.PI;
+  }
+
+  private _bearing(startLat: number, startLng: number, destLat: number, destLng: number): number {
+    startLat = this._toRadians(startLat);
+    startLng = this._toRadians(startLng);
+    destLat = this._toRadians(destLat);
+    destLng = this._toRadians(destLng);
+
+    const y = Math.sin(destLng - startLng) * Math.cos(destLat);
+    const x =
+      Math.cos(startLat) * Math.sin(destLat) -
+      Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+    let brng = Math.atan2(y, x);
+    brng = this._toDegrees(brng);
+    return (brng + 360) % 360;
   }
 
   ngOnDestroy(): void {

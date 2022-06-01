@@ -133,13 +133,6 @@
     class="webmapp-pageroute-fabbottom webmapp-pageroute-fabbottom-top"
     [ngClass]="{'webmapp-pageroute-fabbottom-top-fullmap':modeFullMap}"
   >
-    <webmapp-btn-orientation
-      class="webmapp-pageroute-btnorient"
-      [degrees]="mapDegrees"
-      (click)="orientNorth()"
-      [hidden]="opacity < 0.5"
-    >
-    </webmapp-btn-orientation>
   </ion-fab>
   <ion-fab vertical="top" horizontal="end" [ngStyle]="{      'opacity': opacity    }" *ngIf="false">
     <ion-fab-button (click)="menu()" size="small" class="webmapp-pageroute-btntop">

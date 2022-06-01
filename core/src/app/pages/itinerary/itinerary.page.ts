@@ -386,11 +386,12 @@ export class ItineraryPage implements OnDestroy {
   }
 
   public async download() {
-    const modalres = await this._coinService.openModal();
-
+    /*  const modalres = await this._coinService.openModal();
     if (modalres) {
       this.showDownload = true;
     }
+    */
+    this.showDownload = true;
   }
   ngOnDestroy(): void {
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));

@@ -67,13 +67,6 @@
     class="webmapp-pageroute-fabbottom webmapp-pageroute-fabbottom-top"
     [ngClass]="{'webmapp-pageroute-fabbottom-top-fullmap':modeFullMap}"
   >
-    <webmapp-btn-orientation
-      class="webmapp-pageroute-btnorient"
-      [degrees]="mapDegrees"
-      (click)="orientNorth()"
-      [hidden]="opacity < 0.5"
-    >
-    </webmapp-btn-orientation>
   </ion-fab>
   <ion-fab vertical="top" horizontal="end" [ngStyle]="{      'opacity': opacity    }" *ngIf="false">
     <ion-fab-button (click)="menu()" size="small" class="webmapp-pageroute-btntop">
@@ -92,19 +85,8 @@
     </ion-fab-button>
   </ion-fab>
 
-  <ion-button
-    class="webmapp-pageroute-btnfullmap"
-    [hidden]="opacity < 0.5"
-    [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}"
-    (click)="toogleFullMap()"
-  >
-    <div [hidden]="!modeFullMap">
-      <ion-icon name="close-outline"></ion-icon>
-      {{ 'pages.route.btnFullMapReduce' | translate }}
-    </div>
-    <div [hidden]="modeFullMap">
-      <ion-icon name="resize-outline"></ion-icon>
-      {{ 'pages.route.btnFullMapExpand' | translate }}
-    </div>
+  <ion-button class="webmapp-pageroute-btnfullmap" (click)="back()">
+    <ion-icon name="close-outline"></ion-icon>
+    ESCI
   </ion-button>
 </ion-content>

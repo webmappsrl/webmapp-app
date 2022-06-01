@@ -50,7 +50,7 @@ export class NavigationPage implements OnDestroy {
 
   public pois: Array<IGeojsonPoi> = null;
 
-  public modeFullMap = false;
+  public modeFullMap = true;
   public showToolBarOver = false;
   public hideToolBarOver = false;
   public scrollThreshold = 50;
