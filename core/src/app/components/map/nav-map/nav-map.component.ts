@@ -32,7 +32,7 @@ export class NavMapComponent implements OnInit {
   @Input() track;
   startView: number[] = [lat_long.longitude, lat_long.latitude, 9];
   map: Map;
-  location$: BehaviorSubject<BackgroundGeolocationResponse | null> =
+  location$: BehaviorSubject<BackgroundGeolocationResponse | null | any> =
     new BehaviorSubject<BackgroundGeolocationResponse | null>(null);
   pi = Math.PI;
   private _view: View;
@@ -66,6 +66,7 @@ export class NavMapComponent implements OnInit {
     this._initMap();
   }
   setLocation(loc) {
+    loc.zoom = this._view.getZoom();
     this.location$.next(loc);
   }
   /**
