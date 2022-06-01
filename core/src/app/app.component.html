@@ -1,5 +1,3 @@
-
-
 <webmapp-gallery
   [hidden]="!showingPhotos"
   [images]="image_gallery"
@@ -9,8 +7,11 @@
 
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
-  
-  <webmapp-recording-btn class="webmapp-app-recordingbtn webmapp-app-recordingbtn-{{recBtnPosition()}}" (btnClick)="recordingClick($event)" *ngIf="isRecording()">
-  </webmapp-recording-btn>
 
+  <webmapp-recording-btn
+    class="webmapp-app-recordingbtn webmapp-app-recordingbtn-{{recBtnPosition()}}"
+    (btnClick)="recordingClick($event)"
+    *ngIf="isRecording()"
+  >
+  </webmapp-recording-btn>
 </ion-app>

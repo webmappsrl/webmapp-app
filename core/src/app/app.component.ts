@@ -1,22 +1,21 @@
-import { Component } from '@angular/core';
-import { SplashScreen } from '@capacitor/splash-screen';
-import { NavController, Platform } from '@ionic/angular';
-import { LanguagesService } from './services/languages.service';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
+import {Component} from '@angular/core';
+import {SplashScreen} from '@capacitor/splash-screen';
+import {NavController, Platform} from '@ionic/angular';
+import {LanguagesService} from './services/languages.service';
+import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {environment} from 'src/environments/environment';
-import { DownloadService } from './services/download.service';
-import { GeolocationService } from './services/geolocation.service';
-import { ILocation } from './types/location';
-import { DEF_MAP_LOCATION_ZOOM } from './constants/map';
-import { Router } from '@angular/router';
-import { StatusService } from './services/status.service';
-import { SaveService } from './services/save.service';
-import { GEOHUB_SAVING_TRY_INTERVAL } from './constants/geohub';
-import { IConfRootState } from './store/conf/conf.reducer';
-import { IElasticAllRootState } from './store/elastic/elastic.reducer';
-import { Store } from '@ngrx/store';
-import { loadConf } from './store/conf/conf.actions';
-import { allElastic } from './store/elastic/elastic.actions';
+import {DownloadService} from './services/download.service';
+import {ILocation} from './types/location';
+import {DEF_MAP_LOCATION_ZOOM} from './constants/map';
+import {Router} from '@angular/router';
+import {StatusService} from './services/status.service';
+import {SaveService} from './services/save.service';
+import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
+import {IConfRootState} from './store/conf/conf.reducer';
+import {IElasticAllRootState} from './store/elastic/elastic.reducer';
+import {Store} from '@ngrx/store';
+import {loadConf} from './store/conf/conf.actions';
+import {allElastic} from './store/elastic/elastic.actions';
 import {Observable} from 'rxjs';
 import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
 import {mapCurrentTrack} from './store/map/map.selector';
@@ -42,7 +41,6 @@ export class AppComponent {
     private _platform: Platform,
     private _googleAnalytics: GoogleAnalytics,
     private _downloadService: DownloadService,
-    private _geolocationService: GeolocationService,
     private _navController: NavController,
     private router: Router,
     private status: StatusService,
@@ -92,22 +90,8 @@ export class AppComponent {
     this.showingPhotos = false;
   }
 
-  recordingClick(ev) {
-    const location: ILocation = this._geolocationService.location;
-    let state: any = {};
-
-    if (location && location.latitude && location.longitude) {
-      state = {
-        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
-      };
-    }
-    this._navController.navigateForward('register', {
-      state,
-    });
-  }
-  isRecording() {
-    return this._geolocationService.recording;
-  }
+  recordingClick(ev) {}
+  isRecording() {}
   recBtnPosition() {
     const tree = this.router.parseUrl(this.router.url);
     if (tree?.root?.children && tree.root.children['primary']) {

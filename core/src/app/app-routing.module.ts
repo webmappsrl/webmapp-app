@@ -1,15 +1,12 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {PreloadAllModules, RouterModule, Routes} from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
   },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule),
-  },
+
   {
     path: 'waypoint',
     loadChildren: () => import('./pages/waypoint/waypoint.module').then(m => m.WaypointPageModule),
@@ -63,6 +60,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/poi/poi.module').then(m => m.PoiPageModule),
   },
   {
+    path: 'navigation',
+    loadChildren: () =>
+      import('./pages/navigation/navigation.module').then(m => m.NavigationPageModule),
+  },
+  {
     path: 'downloadlist',
     loadChildren: () =>
       import('./pages/downloadlist/downloadlist.module').then(m => m.DownloadlistPageModule),
@@ -78,9 +80,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
-  ],
+  imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

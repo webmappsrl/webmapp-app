@@ -1,11 +1,15 @@
-<ion-fab-button (click)="orientNorth($event)" size="small"
-  class="webmapp-btn-orientation-fab webmapp-btn-orientation-fab-light">
-  
-  <div style="transform:rotate({{angle}}deg);ms-transform:rotate({{angle}}deg);" class="webmapp-icon-compass webmapp-btn-orientation-icon">
-    <i class="path1 webmapp-icon-"></i>
-    <i class="path2 webmapp-icon-"></i>
-    <i class="path3 webmapp-icon-"></i>
-    <i class="path4 webmapp-icon-"></i>  
+<ion-fab-button
+  (click)="orientNorth($event)"
+  size="small"
+  class="webmapp-btn-orientation-fab webmapp-btn-orientation-fab-light"
+>
+  <div
+    style="transform:rotate({{angle}}deg);ms-transform:rotate({{angle}}deg);"
+    class="icon-compass webmapp-btn-orientation-icon"
+  >
+    <i class="path1 icon-"></i>
+    <i class="path2 icon-"></i>
+    <i class="path3 icon-"></i>
+    <i class="path4 icon-"></i>
   </div>
-
 </ion-fab-button>

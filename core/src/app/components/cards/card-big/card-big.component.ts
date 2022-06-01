@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
-import { BehaviorSubject } from 'rxjs';
-import { GeohubService } from 'src/app/services/geohub.service';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { StatusService } from 'src/app/services/status.service';
-import { IGeojsonFeature, iLocalString } from 'src/app/types/model';
+import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {NavController} from '@ionic/angular';
+import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
+import {BehaviorSubject} from 'rxjs';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {GeoutilsService} from 'src/app/services/geoutils.service';
+import {StatusService} from 'src/app/services/status.service';
+import {IGeojsonFeature, iLocalString} from 'src/app/types/model';
 
 @Component({
   selector: 'webmapp-card-big',
@@ -21,21 +20,21 @@ export class CardBigComponent implements OnInit {
   public distance: number = 0;
   public feature_image;
   @Input('showDistance') public showDistance: boolean;
-  public title$: BehaviorSubject<iLocalString|null> = new BehaviorSubject<iLocalString|null>(null);
+  public title$: BehaviorSubject<iLocalString | null> = new BehaviorSubject<iLocalString | null>(
+    null,
+  );
   public where: any;
 
   constructor(
     private navCtrl: NavController,
     private _statusService: StatusService,
     private _geoHubService: GeohubService,
-    private geolocationService: GeolocationService,
-    private geolocationUtils: GeoutilsService
-  ) {
-  }
+    private geolocationUtils: GeoutilsService,
+  ) {}
 
   @Input('item') public set item(value: IGeojsonFeature) {
     this._item = value;
-    if(value != null && value.properties != null && value.properties.name != null) {
+    if (value != null && value.properties != null && value.properties.name != null) {
       this.title$.next(value.properties.name);
     }
     this.feature_image = value.properties.feature_image;
@@ -43,27 +42,15 @@ export class CardBigComponent implements OnInit {
   }
 
   @Input('term') public set term(value: any) {
-    if(value != null && value.title != null) {
+    if (value != null && value.title != null) {
       this.title$.next(value.title);
     }
-    if(value !=null && value.feature_image != null) {
+    if (value != null && value.feature_image != null) {
       this.feature_image = value.feature_image;
     }
   }
 
-  public async ngOnInit(
-  ) {
-    if (this.showDistance) {
-      const loc = await this.geolocationService.location;
-      const distance = this.geolocationUtils.getDistance(loc.getLatLng(), this.geolocationUtils.getFirstPoint(this._item.geometry.coordinates))
-      if (distance > 10000) {
-        this.distance = Math.round(distance / 1000)
-      }
-      else {
-        this.distance = Math.round(distance / 100) / 10
-      }
-    }
-  }
+  public async ngOnInit() {}
 
   public open() {
     this._statusService.route = this._item;
