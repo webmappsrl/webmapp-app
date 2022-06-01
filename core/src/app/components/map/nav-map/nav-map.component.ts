@@ -41,7 +41,7 @@ export class NavMapComponent implements OnInit {
   private _initMap(): void {
     (this._view = new View({
       center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
-      zoom: 17.5,
+      zoom: 16,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,
     })),
