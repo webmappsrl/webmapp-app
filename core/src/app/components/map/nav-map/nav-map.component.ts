@@ -12,6 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
+import {defaults as defaultInteracion} from 'ol/interaction';
 import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../constants/map';
 import {MapService} from 'src/app/services/base/map.service';
 import {TilesService} from 'src/app/services/tiles.service';
@@ -47,7 +48,18 @@ export class NavMapComponent implements OnInit {
     })),
       (this.map = new Map({
         view: this._view,
-        controls: defaultControls({rotate: false, attribution: false}),
+        controls: defaultControls({rotate: false, attribution: false, zoom: false}),
+        interactions: defaultInteracion({
+          altShiftDragRotate: false,
+          onFocusOnly: true,
+          doubleClickZoom: false,
+          keyboard: false,
+          mouseWheelZoom: false,
+          shiftDragZoom: false,
+          dragPan: false,
+          pinchRotate: false,
+          pinchZoom: false,
+        }),
         layers: [
           new TileLayer({
             source: this._initializeBaseSource(),
