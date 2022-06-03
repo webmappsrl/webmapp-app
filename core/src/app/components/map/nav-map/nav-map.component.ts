@@ -48,7 +48,11 @@ export class NavMapComponent implements OnInit {
     })),
       (this.map = new Map({
         view: this._view,
-        controls: defaultControls({rotate: false, attribution: false, zoom: false}),
+        controls: defaultControls({
+          attribution: false,
+          rotate: false,
+          zoom: false,
+        }),
         interactions: defaultInteracion({
           altShiftDragRotate: false,
           onFocusOnly: true,

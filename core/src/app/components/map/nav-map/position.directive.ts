@@ -1,8 +1,6 @@
 import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {Feature} from 'ol';
-import {Extent} from 'ol/extent';
 import Point from 'ol/geom/Point';
-import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import VectorLayer from 'ol/layer/Vector';
 import Map from 'ol/Map';
 import {fromLonLat} from 'ol/proj';
@@ -24,13 +22,17 @@ const lat_long = {
   latitude: 37.49484,
   longitude: 14.06052,
 };
+
+interface Bearing {
+  cos: number;
+  sin: number;
+}
 @Directive({
   selector: '[navMapPosition]',
 })
 export class NavMapPositionDirective implements OnDestroy {
   private _map: Map;
-  private _lastPosition: [number, number] = [0, 0];
-  private _calculatedBearing = 365;
+  private _lastBearings: Bearing[] = [];
   @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
 
   private _locationIcon = new Icon({
@@ -61,7 +63,7 @@ export class NavMapPositionDirective implements OnDestroy {
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
+      desiredAccuracy: 0,
       activityType: 'OtherNavigation',
       stationaryRadius: 0,
       locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
@@ -83,19 +85,13 @@ export class NavMapPositionDirective implements OnDestroy {
                 console.log('->location');
                 console.log(location);
                 console.log('*************************************');
-                this._calculatedBearing = this._bearing(
-                  this._lastPosition[0],
-                  this._lastPosition[1],
-                  location.longitude,
-                  location.latitude,
-                );
-
-                this._lastPosition = [location.longitude, location.latitude];
+                const runningAvg = this._runningAvg(location.bearing);
+                location.runningAvg = this._radiansToDegrees(runningAvg);
                 this.locationEvt.emit(location);
                 const point = new Point(fromLonLat([location.longitude, location.latitude]));
                 this._locationFeature.setGeometry(point);
                 this._fitView(point);
-                this._rotate(location.bearing, 500);
+                this._rotate(-runningAvg, 500);
                 this._backgroundGeolocation.endTask(task);
               });
           });
@@ -113,7 +109,7 @@ export class NavMapPositionDirective implements OnDestroy {
             let bearing: number = Math.random() * 360;
             const point = new Point(fromLonLat([res.coords.longitude, res.coords.latitude]));
             this._locationFeature.setGeometry(point);
-            this._rotate(bearing, 500);
+            // this._rotate(bearing, 500);
           },
           function errorCallback(error) {
             // console.log(error);
@@ -135,48 +131,46 @@ export class NavMapPositionDirective implements OnDestroy {
     }
     this._map.getView().fit(geometryOrExtent, optOptions);
   }
+  private _degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+  private _radiansToDegrees(radians) {
+    return radians * (180 / Math.PI);
+  }
+  private _runningAvg(bearing: number): number {
+    try {
+      if (typeof bearing === 'number' && Number.isNaN(bearing) === false && bearing >= 0) {
+        const bearingInRadians = this._degreesToRadians(bearing);
+        const newBearing: Bearing = {
+          cos: Math.cos(bearingInRadians),
+          sin: Math.sin(bearingInRadians),
+        };
+        if (this._lastBearings.length > 3) {
+          this._lastBearings.shift();
+        }
+        this._lastBearings.push(newBearing);
+        let cosAverage = 0;
+        let sinAverage = 0;
+        this._lastBearings.forEach(b => {
+          cosAverage += b.cos;
+          sinAverage += b.sin;
+        });
+        const count = this._lastBearings.length;
+        const runningAverage = Math.atan2(sinAverage / count, cosAverage / count);
 
+        return runningAverage < 0 ? Math.PI * 2 + runningAverage : runningAverage;
+      }
+      return 0;
+    } catch (e) {
+      console.log('ERRORERRORERRORERRORERRORERROR', e);
+      return 0;
+    }
+  }
   private _rotate(bearing: number, duration?: number): void {
-    const view = this._map.getView();
-    if (
-      typeof bearing === 'undefined' ||
-      typeof bearing !== 'number' ||
-      Number.isNaN(bearing) ||
-      bearing <= 0
-    ) {
-      return;
-    }
-    if (0 > bearing && bearing > 180) {
-      bearing = 90 - bearing;
-    }
-
-    view.animate({
-      rotation: ((365 - bearing) * Math.PI) / 180,
+    this._map.getView().animate({
+      rotation: bearing,
       duration: duration ? duration : 0,
     });
-  }
-
-  private _toRadians(degrees: number): number {
-    return (degrees * Math.PI) / 180;
-  }
-
-  private _toDegrees(radians: number): number {
-    return (radians * 180) / Math.PI;
-  }
-
-  private _bearing(startLat: number, startLng: number, destLat: number, destLng: number): number {
-    startLat = this._toRadians(startLat);
-    startLng = this._toRadians(startLng);
-    destLat = this._toRadians(destLat);
-    destLng = this._toRadians(destLng);
-
-    const y = Math.sin(destLng - startLng) * Math.cos(destLat);
-    const x =
-      Math.cos(startLat) * Math.sin(destLat) -
-      Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
-    let brng = Math.atan2(y, x);
-    brng = this._toDegrees(brng);
-    return (brng + 360) % 360;
   }
 
   ngOnDestroy(): void {
