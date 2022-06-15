@@ -6,16 +6,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { Store } from '@ngrx/store';
+import {Store} from '@ngrx/store';
 
 import {BehaviorSubject, combineLatest, merge, Observable, of} from 'rxjs';
 import {catchError, map, shareReplay} from 'rxjs/operators';
+import {MapComponent} from 'src/app/components/map/map/map.component';
 
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentTrackId} from 'src/app/store/map/map.actions';
-import { mapCurrentRelatedPoi, mapCurrentTrack } from 'src/app/store/map/map.selector';
-import { ITrackElevationChartHoverElements } from 'src/app/types/track-elevation-charts';
+import {mapCurrentRelatedPoi, mapCurrentTrack} from 'src/app/store/map/map.selector';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 
 const menuOpenLeft = 0;
 const menuCloseLeft = 0;
@@ -45,6 +45,7 @@ export class MapPage {
   popupCloseEVT$: EventEmitter<null> = new EventEmitter<null>();
 
   resizeEVT: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  showMap$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -109,6 +110,13 @@ export class MapPage {
     this.updateUrl(trackid);
   }
 
+  ionViewWillEnter() {
+    this.showMap$.next(true);
+  }
+  ionViewDidLeave() {
+    this.showMap$.next(false);
+  }
+
   public toggleMenu() {
     this.showMenu$.next(!this.showMenu$.value);
     if (!this.isMobile$.value) {
@@ -124,7 +132,6 @@ export class MapPage {
   }
 
   public unselectPOI(): void {
-    // this.setCurrentPoi(-1);
     this.popupCloseEVT$.emit(null);
   }
   public setCurrentPoi(id) {

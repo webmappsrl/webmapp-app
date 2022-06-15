@@ -162,7 +162,6 @@ export class MapComponent implements OnDestroy {
   private _selectedPoiLayer: VectorLayer;
   private _selectedPoiMarker: IPoiMarker;
   private _poiMarkers: IPoiMarker[] = [];
-  private _updateMapSub: Subscription = Subscription.EMPTY;
   private _confTHEME$: Observable<ITHEME> = this._store.select(confTHEME);
   private _confMap$: Observable<any> = this._store.select(confMAP);
   private _mapCurrentLayer$: Observable<any> = this._storeMap.select(mapCurrentLayer);
@@ -170,7 +169,10 @@ export class MapComponent implements OnDestroy {
   private _minZoom: number = initMaxZoom;
   private _defZoom: number = initMinZoom;
   private _defaultFeatureColor = DEF_LINE_COLOR;
-
+  private _mapConf: IMAP;
+  private _updateMapSub: Subscription = Subscription.EMPTY;
+  private _currentTrackFromMapSub: Subscription = Subscription.EMPTY;
+  private _mapCurrentLayerSub: Subscription = Subscription.EMPTY;
   constructor(
     private _communicationService: CommunicationService,
     private _mapService: MapService,
@@ -179,7 +181,7 @@ export class MapComponent implements OnDestroy {
     private _storeMap: Store<IMapRootState>,
     private _confService: ConfService,
   ) {
-    this._currentTrackFromMap$.subscribe(track => {
+    this._currentTrackFromMapSub = this._currentTrackFromMap$.subscribe(track => {
       this._currentTrack$.next(track);
       if (track == null) {
         if (this._mapInit$.value) {
@@ -194,7 +196,7 @@ export class MapComponent implements OnDestroy {
         }
       }
     });
-    this._mapCurrentLayer$.subscribe(val => {
+    this._mapCurrentLayerSub = this._mapCurrentLayer$.subscribe(val => {
       this._currentLayer$.next(val);
       if (this._view != null) {
         if (val != null) {
@@ -249,6 +251,8 @@ export class MapComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this._updateMapSub.unsubscribe();
+    this._currentTrackFromMapSub.unsubscribe();
+    this._mapCurrentLayerSub.unsubscribe();
   }
 
   private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
@@ -266,15 +270,22 @@ export class MapComponent implements OnDestroy {
     }
   }
   private async _initMap(map: IMAP) {
+    this._mapConf = map;
     this._view = new View({
-      center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
       zoom: map.defZoom,
       maxZoom: map.maxZoom,
       minZoom: map.minZoom,
       projection,
+      constrainOnlyCenter: true,
       extent: this._mapService.extentFromLonLat(map.bbox ?? initExtent),
       padding: this._padding$.value || undefined,
     });
+    if (map.bbox) {
+      this._fitView(this._mapService.extentFromLonLat(map.bbox), {
+        duration: zoomDuration,
+        maxZoom: map.defZoom,
+      });
+    }
     if (map.maxZoom) {
       this._maxZoom = map.maxZoom;
     }
@@ -311,7 +322,6 @@ export class MapComponent implements OnDestroy {
     this._selectInteraction.on('select', async (event: SelectEvent) => {
       const clickedFeature = event?.selected?.[0] ?? undefined;
       const clickedFeatureId: number = clickedFeature?.getProperties()?.id ?? undefined;
-      console.log(clickedFeatureId);
       if (clickedFeatureId > -1) {
         this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
       }
