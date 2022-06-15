@@ -12,6 +12,7 @@ import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
+import {defaults as defaultInteracion} from 'ol/interaction';
 import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../constants/map';
 import {MapService} from 'src/app/services/base/map.service';
 import {TilesService} from 'src/app/services/tiles.service';
@@ -32,7 +33,7 @@ export class NavMapComponent implements OnInit {
   @Input() track;
   startView: number[] = [lat_long.longitude, lat_long.latitude, 9];
   map: Map;
-  location$: BehaviorSubject<BackgroundGeolocationResponse | null> =
+  location$: BehaviorSubject<BackgroundGeolocationResponse | null | any> =
     new BehaviorSubject<BackgroundGeolocationResponse | null>(null);
   pi = Math.PI;
   private _view: View;
@@ -41,13 +42,28 @@ export class NavMapComponent implements OnInit {
   private _initMap(): void {
     (this._view = new View({
       center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
-      zoom: 17.5,
+      zoom: 16,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,
     })),
       (this.map = new Map({
         view: this._view,
-        controls: defaultControls({rotate: false, attribution: false}),
+        controls: defaultControls({
+          attribution: false,
+          rotate: false,
+          zoom: false,
+        }),
+        interactions: defaultInteracion({
+          altShiftDragRotate: false,
+          onFocusOnly: true,
+          doubleClickZoom: false,
+          keyboard: false,
+          mouseWheelZoom: false,
+          shiftDragZoom: false,
+          dragPan: false,
+          pinchRotate: false,
+          pinchZoom: false,
+        }),
         layers: [
           new TileLayer({
             source: this._initializeBaseSource(),
@@ -66,6 +82,7 @@ export class NavMapComponent implements OnInit {
     this._initMap();
   }
   setLocation(loc) {
+    loc.zoom = this._view.getZoom();
     this.location$.next(loc);
   }
   /**

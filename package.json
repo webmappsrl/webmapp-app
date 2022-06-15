@@ -6,7 +6,10 @@
   "license": "Check the license in the LICENSE.md",
   "private": true,
   "dependencies": {
-    "@angular-devkit/schematics": "^12.1.0"
+    "@angular-devkit/schematics": "^12.1.0",
+    "@awesome-cordova-plugins/background-geolocation": "^5.43.0",
+    "@capacitor/android": "^3.5.1",
+    "@mauron85/cordova-plugin-background-geolocation": "^3.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.1.0",
