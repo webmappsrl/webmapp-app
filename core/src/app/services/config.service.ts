@@ -15,6 +15,7 @@ import {CommunicationService} from './base/communication.service';
 import {DeviceService} from './base/device.service';
 import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../constants/geohub';
 import {IConfig} from '../types/config';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +112,7 @@ export class ConfigService {
   }
 
   get appId(): string {
-    return this._config.APP.id ? this._config.APP.id : '';
+    return this._config.APP.id ? this._config.APP.id : `${environment.geohubId || ''}`;
   }
 
   get defaultLanguage(): string {

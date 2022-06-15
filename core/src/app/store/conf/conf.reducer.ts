@@ -1,5 +1,6 @@
 import {createReducer, on} from '@ngrx/store';
 import {ICONF} from 'src/app/types/config';
+import {environment} from 'src/environments/environment';
 import {loadConfSuccess} from './conf.actions';
 
 export const confFeatureKey = 'conf';
@@ -9,7 +10,7 @@ export interface IConfRootState {
 const initialConfState: ICONF = {
   APP: {
     name: 'Webmapp',
-    geohubId: 10,
+    geohubId: environment.geohubId || 1,
     id: 'it.webmapp',
   },
   OPTIONS: {

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  analyticsId : '285809815'
+  analyticsId: '285809815',
+  geohubId: 2,
 };
 
 /*
