@@ -189,22 +189,13 @@ export class MapComponent implements OnDestroy {
           this._selectedPoiLayer = undefined;
           this._removePoiLayer();
           this._updateMap();
-          this._fitView(new Point(this._view.getCenter()), {
-            maxZoom: this._defZoom + 2,
-            duration: zoomDuration * 2,
-          });
         }
       }
     });
     this._mapCurrentLayerSub = this._mapCurrentLayer$.subscribe(val => {
       this._currentLayer$.next(val);
       if (this._view != null) {
-        if (val != null) {
-          this._fitView(new Point(this._view.getCenter()), {
-            maxZoom: this._view.getZoom() + 0.1,
-            duration: zoomDuration,
-          });
-        } else {
+        if (val == null) {
           this._fitView(new Point(this._view.getCenter()), {
             maxZoom: this._defZoom,
             duration: zoomDuration,

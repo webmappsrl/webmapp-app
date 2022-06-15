@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { TabsPage } from './tabs.page';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {TabsPage} from './tabs.page';
 
 const routes: Routes = [
   {
@@ -9,27 +9,24 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () =>
-          import('../home/home.module').then((m) => m.HomePageModule),
+        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule),
       },
       {
         path: 'profile',
-        loadChildren: () =>
-          import('../profile/profile.module').then((m) => m.ProfilePageModule),
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule),
       },
       {
         path: 'map',
-        loadChildren: () =>
-          import('../map/map.module').then((m) => m.MapPageModule),
+        loadChildren: () => import('../map/map.module').then(m => m.MapPageModule),
       },
       {
         path: 'favourites',
         loadChildren: () =>
-          import('../favourites/favourites.module').then((m) => m.FavouritesPageModule),
+          import('../favourites/favourites.module').then(m => m.FavouritesPageModule),
       },
       {
-        path: '',
-        redirectTo: 'home',
+        path: 'back',
+        redirectTo: 'map',
         pathMatch: 'full',
       },
     ],
