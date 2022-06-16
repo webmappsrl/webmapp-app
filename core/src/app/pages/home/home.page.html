@@ -35,6 +35,9 @@
         <ng-container *ngIf="home.box_type == 'base'">
           <webmapp-slider-box [data]="home" (clickEVT)="searchCard($event)"></webmapp-slider-box>
         </ng-container>
+        <ng-container *ngIf="home.box_type ==  'external_url'">
+          <webmapp-external-url-box [data]="home"></webmapp-external-url-box>
+        </ng-container>
       </ng-container>
     </ng-template>
   </ng-container>

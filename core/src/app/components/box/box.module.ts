@@ -10,10 +10,12 @@ import {CardsModule} from '../cards/cards.module';
 import {DownloadedTracksBoxComponent} from './downloaded-tracks-box/downloaded-tracks-box.component';
 import {SliderBoxComponent} from './slider-box/slider-box.component';
 import {BaseBoxComponent} from './base-box/base-box.component';
+import {ExternalUrlBoxComponent} from './external-url-box/external-url-box.component';
 
 const boxComponents = [
   LayerBoxComponent,
   SearchBoxComponent,
+  ExternalUrlBoxComponent,
   DownloadedTracksBoxComponent,
   SliderBoxComponent,
   BaseBoxComponent,

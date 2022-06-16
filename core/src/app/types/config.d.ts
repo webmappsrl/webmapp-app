@@ -61,7 +61,7 @@ interface IHOMEOLD {
 }
 
 type IBOX = {
-  box_type: 'title' | 'layer' | 'base';
+  box_type: 'title' | 'layer' | 'base' | 'external_url' | 'slug';
   title: iLocalString | string;
 };
 type ITITLEBOX = IBOX & {
@@ -74,6 +74,10 @@ type ILAYERBOX = IBOX & {
 type IHOMEBASEITEM = {
   title: iLocalString | string;
   image_url: string;
+};
+type IEXTERNALURLBOX = IHOMEBASEITEM & {
+  box_type: 'external_url';
+  url: string;
 };
 
 type IHOMEITEMTRACK = IHOMEBASEITEM & {
@@ -91,7 +95,7 @@ type IBASEBOX = IBOX & {
   box_type: 'base';
   items: IHOMEITEM[];
 };
-type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX;
+type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX;
 interface IOPTIONS {
   trackRefLabelZoom: number;
   caiScaleStyleZoom: number;

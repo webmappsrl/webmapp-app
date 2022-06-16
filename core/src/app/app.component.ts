@@ -58,6 +58,7 @@ export class AppComponent {
     this._platform.ready().then(
       () => {
         this.saveGeneratedContentsNowAndInterval();
+        this.router.navigate(['home']);
         SplashScreen.hide();
       },
       err => {
