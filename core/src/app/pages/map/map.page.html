@@ -1,10 +1,4 @@
 <ion-content scrollY="false">
-  <div class="webmapp-pagemap-searcharea">
-    <ion-button class="webmapp-pagemap-searchherebtn">
-      <i class="webmapp-icon-search-outline"></i>
-      <ion-label>{{'pages.map.searchherebtn' | translate}}</ion-label>
-    </ion-button>
-  </div>
   <webmapp-map
     *ngIf="showMap$|async"
     [padding]="mapPadding$|async"
