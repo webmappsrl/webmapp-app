@@ -21,7 +21,7 @@ import {
   nextPoiID,
   prevPoiID,
 } from 'src/app/store/map/map.selector';
-import {filter, mergeMap, shareReplay, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';
 
 @Component({
@@ -32,27 +32,25 @@ import {setCurrentPoiId} from 'src/app/store/map/map.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoiPage implements OnInit, OnDestroy {
-  public route: IGeojsonFeature;
-  public pois: Array<IGeojsonPoiDetailed> = [];
-  public selectedPoi: IGeojsonPoiDetailed;
-  public track;
-
-  public useCache = false;
-
-  public useAnimation = false;
-
-  public poiIdx: number;
-
-  public sliderOptions: any = {
-    slidesPerView: 1.3,
-  };
-  currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
-  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
-  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
-  nextPoiID$: Observable<number> = this._storeMap.select(nextPoiID);
-  prevPoiID$: Observable<number> = this._storeMap.select(prevPoiID);
   private _changePoiEVT$: EventEmitter<'prev' | 'next'> = new EventEmitter<'prev' | 'next'>();
   private _changePoiSub: Subscription = Subscription.EMPTY;
+
+  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
+  currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
+  nextPoiID$: Observable<number> = this._storeMap.select(nextPoiID);
+  poiIdx: number;
+  pois: Array<IGeojsonPoiDetailed> = [];
+  prevPoiID$: Observable<number> = this._storeMap.select(prevPoiID);
+  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
+  route: IGeojsonFeature;
+  selectedPoi: IGeojsonPoiDetailed;
+  sliderOptions: any = {
+    slidesPerView: 1.3,
+  };
+  track;
+  useAnimation = false;
+  useCache = false;
+
   constructor(
     private _navController: NavController,
     private downloadService: DownloadService,
@@ -65,7 +63,27 @@ export class PoiPage implements OnInit, OnDestroy {
       });
   }
 
-  async ngOnInit() {
+  back() {
+    this._navController.back();
+  }
+
+  clickPoi(poi: IGeojsonPoi) {
+    if (poi != null) {
+      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
+    }
+  }
+
+  email(_): void {}
+
+  nextPoi() {
+    this._changePoiEVT$.emit('next');
+  }
+
+  ngOnDestroy(): void {
+    this._changePoiSub.unsubscribe();
+  }
+
+  ngOnInit() {
     this.currentTrack$
       .pipe(
         take(1),
@@ -83,22 +101,15 @@ export class PoiPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  back() {
-    this._navController.back();
-  }
-
-  async clickPoi(poi: IGeojsonPoi) {
-    if (poi != null) {
-      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
-    }
-  }
+  phone(_): void {}
 
   prevPoi() {
     this._changePoiEVT$.emit('prev');
   }
 
-  nextPoi() {
-    this._changePoiEVT$.emit('next');
+  selectPoi(poi: IGeojsonPoi) {
+    this.selectedPoi = this.pois.find(p => p.properties.id == poi.properties.id);
+    this.poiIdx = this.pois.findIndex(p => p.properties.id == poi.properties.id);
   }
 
   selectPoiById(id: number) {
@@ -106,30 +117,9 @@ export class PoiPage implements OnInit, OnDestroy {
     this.selectPoi(selectedPoi);
   }
 
-  selectPoi(poi: IGeojsonPoi) {
-    this.selectedPoi = this.pois.find(p => p.properties.id == poi.properties.id);
-    this.poiIdx = this.pois.findIndex(p => p.properties.id == poi.properties.id);
-    // this.updatePoiMarkers();
-  }
-
-  phone(phoneNumber) {
-    console.log('------- ~ file: poi.page.ts ~ line 75 ~ PoiPage ~ phone ~ phone', phoneNumber);
-  }
-
-  email(email) {
-    console.log('------- ~ file: poi.page.ts ~ line 80 ~ PoiPage ~ email ~ email');
-  }
+  showPhoto(_) {}
 
   async url(url) {
-    console.log('------- ~ file: poi.page.ts ~ line 85 ~ PoiPage ~ url ~ url', url);
     await Browser.open({url});
-  }
-
-  showPhoto(idx) {
-    // this._statusService.showPhoto(true, this.selectedPoi.properties.images, idx);
-  }
-
-  ngOnDestroy(): void {
-    this._changePoiSub.unsubscribe();
   }
 }

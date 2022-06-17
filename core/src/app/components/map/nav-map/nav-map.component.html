@@ -7,11 +7,3 @@
   [track]="track"
   (locationEvt)="setLocation($event)"
 ></div>
-<div
-  *ngIf="location$|async as loc"
-  style="position: absolute;display:block; background-color: transparent;bottom: 0;left: 0;right: 0;height: auto;background-color: rgba(255,178,61,0.53);"
->
-  <pre> DEBUG MODE</pre>
-  <pre> bearing degrees: {{loc.bearing}} </pre>
-  <pre> running avg: {{loc.runningAvg}}</pre>
-</div>

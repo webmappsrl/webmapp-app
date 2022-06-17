@@ -179,7 +179,7 @@ export class MapComponent implements OnDestroy {
     private _zone: NgZone,
     private _store: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
-    private _confService: ConfService,
+    private _confSvc: ConfService,
   ) {
     this._currentTrackFromMapSub = this._currentTrackFromMap$.subscribe(track => {
       this._currentTrack$.next(track);
@@ -195,12 +195,10 @@ export class MapComponent implements OnDestroy {
     this._mapCurrentLayerSub = this._mapCurrentLayer$.subscribe(val => {
       this._currentLayer$.next(val);
       if (this._view != null) {
-        if (val == null) {
-          this._fitView(new Point(this._view.getCenter()), {
-            maxZoom: this._defZoom,
-            duration: zoomDuration,
-          });
-        }
+        this._fitView(new Point(this._view.getCenter()), {
+          maxZoom: this._defZoom,
+          duration: zoomDuration,
+        });
       }
     });
     this._updateMapSub = this._mapInit$
@@ -589,7 +587,7 @@ export class MapComponent implements OnDestroy {
    * @returns the array of created layers
    */
   private async _initializeDataLayers(map: IMAP): Promise<Array<VectorTileLayer>> {
-    const vectorLayerUrl = this._confService.vectorLayerUrl;
+    const vectorLayerUrl = this._confSvc.vectorLayerUrl;
     const styleJson: any = {
       version: 8,
       name: 'tracks',

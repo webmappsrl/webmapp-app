@@ -2,11 +2,16 @@
   <ion-item class="webmapp-searchbar-textcontainer">
     <i slot="start" class="webmapp-icon-search-outline"></i>
     <form [formGroup]="searchForm">
-      <ion-input formControlName="search" type="text" class="webmapp-searchbar-textinput" placeholder="{{'components.searchbar.placeholder'|translate}}"
-       >
-    </ion-input>
-  </form>
-    <i slot="end" class="webmapp-icon-settings-outline webmapp-searchbar-rightbtn" *ngIf="false"></i>
+      <ion-input
+        formControlName="search"
+        type="text"
+        class="webmapp-searchbar-textinput"
+        placeholder="{{'components.searchbar.placeholder'|translate}}"
+      >
+      </ion-input>
+    </form>
+    <i slot="end" (click)="reset()" *ngIf="(wordsEVT|async) === true">
+      <ion-icon name="close"></ion-icon>
+    </i>
   </ion-item>
 </div>
-

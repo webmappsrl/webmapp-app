@@ -1,17 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { debounceTime } from 'rxjs/operators';
-import { searchElastic } from 'src/app/store/elastic/elastic.actions';
-import { IElasticSearchRootState } from 'src/app/store/elastic/elastic.reducer';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {debounceTime} from 'rxjs/operators';
+import {searchElastic} from 'src/app/store/elastic/elastic.actions';
+import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
 })
-export class SearchBarComponent  {
+export class SearchBarComponent {
+  searchForm: FormGroup;
   @Output('words') wordsEVT: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  public searchForm: FormGroup;
 
   constructor(fb: FormBuilder, store: Store<IElasticSearchRootState>) {
     this.searchForm = fb.group({
@@ -28,7 +28,12 @@ export class SearchBarComponent  {
     });
   }
 
-  @Input('initSearch') public set setSearch(init: string) {
+  @Input('initSearch') set setSearch(init: string) {
     this.searchForm.controls.search.setValue(init);
+  }
+
+  reset(): void {
+    this.searchForm.controls.search.setValue('');
+    this.wordsEVT.emit(false);
   }
 }
