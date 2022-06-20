@@ -619,7 +619,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
           .pipe(replace(/<string name="plugin_bgloc_account_type">\$ACCOUNT_TYPE<\/string>/g, ''))
           .pipe(
             replace(
-              /<string name="plugin_bgloc_content_authority">\$CONTENT_AUTHORITY<\/string>/g,
+              /<string name="plugin_bgloc_content_authority">\$$PACKAGE_NAME.provider<\/string>/g,
               '',
             ),
           )
@@ -631,10 +631,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
                 '</string>' +
                 '<string name="plugin_bgloc_account_name">Webmapp</string>' +
                 '<string name="plugin_bgloc_account_type">$ACCOUNT_TYPE</string>' +
-                '<string name="plugin_bgloc_content_authority">$CONTENT_AUTHORITY</string>' +
-                '<string name="mauron85_bgloc_account_name">@string/app_name</string>' +
-                '<string name="mauron85_bgloc_account_type">$PACKAGE_NAME.account</string>' +
-                '<string name="mauron85_bgloc_content_authority">$PACKAGE_NAME</string>',
+                '<string name="plugin_bgloc_content_authority">$PACKAGE_NAME.provider</string>',
             ),
           )
           .pipe(gulp.dest(instancesDir + instanceName + '/android/app/src/main/res/values/'))

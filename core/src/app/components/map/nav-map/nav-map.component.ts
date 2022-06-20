@@ -18,10 +18,9 @@ import {MapService} from 'src/app/services/base/map.service';
 import {TilesService} from 'src/app/services/tiles.service';
 import {BehaviorSubject, fromEvent} from 'rxjs';
 import {BackgroundGeolocationResponse} from '@awesome-cordova-plugins/background-geolocation/ngx';
-const lat_long = {
-  latitude: 37.49484,
-  longitude: 14.06052,
-};
+import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+
 @Component({
   selector: 'webmapp-nav-map',
   templateUrl: './nav-map.component.html',
@@ -30,8 +29,8 @@ const lat_long = {
   encapsulation: ViewEncapsulation.None,
 })
 export class NavMapComponent implements OnInit {
-  @Input() track;
-  startView: number[] = [lat_long.longitude, lat_long.latitude, 9];
+  @Input() track: CGeojsonLineStringFeature | IGeojsonFeatureDownloaded;
+
   map: Map;
   location$: BehaviorSubject<BackgroundGeolocationResponse | null | any> =
     new BehaviorSubject<BackgroundGeolocationResponse | null>(null);
@@ -41,7 +40,6 @@ export class NavMapComponent implements OnInit {
   constructor(private _mapService: MapService, private _tilesService: TilesService) {}
   private _initMap(): void {
     (this._view = new View({
-      center: this._mapService.coordsFromLonLat([this.startView[0], this.startView[1]]),
       zoom: 16,
       projection: 'EPSG:3857',
       constrainOnlyCenter: true,

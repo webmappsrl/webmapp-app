@@ -16,12 +16,7 @@ import {
   BackgroundGeolocationLocationProvider,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {POSITION_ZINDEX} from './zIndex';
-import {from} from 'rxjs';
-import {take} from 'rxjs/operators';
-const lat_long = {
-  latitude: 37.49484,
-  longitude: 14.06052,
-};
+import {Subscription} from 'rxjs';
 
 interface Bearing {
   cos: number;
@@ -31,6 +26,7 @@ interface Bearing {
   selector: '[navMapPosition]',
 })
 export class NavMapPositionDirective implements OnDestroy {
+  private _bgLocSub: Subscription = Subscription.EMPTY;
   private _map: Map;
   private _lastBearings: Bearing[] = [];
   @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
@@ -53,16 +49,20 @@ export class NavMapPositionDirective implements OnDestroy {
   @Input() set map(map: Map) {
     if (map != null) {
       this._map = map;
-      const point = new Point(fromLonLat([lat_long.longitude, lat_long.latitude]));
       this._map.addLayer(this._locationLayer);
-      this._fitView(point);
       this._map.render();
       this._locationLayer.getSource().changed();
     }
   }
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
-    const config: BackgroundGeolocationConfig = {
+    const androidConfig: BackgroundGeolocationConfig = {
+      startOnBoot: false,
+      interval: 1500,
+      fastestInterval: 1500,
+      startForeground: false,
+    };
+    const commonConfig: BackgroundGeolocationConfig = {
       desiredAccuracy: 0,
       activityType: 'OtherNavigation',
       stationaryRadius: 0,
@@ -70,30 +70,30 @@ export class NavMapPositionDirective implements OnDestroy {
       debug: false,
       stopOnTerminate: true,
     };
+    const config: BackgroundGeolocationConfig = {
+      ...commonConfig,
+      ...androidConfig,
+    };
     this._backgroundGeolocation.finish();
     this._backgroundGeolocation
       .configure(config)
       .then(() => {
         console.log('BACKGROUND CONFIGURED');
-        this._backgroundGeolocation
+        this._bgLocSub = this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
-          .subscribe((location: any) => {
-            from(this._backgroundGeolocation.startTask())
-              .pipe(take(1))
-              .subscribe(task => {
-                console.log('*************************************');
-                console.log('->location');
-                console.log(location);
-                console.log('*************************************');
-                const runningAvg = this._runningAvg(location.bearing);
-                location.runningAvg = this._radiansToDegrees(runningAvg);
-                this.locationEvt.emit(location);
-                const point = new Point(fromLonLat([location.longitude, location.latitude]));
-                this._locationFeature.setGeometry(point);
-                this._fitView(point);
-                this._rotate(-runningAvg, 500);
-                this._backgroundGeolocation.endTask(task);
-              });
+          .subscribe((loc: BackgroundGeolocationResponse) => {
+            console.log('*************************************');
+            console.log('->locationnnnnnn');
+            console.log(JSON.stringify(loc));
+            console.log('*************************************');
+            let location = loc as any;
+            const runningAvg = this._runningAvg(location.bearing);
+            location.runningAvg = this._radiansToDegrees(runningAvg);
+            this.locationEvt.emit(location);
+            const point = new Point(fromLonLat([location.longitude, location.latitude]));
+            this._locationFeature.setGeometry(point);
+            this._fitView(point);
+            this._rotate(-runningAvg, 500);
           });
         this._backgroundGeolocation.start();
       })
@@ -134,7 +134,7 @@ export class NavMapPositionDirective implements OnDestroy {
   private _degreesToRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
   }
-  private _radiansToDegrees(radians) {
+  private _radiansToDegrees(radians): number {
     return radians * (180 / Math.PI);
   }
   private _runningAvg(bearing: number): number {
@@ -176,5 +176,6 @@ export class NavMapPositionDirective implements OnDestroy {
   ngOnDestroy(): void {
     this._backgroundGeolocation.stop();
     this._backgroundGeolocation.finish();
+    this._bgLocSub.unsubscribe();
   }
 }

@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {Directive, Input, OnInit} from '@angular/core';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import Point from 'ol/geom/Point';
@@ -10,13 +10,14 @@ import VectorSource from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
-import {FLAG_TRACK_ZINDEX, TRACK_ZINDEX} from './zIndex';
+import {FitOptions} from 'ol/View';
 @Directive({
   selector: '[navMapTrack]',
 })
-export class NavMapTrackDirective implements OnInit {
+export class NavMapTrackDirective {
   private _map: Map;
   private _track;
+
   @Input() set map(map: Map) {
     this._map = map;
     if (this._track != null && this._map != null) {
@@ -67,8 +68,7 @@ export class NavMapTrackDirective implements OnInit {
   private _startEndLayer: VectorLayer;
   private _trackFeatures: Feature<Geometry>[];
   private _trackLayer: VectorLayer;
-  constructor(private el: ElementRef) {}
-  ngOnInit(): void {}
+
   private _init(): void {
     const startPosition = this._track.geometry.coordinates[0];
     const endPosition =
@@ -84,7 +84,8 @@ export class NavMapTrackDirective implements OnInit {
         features: [this._startFeature, this._endFeature],
       }),
     });
-
+    const point = new Point(fromLonLat([startPosition[0], startPosition[1]]));
+    this._fitView(point);
     this._map.addLayer(this._startEndLayer);
     this.drawTrack(this._track);
 
@@ -214,5 +215,18 @@ export class NavMapTrackDirective implements OnInit {
     );
 
     return style;
+  }
+
+  private _fitView(geometryOrExtent: Point, optOptions?: FitOptions): void {
+    if (optOptions == null) {
+      const size = this._map.getSize();
+      const height = size != null && size.length > 0 ? size[1] : 0;
+      optOptions = {
+        maxZoom: this._map.getView().getZoom(),
+        duration: 500,
+        size,
+      };
+    }
+    this._map.getView().fit(geometryOrExtent, optOptions);
   }
 }
