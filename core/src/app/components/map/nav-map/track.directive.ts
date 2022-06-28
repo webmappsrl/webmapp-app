@@ -88,8 +88,6 @@ export class NavMapTrackDirective {
     this._fitView(point);
     this._map.addLayer(this._startEndLayer);
     this.drawTrack(this._track);
-
-    console.log(this._map.getLayers());
   }
 
   private _createFeature(iconHtml: string, position: [number, number]): Feature {

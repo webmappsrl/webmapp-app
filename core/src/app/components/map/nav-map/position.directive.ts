@@ -16,7 +16,8 @@ import {
   BackgroundGeolocationLocationProvider,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {POSITION_ZINDEX} from './zIndex';
-import {Subscription} from 'rxjs';
+import {from, Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 interface Bearing {
   cos: number;
@@ -27,6 +28,7 @@ interface Bearing {
 })
 export class NavMapPositionDirective implements OnDestroy {
   private _bgLocSub: Subscription = Subscription.EMPTY;
+  private _bgCurrentLocSub: Subscription = Subscription.EMPTY;
   private _map: Map;
   private _lastBearings: Bearing[] = [];
   @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
@@ -74,28 +76,21 @@ export class NavMapPositionDirective implements OnDestroy {
       ...commonConfig,
       ...androidConfig,
     };
-    this._backgroundGeolocation.finish();
+    from(this._backgroundGeolocation.getCurrentLocation())
+      .pipe(take(1))
+      .subscribe((loc: BackgroundGeolocationResponse) => {
+        console.log('current position');
+        this._setPositionByLocation(loc);
+      });
     this._backgroundGeolocation
       .configure(config)
       .then(() => {
-        console.log('BACKGROUND CONFIGURED');
+        console.log('BACKGROUND CONFIGURED 2');
         this._bgLocSub = this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
           .subscribe((loc: BackgroundGeolocationResponse) => {
-            console.log('*************************************');
-            console.log('->locationnnnnnn');
-            console.log(JSON.stringify(loc));
-            console.log('*************************************');
-            let location = loc as any;
-            const runningAvg = this._runningAvg(location.bearing);
-            location.runningAvg = this._radiansToDegrees(runningAvg);
-            this.locationEvt.emit(location);
-            const point = new Point(fromLonLat([location.longitude, location.latitude]));
-            this._locationFeature.setGeometry(point);
-            this._fitView(point);
-            this._rotate(-runningAvg, 500);
+            this._setPositionByLocation(loc);
           });
-        this._backgroundGeolocation.start();
       })
       .catch((e: Error) => {
         console.log('ERROR', e);
@@ -117,8 +112,22 @@ export class NavMapPositionDirective implements OnDestroy {
           {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
         );
       });
+    this._backgroundGeolocation.start();
   }
-
+  private _setPositionByLocation(loc: BackgroundGeolocationResponse): void {
+    console.log('*************************************');
+    console.log('->locationnnnnnn');
+    console.log(JSON.stringify(loc));
+    console.log('*************************************');
+    let location = loc as any;
+    const runningAvg = this._runningAvg(location.bearing);
+    location.runningAvg = this._radiansToDegrees(runningAvg);
+    this.locationEvt.emit(location);
+    const point = new Point(fromLonLat([location.longitude, location.latitude]));
+    this._locationFeature.setGeometry(point);
+    this._fitView(point);
+    this._rotate(-runningAvg, 500);
+  }
   private _fitView(geometryOrExtent: Point, optOptions?: FitOptions): void {
     if (optOptions == null) {
       const size = this._map.getSize();
@@ -177,5 +186,6 @@ export class NavMapPositionDirective implements OnDestroy {
     this._backgroundGeolocation.stop();
     this._backgroundGeolocation.finish();
     this._bgLocSub.unsubscribe();
+    this._bgCurrentLocSub.unsubscribe();
   }
 }
