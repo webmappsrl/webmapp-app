@@ -97,6 +97,40 @@
           class="webmapp-pagepoi-info-body-description"
           [innerHTML]="properties.description | wmtrans"
         ></div>
+
+        <ion-modal #modal trigger="open-modal" [isOpen]="imagePoiToggle$|async">
+          <ng-template>
+            <ion-content fullscreen>
+              <ion-fab vertical="top" horizontal="end" class="webmapp-pagepoi-top">
+                <ion-fab-button
+                  (click)="this.imagePoiToggle$.next(false);"
+                  size="small"
+                  class="webmapp-pagepoi-btntop"
+                >
+                  <i class="icon-outline-close"></i>
+                </ion-fab-button>
+              </ion-fab>
+              <ion-fab vertical="top" horizontal="end" class="webmapp-pagepoi-top">
+                <ion-fab-button
+                  (click)="this.imagePoiToggle$.next(false);"
+                  size="small"
+                  class="webmapp-pagepoi-btntop"
+                >
+                  <i class="icon-outline-close"></i>
+                </ion-fab-button>
+              </ion-fab>
+              <ion-slides #gallery class="gallery" [options]="slideOptions">
+                <ion-slide *ngFor="let image of properties.image_gallery" pager="true">
+                  <webmapp-img
+                    [src]="image"
+                    size="335x250"
+                    class="webmapp-pagepoi-info-body-photo"
+                  ></webmapp-img>
+                </ion-slide>
+              </ion-slides>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
       </ion-content>
     </div>
   </ng-container>

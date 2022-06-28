@@ -109,7 +109,6 @@ export class MapComponent implements OnDestroy {
     }
   }
   @Input('resize') set resizeMap(_) {
-    console.log(_);
     if (this._map != null) {
       this._map.updateSize();
     }
@@ -212,7 +211,6 @@ export class MapComponent implements OnDestroy {
               featureProjection: 'EPSG:3857',
             }).readFeatures(selectedGeohubFeature)[0],
           );
-          console.log(selectedGeohubFeature);
           this._addPoisMarkers(selectedGeohubFeature.properties.related_pois);
         }),
         tap(() => this._updateMap()),
