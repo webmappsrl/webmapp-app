@@ -619,16 +619,16 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     <string name="plugin_bgloc_content_authority">$PACKAGE_NAME.provider</string>
 </resources>
         `;
-        return fs
-          .writeFileSync(
+        try {
+          fs.writeFileSync(
             instancesDir + instanceName + '/android/app/src/main/res/values/strings.xml',
             stringXml,
-          )
-          .on('end', () => {
-            if (verbose) debug('strings.xml updated successfully');
-            resolve();
-          })
-          .on('error', reject);
+          );
+          if (verbose) debug('strings.xml updated successfully');
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
       }),
     );
 
