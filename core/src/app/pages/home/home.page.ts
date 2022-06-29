@@ -31,7 +31,7 @@ import {IGeojsonFeature} from 'src/app/types/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class HomePage implements OnInit {
+export class HomePage {
   cards$: Observable<IHIT[]> = of([]);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   online$: Observable<boolean> = this._storeNetwork
@@ -52,8 +52,6 @@ export class HomePage implements OnInit {
   @Output('searchId') public searchIdEvent: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(
-    private _geoHubService: GeohubService,
-    private _geoLocation: GeolocationService,
     private _storeSearch: Store<IElasticSearchRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
@@ -62,14 +60,6 @@ export class HomePage implements OnInit {
     private _cdr: ChangeDetectorRef,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
-  }
-
-  public async ngOnInit() {
-    // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
-    await this._geoLocation.start();
-    this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
-      this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);
-    });
   }
 
   public searchCard(id: string | number) {

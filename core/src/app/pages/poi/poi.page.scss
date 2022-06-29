@@ -102,10 +102,6 @@ ion-modal::part(backdrop) {
   opacity: 1;
 }
 
-ion-modal.ion-page {
-  width: 100%;
-  height: auto;
-}
 .gallery {
   height: 100%;
   ion-slide {
@@ -113,6 +109,9 @@ ion-modal.ion-page {
     webmapp-img {
       height: 100%;
       transition: all 1s;
+      .webmapp-img-image {
+        height: 100%;
+      }
     }
   }
 }

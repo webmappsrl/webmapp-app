@@ -47,7 +47,6 @@ export class SlopeChartComponent {
         take(1),
       )
       .subscribe(track => {
-        console.log(track);
         this._setChart(track);
       });
   }

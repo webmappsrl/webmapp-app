@@ -336,7 +336,6 @@ export class DownloadService {
         }
       }
     }
-    console.log(track);
     sizeMb += await this.downloadImages(imageUrlList, track); // TODO async
 
     this.addToIndex({

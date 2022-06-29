@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {NavController, IonModal, IonSlides} from '@ionic/angular';
+import {NavController, IonSlides} from '@ionic/angular';
 import {IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
 import {Browser} from '@capacitor/browser';
 import {DownloadService} from 'src/app/services/download.service';
@@ -36,7 +36,6 @@ export class PoiPage implements OnInit, OnDestroy {
   private _changePoiEVT$: EventEmitter<'prev' | 'next'> = new EventEmitter<'prev' | 'next'>();
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _changePoiSub: Subscription = Subscription.EMPTY;
-  @ViewChild(IonModal) modal: IonModal;
   @ViewChild('gallery') slider: IonSlides;
 
   currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
