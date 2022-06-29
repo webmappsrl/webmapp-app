@@ -393,6 +393,16 @@ function update(instanceName, geohubInstanceId) {
     } else {
       reject('Missing instance. See gulp help for more');
     }
+
+    // enviroment.ts
+    const env = `
+export const environment = {
+  production: false,
+  geohubId: ${geohubInstanceId},
+  analyticsId:'285809815',
+};
+`;
+    fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
   });
 }
 
