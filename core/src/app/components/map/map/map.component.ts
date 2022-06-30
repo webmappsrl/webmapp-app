@@ -87,91 +87,48 @@ const DEF_LINE_COLOR_SELECTED = 'rgba(226, 249, 0, 0.6)';
   encapsulation: ViewEncapsulation.None,
 })
 export class MapComponent implements OnDestroy {
-  @ViewChild('mapContainer') mapContainer: ElementRef;
-  @ViewChild('zoomContainer') zoomContainer: ElementRef;
-  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
-
-  @Input('padding') set mapPadding(padding: number[]) {
-    this._padding$.next(padding);
-    if (padding != null && padding[3] != null) {
-      this.scaleLineStyle$.next(padding[3]);
-    }
-
-    if (this._view != null) {
-      this._fitView(new Point(this._view.getCenter()), {
-        padding: this._padding$.value,
-        duration: zoomDuration,
-      });
-    }
-
-    if (this._map != null) {
-      this._map.updateSize();
-    }
-  }
-  @Input('resize') set resizeMap(_) {
-    if (this._map != null) {
-      this._map.updateSize();
-    }
-  }
-  @Input('disableTrackSelection') disableTrackSelection = false;
-  @Input('trackElevationChartElements') set trackElevationChartElements(
-    value: ITrackElevationChartHoverElements,
-  ) {
-    this._drawTemporaryLocationFeature(value?.location, value?.track);
-  }
-  @Input('start-view') startView: number[] = startView;
-
-  @Input('poi') set setPoi(id: number) {
-    if (id === -1 && this._selectedPoiLayer != null) {
-      this._map.removeLayer(this._selectedPoiLayer);
-      this._selectedPoiLayer = undefined;
-    } else {
-      const currentPoi = this._poiMarkers.find(p => +p.id === +id);
-      if (currentPoi != null) {
-        this._fitView(currentPoi.icon.getGeometry() as any);
-        this._selectCurrentPoi(currentPoi);
-      }
-    }
-  }
-
-  @Output('feature-click') featureClick: EventEmitter<number> = new EventEmitter<number>();
-  @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
-
-  scaleLineStyle$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-
-  private _padding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
-  private _view: View;
-  private _map: Map;
-  private _dataLayers: Array<VectorTileLayer>;
-  private _selectedFeature$: BehaviorSubject<FeatureLike | null> =
-    new BehaviorSubject<FeatureLike | null>(null);
+  private _confMap$: Observable<any> = this._store.select(confMAP);
+  private _confTHEME$: Observable<ITHEME> = this._store.select(confTHEME);
+  private _currentLayer$: BehaviorSubject<ILAYER | null> = new BehaviorSubject<ILAYER | null>(null);
   private _currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> =
     new BehaviorSubject<CGeojsonLineStringFeature | null>(null);
   private _currentTrackFromMap$: Observable<CGeojsonLineStringFeature> =
     this._storeMap.select(mapCurrentTrack);
-  private _currentLayer$: BehaviorSubject<ILAYER | null> = new BehaviorSubject<ILAYER | null>(null);
-  private _mapInit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _selectInteraction: SelectInteraction;
-  private _styleJson: any;
-  private _elevationChartLayer: VectorLayer;
-  private _elevationChartSource: VectorSource;
-  private _elevationChartPoint: Feature<Point>;
-  private _elevationChartTrack: Feature<LineString>;
-  private _poisLayer: VectorLayer;
-  private _selectedPoiLayer: VectorLayer;
-  private _selectedPoiMarker: IPoiMarker;
-  private _poiMarkers: IPoiMarker[] = [];
-  private _confTHEME$: Observable<ITHEME> = this._store.select(confTHEME);
-  private _confMap$: Observable<any> = this._store.select(confMAP);
-  private _mapCurrentLayer$: Observable<any> = this._storeMap.select(mapCurrentLayer);
-  private _maxZoom: number = initMaxZoom;
-  private _minZoom: number = initMaxZoom;
+  private _currentTrackFromMapSub: Subscription = Subscription.EMPTY;
+  private _dataLayers: Array<VectorTileLayer>;
   private _defZoom: number = initMinZoom;
   private _defaultFeatureColor = DEF_LINE_COLOR;
-  private _mapConf: IMAP;
-  private _updateMapSub: Subscription = Subscription.EMPTY;
-  private _currentTrackFromMapSub: Subscription = Subscription.EMPTY;
+  private _elevationChartLayer: VectorLayer;
+  private _elevationChartPoint: Feature<Point>;
+  private _elevationChartSource: VectorSource;
+  private _elevationChartTrack: Feature<LineString>;
+  private _map: Map;
+  private _mapCurrentLayer$: Observable<any> = this._storeMap.select(mapCurrentLayer);
   private _mapCurrentLayerSub: Subscription = Subscription.EMPTY;
+  private _mapInit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private _maxZoom: number = initMaxZoom;
+  private _padding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
+  private _poiMarkers: IPoiMarker[] = [];
+  private _poisLayer: VectorLayer;
+  private _selectInteraction: SelectInteraction;
+  private _selectedFeature$: BehaviorSubject<FeatureLike | null> =
+    new BehaviorSubject<FeatureLike | null>(null);
+  private _selectedPoiLayer: VectorLayer;
+  private _selectedPoiMarker: IPoiMarker;
+  private _styleJson: any;
+  private _updateMapSub: Subscription = Subscription.EMPTY;
+  private _view: View;
+
+  @Input('disableTrackSelection') disableTrackSelection = false;
+  @Input('start-view') startView: number[] = startView;
+  @Output('feature-click') featureClick: EventEmitter<number> = new EventEmitter<number>();
+  @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
+  @ViewChild('mapContainer') mapContainer: ElementRef;
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+  @ViewChild('zoomContainer') zoomContainer: ElementRef;
+
+  scaleLineStyle$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
   constructor(
     private _communicationService: CommunicationService,
     private _mapService: MapService,
@@ -236,10 +193,322 @@ export class MapComponent implements OnDestroy {
       });
   }
 
+  @Input('padding') set mapPadding(padding: number[]) {
+    this._padding$.next(padding);
+    if (padding != null && padding[3] != null) {
+      this.scaleLineStyle$.next(padding[3]);
+    }
+
+    if (this._view != null) {
+      this._fitView(new Point(this._view.getCenter()), {
+        padding: this._padding$.value,
+        duration: zoomDuration,
+      });
+    }
+
+    if (this._map != null) {
+      this._map.updateSize();
+    }
+  }
+
+  @Input('resize') set resizeMap(_) {
+    if (this._map != null) {
+      this._map.updateSize();
+    }
+  }
+
+  @Input('poi') set setPoi(id: number) {
+    if (id === -1 && this._selectedPoiLayer != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
+    } else {
+      const currentPoi = this._poiMarkers.find(p => +p.id === +id);
+      if (currentPoi != null) {
+        this._fitView(currentPoi.icon.getGeometry() as any);
+        this._selectCurrentPoi(currentPoi);
+      }
+    }
+  }
+
+  @Input('trackElevationChartElements') set trackElevationChartElements(
+    value: ITrackElevationChartHoverElements,
+  ) {
+    this._drawTemporaryLocationFeature(value?.location, value?.track);
+  }
+
   ngOnDestroy(): void {
     this._updateMapSub.unsubscribe();
     this._currentTrackFromMapSub.unsubscribe();
     this._mapCurrentLayerSub.unsubscribe();
+  }
+
+  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>): void {
+    layer.getSource().addFeature(icon);
+  }
+
+  private async _addPoisMarkers(poiCollection: Array<IGeojsonFeature>): Promise<void> {
+    this._poisLayer = this._createLayer(this._poisLayer, 9998);
+    for (let i = this._poiMarkers?.length - 1; i >= 0; i--) {
+      const ov = this._poiMarkers[i];
+      if (!poiCollection?.find(x => x.properties.id + '' === ov.id)) {
+        this._removeIconFromLayer(this._poisLayer, ov.icon);
+        this._poiMarkers.splice(i, 1);
+      }
+    }
+    if (poiCollection) {
+      for (const poi of poiCollection) {
+        if (
+          !this._poiMarkers?.find(
+            x => x.id === poi.properties.id + '' && poi.properties?.feature_image?.sizes,
+          )
+        ) {
+          const {marker} = await this._createPoiCanvasIcon(poi);
+          this._addIconToLayer(this._poisLayer, marker.icon);
+          this._poiMarkers.push(marker);
+        }
+      }
+    }
+  }
+
+  private async _createCanvasForHtml(html: string, size: number): Promise<HTMLImageElement> {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+
+    const canvasHtml =
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
+      '<foreignObject width="100%" height="100%">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
+      html +
+      '</div>' +
+      '</foreignObject>' +
+      '</svg>';
+
+    const domUrl = window.URL; // || window.webkitURL || window;
+
+    const img = new Image();
+    const svg = new Blob([canvasHtml], {
+      type: 'image/svg+xml', //;charset=utf-8',
+    });
+    const url = domUrl.createObjectURL(svg);
+
+    img.onload = () => {
+      domUrl.revokeObjectURL(url);
+    };
+    img.src = url;
+
+    return img;
+  }
+
+  private async _createIconFeature(
+    coordinates: number[],
+    img: HTMLImageElement,
+    size: number,
+    transparent: boolean = false,
+    anchor: number[] = [0.5, 0.5],
+  ): Promise<{iconFeature: Feature<Geometry>; style: Style}> {
+    if (!coordinates) {
+      return;
+    }
+    const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
+
+    const iconFeature = new Feature({
+      type: 'icon',
+      geometry: new Point([position[0], position[1]]),
+    });
+    const style = new Style({
+      image: new Icon({
+        anchor,
+        img,
+        imgSize: [size, size],
+        opacity: transparent ? 0.5 : 1,
+      }),
+    });
+
+    iconFeature.setStyle(style);
+
+    return {iconFeature, style};
+  }
+
+  private _createLayer(layer: VectorLayer, zIndex: number): VectorLayer {
+    if (!layer) {
+      layer = new VectorLayer({
+        source: new VectorSource({
+          features: [],
+        }),
+        updateWhileAnimating: true,
+        updateWhileInteracting: true,
+        zIndex,
+      });
+      this._map.addLayer(layer);
+    }
+    return layer;
+  }
+
+  private async _createPoiCanvasIcon(
+    poi: any,
+    geometry = null,
+    selected = false,
+  ): Promise<{marker: IPoiMarker; style: Style}> {
+    const img = await this._createPoiCavasImage(poi, selected);
+    const {iconFeature, style} = await this._createIconFeature(
+      geometry
+        ? geometry
+        : [poi.geometry.coordinates[0] as number, poi.geometry.coordinates[1] as number],
+      img,
+      46,
+    );
+    iconFeature.setId(poi.properties.id);
+    return {
+      marker: {
+        poi,
+        icon: iconFeature,
+        id: poi.properties.id + '',
+      },
+      style,
+    };
+  }
+
+  private async _createPoiCavasImage(
+    poi: IGeojsonFeature,
+    selected = false,
+  ): Promise<HTMLImageElement> {
+    const htmlTextCanvas = await this._createPoiMarkerHtmlForCanvas(poi, selected);
+    return this._createCanvasForHtml(htmlTextCanvas, 46);
+  }
+
+  private async _createPoiMarkerHtmlForCanvas(
+    value: IGeojsonFeature,
+    selected = false,
+  ): Promise<string> {
+    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
+      value.properties?.feature_image?.sizes['108x137'],
+    );
+
+    let html = `
+    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
+
+    html += `
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
+          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="${
+      this._defaultFeatureColor
+    }"/>
+          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
+          <defs>
+            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
+              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
+              </image>
+            </pattern>
+          </defs>
+        </svg>`;
+    html += ` </div>`;
+
+    return html;
+  }
+
+  private _distance(c1: Coordinate, c2: Coordinate): number {
+    return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2));
+  }
+
+  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
+    const opt = {};
+    const data = await fetch(url, opt);
+    const blob = await data.blob();
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          resolve(base64data);
+        };
+      } catch (error) {
+        resolve('');
+      }
+    });
+  }
+
+  private _drawTemporaryLocationFeature(
+    location?: ILocation,
+    track?: CGeojsonLineStringFeature,
+  ): void {
+    if (location) {
+      if (!this._elevationChartSource) {
+        this._elevationChartSource = new VectorSource({
+          format: new GeoJSON(),
+        });
+      }
+      if (!this._elevationChartLayer) {
+        this._elevationChartLayer = new VectorLayer({
+          source: this._elevationChartSource,
+          style: feature => {
+            if (feature.getGeometry().getType() === 'Point') {
+              return [
+                new Style({
+                  image: new CircleStyle({
+                    fill: new FillStyle({
+                      color: '#000',
+                    }),
+                    radius: 7,
+                    stroke: new StrokeStyle({
+                      width: 2,
+                      color: '#fff',
+                    }),
+                  }),
+                  zIndex: 100,
+                }),
+              ];
+            } else {
+              return this._getLineStyle(this._elevationChartTrack.get('color'));
+            }
+          },
+          updateWhileAnimating: false,
+          updateWhileInteracting: false,
+          zIndex: 150,
+        });
+        this._map.addLayer(this._elevationChartLayer);
+      }
+
+      if (location) {
+        const pointGeometry: Point = new Point(
+          this._mapService.coordsFromLonLat([location.longitude, location.latitude]),
+        );
+
+        if (this._elevationChartPoint) {
+          this._elevationChartPoint.setGeometry(pointGeometry);
+        } else {
+          this._elevationChartPoint = new Feature(pointGeometry);
+          this._elevationChartSource.addFeature(this._elevationChartPoint);
+        }
+
+        if (track) {
+          const trackGeometry: LineString = new LineString(
+            (track.geometry.coordinates as ILineString).map(value =>
+              this._mapService.coordsFromLonLat(value),
+            ),
+          );
+          const trackColor: string = track?.properties?.color;
+
+          if (this._elevationChartTrack) {
+            this._elevationChartTrack.setGeometry(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+          } else {
+            this._elevationChartTrack = new Feature(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+            this._elevationChartSource.addFeature(this._elevationChartTrack);
+          }
+        }
+      } else {
+        this._elevationChartPoint = undefined;
+        this._elevationChartTrack = undefined;
+        this._elevationChartSource.clear();
+      }
+
+      this._map.render();
+    } else if (this._elevationChartSource && this._map) {
+      this._elevationChartPoint = undefined;
+      this._elevationChartTrack = undefined;
+      this._elevationChartSource.clear();
+      this._map.render();
+    }
   }
 
   private _fitView(geometryOrExtent: SimpleGeometry | Extent, optOptions?: FitOptions): void {
@@ -251,13 +520,124 @@ export class MapComponent implements OnDestroy {
     }
     this._view.fit(geometryOrExtent, optOptions);
   }
-  private _updateMap() {
-    for (const layer of this._dataLayers) {
-      layer.changed();
-    }
+
+  /**
+   * Return a value for the distance between the two point using a screen-fixed unit
+   *
+   * @param point1 the first location
+   * @param point2 the second location
+   */
+  private _getFixedDistance(point1: ILocation, point2: ILocation): number {
+    return (
+      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
+      this._view.getResolution()
+    );
   }
-  private async _initMap(map: IMAP) {
-    this._mapConf = map;
+
+  private _getLineStyle(color?: string): Array<Style> {
+    const style: Array<Style> = [];
+    const selected: boolean = false;
+
+    if (!color) {
+      color = '255, 177, 0';
+    }
+    if (color[0] === '#') {
+      color =
+        parseInt(color.substring(1, 3), 16) +
+        ', ' +
+        parseInt(color.substring(3, 5), 16) +
+        ', ' +
+        parseInt(color.substring(5, 7), 16);
+    }
+    const strokeWidth: number = 3; // this._featuresService.strokeWidth(id),
+    const strokeOpacity: number = 1; // this._featuresService.strokeOpacity(id),
+    const lineDash: Array<number> = []; // this._featuresService.lineDash(id),
+    const lineCap: CanvasLineCap = 'round'; // this._featuresService.lineCap(id),
+    color = 'rgba(' + color + ',' + strokeOpacity + ')';
+
+    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
+
+    if (selected) {
+      style.push(
+        new Style({
+          stroke: new StrokeStyle({
+            color: DEF_LINE_COLOR_SELECTED,
+            width: 10,
+          }),
+          zIndex: zIndex + 5,
+        }),
+      );
+    }
+
+    style.push(
+      new Style({
+        stroke: new StrokeStyle({
+          color: 'rgba(255, 255, 255, 0.9)',
+          width: strokeWidth * 2,
+        }),
+        zIndex: zIndex + 1,
+      }),
+    );
+
+    style.push(
+      new Style({
+        stroke: new StrokeStyle({
+          color,
+          width: strokeWidth,
+          lineDash,
+          lineCap,
+        }),
+        zIndex: zIndex + 2,
+      }),
+    );
+
+    return style;
+  }
+
+  private _getNearest(features: Feature<Geometry>[], coordinate: Coordinate): Feature<Geometry> {
+    let ret: Feature<Geometry> = features[0];
+    let minDistance = Number.MAX_VALUE;
+    features.forEach(feature => {
+      const geom = feature.getGeometry() as Point;
+      const distance = this._distance(geom.getFlatCoordinates(), coordinate);
+      if (distance < minDistance) {
+        minDistance = distance;
+        ret = feature;
+      }
+    });
+    return ret;
+  }
+
+  private _getNearestFeatureOfLayer(
+    layer: VectorLayer,
+    evt: MapBrowserEvent<UIEvent>,
+  ): Feature<Geometry> {
+    const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
+    let nearestFeature = null;
+    const features: Feature<Geometry>[] = [];
+
+    if (layer && layer.getSource()) {
+      layer
+        .getSource()
+        .forEachFeatureInExtent(
+          buffer(
+            [evt.coordinate[0], evt.coordinate[1], evt.coordinate[0], evt.coordinate[1]],
+            precision,
+          ),
+          feature => {
+            features.push(feature);
+          },
+        );
+    }
+
+    if (features.length) {
+      nearestFeature = this._getNearest(features, evt.coordinate);
+    }
+
+    return nearestFeature;
+  }
+
+  private async _initMap(map: IMAP): Promise<void> {
     this._view = new View({
       zoom: map.defZoom,
       maxZoom: map.maxZoom,
@@ -276,9 +656,7 @@ export class MapComponent implements OnDestroy {
     if (map.maxZoom) {
       this._maxZoom = map.maxZoom;
     }
-    if (map.minZoom) {
-      this._minZoom = map.minZoom;
-    }
+
     if (map.defZoom) {
       this._view.setZoom(map.defZoom);
       this._defZoom = map.defZoom;
@@ -351,209 +729,6 @@ export class MapComponent implements OnDestroy {
     this._mapInit$.next(true);
   }
 
-  private async _selectCurrentPoi(poiMarker: IPoiMarker) {
-    if (this._selectedPoiMarker != null) {
-      this._map.removeLayer(this._selectedPoiLayer);
-      this._selectedPoiLayer = undefined;
-    }
-    this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, 9999);
-    this._selectedPoiMarker = poiMarker;
-    const {marker} = await this._createPoiCanvasIcon(poiMarker.poi, null, true);
-    this._addIconToLayer(this._selectedPoiLayer, marker.icon);
-  }
-  private async _addPoisMarkers(poiCollection: Array<IGeojsonFeature>) {
-    this._poisLayer = this._createLayer(this._poisLayer, 9998);
-    for (let i = this._poiMarkers?.length - 1; i >= 0; i--) {
-      const ov = this._poiMarkers[i];
-      if (!poiCollection?.find(x => x.properties.id + '' === ov.id)) {
-        this._removeIconFromLayer(this._poisLayer, ov.icon);
-        this._poiMarkers.splice(i, 1);
-      }
-    }
-    if (poiCollection) {
-      for (const poi of poiCollection) {
-        if (
-          !this._poiMarkers?.find(
-            x => x.id === poi.properties.id + '' && poi.properties?.feature_image?.sizes,
-          )
-        ) {
-          const {marker} = await this._createPoiCanvasIcon(poi);
-          this._addIconToLayer(this._poisLayer, marker.icon);
-          this._poiMarkers.push(marker);
-        }
-      }
-    }
-  }
-
-  private async _createPoiCanvasIcon(
-    poi: any,
-    geometry = null,
-    selected = false,
-  ): Promise<{marker: IPoiMarker; style: Style}> {
-    const img = await this._createPoiCavasImage(poi, selected);
-    const {iconFeature, style} = await this._createIconFeature(
-      geometry
-        ? geometry
-        : [poi.geometry.coordinates[0] as number, poi.geometry.coordinates[1] as number],
-      img,
-      46,
-    );
-    iconFeature.setId(poi.properties.id);
-    return {
-      marker: {
-        poi,
-        icon: iconFeature,
-        id: poi.properties.id + '',
-      },
-      style,
-    };
-  }
-  private _removePoiLayer() {
-    this._poisLayer.getSource().clear();
-    if (this._elevationChartLayer != null) {
-      this._elevationChartLayer.getSource().clear();
-    }
-    this._poiMarkers = [];
-  }
-  private async _createIconFeature(
-    coordinates: number[],
-    img: HTMLImageElement,
-    size: number,
-    transparent: boolean = false,
-    anchor: number[] = [0.5, 0.5],
-  ): Promise<{iconFeature: Feature<Geometry>; style: Style}> {
-    if (!coordinates) {
-      return;
-    }
-    const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
-
-    const iconFeature = new Feature({
-      type: 'icon',
-      geometry: new Point([position[0], position[1]]),
-    });
-    const style = new Style({
-      image: new Icon({
-        anchor,
-        img,
-        imgSize: [size, size],
-        opacity: transparent ? 0.5 : 1,
-      }),
-    });
-
-    iconFeature.setStyle(style);
-
-    return {iconFeature, style};
-  }
-
-  private async _createPoiCavasImage(
-    poi: IGeojsonFeature,
-    selected = false,
-  ): Promise<HTMLImageElement> {
-    const htmlTextCanvas = await this._createPoiMarkerHtmlForCanvas(poi, selected);
-    return this._createCanvasForHtml(htmlTextCanvas, 46);
-  }
-
-  private async _createPoiMarkerHtmlForCanvas(
-    value: IGeojsonFeature,
-    selected = false,
-  ): Promise<string> {
-    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
-      value.properties?.feature_image?.sizes['108x137'],
-    );
-
-    let html = `
-    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
-
-    html += `
-        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
-          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="${
-      this._defaultFeatureColor
-    }"/>
-          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
-          <defs>
-            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
-              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
-              </image>
-            </pattern>
-          </defs>
-        </svg>`;
-    html += ` </div>`;
-
-    return html;
-  }
-
-  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
-    const opt = {};
-    const data = await fetch(url, opt);
-    const blob = await data.blob();
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      try {
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          resolve(base64data);
-        };
-      } catch (error) {
-        resolve('');
-      }
-    });
-  }
-
-  private async _createCanvasForHtml(html: string, size: number): Promise<HTMLImageElement> {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-
-    const canvasHtml =
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">` +
-      '<foreignObject width="100%" height="100%">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">' +
-      html +
-      '</div>' +
-      '</foreignObject>' +
-      '</svg>';
-
-    const domUrl = window.URL; // || window.webkitURL || window;
-
-    const img = new Image();
-    const svg = new Blob([canvasHtml], {
-      type: 'image/svg+xml', //;charset=utf-8',
-    });
-    const url = domUrl.createObjectURL(svg);
-
-    img.onload = () => {
-      domUrl.revokeObjectURL(url);
-    };
-    img.src = url;
-
-    return img;
-  }
-
-  private _createLayer(layer: VectorLayer, zIndex: number) {
-    if (!layer) {
-      layer = new VectorLayer({
-        source: new VectorSource({
-          features: [],
-        }),
-        updateWhileAnimating: true,
-        updateWhileInteracting: true,
-        zIndex,
-      });
-      this._map.addLayer(layer);
-    }
-    return layer;
-  }
-
-  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
-    layer.getSource().addFeature(icon);
-  }
-
-  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
-    const source = layer.getSource();
-    if (source.hasFeature(icon)) {
-      source.removeFeature(icon);
-    }
-  }
-
   private _initializeBaseLayers(): Array<TileLayer> {
     return [
       new TileLayer({
@@ -569,7 +744,7 @@ export class MapComponent implements OnDestroy {
    *
    * @returns the XYZ source to use
    */
-  private _initializeBaseSource() {
+  private _initializeBaseSource(): XYZ {
     return new XYZ({
       maxZoom: this._maxZoom,
       minZoom: 0,
@@ -577,129 +752,6 @@ export class MapComponent implements OnDestroy {
       projection: 'EPSG:3857',
       tileSize: [256, 256],
     });
-  }
-
-  /**
-   * Create the layers containing the map interactive data
-   *
-   * @returns the array of created layers
-   */
-  private async _initializeDataLayers(map: IMAP): Promise<Array<VectorTileLayer>> {
-    const vectorLayerUrl = this._confSvc.vectorLayerUrl;
-    const styleJson: any = {
-      version: 8,
-      name: 'tracks',
-      metadata: {'maputnik:renderer': 'ol'},
-      sources: {
-        tracks1: {
-          type: 'vector',
-          url: vectorLayerUrl,
-        },
-      },
-      sprite: '',
-      glyphs: 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
-      layers: [
-        {
-          id: 'EEA',
-          type: 'line',
-          source: 'tracks',
-          'source-layer': 'tracks',
-          filter: ['all', ['==', 'cai_scale', 'EEA']],
-          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
-          paint: {
-            'line-color': 'rgba(255, 0, 218, 0.8)',
-            'line-width': {
-              stops: [
-                [10, 1],
-                [20, 10],
-              ],
-            },
-            'line-dasharray': [0.001, 2],
-          },
-        },
-        {
-          id: 'EE',
-          type: 'line',
-          source: 'tracks',
-          'source-layer': 'tracks',
-          filter: ['all', ['==', 'cai_scale', 'EE']],
-          layout: {'line-join': 'round', 'line-cap': 'round'},
-          paint: {
-            'line-color': 'rgba(255, 57, 0, 0.8)',
-            'line-width': {
-              stops: [
-                [10, 1],
-                [20, 10],
-              ],
-            },
-            'line-dasharray': [0.01, 2],
-          },
-        },
-        {
-          id: 'E',
-          type: 'line',
-          source: 'tracks',
-          'source-layer': 'tracks',
-          filter: ['all', ['==', 'cai_scale', 'E']],
-          layout: {'line-join': 'round', 'line-cap': 'round'},
-          paint: {
-            'line-color': 'rgba(255, 57, 0, 0.8)',
-            'line-width': {
-              stops: [
-                [10, 1],
-                [20, 10],
-              ],
-            },
-            'line-dasharray': [2, 2],
-          },
-        },
-        {
-          id: 'T',
-          type: 'line',
-          source: 'tracks',
-          'source-layer': 'tracks',
-          filter: ['all', ['==', 'cai_scale', 'T']],
-          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
-          paint: {
-            'line-color': 'rgba(255, 57, 0, 0.8)',
-            'line-width': {
-              stops: [
-                [10, 1],
-                [20, 10],
-              ],
-            },
-          },
-        },
-        {
-          id: 'ref',
-          type: 'symbol',
-          source: 'tracks',
-          'source-layer': 'tracks',
-          minzoom: 10,
-          maxzoom: 16,
-          layout: {
-            'text-field': '{ref}',
-            visibility: 'visible',
-            'symbol-placement': 'line',
-            'text-size': 12,
-            'text-allow-overlap': true,
-          },
-          paint: {'text-color': 'rgba(255, 57, 0,0.8)'},
-        },
-      ],
-      id: '63fa0rhhq',
-    };
-
-    const layers: Array<VectorTileLayer> = [];
-
-    if (styleJson.sources) {
-      this._styleJson = styleJson;
-      for (const i in styleJson.sources) {
-        layers.push(await this._initializeDataLayer(styleJson.sources[i], map));
-      }
-    }
-
-    return layers;
   }
 
   /**
@@ -874,6 +926,129 @@ export class MapComponent implements OnDestroy {
   }
 
   /**
+   * Create the layers containing the map interactive data
+   *
+   * @returns the array of created layers
+   */
+  private async _initializeDataLayers(map: IMAP): Promise<Array<VectorTileLayer>> {
+    const vectorLayerUrl = this._confSvc.vectorLayerUrl;
+    const styleJson: any = {
+      version: 8,
+      name: 'tracks',
+      metadata: {'maputnik:renderer': 'ol'},
+      sources: {
+        tracks1: {
+          type: 'vector',
+          url: vectorLayerUrl,
+        },
+      },
+      sprite: '',
+      glyphs: 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
+      layers: [
+        {
+          id: 'EEA',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'EEA']],
+          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
+          paint: {
+            'line-color': 'rgba(255, 0, 218, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [0.001, 2],
+          },
+        },
+        {
+          id: 'EE',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'EE']],
+          layout: {'line-join': 'round', 'line-cap': 'round'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [0.01, 2],
+          },
+        },
+        {
+          id: 'E',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'E']],
+          layout: {'line-join': 'round', 'line-cap': 'round'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+            'line-dasharray': [2, 2],
+          },
+        },
+        {
+          id: 'T',
+          type: 'line',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          filter: ['all', ['==', 'cai_scale', 'T']],
+          layout: {'line-join': 'round', 'line-cap': 'round', visibility: 'visible'},
+          paint: {
+            'line-color': 'rgba(255, 57, 0, 0.8)',
+            'line-width': {
+              stops: [
+                [10, 1],
+                [20, 10],
+              ],
+            },
+          },
+        },
+        {
+          id: 'ref',
+          type: 'symbol',
+          source: 'tracks',
+          'source-layer': 'tracks',
+          minzoom: 10,
+          maxzoom: 16,
+          layout: {
+            'text-field': '{ref}',
+            visibility: 'visible',
+            'symbol-placement': 'line',
+            'text-size': 12,
+            'text-allow-overlap': true,
+          },
+          paint: {'text-color': 'rgba(255, 57, 0,0.8)'},
+        },
+      ],
+      id: '63fa0rhhq',
+    };
+
+    const layers: Array<VectorTileLayer> = [];
+
+    if (styleJson.sources) {
+      this._styleJson = styleJson;
+      for (const i in styleJson.sources) {
+        layers.push(await this._initializeDataLayer(styleJson.sources[i], map));
+      }
+    }
+
+    return layers;
+  }
+
+  /**
    * Initialize the default map interactions
    *
    * @returns the collection of interactions
@@ -897,207 +1072,35 @@ export class MapComponent implements OnDestroy {
     return interactions;
   }
 
-  /**
-   * Return a value for the distance between the two point using a screen-fixed unit
-   *
-   * @param point1 the first location
-   * @param point2 the second location
-   */
-  private _getFixedDistance(point1: ILocation, point2: ILocation): number {
-    return (
-      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
-      this._view.getResolution()
-    );
-  }
-
-  private _drawTemporaryLocationFeature(
-    location?: ILocation,
-    track?: CGeojsonLineStringFeature,
-  ): void {
-    if (location) {
-      if (!this._elevationChartSource) {
-        this._elevationChartSource = new VectorSource({
-          format: new GeoJSON(),
-        });
-      }
-      if (!this._elevationChartLayer) {
-        this._elevationChartLayer = new VectorLayer({
-          source: this._elevationChartSource,
-          style: feature => {
-            if (feature.getGeometry().getType() === 'Point') {
-              return [
-                new Style({
-                  image: new CircleStyle({
-                    fill: new FillStyle({
-                      color: '#000',
-                    }),
-                    radius: 7,
-                    stroke: new StrokeStyle({
-                      width: 2,
-                      color: '#fff',
-                    }),
-                  }),
-                  zIndex: 100,
-                }),
-              ];
-            } else {
-              return this._getLineStyle(this._elevationChartTrack.get('color'));
-            }
-          },
-          updateWhileAnimating: false,
-          updateWhileInteracting: false,
-          zIndex: 150,
-        });
-        this._map.addLayer(this._elevationChartLayer);
-      }
-
-      if (location) {
-        const pointGeometry: Point = new Point(
-          this._mapService.coordsFromLonLat([location.longitude, location.latitude]),
-        );
-
-        if (this._elevationChartPoint) {
-          this._elevationChartPoint.setGeometry(pointGeometry);
-        } else {
-          this._elevationChartPoint = new Feature(pointGeometry);
-          this._elevationChartSource.addFeature(this._elevationChartPoint);
-        }
-
-        if (track) {
-          const trackGeometry: LineString = new LineString(
-            (track.geometry.coordinates as ILineString).map(value =>
-              this._mapService.coordsFromLonLat(value),
-            ),
-          );
-          const trackColor: string = track?.properties?.color;
-
-          if (this._elevationChartTrack) {
-            this._elevationChartTrack.setGeometry(trackGeometry);
-            this._elevationChartTrack.set('color', trackColor);
-          } else {
-            this._elevationChartTrack = new Feature(trackGeometry);
-            this._elevationChartTrack.set('color', trackColor);
-            this._elevationChartSource.addFeature(this._elevationChartTrack);
-          }
-        }
-      } else {
-        this._elevationChartPoint = undefined;
-        this._elevationChartTrack = undefined;
-        this._elevationChartSource.clear();
-      }
-
-      this._map.render();
-    } else if (this._elevationChartSource && this._map) {
-      this._elevationChartPoint = undefined;
-      this._elevationChartTrack = undefined;
-      this._elevationChartSource.clear();
-      this._map.render();
+  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+    const source = layer.getSource();
+    if (source.hasFeature(icon)) {
+      source.removeFeature(icon);
     }
   }
 
-  private _getLineStyle(color?: string): Array<Style> {
-    const style: Array<Style> = [];
-    const selected: boolean = false;
-
-    if (!color) {
-      color = '255, 177, 0';
+  private _removePoiLayer(): void {
+    this._poisLayer.getSource().clear();
+    if (this._elevationChartLayer != null) {
+      this._elevationChartLayer.getSource().clear();
     }
-    if (color[0] === '#') {
-      color =
-        parseInt(color.substring(1, 3), 16) +
-        ', ' +
-        parseInt(color.substring(3, 5), 16) +
-        ', ' +
-        parseInt(color.substring(5, 7), 16);
-    }
-    const strokeWidth: number = 3; // this._featuresService.strokeWidth(id),
-    const strokeOpacity: number = 1; // this._featuresService.strokeOpacity(id),
-    const lineDash: Array<number> = []; // this._featuresService.lineDash(id),
-    const lineCap: CanvasLineCap = 'round'; // this._featuresService.lineCap(id),
-    color = 'rgba(' + color + ',' + strokeOpacity + ')';
-
-    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
-
-    if (selected) {
-      style.push(
-        new Style({
-          stroke: new StrokeStyle({
-            color: DEF_LINE_COLOR_SELECTED,
-            width: 10,
-          }),
-          zIndex: zIndex + 5,
-        }),
-      );
-    }
-
-    style.push(
-      new Style({
-        stroke: new StrokeStyle({
-          color: 'rgba(255, 255, 255, 0.9)',
-          width: strokeWidth * 2,
-        }),
-        zIndex: zIndex + 1,
-      }),
-    );
-
-    style.push(
-      new Style({
-        stroke: new StrokeStyle({
-          color,
-          width: strokeWidth,
-          lineDash,
-          lineCap,
-        }),
-        zIndex: zIndex + 2,
-      }),
-    );
-
-    return style;
+    this._poiMarkers = [];
   }
 
-  private _getNearestFeatureOfLayer(
-    layer: VectorLayer,
-    evt: MapBrowserEvent<UIEvent>,
-  ): Feature<Geometry> {
-    const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
-    let nearestFeature = null;
-    const features: Feature<Geometry>[] = [];
-
-    if (layer && layer.getSource()) {
-      layer
-        .getSource()
-        .forEachFeatureInExtent(
-          buffer(
-            [evt.coordinate[0], evt.coordinate[1], evt.coordinate[0], evt.coordinate[1]],
-            precision,
-          ),
-          feature => {
-            features.push(feature);
-          },
-        );
+  private async _selectCurrentPoi(poiMarker: IPoiMarker): Promise<void> {
+    if (this._selectedPoiMarker != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
     }
-
-    if (features.length) {
-      nearestFeature = this._getNearest(features, evt.coordinate);
-    }
-
-    return nearestFeature;
+    this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, 9999);
+    this._selectedPoiMarker = poiMarker;
+    const {marker} = await this._createPoiCanvasIcon(poiMarker.poi, null, true);
+    this._addIconToLayer(this._selectedPoiLayer, marker.icon);
   }
 
-  private _getNearest(features: Feature<Geometry>[], coordinate: Coordinate) {
-    let ret: Feature<Geometry> = features[0];
-    let minDistance = Number.MAX_VALUE;
-    features.forEach(feature => {
-      const geom = feature.getGeometry() as Point;
-      const distance = this._distance(geom.getFlatCoordinates(), coordinate);
-      if (distance < minDistance) {
-        minDistance = distance;
-        ret = feature;
-      }
-    });
-    return ret;
-  }
-  private _distance(c1: Coordinate, c2: Coordinate) {
-    return Math.sqrt(Math.pow(c1[0] - c2[0], 2) + Math.pow(c1[1] - c2[1], 2));
+  private _updateMap(): void {
+    for (const layer of this._dataLayers) {
+      layer.changed();
+    }
   }
 }

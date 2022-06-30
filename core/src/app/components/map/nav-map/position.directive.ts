@@ -27,18 +27,15 @@ interface Bearing {
   selector: '[navMapPosition]',
 })
 export class NavMapPositionDirective implements OnDestroy {
-  private _bgLocSub: Subscription = Subscription.EMPTY;
   private _bgCurrentLocSub: Subscription = Subscription.EMPTY;
-  private _map: Map;
+  private _bgLocSub: Subscription = Subscription.EMPTY;
   private _lastBearings: Bearing[] = [];
-  @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
-
+  private _locationFeature = new Feature();
   private _locationIcon = new Icon({
     src: 'assets/images/location-icon-arrow.png',
     scale: 0.4,
     size: [125, 125],
   });
-  private _locationFeature = new Feature();
   private _locationLayer = new VectorLayer({
     source: new VectorSource({
       features: [this._locationFeature],
@@ -48,14 +45,9 @@ export class NavMapPositionDirective implements OnDestroy {
     }),
     zIndex: POSITION_ZINDEX,
   });
-  @Input() set map(map: Map) {
-    if (map != null) {
-      this._map = map;
-      this._map.addLayer(this._locationLayer);
-      this._map.render();
-      this._locationLayer.getSource().changed();
-    }
-  }
+  private _map: Map;
+
+  @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const androidConfig: BackgroundGeolocationConfig = {
@@ -114,20 +106,27 @@ export class NavMapPositionDirective implements OnDestroy {
       });
     this._backgroundGeolocation.start();
   }
-  private _setPositionByLocation(loc: BackgroundGeolocationResponse): void {
-    console.log('*************************************');
-    console.log('->locationnnnnnn');
-    console.log(JSON.stringify(loc));
-    console.log('*************************************');
-    let location = loc as any;
-    const runningAvg = this._runningAvg(location.bearing);
-    location.runningAvg = this._radiansToDegrees(runningAvg);
-    this.locationEvt.emit(location);
-    const point = new Point(fromLonLat([location.longitude, location.latitude]));
-    this._locationFeature.setGeometry(point);
-    this._fitView(point);
-    this._rotate(-runningAvg, 500);
+
+  @Input() set map(map: Map) {
+    if (map != null) {
+      this._map = map;
+      this._map.addLayer(this._locationLayer);
+      this._map.render();
+      this._locationLayer.getSource().changed();
+    }
   }
+
+  ngOnDestroy(): void {
+    this._backgroundGeolocation.stop();
+    this._backgroundGeolocation.finish();
+    this._bgLocSub.unsubscribe();
+    this._bgCurrentLocSub.unsubscribe();
+  }
+
+  private _degreesToRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+  }
+
   private _fitView(geometryOrExtent: Point, optOptions?: FitOptions): void {
     if (optOptions == null) {
       const size = this._map.getSize();
@@ -140,12 +139,18 @@ export class NavMapPositionDirective implements OnDestroy {
     }
     this._map.getView().fit(geometryOrExtent, optOptions);
   }
-  private _degreesToRadians(degrees: number): number {
-    return degrees * (Math.PI / 180);
-  }
+
   private _radiansToDegrees(radians): number {
     return radians * (180 / Math.PI);
   }
+
+  private _rotate(bearing: number, duration?: number): void {
+    this._map.getView().animate({
+      rotation: bearing,
+      duration: duration ? duration : 0,
+    });
+  }
+
   private _runningAvg(bearing: number): number {
     try {
       if (typeof bearing === 'number' && Number.isNaN(bearing) === false && bearing >= 0) {
@@ -175,17 +180,19 @@ export class NavMapPositionDirective implements OnDestroy {
       return 0;
     }
   }
-  private _rotate(bearing: number, duration?: number): void {
-    this._map.getView().animate({
-      rotation: bearing,
-      duration: duration ? duration : 0,
-    });
-  }
 
-  ngOnDestroy(): void {
-    this._backgroundGeolocation.stop();
-    this._backgroundGeolocation.finish();
-    this._bgLocSub.unsubscribe();
-    this._bgCurrentLocSub.unsubscribe();
+  private _setPositionByLocation(loc: BackgroundGeolocationResponse): void {
+    console.log('*************************************');
+    console.log('->locationnnnnnn');
+    console.log(JSON.stringify(loc));
+    console.log('*************************************');
+    let location = loc as any;
+    const runningAvg = this._runningAvg(location.bearing);
+    location.runningAvg = this._radiansToDegrees(runningAvg);
+    this.locationEvt.emit(location);
+    const point = new Point(fromLonLat([location.longitude, location.latitude]));
+    this._locationFeature.setGeometry(point);
+    this._fitView(point);
+    this._rotate(-runningAvg, 500);
   }
 }
