@@ -31,27 +31,27 @@ import {IGeojsonFeature} from 'src/app/types/model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  @Output('searchId') public searchIdEvent: EventEmitter<number> = new EventEmitter<number>();
+
   cards$: Observable<IHIT[]> = of([]);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
+  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
+  isBackAvailable: boolean = false;
+  isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
+  mostViewedRoutes: Array<IGeojsonFeature>;
+  nearRoutes: Array<IGeojsonFeature>;
   online$: Observable<boolean> = this._storeNetwork
     .select(online)
     .pipe(tap(() => this._cdr.detectChanges()));
-
-  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
-  isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
-  showSearch: boolean = true;
-
-  isBackAvailable: boolean = false;
-  mostViewedRoutes: Array<IGeojsonFeature>;
-  nearRoutes: Array<IGeojsonFeature>;
   searchString: string;
+  showSearch: boolean = true;
   title: string;
 
-  @Output('searchId') public searchIdEvent: EventEmitter<number> = new EventEmitter<number>();
-
   constructor(
+    private _geoHubService: GeohubService,
+    private _geoLocation: GeolocationService,
     private _storeSearch: Store<IElasticSearchRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
@@ -60,6 +60,14 @@ export class HomePage {
     private _cdr: ChangeDetectorRef,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
+  }
+
+  public async ngOnInit() {
+    // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
+    await this._geoLocation.start();
+    this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
+      this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);
+    });
   }
 
   public searchCard(id: string | number) {
