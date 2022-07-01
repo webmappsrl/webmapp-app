@@ -1,17 +1,18 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { MapPageRoutingModule } from './map-routing.module';
+import {MapPageRoutingModule} from './map-routing.module';
 
-import { MapPage } from './map.page';
-import { MapModule } from 'src/app/components/map/map.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { MapTrackCardComponent } from './map-track-card/map-track-card.component';
-import { PipeModule } from 'src/app/pipes/pipe.module';
-import { SharedModule } from 'src/app/components/shared/shared.module';
+import {MapPage} from './map.page';
+import {MapModule} from 'src/app/components/map/map.module';
+import {TranslateModule} from '@ngx-translate/core';
+import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {SharedModule} from 'src/app/components/shared/shared.module';
+import {WmMapModule} from 'src/app/components/shared/map-core/map-core.module';
 
 @NgModule({
   imports: [
@@ -22,11 +23,9 @@ import { SharedModule } from 'src/app/components/shared/shared.module';
     MapModule,
     TranslateModule,
     PipeModule,
-    SharedModule
+    SharedModule,
+    WmMapModule,
   ],
-  declarations: [
-    MapPage,
-    MapTrackCardComponent
-  ]
+  declarations: [MapPage, MapTrackCardComponent],
 })
-export class MapPageModule { }
+export class MapPageModule {}

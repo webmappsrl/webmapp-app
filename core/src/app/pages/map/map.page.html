@@ -1,7 +1,13 @@
 <ion-content scrollY="false">
-  <webmapp-map
-    *ngIf="showMap$|async"
-    [padding]="mapPadding$|async"
-    [disableTrackSelection]="true"
-  ></webmapp-map
-></ion-content>
+  <div class="webmapp-pageroute-map-container">
+    <wm-map
+      #wmap
+      wmMapLayer
+      [reset]="resetEvt$|async"
+      [layer]="currentLayer$|async"
+      [conf]="confMap$|async"
+      [map]="wmap.map$|async"
+      (trackSelectedFromLayerEVT)="goToTrack($event)"
+    ></wm-map>
+  </div>
+</ion-content>

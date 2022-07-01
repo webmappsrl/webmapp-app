@@ -1,30 +1,23 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()" >
+  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
     <ion-tab-button tab="home" (click)="reset()">
       <i class="icon-outline-home webmapp-tabs-icon"></i>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.home' | translate}} </ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="map" [disabled]="!(online$|async)">
+      <i class="icon-outline-map-outline webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label">
-        {{'tabs.home' | translate}}
+        {{'tabs.map' | translate}} {{!(online$|async)? 'offline': ''}}
       </ion-label>
     </ion-tab-button>
-      <ion-tab-button tab="map" (click)="reset()" [disabled]="!(online$|async)">
-        <i class="icon-outline-map-outline webmapp-tabs-icon"></i>
-        <ion-label class="webmapp-tabs-label">
-          {{'tabs.map' | translate}} {{!(online$|async)? 'offline': ''}}
-        </ion-label>
-      </ion-tab-button>
 
-
-    <ion-tab-button tab="favourites" *ngIf="authEnable$|async">
+    <ion-tab-button tab="favourites" (click)="reset()" *ngIf="authEnable$|async">
       <i class="icon-outline-heart webmapp-tabs-icon"></i>
-      <ion-label class="webmapp-tabs-label">
-        {{'tabs.favourites' | translate}}
-      </ion-label>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.favourites' | translate}} </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="profile">
+    <ion-tab-button tab="profile" (click)="reset()">
       <i class="icon-outline-user webmapp-tabs-icon"></i>
-      <ion-label class="webmapp-tabs-label">
-        {{'tabs.profile' | translate}}
-      </ion-label>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.profile' | translate}} </ion-label>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
