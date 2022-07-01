@@ -13,6 +13,7 @@ import {PipeModule} from 'src/app/pipes/pipe.module';
 import {NavigationPage} from './navigation.page';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
 import {SlopeChartComponent} from './slope-chart/slope-chart.component';
+import {NavMapModule} from 'src/app/components/map/nav-map/nav-map.module';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import {SlopeChartComponent} from './slope-chart/slope-chart.component';
     MapModule,
     PipeModule,
     SharedModule,
+    NavMapModule,
   ],
   declarations: [NavigationPage, TabDetailComponent, SlopeChartComponent],
 })

@@ -69,7 +69,7 @@ export class NavMapComponent implements OnInit {
             zIndex: 0,
           }),
         ],
-        target: 'ol-map',
+        target: 'ol-map2',
       }));
 
     setTimeout(() => {
