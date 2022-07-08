@@ -1,22 +1,23 @@
-import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {Feature} from 'ol';
-import Point from 'ol/geom/Point';
-import VectorLayer from 'ol/layer/Vector';
-import Map from 'ol/Map';
-import {fromLonLat} from 'ol/proj';
-import VectorSource from 'ol/source/Vector';
-import Icon from 'ol/style/Icon';
-import Style from 'ol/style/Style';
-import {FitOptions} from 'ol/View';
 import {
   BackgroundGeolocation,
   BackgroundGeolocationConfig,
   BackgroundGeolocationEvents,
-  BackgroundGeolocationResponse,
   BackgroundGeolocationLocationProvider,
+  BackgroundGeolocationResponse,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {Subscription, from} from 'rxjs';
+
+import {Feature} from 'ol';
+import {FitOptions} from 'ol/View';
+import Icon from 'ol/style/Icon';
+import Map from 'ol/Map';
 import {POSITION_ZINDEX} from './zIndex';
-import {from, Subscription} from 'rxjs';
+import Point from 'ol/geom/Point';
+import Style from 'ol/style/Style';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import {fromLonLat} from 'ol/proj';
 import {take} from 'rxjs/operators';
 
 interface Bearing {
@@ -71,13 +72,11 @@ export class WmMapPositionDirective implements OnDestroy {
     from(this._backgroundGeolocation.getCurrentLocation())
       .pipe(take(1))
       .subscribe((loc: BackgroundGeolocationResponse) => {
-        console.log('current position');
         this._setPositionByLocation(loc);
       });
     this._backgroundGeolocation
       .configure(config)
       .then(() => {
-        console.log('BACKGROUND CONFIGURED 2');
         this._bgLocSub = this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
           .subscribe((loc: BackgroundGeolocationResponse) => {

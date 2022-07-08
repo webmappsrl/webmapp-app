@@ -1,93 +1,120 @@
-import {Directive, Input, OnInit} from '@angular/core';
+import {Directive, Input, OnChanges, SimpleChanges} from '@angular/core';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import Point from 'ol/geom/Point';
 import VectorLayer from 'ol/layer/Vector';
-import Map from 'ol/Map';
 import GeoJSON from 'ol/format/GeoJSON';
-import {fromLonLat} from 'ol/proj';
+import {fromLonLat, transform} from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
+import FillStyle from 'ol/style/Fill';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
-import {FitOptions} from 'ol/View';
+import StrokeStyle from 'ol/style/Stroke';
+import {endIconHtml, startIconHtml} from './icons';
+import {ILocation} from 'src/app/types/location';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import LineString from 'ol/geom/LineString';
+import CircleStyle from 'ol/style/Circle';
+import {ILineString} from 'src/app/types/model';
+import {Coordinate} from 'ol/coordinate';
+import {FLAG_TRACK_ZINDEX, POINTER_TRACK_ZINDEX, SELECTED_TRACK_ZINDEX} from './zIndex';
+import {WmMapBaseDirective} from './base.directive';
+import {IMAP} from 'src/app/types/config';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 @Directive({
   selector: '[wmMapTrack]',
 })
-export class WmMapTrackDirective {
-  private _map: Map;
-  private _track;
-
-  @Input() set map(map: Map) {
-    this._map = map;
-    if (this._track != null && this._map != null) {
-      this._init();
-    }
-  }
-  @Input() set track(track: any) {
-    this._track = track;
-    if (track != null && this._map != null) {
-      this._init();
-    }
-  }
-
-  private _startIconHtml = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="${32}" height="${32}">
-    <foreignObject width="100%" height="100%">
-      <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">
-        <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">
-          <svg 
-            id="Livello_1" 
-            data-name="Livello 1" 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 74 74">
-              <path d="M32,63.5a6.42,6.42,0,0,1-3.47-1.11,64.93,64.93,0,0,1-16.7-15.51,32.63,32.63,0,0,1-7-19.76C4.88,12.44,17,.5,32,.5S59.12,12.44,59.12,27.12a32.65,32.65,0,0,1-7,19.77A66.08,66.08,0,0,1,35.47,62.38,6.25,6.25,0,0,1,32,63.5Z" style="fill:#fff"/><path d="M32,5.5A21.89,21.89,0,0,0,9.88,27.12a27.61,27.61,0,0,0,5.95,16.74h0A60,60,0,0,0,31.24,58.18c.7.45.91.4,1.5,0A61,61,0,0,0,48.17,43.86a27.61,27.61,0,0,0,5.95-16.74C54.12,15.2,44.19,5.5,32,5.5Z" style="fill:#2f9e44"/><path d="M32,42.05A14.25,14.25,0,1,1,46.32,27.87,14.25,14.25,0,0,1,32,42.05Zm0-23.49a9.25,9.25,0,1,0,9.34,9.31A9.32,9.32,0,0,0,32,18.56Z" style="fill:#fff"/>
-          </svg>
-        </div>
-      </div>
-    </foreignObject>
-  </svg>`;
-  private _endIconHtml = `
-  <svg xmlns="http://www.w3.org/2000/svg" width="${32}" height="${32}">
-    <foreignObject width="100%" height="100%">
-      <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:40px">
-        <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">
-          <svg 
-            id="Livello_1" 
-            data-name="Livello 1" 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 74 74">
-              <path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64A33.47,33.47,0,0,0,32.21,8.8,35.64,35.64,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3.49,3,44,44,0,0,0-16,.41A44.59,44.59,0,0,1,22.21,39a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46A2.94,2.94,0,0,1,14.82,4.51Z" style="fill:#2f9e44;fill-rule:evenodd"/><path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64a36.08,36.08,0,0,0,5.45.42,31.41,31.41,0,0,0,9-1.26,33.4,33.4,0,0,1,9.55-1.34A35.38,35.38,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3,3l-.48,0a43.21,43.21,0,0,0-6.74-.54,47,47,0,0,0-9.21.95A44.47,44.47,0,0,1,24.1,39c-.64,0-1.28,0-1.89,0a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46a2.94,2.94,0,0,1,2.94-2.95m0-2.87A5.83,5.83,0,0,0,9,7.46V56.54a5.82,5.82,0,0,0,11.64,0V41.77l1.44.08c.67,0,1.34,0,2,0A47.48,47.48,0,0,0,33.25,41a43.75,43.75,0,0,1,8.64-.9,40.11,40.11,0,0,1,6.3.51,7,7,0,0,0,.92.07A5.88,5.88,0,0,0,55,34.83V11.16a5.68,5.68,0,0,0-4.29-5.55,37.89,37.89,0,0,0-9-1A35.82,35.82,0,0,0,31.38,6.05a28.53,28.53,0,0,1-8.16,1.13c-.87,0-1.73,0-2.59-.1a5.84,5.84,0,0,0-5.81-5.44Z" style="fill:#fff"/>
-          </svg>
-        </div>
-      </div>
-    </foreignObject>
-  </svg>`;
-  private _startFeature: Feature<Geometry>;
+export class WmMapTrackDirective extends WmMapBaseDirective implements OnChanges {
+  private _elevationChartLayer: VectorLayer;
+  private _elevationChartPoint: Feature<Point>;
+  private _elevationChartSource: VectorSource;
+  private _elevationChartTrack: Feature<LineString>;
   private _endFeature: Feature<Geometry>;
+  private _initTrack = false;
   private _startEndLayer: VectorLayer;
+  private _startFeature: Feature<Geometry>;
   private _trackFeatures: Feature<Geometry>[];
   private _trackLayer: VectorLayer;
 
-  private _init(): void {
-    const startPosition = this._track.geometry.coordinates[0];
-    const endPosition =
-      this._track.geometry.coordinates[this._track.geometry.coordinates.length - 1];
-    this._startFeature = this._createFeature(this._startIconHtml, [
-      startPosition[0],
-      startPosition[1],
-    ]);
-    this._endFeature = this._createFeature(this._endIconHtml, [endPosition[0], endPosition[1]]);
-    this._startEndLayer = new VectorLayer({
-      zIndex: 400,
+  @Input() conf: IMAP;
+  @Input() layer;
+  @Input() track;
+  @Input() trackElevationChartElements: ITrackElevationChartHoverElements;
+
+  drawTrack(trackgeojson: any): void {
+    const geojson: any = this.getGeoJson(trackgeojson);
+    this._trackFeatures = new GeoJSON({
+      featureProjection: 'EPSG:3857',
+    }).readFeatures(geojson);
+    this._trackLayer = new VectorLayer({
       source: new VectorSource({
-        features: [this._startFeature, this._endFeature],
+        format: new GeoJSON(),
+        features: this._trackFeatures,
       }),
+      style: () => {
+        return this._getLineStyle('#caaf15');
+      },
+      updateWhileAnimating: true,
+      updateWhileInteracting: true,
+      zIndex: SELECTED_TRACK_ZINDEX,
     });
-    const point = new Point(fromLonLat([startPosition[0], startPosition[1]]));
-    this._fitView(point);
-    this._map.addLayer(this._startEndLayer);
-    this.drawTrack(this._track);
+
+    this.map.addLayer(this._trackLayer);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const resetCondition =
+      (changes['track'] &&
+        changes['track'].previousValue != null &&
+        changes['track'].currentValue != null &&
+        changes['track'].previousValue.properties.id !=
+          changes['track'].currentValue.properties.id) ??
+      false;
+    if (this.track == null || this.map == null || resetCondition) {
+      this._resetView();
+      this._initTrack = false;
+    }
+    if (this.track != null && this.map != null && this._initTrack === false) {
+      this._init();
+      this._initTrack = true;
+    }
+    if (this.track != null && this.map != null && this.trackElevationChartElements != null) {
+      this._drawTemporaryLocationFeature(
+        this.trackElevationChartElements?.location,
+        this.trackElevationChartElements?.track,
+      );
+    }
+    if (this.map != null && changes['track'] != null) {
+      if (changes['track'].currentValue == null) {
+        const ext =
+          (this.layer && this.layer.bbox) ??
+          this.conf.bbox ??
+          new Point(this.map.getView().getCenter());
+        this.fitView(ext);
+      } else {
+        const ext =
+          this._trackFeatures[0].getGeometry().getExtent() ??
+          this.conf.bbox ??
+          new Point(this.map.getView().getCenter());
+        const optOptions = {
+          duration: 500,
+          padding: this.padding ?? undefined,
+        };
+        this.map.getView().fit(ext, optOptions);
+      }
+    }
+  }
+
+  /**
+   * Transform a set of [lon, lat](EPSG:4326) coordinates in EPSG:3857
+   *
+   * @param coordinates the [lon, lat](EPSG:4326) coordinates
+   *
+   * @returns the coordinates [lon, lat](EPSG:4326)
+   */
+  private _coordsFromLonLat(coordinates: Coordinate): Coordinate {
+    return transform(coordinates, 'EPSG:4326', 'EPSG:3857');
   }
 
   private _createFeature(iconHtml: string, position: [number, number]): Feature {
@@ -115,46 +142,96 @@ export class WmMapTrackDirective {
         imgSize: [32, 32],
         opacity: 1,
       }),
-      zIndex: 100,
+      zIndex: 999999999,
     });
     feature.setStyle(style);
 
     return feature;
   }
 
-  private getGeoJson(trackgeojson: any): any {
-    if (trackgeojson?.geoJson) {
-      return trackgeojson.geoJson;
+  private _drawTemporaryLocationFeature(
+    location?: ILocation,
+    track?: CGeojsonLineStringFeature,
+  ): void {
+    if (location) {
+      if (!this._elevationChartSource) {
+        this._elevationChartSource = new VectorSource({
+          format: new GeoJSON(),
+        });
+      }
+      if (!this._elevationChartLayer) {
+        this._elevationChartLayer = new VectorLayer({
+          source: this._elevationChartSource,
+          style: feature => {
+            if (feature.getGeometry().getType() === 'Point') {
+              return [
+                new Style({
+                  image: new CircleStyle({
+                    fill: new FillStyle({
+                      color: '#000',
+                    }),
+                    radius: 7,
+                    stroke: new StrokeStyle({
+                      width: 2,
+                      color: '#fff',
+                    }),
+                  }),
+                  zIndex: POINTER_TRACK_ZINDEX,
+                }),
+              ];
+            } else {
+              return this._getLineStyle(this._elevationChartTrack.get('color'));
+            }
+          },
+          updateWhileAnimating: false,
+          updateWhileInteracting: false,
+          zIndex: POINTER_TRACK_ZINDEX,
+        });
+        this.map.addLayer(this._elevationChartLayer);
+      }
+
+      if (location) {
+        const pointGeometry: Point = new Point(
+          this._coordsFromLonLat([location.longitude, location.latitude]),
+        );
+
+        if (this._elevationChartPoint) {
+          this._elevationChartPoint.setGeometry(pointGeometry);
+        } else {
+          this._elevationChartPoint = new Feature(pointGeometry);
+          this._elevationChartSource.addFeature(this._elevationChartPoint);
+        }
+
+        if (track) {
+          const trackGeometry: LineString = new LineString(
+            (track.geometry.coordinates as ILineString).map(value => this._coordsFromLonLat(value)),
+          );
+          const trackColor: string = track?.properties?.color;
+
+          if (this._elevationChartTrack) {
+            this._elevationChartTrack.setGeometry(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+          } else {
+            this._elevationChartTrack = new Feature(trackGeometry);
+            this._elevationChartTrack.set('color', trackColor);
+            this._elevationChartSource.addFeature(this._elevationChartTrack);
+          }
+        }
+      } else {
+        this._elevationChartPoint = undefined;
+        this._elevationChartTrack = undefined;
+        this._elevationChartSource.clear();
+      }
+
+      this.map.render();
+    } else if (this._elevationChartSource && this.map) {
+      this._elevationChartPoint = undefined;
+      this._elevationChartTrack = undefined;
+      this._elevationChartSource.clear();
+      this.map.render();
     }
-    if (trackgeojson?.geometry) {
-      return trackgeojson.geometry;
-    }
-    if (trackgeojson?._geometry) {
-      return trackgeojson._geometry;
-    }
-    return trackgeojson;
   }
 
-  drawTrack(trackgeojson: any) {
-    const geojson: any = this.getGeoJson(trackgeojson);
-    this._trackFeatures = new GeoJSON({
-      featureProjection: 'EPSG:3857',
-    }).readFeatures(geojson);
-    this._trackLayer = new VectorLayer({
-      source: new VectorSource({
-        format: new GeoJSON(),
-        features: this._trackFeatures,
-      }),
-      style: () => {
-        return this._getLineStyle('#CA1551');
-      },
-      updateWhileAnimating: true,
-      updateWhileInteracting: true,
-      zIndex: 50,
-    });
-
-    this._map.addLayer(this._trackLayer);
-  }
   private _getLineStyle(color?: string): Array<Style> {
     const style: Array<Style> = [],
       selected: boolean = false;
@@ -168,15 +245,13 @@ export class WmMapTrackDirective {
         ', ' +
         parseInt(color.substring(5, 7), 16);
     }
-    const strokeWidth: number = 3, // this._featuresService.strokeWidth(id),
+    const strokeWidth: number = 6, // this._featuresService.strokeWidth(id),
       strokeOpacity: number = 1, // this._featuresService.strokeOpacity(id),
       lineDash: Array<number> = [], // this._featuresService.lineDash(id),
       lineCap: CanvasLineCap = 'round', // this._featuresService.lineCap(id),
-      currentZoom: number = this._map.getView().getZoom();
+      currentZoom: number = this.map.getView().getZoom();
 
     color = 'rgba(' + color + ',' + strokeOpacity + ')';
-
-    const zIndex: number = 50; //this._getZIndex(id, "line", selected);
 
     if (selected) {
       style.push(
@@ -185,7 +260,7 @@ export class WmMapTrackDirective {
             color: 'rgba(226, 249, 0, 0.6)',
             width: 10,
           }),
-          zIndex: zIndex + 5,
+          zIndex: SELECTED_TRACK_ZINDEX + 5,
         }),
       );
     }
@@ -196,7 +271,7 @@ export class WmMapTrackDirective {
           color: 'rgba(255, 255, 255, 0.9)',
           width: strokeWidth * 2,
         }),
-        zIndex: zIndex + 1,
+        zIndex: SELECTED_TRACK_ZINDEX + 1,
       }),
     );
 
@@ -208,23 +283,58 @@ export class WmMapTrackDirective {
           lineDash,
           lineCap,
         }),
-        zIndex: zIndex + 2,
+        zIndex: SELECTED_TRACK_ZINDEX + 2,
       }),
     );
 
     return style;
   }
 
-  private _fitView(geometryOrExtent: Point, optOptions?: FitOptions): void {
-    if (optOptions == null) {
-      const size = this._map.getSize();
-      const height = size != null && size.length > 0 ? size[1] : 0;
-      optOptions = {
-        maxZoom: this._map.getView().getZoom(),
-        duration: 500,
-        size,
-      };
+  private _init(): void {
+    const startPosition = this.track.geometry.coordinates[0];
+    const endPosition = this.track.geometry.coordinates[this.track.geometry.coordinates.length - 1];
+    this._startFeature = this._createFeature(startIconHtml, [startPosition[0], startPosition[1]]);
+    this._endFeature = this._createFeature(endIconHtml, [endPosition[0], endPosition[1]]);
+    this._startEndLayer = new VectorLayer({
+      zIndex: FLAG_TRACK_ZINDEX,
+      source: new VectorSource({
+        features: [this._startFeature, this._endFeature],
+      }),
+    });
+    this.map.addLayer(this._startEndLayer);
+    this.drawTrack(this.track);
+  }
+
+  private _resetView(): void {
+    if (this._elevationChartLayer != null) {
+      this._elevationChartSource.removeFeature(this._elevationChartPoint);
+      this._elevationChartSource.clear();
+      this.map.removeLayer(this._elevationChartLayer);
+      this._elevationChartLayer = undefined;
+      this._elevationChartPoint = undefined;
+      this._elevationChartTrack = undefined;
+      this.trackElevationChartElements = undefined;
     }
-    this._map.getView().fit(geometryOrExtent, optOptions);
+    if (this._startEndLayer != null) {
+      this.map.removeLayer(this._startEndLayer);
+      this._startEndLayer = undefined;
+    }
+    if (this._trackLayer != null) {
+      this.map.removeLayer(this._trackLayer);
+      this._trackLayer = undefined;
+    }
+  }
+
+  private getGeoJson(trackgeojson: any): any {
+    if (trackgeojson?.geoJson) {
+      return trackgeojson.geoJson;
+    }
+    if (trackgeojson?.geometry) {
+      return trackgeojson.geometry;
+    }
+    if (trackgeojson?._geometry) {
+      return trackgeojson._geometry;
+    }
+    return trackgeojson;
   }
 }

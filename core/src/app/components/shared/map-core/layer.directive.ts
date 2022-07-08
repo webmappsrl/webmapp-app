@@ -1,51 +1,56 @@
-import {Directive, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {Store} from '@ngrx/store';
-import Feature, {FeatureLike} from 'ol/Feature';
-import VectorTileLayer from 'ol/layer/VectorTile';
-import Map from 'ol/Map';
-import StrokeStyle from 'ol/style/Stroke';
-import View, {FitOptions} from 'ol/View';
-import FillStyle from 'ol/style/Fill';
+import {Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ILAYER, IMAP} from 'src/app/types/config';
+import {Interaction, defaults as defaultInteractions} from 'ol/interaction.js';
+import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
+
+import {Collection} from 'ol';
 import {CommunicationService} from 'src/app/services/base/communication.service';
 import {ConfService} from 'src/app/store/conf/conf.service';
-import {ILAYER, IMAP} from 'src/app/types/config';
-import TextStyle from 'ol/style/Text';
-import VectorTileSource from 'ol/source/VectorTile';
-import MVT from 'ol/format/MVT';
-import Style from 'ol/style/Style';
-import TextPlacement from 'ol/style/TextPlacement';
-import {styleJsonFn} from './utils';
-import {defaults as defaultInteractions, Interaction} from 'ol/interaction.js';
-import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
+import {DEF_LINE_COLOR} from './constants';
+import {FeatureLike} from 'ol/Feature';
 import Layer from 'ol/layer/Layer';
-import {Collection} from 'ol';
-const DEF_LINE_COLOR = 'red';
+import MVT from 'ol/format/MVT';
+import Map from 'ol/Map';
+import StrokeStyle from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import {TRACK_ZINDEX} from './zIndex';
+import VectorTileLayer from 'ol/layer/VectorTile';
+import VectorTileSource from 'ol/source/VectorTile';
+import {WmMapBaseDirective} from './base.directive';
+import {styleJsonFn} from './utils';
+
 @Directive({
   selector: '[wmMapLayer]',
 })
-export class WmMapLayerDirective implements OnChanges {
+export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges {
   private _currentLayer: ILAYER;
   private _dataLayers: Array<VectorTileLayer>;
   private _defaultFeatureColor = DEF_LINE_COLOR;
   private _mapIsInit = false;
   private _selectInteraction: SelectInteraction;
   private _styleJson: any;
-  private _view: View;
 
   @Input() conf: IMAP;
   @Input() map: Map;
   @Output() trackSelectedFromLayerEVT: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private _confSvc: ConfService, private _communicationSvc: CommunicationService) {}
+  constructor(private _confSvc: ConfService, private _communicationSvc: CommunicationService) {
+    super();
+  }
 
   @Input() set layer(l: ILAYER) {
     this._currentLayer = l;
+    if (l != null && l.bbox != null) {
+      this.fitView(l.bbox);
+    } else if (this.conf != null && this.conf.bbox != null) {
+      console.log(this.conf.bbox);
+      this.fitView(this.conf.bbox);
+    }
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (this.map != null && this.conf != null && this._mapIsInit == false) {
-      this._view = this.map.getView();
-      this._initMap(this.conf);
+      this._initLayer(this.conf);
       this._mapIsInit = true;
     }
     if (this._dataLayers != null) {
@@ -54,7 +59,7 @@ export class WmMapLayerDirective implements OnChanges {
   }
 
   private _handlingStrokeStyleWidth(strokeStyle: StrokeStyle, conf: IMAP): void {
-    const currentZoom: number = this._view.getZoom();
+    const currentZoom: number = this.map.getView().getZoom();
     const minW = 0.1;
     const maxW = 5;
     const delta = (currentZoom - conf.minZoom) / (conf.maxZoom - conf.minZoom);
@@ -62,7 +67,7 @@ export class WmMapLayerDirective implements OnChanges {
     strokeStyle.setWidth(newWidth);
   }
 
-  private async _initMap(map: IMAP) {
+  private async _initLayer(map: IMAP) {
     this._dataLayers = await this._initializeDataLayers(map);
     const interactions: Collection<Interaction> = this._initializeMapInteractions(this._dataLayers);
     interactions.getArray().forEach(interaction => {
@@ -75,6 +80,7 @@ export class WmMapLayerDirective implements OnChanges {
         this.trackSelectedFromLayerEVT.emit(clickedFeatureId);
       }
     });
+
     this.map.updateSize();
   }
 
@@ -108,7 +114,7 @@ export class WmMapLayerDirective implements OnChanges {
         if (this._currentLayer != null) {
           const currentIDLayer = +this._currentLayer.id;
           if (layers.indexOf(currentIDLayer) >= 0) {
-            strokeStyle.setColor(this._currentLayer.style.color);
+            strokeStyle.setColor(this._currentLayer.style.color ?? this._defaultFeatureColor);
           } else {
             strokeStyle.setColor('rgba(0,0,0,0)');
           }
@@ -119,12 +125,12 @@ export class WmMapLayerDirective implements OnChanges {
 
         let style = new Style({
           stroke: strokeStyle,
-          zIndex: 1000,
+          zIndex: TRACK_ZINDEX,
         });
         return style;
       },
-      minZoom: 7,
-      zIndex: 1000,
+      minZoom: 1,
+      zIndex: TRACK_ZINDEX,
       updateWhileAnimating: true,
       updateWhileInteracting: true,
     });

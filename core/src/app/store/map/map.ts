@@ -1,16 +1,17 @@
+import {IGeojsonPoiDetailed, IGeojsonProperties} from 'src/app/types/model';
+
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {ILAYER} from 'src/app/types/config';
-import {IGeojsonPoiDetailed, IGeojsonProperties} from 'src/app/types/model';
 
 export interface IMapRootState {
   currentLayer?: ILAYER;
+  currentPoi?: IGeojsonPoiDetailed;
+  currentPoiId?: number;
+  currentPoiIds?: number[];
+  currentPoiIndex?: number;
+  currentRelatedPoi?: IGeojsonPoiDetailed[];
   currentTrack?: CGeojsonLineStringFeature;
   currentTrackProperties?: IGeojsonProperties;
-  currentRelatedPoi?: IGeojsonPoiDetailed[];
-  currentPoiIds?: number[];
-  currentPoiId?: number;
-  currentPoiIndex?: number;
-  currentPoi?: IGeojsonPoiDetailed;
   nextPoiIndex?: number;
   prevPoiIndex?: number;
 }

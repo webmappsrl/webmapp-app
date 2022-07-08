@@ -1,19 +1,20 @@
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../constants/map';
+import {Interaction, defaults as defaultInteracion} from 'ol/interaction';
+
+import {BehaviorSubject} from 'rxjs';
+import Collection from 'ol/Collection';
+import {Extent} from 'ol/extent';
+import {IMAP} from 'src/app/types/config';
 import Map from 'ol/Map';
+import {MapService} from 'src/app/services/base/map.service';
 import TileLayer from 'ol/layer/Tile';
+import {TilesService} from 'src/app/services/tiles.service';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
-import {defaults as defaultInteracion, Interaction} from 'ol/interaction';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
-import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../constants/map';
-import {TilesService} from 'src/app/services/tiles.service';
-import {BehaviorSubject} from 'rxjs';
-import {IMAP} from 'src/app/types/config';
-import {MapService} from 'src/app/services/base/map.service';
-import {Extent} from 'ol/extent';
-import Collection from 'ol/Collection';
-const initExtent: Extent = [-180, -85, 180, 85];
+import {initExtent} from '../constants';
 
 @Component({
   selector: 'wm-map',
@@ -51,7 +52,6 @@ export class WmMapComponent {
   }
 
   private _initMap(conf: IMAP): void {
-    console.log(conf);
     this._view = new View({
       zoom: conf.defZoom ?? 10,
       maxZoom: conf.maxZoom,
