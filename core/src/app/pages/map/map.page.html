@@ -3,12 +3,134 @@
     <wm-map
       #wmap
       wmMapLayer
+      wmMapPois
       [reset]="resetEvt$|async"
       [layer]="currentLayer$|async"
       [conf]="confMap$|async"
       [map]="wmap.map$|async"
+      [poi]="currentPoiID$|async"
+      [pois]="pois$|async"
       [padding]="[50,50,50,50]"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
+      (poi-click)="openPoi($event)"
     ></wm-map>
   </div>
+
+  <ng-container *ngIf="currentPoi$|async as currentPoi">
+    <ng-container *ngIf="currentPoi.properties as properties">
+      <ion-fab-button (click)="resetPoi()" size="small" class="webmapp-poi-close">
+        <i class="icon-outline-close"></i>
+      </ion-fab-button>
+      <div class="webmapp-pagepoi-info-container">
+        <div class="webmapp-pagepoi-info-header">
+          <div class="webmapp-pagepoi-info-header-title" *ngIf="properties.name as name">
+            {{ name | wmtrans}}
+          </div>
+
+          <div class="webmapp-pagepoi-info-header-arrows">
+            <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+              <ion-ripple-effect></ion-ripple-effect>
+            </div>
+          </div>
+        </div>
+
+        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+          <ion-slides
+            pager="false"
+            [options]="sliderOptions"
+            class="webmapp-pagepoi-info-body-photoslider"
+            #slider
+          >
+            <ion-slide *ngFor="let image of properties.image_gallery;let idx = index">
+              <webmapp-img
+                [src]="image"
+                size="250x150"
+                class="webmapp-pagepoi-info-body-photo"
+                (click)="showPhoto(idx)"
+              ></webmapp-img>
+            </ion-slide>
+          </ion-slides>
+
+          <div
+            [hidden]="!properties.address"
+            class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+          >
+            <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+            {{ currentPoi.properties.address}}
+            <ion-ripple-effect></ion-ripple-effect>
+          </div>
+          <div
+            [hidden]="!properties.phone"
+            class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+            (click)="phone(properties.phone)"
+          >
+            <a href="tel:{{ properties.phone}}">
+              <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+              {{ properties.phone}}</a
+            >
+            <ion-ripple-effect></ion-ripple-effect>
+          </div>
+          <div
+            [hidden]="!properties.email"
+            class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+            (click)="email(properties.email)"
+          >
+            <a href="mailto:{{ properties.email}}">
+              <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+              {{ currentPoi.properties.email}}
+              <ion-ripple-effect></ion-ripple-effect>
+            </a>
+          </div>
+          <div
+            [hidden]="!properties.url"
+            class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+            (click)="url(properties.url)"
+          >
+            <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+            {{ properties.url}}
+            <ion-ripple-effect></ion-ripple-effect>
+          </div>
+
+          <div
+            class="webmapp-pagepoi-info-body-description"
+            [innerHTML]="properties.description | wmtrans"
+          ></div>
+
+          <ion-modal #modal trigger="open-modal" [isOpen]="imagePoiToggle$|async">
+            <ng-template>
+              <ion-content fullscreen>
+                <ion-fab vertical="top" horizontal="end" class="webmapp-pagepoi-top">
+                  <ion-fab-button
+                    (click)="this.imagePoiToggle$.next(false);"
+                    size="small"
+                    class="webmapp-pagepoi-btntop"
+                  >
+                    <i class="icon-outline-close"></i>
+                  </ion-fab-button>
+                </ion-fab>
+                <ion-fab vertical="top" horizontal="end" class="webmapp-pagepoi-top">
+                  <ion-fab-button
+                    (click)="this.imagePoiToggle$.next(false);"
+                    size="small"
+                    class="webmapp-pagepoi-btntop"
+                  >
+                    <i class="icon-outline-close"></i>
+                  </ion-fab-button>
+                </ion-fab>
+                <ion-slides #gallery class="gallery" [options]="slideOptions">
+                  <ion-slide *ngFor="let image of properties.image_gallery" pager="true">
+                    <webmapp-img
+                      [src]="image"
+                      size="335x250"
+                      class="webmapp-pagepoi-info-body-photo"
+                    ></webmapp-img>
+                  </ion-slide>
+                </ion-slides>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </ion-content>
+      </div>
+    </ng-container>
+  </ng-container>
 </ion-content>

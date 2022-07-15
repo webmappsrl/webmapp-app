@@ -1,3 +1,4 @@
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,14 +8,10 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {NavController, IonSlides} from '@ionic/angular';
 import {IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
-import {Browser} from '@capacitor/browser';
-import {DownloadService} from 'src/app/services/download.service';
-import {Store} from '@ngrx/store';
-import {IMapRootState} from 'src/app/store/map/map';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {IonSlides, NavController} from '@ionic/angular';
+import {beforeInit, setTransition, setTranslate} from './utils';
+import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {
   mapCurrentPoi,
   mapCurrentRelatedPoi,
@@ -22,9 +19,13 @@ import {
   nextPoiID,
   prevPoiID,
 } from 'src/app/store/map/map.selector';
-import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+
+import {Browser} from '@capacitor/browser';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {DownloadService} from 'src/app/services/download.service';
+import {IMapRootState} from 'src/app/store/map/map';
+import {Store} from '@ngrx/store';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';
-import {beforeInit, setTransition, setTranslate} from './utils';
 
 @Component({
   selector: 'app-poi',
@@ -135,7 +136,6 @@ export class PoiPage implements OnInit, OnDestroy {
       this.slider.slideTo(idx);
     }, 300);
   }
-
   async url(url) {
     await Browser.open({url});
   }

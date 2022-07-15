@@ -279,6 +279,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnInit, On
       optOptions = {
         maxZoom: this.map.getView().getZoom(),
         duration: 500,
+        padding: [0, 0, 300, 0],
         size,
       };
     }

@@ -71,7 +71,7 @@ export class WmMapComponent {
       controls: defaultControls({
         attribution: false,
         rotate: false,
-        zoom: true,
+        zoom: false,
       }),
       interactions: this._initDefaultInteractions(),
       layers: [
