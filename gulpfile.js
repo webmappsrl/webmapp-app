@@ -400,6 +400,7 @@ export const environment = {
   production: false,
   geohubId: ${geohubInstanceId},
   analyticsId:'285809815',
+  api: 'https://geohub.webmapp.it',
 };
 `;
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
