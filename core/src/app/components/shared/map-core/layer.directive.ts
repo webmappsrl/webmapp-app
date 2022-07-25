@@ -43,12 +43,11 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     if (l != null && l.bbox != null) {
       this.fitView(l.bbox);
     } else if (this.conf != null && this.conf.bbox != null) {
-      console.log(this.conf.bbox);
       this.fitView(this.conf.bbox);
     }
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(_: SimpleChanges): void {
     if (this.map != null && this.conf != null && this._mapIsInit == false) {
       this._initLayer(this.conf);
       this._mapIsInit = true;
@@ -56,6 +55,14 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     if (this._dataLayers != null) {
       this._updateMap();
     }
+  }
+
+  private _getColorFromLayer(id: number): string {
+    const layers = this.conf.layers || [];
+    const layer = layers.filter(l => +l.id === +id);
+    return layer[0] && layer[0].style && layer[0].style.color
+      ? layer[0].style.color
+      : this._defaultFeatureColor;
   }
 
   private _handlingStrokeStyleWidth(strokeStyle: StrokeStyle, conf: IMAP): void {
@@ -119,7 +126,8 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             strokeStyle.setColor('rgba(0,0,0,0)');
           }
         } else {
-          strokeStyle.setColor(this._defaultFeatureColor);
+          const layerId = +layers[0];
+          strokeStyle.setColor(this._getColorFromLayer(layerId));
         }
         this._handlingStrokeStyleWidth(strokeStyle, map);
 
