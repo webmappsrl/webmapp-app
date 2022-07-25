@@ -4,69 +4,89 @@
 ></webmapp-slope-chart>
 
 <ion-list *ngIf="(currentTrackProperties$|async) as properties">
-  <ion-item>
+  <ion-item *ngIf="properties.cai_scale || properties.difficulty">
+    <i class="icon-outline-difficulty webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label"
+      >{{ "pages.route.detail.difficulty" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
+      >{{ properties?.cai_scale ? properties?.cai_scale :properties?.difficulty}}
+    </ion-note>
+  </ion-item>
+
+  <ion-item *ngIf="properties?.distance as distance">
     <i class="icon-outline-distance webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.distance" | translate }}
     </ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.distance }}km</ion-note
-    >
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ distance}}km</ion-note>
   </ion-item>
-  <ion-item>
+
+  <ion-item *ngIf="properties?.duration_forward as duration_forward">
+    <i class="icon-outline-duration webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label"
+      >{{ "pages.route.detail.duration_forward" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
+      >{{duration_forward| duration }}
+    </ion-note>
+  </ion-item>
+
+  <ion-item *ngIf="properties?.duration_backward as duration_backward">
+    <i class="icon-outline-duration webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label"
+      >{{ "pages.route.detail.duration_backward" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">
+      {{ duration_backward| duration }}
+    </ion-note>
+  </ion-item>
+
+  <ion-item *ngIf="properties?.ascent as ascent">
     <i class="icon-outline-dislivello-positivo webmapp-pageroute-tabdetail-icon"> </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label">{{
-        "pages.route.detail.ascent" | translate
-    }}</ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.ascent }}m</ion-note
-    >
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{"pages.route.detail.ascent" | translate}}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"> {{ ascent }}m </ion-note>
   </ion-item>
-  <ion-item>
+
+  <ion-item *ngIf="properties?.descent as descent">
     <i class="icon-outline-dislivello-negativo webmapp-pageroute-tabdetail-icon"> </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label"
-      >{{ "pages.route.detail.descent" | translate }}
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{ "pages.route.detail.descent" | translate }}
     </ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.descent }}m</ion-note
-    >
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"> {{ descent }}m</ion-note>
   </ion-item>
-  <ion-item>
+
+  <ion-item *ngIf="properties?.ele_from as ele_from">
     <i class="icon-outline-plus webmapp-pageroute-tabdetail-icon"> </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label"
-      >{{ "pages.route.detail.ele_max" | translate }}
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{ "pages.route.detail.ele_from" | translate }}
     </ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.ele_max }}m</ion-note
-    >
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ ele_from }}m</ion-note>
   </ion-item>
-  <ion-item>
+
+  <ion-item *ngIf="properties?.ele_to as ele_to">
     <i class="icon-outline-minus webmapp-pageroute-tabdetail-icon"> </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label"
-      >{{ "pages.route.detail.ele_min" | translate }}
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{ "pages.route.detail.ele_to" | translate }}
     </ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.ele_min }}m</ion-note
-    >
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ ele_to }}m</ion-note>
   </ion-item>
-  <ion-item>
-    <i class="icon-fill-starting-point webmapp-pageroute-tabdetail-icon">
-      <span class="path1"></span><span class="path2"></span>
-     </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label"
-      >{{ "pages.route.detail.ele_from" | translate }}
+
+  <ion-item *ngIf="properties.ele_min as ele_min">
+    <i class="icon-outline-plus webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{ "pages.route.detail.ele_min" | translate }}
     </ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.ele_from }}m</ion-note
-    >
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ ele_min }}m</ion-note>
   </ion-item>
-  <ion-item>
-    <i class="icon-outline-flag webmapp-pageroute-tabdetail-icon"> </i>
-    <ion-label start class="webmapp-pageroute-tabdetail-label">{{
-        "pages.route.detail.ele_to" | translate
-    }}</ion-label>
-    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"
-      >{{ properties?.ele_to }}m</ion-note
-    >
+
+  <ion-item *ngIf="properties?.ele_max as ele_max">
+    <i class="icon-outline-minus webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label">
+      {{ "pages.route.detail.ele_max" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ ele_max}}m</ion-note>
   </ion-item>
 </ion-list>

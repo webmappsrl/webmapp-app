@@ -2,13 +2,17 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-icon name="close-outline" class="webmapp-trackdetail-menuclose" (click)="closeMenu()"></ion-icon>
+        <ion-icon
+          name="close-outline"
+          class="webmapp-trackdetail-menuclose"
+          (click)="closeMenu()"
+        ></ion-icon>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item  (click)="edit()">
+      <ion-item (click)="edit()">
         <i class="webmapp-icon-edit-outline " start></i>
         <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|translate}}</div>
       </ion-item>
@@ -20,22 +24,29 @@
   </ion-content>
 </ion-menu>
 
-
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" defaultHref="map" text="" class="webmapp-backbutton webmapp-backbutton-dark"></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        defaultHref="map"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+      ></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.trackdetail.title'|translate}}</ion-title>
     <ion-buttons slot="end">
-      <ion-icon name="ellipsis-vertical" class="webmapp-trackdetail-menuopen" (click)="menu()"></ion-icon>
+      <ion-icon
+        name="ellipsis-vertical"
+        class="webmapp-trackdetail-menuopen"
+        (click)="menu()"
+      ></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content id="main">
-
-  <webmapp-map class="webmapp-trackdetail-map" #map [static]="true" [track]="track"></webmapp-map>
+  <webmapp-map class="webmapp-trackdetail-map" #map static="true" [track]="track"></webmapp-map>
 
   <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
 
@@ -63,10 +74,18 @@
     </ion-item>
   </ion-list>
 
-  <ion-slides pager="false" [options]="sliderOptions" class="webmapp-trackdetail-photoslider" #slider>
+  <ion-slides
+    pager="false"
+    [options]="sliderOptions"
+    class="webmapp-trackdetail-photoslider"
+    #slider
+  >
     <ion-slide *ngFor="let photo of photos;let idx = index">
       <div class="webmapp-trackdetail-photocontainer">
-        <ion-img [src]="photo.rawData ? photo.rawData : photo.datasrc" class="webmapp-trackdetail-photo"></ion-img>
+        <ion-img
+          [src]="photo.rawData ? photo.rawData : photo.datasrc"
+          class="webmapp-trackdetail-photo"
+        ></ion-img>
       </div>
     </ion-slide>
   </ion-slides>
@@ -116,7 +135,4 @@
       </ion-label>
     </ion-item>
   </ion-list>
-
-
-
 </ion-content>
