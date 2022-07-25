@@ -24,19 +24,21 @@
     ></ng-container>
 
     <ng-template #myhome>
-      <ng-container *ngFor="let home of confHOME$|async">
-        <h3 *ngIf="home.box_type === 'title'" class="webmapp-home-title">{{home.title}}</h3>
+      <ng-container *ngFor="let box of confHOME$|async">
+        <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
+        <webmapp-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
+        </webmapp-box>
         <webmapp-layer-box
-          *ngIf="home.box_type === 'layer'"
-          [data]="home.layer"
-          (clickEVT)="setLayer(home.layer)"
+          *ngIf="box.box_type === 'layer'"
+          [data]="box.layer"
+          (clickEVT)="setLayer(box.layer)"
         >
         </webmapp-layer-box>
-        <ng-container *ngIf="home.box_type == 'base'">
-          <webmapp-slider-box [data]="home" (clickEVT)="searchCard($event)"></webmapp-slider-box>
+        <ng-container *ngIf="box.box_type == 'base'">
+          <webmapp-slider-box [data]="box" (clickEVT)="searchCard($event)"></webmapp-slider-box>
         </ng-container>
-        <ng-container *ngIf="home.box_type ==  'external_url'">
-          <webmapp-external-url-box [data]="home"></webmapp-external-url-box>
+        <ng-container *ngIf="box.box_type ==  'external_url'">
+          <webmapp-external-url-box [data]="box"></webmapp-external-url-box>
         </ng-container>
       </ng-container>
     </ng-template>

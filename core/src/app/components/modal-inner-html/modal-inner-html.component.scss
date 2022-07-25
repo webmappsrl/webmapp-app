@@ -1,0 +1,22 @@
+webmapp-modal-inner-html {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-content: stretch;
+  align-items: stretch;
+  color: black;
+  .dismiss {
+    flex: 0 1 auto;
+    align-self: auto;
+    text-align: end;
+    font-size: 40px;
+  }
+  .content {
+    overflow-y: auto;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    align-self: auto;
+  }
+}

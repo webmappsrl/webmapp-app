@@ -1,8 +1,9 @@
-import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {ICONF, IHOME, IHOMEOLD, ILAYER, ITHEME} from 'src/app/types/config';
-import {getCSSVariables} from '../../functions/theme';
-import {elasticAll} from '../elastic/elastic.selector';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+
 import {confFeatureKey} from './conf.reducer';
+import {elasticAll} from '../elastic/elastic.selector';
+import {getCSSVariables} from '../../functions/theme';
 
 const confFeature = createFeatureSelector<ICONF>(confFeatureKey);
 
@@ -14,6 +15,7 @@ export const confAUTHEnable = createSelector(confAUTH, auth => auth.enable ?? fa
 export const confMAP = createSelector(confFeature, state => state.MAP);
 export const confTHEME = createSelector(confFeature, state => state.THEME);
 export const confMAPLAYERS = createSelector(confMAP, state => state.layers);
+export const confPROJECT = createSelector(confFeature, state => state.PROJECT);
 
 export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
   getCSSVariables(theme),

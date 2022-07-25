@@ -1,3 +1,4 @@
+import {BehaviorSubject, Observable, merge, of} from 'rxjs';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,22 +8,23 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {NavController} from '@ionic/angular';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject, merge, Observable, of} from 'rxjs';
+import {IHOME, ILAYER} from 'src/app/types/config';
+import {ModalController, NavController} from '@ionic/angular';
 import {first, startWith, tap} from 'rxjs/operators';
+import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
+
 import {GeohubService} from 'src/app/services/geohub.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {confHOME} from 'src/app/store/conf/conf.selector';
 import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
-import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
-import {IMapRootState} from 'src/app/store/map/map';
-import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
-import {online} from 'src/app/store/network/network.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {IHOME, ILAYER} from 'src/app/types/config';
 import {IGeojsonFeature} from 'src/app/types/model';
+import {IMapRootState} from 'src/app/store/map/map';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
+import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
+import {Store} from '@ngrx/store';
+import {confHOME} from 'src/app/store/conf/conf.selector';
+import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
+import {online} from 'src/app/store/network/network.selector';
 
 @Component({
   selector: 'webmapp-page-home',
@@ -57,6 +59,7 @@ export class HomePage implements OnInit {
     private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
     private _navController: NavController,
+    private _modalCtrl: ModalController,
     private _cdr: ChangeDetectorRef,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
@@ -77,5 +80,19 @@ export class HomePage implements OnInit {
   public setLayer(layer: ILAYER | null | number) {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
     this._navController.navigateForward('map');
+  }
+  openSlug(slug: string): void {
+    if (slug === 'project') {
+      this._modalCtrl
+        .create({
+          component: InnerHtmlComponent,
+          cssClass: 'wm-modal',
+          backdropDismiss: true,
+          keyboardClose: true,
+        })
+        .then(modal => {
+          modal.present();
+        });
+    }
   }
 }

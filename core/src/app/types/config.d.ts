@@ -79,6 +79,10 @@ type IEXTERNALURLBOX = IHOMEBASEITEM & {
   box_type: 'external_url';
   url: string;
 };
+type ISLUGBOX = IHOMEBASEITEM & {
+  box_type: 'slug';
+  slug: string;
+};
 
 type IHOMEITEMTRACK = IHOMEBASEITEM & {
   track_id: number;
@@ -95,7 +99,7 @@ type IBASEBOX = IBOX & {
   box_type: 'base';
   items: IHOMEITEM[];
 };
-type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX;
+type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX | ISLUGBOX;
 interface IOPTIONS {
   addArrowsOverTracks: boolean;
   baseUrl: string;
@@ -159,14 +163,16 @@ interface IAUTH {
   showAtStartup?: boolean;
   skipToDownloadPublicRoute?: boolean;
 }
-
+interface IPROJECT {
+  HTML: string;
+}
 interface IMAP {
   bbox: [number, number, number, number];
   center?: [number, number];
   defZoom: number;
-  layers?: ILAYER[];
   maxZoom: number;
   minZoom: number;
+  layers?: ILAYER[];
 }
 interface ILAYER {
   bbox: [number, number, number, number];
@@ -245,5 +251,6 @@ interface ICONF {
   LANGUAGES?: ILANGUAGES;
   MAP?: IMAP;
   OPTIONS: IOPTIONS;
+  PROJECT?: IPROJECT;
   THEME?: ITHEME;
 }
