@@ -1,8 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../../constants/geohub';
+
+import {HttpClient} from '@angular/common/http';
 import {ICONF} from 'src/app/types/config';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 
 @Injectable({
@@ -12,6 +13,7 @@ export class ConfService {
   private _geohubAppId: number = environment.geohubId || 1;
 
   constructor(private _http: HttpClient) {
+    console.log(environment);
     const hostname: string = window.location.hostname;
     if (hostname.indexOf('localhost') < 0) {
       const newGeohubId = parseInt(hostname.split('.')[0], this._geohubAppId);

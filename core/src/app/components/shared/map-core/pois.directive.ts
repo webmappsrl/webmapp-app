@@ -224,7 +224,12 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnInit, On
     selected = false,
   ): Promise<string> {
     let img1b64: string | ArrayBuffer = logoBase64;
-    const url = value.properties?.feature_image?.sizes['108x137'];
+    let url = null;
+    try {
+      url = value.properties?.feature_image?.sizes['108x137'];
+    } catch (e) {
+      console.log('POI error createPoiMarker id:', value.properties.id);
+    }
     if (url) {
       img1b64 = await this._downloadBase64Img(url);
     }
