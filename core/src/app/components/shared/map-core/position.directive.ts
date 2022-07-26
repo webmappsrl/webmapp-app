@@ -5,8 +5,8 @@ import {
   BackgroundGeolocationLocationProvider,
   BackgroundGeolocationResponse,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {BehaviorSubject, Observable, Subscription, from} from 'rxjs';
 import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
-import {Subscription, from} from 'rxjs';
 
 import {Feature} from 'ol';
 import {FitOptions} from 'ol/View';
@@ -30,9 +30,16 @@ interface Bearing {
 export class WmMapPositionDirective implements OnDestroy {
   private _bgCurrentLocSub: Subscription = Subscription.EMPTY;
   private _bgLocSub: Subscription = Subscription.EMPTY;
+
+  private _focus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _lastBearings: Bearing[] = [];
   private _locationFeature = new Feature();
   private _locationIcon = new Icon({
+    src: 'assets/images/location-icon.png',
+    scale: 0.4,
+    size: [125, 125],
+  });
+  private _locationArrowIcon = new Icon({
     src: 'assets/images/location-icon-arrow.png',
     scale: 0.4,
     size: [125, 125],
@@ -46,9 +53,32 @@ export class WmMapPositionDirective implements OnDestroy {
     }),
     zIndex: POSITION_ZINDEX,
   });
+  private _currentLocation: BackgroundGeolocationResponse;
   private _map: Map;
 
   @Output() locationEvt: EventEmitter<BackgroundGeolocationResponse> = new EventEmitter();
+  @Input() set focus(val) {
+    this._focus$.next(val);
+    if (val === true) {
+      this._locationLayer.setStyle(
+        new Style({
+          image: this._locationArrowIcon,
+        }),
+      );
+      this._map.getView().setZoom(this._map.getView().getZoom() + 1);
+      this._setPositionByLocation(this._currentLocation);
+    } else {
+      this._locationLayer.setStyle(
+        new Style({
+          image: this._locationIcon,
+        }),
+      );
+    }
+    this._locationLayer.getSource().changed();
+    if (this._map != null) {
+      this._map.render();
+    }
+  }
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const androidConfig: BackgroundGeolocationConfig = {
@@ -69,10 +99,23 @@ export class WmMapPositionDirective implements OnDestroy {
       ...commonConfig,
       ...androidConfig,
     };
-    from(this._backgroundGeolocation.getCurrentLocation())
+
+    from(
+      this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
+        console.log('ERROR', e);
+        return {
+          longitude: 14.07228,
+          latitude: 37.49882,
+          bearing: 0,
+        } as BackgroundGeolocationResponse;
+      }),
+    )
       .pipe(take(1))
       .subscribe((loc: BackgroundGeolocationResponse) => {
-        this._setPositionByLocation(loc);
+        if (loc != null) {
+          this._currentLocation = loc;
+          this._setPositionByLocation(loc);
+        }
       });
     this._backgroundGeolocation
       .configure(config)
@@ -80,6 +123,7 @@ export class WmMapPositionDirective implements OnDestroy {
         this._bgLocSub = this._backgroundGeolocation
           .on(BackgroundGeolocationEvents.location)
           .subscribe((loc: BackgroundGeolocationResponse) => {
+            this._currentLocation = loc;
             this._setPositionByLocation(loc);
           });
       })
@@ -191,7 +235,25 @@ export class WmMapPositionDirective implements OnDestroy {
     this.locationEvt.emit(location);
     const point = new Point(fromLonLat([location.longitude, location.latitude]));
     this._locationFeature.setGeometry(point);
-    this._fitView(point);
-    this._rotate(-runningAvg, 500);
+    if (this._focus$.value === true) {
+      this._fitView(point);
+      this._rotate(-runningAvg, 500);
+    }
+  }
+
+  private _getLocationFromBrowser(): Observable<any> {
+    return Observable.create(observer => {
+      if (window.navigator && window.navigator.geolocation) {
+        window.navigator.geolocation.getCurrentPosition(
+          position => {
+            observer.next(position);
+            observer.complete();
+          },
+          error => observer.error(error),
+        );
+      } else {
+        observer.error('Unsupported Browser');
+      }
+    });
   }
 }

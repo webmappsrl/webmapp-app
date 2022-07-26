@@ -67,11 +67,13 @@
       [hidePosition]="true"
       [btnposition]="'middle'"
       [noPoiSelection]="true"
+      [focus]="focus$|async"
       (clickpoi)="clickPoi($event)"
       [height]="mapHeigth()"
       [slopeChartElements]="trackElevationChartHoverElements$|async"
       [cache]="useCache"
       (rotate)="mapRotation($event)"
+      (touch)="resetFocus()"
     ></itinerary-webmapp-map>
   </div>
 
@@ -152,6 +154,7 @@
   </ion-fab>
 
   <div
+    *ngIf="(focus$|async) === false"
     class="webmapp-pageroute-toolbox"
     [ngClass]="
     {'webmapp-pageroute-toolbox-over':showToolBarOver && opacity < 0.9,
@@ -201,11 +204,9 @@
   >
     <div [hidden]="!modeFullMap">
       <ion-icon name="close-outline"></ion-icon>
-      {{ 'pages.route.btnFullMapReduce' | translate }}
     </div>
     <div [hidden]="modeFullMap">
       <ion-icon name="resize-outline"></ion-icon>
-      {{ 'pages.route.btnFullMapExpand' | translate }}
     </div>
   </ion-button>
 </ion-content>

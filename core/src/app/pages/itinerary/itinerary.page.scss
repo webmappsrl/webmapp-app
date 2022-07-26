@@ -293,11 +293,11 @@
     top: calc(14px + env(safe-area-inset-top));
   }
 
-  --padding-start: 32px;
+  --padding-start: 24px;
   ion-icon {
     font-size: var(--wm-font-xxlg);
     position: absolute;
-    left: -24px;
+    left: -16px;
     top: 9px;
   }
 }

@@ -712,6 +712,7 @@ export class MapComponent implements OnDestroy {
         this._map.getTargetElement().style.cursor = 'pointer';
       }
     });
+
     this._map.on('click', event => {
       stopPropagation(event);
       try {

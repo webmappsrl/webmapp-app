@@ -540,7 +540,7 @@ export class SlopeChartComponent {
             beforeTooltipDraw: chart => {
               let tooltip: TooltipModel<'line'> = chart.tooltip;
 
-              if ((<any>tooltip)._active && (<any>tooltip)._active.length > 0) {
+              if (tooltip != null && (<any>tooltip)._active && (<any>tooltip)._active.length > 0) {
                 let activePoint = (<any>tooltip)._active[0],
                   ctx = chart.ctx,
                   x = activePoint.element.x,

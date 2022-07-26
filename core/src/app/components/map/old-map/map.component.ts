@@ -10,10 +10,10 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { buffer } from 'ol/extent';
+import {buffer} from 'ol/extent';
 
 // ol imports
-import { Coordinate } from 'ol/coordinate';
+import {Coordinate} from 'ol/coordinate';
 import Circle from 'ol/geom/Circle';
 import Feature from 'ol/Feature';
 import Icon from 'ol/style/Icon';
@@ -27,7 +27,7 @@ import VectorSource from 'ol/source/Vector';
 import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
-import { defaults as defaultInteractions } from 'ol/interaction.js';
+import {defaults as defaultInteractions} from 'ol/interaction.js';
 
 import {
   DEF_LOCATION_ACCURACY,
@@ -40,34 +40,29 @@ import {
   DEF_MAP_ROTATION_DURATION,
 } from '../../../constants/map';
 
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { ILocation } from 'src/app/types/location';
-import { CLocation } from 'src/app/classes/clocation';
-import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
-import { MapService } from 'src/app/services/base/map.service';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {ILocation} from 'src/app/types/location';
+import {CLocation} from 'src/app/classes/clocation';
+import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
+import {MapService} from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
-import { ITrack } from 'src/app/types/track';
-import {
-  IGeojsonCluster,
-  IGeojsonGeometry,
-  IGeojsonPoi,
-  ILineString,
-} from 'src/app/types/model';
-import { fromLonLat } from 'ol/proj';
-import { ClusterMarker, iMarker, MapMoveEvent, PoiMarker } from 'src/app/types/map';
+import {ITrack} from 'src/app/types/track';
+import {IGeojsonCluster, IGeojsonGeometry, IGeojsonPoi, ILineString} from 'src/app/types/model';
+import {fromLonLat} from 'ol/proj';
+import {ClusterMarker, iMarker, MapMoveEvent, PoiMarker} from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
-import { AuthService } from 'src/app/services/auth.service';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import {AuthService} from 'src/app/services/auth.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
-import { CGeojsonLineStringFeature } from 'src/app/classes/features/cgeojson-line-string-feature';
-import { ISlopeChartHoverElements } from 'src/app/types/slope-chart';
-import { GeohubService } from 'src/app/services/geohub.service';
-import { MarkerService } from 'src/app/services/marker.service';
-import { TilesService } from 'src/app/services/tiles.service';
-import { ConfigService } from 'src/app/services/config.service';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {MarkerService} from 'src/app/services/marker.service';
+import {TilesService} from 'src/app/services/tiles.service';
+import {ConfigService} from 'src/app/services/config.service';
 import layerVector from 'ol/layer/Vector';
 import sourceVector from 'ol/source/Vector';
 
@@ -438,6 +433,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
         }
         this.mapDegrees = degree;
       });
+
       this._map.on('moveend', () => {
         this.move.emit({
           boundingbox: this._mapService.extentToLonLat(
