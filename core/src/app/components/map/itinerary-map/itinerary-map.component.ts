@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -193,6 +194,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     private _markerService: MarkerService,
     private _tilesService: TilesService,
     private _storeMap: Store<IMapRootState>,
+    private _cdr: ChangeDetectorRef,
   ) {
     this._locationIcon = {
       layer: null,
@@ -684,8 +686,14 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.focus && changes.focus.currentValue == false) {
-      // this._centerMapToTrack();
+    if (changes.focus != null) {
+      if (changes.focus.currentValue == false) {
+        this.btnposition = 'middle';
+      }
+      if (changes.focus.currentValue == true) {
+        this.btnposition = 'bottom';
+      }
+      this._cdr.detectChanges();
     }
   }
 

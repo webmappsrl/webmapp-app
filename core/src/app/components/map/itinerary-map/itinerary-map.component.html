@@ -27,8 +27,8 @@
   </webmapp-btn-geolocation>
 
   <webmapp-btn-orientation
+    *ngIf="focus === false"
     class="webmapp-map-fab"
-    *ngIf="!static && !hidePosition"
     [degrees]="mapDegrees"
     (click)="orientNorth()"
   >

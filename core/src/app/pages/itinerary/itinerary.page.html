@@ -65,7 +65,7 @@
       [track]="(currentTrack$|async)?.geometry"
       [hideRegister]="true"
       [hidePosition]="true"
-      [btnposition]="'middle'"
+      [btnposition]="modeFullMap?'bottom': 'middle'"
       [noPoiSelection]="true"
       [focus]="focus$|async"
       (clickpoi)="clickPoi($event)"
