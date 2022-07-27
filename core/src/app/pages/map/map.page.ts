@@ -39,7 +39,10 @@ export class MapPage {
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+
   pois$: Observable<any> = this._store
     .select(pois)
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
@@ -95,5 +98,8 @@ export class MapPage {
   }
   async url(url) {
     await Browser.open({url});
+  }
+  setCurrentLocation(event): void {
+    this.currentPosition$.next(event);
   }
 }

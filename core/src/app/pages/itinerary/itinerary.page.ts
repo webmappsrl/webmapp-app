@@ -251,7 +251,6 @@ export class ItineraryPage implements OnDestroy {
   }
 
   resetFocus(): void {
-    console.log('reset focus');
     if (this.focus$.value === true) {
       this.modeFullMap = false;
     }

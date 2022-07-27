@@ -79,6 +79,11 @@ export class WmMapPositionDirective implements OnDestroy {
       this._map.render();
     }
   }
+  @Input() set position(event: any) {
+    if (event != null) {
+      this._setPositionToUser();
+    }
+  }
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     const androidConfig: BackgroundGeolocationConfig = {
@@ -241,19 +246,12 @@ export class WmMapPositionDirective implements OnDestroy {
     }
   }
 
-  private _getLocationFromBrowser(): Observable<any> {
-    return Observable.create(observer => {
-      if (window.navigator && window.navigator.geolocation) {
-        window.navigator.geolocation.getCurrentPosition(
-          position => {
-            observer.next(position);
-            observer.complete();
-          },
-          error => observer.error(error),
-        );
-      } else {
-        observer.error('Unsupported Browser');
-      }
-    });
+  private _setPositionToUser() {
+    const point = new Point(
+      fromLonLat([this._currentLocation.longitude, this._currentLocation.latitude]),
+    );
+    this._fitView(point);
+    const runningAvg = this._runningAvg(this._currentLocation.bearing);
+    this._rotate(-runningAvg, 500);
   }
 }

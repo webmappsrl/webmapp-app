@@ -665,7 +665,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       this._mapClick(evt);
     });
     this._map.on('pointermove', event => {
-      console.log('TOUCH');
       this.touch.emit();
     });
 

@@ -12,9 +12,14 @@
       [poi]="currentPoiID$|async"
       [pois]="pois$|async"
       [padding]="[50,50,50,50]"
+      [position]="setCurrentPosition$|async"
+      (locationEvt)="setCurrentLocation($event)"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
       (poi-click)="openPoi($event)"
     ></wm-map>
+  </div>
+  <div class="wm-fab-buttons">
+    <wm-btn-center-position (click)="setCurrentPosition$.next($event)"></wm-btn-center-position>
   </div>
 
   <ng-container *ngIf="currentPoi$|async as currentPoi">
