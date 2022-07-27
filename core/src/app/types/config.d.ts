@@ -1,4 +1,5 @@
 import {iLocalString} from './model';
+import {ITrack} from './track';
 
 interface IGEOLOCATION {
   record: {
@@ -170,9 +171,14 @@ interface IMAP {
   bbox: [number, number, number, number];
   center?: [number, number];
   defZoom: number;
+  layers?: ILAYER[];
   maxZoom: number;
   minZoom: number;
-  layers?: ILAYER[];
+  ref_on_track_min_zoom: number;
+  ref_on_track_show: boolean;
+  start_end_icons_min_zoom: number;
+  start_end_icons_show: boolean;
+  tracks?: any[];
 }
 interface ILAYER {
   bbox: [number, number, number, number];

@@ -1,19 +1,24 @@
 import {Directive, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import Feature, {FeatureLike} from 'ol/Feature';
 import {ILAYER, IMAP} from 'src/app/types/config';
 import {Interaction, defaults as defaultInteractions} from 'ol/interaction.js';
 import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
+import {endIconHtml, startIconHtml} from './icons';
 
 import {Collection} from 'ol';
 import {CommunicationService} from 'src/app/services/base/communication.service';
 import {ConfService} from 'src/app/store/conf/conf.service';
 import {DEF_LINE_COLOR} from './constants';
-import {FeatureLike} from 'ol/Feature';
+import Geometry from 'ol/geom/Geometry';
 import Layer from 'ol/layer/Layer';
 import MVT from 'ol/format/MVT';
 import Map from 'ol/Map';
+import Point from 'ol/geom/Point';
 import StrokeStyle from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import {TRACK_ZINDEX} from './zIndex';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
 import {WmMapBaseDirective} from './base.directive';
@@ -26,6 +31,8 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   private _currentLayer: ILAYER;
   private _dataLayers: Array<VectorTileLayer>;
   private _defaultFeatureColor = DEF_LINE_COLOR;
+  private _flagFeatures: Feature<Geometry>[] = [];
+  private _flagsLayer: VectorLayer;
   private _mapIsInit = false;
   private _selectInteraction: SelectInteraction;
   private _styleJson: any;
@@ -50,6 +57,20 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   ngOnChanges(_: SimpleChanges): void {
     if (this.map != null && this.conf != null && this._mapIsInit == false) {
       this._initLayer(this.conf);
+      if (this.conf.start_end_icons_show === true && this.conf.start_end_icons_min_zoom != null) {
+        this.map.on('moveend', e => {
+          const view = this.map.getView();
+          if (view != null) {
+            const newZoom = +view.getZoom();
+            const flagMinZoom = +this.conf.start_end_icons_min_zoom;
+            if (newZoom >= flagMinZoom) {
+              this._flagsLayer.setVisible(true);
+            } else {
+              this._flagsLayer.setVisible(false);
+            }
+          }
+        });
+      }
       this._mapIsInit = true;
     }
     if (this._dataLayers != null) {
@@ -88,6 +109,25 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       }
     });
 
+    if (map.tracks) {
+      map.tracks.forEach(track => {
+        if (track.start != null && track.start.length === 2) {
+          this._flagFeatures.push(this._createFeature(startIconHtml, track.start));
+        }
+        if (track.end != null && track.end.length === 2) {
+          this._flagFeatures.push(this._createFeature(endIconHtml, track.end));
+        }
+      });
+      this._flagsLayer = new VectorLayer({
+        zIndex: 9400,
+        source: new VectorSource({
+          features: this._flagFeatures,
+        }),
+      });
+      this._flagsLayer.setVisible(false);
+      this.map.addLayer(this._flagsLayer);
+    }
+
     this.map.updateSize();
   }
 
@@ -116,7 +156,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       style: (feature: FeatureLike) => {
         const properties = feature.getProperties();
         const layers: number[] = JSON.parse(properties.layers);
-
         let strokeStyle: StrokeStyle = new StrokeStyle();
         if (this._currentLayer != null) {
           const currentIDLayer = +this._currentLayer.id;
@@ -160,6 +199,7 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       this._styleJson = styleJson;
       for (const i in styleJson.sources) {
         layers.push(await this._initializeDataLayer(styleJson.sources[i], map));
+        console.log(layers);
         this.map.addLayer(layers[layers.length - 1]);
       }
     }

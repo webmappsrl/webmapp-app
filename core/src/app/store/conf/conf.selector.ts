@@ -12,7 +12,10 @@ export const confLANGUAGES = createSelector(confFeature, state => state.LANGUAGE
 export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
 export const confAUTHEnable = createSelector(confAUTH, auth => auth.enable ?? false);
-export const confMAP = createSelector(confFeature, state => state.MAP);
+export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks) => ({
+  ...state.MAP,
+  ...{tracks: allTracks},
+}));
 export const confTHEME = createSelector(confFeature, state => state.THEME);
 export const confMAPLAYERS = createSelector(confMAP, state => state.layers);
 export const confPROJECT = createSelector(confFeature, state => state.PROJECT);
@@ -22,7 +25,13 @@ export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
 );
 
 export const confHOME = createSelector(confFeature, elasticAll, (state, all) => {
-  if (state.HOME != null && state.MAP != null && state.MAP.layers != null) {
+  if (
+    state.HOME != null &&
+    state.MAP != null &&
+    state.MAP.layers != null &&
+    all != null &&
+    all.length > 0
+  ) {
     const home: IHOME[] = [];
     state.HOME.forEach(el => {
       if (el.box_type === 'layer') {
