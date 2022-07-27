@@ -23,6 +23,9 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
 import {WmMapBaseDirective} from './base.directive';
 import {styleJsonFn} from './utils';
+import Text from 'ol/style/Text';
+import Fill from 'ol/style/Fill';
+import Stroke from 'ol/style/Stroke';
 
 @Directive({
   selector: '[wmMapLayer]',
@@ -170,9 +173,26 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
         }
         this._handlingStrokeStyleWidth(strokeStyle, map);
 
+        let text = new Text({
+          text:
+            properties.ref != null && properties.ref != '' && map.ref_on_track_show
+              ? `REF: ${properties.ref}`
+              : '',
+          font: 'bold 12px "Open Sans", "Arial Unicode MS", "sans-serif"',
+          placement: 'line',
+          offsetY: 20,
+          rotateWithView: true,
+          overflow: true,
+          maxAngle: Math.PI / 16,
+
+          fill: new Fill({
+            color: this._defaultFeatureColor,
+          }),
+        });
         let style = new Style({
           stroke: strokeStyle,
           zIndex: TRACK_ZINDEX,
+          text,
         });
         return style;
       },
