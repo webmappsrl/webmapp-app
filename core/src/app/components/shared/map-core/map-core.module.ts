@@ -1,4 +1,5 @@
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {ButtonsModule} from './buttons/buttons.module';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {WmMapComponent} from './component/map.component';
@@ -18,7 +19,7 @@ const components = [WmMapComponent];
 
 @NgModule({
   declarations: [...components, ...directives],
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonsModule],
   providers: [BackgroundGeolocation],
   exports: [...components, ...directives],
 })

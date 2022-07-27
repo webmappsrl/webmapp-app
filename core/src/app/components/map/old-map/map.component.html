@@ -7,10 +7,7 @@
     'webmapp-map-fabcontainer-middle': btnposition == 'middle'
   }"
 >
-  <webmapp-btn-layer
-    class="webmapp-map-fab"
-    *ngIf="(registering && !static) || showLayer"
-  >
+  <webmapp-btn-layer class="webmapp-map-fab" *ngIf="(registering && !static) || showLayer">
   </webmapp-btn-layer>
 
   <webmapp-btn-register
@@ -24,7 +21,6 @@
     class="webmapp-map-fab"
     color="light"
     [state]="locationState"
-    *ngIf="!static && !hidePosition"
     (btn-click)="btnLocationClick()"
   >
   </webmapp-btn-geolocation>
@@ -32,7 +28,6 @@
   <webmapp-btn-orientation
     class="webmapp-map-fab"
     *ngIf="!static && !hidePosition"
-    [degrees]="mapDegrees"
     (click)="orientNorth()"
   >
   </webmapp-btn-orientation>
@@ -59,9 +54,6 @@
 
 <template #clusterContainer></template>
 
-<div
-  id="container"
-  style="width: 120px; height: 120px; position: absolute; left: -10000px"
->
+<div id="container" style="width: 120px; height: 120px; position: absolute; left: -10000px">
   <canvas id="canvas" width="100" height="100"></canvas>
 </div>

@@ -669,19 +669,17 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       this.touch.emit();
     });
 
-    if (!this.static) {
-      this._map.on('postrender', () => {
-        const degree = (this._map.getView().getRotation() / (2 * Math.PI)) * 360;
-        if (degree != this.mapDegrees) {
-          this.rotate.emit(degree);
-        }
-        this.mapDegrees = degree;
-      });
-
-      if (this.registering) {
-        this.locationState = EMapLocationState.FOLLOW;
-        this._centerMapToLocation();
+    this._map.on('postrender', () => {
+      const degree = (this._map.getView().getRotation() / (2 * Math.PI)) * 360;
+      if (degree != this.mapDegrees) {
+        this.rotate.emit(degree);
       }
+      this.mapDegrees = degree;
+    });
+
+    if (this.registering) {
+      this.locationState = EMapLocationState.FOLLOW;
+      this._centerMapToLocation();
     }
   }
 
