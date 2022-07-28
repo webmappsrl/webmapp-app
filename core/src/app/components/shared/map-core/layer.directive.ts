@@ -48,17 +48,14 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
 
   @Input() set layer(l: ILAYER) {
     this._currentLayer = l;
-    this._updateFlagsVisibilyByCurrentLayer();
-    setTimeout(() => {
-      if (l != null && l.bbox != null) {
-        this.fitView(l.bbox);
-      } else if (this.conf != null && this.conf.bbox != null) {
-        this.fitView(this.conf.bbox);
-      }
-    }, 50);
+    if (l != null && l.bbox != null) {
+      this.fitView(l.bbox);
+    } else if (this.conf != null && this.conf.bbox != null) {
+      this.fitView(this.conf.bbox);
+    }
   }
 
-  ngOnChanges(_: SimpleChanges): void {
+  ngOnChanges(c: SimpleChanges): void {
     if (this.map != null && this.conf != null && this._mapIsInit == false) {
       this._initLayer(this.conf);
       if (this.conf.start_end_icons_show === true && this.conf.start_end_icons_min_zoom != null) {
@@ -74,9 +71,24 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             }
           }
         });
+        if (c.layer != null && c.layer.firstChange && c.map != null && c.map.firstChange) {
+          setTimeout(() => {
+            const l = c.layer.currentValue;
+            if (l != null && l.bbox != null) {
+              this.fitView(l.bbox);
+            } else if (this.conf != null && this.conf.bbox != null) {
+              this.fitView(this.conf.bbox);
+            }
+          }, 200);
+        }
+      }
+
+      if (this.map != null && c.layer != null) {
+        this._updateFlagsVisibilyByCurrentLayer();
       }
       this._mapIsInit = true;
     }
+
     if (this._dataLayers != null) {
       this._updateMap();
     }
@@ -133,7 +145,9 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       });
       this._flagsLayer.setVisible(false);
       this.map.addLayer(this._flagsLayer);
-      this._updateFlagsVisibilyByCurrentLayer();
+      setTimeout(() => {
+        this._updateFlagsVisibilyByCurrentLayer();
+      }, 100);
     }
 
     this.map.updateSize();
@@ -222,7 +236,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       this._styleJson = styleJson;
       for (const i in styleJson.sources) {
         layers.push(await this._initializeDataLayer(styleJson.sources[i], map));
-        console.log(layers);
         this.map.addLayer(layers[layers.length - 1]);
       }
     }
