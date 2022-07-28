@@ -403,6 +403,8 @@
         "gallery": "Gallery"
       },
       "detail": {
+        "from": "Partenza",
+        "to": "Arrivo",
         "ascent": "Dislivello +",
         "descent": "Dislivello -",
         "distance": "Lunghezza",

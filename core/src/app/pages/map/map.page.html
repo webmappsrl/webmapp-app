@@ -19,7 +19,10 @@
     ></wm-map>
   </div>
   <div class="wm-fab-buttons">
-    <wm-btn-center-position (click)="setCurrentPosition$.next($event)"></wm-btn-center-position>
+    <wm-btn-center-position
+      *ngIf="false"
+      (click)="setCurrentPosition$.next($event)"
+    ></wm-btn-center-position>
   </div>
 
   <ng-container *ngIf="currentPoi$|async as currentPoi">

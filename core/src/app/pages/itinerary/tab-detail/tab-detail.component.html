@@ -4,6 +4,20 @@
 ></webmapp-slope-chart>
 
 <ion-list *ngIf="(currentTrackProperties$|async) as properties">
+  <ion-item *ngIf="properties?.from as from">
+    <i class="icon-outline-pin webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label"
+      >{{ "pages.route.detail.from" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{from}}</ion-note>
+  </ion-item>
+  <ion-item *ngIf="properties?.to as to">
+    <i class="icon-outline-flag webmapp-pageroute-tabdetail-icon"> </i>
+    <ion-label start class="webmapp-pageroute-tabdetail-label"
+      >{{ "pages.route.detail.to" | translate }}
+    </ion-label>
+    <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{to}}</ion-note>
+  </ion-item>
   <ion-item *ngIf="properties.cai_scale || properties.difficulty">
     <i class="icon-outline-difficulty webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"

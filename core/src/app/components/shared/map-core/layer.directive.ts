@@ -14,10 +14,8 @@ import Geometry from 'ol/geom/Geometry';
 import Layer from 'ol/layer/Layer';
 import MVT from 'ol/format/MVT';
 import Map from 'ol/Map';
-import Point from 'ol/geom/Point';
-import Stroke from 'ol/style/Stroke';
 import StrokeStyle from 'ol/style/Stroke';
-import Style from 'ol/style/Style';
+import Style, {StyleLike} from 'ol/style/Style';
 import {TRACK_ZINDEX} from './zIndex';
 import Text from 'ol/style/Text';
 import VectorLayer from 'ol/layer/Vector';
@@ -50,11 +48,14 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
 
   @Input() set layer(l: ILAYER) {
     this._currentLayer = l;
-    if (l != null && l.bbox != null) {
-      this.fitView(l.bbox);
-    } else if (this.conf != null && this.conf.bbox != null) {
-      this.fitView(this.conf.bbox);
-    }
+    this._updateFlagsVisibilyByCurrentLayer();
+    setTimeout(() => {
+      if (l != null && l.bbox != null) {
+        this.fitView(l.bbox);
+      } else if (this.conf != null && this.conf.bbox != null) {
+        this.fitView(this.conf.bbox);
+      }
+    }, 50);
   }
 
   ngOnChanges(_: SimpleChanges): void {
@@ -111,14 +112,17 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
         this.trackSelectedFromLayerEVT.emit(clickedFeatureId);
       }
     });
-
-    if (map.tracks) {
+    if (map.start_end_icons_show && map.tracks) {
       map.tracks.forEach(track => {
         if (track.start != null && track.start.length === 2) {
-          this._flagFeatures.push(this._createFeature(startIconHtml, track.start));
+          const startFeature = this._createFeature(startIconHtml, track.start);
+          startFeature.setProperties({...track});
+          this._flagFeatures.push(startFeature);
         }
         if (track.end != null && track.end.length === 2) {
-          this._flagFeatures.push(this._createFeature(endIconHtml, track.end));
+          const endFeature = this._createFeature(endIconHtml, track.end);
+          endFeature.setProperties({...track});
+          this._flagFeatures.push(endFeature);
         }
       });
       this._flagsLayer = new VectorLayer({
@@ -129,6 +133,7 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       });
       this._flagsLayer.setVisible(false);
       this.map.addLayer(this._flagsLayer);
+      this._updateFlagsVisibilyByCurrentLayer();
     }
 
     this.map.updateSize();
@@ -160,19 +165,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
         const properties = feature.getProperties();
         const layers: number[] = JSON.parse(properties.layers);
         let strokeStyle: StrokeStyle = new StrokeStyle();
-        if (this._currentLayer != null) {
-          const currentIDLayer = +this._currentLayer.id;
-          if (layers.indexOf(currentIDLayer) >= 0) {
-            strokeStyle.setColor(this._currentLayer.style.color ?? this._defaultFeatureColor);
-          } else {
-            strokeStyle.setColor('rgba(0,0,0,0)');
-          }
-        } else {
-          const layerId = +layers[0];
-          strokeStyle.setColor(this._getColorFromLayer(layerId));
-        }
-        this._handlingStrokeStyleWidth(strokeStyle, map);
-
         let text = new Text({
           text: properties.ref != null && map.ref_on_track_show ? properties.ref : '',
           font: 'bold 12px "Open Sans", "Arial Unicode MS", "sans-serif"',
@@ -186,6 +178,20 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             color: this._defaultFeatureColor,
           }),
         });
+        if (this._currentLayer != null) {
+          const currentIDLayer = +this._currentLayer.id;
+          if (layers.indexOf(currentIDLayer) >= 0) {
+            strokeStyle.setColor(this._currentLayer.style.color ?? this._defaultFeatureColor);
+          } else {
+            strokeStyle.setColor('rgba(0,0,0,0)');
+            text.setText('');
+          }
+        } else {
+          const layerId = +layers[0];
+          strokeStyle.setColor(this._getColorFromLayer(layerId));
+        }
+        this._handlingStrokeStyleWidth(strokeStyle, map);
+
         let style = new Style({
           stroke: strokeStyle,
           zIndex: TRACK_ZINDEX,
@@ -241,6 +247,23 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     interactions.push(this._selectInteraction);
 
     return interactions;
+  }
+
+  private _updateFlagsVisibilyByCurrentLayer(): void {
+    this._flagFeatures.forEach(feature => {
+      const properties = feature.getProperties();
+      if (
+        this._currentLayer == null ||
+        (properties != null &&
+          properties.layers != null &&
+          properties.layers.indexOf(this._currentLayer.id) > -1 &&
+          this._currentLayer != null)
+      ) {
+        (feature.getStyle() as Style).getImage().setOpacity(1);
+      } else {
+        (feature.getStyle() as Style).getImage().setOpacity(0);
+      }
+    });
   }
 
   private _updateMap(): void {
