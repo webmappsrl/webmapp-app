@@ -1,6 +1,8 @@
 gulp build -i fumaiolosentieri -g 2
 gulp build -i webmapp -g 3
 gulp build -i pec -g 4
-gulp build -i parcomaremma -g 10
 gulp build -i ucvs -g 17
+gulp build -i gavorrano -g 19
 gulp build -i sicai -g 20
+
+gulp build -i parcomaremma -g 10
