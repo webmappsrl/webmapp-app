@@ -3,6 +3,7 @@ import Feature, {FeatureLike} from 'ol/Feature';
 import {ILAYER, IMAP} from 'src/app/types/config';
 import {Interaction, defaults as defaultInteractions} from 'ol/interaction.js';
 import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
+import Style, {StyleLike} from 'ol/style/Style';
 import {endIconHtml, startIconHtml} from './icons';
 
 import {Collection} from 'ol';
@@ -15,7 +16,6 @@ import Layer from 'ol/layer/Layer';
 import MVT from 'ol/format/MVT';
 import Map from 'ol/Map';
 import StrokeStyle from 'ol/style/Stroke';
-import Style, {StyleLike} from 'ol/style/Style';
 import {TRACK_ZINDEX} from './zIndex';
 import Text from 'ol/style/Text';
 import VectorLayer from 'ol/layer/Vector';
@@ -181,13 +181,13 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
         let strokeStyle: StrokeStyle = new StrokeStyle();
         let text = new Text({
           text: properties.ref != null && map.ref_on_track_show ? properties.ref : '',
-          font: 'bold 12px "Open Sans", "Arial Unicode MS", "sans-serif"',
           placement: 'line',
           offsetY: 20,
           rotateWithView: true,
           overflow: true,
+          font: '12px "Roboto", "Arial Unicode MS", "sans-serif"',
           maxAngle: Math.PI / 16,
-
+          textBaseline: 'hanging',
           fill: new Fill({
             color: this._defaultFeatureColor,
           }),
