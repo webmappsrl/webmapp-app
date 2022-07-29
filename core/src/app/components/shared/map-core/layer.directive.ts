@@ -83,10 +83,10 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
         }
       }
 
-      if (this.map != null && c.layer != null) {
-        this._updateFlagsVisibilyByCurrentLayer();
-      }
       this._mapIsInit = true;
+    }
+    if (this.map != null && c.layer != null) {
+      this._updateFlagsVisibilyByCurrentLayer();
     }
 
     if (this._dataLayers != null) {
