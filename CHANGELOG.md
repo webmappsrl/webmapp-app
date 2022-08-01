@@ -10,6 +10,15 @@
 
 ---
 
+**12.1.16**
+
+- (fine tuning): stroke width delle tracks ora il minimo è rappresentato da 1 e il massimo da 8
+- (fix): aggiunto l'attribution sulla mappa generale e su quella percorso
+- (fix): aggiunto lo scale sulla mappa generale e su quella percorso
+- (fix): aggiunto un alert di conferma sull' eliminazione delle tracce scaricate
+
+---
+
 **12.1.15**
 
 - (fine tuning): REF
