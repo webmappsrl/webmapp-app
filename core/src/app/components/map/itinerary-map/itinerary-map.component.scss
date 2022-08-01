@@ -37,7 +37,8 @@
 }
 .webmapp-map-attribution-container {
   position: absolute;
-  top: 56px;
+  top: calc(56px + constant(safe-area-inset-top));
+  top: calc(56px + env(safe-area-inset-top));
   left: 0;
   display: flex;
   justify-content: center;
@@ -59,15 +60,15 @@
 }
 
 .top {
-  top: 0 !important;
+  top: calc(env(safe-area-inset-top));
 }
 
 .webmapp-map-scale-line-container {
   position: absolute;
-  top: 115px;
+  top: calc(115px + env(safe-area-inset-top));
   left: 0;
   transition: left 500ms;
 }
 .top-scale {
-  top: 60px !important;
+  top: calc(60px + env(safe-area-inset-top));
 }
