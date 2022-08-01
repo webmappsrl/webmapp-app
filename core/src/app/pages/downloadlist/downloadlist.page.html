@@ -1,7 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-icon name="chevron-back" [routerLink]="['/profile/profile-data']" class="webmapp-backbutton webmapp-backbutton-chevron">
+      <ion-icon
+        name="chevron-back"
+        [routerLink]="['/profile/profile-data']"
+        class="webmapp-backbutton webmapp-backbutton-chevron"
+      >
       </ion-icon>
     </ion-buttons>
     <ion-title mode="md" class="webmapp-downloadlist-header-toolbar-title">
@@ -12,39 +16,50 @@
 
 <ion-content>
   <div class="webmapp-downloadlist-command-container">
-    <ion-label class="webmapp-downloadlist-command" [hidden]="isSelectedActive || !tracks?.length"
-      (click)="isSelectedActive = !isSelectedActive">{{ 'pages.downloadlist.select' | translate }}</ion-label>
-    <ion-label class="webmapp-downloadlist-command webmapp-downloadlist-command-delete" [hidden]="!isSelectedActive" (click)="deleteSelected()">{{
-      'pages.downloadlist.deleteselected' | translate }}</ion-label>
-    <ion-label class="webmapp-downloadlist-command" [hidden]="!isSelectedActive"
-      (click)="isSelectedActive = !isSelectedActive">{{ 'pages.downloadlist.cancel' | translate }}</ion-label>
+    <ion-label
+      class="webmapp-downloadlist-command"
+      [hidden]="isSelectedActive || !tracks?.length"
+      (click)="isSelectedActive = !isSelectedActive"
+      >{{ 'pages.downloadlist.select' | translate }}</ion-label
+    >
+    <ion-label
+      class="webmapp-downloadlist-command webmapp-downloadlist-command-delete"
+      [hidden]="!isSelectedActive"
+      (click)="deleteSelected()"
+      >{{ 'pages.downloadlist.deleteselected' | translate }}</ion-label
+    >
+    <ion-label
+      class="webmapp-downloadlist-command"
+      [hidden]="!isSelectedActive"
+      (click)="isSelectedActive = !isSelectedActive"
+      >{{ 'pages.downloadlist.cancel' | translate }}</ion-label
+    >
   </div>
-  <!-- <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher> -->
 
   <div class="webmapp-downloadlist-nodata" *ngIf="!tracks || !tracks.length">
     <ion-label> {{'pages.downloadlist.nodata' | translate}}</ion-label>
     <ion-label> {{ 'pages.downloadlist.nodata2' | translate }}</ion-label>
-    <ion-button class="webmapp-downloadlist-nodata-button" (click)="gotoMap()">{{ 'pages.downloadlist.nodatabtn' | translate }}</ion-button>
+    <ion-button class="webmapp-downloadlist-nodata-button" (click)="gotoMap()"
+      >{{ 'pages.downloadlist.nodatabtn' | translate }}</ion-button
+    >
   </div>
 
   <ion-list>
     <div *ngFor="let track of tracks" class="webmapp-downloadlist-list-container">
-      <ion-checkbox class="webmapp-downloadlist-list-checkbox" [hidden]="!isSelectedActive"
-        (ionChange)="select($event,track)"></ion-checkbox>
-      <webmapp-card-track [ngClass]="{'webmapp-downloadlist-list-card-selecion':isSelectedActive}"
-        class="webmapp-downloadlist-list-card" [isDownload]="true" [track]="track" (open)="open($event)"
-        (remove)="remove($event)">
+      <ion-checkbox
+        class="webmapp-downloadlist-list-checkbox"
+        [hidden]="!isSelectedActive"
+        (ionChange)="select($event,track)"
+      ></ion-checkbox>
+      <webmapp-card-track
+        [ngClass]="{'webmapp-downloadlist-list-card-selecion':isSelectedActive}"
+        class="webmapp-downloadlist-list-card"
+        [isDownload]="true"
+        [track]="track"
+        (open)="open($event)"
+        (remove)="remove($event)"
+      >
       </webmapp-card-track>
     </div>
   </ion-list>
-
-  <!-- <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Loading more data...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll> -->
-
 </ion-content>

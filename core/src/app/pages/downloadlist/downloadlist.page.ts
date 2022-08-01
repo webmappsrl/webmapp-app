@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import {Store} from '@ngrx/store';
+import {AlertController, NavController} from '@ionic/angular';
+import {Component, OnInit} from '@angular/core';
+import {IGeojsonFeature, IGeojsonFeatureDownloaded} from 'src/app/types/model';
+
 import {DownloadService} from 'src/app/services/download.service';
 import {IMapRootState} from 'src/app/store/map/map';
+import {Store} from '@ngrx/store';
 import {setCurrentTrackId} from 'src/app/store/map/map.actions';
-import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 
 @Component({
   selector: 'app-downloadlist',
@@ -22,6 +23,7 @@ export class DownloadlistPage implements OnInit {
     private _downloadService: DownloadService,
     private _navController: NavController,
     private _storeMap: Store<IMapRootState>,
+    private _alertCtrl: AlertController,
   ) {}
 
   async ngOnInit() {
@@ -29,7 +31,7 @@ export class DownloadlistPage implements OnInit {
     console.log(this.tracks);
   }
 
-  open(track: IGeojsonFeatureDownloaded) {
+  open(track: IGeojsonFeature) {
     const clickedFeatureId = track.properties.id;
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId, track}));
     this._navController.navigateForward('/itinerary');
@@ -43,18 +45,47 @@ export class DownloadlistPage implements OnInit {
     }
   }
 
-  deleteSelected() {
-    console.log('------- ~ DownloadlistPage ~ deleteSelected ~ deleteSelected', this.selected);
-    this.selected.forEach(track => {
-      this.remove(track);
+  async deleteSelected() {
+    const alert = await this._alertCtrl.create({
+      header: 'Attenzione',
+      message: 'Sei sicuro di voler eliminare le tracce?',
+      buttons: [
+        'Annulla',
+        {
+          text: 'Elimina',
+          handler: () => {
+            this.selected.forEach(track => {
+              this._remove(track);
+            });
+            this.isSelectedActive = false;
+          },
+        },
+      ],
     });
-    this.isSelectedActive = false;
+    alert.present().then();
   }
 
-  async remove(track: IGeojsonFeatureDownloaded) {
+  private async _remove(track: IGeojsonFeatureDownloaded) {
     await this._downloadService.removeDownload(track.properties.id);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
+  }
+
+  async remove(track: IGeojsonFeature) {
+    const alert = await this._alertCtrl.create({
+      header: 'Attenzione',
+      message: 'Sei sicuro di voler eliminare la traccia?',
+      buttons: [
+        'Annulla',
+        {
+          text: 'Elimina',
+          handler: () => {
+            this._remove(track as IGeojsonFeatureDownloaded);
+          },
+        },
+      ],
+    });
+    alert.present().then();
   }
 
   gotoMap() {
