@@ -104,8 +104,8 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
 
   private _handlingStrokeStyleWidth(strokeStyle: StrokeStyle, conf: IMAP): void {
     const currentZoom: number = this.map.getView().getZoom();
-    const minW = 0.1;
-    const maxW = 5;
+    const minW = 1;
+    const maxW = 8;
     const delta = (currentZoom - conf.minZoom) / (conf.maxZoom - conf.minZoom);
     const newWidth = minW + (maxW - minW) * delta;
     strokeStyle.setWidth(newWidth);
