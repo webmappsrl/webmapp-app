@@ -32,4 +32,10 @@ wm-map {
       }
     }
   }
+  .webmapp-map-scale-line-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: left 500ms;
+  }
 }

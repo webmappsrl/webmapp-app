@@ -31,7 +31,7 @@ import View, {FitOptions} from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
-
+import ScaleLineControl from 'ol/control/ScaleLine';
 import {
   DEF_LOCATION_ACCURACY,
   DEF_LOCATION_Z_INDEX,
@@ -173,6 +173,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   @ViewChild('clusterContainer', {read: ViewContainerRef}) clusterContainer;
   @ViewChild('map') mapDiv: ElementRef;
 
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
   public centerToTrack: boolean = false;
   currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
   public isLoggedIn: boolean = false;
@@ -628,7 +629,13 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     this._map = new Map({
       target: this.mapDiv.nativeElement,
       view: this._view,
-      controls: [],
+      controls: [
+        new ScaleLineControl({
+          units: 'metric',
+          minWidth: 50,
+          target: this.scaleLineContainer.nativeElement,
+        }),
+      ],
       interactions,
       moveTolerance: 3,
     });

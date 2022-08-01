@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../constants/map';
 import {Interaction, defaults as defaultInteracion} from 'ol/interaction';
 
@@ -8,6 +16,7 @@ import {Extent} from 'ol/extent';
 import {IMAP} from 'src/app/types/config';
 import Map from 'ol/Map';
 import {MapService} from 'src/app/services/base/map.service';
+import ScaleLineControl from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import {TilesService} from 'src/app/services/tiles.service';
 import View from 'ol/View';
@@ -23,24 +32,25 @@ import {initExtent} from '../constants';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class WmMapComponent {
+export class WmMapComponent implements AfterViewInit {
   private _centerExtent: Extent;
   private _defZoom: number;
   private _view: View;
 
   map: Map;
   map$: BehaviorSubject<Map> = new BehaviorSubject<Map | null>(null);
+  private _conf: IMAP;
 
   constructor(private _tilesService: TilesService, private _mapSvc: MapService) {}
 
   @Input() set conf(conf: IMAP) {
-    this._initMap(conf);
+    this._conf = conf;
   }
 
   @Input() set reset(_) {
     this._reset();
   }
-
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
   private _initDefaultInteractions(): Collection<Interaction> {
     return defaultInteractions({
       doubleClickZoom: true,
@@ -50,7 +60,9 @@ export class WmMapComponent {
       altShiftDragRotate: false,
     });
   }
-
+  ngAfterViewInit(): void {
+    this._initMap(this._conf);
+  }
   private _initMap(conf: IMAP): void {
     this._view = new View({
       zoom: conf.defZoom ?? 10,
@@ -72,7 +84,13 @@ export class WmMapComponent {
         attribution: false,
         rotate: false,
         zoom: false,
-      }),
+      }).extend([
+        new ScaleLineControl({
+          units: 'metric',
+          minWidth: 50,
+          target: this.scaleLineContainer.nativeElement,
+        }),
+      ]),
       interactions: this._initDefaultInteractions(),
       layers: [
         new TileLayer({
