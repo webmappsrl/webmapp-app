@@ -3,7 +3,7 @@
 **APP VERSION:**
 
 - PEC: **12.1.15**
-- SICAI: **12.1.15**
+- SICAI: **12.1.16**
 - UCVS:**12.1.15**
 - FUMAIOLOSENTIERI:**12.1.15**
 - GAVORRANO:**12.1.15**
