@@ -178,6 +178,7 @@ interface IMAP {
   ref_on_track_show: boolean;
   start_end_icons_min_zoom: number;
   start_end_icons_show: boolean;
+  record_track_show: boolean;
   tracks?: any[];
 }
 interface ILAYER {

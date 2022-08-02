@@ -3,19 +3,22 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../constants/map';
-import {Interaction, defaults as defaultInteracion} from 'ol/interaction';
+import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../../constants/map';
 
 import {BehaviorSubject} from 'rxjs';
 import Collection from 'ol/Collection';
 import {Extent} from 'ol/extent';
 import {IMAP} from 'src/app/types/config';
+import {Interaction} from 'ol/interaction';
 import Map from 'ol/Map';
 import {MapService} from 'src/app/services/base/map.service';
+import {Observable} from 'ol';
 import ScaleLineControl from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import {TilesService} from 'src/app/services/tiles.service';
@@ -23,7 +26,7 @@ import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
-import {initExtent} from '../constants';
+import {initExtent} from '../../constants';
 
 @Component({
   selector: 'wm-map',
@@ -34,23 +37,36 @@ import {initExtent} from '../constants';
 })
 export class WmMapComponent implements AfterViewInit {
   private _centerExtent: Extent;
+  private _conf: IMAP;
   private _defZoom: number;
   private _view: View;
 
+  @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+
+  isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   map: Map;
   map$: BehaviorSubject<Map> = new BehaviorSubject<Map | null>(null);
-  private _conf: IMAP;
+  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private _tilesService: TilesService, private _mapSvc: MapService) {}
 
   @Input() set conf(conf: IMAP) {
     this._conf = conf;
+    if (conf.record_track_show) {
+      this.isTrackRecordingEnable$.next(true);
+    }
   }
 
   @Input() set reset(_) {
     this._reset();
   }
-  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+
+  ngAfterViewInit(): void {
+    this._initMap(this._conf);
+  }
+  @Input() isLoggedIn: boolean;
+
   private _initDefaultInteractions(): Collection<Interaction> {
     return defaultInteractions({
       doubleClickZoom: true,
@@ -60,9 +76,7 @@ export class WmMapComponent implements AfterViewInit {
       altShiftDragRotate: false,
     });
   }
-  ngAfterViewInit(): void {
-    this._initMap(this._conf);
-  }
+
   private _initMap(conf: IMAP): void {
     this._view = new View({
       zoom: conf.defZoom ?? 10,

@@ -5,7 +5,7 @@ import {
   BackgroundGeolocationLocationProvider,
   BackgroundGeolocationResponse,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
-import {BehaviorSubject, Observable, Subscription, from} from 'rxjs';
+import {BehaviorSubject, Subscription, from} from 'rxjs';
 import {Directive, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 
 import {Feature} from 'ol';

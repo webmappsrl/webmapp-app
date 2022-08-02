@@ -13,4 +13,9 @@
     </a>
   </div>
 </div>
-<ng-content> </ng-content>
+<div class="wm-fab-buttons">
+  <wm-btn-track-recording
+    *ngIf="isTrackRecordingEnable$|async"
+    (start-recording)="startRecording$.next($event)"
+  ></wm-btn-track-recording>
+</div>

@@ -1,27 +1,28 @@
-import {Component} from '@angular/core';
-import {SplashScreen} from '@capacitor/splash-screen';
 import {NavController, Platform} from '@ionic/angular';
-import {LanguagesService} from './services/languages.service';
-import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
-import {environment} from 'src/environments/environment';
-import {DownloadService} from './services/download.service';
-import {ILocation} from './types/location';
+
+import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
+import {Component} from '@angular/core';
 import {DEF_MAP_LOCATION_ZOOM} from './constants/map';
-import {Router} from '@angular/router';
-import {StatusService} from './services/status.service';
-import {SaveService} from './services/save.service';
+import {DownloadService} from './services/download.service';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
+import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {IConfRootState} from './store/conf/conf.reducer';
 import {IElasticAllRootState} from './store/elastic/elastic.reducer';
-import {Store} from '@ngrx/store';
-import {loadConf} from './store/conf/conf.actions';
-import {allElastic} from './store/elastic/elastic.actions';
-import {Observable} from 'rxjs';
-import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
-import {mapCurrentTrack} from './store/map/map.selector';
+import {ILocation} from './types/location';
 import {IMapRootState} from './store/map/map';
-import {filter} from 'rxjs/operators';
 import {INetworkRootState} from './store/network/netwotk.reducer';
+import {LanguagesService} from './services/languages.service';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
+import {SaveService} from './services/save.service';
+import {SplashScreen} from '@capacitor/splash-screen';
+import {StatusService} from './services/status.service';
+import {Store} from '@ngrx/store';
+import {allElastic} from './store/elastic/elastic.actions';
+import {environment} from 'src/environments/environment';
+import {filter} from 'rxjs/operators';
+import {loadConf} from './store/conf/conf.actions';
+import {mapCurrentTrack} from './store/map/map.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 
 @Component({

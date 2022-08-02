@@ -1,14 +1,9 @@
-<ion-fab-button
-  
-  (click)="presentPopOver($event)"
-  size="small"
-  class="webmapp-btn-register-fab"
->
+<ion-fab-button (click)="presentPopOver($event)" size="small" class="webmapp-btn-register-fab">
   <i
-    class=" webmapp-btn-register-click-icon 
+    class="webmapp-pagemap-recordingbtn-icon
       {{isPopOverPresented
-        ? 'webmapp-icon-close-outline'
-        : 'webmapp-icon-recording-outline'}}
+        ? 'icon-outline-close'
+        : 'icon-outline-recording'}}
     "
   ></i>
 </ion-fab-button>

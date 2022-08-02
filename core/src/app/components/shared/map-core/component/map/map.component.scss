@@ -38,4 +38,10 @@ wm-map {
     left: 0;
     transition: left 500ms;
   }
+
+  .wm-fab-buttons {
+    position: absolute;
+    right: 22px;
+    bottom: 30px;
+  }
 }
