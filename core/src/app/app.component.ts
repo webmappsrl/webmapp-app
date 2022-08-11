@@ -1,4 +1,5 @@
 import {NavController, Platform} from '@ionic/angular';
+import {filter, take} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
 import {Component} from '@angular/core';
@@ -19,8 +20,8 @@ import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusService} from './services/status.service';
 import {Store} from '@ngrx/store';
 import {allElastic} from './store/elastic/elastic.actions';
+import {confMAP} from './store/conf/conf.selector';
 import {environment} from 'src/environments/environment';
-import {filter} from 'rxjs/operators';
 import {loadConf} from './store/conf/conf.actions';
 import {loadPois} from './store/pois/pois.actions';
 import {mapCurrentTrack} from './store/map/map.selector';
@@ -54,10 +55,20 @@ export class AppComponent {
   ) {
     this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
-    this._storeConf.dispatch(loadPois());
     this._storeElasticAll.dispatch(allElastic());
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
+    this._storeConf
+      .select(confMAP)
+      .pipe(
+        filter(p => p != null),
+        take(2),
+      )
+      .subscribe(c => {
+        if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
+          this._storeConf.dispatch(loadPois());
+        }
+      });
     this._platform.ready().then(
       () => {
         this.saveGeneratedContentsNowAndInterval();
