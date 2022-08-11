@@ -1,16 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
-import { PoiPageRoutingModule } from './poi-routing.module';
-
-import { PoiPage } from './poi.page';
-import { TranslateModule } from '@ngx-translate/core';
-import { PipeModule } from 'src/app/pipes/pipe.module';
-import { MapModule } from 'src/app/components/map/map.module';
-import { SharedModule } from 'src/app/components/shared/shared.module';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {IonicModule} from '@ionic/angular';
+import {MapModule} from 'src/app/components/map/map.module';
+import {NgModule} from '@angular/core';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {PoiPage} from './poi.page';
+import {PoiPageRoutingModule} from './poi-routing.module';
+import {SharedModule} from 'src/app/components/shared/shared.module';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -21,8 +18,8 @@ import { SharedModule } from 'src/app/components/shared/shared.module';
     TranslateModule,
     PipeModule,
     MapModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [PoiPage]
+  declarations: [PoiPage],
 })
 export class PoiPageModule {}

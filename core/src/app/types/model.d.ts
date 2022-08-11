@@ -133,6 +133,7 @@ export interface IGeojsonPoiDetailed extends IGeojsonPoi {
     phone?: string;
     address?: string;
     url?: string;
+    audio?: {[lang: string]: string};
   };
 }
 export interface IGeojsonClusterApiResponse {

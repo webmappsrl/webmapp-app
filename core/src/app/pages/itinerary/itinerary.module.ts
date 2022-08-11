@@ -16,7 +16,6 @@ import {TabHowtoComponent} from './tab-howto/tab-howto.component';
 import {TabPoiComponent} from './tab-poi/tab-poi.component';
 import {TabViabilityComponent} from './tab-viability/tab-viability.component';
 import {TabWalkableComponent} from './tab-walkable/tab-walkable.component';
-import {TrackAudioComponent} from './track-audio/track-audio.component';
 import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
@@ -41,7 +40,6 @@ import {TranslateModule} from '@ngx-translate/core';
     SlopeChartComponent,
     DownloadPanelComponent,
     FavBtnComponent,
-    TrackAudioComponent,
   ],
 })
 export class ItineraryPageModule {}

@@ -13,6 +13,7 @@ import {NgModule} from '@angular/core';
 import {PipeModule} from 'src/app/pipes/pipe.module';
 import {RecordingBtnComponent} from './recording-btn/recording-btn.component';
 import {SearchBarComponent} from './search-bar/search-bar.component';
+import {TrackAudioComponent} from './track-audio/track-audio.component';
 import {TranslateModule} from '@ngx-translate/core';
 
 const components = [
@@ -25,6 +26,7 @@ const components = [
   FormFieldComponent,
   SearchBarComponent,
   BtnFilterComponent,
+  TrackAudioComponent,
 ];
 @NgModule({
   declarations: components,

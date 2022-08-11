@@ -97,6 +97,9 @@
           class="webmapp-pagepoi-info-body-description"
           [innerHTML]="properties.description | wmtrans"
         ></div>
+        <ng-container *ngIf="properties.audio">
+          <webmapp-track-audio [audio]="properties.audio"></webmapp-track-audio>
+        </ng-container>
 
         <ion-modal #modal trigger="open-modal" [isOpen]="imagePoiToggle$|async">
           <ng-template>
