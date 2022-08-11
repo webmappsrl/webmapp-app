@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { EMapLocationState } from 'src/app/types/emap-location-state.enum';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+
+import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
+import {GeolocationService} from 'src/app/services/geolocation.service';
 
 @Component({
   selector: 'webmapp-btn-geolocation',
@@ -15,18 +16,17 @@ export class BtnGeolocationComponent implements OnInit {
       case EMapLocationState.OFF:
       case EMapLocationState.ACTIVE:
       default:
-        this.iconClass = 'webmapp-icon-nav-outline';
+        this.iconClass = 'icon-outline-nav';
         break;
       case EMapLocationState.FOLLOW:
-        this.iconClass = 'webmapp-icon-nav';
+        this.iconClass = 'icon-fill-nav';
         break;
     }
   }
-  @Output('btn-click') btnClick: EventEmitter<MouseEvent> =
-    new EventEmitter<MouseEvent>();
+  @Output('btn-click') btnClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
   public state: EMapLocationState = EMapLocationState.OFF;
-  public iconClass: string = 'webmapp-icon-nav-outline';
+  public iconClass: string = 'icon-outline-nav';
 
   constructor(private geolocationService: GeolocationService) {}
 

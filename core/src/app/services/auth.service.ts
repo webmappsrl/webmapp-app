@@ -1,15 +1,16 @@
-import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import {BehaviorSubject, ReplaySubject} from 'rxjs';
 import {
-  GEOHUB_PROTOCOL,
   GEOHUB_DOMAIN,
   GEOHUB_LOGIN_ENDPOINT,
   GEOHUB_LOGOUT_ENDPOINT,
+  GEOHUB_PROTOCOL,
   GEOHUB_REGISTER_ENDPOINT,
 } from '../constants/geohub';
-import { CommunicationService } from './base/communication.service';
-import { StorageService } from './base/storage.service';
+import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+
+import {CommunicationService} from './base/communication.service';
+import {Injectable} from '@angular/core';
+import {StorageService} from './base/storage.service';
 import config from '../../../config.json';
 
 @Injectable({
@@ -21,11 +22,11 @@ export class AuthService {
 
   constructor(
     private _communicationService: CommunicationService,
-    private _storageService: StorageService
+    private _storageService: StorageService,
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
 
-    this._onStateChange.subscribe((x) => {
+    this._onStateChange.subscribe(x => {
       this._communicationService.setToken(x?.token);
     });
 
@@ -33,17 +34,21 @@ export class AuthService {
     this._storageService.getUser().then(
       (user: IUser) => {
         this._userData = user;
+        if (user != null) {
+          this.isLoggedIn$.next(true);
+        }
         this._onStateChange.next(this._userData);
       },
-      (err) => {
+      err => {
         console.warn(err);
-      }
+      },
     );
   }
 
   get isLoggedIn(): boolean {
     return typeof this._userData !== 'undefined';
   }
+  isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   get userId(): number {
     return this._userData?.id;
@@ -65,12 +70,7 @@ export class AuthService {
     return this._onStateChange;
   }
 
-  async register(
-    name: string,
-    email: string,
-    password: string,
-    cf: string
-  ): Promise<boolean> {
+  async register(name: string, email: string, password: string, cf: string): Promise<boolean> {
     try {
       const response: IGeohubApiLogin = await this._communicationService
         .post(
@@ -87,7 +87,7 @@ export class AuthService {
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/json',
             }),
-          }
+          },
         )
         .toPromise();
       this._saveUser(response);
@@ -122,7 +122,7 @@ export class AuthService {
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/json',
             }),
-          }
+          },
         )
         .subscribe(
           (response: IGeohubApiLogin) => {
@@ -134,7 +134,7 @@ export class AuthService {
             this._userData = undefined;
             this._onStateChange.next(this._userData);
             reject(err);
-          }
+          },
         );
     });
   }
@@ -147,26 +147,22 @@ export class AuthService {
     this._storageService.removeUser();
     this._userData = undefined;
     this._onStateChange.next(this._userData);
-
+    this.isLoggedIn$.next(false);
     if (token) {
       this._communicationService
-        .post(
-          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGOUT_ENDPOINT,
-          undefined,
-          {
-            headers: new HttpHeaders({
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              'Content-Type': 'application/json',
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              Authorization: 'Bearer ' + token,
-            }),
-          }
-        )
+        .post(GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGOUT_ENDPOINT, undefined, {
+          headers: new HttpHeaders({
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'Content-Type': 'application/json',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            Authorization: 'Bearer ' + token,
+          }),
+        })
         .subscribe(
           () => {},
           (err: HttpErrorResponse) => {
             console.warn(err);
-          }
+          },
         );
     }
   }

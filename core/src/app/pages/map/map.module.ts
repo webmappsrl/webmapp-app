@@ -8,6 +8,7 @@ import {MapPageRoutingModule} from './map-routing.module';
 import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
 import {NgModule} from '@angular/core';
 import {PipeModule} from 'src/app/pipes/pipe.module';
+import {RegisterPageModule} from '../register/register.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {WmMapModule} from 'src/app/components/shared/map-core/map-core.module';
@@ -24,6 +25,7 @@ import {WmMapModule} from 'src/app/components/shared/map-core/map-core.module';
     SharedModule,
     WmMapModule,
     ButtonsModule,
+    RegisterPageModule,
   ],
   declarations: [MapPage, MapTrackCardComponent],
 })

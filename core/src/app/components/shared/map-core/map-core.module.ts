@@ -2,11 +2,12 @@ import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geoloca
 import {ButtonsModule} from './buttons/buttons.module';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {WmMapComponent} from './component/map.component';
+import {WmMapComponent} from './component/map/map.component';
 import {WmMapDirective} from './map.directive';
 import {WmMapLayerDirective} from './layer.directive';
 import {WmMapPoisDirective} from './pois.directive';
 import {WmMapPositionDirective} from './position.directive';
+import {WmMapRelatedPoisDirective} from './related-pois.directive';
 import {WmMapTrackDirective} from './track.directive';
 const directives = [
   WmMapDirective,
@@ -14,6 +15,7 @@ const directives = [
   WmMapTrackDirective,
   WmMapLayerDirective,
   WmMapPoisDirective,
+  WmMapRelatedPoisDirective,
 ];
 const components = [WmMapComponent];
 

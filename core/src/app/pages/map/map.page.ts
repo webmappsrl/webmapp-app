@@ -11,6 +11,7 @@ import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {map, tap, withLatestFrom} from 'rxjs/operators';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 
+import {AuthService} from 'src/app/services/auth.service';
 import {Browser} from '@capacitor/browser';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {IGeojsonPoiDetailed} from 'src/app/types/model';
@@ -57,8 +58,12 @@ export class MapPage {
   };
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  constructor(private _store: Store, private _deviceService: DeviceService) {
+  isLoggedIn$: Observable<boolean>;
+  constructor(
+    private _store: Store,
+    private _deviceService: DeviceService,
+    private _authSvc: AuthService,
+  ) {
     this.sliderOptions = {
       initialSlide: 0,
       speed: 400,
@@ -67,6 +72,7 @@ export class MapPage {
       slidesOffsetBefore: 15,
       slidesPerView: this._deviceService.width / 235,
     };
+    this.isLoggedIn$ = this._authSvc.isLoggedIn$;
   }
 
   goToTrack(id: number) {
