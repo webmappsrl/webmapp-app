@@ -106,6 +106,12 @@
         ></webmapp-tab-detail>
         <webmapp-tab-howto class="webmapp-route-tab"></webmapp-tab-howto>
         <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
+        <ng-container *ngIf="(currentTrackProperties$|async)?.audio">
+          <ion-title>Descrizione Audio</ion-title>
+          <webmapp-track-audio
+            [audio]="(currentTrackProperties$|async)?.audio"
+          ></webmapp-track-audio>
+        </ng-container>
       </ion-content>
     </ion-card>
   </div>

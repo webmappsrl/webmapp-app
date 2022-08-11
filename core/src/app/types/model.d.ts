@@ -1,4 +1,4 @@
-import { EGeojsonGeometryTypes } from './egeojson-geometry-types.enum';
+import {EGeojsonGeometryTypes} from './egeojson-geometry-types.enum';
 
 export type IPoint = [number, number, number?];
 export type ILineString = Array<IPoint>;
@@ -11,12 +11,7 @@ export type IMultiPolygon = Array<Array<Array<IPoint>>>;
  */
 export interface IGeojsonGeometry {
   type: EGeojsonGeometryTypes;
-  coordinates:
-  | IPoint
-  | ILineString
-  | IMultiLineString
-  | IPolygon
-  | IMultiPolygon;
+  coordinates: IPoint | ILineString | IMultiLineString | IPolygon | IMultiPolygon;
 }
 
 export interface iLocalString {
@@ -42,7 +37,7 @@ export interface IGeojsonProperties {
   source?: string;
   distance_comp?: number;
   user_id?: number;
-  audio?: string;
+  audio?: {[lang: string]: string};
   distance?: number;
   ascent?: number;
   descent?: number;
@@ -80,8 +75,8 @@ export interface IGeojsonFeature {
   geometry: IGeojsonGeometry;
 }
 
-export interface IGeojsonFeatureDownloaded extends IGeojsonFeature{
-  size:number;
+export interface IGeojsonFeatureDownloaded extends IGeojsonFeature {
+  size: number;
 }
 
 export interface IWmImage {
@@ -123,7 +118,7 @@ export interface IGeojsonPoi extends IGeojsonGeneric {
     id: number; // Id del poi
     image: string; // url image
   };
-  isSmall?: boolean
+  isSmall?: boolean;
 }
 
 export interface IGeojsonPoiDetailed extends IGeojsonPoi {
@@ -145,14 +140,14 @@ export interface IGeojsonClusterApiResponse {
 }
 
 export interface WhereTaxonomy {
-  id: 9,
-  created_at: Date,
-  updated_at: Date
-  name: iLocalString,
-  import_method: string,
-  source_id: number,
-  admin_level: number,
-  description: string,
+  id: 9;
+  created_at: Date;
+  updated_at: Date;
+  name: iLocalString;
+  import_method: string;
+  source_id: number;
+  admin_level: number;
+  description: string;
   // excerpt: null,
   // source: null,
   // user_id: null,
