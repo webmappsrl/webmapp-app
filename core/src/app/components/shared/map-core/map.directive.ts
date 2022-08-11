@@ -1,11 +1,12 @@
+import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from 'src/app/constants/map';
 import {Directive, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import View, {FitOptions} from 'ol/View';
+
+import Map from 'ol/Map';
 import Point from 'ol/geom/Point';
 import TileLayer from 'ol/layer/Tile';
-import Map from 'ol/Map';
-import XYZ from 'ol/source/XYZ';
-import View, {FitOptions} from 'ol/View';
-import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from 'src/app/constants/map';
 import {TilesService} from 'src/app/services/tiles.service';
+import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
 import {defaults as defaultInteracion} from 'ol/interaction';
 import {fromLonLat} from 'ol/proj';
@@ -15,6 +16,7 @@ import {fromLonLat} from 'ol/proj';
 export class WmMapDirective implements OnInit {
   private _view: View;
   map: Map;
+  @Input() padding: number[];
 
   @Output() public initMap: EventEmitter<Map> = new EventEmitter<Map>();
 
@@ -31,6 +33,7 @@ export class WmMapDirective implements OnInit {
       optOptions = {
         maxZoom: this.map.getView().getZoom(),
         duration: 500,
+        padding: this.padding,
         size,
       };
     }

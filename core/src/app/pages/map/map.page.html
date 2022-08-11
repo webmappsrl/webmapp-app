@@ -11,9 +11,11 @@
       [map]="wmap.map$|async"
       [poi]="currentPoiID$|async"
       [pois]="pois$|async"
-      [padding]="[50,50,50,50]"
+      [padding]="padding$|async"
+      [filters]="currentFilters$|async"
       [position]="setCurrentPosition$|async"
       [isLoggedIn]="isLoggedIn$|async"
+      [disableLayers]="(currentFilters$|async).length > 0"
       (locationEvt)="setCurrentLocation($event)"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
       (poi-click)="openPoi($event)"
@@ -25,7 +27,11 @@
       (click)="setCurrentPosition$.next($event)"
     ></wm-btn-center-position>
   </div>
-
+  <wm-btn-filter
+    [filters]="confPOISFilter$|async"
+    [initSelectedFilters]="currentFilters$|async"
+    (selectedFilters)="setCurrentFilters($event)"
+  ></wm-btn-filter>
   <ng-container *ngIf="currentPoi$|async as currentPoi">
     <ng-container *ngIf="currentPoi.properties as properties">
       <ion-fab-button (click)="resetPoi()" size="small" class="webmapp-poi-close">

@@ -10,7 +10,7 @@
       >
       </ion-input>
     </form>
-    <i slot="end" (click)="reset()" *ngIf="(wordsEVT|async) === true">
+    <i slot="end" (click)="reset()" *ngIf="(isTypingsEVT|async) === true">
       <ion-icon name="close"></ion-icon>
     </i>
   </ion-item>

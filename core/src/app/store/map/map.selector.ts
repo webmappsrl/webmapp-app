@@ -1,4 +1,5 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+
 import {IMapRootState} from './map';
 
 const feature = createFeatureSelector<IMapRootState | null>('map');
@@ -26,4 +27,10 @@ export const nextPoiID = createSelector(feature, state =>
 );
 export const prevPoiID = createSelector(feature, state =>
   state && state.prevPoiIndex ? state.prevPoiIndex : null,
+);
+export const padding = createSelector(feature, state =>
+  state && state.padding ? state.padding : [50, 50, 50, 50],
+);
+export const currentFilters = createSelector(feature, state =>
+  state && state.currentFilters ? state.currentFilters : [],
 );

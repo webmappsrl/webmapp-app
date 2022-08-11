@@ -3,23 +3,10 @@ webmapp-page-home {
     --padding-bottom: 15px;
     --background: var(--wm-color-greybackground);
     .wm-home-header-container {
-      height: 200px;
       padding-top: 36px;
-
-      // &:before {
-      //   content: "";
-      //   display: block;
-      //   position: absolute;
-      //   top: 0;
-      //   z-index: -1;
-      //   width: 100%;
-      //   height: 310px;
-      //   background: var(--wm-color-secondary);
-      //   border-radius: 0 0 75% 75% / 0 0 120px 120px;
-      //   transform: scaleX(1.4);
-      // }
-
-      .wm-home-hader-label {
+      padding-bottom: 45px;
+      display: block;
+      ion-label {
         color: var(--wm-color-dark);
         display: block;
         font-size: var(--wm-font-xxxlg);
@@ -27,20 +14,16 @@ webmapp-page-home {
         padding: 30px 20px;
       }
 
-      .wm-home-hader-button {
-        color: var(--wm-color-light);
-        border-radius: 25px;
-        --border-radius: 25px;
-        --padding-start: 20px;
-        --padding-end: 20px;
+      webmapp-search-bar {
+        height: 59px;
+        display: block;
       }
-
-      .wm-home-logo-container {
-        padding: 0 18%;
-        #wm-home-logo {
-          max-width: 100%;
-          max-height: 50px;
-        }
+      wm-btn-filter {
+        font-family: var(--ion-font-family, inherit);
+        margin-inline: 10px;
+        position: absolute;
+        height: 59px;
+        right: 0;
       }
     }
     webmapp-card-big,

@@ -22,6 +22,7 @@ import {allElastic} from './store/elastic/elastic.actions';
 import {environment} from 'src/environments/environment';
 import {filter} from 'rxjs/operators';
 import {loadConf} from './store/conf/conf.actions';
+import {loadPois} from './store/pois/pois.actions';
 import {mapCurrentTrack} from './store/map/map.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 
@@ -53,6 +54,7 @@ export class AppComponent {
   ) {
     this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
+    this._storeConf.dispatch(loadPois());
     this._storeElasticAll.dispatch(allElastic());
     this._storeNetwork.dispatch(startNetworkMonitoring());
 

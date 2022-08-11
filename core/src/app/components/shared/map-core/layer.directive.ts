@@ -37,9 +37,11 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   private _mapIsInit = false;
   private _selectInteraction: SelectInteraction;
   private _styleJson: any;
+  private _disableLayers = false;
 
   @Input() conf: IMAP;
   @Input() map: Map;
+
   @Output() trackSelectedFromLayerEVT: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _confSvc: ConfService, private _communicationSvc: CommunicationService) {
@@ -48,10 +50,19 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
 
   @Input() set layer(l: ILAYER) {
     this._currentLayer = l;
-    if (l != null && l.bbox != null) {
-      this.fitView(l.bbox);
+    if (this.map != null && l != null && l.bbox != null) {
+      setTimeout(() => {
+        this.fitView(l.bbox);
+      }, 200);
     } else if (this.conf != null && this.conf.bbox != null) {
       this.fitView(this.conf.bbox);
+    }
+  }
+
+  @Input() set disableLayers(disable: boolean) {
+    this._disableLayers = disable;
+    if (this._dataLayers != null) {
+      this._dataLayers[this._dataLayers.length - 1].setVisible(!this._disableLayers);
     }
   }
 
@@ -91,6 +102,12 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
 
     if (this._dataLayers != null) {
       this._updateMap();
+    }
+    if (c.map && c.map.previousValue == null && c.map.currentValue != null) {
+      this.layer = this._currentLayer;
+      if (this._disableLayers) {
+        this.disableLayers = true;
+      }
     }
   }
 
@@ -148,6 +165,9 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       setTimeout(() => {
         this._updateFlagsVisibilyByCurrentLayer();
       }, 100);
+    }
+    if (this._disableLayers) {
+      this.disableLayers = true;
     }
 
     this.map.updateSize();

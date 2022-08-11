@@ -1,4 +1,5 @@
 import {BoxModule} from 'src/app/components/box/box.module';
+import {ButtonsModule} from 'src/app/components/shared/map-core/buttons/buttons.module';
 import {CardsModule} from 'src/app/components/cards/cards.module';
 import {CommonModule} from '@angular/common';
 import {DownloadlistPageModule} from '../downloadlist/downloadlist.module';

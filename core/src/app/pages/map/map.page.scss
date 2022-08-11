@@ -1,6 +1,11 @@
 @import 'src/theme/mixins.scss';
 @import '~@ionic/angular/css/ionic-swiper';
 webmapp-map-page {
+  wm-btn-filter {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+  }
   .webmapp-poi-close {
     position: fixed;
     top: calc(10px + env(safe-area-inset-top));

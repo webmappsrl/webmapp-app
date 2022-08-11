@@ -8,6 +8,7 @@ import {IonicModule} from '@ionic/angular';
 import {LayerBoxComponent} from './layer-box/layer-box.component';
 import {NgModule} from '@angular/core';
 import {PipeModule} from 'src/app/pipes/pipe.module';
+import {PoiBoxComponent} from './poi-box/poi-box.component';
 import {SearchBoxComponent} from './search-box/search-box.component';
 import {SharedModule} from '../shared/shared.module';
 import {SliderBoxComponent} from './slider-box/slider-box.component';
@@ -21,6 +22,7 @@ const boxComponents = [
   SliderBoxComponent,
   BaseBoxComponent,
   BoxComponent,
+  PoiBoxComponent,
 ];
 @NgModule({
   declarations: boxComponents,

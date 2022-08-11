@@ -5,6 +5,7 @@ import {ILAYER} from 'src/app/types/config';
 
 export interface IMapRootState {
   currentLayer?: ILAYER;
+  currentFilters?: any;
   currentPoi?: IGeojsonPoiDetailed;
   currentPoiId?: number;
   currentPoiIds?: number[];
@@ -14,4 +15,5 @@ export interface IMapRootState {
   currentTrackProperties?: IGeojsonProperties;
   nextPoiIndex?: number;
   prevPoiIndex?: number;
+  padding: number[];
 }

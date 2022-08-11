@@ -18,6 +18,12 @@ export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks
 }));
 export const confTHEME = createSelector(confFeature, state => state.THEME);
 export const confMAPLAYERS = createSelector(confMAP, state => state.layers);
+export const confPOISFilter = createSelector(confMAP, map => {
+  if (map != null && map.pois != null && map.pois.taxonomies != null) {
+    return map.pois.taxonomies;
+  }
+  return undefined;
+});
 export const confPROJECT = createSelector(confFeature, state => state.PROJECT);
 
 export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>

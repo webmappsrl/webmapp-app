@@ -174,11 +174,12 @@ interface IMAP {
   layers?: ILAYER[];
   maxZoom: number;
   minZoom: number;
+  pois?: any;
+  record_track_show: boolean;
   ref_on_track_min_zoom: number;
   ref_on_track_show: boolean;
   start_end_icons_min_zoom: number;
   start_end_icons_show: boolean;
-  record_track_show: boolean;
   tracks?: any[];
 }
 interface ILAYER {

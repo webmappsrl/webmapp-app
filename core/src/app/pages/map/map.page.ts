@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable, combineLatest} from 'rxjs';
+import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,17 +8,25 @@ import {
 } from '@angular/core';
 import {IonSlides, NavController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-import {map, tap, withLatestFrom} from 'rxjs/operators';
-import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {confMAP, confPOISFilter} from 'src/app/store/conf/conf.selector';
+import {
+  currentFilters,
+  currentPoiID,
+  mapCurrentLayer,
+  padding,
+} from 'src/app/store/map/map.selector';
+import {map, startWith, tap, withLatestFrom} from 'rxjs/operators';
+import {
+  openDetails,
+  setCurrentFilters,
+  setCurrentPoiId,
+  setCurrentTrackId,
+} from 'src/app/store/map/map.actions';
 
 import {AuthService} from 'src/app/services/auth.service';
 import {Browser} from '@capacitor/browser';
 import {DeviceService} from 'src/app/services/base/device.service';
-import {IGeojsonPoiDetailed} from 'src/app/types/model';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'src/app/store/conf/conf.selector';
-import {loadPois} from 'src/app/store/pois/pois.actions';
-import {mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {pois} from 'src/app/store/pois/pois.selector';
 
 @Component({
@@ -30,10 +38,11 @@ import {pois} from 'src/app/store/pois/pois.selector';
 })
 export class MapPage {
   @ViewChild('gallery') slider: IonSlides;
+
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
-        this._store.dispatch(loadPois());
+        // this._store.dispatch(loadPois());
       }
     }),
   );
@@ -41,14 +50,18 @@ export class MapPage {
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  padding$: Observable<number[]> = this._store.select(padding);
+  isLoggedIn$: Observable<boolean>;
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-
+  confPOISFilter$: Observable<any> = this._store.select(confPOISFilter);
+  currentFilters$: Observable<string[]> = this._store.select(currentFilters);
+  pois: any[];
   pois$: Observable<any> = this._store
     .select(pois)
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
-  pois: any[];
-  public sliderOptions: any;
+  resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   slideOptions = {
     on: {
       beforeInit,
@@ -56,9 +69,8 @@ export class MapPage {
       setTransition,
     },
   };
-  resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
-  imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLoggedIn$: Observable<boolean>;
+  public sliderOptions: any;
+
   constructor(
     private _store: Store,
     private _deviceService: DeviceService,
@@ -73,7 +85,15 @@ export class MapPage {
       slidesPerView: this._deviceService.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
+    this._store
+      .select(currentPoiID)
+      .pipe(withLatestFrom(this.pois$))
+      .subscribe(([id, pois]) => {
+        if (id != null && pois != null) this.openPoi(id);
+      });
   }
+
+  email(_): void {}
 
   goToTrack(id: number) {
     this.resetPoi();
@@ -81,12 +101,29 @@ export class MapPage {
   }
 
   ionViewWillLeave() {
+    this.resetPoi();
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
+  setCurrentFilters(filters: string[]): void {
+    this._store.dispatch(setCurrentFilters({currentFilters: filters}));
+  }
+  openPoi(poiID: number) {
+    this._store.dispatch(openDetails({openDetails: true}));
+    this.currentPoiID$.next(poiID);
+    const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
+    this.currentPoi$.next(currentPoi);
+  }
+
+  phone(_): void {}
 
   resetPoi(): void {
+    this._store.dispatch(openDetails({openDetails: false}));
     this.currentPoi$.next(null);
     this.currentPoiID$.next(-1);
+  }
+
+  setCurrentLocation(event): void {
+    this.currentPosition$.next(event);
   }
 
   showPhoto(idx) {
@@ -95,17 +132,8 @@ export class MapPage {
       this.slider.slideTo(idx);
     }, 300);
   }
-  email(_): void {}
-  phone(_): void {}
-  openPoi(poiID: number) {
-    this.currentPoiID$.next(poiID);
-    const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
-    this.currentPoi$.next(currentPoi);
-  }
+
   async url(url) {
     await Browser.open({url});
-  }
-  setCurrentLocation(event): void {
-    this.currentPosition$.next(event);
   }
 }

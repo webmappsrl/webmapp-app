@@ -1,6 +1,13 @@
 import {createReducer, on} from '@ngrx/store';
+import {
+  loadTrackSuccess,
+  openDetails,
+  setCurrentFilters,
+  setCurrentLayer,
+  setCurrentPoiId,
+} from './map.actions';
+
 import {IMapRootState} from './map';
-import {loadTrackSuccess, setCurrentLayer, setCurrentPoiId, setCurrentTrackId} from './map.actions';
 
 const initialUIState: IMapRootState = null;
 export const UIReducer = createReducer(
@@ -11,18 +18,32 @@ export const UIReducer = createReducer(
       ...{currentLayer},
     };
   }),
+  on(setCurrentFilters, (state, {currentFilters}) => {
+    return {
+      ...state,
+      ...{currentFilters},
+    };
+  }),
   on(setCurrentPoiId, (state, {currentPoiId}) => {
-    const currentRelatedPoi = state.currentRelatedPoi;
+    const currentRelatedPoi = state != null ? state.currentRelatedPoi : [];
     const currentPoi =
-      currentPoiId != null
+      currentPoiId != null && currentRelatedPoi != null && currentRelatedPoi.length > 0
         ? currentRelatedPoi.filter(poi => +poi.properties.id === +currentPoiId)[0]
         : null;
 
-    const poiIndex = currentRelatedPoi.findIndex(p => +p.properties.id === +currentPoiId);
-    const nextPoiIndex = currentRelatedPoi[(poiIndex + 1) % currentRelatedPoi.length].properties.id;
+    const poiIndex =
+      currentPoi != null
+        ? currentRelatedPoi.findIndex(p => +p.properties.id === +currentPoiId)
+        : null;
+    const nextPoiIndex =
+      currentPoi != null
+        ? currentRelatedPoi[(poiIndex + 1) % currentRelatedPoi.length].properties.id
+        : null;
     const prevPoiIndex =
-      currentRelatedPoi[(poiIndex + currentRelatedPoi.length - 1) % currentRelatedPoi.length]
-        .properties.id;
+      currentPoi != null
+        ? currentRelatedPoi[(poiIndex + currentRelatedPoi.length - 1) % currentRelatedPoi.length]
+            .properties.id
+        : null;
     return {
       ...state,
       ...{currentPoiId},
@@ -42,6 +63,12 @@ export const UIReducer = createReducer(
       ...{currentTrackProperties},
       ...{currentRelatedPoi},
       ...{currentPoiIDs},
+    };
+  }),
+  on(openDetails, (state, {openDetails}) => {
+    return {
+      ...state,
+      padding: openDetails ? [50, 50, 400, 50] : [50, 50, 50, 50],
     };
   }),
 );
