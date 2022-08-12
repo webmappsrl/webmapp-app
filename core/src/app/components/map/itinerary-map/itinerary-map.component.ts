@@ -323,10 +323,12 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       this._map.removeLayer(this._selectedPoiLayer);
       this._selectedPoiLayer = undefined;
     }
-    const currentPoi = this._poiMarkers.find(p => +p.id === value.properties.id);
-    if (currentPoi != null) {
-      this._fitView(currentPoi.icon.getGeometry() as any);
-      this._selectCurrentPoi(currentPoi);
+    if (value != null) {
+      const currentPoi = this._poiMarkers.find(p => +p.id === value.properties.id);
+      if (currentPoi != null) {
+        this._fitView(currentPoi.icon.getGeometry() as any);
+        this._selectCurrentPoi(currentPoi);
+      }
     }
   }
 

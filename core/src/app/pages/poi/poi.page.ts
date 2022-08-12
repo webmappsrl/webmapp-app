@@ -77,6 +77,7 @@ export class PoiPage implements OnInit, OnDestroy {
   }
 
   back() {
+    this._storeMap.dispatch(setCurrentPoiId({currentPoiId: -1}));
     this._navController.back();
   }
 
@@ -136,6 +137,7 @@ export class PoiPage implements OnInit, OnDestroy {
       this.slider.slideTo(idx);
     }, 300);
   }
+
   async url(url) {
     await Browser.open({url});
   }

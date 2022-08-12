@@ -4,8 +4,10 @@ import {ILAYER, IMAP} from 'src/app/types/config';
 import {Interaction, defaults as defaultInteractions} from 'ol/interaction.js';
 import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
 import Style, {StyleLike} from 'ol/style/Style';
+import {distinctUntilChanged, filter, switchMap} from 'rxjs/operators';
 import {endIconHtml, startIconHtml} from './icons';
 
+import {BehaviorSubject} from 'rxjs';
 import {Collection} from 'ol';
 import {CommunicationService} from 'src/app/services/base/communication.service';
 import {ConfService} from 'src/app/store/conf/conf.service';
@@ -29,34 +31,36 @@ import {styleJsonFn} from './utils';
   selector: '[wmMapLayer]',
 })
 export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges {
-  private _currentLayer: ILAYER;
   private _dataLayers: Array<VectorTileLayer>;
   private _defaultFeatureColor = DEF_LINE_COLOR;
+  private _disableLayers = false;
   private _flagFeatures: Feature<Geometry>[] = [];
   private _flagsLayer: VectorLayer;
-  private _mapIsInit = false;
   private _selectInteraction: SelectInteraction;
   private _styleJson: any;
-  private _disableLayers = false;
+  private _map$: BehaviorSubject<Map> = new BehaviorSubject<Map>(null);
+  private _currentLayer$: BehaviorSubject<ILAYER> = new BehaviorSubject<ILAYER>(null);
+  private _mapIsInit$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   @Input() conf: IMAP;
-  @Input() map: Map;
-
   @Output() trackSelectedFromLayerEVT: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _confSvc: ConfService, private _communicationSvc: CommunicationService) {
     super();
-  }
 
-  @Input() set layer(l: ILAYER) {
-    this._currentLayer = l;
-    if (this.map != null && l != null && l.bbox != null) {
-      setTimeout(() => {
-        this.fitView(l.bbox);
-      }, 200);
-    } else if (this.conf != null && this.conf.bbox != null) {
-      this.fitView(this.conf.bbox);
-    }
+    this._mapIsInit$
+      .pipe(
+        filter(f => f),
+        switchMap(_ => this._currentLayer$),
+        distinctUntilChanged(),
+      )
+      .subscribe(l => {
+        if (l != null && l.bbox != null) {
+          this.fitView(l.bbox);
+        } else if (this.conf != null && this.conf.bbox != null) {
+          this.fitView(this.conf.bbox);
+        }
+      });
   }
 
   @Input() set disableLayers(disable: boolean) {
@@ -66,8 +70,15 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     }
   }
 
+  @Input() set layer(l: ILAYER) {
+    this._currentLayer$.next(l);
+  }
+
   ngOnChanges(c: SimpleChanges): void {
-    if (this.map != null && this.conf != null && this._mapIsInit == false) {
+    if (c.map != null && c.map.currentValue != null) {
+      this._map$.next(c.map.currentValue);
+    }
+    if (this.map != null && this.conf != null && this._mapIsInit$.value == false) {
       this._initLayer(this.conf);
       if (this.conf.start_end_icons_show === true && this.conf.start_end_icons_min_zoom != null) {
         this.map.on('moveend', e => {
@@ -82,20 +93,12 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             }
           }
         });
-        if (c.layer != null && c.layer.firstChange && c.map != null && c.map.firstChange) {
-          setTimeout(() => {
-            const l = c.layer.currentValue;
-            if (l != null && l.bbox != null) {
-              this.fitView(l.bbox);
-            } else if (this.conf != null && this.conf.bbox != null) {
-              this.fitView(this.conf.bbox);
-            }
-          }, 200);
-        }
       }
-
-      this._mapIsInit = true;
+      setTimeout(() => {
+        this._mapIsInit$.next(true);
+      }, 400);
     }
+
     if (this.map != null && c.layer != null) {
       this._updateFlagsVisibilyByCurrentLayer();
     }
@@ -104,7 +107,7 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       this._updateMap();
     }
     if (c.map && c.map.previousValue == null && c.map.currentValue != null) {
-      this.layer = this._currentLayer;
+      this.layer = this._currentLayer$.value;
       if (this._disableLayers) {
         this.disableLayers = true;
       }
@@ -212,10 +215,12 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             color: this._defaultFeatureColor,
           }),
         });
-        if (this._currentLayer != null) {
-          const currentIDLayer = +this._currentLayer.id;
+        if (this._currentLayer$.value != null) {
+          const currentIDLayer = +this._currentLayer$.value.id;
           if (layers.indexOf(currentIDLayer) >= 0) {
-            strokeStyle.setColor(this._currentLayer.style.color ?? this._defaultFeatureColor);
+            strokeStyle.setColor(
+              this._currentLayer$.value.style.color ?? this._defaultFeatureColor,
+            );
           } else {
             strokeStyle.setColor('rgba(0,0,0,0)');
             text.setText('');
@@ -286,11 +291,11 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     this._flagFeatures.forEach(feature => {
       const properties = feature.getProperties();
       if (
-        this._currentLayer == null ||
+        this._currentLayer$.value == null ||
         (properties != null &&
           properties.layers != null &&
-          properties.layers.indexOf(this._currentLayer.id) > -1 &&
-          this._currentLayer != null)
+          properties.layers.indexOf(this._currentLayer$.value.id) > -1 &&
+          this._currentLayer$.value != null)
       ) {
         (feature.getStyle() as Style).getImage().setOpacity(1);
       } else {

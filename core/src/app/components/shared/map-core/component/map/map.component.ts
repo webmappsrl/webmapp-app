@@ -9,16 +9,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../../constants/map';
 
-import {BehaviorSubject} from 'rxjs';
 import Collection from 'ol/Collection';
 import {Extent} from 'ol/extent';
 import {IMAP} from 'src/app/types/config';
 import {Interaction} from 'ol/interaction';
 import Map from 'ol/Map';
 import {MapService} from 'src/app/services/base/map.service';
-import {Observable} from 'ol';
 import ScaleLineControl from 'ol/control/ScaleLine';
 import TileLayer from 'ol/layer/Tile';
 import {TilesService} from 'src/app/services/tiles.service';
@@ -26,6 +25,7 @@ import View from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
+import {filter} from 'rxjs/operators';
 import {initExtent} from '../../constants';
 
 @Component({
@@ -39,14 +39,16 @@ export class WmMapComponent implements AfterViewInit {
   private _centerExtent: Extent;
   private _conf: IMAP;
   private _defZoom: number;
+  private _map$: BehaviorSubject<Map> = new BehaviorSubject<Map | null>(null);
   private _view: View;
 
+  @Input() isLoggedIn: boolean;
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
 
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   map: Map;
-  map$: BehaviorSubject<Map> = new BehaviorSubject<Map | null>(null);
+  map$: Observable<Map> = this._map$.pipe(filter(f => f != null));
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private _tilesService: TilesService, private _mapSvc: MapService) {}
@@ -65,7 +67,6 @@ export class WmMapComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this._initMap(this._conf);
   }
-  @Input() isLoggedIn: boolean;
 
   private _initDefaultInteractions(): Collection<Interaction> {
     return defaultInteractions({
@@ -115,7 +116,7 @@ export class WmMapComponent implements AfterViewInit {
       ],
       target: 'ol-map',
     });
-    this.map$.next(this.map);
+    this._map$.next(this.map);
   }
 
   /**
