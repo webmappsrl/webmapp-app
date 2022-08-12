@@ -10,6 +10,19 @@
 
 ---
 
+**12.1.17**
+
+- (feature): abilitata la registrazione percorso
+- (feature): abilitata l'autenticazione
+- (feature): abilitata la sezione preferiti
+- (feature): inseriti filtri sui poi
+- (feature): aggiunta clusterizzazione sui poi
+- (feature): aggiunto il componente audio nei dettagli del percorso e del poi
+- (refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
+-
+
+---
+
 **12.1.16**
 
 - (fine tuning): stroke width delle tracks ora il minimo è rappresentato da 1 e il massimo da 8
