@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {IonSlides, NavController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-import {confMAP, confPOISFilter} from 'src/app/store/conf/conf.selector';
+import {confMAP, confPOIS} from 'src/app/store/conf/conf.selector';
 import {
   currentFilters,
   currentPoiID,
@@ -46,16 +46,16 @@ export class MapPage {
       }
     }),
   );
+  confPOIS$: Observable<any> = this._store.select(confPOIS);
+  currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  padding$: Observable<number[]> = this._store.select(padding);
   isLoggedIn$: Observable<boolean>;
+  padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-  confPOISFilter$: Observable<any> = this._store.select(confPOISFilter);
-  currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   pois: any[];
   pois$: Observable<any> = this._store
     .select(pois)
@@ -104,9 +104,7 @@ export class MapPage {
     this.resetPoi();
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
-  setCurrentFilters(filters: string[]): void {
-    this._store.dispatch(setCurrentFilters({currentFilters: filters}));
-  }
+
   openPoi(poiID: number) {
     this._store.dispatch(openDetails({openDetails: true}));
     this.currentPoiID$.next(poiID);
@@ -120,6 +118,10 @@ export class MapPage {
     this._store.dispatch(openDetails({openDetails: false}));
     this.currentPoi$.next(null);
     this.currentPoiID$.next(-1);
+  }
+
+  setCurrentFilters(filters: string[]): void {
+    this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
 
   setCurrentLocation(event): void {

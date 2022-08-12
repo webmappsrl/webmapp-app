@@ -27,11 +27,15 @@
       (click)="setCurrentPosition$.next($event)"
     ></wm-btn-center-position>
   </div>
-  <wm-btn-filter
-    [filters]="confPOISFilter$|async"
-    [initSelectedFilters]="currentFilters$|async"
-    (selectedFilters)="setCurrentFilters($event)"
-  ></wm-btn-filter>
+  <ng-container *ngIf="confPOIS$|async as confPois">
+    <wm-btn-filter
+      *ngIf="confPois.apppoisApiLayer"
+      [filters]="confPois.taxonomies"
+      [initSelectedFilters]="currentFilters$|async"
+      (selectedFilters)="setCurrentFilters($event)"
+    ></wm-btn-filter>
+  </ng-container>
+
   <ng-container *ngIf="currentPoi$|async as currentPoi">
     <ng-container *ngIf="currentPoi.properties as properties">
       <ion-fab-button (click)="resetPoi()" size="small" class="webmapp-poi-close">
