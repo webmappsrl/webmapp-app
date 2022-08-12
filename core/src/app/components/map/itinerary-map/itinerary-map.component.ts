@@ -172,8 +172,8 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
   @ViewChild('clusterContainer', {read: ViewContainerRef}) clusterContainer;
   @ViewChild('map') mapDiv: ElementRef;
-
   @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+
   public centerToTrack: boolean = false;
   currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
   public isLoggedIn: boolean = false;
@@ -1099,9 +1099,16 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   }
 
   private async _createPoiMarkerHtmlForCanvas(value: any, selected = false): Promise<string> {
-    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
-      value.properties?.feature_image?.sizes['108x137'],
-    );
+    let url = null;
+    try {
+      url = value.properties?.feature_image?.sizes['108x137'];
+    } catch (e) {
+      console.warn(
+        `missed url properties?.feature_image?.sizes['108x137'] poi id ${value.properties.id}`,
+        e,
+      );
+    }
+    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(url);
 
     let html = `
     <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;

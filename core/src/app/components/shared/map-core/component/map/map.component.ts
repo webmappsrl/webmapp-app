@@ -44,7 +44,7 @@ export class WmMapComponent implements AfterViewInit {
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
   @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
 
-  isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   map: Map;
   map$: BehaviorSubject<Map> = new BehaviorSubject<Map | null>(null);
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
