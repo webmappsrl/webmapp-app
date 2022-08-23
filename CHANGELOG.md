@@ -18,6 +18,7 @@
 - (feature): inseriti filtri sui poi
 - (feature): aggiunta clusterizzazione sui poi
 - (feature): aggiunto il componente audio nei dettagli del percorso e del poi
+- (feature): aggiunta la traduzione inglese della UI
 - (refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
 
 ---
