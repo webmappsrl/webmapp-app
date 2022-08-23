@@ -1,22 +1,15 @@
 <webmapp-modal-header
-  [title]="'modals.settings.title' | translate"
+  [title]="'modals.settings.title' | wmtrans"
   (dismiss)="dismiss()"
 ></webmapp-modal-header>
 <ion-content>
   <ion-list class="webmapp-settings-list">
-    <ion-item
-      class="webmapp-settings-button"
-      button
-      (click)="logout()"
-      mode="md"
-    >
-      <ion-label> {{ "modals.settings.logout" | translate }} </ion-label>
+    <ion-item class="webmapp-settings-button" button (click)="logout()" mode="md">
+      <ion-label> {{ "modals.settings.logout" | wmtrans }} </ion-label>
       <i class="webmapp-icon-chevron-right-outline" slot="end"></i>
     </ion-item>
     <ion-item class="webmapp-settings-version" mode="md">
-      <ion-label>
-        {{ "modals.settings.version" | translate }} {{ version }}</ion-label
-      >
+      <ion-label> {{ "modals.settings.version" | wmtrans }} {{ version }}</ion-label>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -14,7 +14,7 @@
           class="webmapp-backbutton webmapp-backbutton-dark"
         ></ion-back-button>
       </ion-buttons>
-      <ion-title>{{'pages.register.title' | translate}}</ion-title>
+      <ion-title>{{'pages.register.title' | wmtrans}}</ion-title>
     </ion-toolbar>
   </ion-header>
 
@@ -37,7 +37,7 @@
   >
     <div class="webmapp-pageregister-infopanel-top">
       <div class="webmapp-pageregister-infopanel-top-title">
-        {{'pages.register.time' | translate}}
+        {{'pages.register.time' | wmtrans}}
       </div>
       <div class="webmapp-pageregister-infopanel-top-data">
         {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
@@ -46,7 +46,7 @@
     </div>
     <div class="webmapp-pageregister-infopanel-bottom">
       <div class="webmapp-pageregister-infopanel-bottom-title">
-        {{'pages.register.currentspeed' | translate}}
+        {{'pages.register.currentspeed' | wmtrans}}
       </div>
       <div class="webmapp-pageregister-infopanel-bottom-data">
         {{actualSpeed | number:'1.0-0'}}km/h
@@ -59,7 +59,7 @@
       "
     >
       <div class="webmapp-pageregister-infopanel-bottom-title">
-        {{'pages.register.averagespeed' | translate}}
+        {{'pages.register.averagespeed' | wmtrans}}
       </div>
       <div class="webmapp-pageregister-infopanel-bottom-data">
         {{averageSpeed | number:'1.0-0'}}km/h
@@ -67,7 +67,7 @@
     </div>
     <div class="webmapp-pageregister-infopanel-bottom">
       <div class="webmapp-pageregister-infopanel-bottom-title">
-        {{'pages.register.odo' | translate}}
+        {{'pages.register.odo' | wmtrans}}
       </div>
       <div class="webmapp-pageregister-infopanel-bottom-data">{{length | number:'1.2-2'}}</div>
     </div>
@@ -79,7 +79,7 @@
       class="webmapp-pageregister-backgroundbtn-button"
       (click)="background($event)"
     >
-      <i class="webmapp-icon-background"></i> {{'pages.register.backgroundbtn' | translate}}
+      <i class="webmapp-icon-background"></i> {{'pages.register.backgroundbtn' | wmtrans}}
     </ion-button>
   </div>
 
@@ -99,7 +99,7 @@
     >
       <div class="webmapp-pageregister-btncontent">
         <i class="webmapp-icon-play webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | translate}}</div>
+        <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | wmtrans}}</div>
       </div>
     </ion-fab-button>
 
@@ -110,7 +110,7 @@
     >
       <div class="webmapp-pageregister-btncontent">
         <i class="webmapp-icon-pause-outline webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.pausebtn' | translate}}</div>
+        <div class="webmapp-pageregister-btntext">{{'pages.register.pausebtn' | wmtrans}}</div>
       </div>
     </ion-fab-button>
 
@@ -121,7 +121,7 @@
     >
       <div class="webmapp-pageregister-btncontent">
         <i class="webmapp-icon-stop webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.stopbtn' | translate}}</div>
+        <div class="webmapp-pageregister-btntext">{{'pages.register.stopbtn' | wmtrans}}</div>
       </div>
     </ion-fab-button>
   </ion-fab>

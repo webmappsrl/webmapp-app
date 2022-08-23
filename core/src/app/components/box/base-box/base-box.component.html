@@ -7,7 +7,7 @@
   <ion-card-header class="webmapp-base-box-header">
     <ng-container *ngIf="data else skeletonTemplate">
       <ion-card-title class="webmapp-base-box-title">
-        {{ data.title  }}
+        {{ data.title | wmtrans }}
       </ion-card-title>
     </ng-container>
     <ng-template #skeletonTemplate>

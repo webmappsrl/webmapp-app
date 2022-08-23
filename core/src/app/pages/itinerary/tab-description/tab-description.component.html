@@ -1,7 +1,7 @@
 <ng-container *ngIf="currentTrackProperties$|async as properties">
   <div *ngIf="properties.image_gallery?.length">
     <ion-label class="webmapp-pageroute-tabdescription-title"
-      >{{'pages.route.description.gallery' | translate}}
+      >{{'pages.route.description.gallery' | wmtrans}}
     </ion-label>
 
     <ion-slides
@@ -19,9 +19,9 @@
       </ion-slide>
     </ion-slides>
   </div>
-  <div>
+  <div *ngIf="properties?.description">
     <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.description' |
-      translate}}</ion-label>
+      wmtrans}}</ion-label>
     <div
       class="webmapp-pageroute-tabdescription-description"
       [innerHTML]="properties?.description | wmtrans"

@@ -1,27 +1,40 @@
 <ion-content class="webmapp-modalsuccess">
-
   <div class="ios-filling"></div>
 
   <div class="webmapp-modalsuccess-header">
-    <ion-icon name="close-outline" class="webmapp-modalsuccess-closebtn" (click)="close()"></ion-icon>
+    <ion-icon
+      name="close-outline"
+      class="webmapp-modalsuccess-closebtn"
+      (click)="close()"
+    ></ion-icon>
   </div>
 
   <div class="webmapp-modalsuccess-body">
-    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" *ngIf="isTrack">
-    <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos">
-    <img class="webmapp-modalsuccess-img" src="assets/images/waypointsuccess.png" *ngIf="isWaypoint">
+    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" *ngIf="isTrack" />
+    <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos" />
+    <img
+      class="webmapp-modalsuccess-img"
+      src="assets/images/waypointsuccess.png"
+      *ngIf="isWaypoint"
+    />
     <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
-      {{'modals.success.track.title' | translate}}</div>
+      {{'modals.success.track.title' | wmtrans}}
+    </div>
     <div class="webmapp-modalsuccess-title" *ngIf="isPhotos">
-      {{'modals.success.photos.title' | translate}}</div>
+      {{'modals.success.photos.title' | wmtrans}}
+    </div>
     <div class="webmapp-modalsuccess-title" *ngIf="isWaypoint">
-      {{'modals.success.waypoint.title' | translate}}</div>
+      {{'modals.success.waypoint.title' | wmtrans}}
+    </div>
     <div class="webmapp-modalsuccess-text" *ngIf="isTrack">
-      {{'modals.success.track.text' | translate}}</div>
+      {{'modals.success.track.text' | wmtrans}}
+    </div>
     <div class="webmapp-modalsuccess-text" *ngIf="isPhotos">
-      {{'modals.success.photos.text' | translate}}</div>
+      {{'modals.success.photos.text' | wmtrans}}
+    </div>
     <div class="webmapp-modalsuccess-text" *ngIf="isWaypoint">
-      {{'modals.success.waypoint.text' | translate}}</div>
+      {{'modals.success.waypoint.text' | wmtrans}}
+    </div>
 
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack" (click)="openTrack(track)">
       <div class="webmapp-modalsuccess-infopanel-top">
@@ -29,17 +42,16 @@
           <webmapp-map [track]="track" [static]="true" [animation]="false"></webmapp-map>
         </div>
         <div class="webmapp-modalsuccess-infopanel-top-info">
-          <div class="webmapp-modalsuccess-infopanel-top-name"> {{track.title}}</div>
-          <div class="webmapp-modalsuccess-infopanel-top-date"> {{trackDate | date}}
-          </div>
+          <div class="webmapp-modalsuccess-infopanel-top-name">{{track.title}}</div>
+          <div class="webmapp-modalsuccess-infopanel-top-date">{{trackDate | date}}</div>
         </div>
       </div>
-
 
       <div class="webmapp-modalsuccess-infopanel-middle">
         <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
         {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
-        '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
+        '2.0-0'
+        }}:{{trackTime?.seconds| number : '2.0-0'}}
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
         <i class="webmapp-icon-distance webmapp-modalsuccess-infopanel-icon"></i>
@@ -52,7 +64,7 @@
 
       <!-- <div class="webmapp-modalsuccess-infopanel-middle">
         <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.time' | translate}}
+          {{'modals.success.track.time' | wmtrans}}
         </div>
         <div class="webmapp-modalsuccess-infopanel-data">
           {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
@@ -61,30 +73,36 @@
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
         <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.odo' | translate}}
+          {{'modals.success.track.odo' | wmtrans}}
         </div>
         <div class="webmapp-modalsuccess-infopanel-data">
           {{trackodo | number : '1.1-1'}}
         </div>
       </div> -->
 
-      <div class="webmapp-modalsuccess-infopanel-photobottom" *ngIf="track.photos && track.photos.length">
-        <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of track.photos  | slice:0:3;let idx = index">
-
+      <div
+        class="webmapp-modalsuccess-infopanel-photobottom"
+        *ngIf="track.photos && track.photos.length"
+      >
+        <div
+          class="webmapp-modalsuccess-infopanel-photocontainer"
+          *ngFor="let photo of track.photos  | slice:0:3;let idx = index"
+        >
           <div *ngIf="idx<3">
             <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
-            <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2 && track.photos.length>3">
+            <div
+              class="webmapp-modalsuccess-infopanel-photoextra"
+              *ngIf="idx===2 && track.photos.length>3"
+            >
               +{{track.photos.length-3}}
             </div>
           </div>
-          
         </div>
       </div>
 
-
       <!-- <div class="webmapp-modalsuccess-infopanel-bottom">
         <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.slope' | translate}}
+          {{'modals.success.track.slope' | wmtrans}}
         </div>
         <div class="webmapp-modalsuccess-infopanel-data">
           {{trackSlope | number:'1.0-0'}}m
@@ -92,7 +110,7 @@
       </div>
       <div class="webmapp-modalsuccess-infopanel-bottom">
         <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.avgspeed' | translate}}
+          {{'modals.success.track.avgspeed' | wmtrans}}
         </div>
         <div class="webmapp-modalsuccess-infopanel-data">
           {{trackAvgSpeed | number:'1.1-1'}} km/h
@@ -100,7 +118,7 @@
       </div>
       <div class="webmapp-modalsuccess-infopanel-bottom">
         <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.topspeed' | translate}}
+          {{'modals.success.track.topspeed' | wmtrans}}
         </div>
         <div class="webmapp-modalsuccess-infopanel-data">
           {{trackTopSpeed | number:'1.1-1'}} km/h
@@ -109,14 +127,16 @@
     </ion-card>
 
     <div class="webmapp-modalsuccess-photogallery" *ngIf="isPhotos" (click)="gotoPhotos()">
-      <div class="webmapp-modalsuccess-photocontainer" *ngFor="let photo of photos | slice:0:3;let idx = index;">
+      <div
+        class="webmapp-modalsuccess-photocontainer"
+        *ngFor="let photo of photos | slice:0:3;let idx = index;"
+      >
         <div *ngIf="idx<3">
           <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-photo"></ion-img>
           <div class="webmapp-modalsuccess-photoextra" *ngIf="idx===2 && photos.length>3">
             +{{photos.length-3}}
           </div>
         </div>
-        
       </div>
     </div>
 
@@ -130,19 +150,29 @@
       </ion-slide>
     </ion-slides> -->
 
-    <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isWaypoint" (click)="openWaypoint(waypoint)">
+    <ion-card
+      class="webmapp-modalsuccess-infopanel"
+      *ngIf="isWaypoint"
+      (click)="openWaypoint(waypoint)"
+    >
       <div class="webmapp-modalsuccess-infopanel-top">
         <ion-grid>
           <ion-row>
             <ion-col size="4">
               <div class="webmapp-modalsuccess-infopanel-top-map">
-                <webmapp-map [static]="true" [animation]="false" [position]="displayPosition"></webmapp-map>
+                <webmapp-map
+                  [static]="true"
+                  [animation]="false"
+                  [position]="displayPosition"
+                ></webmapp-map>
               </div>
             </ion-col>
-            <ion-col size="8" class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info">
-
-                <div class="webmapp-modalsuccess-infopanel-top-name"> {{waypoint.title}}</div>
-              <div class="webmapp-modalsuccess-infopanel-top-date"> {{today | date }}</div>
+            <ion-col
+              size="8"
+              class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info"
+            >
+              <div class="webmapp-modalsuccess-infopanel-top-name">{{waypoint.title}}</div>
+              <div class="webmapp-modalsuccess-infopanel-top-date">{{today | date }}</div>
 
               <!-- <div class="webmapp-modalsuccess-infopanel-section">
                 <i class="webmapp-icon-list secondary webmapp-modalsuccess-infopanel-sectionicon"></i>
@@ -156,29 +186,34 @@
 
               <div class="webmapp-modalsuccess-infopanel-section">
                 <i class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"></i>
-                <div class="webmapp-modalsuccess-infopanel-top-text"> {{waypoint.position.latitude}} , {{waypoint.position.longitude}}
+                <div class="webmapp-modalsuccess-infopanel-top-text">
+                  {{waypoint.position.latitude}} , {{waypoint.position.longitude}}
                 </div>
-              </div> 
-
-
+              </div>
             </ion-col>
           </ion-row>
         </ion-grid>
       </div>
 
-        <div class="webmapp-modalsuccess-infopanel-photobottom" *ngIf="waypoint.photos && waypoint.photos.length">
-          <div class="webmapp-modalsuccess-infopanel-photocontainer" *ngFor="let photo of waypoint.photos | slice:0:3;let idx = index">
-  
-            <div *ngIf="idx<3">
-              <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
-              <div class="webmapp-modalsuccess-infopanel-photoextra" *ngIf="idx===2 && waypoint.photos.length>3">
-                +{{waypoint.photos.length-3}}
-              </div>
+      <div
+        class="webmapp-modalsuccess-infopanel-photobottom"
+        *ngIf="waypoint.photos && waypoint.photos.length"
+      >
+        <div
+          class="webmapp-modalsuccess-infopanel-photocontainer"
+          *ngFor="let photo of waypoint.photos | slice:0:3;let idx = index"
+        >
+          <div *ngIf="idx<3">
+            <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
+            <div
+              class="webmapp-modalsuccess-infopanel-photoextra"
+              *ngIf="idx===2 && waypoint.photos.length>3"
+            >
+              +{{waypoint.photos.length-3}}
             </div>
-            
           </div>
         </div>
-
+      </div>
 
       <!-- <div class="webmapp-modalsuccess-infopanel-content">
 
@@ -201,23 +236,13 @@
 
 
       </div> -->
-
-
-
     </ion-card>
-
   </div>
 
   <div class="webmapp-modalsuccess-footer" (click)="close()">
-    {{'modals.success.return' | translate}}
+    {{'modals.success.return' | wmtrans}}
   </div>
 </ion-content>
-
-
-
-
-
-
 
 <!-- <ion-header>
   <ion-toolbar>
@@ -225,7 +250,7 @@
       <ion-back-button defaultHref="register" text="" class="webmapp-backbutton webmapp-backbutton-dark" (click)="close()">
       </ion-back-button>
     </ion-buttons>
-    <ion-title>{{'modals.photos.title' | translate}}</ion-title>
+    <ion-title>{{'modals.photos.title' | wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -236,5 +261,5 @@
 
 <ion-footer class="webmapp-register-modalphotos-footer">
   <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
-    {{'modals.photos.savebtn' | translate}}</ion-button>
+    {{'modals.photos.savebtn' | wmtrans}}</ion-button>
 </ion-footer> -->

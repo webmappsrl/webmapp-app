@@ -10,14 +10,14 @@
       >
       </ion-back-button>
     </ion-buttons>
-    <ion-title>{{ "pages.register.modalphotos.title" | translate }}</ion-title>
+    <ion-title>{{ "pages.register.modalphotos.title" | wmtrans }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ng-container *ngIf="!images?.length">
     <div class="webmapp-register-modalphotos-noimages">
-      {{ "pages.register.modalphotos.noimages" | translate }}
+      {{ "pages.register.modalphotos.noimages" | wmtrans }}
     </div>
   </ng-container>
 
@@ -28,7 +28,7 @@
         (click)="selectAll(true)"
         *ngIf="!isAllSelected"
       >
-        {{ "pages.register.modalphotos.selectall" | translate }}</ion-button
+        {{ "pages.register.modalphotos.selectall" | wmtrans }}</ion-button
       >
       <ion-button
         color="primary"
@@ -39,7 +39,7 @@
         (click)="selectAll(false)"
         *ngIf="isAllSelected"
       >
-        {{ "pages.register.modalphotos.deselectall" | translate }}</ion-button
+        {{ "pages.register.modalphotos.deselectall" | wmtrans }}</ion-button
       >
     </div>
     <ion-grid>
@@ -51,10 +51,7 @@
               [(ngModel)]="image.selected"
               (ionChange)="select($event)"
             ></ion-checkbox>
-            <ion-img
-              class="webmapp-register-modalphotos-image"
-              [src]="image.datasrc"
-            ></ion-img>
+            <ion-img class="webmapp-register-modalphotos-image" [src]="image.datasrc"></ion-img>
           </div>
         </ion-col>
       </ion-row>
@@ -63,11 +60,7 @@
 </ion-content>
 
 <ion-footer class="webmapp-register-modalphotos-footer">
-  <ion-button
-    class="webmapp-register-modalphotos-savebtn"
-    (click)="save()"
-    [disabled]="!isValid()"
-  >
-    {{ "pages.register.modalphotos.savebtn" | translate }}</ion-button
+  <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
+    {{ "pages.register.modalphotos.savebtn" | wmtrans }}</ion-button
   >
 </ion-footer>

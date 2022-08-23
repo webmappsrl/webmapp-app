@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { WmTransPipe } from 'src/app/pipes/wmtrans.pipe';
-import { StatusService } from 'src/app/services/status.service';
-import { StoreService } from 'src/app/services/store.service';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+
+import {ModalController} from '@ionic/angular';
+import {StatusService} from 'src/app/services/status.service';
+import {TranslateService} from '@ngx-translate/core';
+import {WmTransPipe} from 'src/app/pipes/wmtrans.pipe';
 
 @Component({
   selector: 'app-modal-store-success',
@@ -11,21 +11,20 @@ import { StoreService } from 'src/app/services/store.service';
   styleUrls: ['./modal-store-success.component.scss'],
 })
 export class ModalStoreSuccessComponent implements OnInit {
-
   public trackname: string = null;
 
   constructor(
     private _modalController: ModalController,
-    private statusService: StatusService,
-    private translate: TranslateService
-  ) { }
+    private _statusSvc: StatusService,
+    private _translateSvc: TranslateService,
+    private _cdr: ChangeDetectorRef,
+  ) {}
 
-  ngOnInit() {
-    if (this.statusService.route) {
-      let f = new WmTransPipe(this.translate);      
-      this.trackname = f.transform(this.statusService.route.properties.name);
-    }
-
+  close() {
+    // back
+    this._modalController.dismiss({
+      dismissed: true,
+    });
   }
 
   download() {
@@ -33,16 +32,12 @@ export class ModalStoreSuccessComponent implements OnInit {
     this._modalController.dismiss({
       dismissed: false,
     });
-
   }
 
-  close() {
-    // back
-    this._modalController.dismiss({
-      dismissed: true,
-    });
-
+  ngOnInit() {
+    if (this._statusSvc.route) {
+      let f = new WmTransPipe(this._translateSvc, this._cdr);
+      this.trackname = f.transform(this._statusSvc.route.properties.name);
+    }
   }
-
-
 }

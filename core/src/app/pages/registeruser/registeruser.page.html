@@ -1,134 +1,185 @@
 <ion-header class="webmapp-registeruser-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" text="" class="webmapp-backbutton webmapp-backbutton-dark"></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+      ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{'pages.registeruser.title' | translate}}</ion-title>
+    <ion-title>{{'pages.registeruser.title' | wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
   <form class="webmapp-registeruser-form" (ngSubmit)="register()" [formGroup]="registerForm">
-
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
-        {{ "pages.registeruser.name" | translate }}
+        {{ "pages.registeruser.name" | wmtrans }}
       </ion-label>
-      <ion-item class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.name.errors}">
-        <ion-input type="text" placeholder="{{ 'pages.registeruser.nameph' | translate }}" required #name
-          class="webmapp-registeruser-input" formControlName="name">
+      <ion-item
+        class="webmapp-registeruser-field"
+        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.name.errors}"
+      >
+        <ion-input
+          type="text"
+          placeholder="{{ 'pages.registeruser.nameph' | wmtrans }}"
+          required
+          #name
+          class="webmapp-registeruser-input"
+          formControlName="name"
+        >
         </ion-input>
       </ion-item>
       <ng-container *ngIf="isSubmitted && !!errorControl.name.errors">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.name.errors?.required">
-          {{ "pages.registeruser.errors.form.nameRequired" | translate }}
+          {{ "pages.registeruser.errors.form.nameRequired" | wmtrans }}
         </span>
       </ng-container>
     </div>
 
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
-        {{ "pages.registeruser.email" | translate }}
+        {{ "pages.registeruser.email" | wmtrans }}
       </ion-label>
-      <ion-item class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.email.errors}">
-        <ion-input type="text" inputmode="email" placeholder="{{ 'pages.registeruser.emailph' | translate }}" required
-          #email class="webmapp-registeruser-input" formControlName="email">
+      <ion-item
+        class="webmapp-registeruser-field"
+        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.email.errors}"
+      >
+        <ion-input
+          type="text"
+          inputmode="email"
+          placeholder="{{ 'pages.registeruser.emailph' | wmtrans }}"
+          required
+          #email
+          class="webmapp-registeruser-input"
+          formControlName="email"
+        >
         </ion-input>
       </ion-item>
       <ng-container *ngIf="isSubmitted && !!errorControl.email.errors">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.email.errors?.required">
-          {{ "pages.registeruser.errors.form.emailRequired" | translate }}
+          {{ "pages.registeruser.errors.form.emailRequired" | wmtrans }}
         </span>
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.email.errors?.email">
-          {{ "pages.registeruser.errors.form.emailInvalid" | translate }}
+          {{ "pages.registeruser.errors.form.emailInvalid" | wmtrans }}
         </span>
       </ng-container>
     </div>
 
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
-        {{ "pages.registeruser.cf" | translate }}
+        {{ "pages.registeruser.cf" | wmtrans }}
       </ion-label>
 
       <div class="webmapp-registeruser-extrainfo" (click)="showCfInfo($event)">
         <i class="webmapp-icon-info"></i>
-        {{ "pages.registeruser.cfextra" | translate }}
+        {{ "pages.registeruser.cfextra" | wmtrans }}
       </div>
 
-      <ion-item class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.cf.errors}">
-        <ion-input type="text" #cf placeholder="{{ 'pages.registeruser.cfph' | translate }}"
-          class="webmapp-registeruser-input" formControlName="cf">
+      <ion-item
+        class="webmapp-registeruser-field"
+        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.cf.errors}"
+      >
+        <ion-input
+          type="text"
+          #cf
+          placeholder="{{ 'pages.registeruser.cfph' | wmtrans }}"
+          class="webmapp-registeruser-input"
+          formControlName="cf"
+        >
         </ion-input>
       </ion-item>
       <ng-container *ngIf="isSubmitted && !!errorControl.cf.errors">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.cf.errors?.pattern">
-          {{ "pages.registeruser.errors.form.cfInvalid" | translate }}
+          {{ "pages.registeruser.errors.form.cfInvalid" | wmtrans }}
         </span>
       </ng-container>
     </div>
 
-
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
-        {{ "pages.registeruser.password" | translate }}
+        {{ "pages.registeruser.password" | wmtrans }}
       </ion-label>
-      <ion-item class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.password.errors}">
-        <ion-input type="text" type="password" placeholder="{{ 'pages.registeruser.passwordph' | translate }}" required
-          #password class="webmapp-registeruser-input" formControlName="password">
+      <ion-item
+        class="webmapp-registeruser-field"
+        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.password.errors}"
+      >
+        <ion-input
+          type="text"
+          type="password"
+          placeholder="{{ 'pages.registeruser.passwordph' | wmtrans }}"
+          required
+          #password
+          class="webmapp-registeruser-input"
+          formControlName="password"
+        >
         </ion-input>
       </ion-item>
       <ng-container *ngIf="isSubmitted && !!errorControl.password.errors">
-        <span class="webmapp-registeruser-field-error" *ngIf="errorControl.password.errors?.required">
-          {{ "pages.registeruser.errors.form.passwordRequired" | translate }}
+        <span
+          class="webmapp-registeruser-field-error"
+          *ngIf="errorControl.password.errors?.required"
+        >
+          {{ "pages.registeruser.errors.form.passwordRequired" | wmtrans }}
         </span>
       </ng-container>
     </div>
 
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
-        {{ "pages.registeruser.confirmPassword" | translate }}
+        {{ "pages.registeruser.confirmPassword" | wmtrans }}
       </ion-label>
-      <ion-item class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.confirmPassword.errors}">
-        <ion-input type="text" type="password" placeholder="{{ 'pages.registeruser.confirmPasswordph' | translate }}"
-          required #confirmPassword class="webmapp-registeruser-input" formControlName="confirmPassword">
+      <ion-item
+        class="webmapp-registeruser-field"
+        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.confirmPassword.errors}"
+      >
+        <ion-input
+          type="text"
+          type="password"
+          placeholder="{{ 'pages.registeruser.confirmPasswordph' | wmtrans }}"
+          required
+          #confirmPassword
+          class="webmapp-registeruser-input"
+          formControlName="confirmPassword"
+        >
         </ion-input>
       </ion-item>
       <ng-container *ngIf="isSubmitted && !!errorControl.confirmPassword.errors">
-        <span class="webmapp-registeruser-field-error" *ngIf="errorControl.confirmPassword.errors?.required">
-          {{ "pages.registeruser.errors.form.confirmPasswordRequired" | translate }}
+        <span
+          class="webmapp-registeruser-field-error"
+          *ngIf="errorControl.confirmPassword.errors?.required"
+        >
+          {{ "pages.registeruser.errors.form.confirmPasswordRequired" | wmtrans }}
         </span>
       </ng-container>
       <ng-container *ngIf="isSubmitted && !! registerForm.hasError('notSame')">
         <span class="webmapp-registeruser-field-error">
-          {{ "pages.registeruser.errors.form.confirmPasswordInvalid" | translate }}
+          {{ "pages.registeruser.errors.form.confirmPasswordInvalid" | wmtrans }}
         </span>
       </ng-container>
     </div>
 
     <ion-label class="webmapp-registeruser-policy">
-      {{ "pages.registeruser.privacy1" | translate }}
-      <a class="webmapp-registeruser-policylink" href="#">{{ "pages.registeruser.privacylink1" | translate }}</a>
-      {{ "pages.registeruser.privacy2" | translate }}
-      <a class="webmapp-registeruser-policylink" href="#">{{ "pages.registeruser.privacylink2" | translate }}</a>
-      {{ "pages.registeruser.privacy3" | translate }}
+      {{ "pages.registeruser.privacy1" | wmtrans }}
+      <a class="webmapp-registeruser-policylink" href="#"
+        >{{ "pages.registeruser.privacylink1" | wmtrans }}</a
+      >
+      {{ "pages.registeruser.privacy2" | wmtrans }}
+      <a class="webmapp-registeruser-policylink" href="#"
+        >{{ "pages.registeruser.privacylink2" | wmtrans }}</a
+      >
+      {{ "pages.registeruser.privacy3" | wmtrans }}
     </ion-label>
 
     <div class="webmapp-registeruser-buttoncontainer">
       <ion-button (click)="register()" class="webmapp-registeruser-button">
-        {{ "pages.registeruser.registerbutton" | translate }}
+        {{ "pages.registeruser.registerbutton" | wmtrans }}
       </ion-button>
     </div>
   </form>
 
   <ion-label *ngIf="showError" class="webmapp-registeruser-field-error">
-    {{ "pages.registeruser.genericError" | translate }}
+    {{ "pages.registeruser.genericError" | wmtrans }}
   </ion-label>
-
-
 </ion-content>

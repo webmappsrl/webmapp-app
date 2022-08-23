@@ -1,14 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
-import { WaypointdetailPageRoutingModule } from './waypointdetail-routing.module';
-
-import { WaypointdetailPage } from './waypointdetail.page';
-import { TranslateModule } from '@ngx-translate/core';
-import { MapModule } from 'src/app/components/map/map.module';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {IonicModule} from '@ionic/angular';
+import {MapModule} from 'src/app/components/map/map.module';
+import {NgModule} from '@angular/core';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {WaypointdetailPage} from './waypointdetail.page';
+import {WaypointdetailPageRoutingModule} from './waypointdetail-routing.module';
 
 @NgModule({
   imports: [
@@ -16,9 +13,9 @@ import { MapModule } from 'src/app/components/map/map.module';
     FormsModule,
     IonicModule,
     WaypointdetailPageRoutingModule,
-    TranslateModule,
-    MapModule
+    PipeModule,
+    MapModule,
   ],
-  declarations: [WaypointdetailPage]
+  declarations: [WaypointdetailPage],
 })
 export class WaypointdetailPageModule {}

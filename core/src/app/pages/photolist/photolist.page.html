@@ -8,26 +8,20 @@
         class="webmapp-backbutton webmapp-backbutton-chevron"
       ></ion-icon>
     </ion-buttons>
-    <ion-title>{{'pages.photolist.title'|translate}}</ion-title>
+    <ion-title>{{'pages.photolist.title'|wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="webmapp-photolist-noitem" *ngIf="!photos?.length">
-    {{'pages.photolist.noitem'|translate}}
+    {{'pages.photolist.noitem'|wmtrans}}
   </div>
   <ion-list>
     <ion-item *ngFor="let photo of photos" button detail (click)="open(photo)">
-      <ion-img
-        [src]="photo.photoURL"
-        start
-        class="webmapp-photolist-item-image"
-      ></ion-img>
+      <ion-img [src]="photo.photoURL" start class="webmapp-photolist-item-image"></ion-img>
       <div>
-        <div class="webmapp-photolist-item-title">{{photo.description}}</div>
-        <div class="webmapp-photolist-item-date">
-          {{photo.date | date : "d MMMM YYYY - HH:mm"}}
-        </div>
+        <div class="webmapp-photolist-item-title">{{photo.description|wmtrans}}</div>
+        <div class="webmapp-photolist-item-date">{{photo.date | date : "d MMMM YYYY - HH:mm"}}</div>
       </div>
     </ion-item>
   </ion-list>

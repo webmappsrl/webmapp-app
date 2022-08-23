@@ -41,23 +41,23 @@
         webmapp-modalphoto-addbtn-camera
       "
     ></i>
-    <ion-icon
-      class="webmapp-modalphoto-addbtn-plus"
-      name="add-outline"
-    ></ion-icon>
+    <ion-icon class="webmapp-modalphoto-addbtn-plus" name="add-outline"></ion-icon>
   </div>
   <ion-button
     class="webmapp-modalphoto-nextbtn"
     (click)="next()"
     *ngIf="photoCollection?.length"
-    >{{ "modals.photo.next" | translate }}</ion-button
+    >{{ "modals.photo.next" | wmtrans }}</ion-button
   >
 </ion-content>
 
 <ion-footer>
   <ion-toolbar class="webmapp-modalphoto-footer">
     <ion-slides pager="false" class="webmapp-modalphoto-slider" [options]="sliderOptions" #slider>
-      <ion-slide *ngFor="let photo of photoCollection" class="webmapp-modalphoto-footer-photocontainer">
+      <ion-slide
+        *ngFor="let photo of photoCollection"
+        class="webmapp-modalphoto-footer-photocontainer"
+      >
         <ion-img
           class="webmapp-modalphoto-footer-photo"
           (click)="select(photo)"

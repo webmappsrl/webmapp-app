@@ -12,17 +12,16 @@
       </ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="!track">{{
-      "pages.register.modalsave.title" | translate
+      "pages.register.modalsave.title" | wmtrans
     }}</ion-title>
     <ion-title *ngIf="track">{{
-      "pages.register.modalsave.titleEdit" | translate
+      "pages.register.modalsave.titleEdit" | wmtrans
     }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-      
     <webmapp-form-field
       [required]="true"
       [(value)]="title"
@@ -36,56 +35,59 @@
     ></webmapp-form-field>
 
     <webmapp-form-field
-    [required]="true"
-    [(value)]="activity"
-    [icon]="'webmapp-icon-activities'"
-    [iconColor]="'primary'"
-    [label]="'pages.register.modalsave.formactivity'"
-    [error]="'pages.register.modalsave.formactivityerror'"
-    [validate]="validate"
-    (validChange)="setIsValid(1,$event)"
-  >
-  <ion-select class="webmapp-register-modalsave-select" [(ngModel)]="activity" placeholder="{{'pages.register.modalsave.formactivityplaceholder'|translate}}">
-    <ion-select-option *ngFor="let activity of activities" [value]="activity">{{'activities.'+ activity | translate}}</ion-select-option>
-        </ion-select>
-  </webmapp-form-field>
+      [required]="true"
+      [(value)]="activity"
+      [icon]="'webmapp-icon-activities'"
+      [iconColor]="'primary'"
+      [label]="'pages.register.modalsave.formactivity'"
+      [error]="'pages.register.modalsave.formactivityerror'"
+      [validate]="validate"
+      (validChange)="setIsValid(1,$event)"
+    >
+      <ion-select
+        class="webmapp-register-modalsave-select"
+        [(ngModel)]="activity"
+        placeholder="{{'pages.register.modalsave.formactivityplaceholder'|wmtrans}}"
+      >
+        <ion-select-option
+          *ngFor="let activity of activities"
+          [value]="activity"
+          >{{'activities.'+ activity | wmtrans}}</ion-select-option
+        >
+      </ion-select>
+    </webmapp-form-field>
 
     <webmapp-form-field
-    [(value)]="description"
-    [icon]="'webmapp-icon-document'"
-    [iconColor]="'tertiary'"
-    [label]="'pages.register.modalsave.formdescription'"
-    [placeholder]="'pages.register.modalsave.formdescriptionplaceholder'"
-    [textArea]='true'
-  ></webmapp-form-field>
+      [(value)]="description"
+      [icon]="'webmapp-icon-document'"
+      [iconColor]="'tertiary'"
+      [label]="'pages.register.modalsave.formdescription'"
+      [placeholder]="'pages.register.modalsave.formdescriptionplaceholder'"
+      [textArea]="true"
+    ></webmapp-form-field>
 
-
-      
-<webmapp-form-field
-[icon]="'webmapp-icon-camera'"
-[iconColor]="'secondary'"
-[label]="'pages.register.modalsave.formphotos'"
-[noline]="true"
-><span></span></webmapp-form-field>
-
+    <webmapp-form-field
+      [icon]="'webmapp-icon-camera'"
+      [iconColor]="'secondary'"
+      [label]="'pages.register.modalsave.formphotos'"
+      [noline]="true"
+      ><span></span
+    ></webmapp-form-field>
   </ion-list>
 
   <ion-grid>
     <ion-row *ngIf="!photos?.length && !track">
       <ion-col size="12">
         <div class="webmapp-register-modalsave-loadphoto-wrapper">
-          <div
-            class="webmapp-register-modalsave-loadphoto"
-            (click)="addPhotos()"
-          >
+          <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
             <div class="webmapp-register-modalsave-loadphoto-text">
               <div class="webmapp-register-modalsave-loadphoto-action">
-                {{ "pages.register.modalsave.photoaction" | translate }}
+                {{ "pages.register.modalsave.photoaction" | wmtrans }}
               </div>
-              {{ "pages.register.modalsave.phototext" | translate }}
+              {{ "pages.register.modalsave.phototext" | wmtrans }}
             </div>
             <div class="webmapp-register-modalsave-loadphoto-advice">
-              {{ "pages.register.modalsave.photoadvice" | translate }}
+              {{ "pages.register.modalsave.photoadvice" | wmtrans }}
             </div>
           </div>
         </div>
@@ -103,12 +105,12 @@
         >
           <div class="webmapp-register-modalsave-loadphoto-text">
             <div class="webmapp-register-modalsave-loadphoto-action">
-              {{ "pages.register.modalsave.photoactionshort" | translate }}
+              {{ "pages.register.modalsave.photoactionshort" | wmtrans }}
             </div>
-            {{ "pages.register.modalsave.phototextshort" | translate }}
+            {{ "pages.register.modalsave.phototextshort" | wmtrans }}
           </div>
           <div class="webmapp-register-modalsave-loadphoto-advice">
-            {{ "pages.register.modalsave.photoadviceshort" | translate }}
+            {{ "pages.register.modalsave.photoadviceshort" | wmtrans }}
           </div>
         </div>
       </ion-col>
@@ -132,14 +134,11 @@
 </ion-content>
 
 <ion-footer class="webmapp-register-modalsave-footer">
-  <ion-button
-    class="webmapp-register-modalsave-savebtn"
-    (click)="save()"
-  >
-    {{ "pages.register.modalsave.savebtn" | translate }}</ion-button
+  <ion-button class="webmapp-register-modalsave-savebtn" (click)="save()">
+    {{ "pages.register.modalsave.savebtn" | wmtrans }}</ion-button
   >
 
   <ion-label (click)="exit()" class="webmapp-register-modalsave-deletebtn">
-    {{ 'pages.register.modalsave.deletebtn' | translate }}
+    {{ 'pages.register.modalsave.deletebtn' | wmtrans }}
   </ion-label>
 </ion-footer>

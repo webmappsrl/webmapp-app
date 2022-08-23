@@ -14,15 +14,15 @@
     <ion-list>
       <ion-item>
         <i class="webmapp-icon-directions-outline" start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions' | translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions' | wmtrans}}</div>
       </ion-item>
       <ion-item (click)="download()">
         <i class="webmapp-icon-donwload-outline" start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.download' | translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.download' | wmtrans}}</div>
       </ion-item>
       <ion-item (click)="share()">
         <i class="webmapp-icon-share-outline"></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.share' | translate}}</div>
+        <div class="webmapp-pageroute-menuitem">{{'pages.route.share' | wmtrans}}</div>
       </ion-item>
     </ion-list>
   </ion-content>
@@ -107,7 +107,7 @@
         <webmapp-tab-howto class="webmapp-route-tab"></webmapp-tab-howto>
         <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
         <ng-container *ngIf="(currentTrackProperties$|async)?.audio">
-          <ion-title>Descrizione Audio</ion-title>
+          <ion-title>{{'Descrizione Audio'|wmtrans}}</ion-title>
           <webmapp-track-audio
             [audio]="(currentTrackProperties$|async)?.audio"
           ></webmapp-track-audio>
@@ -174,19 +174,19 @@
       class="webmapp-pageroute-toolbox-button ion-activatable"
     >
       <i class="icon-outline-donwload"></i>
-      {{ 'pages.route.btndownload' | translate }}
+      {{ 'pages.route.btndownload' | wmtrans }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <div (click)="share()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="icon-outline-share-outline"></i>
-      {{ 'pages.route.btnshare' | translate }}
+      {{ 'pages.route.btnshare' | wmtrans }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
     <div (click)="navigate()" class="webmapp-pageroute-toolbox-button ion-activatable">
       <i class="icon-outline-nav-outline"></i>
-      {{ 'pages.route.btndnavigate' | translate }}
+      {{ 'pages.route.btndnavigate' | wmtrans }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
 
@@ -197,7 +197,7 @@
     >
       <i *ngIf="isFavourite$|async" class="icon-fill-heart"></i>
       <i *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></i>
-      {{ 'pages.route.btnfavourite' | translate }}
+      {{ 'pages.route.btnfavourite' | wmtrans }}
       <ion-ripple-effect></ion-ripple-effect>
     </div>
   </div>

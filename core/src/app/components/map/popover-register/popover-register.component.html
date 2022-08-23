@@ -1,19 +1,23 @@
 <div class="webmapp-map-register-title">
-  {{'components.map.register.title' | translate}}
+  {{'components.map.register.title' | wmtrans}}
 </div>
-<div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="track()" *ngIf="!registering">
-  <i class="webmapp-icon-track"></i> {{'components.map.register.track' | translate}}
+<div
+  class="webmapp-map-register-element ion-activatable ripple-parent"
+  (click)="track()"
+  *ngIf="!registering"
+>
+  <i class="webmapp-icon-track"></i> {{'components.map.register.track' | wmtrans}}
   <ion-ripple-effect></ion-ripple-effect>
 </div>
 <div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="photo($event)">
-  <i class="webmapp-icon-camera-outline"></i> {{'components.map.register.photo' | translate}}
+  <i class="webmapp-icon-camera-outline"></i> {{'components.map.register.photo' | wmtrans}}
   <ion-ripple-effect></ion-ripple-effect>
 </div>
 <div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="waypoint()">
-  <i class="webmapp-icon-pin-outline"></i> {{'components.map.register.waypoint' | translate}}
+  <i class="webmapp-icon-pin-outline"></i> {{'components.map.register.waypoint' | wmtrans}}
   <ion-ripple-effect></ion-ripple-effect>
 </div>
 <div class="webmapp-map-register-element ion-activatable ripple-parent" (click)="vocal()">
-  <i class="webmapp-icon-microphone"></i> {{'components.map.register.vocal' | translate}}
+  <i class="webmapp-icon-microphone"></i> {{'components.map.register.vocal' | wmtrans}}
   <ion-ripple-effect></ion-ripple-effect>
 </div>

@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SettingsComponent } from './settings.component';
-import { IonicModule } from '@ionic/angular';
-import { SharedModule } from '../shared/shared.module';
-import { TranslateModule } from '@ngx-translate/core';
+import {CommonModule} from '@angular/common';
+import {IonicModule} from '@ionic/angular';
+import {NgModule} from '@angular/core';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {SettingsComponent} from './settings.component';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [SettingsComponent],
-  imports: [CommonModule, IonicModule, TranslateModule, SharedModule],
+  imports: [CommonModule, IonicModule, PipeModule, SharedModule],
   exports: [SettingsComponent],
 })
 export class SettingsModule {}

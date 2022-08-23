@@ -1,7 +1,7 @@
 <ion-header class="webmapp-profile-header">
   <ion-toolbar mode="md" class="webmapp-profile-header-toolbar">
     <ion-title mode="md" class="webmapp-profile-header-toolbar-title">
-      {{'pages.profile.title' | translate}}
+      {{'pages.profile.title' | wmtrans}}
     </ion-title>
     <ion-fab-button
       slot="end"
@@ -29,10 +29,10 @@
 <ion-content scrollY="false" class="webmapp-profile-container">
   <form [formGroup]="langForm">
     <ion-item>
-      <ion-label> {{'pages.profile.lang' | translate}}</ion-label>
+      <ion-label> {{'pages.profile.lang' | wmtrans}}</ion-label>
       <ion-select
         formControlName="lang"
-        placeholder="{{'pages.profile.langPlaceholder' | translate}}"
+        placeholder="{{'pages.profile.langPlaceholder' | wmtrans}}"
       >
         <ion-select-option [value]="lang" *ngFor="let lang of langs$|async"
           >{{lang}}</ion-select-option
@@ -55,7 +55,7 @@
                 src="assets/images/profile/logged_out_slide_1.svg"
               />
               <div class="webmapp-profile-logged-out-slide-text">
-                {{'pages.profile.loggedOut.slides.0' | translate}}
+                {{'pages.profile.loggedOut.slides.0' | wmtrans}}
               </div>
             </div>
           </ion-slide>
@@ -66,7 +66,7 @@
                 src="assets/images/profile/logged_out_slide_2.svg"
               />
               <div class="webmapp-profile-logged-out-slide-text">
-                {{'pages.profile.loggedOut.slides.1' | translate}}
+                {{'pages.profile.loggedOut.slides.1' | wmtrans}}
               </div>
             </div>
           </ion-slide>
@@ -74,10 +74,10 @@
       </div>
       <div class="webmapp-profile-logged-out-login-buttons-container">
         <button class="webmapp-profile-logged-out-login-button" (click)="login()">
-          {{'pages.profile.loggedOut.login' | translate}}
+          {{'pages.profile.loggedOut.login' | wmtrans}}
         </button>
         <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
-          {{'pages.profile.loggedOut.signup' | translate}}
+          {{'pages.profile.loggedOut.signup' | wmtrans}}
         </button>
       </div>
     </ng-container>
@@ -104,7 +104,9 @@
             [routerLink]="['profile-data']"
             class="webmapp-profile-tabs-tab-button"
           >
-            <ion-label class="webmapp-profile-tabs-tab-label"> I tuoi dati </ion-label>
+            <ion-label class="webmapp-profile-tabs-tab-label">
+              {{'I tuoi dati'|wmtrans}}
+            </ion-label>
             <div class="webmapp-profile-tabs-tab-button-border"></div>
           </ion-tab-button>
           <ion-tab-button
@@ -113,7 +115,9 @@
             [routerLink]="['profile-records']"
             class="webmapp-profile-tabs-tab-button"
           >
-            <ion-label class="webmapp-profile-tabs-tab-label"> Le tue registrazioni </ion-label>
+            <ion-label class="webmapp-profile-tabs-tab-label">
+              {{'Le tue registrazioni'|wmtrans}}
+            </ion-label>
             <div class="webmapp-profile-tabs-tab-button-border"></div>
           </ion-tab-button>
         </ion-tab-bar>
@@ -129,7 +133,7 @@
           [routerLink]="['profile-data']"
           class="webmapp-profile-tabs-tab-button"
         >
-          <ion-label class="webmapp-profile-tabs-tab-label"> I tuoi dati </ion-label>
+          <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
           <div class="webmapp-profile-tabs-tab-button-border"></div>
         </ion-tab-button>
       </ion-tab-bar>

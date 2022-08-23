@@ -1,34 +1,41 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" text="" defaultHref="map" class="webmapp-backbutton webmapp-store-backbutton" ></ion-back-button>
+      <ion-back-button
+        mode="ios"
+        text=""
+        defaultHref="map"
+        class="webmapp-backbutton webmapp-store-backbutton"
+      ></ion-back-button>
       <!-- <ion-icon name="arrow-back-outline" [routerLink]="['/profile/profile-records']" class="webmapp-backbutton"></ion-icon> -->
     </ion-buttons>
-    <ion-title>{{'pages.store.title'|translate}}</ion-title>
+    <ion-title>{{'pages.store.title'|wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-label class="webmapp-store-main">
-    {{'pages.store.main'|translate}}
-  </ion-label>
-  <ion-label class="webmapp-store-text">
-    {{'pages.store.text'|translate}}
-  </ion-label>
-  <ion-label class="webmapp-store-text">
-    {{'pages.store.text2'|translate}}
-  </ion-label>
+  <ion-label class="webmapp-store-main"> {{'pages.store.main'|wmtrans}} </ion-label>
+  <ion-label class="webmapp-store-text"> {{'pages.store.text'|wmtrans}} </ion-label>
+  <ion-label class="webmapp-store-text"> {{'pages.store.text2'|wmtrans}} </ion-label>
   <div class="webmapp-store-buttoncontainer">
-    <ion-button *ngFor="let coinSize of coinSizes" expand="block" size="large" class="webmapp-store-button"
-      (click)="buy(coinSize.quantity)">
-      <ion-img class="webmapp-store-button-image" src="assets/images/coins{{coinSize.quantity}}.png"></ion-img>
+    <ion-button
+      *ngFor="let coinSize of coinSizes"
+      expand="block"
+      size="large"
+      class="webmapp-store-button"
+      (click)="buy(coinSize.quantity)"
+    >
+      <ion-img
+        class="webmapp-store-button-image"
+        src="assets/images/coins{{coinSize.quantity}}.png"
+      ></ion-img>
       <div class="webmapp-store-button-value">
-        <ion-label class="webmapp-store-button-text">{{ 'pages.store.button'+coinSize.quantity | translate }}
+        <ion-label class="webmapp-store-button-text"
+          >{{ 'pages.store.button'+coinSize.quantity | wmtrans }}
         </ion-label>
         <ion-label class="webmapp-store-button-price">{{coinSize.price}}€</ion-label>
       </div>
       <i class="webmapp-store-button-icon webmapp-icon-basket-outline"> </i>
     </ion-button>
   </div>
-
 </ion-content>

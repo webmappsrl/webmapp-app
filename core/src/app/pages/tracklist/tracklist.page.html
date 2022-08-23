@@ -8,13 +8,13 @@
         class="webmapp-backbutton webmapp-backbutton-chevron"
       ></ion-icon>
     </ion-buttons>
-    <ion-title>{{'pages.tracklist.title'|translate}}</ion-title>
+    <ion-title>{{'pages.tracklist.title'|wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="webmapp-tracklist-noitem" *ngIf="!tracks?.length">
-    {{'pages.tracklist.noitem'|translate}}
+    {{'pages.tracklist.noitem'|wmtrans}}
   </div>
   <ion-list>
     <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
@@ -28,9 +28,7 @@
       </div>
       <div>
         <div class="webmapp-tracklist-item-title">{{track.title}}</div>
-        <div class="webmapp-tracklist-item-date">
-          {{track.date | date : "d MMMM YYYY - HH:mm"}}
-        </div>
+        <div class="webmapp-tracklist-item-date">{{track.date | date : "d MMMM YYYY - HH:mm"}}</div>
       </div>
     </ion-item>
   </ion-list>

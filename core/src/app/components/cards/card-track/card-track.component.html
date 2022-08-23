@@ -1,34 +1,41 @@
 <ion-item button detail lines="none" class="webmapp-cardtrack-card">
-
   <!-- <ion-img [src]="getImage(track.properties?.feature_image?.url)" (click)="open()" class="webmapp-cardtrack-image"> -->
-  <webmapp-img [src]="track.properties?.feature_image" size="118x138" (click)="open()" class="webmapp-cardtrack-image">
-
+  <webmapp-img
+    [src]="track.properties?.feature_image"
+    size="118x138"
+    (click)="open()"
+    class="webmapp-cardtrack-image"
+  >
   </webmapp-img>
   <div class="webmapp-cardtrack-info" (click)="open()">
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-name">{{track.properties.name | wmtrans
-      }}</ion-label>
+    }}</ion-label>
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
-      {{track.properties.duration_forward | minutetime}}</ion-label>
+      {{track.properties.duration_forward | minutetime}}</ion-label
+    >
     <ion-label *ngIf="isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
-      {{sizeInMB(track.properties.size)}} MB</ion-label>
+      {{sizeInMB(track.properties.size)}} MB</ion-label
+    >
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
-      <i class="webmapp-cardtrack-info-icon wπcard-traebmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"> </i>
+      <i
+        class="webmapp-cardtrack-info-icon wπcard-traebmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"
+      >
+      </i>
       {{track.properties.difficulty | wmtrans }}
     </ion-label>
     <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-distance">
       <i class="webmapp-cardtrack-info-icon webmapp-icon-distance"> </i>
       {{track.properties.distance}} Km
     </ion-label>
-
   </div>
-
 
   <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)">
     {{"components.cardtrack.remove" |
-    translate}}
+    wmtrans}}
   </ion-label>
-  <ion-label *ngIf="isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)">{{
+  <ion-label *ngIf="isDownload" class="webmapp-cardtrack-remove" (click)="remove($event,track)"
+    >{{
     'components.cardtrack.delete' |
-    translate }} </ion-label>
-
+    wmtrans }}
+  </ion-label>
 </ion-item>

@@ -9,7 +9,7 @@
       </ion-icon>
     </ion-buttons>
     <ion-title mode="md" class="webmapp-downloadlist-header-toolbar-title">
-      {{'pages.downloadlist.title' | translate}}
+      {{'pages.downloadlist.title' | wmtrans}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -20,27 +20,27 @@
       class="webmapp-downloadlist-command"
       [hidden]="isSelectedActive || !tracks?.length"
       (click)="isSelectedActive = !isSelectedActive"
-      >{{ 'pages.downloadlist.select' | translate }}</ion-label
+      >{{ 'pages.downloadlist.select' | wmtrans }}</ion-label
     >
     <ion-label
       class="webmapp-downloadlist-command webmapp-downloadlist-command-delete"
       [hidden]="!isSelectedActive"
       (click)="deleteSelected()"
-      >{{ 'pages.downloadlist.deleteselected' | translate }}</ion-label
+      >{{ 'pages.downloadlist.deleteselected' | wmtrans }}</ion-label
     >
     <ion-label
       class="webmapp-downloadlist-command"
       [hidden]="!isSelectedActive"
       (click)="isSelectedActive = !isSelectedActive"
-      >{{ 'pages.downloadlist.cancel' | translate }}</ion-label
+      >{{ 'pages.downloadlist.cancel' | wmtrans }}</ion-label
     >
   </div>
 
   <div class="webmapp-downloadlist-nodata" *ngIf="!tracks || !tracks.length">
-    <ion-label> {{'pages.downloadlist.nodata' | translate}}</ion-label>
-    <ion-label> {{ 'pages.downloadlist.nodata2' | translate }}</ion-label>
+    <ion-label> {{'pages.downloadlist.nodata' | wmtrans}}</ion-label>
+    <ion-label> {{ 'pages.downloadlist.nodata2' | wmtrans }}</ion-label>
     <ion-button class="webmapp-downloadlist-nodata-button" (click)="gotoMap()"
-      >{{ 'pages.downloadlist.nodatabtn' | translate }}</ion-button
+      >{{ 'pages.downloadlist.nodatabtn' | wmtrans }}</ion-button
     >
   </div>
 

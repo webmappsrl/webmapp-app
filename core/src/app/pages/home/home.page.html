@@ -1,6 +1,6 @@
 <ion-content class="webmapp-home-content">
   <div class="wm-home-header-container">
-    <ion-label>{{'pages.home.welcome' | translate}}</ion-label>
+    <ion-label>{{'pages.home.welcome' | wmtrans}}</ion-label>
     <webmapp-search-bar
       *ngIf="showSearch && online$|async"
       [initSearch]="title"
@@ -26,12 +26,12 @@
       <ion-segment [value]="currentTab$|async" (ionChange)="segmentChanged($event)">
         <ng-container *ngIf="cards$|async as cards">
           <ion-segment-button value="tracks" *ngIf="cards != null && cards.length> 0">
-            <ion-label> tracks <ion-badge>{{cards.length}} </ion-badge></ion-label>
+            <ion-label> {{'tracks'| wmtrans}} <ion-badge>{{cards.length}} </ion-badge></ion-label>
           </ion-segment-button>
         </ng-container>
         <ng-container *ngIf="poiCards$|async as poiCards">
           <ion-segment-button value="pois" *ngIf="poiCards != null && poiCards.length> 0">
-            <ion-label> POI <ion-badge>{{poiCards.length}}</ion-badge></ion-label>
+            <ion-label> {{'POI'|wmtrans}} <ion-badge>{{poiCards.length}}</ion-badge></ion-label>
           </ion-segment-button>
         </ng-container>
       </ion-segment>
@@ -73,12 +73,12 @@
   </ng-container>
   <ng-container *ngIf="false">
     <webmapp-card-slider
-      [title]="'pages.home.mostViewedTracks' | translate"
+      [title]="'pages.home.mostViewedTracks' | wmtrans"
       [data]="mostViewedRoutes"
     ></webmapp-card-slider>
     <webmapp-card-slider
-      [title]="'pages.home.closerTracks' | translate"
-      [nodata]="'pages.home.nocloserTracks' | translate"
+      [title]="'pages.home.closerTracks' | wmtrans"
+      [nodata]="'pages.home.nocloserTracks' | wmtrans"
       [data]="nearRoutes"
       [showDistance]="true"
     ></webmapp-card-slider>

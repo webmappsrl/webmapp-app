@@ -1,14 +1,15 @@
 <div class="webmapp-route-favbtn-container" (click)="click()">
   <div class="webmapp-route-favbtn-right"></div>
 
-  <div #center class="webmapp-route-favbtn-center" [ngStyle]="{'width':centerWidth+'px'}">
-    </div>
-  
-  <div #left class="webmapp-route-favbtn-left">
-    <i class="webmapp-route-favbtn-icon"
-      [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"></i><div #text class="webmapp-route-favbtn-text">
-      {{(isFavourite?'pages.route.favbtn.isFavourite':'pages.route.favbtn.isNotFavourite')|translate}}</div>
-  
-  </div>
+  <div #center class="webmapp-route-favbtn-center" [ngStyle]="{'width':centerWidth+'px'}"></div>
 
+  <div #left class="webmapp-route-favbtn-left">
+    <i
+      class="webmapp-route-favbtn-icon"
+      [ngClass]="{'webmapp-icon-heart-outline':!isFavourite,'webmapp-icon-heart':isFavourite}"
+    ></i>
+    <div #text class="webmapp-route-favbtn-text">
+      {{(isFavourite?'pages.route.favbtn.isFavourite':'pages.route.favbtn.isNotFavourite')|wmtrans}}
+    </div>
+  </div>
 </div>

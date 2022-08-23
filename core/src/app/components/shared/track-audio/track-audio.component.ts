@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import {map, withLatestFrom} from 'rxjs/operators';
 
+import {TranslateService} from '@ngx-translate/core';
+
 @Component({
   selector: 'webmapp-track-audio',
   templateUrl: './track-audio.component.html',
@@ -42,5 +44,8 @@ export class TrackAudioComponent {
     playerElem.load();
     playerElem.play();
   }
-  constructor() {}
+  constructor(private _translateSvc: TranslateService) {
+    console.log(this._translateSvc.currentLang);
+    this.currentLang$.next(this._translateSvc.currentLang);
+  }
 }

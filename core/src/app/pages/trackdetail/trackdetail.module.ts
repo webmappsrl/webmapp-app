@@ -1,14 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-
-import { IonicModule } from '@ionic/angular';
-
-import { TrackdetailPageRoutingModule } from './trackdetail-routing.module';
-
-import { TrackdetailPage } from './trackdetail.page';
-import { TranslateModule } from '@ngx-translate/core';
-import { MapModule } from 'src/app/components/map/map.module';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {IonicModule} from '@ionic/angular';
+import {MapModule} from 'src/app/components/map/map.module';
+import {NgModule} from '@angular/core';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {TrackdetailPage} from './trackdetail.page';
+import {TrackdetailPageRoutingModule} from './trackdetail-routing.module';
 
 @NgModule({
   imports: [
@@ -16,9 +13,9 @@ import { MapModule } from 'src/app/components/map/map.module';
     FormsModule,
     IonicModule,
     TrackdetailPageRoutingModule,
-    TranslateModule,
-    MapModule
+    PipeModule,
+    MapModule,
   ],
-  declarations: [TrackdetailPage]
+  declarations: [TrackdetailPage],
 })
 export class TrackdetailPageModule {}

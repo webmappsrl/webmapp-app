@@ -1,24 +1,28 @@
 <ion-content class="webmapp-pageroute-tabviability">
-
   <div>
-    <ion-label class="webmapp-pageroute-tabviability-title">{{'pages.route.viability.title' | translate}}
+    <ion-label class="webmapp-pageroute-tabviability-title"
+      >{{'pages.route.viability.title' | wmtrans}}
     </ion-label>
 
-    <ion-slides pager="false" [options]="sliderOptions" class="webmapp-pageroute-tabviability-viaslider" #slider>
+    <ion-slides
+      pager="false"
+      [options]="sliderOptions"
+      class="webmapp-pageroute-tabviability-viaslider"
+      #slider
+    >
       <ion-slide *ngFor="let via of route?.properties.praticability">
         <div class="webmapp-pageroute-tabviability-viacontainer">
           <i class="webmapp-pageroute-tabviability-viaicon  webmapp-icon-{{via.icon}}   "></i>
-          <ion-label class="webmapp-pageroute-tabviability-vianame">{{via.name | wmtrans}}
+          <ion-label class="webmapp-pageroute-tabviability-vianame"
+            >{{via.name | wmtrans}}
           </ion-label>
         </div>
       </ion-slide>
     </ion-slides>
-
-
   </div>
   <div>
-    <ion-label class="webmapp-pageroute-tabviability-title">{{'pages.route.viability.info' | translate}}
+    <ion-label class="webmapp-pageroute-tabviability-title"
+      >{{'pages.route.viability.info' | wmtrans}}
     </ion-label>
   </div>
-
 </ion-content>

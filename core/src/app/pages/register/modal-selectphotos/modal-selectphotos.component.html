@@ -1,48 +1,63 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button  mode="ios" defaultHref="register" text="" class="webmapp-backbutton webmapp-backbutton-dark" (click)="close()">
+      <ion-back-button
+        mode="ios"
+        defaultHref="register"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+        (click)="close()"
+      >
       </ion-back-button>
     </ion-buttons>
-    <ion-title>{{'pages.register.modalphotos.title' | translate}}</ion-title>
+    <ion-title>{{'pages.register.modalphotos.title' | wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ng-container *ngIf="!images?.length">
     <div class="webmapp-register-modalphotos-noimages">
-      {{'pages.register.modalphotos.noimages' | translate}}
+      {{'pages.register.modalphotos.noimages' | wmtrans}}
     </div>
   </ng-container>
 
   <ng-container *ngIf="images?.length">
-
     <div class="webmapp-register-modalphotos-selectcontainer">
-      <ion-button class="webmapp-register-modalphotos-selectall" (click)="selectAll(true)" *ngIf="!isAllSelected">
-        {{'pages.register.modalphotos.selectall' | translate}}</ion-button>
-      <ion-button color="primary"
+      <ion-button
+        class="webmapp-register-modalphotos-selectall"
+        (click)="selectAll(true)"
+        *ngIf="!isAllSelected"
+      >
+        {{'pages.register.modalphotos.selectall' | wmtrans}}</ion-button
+      >
+      <ion-button
+        color="primary"
         class=" webmapp-register-modalphotos-selectall webmapp-register-modalphotos-deselectall"
-        (click)="selectAll(false)" *ngIf="isAllSelected">
-        {{'pages.register.modalphotos.deselectall' | translate}}</ion-button>
+        (click)="selectAll(false)"
+        *ngIf="isAllSelected"
+      >
+        {{'pages.register.modalphotos.deselectall' | wmtrans}}</ion-button
+      >
     </div>
     <ion-grid>
       <ion-row>
         <ion-col size="4" *ngFor="let image of images">
           <div class="webmapp-register-modalphotos-imagecontainer">
-            <ion-checkbox class="webmapp-register-modalphotos-check" [(ngModel)]="image.selected"
-              (ionChange)="select($event)"></ion-checkbox>
-              <ion-img class="webmapp-register-modalphotos-image" [src]="image.datasrc"></ion-img>
+            <ion-checkbox
+              class="webmapp-register-modalphotos-check"
+              [(ngModel)]="image.selected"
+              (ionChange)="select($event)"
+            ></ion-checkbox>
+            <ion-img class="webmapp-register-modalphotos-image" [src]="image.datasrc"></ion-img>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
-
   </ng-container>
-
-
 </ion-content>
 
 <ion-footer class="webmapp-register-modalphotos-footer">
   <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
-    {{'pages.register.modalphotos.savebtn' | translate}}</ion-button>
+    {{'pages.register.modalphotos.savebtn' | wmtrans}}</ion-button
+  >
 </ion-footer>

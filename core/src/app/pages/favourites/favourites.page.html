@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="webmapp-favourites-header-toolbar-header">
     <ion-title mode="md" class="webmapp-favourites-header-toolbar-title">
-      {{'pages.favourites.title' | translate}}
+      {{'pages.favourites.title' | wmtrans}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -10,20 +10,21 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length">{{'pages.favourites.nodata' |
-    translate}}</ion-label>
+  <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
+    >{{'pages.favourites.nodata' | wmtrans}}</ion-label
+  >
   <ion-list>
-    <webmapp-card-track *ngFor="let track of tracks" [track]="track" (open)="open($event)"
-    (remove)="remove($event)">      
-
+    <webmapp-card-track
+      *ngFor="let track of tracks"
+      [track]="track"
+      (open)="open($event)"
+      (remove)="remove($event)"
+    >
     </webmapp-card-track>
   </ion-list>
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Loading more data...">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
-
 </ion-content>

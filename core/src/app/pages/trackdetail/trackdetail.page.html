@@ -14,11 +14,11 @@
     <ion-list>
       <ion-item (click)="edit()">
         <i class="webmapp-icon-edit-outline " start></i>
-        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|translate}}</div>
+        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|wmtrans}}</div>
       </ion-item>
       <ion-item>
         <ion-icon name="trash-outline" start></ion-icon>
-        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.delete'|translate}}</div>
+        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.delete'|wmtrans}}</div>
       </ion-item>
     </ion-list>
   </ion-content>
@@ -34,7 +34,7 @@
         class="webmapp-backbutton webmapp-backbutton-dark"
       ></ion-back-button>
     </ion-buttons>
-    <ion-title>{{'pages.trackdetail.title'|translate}}</ion-title>
+    <ion-title>{{'pages.trackdetail.title'|wmtrans}}</ion-title>
     <ion-buttons slot="end">
       <ion-icon
         name="ellipsis-vertical"
@@ -59,18 +59,18 @@
     <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.description">
       <i class="webmapp-icon-document webmapp-trackdetail-icon tertiary" start></i>
       <div>
-        <div class="webmapp-trackdetail-item-description">{{track?.description}}</div>
+        <div class="webmapp-trackdetail-item-description">{{track?.description|wmtrans}}</div>
       </div>
     </ion-item>
 
     <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.activity">
       <i class="webmapp-icon-document webmapp-trackdetail-icon primary" start></i>
-      {{track?.activity}}
+      {{track?.activity|wmtrans}}
     </ion-item>
 
     <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="photos && photos.length">
       <i class="webmapp-icon-camera webmapp-trackdetail-icon secondary" start></i>
-      {{'pages.trackdetail.photos'|translate}}
+      {{'pages.trackdetail.photos'|wmtrans}}
     </ion-item>
   </ion-list>
 
@@ -90,12 +90,12 @@
     </ion-slide>
   </ion-slides>
 
-  <div class="webmapp-trackdetail-details">{{'pages.trackdetail.details'|translate}}</div>
+  <div class="webmapp-trackdetail-details">{{'pages.trackdetail.details'|wmtrans}}</div>
 
   <ion-list>
     <ion-item class="webmapp-trackdetail-detail">
       <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.time' | translate}}
+        {{'pages.trackdetail.time' | wmtrans}}
       </ion-label>
       <ion-label slot="end" class="webmapp-trackdetail-detail-value">
         {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
@@ -104,7 +104,7 @@
     </ion-item>
     <ion-item class="webmapp-trackdetail-detail">
       <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.distance' | translate}}
+        {{'pages.trackdetail.distance' | wmtrans}}
       </ion-label>
       <ion-label slot="end" class="webmapp-trackdetail-detail-value">
         {{trackDistance | number:'1.0-0'}}
@@ -112,7 +112,7 @@
     </ion-item>
     <ion-item class="webmapp-trackdetail-detail">
       <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.slope' | translate}}
+        {{'pages.trackdetail.slope' | wmtrans}}
       </ion-label>
       <ion-label slot="end" class="webmapp-trackdetail-detail-value">
         {{trackSlope | number:'1.0-0'}}m
@@ -120,7 +120,7 @@
     </ion-item>
     <ion-item class="webmapp-trackdetail-detail">
       <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.avgspeed' | translate}}
+        {{'pages.trackdetail.avgspeed' | wmtrans}}
       </ion-label>
       <ion-label slot="end" class="webmapp-trackdetail-detail-value">
         {{trackAvgSpeed | number:'1.1-1'}} km/h
@@ -128,7 +128,7 @@
     </ion-item>
     <ion-item class="webmapp-trackdetail-detail">
       <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.topspeed' | translate}}
+        {{'pages.trackdetail.topspeed' | wmtrans}}
       </ion-label>
       <ion-label slot="end" class="webmapp-trackdetail-detail-value">
         {{trackTopSpeed | number:'1.1-1'}} km/h

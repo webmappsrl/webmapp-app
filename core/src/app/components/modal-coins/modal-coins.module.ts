@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { SharedModule } from '../shared/shared.module';
-import { TranslateModule } from '@ngx-translate/core';
-import { ModalCoinsComponent } from './modal-coins.component';
+import {CommonModule} from '@angular/common';
+import {IonicModule} from '@ionic/angular';
+import {ModalCoinsComponent} from './modal-coins.component';
+import {NgModule} from '@angular/core';
+import {PipeModule} from 'src/app/pipes/pipe.module';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [ModalCoinsComponent],
-  imports: [CommonModule, IonicModule, TranslateModule, SharedModule],
+  imports: [CommonModule, IonicModule, PipeModule, SharedModule],
   exports: [ModalCoinsComponent],
 })
-export class ModalCoinsModule { }
+export class ModalCoinsModule {}

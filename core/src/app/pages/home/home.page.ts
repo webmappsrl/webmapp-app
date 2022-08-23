@@ -37,7 +37,6 @@ import {pois} from 'src/app/store/pois/pois.selector';
   selector: 'webmapp-page-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class HomePage implements OnInit {

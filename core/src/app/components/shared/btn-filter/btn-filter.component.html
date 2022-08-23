@@ -1,6 +1,6 @@
 <ion-button (click)="setOpen(true)">
   <ion-icon name="funnel"></ion-icon>
-  Filtri
+  {{'Filtri'|wmtrans}}
 </ion-button>
 <ion-modal [isOpen]="isModalOpen$|async" (willDismiss)="onWillDismiss($event)" #filterModal>
   <ng-template>
@@ -11,9 +11,9 @@
             <ion-icon name="close"></ion-icon>
           </ion-button>
         </ion-buttons>
-        <ion-title>Filtri</ion-title>
+        <ion-title>{{'Filtri'|wmtrans}}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="reset()" color="danger">reset</ion-button>
+          <ion-button (click)="reset()" color="danger">{{'reset'|wmtrans}}</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -24,7 +24,7 @@
           *ngFor="let tab of tabs$|async"
           (click)="segmentChanged(tab)"
         >
-          <ion-label>{{tab|translate}}</ion-label>
+          <ion-label>{{tab|wmtrans}}</ion-label>
         </ion-segment-button>
       </ion-segment>
       <div class="chip-list">

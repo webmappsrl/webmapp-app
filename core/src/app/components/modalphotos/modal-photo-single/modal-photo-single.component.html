@@ -1,43 +1,48 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button mode="ios" defaultHref="" icon="close-outline" text=""
-        class="webmapp-backbutton webmapp-backbutton-dark" (click)="done()">
+      <ion-back-button
+        mode="ios"
+        defaultHref=""
+        icon="close-outline"
+        text=""
+        class="webmapp-backbutton webmapp-backbutton-dark"
+        (click)="done()"
+      >
       </ion-back-button>
     </ion-buttons>
     <ion-title class="webmapp-modalphotosingle-title">{{
-      "modals.photo.single.title" | translate
-      }}</ion-title>
+      "modals.photo.single.title" | wmtrans
+    }}</ion-title>
     <ion-buttons slot="end"> </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="true" class="webmapp-modalphotosingle-item">
-
   <!-- <ion-slides>
     <ion-slide *ngFor="let photo of photos"> -->
-<ion-img class="webmapp-modalphotosingle-item-photo" [src]="photo?.datasrc"></ion-img>
+  <ion-img class="webmapp-modalphotosingle-item-photo" [src]="photo?.datasrc"></ion-img>
 
   <div class="webmapp-modalphotosingle-item-inputwrapper">
     <!-- <ion-label class="webmapp-modalphotosingle-item-label" position="stacked">{{ "modals.photo.single.formphototitle"
-      | translate }}</ion-label>
+      | wmtrans }}</ion-label>
     <ion-input class="webmapp-modalphotosingle-item-input"
-      placeholder="{{ 'modals.photo.single.placeholder'  | translate }}" [(ngModel)]="photo.description" type="text">
+      placeholder="{{ 'modals.photo.single.placeholder'  | wmtrans }}" [(ngModel)]="photo.description" type="text">
     </ion-input> -->
 
-    <webmapp-form-field [(value)]="photo.description" 
-      [label]="'modals.photo.single.formphototitle'" [placeholder]="'modals.photo.single.placeholder'"></webmapp-form-field>
+    <webmapp-form-field
+      [(value)]="photo.description"
+      [label]="'modals.photo.single.formphototitle'"
+      [placeholder]="'modals.photo.single.placeholder'"
+    ></webmapp-form-field>
   </div>
-    <!-- </ion-slide>
+  <!-- </ion-slide>
 
   </ion-slides> -->
-
-  
-
-
 </ion-content>
 
 <ion-footer class="webmapp-modalphotosingle-footer">
   <ion-button class="webmapp-modalphotosingle-savebtn" (click)="done()">
-    {{ "modals.photo.single.savebtn" | translate }}</ion-button>
+    {{ "modals.photo.single.savebtn" | wmtrans }}</ion-button
+  >
 </ion-footer>
