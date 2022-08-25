@@ -12,6 +12,7 @@
 
 **12.1.17**
 
+- (feature): aggiunto nella home il box_type track
 - (feature): abilitata la registrazione percorso
 - (feature): abilitata l'autenticazione
 - (feature): abilitata la sezione preferiti
