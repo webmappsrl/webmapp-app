@@ -62,6 +62,13 @@
           (clickEVT)="setLayer(box.layer)"
         >
         </webmapp-layer-box>
+        <ng-container *ngIf="box.box_type == 'track'">
+          <webmapp-base-box
+            class="home-base-box"
+            [data]="box"
+            (clickEVT)="searchCard(box.track_id)"
+          ></webmapp-base-box>
+        </ng-container>
         <ng-container *ngIf="box.box_type == 'base'">
           <webmapp-slider-box [data]="box" (clickEVT)="searchCard($event)"></webmapp-slider-box>
         </ng-container>

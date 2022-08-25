@@ -62,7 +62,7 @@ interface IHOMEOLD {
 }
 
 type IBOX = {
-  box_type: 'title' | 'layer' | 'base' | 'external_url' | 'slug';
+  box_type: 'title' | 'layer' | 'track' | 'base' | 'external_url' | 'slug';
   title: iLocalString | string;
 };
 type ITITLEBOX = IBOX & {
@@ -72,6 +72,12 @@ type ILAYERBOX = IBOX & {
   box_type: 'layer';
   layer: number | ILAYER;
 };
+
+type ITRACKBOX = IBOX & {
+  box_type: 'track';
+  track_id: number;
+};
+
 type IHOMEBASEITEM = {
   title: iLocalString | string;
   image_url: string;
@@ -100,7 +106,7 @@ type IBASEBOX = IBOX & {
   box_type: 'base';
   items: IHOMEITEM[];
 };
-type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX | ISLUGBOX;
+type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX | ISLUGBOX | ITRACKBOX;
 interface IOPTIONS {
   addArrowsOverTracks: boolean;
   baseUrl: string;

@@ -2,6 +2,20 @@ webmapp-page-home {
   .webmapp-home-content {
     --padding-bottom: 15px;
     --background: var(--wm-color-greybackground);
+
+    .home-base-box {
+      background-color: red;
+      height: 100%;
+      width: 100%;
+      max-height: 186px;
+      .webmapp-base-box-container,
+      ion-card {
+        width: auto;
+      }
+      .webmapp-base-box-container {
+        margin: 0px 10px;
+      }
+    }
     .wm-home-header-container {
       padding-top: 36px;
       padding-bottom: 45px;
