@@ -13,6 +13,7 @@ import {SlopeChartComponent} from './slope-chart/slope-chart.component';
 import {TabDescriptionComponent} from './tab-description/tab-description.component';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
 import {TabHowtoComponent} from './tab-howto/tab-howto.component';
+import {TabNearestPoiComponent} from './tab-nearest-poi/tab-nearest-poi.component';
 import {TabPoiComponent} from './tab-poi/tab-poi.component';
 import {TabViabilityComponent} from './tab-viability/tab-viability.component';
 import {TabWalkableComponent} from './tab-walkable/tab-walkable.component';
@@ -40,6 +41,7 @@ import {TranslateModule} from '@ngx-translate/core';
     SlopeChartComponent,
     DownloadPanelComponent,
     FavBtnComponent,
+    TabNearestPoiComponent,
   ],
 })
 export class ItineraryPageModule {}

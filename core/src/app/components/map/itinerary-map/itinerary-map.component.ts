@@ -27,6 +27,7 @@ import CircleStyle from 'ol/style/Circle';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+
 import View, {FitOptions} from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -41,6 +42,14 @@ import {
   DEF_MAP_MIN_ZOOM,
   DEF_MAP_MAX_CENTER_ZOOM,
   DEF_MAP_ROTATION_DURATION,
+  DEF_LINE_COLOR,
+  CIRCULARTOLERANCE,
+  CLUSTERLAYERZINDEX,
+  DISTANCE_NEARBY_POINT,
+  POISLAYERZINDEX,
+  SELECTEDPOIANIMATIONDURATION,
+  TRACKLAYERZINDEX,
+  TRACKMARKERLAYERZINDEX,
 } from '../../../constants/map';
 
 import {ILocation} from 'src/app/types/location';
@@ -49,15 +58,8 @@ import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
 import {MapService} from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
 import {ITrack} from 'src/app/types/track';
-import {
-  IGeojsonCluster,
-  IGeojsonFeature,
-  IGeojsonGeometry,
-  IGeojsonPoi,
-  IGeojsonPoiDetailed,
-  ILineString,
-} from 'src/app/types/model';
-import {fromLonLat} from 'ol/proj';
+import {IGeojsonCluster, IGeojsonPoi, IGeojsonPoiDetailed, ILineString} from 'src/app/types/model';
+import {fromLonLat, toLonLat} from 'ol/proj';
 import {ClusterMarker, iMarker, MapMoveEvent, PoiMarker} from 'src/app/types/map';
 import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
@@ -72,23 +74,12 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {MarkerService} from 'src/app/services/marker.service';
 import {TilesService} from 'src/app/services/tiles.service';
 import {ConfigService} from 'src/app/services/config.service';
-import layerVector from 'ol/layer/Vector';
-import sourceVector from 'ol/source/Vector';
 import {Store} from '@ngrx/store';
 import {IMapRootState} from 'src/app/store/map/map';
 import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selector';
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
-
-const SELECTEDPOIANIMATIONDURATION = 300;
-
-const CLUSTERLAYERZINDEX = 400;
-const POISLAYERZINDEX = 460;
-const SELECTEDPOILAYERZINDEX = 500;
-const TRACKLAYERZINDEX = 450;
-const TRACKMARKERLAYERZINDEX = 470;
-const DEF_LINE_COLOR = 'green';
-const CIRCULARTOLERANCE = 0.001;
+import {getDistance} from 'ol/sphere';
 
 @Component({
   selector: 'itinerary-webmapp-map',
@@ -99,6 +90,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   private _bottomPadding: number = 0;
   private _clusterLayer: VectorLayer;
   private _clusterMarkers: ClusterMarker[] = [];
+  private _currentLocation;
   private _defaultFeatureColor = DEF_LINE_COLOR;
   private _destroyer: Subject<boolean> = new Subject<boolean>();
   private _height: number;
@@ -167,6 +159,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
   @Output() moveBtn: EventEmitter<number> = new EventEmitter();
+  @Output() nearestPoiEvt: EventEmitter<Feature<Geometry>> = new EventEmitter();
   @Output() rotate: EventEmitter<number> = new EventEmitter();
   @Output() touch: EventEmitter<any> = new EventEmitter();
   @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
@@ -518,6 +511,21 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       this.locationState = EMapLocationState.FOLLOW;
       this._centerMapToLocation();
     }
+  }
+
+  currentLocation(coords) {
+    setTimeout(() => {
+      this._currentLocation = fromLonLat([coords.longitude, coords.latitude]);
+      const nearestPoi = this._calculateNearestPoint(
+        this._currentLocation,
+        this._poisLayer.getSource(),
+      );
+
+      if (nearestPoi != null) {
+        ((nearestPoi.getStyle() as any).getImage() as any).setScale(1.2);
+        this.nearestPoiEvt.emit(nearestPoi);
+      }
+    }, 500);
   }
 
   deleteTrack() {
@@ -877,6 +885,27 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     }
   }
 
+  private _calculateNearestPoint(
+    coord: Coordinate,
+    feature: VectorSource<Geometry>,
+  ): Feature<Geometry> | null {
+    const nFeature = feature.getClosestFeatureToCoordinate(coord);
+    if (nFeature != null) {
+      const nFeatureCoords = nFeature.getGeometry();
+      const distanceFromUser = getDistance(
+        toLonLat(coord),
+        toLonLat((nFeatureCoords as Point).getCoordinates()),
+      );
+      if (distanceFromUser > DISTANCE_NEARBY_POINT) {
+        return null;
+      }
+      const oldProperties = nFeature.getProperties();
+      nFeature.setProperties({...oldProperties, ...{distance_from_user: distanceFromUser}});
+      return nFeature;
+    }
+    return null;
+  }
+
   /**
    * Set the current map view to a specific bounding box
    */
@@ -1082,6 +1111,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       img,
       this._markerService.poiMarkerSize,
     );
+    iconFeature.setProperties(poi.properties);
     return {
       marker: {
         poi,

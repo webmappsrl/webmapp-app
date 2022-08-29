@@ -78,6 +78,7 @@
   style="width: 120px; height: 120px; position: absolute; left: -10000px"
   [map]="itineraryMap"
   [focus]="focus"
+  (locationEvt)="currentLocation($event)"
   wmMapPosition
   wmAttribution
 >

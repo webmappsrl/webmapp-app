@@ -6,7 +6,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class DistancePipe implements PipeTransform {
   transform(value: number, distance = 'km'): string {
     if (value != null && distance === 'km') {
-      return `${Math.round(value * 10) / 10} km`;
+      return `${Math.trunc(value)} km`;
+    }
+    if (value != null && distance === 'm') {
+      return `${Math.trunc(value)} m`;
     }
     return `${value}`;
   }

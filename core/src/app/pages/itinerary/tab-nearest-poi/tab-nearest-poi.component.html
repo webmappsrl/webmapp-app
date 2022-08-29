@@ -1,7 +1,10 @@
-<ng-container *ngIf="currentRelatedPoi$|async as currentRelatedPoi">
-  <div class="webmapp-title">Punti di interesse</div>
-  <div *ngFor="let item of currentRelatedPoi" class="webmapp-track-poi-list">
-    <ng-container *ngIf="item.properties as properties">
+<ng-container *ngIf="nearestPoi as np">
+  <ng-container *ngIf="nearestPoi.getProperties() as properties">
+    <div class="webmapp-title">
+      {{'Punto di interesse nelle vicinanze'| wmtrans}}
+      ({{properties.distance_from_user|distance:'m'}})
+    </div>
+    <div class="webmapp-track-poi-list">
       <div class="webmapp-track-poi-item">
         <webmapp-img
           class="webmapp-track-poi-img"
@@ -12,10 +15,7 @@
           <div class="webmapp-track-poi-title">
             {{ properties.name | wmtrans|lowercase }}
           </div>
-          <div
-            class="webmapp-track-poi-description"
-            [innerHTML]="properties?.description | wmtrans"
-          ></div>
+
           <div class="webmapp-track-poi-btns">
             <div class="webmapp-poi-popup-btn">
               <i class="webmapp-icon icon-fill-pin"></i>
@@ -32,6 +32,6 @@
           </div>
         </div>
       </div>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </ng-container>

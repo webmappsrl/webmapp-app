@@ -74,6 +74,7 @@
       [cache]="useCache"
       (rotate)="mapRotation($event)"
       (touch)="resetFocus()"
+      (nearestPoiEvt)="nearestPoi$.next($event)"
     ></itinerary-webmapp-map>
   </div>
 
@@ -100,6 +101,12 @@
         </div>
       </div>
       <ion-content #moredetails scrollY="true" scroll-events="true" (ionScroll)="scroll($event)">
+        <ng-container *ngIf="nearestPoi$|async as nearestPoi">
+          <webmapp-tab-nearest-poi
+            [nearestPoi]="nearestPoi"
+            (click)="clickPoi(nearestPoi)"
+          ></webmapp-tab-nearest-poi>
+        </ng-container>
         <webmapp-tab-detail
           class="webmapp-route-tab"
           (slopeChartHover)="setTrackElevationChartHoverElements($event)"

@@ -12,6 +12,8 @@ import {
 } from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
+import Feature from 'ol/Feature';
+import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {auditTime, switchMap, take, tap} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -85,6 +87,8 @@ export class ItineraryPage implements OnDestroy {
   //from CCS????
   public minInfoheight = 350;
   public modeFullMap = false;
+  nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
+    new BehaviorSubject<Feature<Geometry> | null>(null);
   public opacity = 1;
   public pois: Array<IGeojsonPoi> = null;
   public scrollShowButtonThreshold = 450;
@@ -141,10 +145,20 @@ export class ItineraryPage implements OnDestroy {
     this._navController.back();
   }
 
-  clickPoi(poi: IGeojsonPoi) {
+  clickPoi(poi: IGeojsonPoi | Feature<Geometry>) {
     this._navController.navigateForward(['poi']);
     setTimeout(() => {
-      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
+      let id =
+        (poi as IGeojsonPoi).properties != null && (poi as IGeojsonPoi).properties.id != null
+          ? +(poi as IGeojsonPoi).properties.id
+          : undefined;
+      if (id == undefined) {
+        const prop = (poi as Feature<Geometry>).getProperties();
+        if (prop != null && prop.id != null) {
+          id = prop.id;
+        }
+      }
+      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +id}));
     }, 500);
   }
 

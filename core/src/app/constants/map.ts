@@ -1,5 +1,5 @@
 // MAP
-export const DEF_MAP_MAX_BOUNDINGBOX: number[] = [-90,-180,90,180];
+export const DEF_MAP_MAX_BOUNDINGBOX: number[] = [-90, -180, 90, 180];
 export const DEF_MAP_MIN_ZOOM: number = 1;
 export const DEF_MAP_MAX_ZOOM: number = 16;
 export const DEF_MAP_MAX_CENTER_ZOOM: number = 14;
@@ -34,3 +34,13 @@ export const DEF_LOCATION_Z_INDEX: number = 1e11;
 // export const DEF_LINE_Z_INDEX: number = 2e9;
 // export const DEF_POLYGON_Z_INDEX: number = 1e9;
 // export const DEF_LINE_REF_LABEL_Z_INDEX: number = 3e9;
+export const SELECTEDPOIANIMATIONDURATION = 300;
+
+export const CLUSTERLAYERZINDEX = 400;
+export const POISLAYERZINDEX = 460;
+export const SELECTEDPOILAYERZINDEX = 500;
+export const TRACKLAYERZINDEX = 450;
+export const TRACKMARKERLAYERZINDEX = 470;
+export const DEF_LINE_COLOR = 'green';
+export const CIRCULARTOLERANCE = 0.001;
+export const DISTANCE_NEARBY_POINT = 1000;
