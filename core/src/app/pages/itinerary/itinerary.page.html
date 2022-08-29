@@ -29,6 +29,16 @@
 </ion-menu>
 
 <ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
+  <ng-container *ngIf="modeFullMap">
+    <ng-container *ngIf="nearestPoi$|async as nearestPoi">
+      <div class="message">
+        <webmapp-tab-nearest-poi
+          [nearestPoi]="nearestPoi"
+          (click)="clickPoi(nearestPoi)"
+        ></webmapp-tab-nearest-poi>
+      </div>
+    </ng-container>
+  </ng-container>
   <div #header class="webmapp-pageroute-header">
     <ion-header
       class="webmapp-pageroute-header"

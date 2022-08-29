@@ -27,7 +27,6 @@ import CircleStyle from 'ol/style/Circle';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-
 import View, {FitOptions} from 'ol/View';
 import XYZ from 'ol/source/XYZ';
 import GeoJSON from 'ol/format/GeoJSON';
