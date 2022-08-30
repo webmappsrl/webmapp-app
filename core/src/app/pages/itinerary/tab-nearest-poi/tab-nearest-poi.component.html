@@ -1,5 +1,5 @@
 <ng-container *ngIf="nearestPoi as np">
-  <ng-container *ngIf="nearestPoi.getProperties() as properties">
+  <ng-container *ngIf="np.getProperties() as properties">
     <div class="webmapp-title">
       {{'Punto di interesse nelle vicinanze'| wmtrans}}
       ({{properties.distance_from_user|distance:'m'}})

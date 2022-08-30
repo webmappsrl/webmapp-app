@@ -519,11 +519,10 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
         this._currentLocation,
         this._poisLayer.getSource(),
       );
-
       if (nearestPoi != null) {
         ((nearestPoi.getStyle() as any).getImage() as any).setScale(1.2);
-        this.nearestPoiEvt.emit(nearestPoi);
       }
+      this.nearestPoiEvt.emit(nearestPoi);
     }, 500);
   }
 
@@ -588,7 +587,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     if (this.centerToTrack) {
       this._centerMapToTrack();
     }
-    //}
   }
 
   ionViewWillLeave() {

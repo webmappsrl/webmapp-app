@@ -5,7 +5,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   templateUrl: './tab-nearest-poi.component.html',
   styleUrls: ['./tab-nearest-poi.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabNearestPoiComponent {
   @Input() nearestPoi: any | null;
