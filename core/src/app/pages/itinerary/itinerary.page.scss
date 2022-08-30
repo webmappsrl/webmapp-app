@@ -85,7 +85,10 @@
     padding: 15px;
   }
 }
-
+.message {
+  margin-top: constant(safe-area-inset-top); // for ios 11.1
+  margin-top: env(safe-area-inset-top); // for ios 11.2 and onwards
+}
 .webmapp-pageroute-infopanel-name {
   padding: 5px 15px;
   font-weight: var(--wm-font-weight-xbold);
