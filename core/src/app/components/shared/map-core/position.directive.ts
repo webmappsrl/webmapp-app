@@ -81,8 +81,8 @@ export class WmMapPositionDirective implements OnDestroy {
       this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
         console.log('ERROR', e);
         return {
-          longitude: 11.067476,
-          latitude: 42.640654,
+          longitude: 14.0618579,
+          latitude: 37.494745,
           bearing: 0,
         } as BackgroundGeolocationResponse;
       }),

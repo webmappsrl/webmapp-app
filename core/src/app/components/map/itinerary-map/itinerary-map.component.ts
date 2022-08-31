@@ -44,7 +44,7 @@ import {
   DEF_LINE_COLOR,
   CIRCULARTOLERANCE,
   CLUSTERLAYERZINDEX,
-  DISTANCE_NEARBY_POINT,
+  ALERT_POI_RADIUS,
   POISLAYERZINDEX,
   SELECTEDPOIANIMATIONDURATION,
   TRACKLAYERZINDEX,
@@ -154,6 +154,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('animation') useAnimation: boolean = true;
   @Input('cache') useCache: boolean = false;
+  @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
   @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
@@ -893,7 +894,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
         toLonLat(coord),
         toLonLat((nFeatureCoords as Point).getCoordinates()),
       );
-      if (distanceFromUser > DISTANCE_NEARBY_POINT) {
+      if (distanceFromUser > this.alertPoiRadius) {
         return null;
       }
       const oldProperties = nFeature.getProperties();

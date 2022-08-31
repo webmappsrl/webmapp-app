@@ -16,6 +16,7 @@ export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks
   ...state.MAP,
   ...{tracks: allTracks},
 }));
+
 export const confTHEME = createSelector(confFeature, state => state.THEME);
 export const confMAPLAYERS = createSelector(confMAP, state => state.layers);
 export const confPOIS = createSelector(confMAP, map => {

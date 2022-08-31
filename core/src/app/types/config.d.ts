@@ -174,6 +174,8 @@ interface IPROJECT {
   HTML: string;
 }
 interface IMAP {
+  alert_poi_radius: number;
+  alert_poi_show: boolean;
   bbox: [number, number, number, number];
   center?: [number, number];
   defZoom: number;

@@ -22,7 +22,7 @@ import {CoinService} from 'src/app/services/coin.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
+import {confAUTHEnable, confMAP} from 'src/app/store/conf/conf.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentTrack, mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
@@ -80,6 +80,7 @@ export class ItineraryPage implements OnDestroy {
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public itinerary: IGeojsonFeature;
   public lastScroll = 0;
+  mapConf$: Observable<any> = this._storeConf.select(confMAP);
   public mapDegrees = 0;
   //will be updated by real screen height
   public maxInfoHeigtDifference = 80;

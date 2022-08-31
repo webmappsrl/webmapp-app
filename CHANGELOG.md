@@ -20,7 +20,7 @@
 - (feature): aggiunta clusterizzazione sui poi
 - (feature): aggiunto il componente audio nei dettagli del percorso e del poi
 - (feature): aggiunta la traduzione inglese della UI
-- (feature): aggiunto nearby point
+- (feature): aggiunto nearby point configurabile da geohub
 - (refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
 
 ---
