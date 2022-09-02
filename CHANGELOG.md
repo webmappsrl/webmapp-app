@@ -10,7 +10,11 @@
 
 ---
 
-**12.1.17**(in progress)
+**12.1.18**
+
+---
+
+**12.1.17**
 
 - (feature): aggiunto nella home il box_type track
 - (feature): abilitata la registrazione percorso
@@ -20,7 +24,7 @@
 - (feature): aggiunta clusterizzazione sui poi
 - (feature): aggiunto il componente audio nei dettagli del percorso e del poi
 - (feature): aggiunta la traduzione inglese della UI
-- (feature): aggiunto nearby point configurabile da geohub
+- (feature): aggiunto alert_poi configurabile da geohub
 - (refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
 
 ---
