@@ -20,13 +20,13 @@
 
 **12.1.17**
 
-|                  | [1F]() | [2F]() | [3F]() | [4F]() | [5F]() | [6F]() | [7F]() | [8F]() | [9F]() | [10F]() |
-| ---------------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------- |
-| PEC              |        |        |        |        |        |        |        |        |        |         |
-| SICAI            |        |        |        |        |        |        |        |        |        |         |
-| UCVS             |        |        |        |        |        |        |        |        |        |         |
-| FUMAIOLOSENTIERI |        |        |        |        |        |        |        |        |        |         |
-| GAVORRANO        |        |        |        |        |        |        |        |        |        |         |
+|                  | [1F]() | [2F]() | [3F]() | [4F]() | [5F]() | [6F]() | [7F]() | [8F]() | [9F]() |
+| ---------------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
+| PEC              |        |        |        |        |        |        |        |        |        |
+| SICAI            |        |        |        |        |        |        |        |        |        |
+| UCVS             |        |        |        |        |        |        |        |        |        |
+| FUMAIOLOSENTIERI |        |        |        |        |        |        |        |        |        |
+| GAVORRANO        |        |        |        |        |        |        |        |        |        |
 
 - [1F]()(feature): aggiunto nella home il box_type track
 
@@ -46,7 +46,7 @@
 
 - [9F]()(feature): aggiunto alert_poi configurabile da geohub
 
-- [10F]()(refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
+- [1R]()(refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
 
 ---
 
