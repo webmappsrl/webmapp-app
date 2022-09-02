@@ -8,7 +8,7 @@
 
 - UCVS:**12.1.15**
 
-- FUMAIOLOSENTIERI:**12.1.15**
+- FUMAIOLOSENTIERI:**12.1.17**
 
 - GAVORRANO:**12.1.15**
 
@@ -25,7 +25,7 @@
 | PEC              |        |        |        |        |        |        |        |        |        |
 | SICAI            |        |        |        |        |        |        |        |        |        |
 | UCVS             |        |        |        |        |        |        |        |        |        |
-| FUMAIOLOSENTIERI |        |   X    |   X    |   X    |   X    |   X    |        |   X    |   X    |
+| FUMAIOLOSENTIERI |        | X      | X      | X      | X      | X      |        | X      | X      |
 | GAVORRANO        |        |        |        |        |        |        |        |        |        |
 
 - [1F]()(feature): aggiunto nella home il box_type track
@@ -44,7 +44,7 @@
 
 - [8F]()(feature): aggiunta la traduzione inglese della UI
 
-- [9F]()(feature): aggiunto alert_poi configurabile da geohub
+- [9F]()(feature): aggiunto un alert di prossimita per i punti di interesse vicini alla posizione dell' utente
 
 - [1R]()(refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
 
