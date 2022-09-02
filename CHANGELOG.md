@@ -25,7 +25,7 @@
 | PEC              |        |        |        |        |        |        |        |        |        |
 | SICAI            |        |        |        |        |        |        |        |        |        |
 | UCVS             |        |        |        |        |        |        |        |        |        |
-| FUMAIOLOSENTIERI |        |        |        |        |        |        |        |        |        |
+| FUMAIOLOSENTIERI |        |   X    |   X    |   X    |   X    |   X    |        |   X    |   X    |
 | GAVORRANO        |        |        |        |        |        |        |        |        |        |
 
 - [1F]()(feature): aggiunto nella home il box_type track
@@ -36,11 +36,11 @@
 
 - [4F]()(feature): abilitata la sezione preferiti
 
-- [5F]()(feature): inseriti filtri sui poi
+- [5F]()(feature): inseriti filtri sui punti di interesse
 
-- [6F]()(feature): aggiunta clusterizzazione sui poi
+- [6F]()(feature): aggiunta clusterizzazione sui punti di interesse
 
-- [7F]()(feature): aggiunto il componente audio nei dettagli del percorso e del poi
+- [7F]()(feature): aggiunto il componente audio nei dettagli del percorso e del punti di interess
 
 - [8F]()(feature): aggiunta la traduzione inglese della UI
 
