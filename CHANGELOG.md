@@ -4,21 +4,21 @@
 
 - PEC: **12.1.15**
 
-- SICAI: **12.1.16**
+- SICAI: **12.1.17**
 
 - UCVS:**12.1.15**
 
-- FUMAIOLOSENTIERI:**12.1.17**
+- FUMAIOLOSENTIERI:**12.1.15**
 
 - GAVORRANO:**12.1.15**
 
 ---
 
-**12.1.18**
+**12.1.19**
 
 ---
 
-**12.1.17**
+**12.1.18**
 
 |                  | [1F]() | [2F]() | [3F]() | [4F]() | [5F]() | [6F]() | [7F]() | [8F]() | [9F]() |
 | ---------------- | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ |
@@ -47,6 +47,12 @@
 - [9F]()(feature): aggiunto un alert di prossimita per i punti di interesse vicini alla posizione dell' utente
 
 - [1R]()(refactoring): ora i poi hanno come categoria le tassonomie a loro associate e il marker ha una image predefinita legata alla categoria
+
+---
+
+**12.1.17**
+
+-[FIX]()(fix):risolto bug inerente ad alcune vecchie versioni di android/ios che non permetteva la corretta visualizzazione della mappa
 
 ---
 

@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -32,7 +31,6 @@ import {initExtent} from '../../constants';
   selector: 'wm-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class WmMapComponent implements AfterViewInit {
@@ -44,6 +42,7 @@ export class WmMapComponent implements AfterViewInit {
 
   @Input() isLoggedIn: boolean;
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
+  @ViewChild('olmap', {static: true}) olmap!: ElementRef;
   @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
 
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -65,7 +64,9 @@ export class WmMapComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._initMap(this._conf);
+    setTimeout(() => {
+      this._initMap(this._conf);
+    }, 0);
   }
 
   private _initDefaultInteractions(): Collection<Interaction> {
@@ -114,7 +115,7 @@ export class WmMapComponent implements AfterViewInit {
           zIndex: 0,
         }),
       ],
-      target: 'ol-map',
+      target: this.olmap.nativeElement,
     });
     this._map$.next(this.map);
   }
