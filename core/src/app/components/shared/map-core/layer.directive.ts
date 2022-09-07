@@ -65,9 +65,9 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
             const newZoom = +view.getZoom();
             const flagMinZoom = +this.conf.start_end_icons_min_zoom;
             if (newZoom >= flagMinZoom) {
-              this._flagsLayer.setVisible(true);
+              this._flagsLayer?.setVisible(true);
             } else {
-              this._flagsLayer.setVisible(false);
+              this._flagsLayer?.setVisible(false);
             }
           }
         });

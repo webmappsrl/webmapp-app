@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -29,7 +28,6 @@ import {initExtent} from '../constants';
   selector: 'wm-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class WmMapComponent implements AfterViewInit {
@@ -51,6 +49,7 @@ export class WmMapComponent implements AfterViewInit {
     this._reset();
   }
   @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+  @ViewChild('olmap', {static: true}) olmap!: ElementRef;
   private _initDefaultInteractions(): Collection<Interaction> {
     return defaultInteractions({
       doubleClickZoom: true,
@@ -61,7 +60,9 @@ export class WmMapComponent implements AfterViewInit {
     });
   }
   ngAfterViewInit(): void {
-    this._initMap(this._conf);
+    setTimeout(() => {
+      this._initMap(this._conf);
+    }, 0);
   }
   private _initMap(conf: IMAP): void {
     this._view = new View({
@@ -99,7 +100,7 @@ export class WmMapComponent implements AfterViewInit {
           zIndex: 0,
         }),
       ],
-      target: 'ol-map',
+      target: this.olmap.nativeElement,
     });
     this.map$.next(this.map);
   }
