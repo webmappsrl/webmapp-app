@@ -94,6 +94,14 @@
         <div class="webmapp-profile-user-header-container">
           <h4 class="webmapp-profile-user-name">{{name}}</h4>
           <div class="webmapp-profile-user-email">{{email}}</div>
+          <ion-button
+            (click)="deleteUserAlert()"
+            size="small"
+            expand="block"
+            fill="outline"
+            color="danger"
+            ><ion-icon name="close-outline"></ion-icon>{{'elimina'|wmtrans}}</ion-button
+          >
         </div>
       </div>
       <ion-tabs class="webmapp-profile-tabs">

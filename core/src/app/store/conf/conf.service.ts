@@ -1,5 +1,3 @@
-import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../../constants/geohub';
-
 import {HttpClient} from '@angular/common/http';
 import {ICONF} from 'src/app/types/config';
 import {Injectable} from '@angular/core';
@@ -31,15 +29,16 @@ export class ConfService {
     return this._geohubAppId;
   }
 
+  public get vectorLayerUrl(): string {
+    return `${environment.api}/api/app/webapp/${this._geohubAppId}/vector_layer`;
+  }
+
   public get vectorStyleUrl(): string {
     return `${this._geohubApiBaseUrl}vector_style`;
   }
 
-  public get vectorLayerUrl(): string {
-    return `https://geohub.webmapp.it/api/app/webapp/${this._geohubAppId}/vector_layer`;
-  }
   private get _geohubApiBaseUrl(): string {
-    return `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/app/webmapp/${this._geohubAppId}/`;
+    return `${environment.api}/api/app/webmapp/${this._geohubAppId}/`;
   }
 
   public getConf(): Observable<ICONF> {

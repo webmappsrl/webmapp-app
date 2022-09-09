@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Share } from '@capacitor/share';
-import { TranslateService } from '@ngx-translate/core';
 import {ConfService} from '../store/conf/conf.service';
 import {IGeojsonFeature} from '../types/model';
-
-const DEFAULT_ROUTE_LINK_BASEURL = 'https://geohub.webmapp.it/track/';
+import {Injectable} from '@angular/core';
+import {Share} from '@capacitor/share';
+import {TranslateService} from '@ngx-translate/core';
+import {environment} from 'src/environments/environment';
+const DEFAULT_ROUTE_LINK_BASEURL = `${environment.api}/track/`;
 
 export interface ShareObject {
   title?: string;

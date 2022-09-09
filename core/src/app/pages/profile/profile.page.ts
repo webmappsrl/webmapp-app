@@ -1,21 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {BehaviorSubject, Observable, Subject, from} from 'rxjs';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Router} from '@angular/router';
 import {ModalController, NavController} from '@ionic/angular';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {SettingsComponent} from 'src/app/components/settings/settings.component';
-import {LoginComponent} from 'src/app/components/shared/login/login.component';
+import {switchMap, take, takeUntil} from 'rxjs/operators';
+
+import {AlertController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
-import {LanguagesService} from 'src/app/services/languages.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {LanguagesService} from 'src/app/services/languages.service';
+import {LoginComponent} from 'src/app/components/shared/login/login.component';
+import {Router} from '@angular/router';
+import {SettingsComponent} from 'src/app/components/settings/settings.component';
+import {Store} from '@ngrx/store';
+import {WmTransPipe} from 'src/app/pipes/wmtrans.pipe';
 import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProfilePage implements OnInit, OnDestroy {
   loggedOutSliderOptions: any;
@@ -37,6 +41,8 @@ export class ProfilePage implements OnInit, OnDestroy {
     private _langSvc: LanguagesService,
     private _fb: FormBuilder,
     private _storeConf: Store<IConfRootState>,
+    private _alertCtrl: AlertController,
+    private _wmTrans: WmTransPipe,
   ) {
     this.loggedOutSliderOptions = {
       initialSlide: 0,
@@ -104,5 +110,56 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._destroyer.next(true);
+  }
+  deleteUserAlert(): void {
+    from(
+      this._alertCtrl.create({
+        header: this._wmTrans.transform('Attenzione'),
+        subHeader: this._wmTrans.transform('Azione irreversibile'),
+        message: this._wmTrans.transform('Vuoi veramente eliminare il tuo account?'),
+        buttons: [
+          {
+            text: this._wmTrans.transform('Annulla'),
+            role: 'cancel',
+            handler: () => {
+              window.alert('cancel');
+            },
+          },
+          {
+            text: this._wmTrans.transform('elimina'),
+            role: 'confirm',
+            handler: () => {
+              this._authService
+                .delete$()
+                .pipe(
+                  switchMap(res => {
+                    return from(
+                      this._alertCtrl.create({
+                        message: this._wmTrans.transform(res.error || res.success),
+                        buttons: [
+                          {
+                            text: this._wmTrans.transform('ok'),
+                            role: 'ok',
+                            handler: () => {
+                              if (res.success != null) {
+                                this._authService.logout();
+                              }
+                            },
+                          },
+                        ],
+                      }),
+                    );
+                  }),
+                )
+                .subscribe(val => val.present());
+            },
+          },
+        ],
+      }),
+    )
+      .pipe(take(1))
+      .subscribe(l => {
+        l.present();
+      });
   }
 }

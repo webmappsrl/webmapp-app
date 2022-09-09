@@ -546,5 +546,10 @@
   "I tuoi dati": "Your data",
   "Le tue registrazioni": "your recordings",
   "Descrizione Audio": "Audio Description",
-  "Punto di interesse nelle vicinanze": "Point of interest nearby"
+  "Punto di interesse nelle vicinanze": "Point of interest nearby",
+  "elimina": "delete",
+  "Attenzione": "Attention",
+  "Azione irreversibile": "Irreversible action",
+  "Vuoi veramente eliminare il tuo account?": "Do you really want to delete your account?",
+  "Annulla": "Cancel"
 }

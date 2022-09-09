@@ -1,13 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
-import { GEOHUB_DOMAIN, GEOHUB_PROTOCOL } from '../constants/geohub';
-import { TAXONOMYWHERE_STORAGE_KEY } from '../constants/storage';
-import { EGeojsonGeometryTypes } from '../types/egeojson-geometry-types.enum';
-import { ILocation } from '../types/location';
-import { SearchStringResult } from '../types/map';
 import {
   IGeojsonClusterApiResponse,
   IGeojsonFeature,
@@ -15,12 +5,23 @@ import {
   IGeojsonPoiDetailed,
   WhereTaxonomy,
 } from '../types/model';
-import { ITrack } from '../types/track';
-import { WaypointSave } from '../types/waypoint';
-import { CommunicationService } from './base/communication.service';
-import { StorageService } from './base/storage.service';
-import { ConfigService } from './config.service';
-import { IPhotoItem } from './photo.service';
+
+import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
+import {CommunicationService} from './base/communication.service';
+import {ConfigService} from './config.service';
+import {EGeojsonGeometryTypes} from '../types/egeojson-geometry-types.enum';
+import {HttpHeaders} from '@angular/common/http';
+import {ILocation} from '../types/location';
+import {IPhotoItem} from './photo.service';
+import {ITrack} from '../types/track';
+import {Injectable} from '@angular/core';
+import {SearchStringResult} from '../types/map';
+import {StorageService} from './base/storage.service';
+import {TAXONOMYWHERE_STORAGE_KEY} from '../constants/storage';
+import {WaypointSave} from '../types/waypoint';
+import {environment} from 'src/environments/environment';
+import {map} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 const FAVOURITE_PAGESIZE = 3;
 
@@ -47,7 +48,7 @@ export class GeohubService {
   async getEcTrackAPP(id: string | number): Promise<CGeojsonLineStringFeature> {
     const fondo = ['asfalto', 'lastricato', 'naturale'];
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+      .get(`${environment.api}/api/ec/track/${id}`)
       .pipe(
         map((res: CGeojsonLineStringFeature) => {
           let lastAlt = 0;
@@ -95,7 +96,7 @@ export class GeohubService {
     }
     if (id > -1) {
       const result = await this._communicationService
-        .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/${id}`)
+        .get(`${environment.api}/api/ec/track/${id}`)
         .pipe(
           map((apiResult: CGeojsonLineStringFeature) => {
             return apiResult;
@@ -144,7 +145,7 @@ export class GeohubService {
     filters,
     referenceTrackId: number,
   ): Promise<IGeojsonClusterApiResponse> {
-    let url = `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
+    let url = `${environment.api}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
     if (referenceTrackId) {
       url += `&reference_id=${referenceTrackId}`;
     }
@@ -162,7 +163,7 @@ export class GeohubService {
   async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`,
+        `${environment.api}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`,
       )
       .pipe(map(x => x.features))
       .toPromise();
@@ -176,9 +177,7 @@ export class GeohubService {
    */
   async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/most_viewed?app_id=${this._configService.appId}`,
-      )
+      .get(`${environment.api}/api/ec/track/most_viewed?app_id=${this._configService.appId}`)
       .pipe(map(x => x.features))
       .toPromise();
     return res;
@@ -206,7 +205,7 @@ export class GeohubService {
       },
     };
     const res = await this._communicationService
-      .post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/poi/store`, data, {
+      .post(`${environment.api}/api/ugc/poi/store`, data, {
         headers: new HttpHeaders({
           'Content-Type': 'application/json',
         }),
@@ -249,7 +248,7 @@ export class GeohubService {
     // The content type multipart/form-data is not set because there could be problems
     // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http
     const res = await this._communicationService
-      .post(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/media/store`, data)
+      .post(`${environment.api}/api/ugc/media/store`, data)
       .toPromise();
     return res;
   }
@@ -278,7 +277,7 @@ export class GeohubService {
     };
     const res = await this._communicationService
       .post(
-        `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ugc/track/store`,
+        `${environment.api}/api/ugc/track/store`,
         data,
         new HttpHeaders({
           'Content-Type': 'application/json',
@@ -339,7 +338,7 @@ export class GeohubService {
       ],
     };
     let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,
+      `${environment.api}/api/ec/track/get_related_simple/${id}`,
     );
     call = of(mock);
     const res = await call.pipe(map(x => x.features)).toPromise();
@@ -375,7 +374,7 @@ export class GeohubService {
       ],
     };
     let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/get_related_simple/${id}`,
+      `${environment.api}/api/ec/track/get_related_simple/${id}`,
     );
     call = of(mock);
     const res = await call.pipe(map(x => x.features)).toPromise();
@@ -424,9 +423,7 @@ export class GeohubService {
         },
       ],
     };
-    let call = this._communicationService.get(
-      `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/search/${searchstring}`,
-    );
+    let call = this._communicationService.get(`${environment.api}/api/ec/search/${searchstring}`);
     call = of(mock);
     const res = await call.toPromise();
     return res;
@@ -443,7 +440,7 @@ export class GeohubService {
     const cached = await this._getFromCache(cacheId);
     if (cached) return cached;
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/taxonomy/where/${id}`)
+      .get(`${environment.api}/api/taxonomy/where/${id}`)
       .pipe(
         map(value => {
           delete value.geometry;
@@ -470,7 +467,7 @@ export class GeohubService {
 
   async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/multiple?ids=${ids.join(',')}`)
+      .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
       .pipe(map(x => x.features))
       .toPromise();
     return res;
@@ -480,7 +477,7 @@ export class GeohubService {
     if (!this._favourites) {
       try {
         const {favorites} = await this._communicationService
-          .get(`${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/list`)
+          .get(`${environment.api}/api/ec/track/favorite/list`)
           .toPromise();
         this._favourites = favorites;
       } catch (err) {
@@ -494,7 +491,7 @@ export class GeohubService {
     if (isFavourite) {
       await this._communicationService
         .post(
-          `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/add/${trackId}`,
+          `${environment.api}/api/ec/track/favorite/add/${trackId}`,
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
@@ -504,7 +501,7 @@ export class GeohubService {
     } else {
       await this._communicationService
         .post(
-          `${GEOHUB_PROTOCOL}://${GEOHUB_DOMAIN}/api/ec/track/favorite/remove/${trackId}`,
+          `${environment.api}/api/ec/track/favorite/remove/${trackId}`,
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
@@ -536,24 +533,6 @@ export class GeohubService {
       return !!favourites.find(x => x == trackId);
     }
     return false;
-  }
-
-  /**
-   * Get an instance of the specified geohub feature
-   *
-   * @param {string} id the feature id
-   *
-   * @returns {IGeojsonFeature}
-   */
-  private _getFeature<T extends IGeojsonFeature>(id: string): T {
-    return undefined;
-  }
-
-  private async _getMockFeature(): Promise<IGeojsonFeature> {
-    const res = await this._communicationService
-      .get('https://geohub.webmapp.it/api/ec/track/18')
-      .toPromise();
-    return res;
   }
 
   private async _getFromCache(cacheId: string): Promise<any> {

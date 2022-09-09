@@ -9,6 +9,7 @@ import {ProfilePage} from './profile.page';
 import {ProfilePageRoutingModule} from './profile-routing.module';
 import {ProfileRecordsComponent} from './profile-records/profile-records.component';
 import {SettingsModule} from 'src/app/components/settings/settings.module';
+import {WmTransPipe} from 'src/app/pipes/wmtrans.pipe';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import {SettingsModule} from 'src/app/components/settings/settings.module';
     PipeModule,
     SettingsModule,
   ],
+  providers: [WmTransPipe],
   declarations: [ProfilePage, ProfileDataComponent, ProfileRecordsComponent],
 })
 export class ProfilePageModule {}

@@ -6,16 +6,15 @@
  * */
 
 import * as CONFIG from '../../../config.json';
-import pkg from 'package.json';
-import {Injectable} from '@angular/core';
 
-import {timeout} from 'rxjs/operators';
-import {StorageService} from './base/storage.service';
 import {CommunicationService} from './base/communication.service';
 import {DeviceService} from './base/device.service';
-import {GEOHUB_DOMAIN, GEOHUB_PROTOCOL} from '../constants/geohub';
 import {IConfig} from '../types/config';
+import {Injectable} from '@angular/core';
+import {StorageService} from './base/storage.service';
 import {environment} from 'src/environments/environment';
+import pkg from 'package.json';
+import {timeout} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -29,6 +28,26 @@ export class ConfigService {
     private _storageService: StorageService,
   ) {
     console.log('Core v' + this.version);
+  }
+
+  get appId(): string {
+    return this._config.APP.id ? this._config.APP.id : 'it.webmapp.webmapp';
+  }
+
+  get appName(): string {
+    return this._config.APP ? this._config.APP.name : 'Webmapp';
+  }
+
+  get availableLanguages(): Array<string> {
+    return ['it'];
+  }
+
+  get defaultLanguage(): string {
+    return 'it';
+  }
+
+  get version(): string {
+    return pkg.version;
   }
 
   /**
@@ -53,13 +72,9 @@ export class ConfigService {
             () => {},
           )
           .finally(() => {
-            const url =
-              GEOHUB_PROTOCOL +
-              '://' +
-              GEOHUB_DOMAIN +
-              '/api/app/webmapp/' +
-              this._config.APP.geohubId +
-              '/config.json';
+            const url = `${environment.api}/api/app/webmapp/${
+              this._config.APP.geohubId || environment.geohubId
+            }/config.json`;
 
             this._communicationService
               .get(url + '?t=' + Date.now())
@@ -101,26 +116,6 @@ export class ConfigService {
         );
       }
     });
-  }
-
-  get version(): string {
-    return pkg.version;
-  }
-
-  get appName(): string {
-    return this._config.APP ? this._config.APP.name : 'Webmapp';
-  }
-
-  get appId(): string {
-    return this._config.APP.id ? this._config.APP.id : `${environment.geohubId || ''}`;
-  }
-
-  get defaultLanguage(): string {
-    return 'it';
-  }
-
-  get availableLanguages(): Array<string> {
-    return ['it'];
   }
 
   /**

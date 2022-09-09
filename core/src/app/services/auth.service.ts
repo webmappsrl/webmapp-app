@@ -1,28 +1,33 @@
-import {BehaviorSubject, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, Observable, ReplaySubject, from, of} from 'rxjs';
 import {
-  GEOHUB_DOMAIN,
+  GEOHUB_DELETE_ENDPOINT,
   GEOHUB_LOGIN_ENDPOINT,
   GEOHUB_LOGOUT_ENDPOINT,
-  GEOHUB_PROTOCOL,
   GEOHUB_REGISTER_ENDPOINT,
 } from '../constants/geohub';
-import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpErrorResponse, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {catchError, switchMap, take, tap} from 'rxjs/operators';
 
 import {CommunicationService} from './base/communication.service';
 import {Injectable} from '@angular/core';
+import {LoadingController} from '@ionic/angular';
 import {StorageService} from './base/storage.service';
 import config from '../../../config.json';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private _userData: IUser;
   private _onStateChange: ReplaySubject<IUser>;
+  private _userData: IUser;
+
+  isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
+    private _loadingCtrl: LoadingController,
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
 
@@ -45,21 +50,12 @@ export class AuthService {
     );
   }
 
-  get isLoggedIn(): boolean {
-    return typeof this._userData !== 'undefined';
-  }
-  isLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  get userId(): number {
-    return this._userData?.id;
-  }
-
-  get token(): string {
-    return this._userData?.token;
-  }
-
   get email(): string {
     return this._userData?.email;
+  }
+
+  get isLoggedIn(): boolean {
+    return typeof this._userData !== 'undefined';
   }
 
   get name(): string {
@@ -70,35 +66,12 @@ export class AuthService {
     return this._onStateChange;
   }
 
-  async register(name: string, email: string, password: string, cf: string): Promise<boolean> {
-    try {
-      const response: IGeohubApiLogin = await this._communicationService
-        .post(
-          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_REGISTER_ENDPOINT,
-          {
-            name,
-            email,
-            password,
-            referrer: config.APP.id,
-            fiscal_code: cf,
-          },
-          {
-            headers: new HttpHeaders({
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              'Content-Type': 'application/json',
-            }),
-          },
-        )
-        .toPromise();
-      this._saveUser(response);
-      console.log('------- ~ AuthService ~ register ~ response', response);
-      return true;
-    } catch (err) {
-      console.warn(err);
-      this._userData = undefined;
-      this._onStateChange.next(this._userData);
-      return false;
-    }
+  get token(): string {
+    return this._userData?.token;
+  }
+
+  get userId(): number {
+    return this._userData?.id;
   }
 
   /**
@@ -112,7 +85,7 @@ export class AuthService {
     return new Promise<boolean>((resolve, reject) => {
       this._communicationService
         .post(
-          GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGIN_ENDPOINT,
+          `${environment.api}${GEOHUB_LOGIN_ENDPOINT}`,
           {
             email,
             password,
@@ -150,7 +123,7 @@ export class AuthService {
     this.isLoggedIn$.next(false);
     if (token) {
       this._communicationService
-        .post(GEOHUB_PROTOCOL + '://' + GEOHUB_DOMAIN + GEOHUB_LOGOUT_ENDPOINT, undefined, {
+        .post(`${environment.api}${GEOHUB_LOGOUT_ENDPOINT}`, undefined, {
           headers: new HttpHeaders({
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'Content-Type': 'application/json',
@@ -164,6 +137,72 @@ export class AuthService {
             console.warn(err);
           },
         );
+    }
+  }
+
+  delete$(): Observable<any> {
+    const token: string = this.token;
+    let res: Observable<any> = from('errore');
+    let loading = null;
+
+    if (token) {
+      res = from(this._loadingCtrl.create()).pipe(
+        switchMap(l => {
+          loading = l;
+          loading.present();
+          return this._communicationService.post(
+            `${environment.api}${GEOHUB_DELETE_ENDPOINT}`,
+            undefined,
+            {
+              headers: new HttpHeaders({
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                'Content-Type': 'application/json',
+                // eslint-disable-next-line @typescript-eslint/naming-convention
+                Authorization: 'Bearer ' + token,
+              }),
+            },
+          );
+        }),
+        take(1),
+        catchError((err: HttpErrorResponse) => {
+          return of(err.error);
+        }),
+        tap(_ => {
+          loading.dismiss();
+        }),
+      );
+    }
+    return res;
+  }
+
+  async register(name: string, email: string, password: string, cf: string): Promise<boolean> {
+    try {
+      const response: IGeohubApiLogin = await this._communicationService
+        .post(
+          `${environment.api}${GEOHUB_REGISTER_ENDPOINT}`,
+          {
+            name,
+            email,
+            password,
+            referrer: config.APP.id,
+            fiscal_code: cf,
+          },
+          {
+            headers: new HttpHeaders({
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'Content-Type': 'application/json',
+            }),
+          },
+        )
+        .toPromise();
+      this._saveUser(response);
+      console.log('------- ~ AuthService ~ register ~ response', response);
+      return true;
+    } catch (err) {
+      console.warn(err);
+      this._userData = undefined;
+      this._onStateChange.next(this._userData);
+      return false;
     }
   }
 
