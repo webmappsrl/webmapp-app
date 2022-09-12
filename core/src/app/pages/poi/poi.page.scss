@@ -58,17 +58,6 @@ app-poi {
         }
       }
 
-      .webmapp-pagepoi-info-body-photoslider {
-        padding: 10px 0;
-        overflow: visible;
-        .webmapp-pagepoi-info-body-photo {
-          height: 150px;
-          width: 250px;
-          &::part(image) {
-            border-radius: 15px;
-          }
-        }
-      }
       .webmapp-pagepoi-info-body-description {
         padding: 10px 0;
       }
@@ -89,28 +78,4 @@ app-poi {
   --background-focused-opacity: 0;
   --background-hover: var(--wm-color-light);
   --background-hover-opacity: 0;
-}
-ion-modal {
-  --height: 50%;
-  --border-radius: 16px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-}
-
-ion-modal::part(backdrop) {
-  background: rgba(209, 213, 219);
-  opacity: 1;
-}
-
-.gallery {
-  height: 100%;
-  ion-slide {
-    width: 100%;
-    webmapp-img {
-      height: 100%;
-      transition: all 1s;
-      .webmapp-img-image {
-        height: 100%;
-      }
-    }
-  }
 }

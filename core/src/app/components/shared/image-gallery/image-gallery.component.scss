@@ -1,0 +1,13 @@
+wm-image-gallery {
+  .webmapp-pagepoi-info-body-photoslider {
+    padding: 10px 0;
+    overflow: visible;
+    .webmapp-pagepoi-info-body-photo {
+      height: 150px;
+      width: 250px;
+      &::part(image) {
+        border-radius: 15px;
+      }
+    }
+  }
+}

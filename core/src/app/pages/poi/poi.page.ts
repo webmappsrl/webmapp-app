@@ -38,11 +38,8 @@ export class PoiPage implements OnInit, OnDestroy {
   private _changePoiEVT$: EventEmitter<'prev' | 'next'> = new EventEmitter<'prev' | 'next'>();
   private _changePoiSub: Subscription = Subscription.EMPTY;
 
-  @ViewChild('gallery') slider: IonSlides;
-
   currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
   currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
-  imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   nextPoiID$: Observable<number> = this._storeMap.select(nextPoiID);
   poiIdx: number;
   pois: Array<IGeojsonPoiDetailed> = [];
@@ -129,13 +126,6 @@ export class PoiPage implements OnInit, OnDestroy {
   selectPoiById(id: number) {
     const selectedPoi = this.pois.find(p => p.properties.id == id);
     this.selectPoi(selectedPoi);
-  }
-
-  showPhoto(idx) {
-    this.imagePoiToggle$.next(true);
-    setTimeout(() => {
-      this.slider.slideTo(idx);
-    }, 300);
   }
 
   async url(url) {
