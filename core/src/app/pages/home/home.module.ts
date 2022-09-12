@@ -10,6 +10,7 @@ import {NgModule} from '@angular/core';
 import {PipeModule} from 'src/app/pipes/pipe.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {TranslateModule} from '@ngx-translate/core';
+import {IntroComponent} from './intro/intro.component';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ import {TranslateModule} from '@ngx-translate/core';
     SharedModule,
     InnerHtmlModule,
   ],
-  declarations: [HomePage],
+  declarations: [HomePage, IntroComponent],
   entryComponents: [],
 })
 export class HomePageModule {}

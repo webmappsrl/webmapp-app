@@ -1,6 +1,8 @@
 <ion-content class="webmapp-home-content">
   <div class="wm-home-header-container">
-    <ion-label>{{'pages.home.welcome' | wmtrans}}</ion-label>
+    <webmapp-home-intro class="wm-home-header-intro"> </webmapp-home-intro>
+
+    <ion-label class="wm-home-header-welcome">{{'pages.home.welcome' | wmtrans}}</ion-label>
     <webmapp-search-bar
       *ngIf="showSearch && online$|async"
       [initSearch]="title"

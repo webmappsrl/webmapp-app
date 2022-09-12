@@ -1,0 +1,16 @@
+.wm-homeintro-container {
+    display: flex;
+    align-items: center;
+
+    .wm-homeintro-title {
+        color: var(--wm-color-primary) !important;
+        display: inline-block !important;
+        padding: 0 10px !important;
+    }
+
+    .wm-homeintro-btnmenu {
+        color: var(--wm-color-primary);
+        display: inline-block;
+        font-size: 24px;
+    }
+}

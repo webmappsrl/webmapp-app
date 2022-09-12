@@ -1,4 +1,41 @@
-webmapp-app-root {
-    // display: none;
-    background-color: red;
+@import "src/theme/mixins.scss";
+
+ion-tab-bar {
+    display: none;
+}
+
+webmapp-page-home .webmapp-home-content .wm-home-header-container {
+    padding-top: 0 !important;
+    ion-label.wm-home-header-welcome {
+        display: none;
+    }
+
+    .wm-home-header-intro {
+        display: block;
+        border-bottom: 3px solid var(--wm-color-primary);
+        padding: 10px;
+    }
+}
+
+webmapp-layer-box {
+    .wm-box {
+        .webmapp-card-big-image-container.wm-result-img {
+            border-radius: 0;
+
+            img.webmapp-img-image {
+                border-radius: 0;
+            }
+        }
+        div.wm-box-click {
+            display: none;
+        }
+        div.wm-box-title {
+            top: 20%;
+            width: 100%;
+            text-align: center;
+
+            @include box-shadow-light;
+            // text-shadow: 3px 2px #333;
+        }
+    }
 }
