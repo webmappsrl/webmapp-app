@@ -1,5 +1,11 @@
 @import "src/theme/mixins.scss";
 
+/******************  ion-menu bug fix  ******************/
+ion-router-outlet#main {
+    pointer-events: auto !important;
+}
+/*******************************************************/
+
 ion-tab-bar {
     display: none;
 }
@@ -35,7 +41,6 @@ webmapp-layer-box {
             text-align: center;
 
             @include box-shadow-light;
-            // text-shadow: 3px 2px #333;
         }
     }
 }

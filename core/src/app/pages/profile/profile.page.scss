@@ -18,6 +18,10 @@ webmapp-page-profile {
       }
     }
   }
+  .webmapp-profile-links {
+    display: flex;
+    justify-content: space-evenly;
+  }
 
   .webmapp-profile-container {
     --user-container-padding: 15px;

@@ -6,6 +6,13 @@
     "skitouring": "Scialpinismo",
     "walking": "Passeggiata"
   },
+  "sidemenu": {
+    "project": "Il Progetto",
+    "offline": "Offline",
+    "settings": "Impostazioni",
+    "credits": "Credits",
+    "disclaimer": "Disclaimer"
+  },
   "components": {
     "cardtrack": {
       "delete": "Elimina",
@@ -298,7 +305,10 @@
       },
       "title": "Profilo",
       "lang": "lingua",
-      "langPlaceholder": "seleziona"
+      "langPlaceholder": "seleziona",
+      "projectlink": "Progetto",
+      "disclaimerlink": "Disclaimer",
+      "creditslink": "Credits"
     },
     "register": {
       "averagespeed": "Velocità media",
@@ -513,6 +523,15 @@
     "waypointlist": {
       "noitem": "Al momento non sono presenti waypoint registrati",
       "title": "Waypoint registrati"
+    },
+    "project": {
+      "title": "Il Progetto"
+    },
+    "credits": {
+      "title": "Credits"
+    },
+    "disclaimer": {
+      "title": "Disclaimer"
     }
   },
   "services": {

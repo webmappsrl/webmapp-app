@@ -6,6 +6,13 @@
     "skitouring": "Skitouring",
     "walking": "Salking"
   },
+  "sidemenu": {
+    "project": "The project",
+    "offline": "Offline",
+    "settings": "Settings",
+    "credits": "Credits",
+    "disclaimer": "Disclaimer"
+  },
   "components": {
     "cardtrack": {
       "delete": "Delete",
@@ -300,7 +307,10 @@
       },
       "title": "Profile",
       "lang": "Language",
-      "langPlaceholder": "select"
+      "langPlaceholder": "select",
+      "projectlink": "Project",
+      "disclaimerlink": "Disclaimer",
+      "creditslink": "Credits"
     },
     "register": {
       "averagespeed": "Average speed",
@@ -515,6 +525,15 @@
     "waypointlist": {
       "noitem": "There are currently no registered waypoints",
       "title": "Recorded waypoints"
+    },
+    "project": {
+      "title": "The Project"
+    },
+    "credits": {
+      "title": "Credits"
+    },
+    "disclaimer": {
+      "title": "Disclaimer"
     }
   },
   "services": {

@@ -6,19 +6,42 @@
   </ion-label>
 </div>
 
-<ion-menu side="start" menuId="appMenu" contentId="main" class="my-custom-menu">
-  <ion-header>
-    <ion-toolbar color="tertiary">
-      <ion-title>Custom Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-menu side="start" menuId="appMenu" class="wm-sidemenu" contentId="main">
   <ion-content>
-    <ion-list>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
+    <ion-title class="wm-sidemenu-title">Regione Lombardia</ion-title>
+    <ion-list class="wm-sidemenu-list">
+      <ion-item
+        button
+        lines="none"
+        (click)="goTo('project')"
+        >{{"sidemenu.project" | wmtrans}}</ion-item
+      >
+      <ion-item
+        button
+        lines="none"
+        (click)="goTo('offline')"
+        >{{"sidemenu.offline" | wmtrans}}</ion-item
+      >
+      <ion-item
+        button
+        lines="none"
+        (click)="goTo('profile')"
+        >{{"sidemenu.settings" | wmtrans}}</ion-item
+      >
+    </ion-list>
+    <ion-list class="wm-sidemenu-list">
+      <ion-item
+        button
+        lines="none"
+        (click)="goTo('credits')"
+        >{{"sidemenu.credits" | wmtrans}}</ion-item
+      >
+      <ion-item
+        button
+        lines="none"
+        (click)="goTo('disclaimer')"
+        >{{"sidemenu.disclaimer" | wmtrans}}</ion-item
+      >
     </ion-list>
   </ion-content>
 </ion-menu>

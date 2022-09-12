@@ -38,6 +38,10 @@ export class ConfigService {
     return this._config.APP ? this._config.APP.name : 'Webmapp';
   }
 
+  get project(): string {
+    return this._config.PROJECT ? this._config.PROJECT.HTML : '';
+  }
+
   get availableLanguages(): Array<string> {
     return ['it'];
   }

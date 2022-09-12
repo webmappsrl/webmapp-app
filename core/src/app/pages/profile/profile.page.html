@@ -1,5 +1,13 @@
 <ion-header class="webmapp-profile-header">
   <ion-toolbar mode="md" class="webmapp-profile-header-toolbar">
+    <ion-buttons slot="start" class="webmapp-sidemenuapp">
+      <ion-icon
+        name="chevron-back"
+        [routerLink]="['/home']"
+        class="webmapp-backbutton webmapp-backbutton-chevron"
+      >
+      </ion-icon>
+    </ion-buttons>
     <ion-title mode="md" class="webmapp-profile-header-toolbar-title">
       {{'pages.profile.title' | wmtrans}}
     </ion-title>
@@ -103,6 +111,17 @@
             ><ion-icon name="close-outline"></ion-icon>{{'elimina'|wmtrans}}</ion-button
           >
         </div>
+      </div>
+      <div class="webmapp-profile-links">
+        <ion-button [routerLink]="['/project']" size="small" fill="outline"
+          >{{'pages.profile.projectlink'|wmtrans}}</ion-button
+        >
+        <ion-button [routerLink]="['/disclaimer']" size="small" fill="outline"
+          >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
+        >
+        <ion-button [routerLink]="['/credits']" size="small" fill="outline"
+          >{{'pages.profile.creditslink'|wmtrans}}</ion-button
+        >
       </div>
       <ion-tabs class="webmapp-profile-tabs">
         <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">

@@ -14,3 +14,18 @@
         font-size: 24px;
     }
 }
+.wm-sidemenu {
+    ion-title.wm-sidemenu-title {
+        padding-top: 20px;
+        font-weight: bold;
+    }
+    .wm-sidemenu-list {
+        border-top: 1px solid var(--wm-color-primary);
+        padding-top: 15px;
+        margin: 20px;
+        ion-item {
+            --padding-start: 0;
+            color: var(--wm-color-primary);
+        }
+    }
+}

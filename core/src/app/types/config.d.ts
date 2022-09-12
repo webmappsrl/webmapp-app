@@ -19,7 +19,9 @@ interface IAPP {
 interface IConfig {
   APP: IAPP;
   GEOLOCATION?: IGEOLOCATION;
+  PROJECT: IPROJECT;
 }
+
 interface ITHEME {
   danger?: string;
   dark?: string;

@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon
+        name="chevron-back"
+        [routerLink]="['/home']"
+        class="webmapp-backbutton webmapp-backbutton-chevron"
+      >
+      </ion-icon>
+    </ion-buttons>
+    <ion-title>{{"pages.project.title" | wmtrans}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wm-project-content" [innerHTML]="sanitizer.bypassSecurityTrustHtml(innerHtml)"></div>
+</ion-content>
