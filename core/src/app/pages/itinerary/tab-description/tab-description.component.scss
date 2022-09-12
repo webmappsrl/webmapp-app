@@ -12,12 +12,11 @@
   padding: 20px 0;
   overflow: visible;
 
-    .webmapp-pageroute-tabdescription-photo {
-      height: 150px;
-      width: 250px;
-      &::part(image) {
-        border-radius: 15px;
-      }
+  .webmapp-pageroute-tabdescription-photo {
+    height: 150px;
+    width: 250px;
+    &::part(image) {
+      border-radius: 15px;
     }
-
+  }
 }

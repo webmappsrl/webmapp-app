@@ -1,0 +1,28 @@
+wm-modal-image {
+  --background: white;
+  --color: black;
+  .gallery {
+    height: 100%;
+    ion-slide {
+      width: 100%;
+      webmapp-img {
+        transition: all 1s;
+      }
+    }
+  }
+}
+ion-modal {
+  --border-radius: 16px;
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+  opacity: 1;
+}
+ion-slide {
+  background-color: white;
+}
+ion-fab-button {
+  --background: white;
+  --color: black;
+}

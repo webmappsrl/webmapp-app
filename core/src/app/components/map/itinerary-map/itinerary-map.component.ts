@@ -1031,8 +1031,17 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     geometry = null,
   ): Promise<{marker: iMarker; style: Style}> {
     const img = await this._createEndTrackImage(trackgeojson);
+    console.log(trackgeojson);
+    if (geometry == null && trackgeojson != null) {
+      if (trackgeojson.coordinates != null) {
+        geometry = trackgeojson.coordinates[trackgeojson.coordinates.length - 1];
+      }
+      if (trackgeojson.geometry != null && trackgeojson.geometry.coordinates != null) {
+        geometry = trackgeojson.geometry.coordinates[trackgeojson.geometry.coordinates.length - 1];
+      }
+    }
     const {iconFeature, style} = await this._createIconFeature(
-      geometry ? geometry : trackgeojson.coordinates[trackgeojson.coordinates.length - 1],
+      geometry,
       img,
       this._markerService.trackMarkerSize,
       false,
