@@ -19,6 +19,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/theme/default"]
+            },
             "assets": [
               {
                 "glob": "**/*",
@@ -49,6 +52,9 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "stylePreprocessorOptions": {
+                "includePaths": ["src/theme/default"]
+              },
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -65,6 +71,11 @@
                 }
               ]
             },
+            "stelvio": {
+              "stylePreprocessorOptions": {
+                "includePaths": ["src/theme/stelvio"]
+              }
+            },
             "ci": {
               "progress": false
             }
@@ -79,6 +90,9 @@
           "configurations": {
             "production": {
               "browserTarget": "app:build:production"
+            },
+            "stelvio": {
+              "browserTarget": "app:build:stelvio"
             },
             "ci": {
               "progress": false
