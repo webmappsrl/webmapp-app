@@ -15,10 +15,19 @@
     }
 }
 .wm-sidemenu {
-    ion-title.wm-sidemenu-title {
-        padding-top: 20px;
-        font-weight: bold;
+    .wm-sidemenu-header {
+        display: flex;
+        align-self: center;
+        padding: 20px 20px 0 20px;
+        .wm-sidemenu-logo {
+            height: 48px;
+        }
+
+        ion-title.wm-sidemenu-title {
+            font-weight: bold;
+        }
     }
+
     .wm-sidemenu-list {
         border-top: 1px solid var(--wm-color-primary);
         padding-top: 15px;
