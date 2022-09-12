@@ -12,4 +12,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <div class="disclaimer__paragraph">
+    <span [innerHTML]="'pages.disclaimer.content' | wmtrans : appNameObj"></span>
+  </div>
+</ion-content>

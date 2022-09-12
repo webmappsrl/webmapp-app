@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ConfigService} from 'src/app/services/config.service';
 
 @Component({
   selector: 'app-credits',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./credits.page.scss'],
 })
 export class CreditsPage implements OnInit {
+  public appNameObj = '';
 
-  constructor() { }
+  constructor(private configService: ConfigService) {}
 
   ngOnInit() {
+    this.appNameObj = this.configService.appName;
   }
-
 }

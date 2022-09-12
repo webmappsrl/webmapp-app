@@ -1,0 +1,33 @@
+@import "src/theme/variables.scss";
+@import "src/theme/mixins.scss";
+
+.credits__content {
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: var(--font-family-content);
+}
+
+.credits__paragraph {
+    font-size: var(--font-lg);
+    padding: 10px 20px;
+    font-family: var(--font-family-content);
+}
+
+.credits__p-title {
+    font-size: var(--font-xlg);
+    font-family: var(--font-family-content);
+    font-weight: bold;
+    display: block;
+    padding: 1.5 * 20px 0 0.5 * 20px;
+}
+
+.credits-custom_content-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    ion-spinner {
+        width: 50px;
+        height: 50px;
+    }
+}

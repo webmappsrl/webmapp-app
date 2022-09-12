@@ -28,5 +28,6 @@ export class IntroComponent implements OnInit {
   goTo(pageName: string) {
     console.log('------- ~ IntroComponent ~ goTo ~ pageName', pageName);
     this.navCtrl.navigateForward(pageName);
+    this.menu.close('appMenu');
   }
 }

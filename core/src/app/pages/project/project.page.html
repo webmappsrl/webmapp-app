@@ -13,5 +13,10 @@
 </ion-header>
 
 <ion-content>
-  <div class="wm-project-content" [innerHTML]="sanitizer.bypassSecurityTrustHtml(innerHtml)"></div>
+  <div
+    class="wm-project-content"
+    *ngIf="innerHtml"
+    [innerHTML]="sanitizer.bypassSecurityTrustHtml(innerHtml)"
+  ></div>
+  <div class="wm-project-content" *ngIf="!innerHtml"></div>
 </ion-content>

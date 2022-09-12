@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ConfigService} from 'src/app/services/config.service';
 
 @Component({
   selector: 'app-disclaimer',
@@ -6,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./disclaimer.page.scss'],
 })
 export class DisclaimerPage implements OnInit {
+  public appNameObj = '';
 
-  constructor() { }
+  constructor(private configService: ConfigService) {}
 
   ngOnInit() {
+    this.appNameObj = this.configService.appName;
   }
-
 }

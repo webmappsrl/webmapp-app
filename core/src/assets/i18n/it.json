@@ -528,10 +528,17 @@
       "title": "Il Progetto"
     },
     "credits": {
-      "title": "Credits"
+      "title": "Credits",
+      "webmappContent1": "La app {{appName}} è sviluppata e mantenuta da Webmapp.<br> Webmapp realizza servizi cartografici web, app mobile, e cartografia stampata per il Turismo Natura & Avventura.<br>Per maggiori informazioni visitate il nostro sito web ",
+      "webmappContent2": " o scriveteci all'indirizzo <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
+      "map": "Mappa",
+      "mapContent": "© Webmapp, distribuita con licenza CC BY-NC-SA",
+      "cartographicData": "Dati cartografici",
+      "cartographicDataContent": "© OpenStreetMap Contributors"
     },
     "disclaimer": {
-      "title": "Disclaimer"
+      "title": "Disclaimer",
+      "content": "L'escursionismo e, più in generale, l'attività all'aria aperta, è una attività potenzialmente rischiosa: prima di avventurarti in una escursione assicurati di avere le conoscenze e le competenze per farlo. Se non sei sicuro rivolgiti agli esperti locali che ti possono aiutare, suggerire e supportare nella pianificazione e nello svolgimento delle tue attività. I dati presentati su questa APP non possono garantire completamente la percorribilità senza rischi del percorso: potrebbero essersi verificati cambiamenti, anche importanti, dall’ultima verifica effettuata del percorso stesso. E’ fondamentale quindi che chi si appresta a svolgere attività valuti attentamente l’opportunità di proseguire in base ai suggerimenti e ai consigli contenuti in questa APP, in base alla propria esperienza, alle condizioni metereologiche (anche dei giorni precedenti) e di una valutazione effettuata sul campo all’inizio dello svolgimento della attività. La società Webmapp S.r.l. non fornisce garanzie sulla sicurezza dei luoghi descritti, e non si assume alcuna responsabilità per eventuali danni causati dallo svolgimento delle attività descritte."
     }
   },
   "services": {
