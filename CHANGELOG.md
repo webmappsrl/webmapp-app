@@ -16,6 +16,8 @@
 
 **12.1.19**
 
+- [1R]()(refactoring): creato un componente per la visualizzazione delle gallery presenti in dettagli mappa e track
+
 ---
 
 **12.1.18**
