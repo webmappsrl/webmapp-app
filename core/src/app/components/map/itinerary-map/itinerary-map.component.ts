@@ -143,6 +143,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   };
   private _view: View;
 
+  @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
   @Input('btnposition') btnposition: string = 'bottom';
   @Input() focus: boolean = false;
   @Input('hideEndMarker') hideEndMarker: boolean = false;
@@ -154,7 +155,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('animation') useAnimation: boolean = true;
   @Input('cache') useCache: boolean = false;
-  @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
   @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
@@ -1031,7 +1031,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     geometry = null,
   ): Promise<{marker: iMarker; style: Style}> {
     const img = await this._createEndTrackImage(trackgeojson);
-    console.log(trackgeojson);
     if (geometry == null && trackgeojson != null) {
       if (trackgeojson.coordinates != null) {
         geometry = trackgeojson.coordinates[trackgeojson.coordinates.length - 1];

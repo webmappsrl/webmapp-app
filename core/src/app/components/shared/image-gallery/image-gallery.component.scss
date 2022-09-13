@@ -3,8 +3,12 @@ wm-image-gallery {
     padding: 10px 0;
     overflow: visible;
     .webmapp-pagepoi-info-body-photo {
-      height: 150px;
-      width: 250px;
+      height: 150px !important;
+      width: 250px !important;
+      img {
+        height: 150px !important;
+        width: 250px !important;
+      }
       &::part(image) {
         border-radius: 15px;
       }

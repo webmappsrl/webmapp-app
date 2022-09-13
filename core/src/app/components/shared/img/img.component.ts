@@ -12,6 +12,7 @@ import {shareReplay, startWith, switchMap, tap} from 'rxjs/operators';
 import {DownloadService} from 'src/app/services/download.service';
 import {IWmImage} from 'src/app/types/model';
 import defaultImage from 'src/assets/images/defaultImageB64.json';
+
 @Component({
   selector: 'webmapp-img',
   templateUrl: './img.component.html',
