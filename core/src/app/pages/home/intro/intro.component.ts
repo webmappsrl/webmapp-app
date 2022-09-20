@@ -1,11 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {MenuController, NavController} from '@ionic/angular';
+
 import {ConfigService} from 'src/app/services/config.service';
 
 @Component({
   selector: 'webmapp-home-intro',
   templateUrl: './intro.component.html',
   styleUrls: ['./intro.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class IntroComponent implements OnInit {
   public title = 'webmapp';
@@ -16,8 +18,10 @@ export class IntroComponent implements OnInit {
     private navCtrl: NavController,
   ) {}
 
-  ngOnInit() {
-    this.title = this.configService.appName;
+  goTo(pageName: string) {
+    console.log('------- ~ IntroComponent ~ goTo ~ pageName', pageName);
+    this.navCtrl.navigateForward(pageName);
+    this.menu.close('appMenu');
   }
 
   menuOpen() {
@@ -25,9 +29,7 @@ export class IntroComponent implements OnInit {
     this.menu.open('appMenu');
   }
 
-  goTo(pageName: string) {
-    console.log('------- ~ IntroComponent ~ goTo ~ pageName', pageName);
-    this.navCtrl.navigateForward(pageName);
-    this.menu.close('appMenu');
+  ngOnInit() {
+    this.title = this.configService.appName;
   }
 }

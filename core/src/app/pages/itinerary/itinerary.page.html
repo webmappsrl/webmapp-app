@@ -1,33 +1,3 @@
-<ion-menu side="end" menuId="optionMenu" contentId="webmapp-pageroute-main">
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-icon
-          name="close-outline"
-          class="webmapp-pageroute-menuclose"
-          (click)="closeMenu()"
-        ></ion-icon>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item>
-        <i class="webmapp-icon-directions-outline" start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.directions' | wmtrans}}</div>
-      </ion-item>
-      <ion-item (click)="download()">
-        <i class="webmapp-icon-donwload-outline" start></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.download' | wmtrans}}</div>
-      </ion-item>
-      <ion-item (click)="share()">
-        <i class="webmapp-icon-share-outline"></i>
-        <div class="webmapp-pageroute-menuitem">{{'pages.route.share' | wmtrans}}</div>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
 <ion-content scrollY="false" class="webmapp-pageroute-content" id="webmapp-pageroute-main">
   <ng-container *ngIf="(mapConf$|async).alert_poi_show">
     <ng-container *ngIf="modeFullMap ">
@@ -57,13 +27,6 @@
           </ion-back-button>
         </ion-buttons>
         <ion-title>{{(currentTrackProperties$|async)?.name | wmtrans}}</ion-title>
-        <ion-buttons slot="end">
-          <ion-icon
-            name="ellipsis-vertical"
-            class="webmapp-pageroute-menuopen"
-            (click)="menu()"
-          ></ion-icon>
-        </ion-buttons>
       </ion-toolbar>
       <div class="webmapp-pageroute-header-backdrop" [hidden]="opacity>0.5"></div>
     </ion-header>

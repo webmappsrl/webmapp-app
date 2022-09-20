@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
 import {
   AlertController,
   Animation,
@@ -40,6 +40,7 @@ import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-c
   selector: 'webmapp-itinerary',
   templateUrl: './itinerary.page.html',
   styleUrls: ['./itinerary.page.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ItineraryPage implements OnDestroy {
   private _tabChildEventSubscriptions: Array<Subscription> = [];

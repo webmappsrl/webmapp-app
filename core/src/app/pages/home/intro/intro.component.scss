@@ -1,40 +1,47 @@
-.wm-homeintro-container {
+webmapp-home-intro {
+  z-index: 20000;
+  background-color: white;
+  padding: 15px;
+  max-height: 60px;
+
+  .wm-homeintro-container {
     display: flex;
     align-items: center;
 
     .wm-homeintro-title {
-        color: var(--wm-color-primary) !important;
-        display: inline-block !important;
-        padding: 0 10px !important;
+      color: var(--wm-color-primary) !important;
+      display: inline-block !important;
+      padding: 0 10px !important;
     }
 
     .wm-homeintro-btnmenu {
-        color: var(--wm-color-primary);
-        display: inline-block;
-        font-size: 24px;
+      color: var(--wm-color-primary);
+      display: inline-block;
+      font-size: 24px;
     }
-}
-.wm-sidemenu {
+  }
+  .wm-sidemenu {
     .wm-sidemenu-header {
-        display: flex;
-        align-self: center;
-        padding: 20px 20px 0 20px;
-        .wm-sidemenu-logo {
-            height: 48px;
-        }
+      display: flex;
+      align-self: center;
+      padding: 20px 20px 0 20px;
+      .wm-sidemenu-logo {
+        height: 48px;
+      }
 
-        ion-title.wm-sidemenu-title {
-            font-weight: bold;
-        }
+      ion-title.wm-sidemenu-title {
+        font-weight: bold;
+      }
     }
 
     .wm-sidemenu-list {
-        border-top: 1px solid var(--wm-color-primary);
-        padding-top: 15px;
-        margin: 20px;
-        ion-item {
-            --padding-start: 0;
-            color: var(--wm-color-primary);
-        }
+      border-top: 1px solid var(--wm-color-primary);
+      padding-top: 15px;
+      margin: 20px;
+      ion-item {
+        --padding-start: 0;
+        color: var(--wm-color-primary);
+      }
     }
+  }
 }

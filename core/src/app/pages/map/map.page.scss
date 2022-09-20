@@ -8,7 +8,7 @@ webmapp-map-page {
   }
   .webmapp-poi-close {
     position: fixed;
-    top: calc(10px + env(safe-area-inset-top));
+    top: calc(10px);
     left: 5px;
     --color: var(--wm-color-dark);
     --background: var(--wm-color-light);

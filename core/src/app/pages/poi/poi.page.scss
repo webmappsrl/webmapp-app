@@ -65,8 +65,7 @@ app-poi {
   }
 
   .webmapp-pagepoi-top {
-    top: calc(10px + constant(safe-area-inset-top));
-    top: calc(10px + env(safe-area-inset-top));
+    top: calc(10px);
   }
 }
 .webmapp-pagepoi-btntop {
