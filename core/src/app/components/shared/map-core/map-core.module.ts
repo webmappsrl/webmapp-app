@@ -1,4 +1,5 @@
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {BtnTiles} from './buttons/btn-tiles/btn-tiles';
 import {ButtonsModule} from './buttons/buttons.module';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';

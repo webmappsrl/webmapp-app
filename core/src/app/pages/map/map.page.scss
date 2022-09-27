@@ -3,8 +3,8 @@
 webmapp-map-page {
   wm-btn-filter {
     position: absolute;
-    top: 30px;
-    right: 10px;
+    top: calc(2% + env(safe-area-inset-top));
+    right: calc(2% + 50px) !important;
   }
   .webmapp-poi-close {
     position: fixed;

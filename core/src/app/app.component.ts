@@ -1,8 +1,8 @@
+import {Component, ViewEncapsulation} from '@angular/core';
 import {NavController, Platform} from '@ionic/angular';
 import {filter, take} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
-import {Component} from '@angular/core';
 import {DEF_MAP_LOCATION_ZOOM} from './constants/map';
 import {DownloadService} from './services/download.service';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
@@ -31,13 +31,15 @@ import {startNetworkMonitoring} from './store/network/network.actions';
   selector: 'webmapp-app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-  public showingPhotos = false;
-  public image_gallery: any[];
-  public photoIndex: number = 0;
   private _currentTrack$: Observable<CGeojsonLineStringFeature> =
     this._storeMap.select(mapCurrentTrack);
+
+  public image_gallery: any[];
+  public photoIndex: number = 0;
+  public showingPhotos = false;
 
   constructor(
     private _languagesService: LanguagesService,
@@ -105,8 +107,8 @@ export class AppComponent {
     this.showingPhotos = false;
   }
 
-  recordingClick(ev) {}
   isRecording() {}
+
   recBtnPosition() {
     const tree = this.router.parseUrl(this.router.url);
     if (tree?.root?.children && tree.root.children['primary']) {
@@ -128,6 +130,8 @@ export class AppComponent {
     }
     return 'low';
   }
+
+  recordingClick(ev) {}
 
   saveGeneratedContentsNowAndInterval() {
     setInterval(() => {

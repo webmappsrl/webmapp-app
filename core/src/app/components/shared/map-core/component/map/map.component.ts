@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM} from '../../../../../constants/map';
+import {DEF_MAP_MAX_ZOOM, DEF_MAP_MIN_ZOOM, DEF_XYZ_URL, initExtent} from '../../constants';
 
 import Collection from 'ol/Collection';
 import {Extent} from 'ol/extent';
@@ -25,7 +25,6 @@ import XYZ from 'ol/source/XYZ';
 import {defaults as defaultControls} from 'ol/control';
 import {defaults as defaultInteractions} from 'ol/interaction.js';
 import {filter} from 'rxjs/operators';
-import {initExtent} from '../../constants';
 
 @Component({
   selector: 'wm-map',
@@ -49,6 +48,7 @@ export class WmMapComponent implements AfterViewInit {
   map: Map;
   map$: Observable<Map> = this._map$.pipe(filter(f => f != null));
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  tileLayers: TileLayer[] = [];
 
   constructor(private _tilesService: TilesService, private _mapSvc: MapService) {}
 
@@ -67,6 +67,26 @@ export class WmMapComponent implements AfterViewInit {
     setTimeout(() => {
       this._initMap(this._conf);
     }, 0);
+  }
+
+  private _buildTileLayers(tiles: {[name: string]: string}[]): TileLayer[] {
+    return (
+      tiles.map((tile, index) => {
+        return new TileLayer({
+          source: this._initializeBaseSource(Object.values(tile)[0]),
+          visible: index === 0,
+          zIndex: index,
+          className: Object.keys(tile)[0],
+        });
+      }) ?? [
+        new TileLayer({
+          source: this._initializeBaseSource(DEF_XYZ_URL),
+          visible: true,
+          zIndex: 0,
+          className: 'webmapp',
+        }),
+      ]
+    );
   }
 
   private _initDefaultInteractions(): Collection<Interaction> {
@@ -92,6 +112,8 @@ export class WmMapComponent implements AfterViewInit {
     if (conf.defZoom) {
       this._defZoom = conf.defZoom;
     }
+
+    this.tileLayers = this._buildTileLayers(conf.tiles);
     this._reset();
 
     this.map = new Map({
@@ -108,13 +130,7 @@ export class WmMapComponent implements AfterViewInit {
         }),
       ]),
       interactions: this._initDefaultInteractions(),
-      layers: [
-        new TileLayer({
-          source: this._initializeBaseSource(),
-          visible: true,
-          zIndex: 0,
-        }),
-      ],
+      layers: this.tileLayers,
       target: this.olmap.nativeElement,
     });
     this._map$.next(this.map);
@@ -125,25 +141,11 @@ export class WmMapComponent implements AfterViewInit {
    *
    * @returns the XYZ source to use
    */
-  private _initializeBaseSource() {
+  private _initializeBaseSource(tile: string) {
     return new XYZ({
-      maxZoom: DEF_MAP_MAX_ZOOM,
-      minZoom: DEF_MAP_MIN_ZOOM,
-      tileLoadFunction: (tile: any, url: string) => {
-        const coords = this._tilesService.getCoordsFromUr(url);
-
-        this._tilesService
-          .getTile(coords, true)
-          .then((tileString: string) => {
-            tile.getImage().src = tileString;
-          })
-          .catch(() => {
-            tile.getImage().src = url;
-          });
-      },
-      tileUrlFunction: c => {
-        return this._tilesService.getTileFromWeb(c);
-      },
+      maxZoom: this._conf.maxZoom || DEF_MAP_MAX_ZOOM,
+      minZoom: this._conf.minZoom || DEF_MAP_MIN_ZOOM,
+      url: tile,
       projection: 'EPSG:3857',
       tileSize: [256, 256],
     });

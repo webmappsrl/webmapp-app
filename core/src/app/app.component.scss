@@ -1,21 +1,26 @@
-
-.webmapp-app-recordingbtn {
+webmapp-app-root {
+  ion-router-outlet {
+    height: 100%;
+    position: initial;
+  }
+  .webmapp-app-recordingbtn {
     position: absolute;
     left: 20px;
-    &.webmapp-app-recordingbtn-low{
-        bottom: 85px;
+    &.webmapp-app-recordingbtn-low {
+      bottom: 85px;
     }
-    &.webmapp-app-recordingbtn-middle{
-        bottom: 124px;        
+    &.webmapp-app-recordingbtn-middle {
+      bottom: 124px;
     }
-    &.webmapp-app-recordingbtn-middlehigh{
-        bottom: 155px;        
+    &.webmapp-app-recordingbtn-middlehigh {
+      bottom: 155px;
     }
-    &.webmapp-app-recordingbtn-high{
-        bottom: 415px;        
+    &.webmapp-app-recordingbtn-high {
+      bottom: 415px;
     }
-    &.webmapp-app-recordingbtn-none{
-        bottom: 180px; 
-        display: none;       
+    &.webmapp-app-recordingbtn-none {
+      bottom: 180px;
+      display: none;
     }
   }
+}
