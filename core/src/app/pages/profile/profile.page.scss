@@ -18,10 +18,6 @@ webmapp-page-profile {
       }
     }
   }
-  .webmapp-profile-links {
-    display: flex;
-    justify-content: space-evenly;
-  }
 
   .webmapp-profile-container {
     --user-container-padding: 15px;
@@ -124,6 +120,7 @@ webmapp-page-profile {
     .webmapp-profile-tabs {
       position: relative;
       height: 20%;
+      min-height: 200px;
       margin-top: 2%;
       .webmapp-profile-tabs-tab-bar {
         justify-content: flex-start;

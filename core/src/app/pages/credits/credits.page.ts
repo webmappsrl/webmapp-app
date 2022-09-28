@@ -1,17 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {ConfigService} from 'src/app/services/config.service';
+import {Component} from '@angular/core';
+import {ModalController} from '@ionic/angular';
 
 @Component({
   selector: 'app-credits',
   templateUrl: './credits.page.html',
   styleUrls: ['./credits.page.scss'],
 })
-export class CreditsPage implements OnInit {
-  public appNameObj = '';
+export class CreditsPage {
+  constructor(private _modalCtrl: ModalController) {}
 
-  constructor(private configService: ConfigService) {}
-
-  ngOnInit() {
-    this.appNameObj = this.configService.appName;
+  cancel(): void {
+    this._modalCtrl.dismiss();
   }
 }

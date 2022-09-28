@@ -35,6 +35,31 @@
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
+  <ng-container *ngIf="isLoggedIn">
+    <div class="webmapp-profile-user-container">
+      <ion-avatar
+        class="webmapp-profile-user-avatar"
+        [ngClass]="{
+        'webmapp-profile-user-avatar-icon': !avatarUrl
+      }"
+      >
+        <i class="webmapp-icon-user-outline"></i>
+      </ion-avatar>
+      <div class="webmapp-profile-user-header-container">
+        <h4 class="webmapp-profile-user-name">{{name}}</h4>
+        <div class="webmapp-profile-user-email">{{email}}</div>
+        <ion-button
+          (click)="deleteUserAlert()"
+          size="small"
+          expand="block"
+          fill="outline"
+          color="danger"
+          ><ion-icon name="close-outline"></ion-icon>{{'elimina'|wmtrans}}</ion-button
+        >
+      </div>
+    </div>
+  </ng-container>
+
   <ion-tabs class="webmapp-profile-tabs">
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
@@ -60,17 +85,6 @@
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>
-  <div class="webmapp-profile-links">
-    <ion-button [routerLink]="['/project']" size="small" fill="outline"
-      >{{'pages.profile.projectlink'|wmtrans}}</ion-button
-    >
-    <ion-button [routerLink]="['/disclaimer']" size="small" fill="outline"
-      >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
-    >
-    <ion-button [routerLink]="['/credits']" size="small" fill="outline"
-      >{{'pages.profile.creditslink'|wmtrans}}</ion-button
-    >
-  </div>
   <ng-container *ngIf="(authEnable$|async) === true">
     <ng-container *ngIf="!isLoggedIn">
       <div class="webmapp-profile-logged-out-slider-container">
@@ -110,30 +124,6 @@
         <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
           {{'pages.profile.loggedOut.signup' | wmtrans}}
         </button>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="isLoggedIn">
-      <div class="webmapp-profile-user-container">
-        <ion-avatar
-          class="webmapp-profile-user-avatar"
-          [ngClass]="{
-          'webmapp-profile-user-avatar-icon': !avatarUrl
-        }"
-        >
-          <i class="webmapp-icon-user-outline"></i>
-        </ion-avatar>
-        <div class="webmapp-profile-user-header-container">
-          <h4 class="webmapp-profile-user-name">{{name}}</h4>
-          <div class="webmapp-profile-user-email">{{email}}</div>
-          <ion-button
-            (click)="deleteUserAlert()"
-            size="small"
-            expand="block"
-            fill="outline"
-            color="danger"
-            ><ion-icon name="close-outline"></ion-icon>{{'elimina'|wmtrans}}</ion-button
-          >
-        </div>
       </div>
     </ng-container>
   </ng-container>

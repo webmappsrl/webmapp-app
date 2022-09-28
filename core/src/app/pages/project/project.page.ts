@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 import {DomSanitizer} from '@angular/platform-browser';
+import {ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {confPROJECT} from 'src/app/store/conf/conf.selector';
 
@@ -13,5 +14,13 @@ import {confPROJECT} from 'src/app/store/conf/conf.selector';
 export class ProjectPage {
   innerHtml$ = this._store.select(confPROJECT);
 
-  constructor(private _store: Store, public sanitizer: DomSanitizer) {}
+  constructor(
+    public sanitizer: DomSanitizer,
+    private _store: Store,
+    private _modalCtrl: ModalController,
+  ) {}
+
+  cancel(): void {
+    this._modalCtrl.dismiss();
+  }
 }

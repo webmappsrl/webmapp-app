@@ -33,4 +33,24 @@
       </ion-item>
     </form>
   </ion-list>
+  <div class="webmapp-profile-links">
+    <ion-button
+      (click)="openCmp('project')"
+      size="small"
+      fill="outline"
+      >{{'pages.profile.projectlink'|wmtrans}}</ion-button
+    >
+    <ion-button
+      (click)="openCmp('disclaimer')"
+      size="small"
+      fill="outline"
+      >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
+    >
+    <ion-button
+      (click)="openCmp('credits')"
+      size="small"
+      fill="outline"
+      >{{'pages.profile.creditslink'|wmtrans}}</ion-button
+    >
+  </div>
 </ion-content>

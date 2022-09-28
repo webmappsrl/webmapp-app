@@ -5,7 +5,11 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {AuthService} from 'src/app/services/auth.service';
 import {BehaviorSubject} from 'rxjs';
 import {ConfigService} from 'src/app/services/config.service';
+import {CreditsPage} from 'src/app/pages/credits/credits.page';
+import {DisclaimerPage} from 'src/app/pages/disclaimer/disclaimer.page';
 import {LanguagesService} from 'src/app/services/languages.service';
+import {ProjectPage} from 'src/app/pages/project/project.page';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'webmapp-settings',
@@ -25,6 +29,7 @@ export class SettingsComponent implements OnInit {
     private _configService: ConfigService,
     private _langSvc: LanguagesService,
     private _fb: FormBuilder,
+    private _router: Router,
   ) {}
 
   dismiss(): void {
@@ -58,6 +63,16 @@ export class SettingsComponent implements OnInit {
           console.warn(alertError);
         },
       );
+  }
+  async openCmp(nameCmp: string) {
+    const cmp =
+      nameCmp === 'project' ? ProjectPage : nameCmp === 'disclaimer' ? DisclaimerPage : CreditsPage;
+    const pmodal = await this._modalController.create({
+      component: cmp,
+      swipeToClose: true,
+      mode: 'ios',
+    });
+    pmodal.present();
   }
 
   ngOnInit() {
