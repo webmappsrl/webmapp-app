@@ -1,13 +1,14 @@
+import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
+
 import {Component} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {IMapRootState} from 'src/app/store/map/map';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {Observable} from 'rxjs';
 import {StatusService} from 'src/app/services/status.service';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {Store} from '@ngrx/store';
 import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
-import {IMapRootState} from 'src/app/store/map/map';
-import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {online} from 'src/app/store/network/network.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -31,8 +32,5 @@ export class TabsPage {
   reset() {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: null}));
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
-  }
-  mapOffline(): void {
-    console.log('suca');
   }
 }

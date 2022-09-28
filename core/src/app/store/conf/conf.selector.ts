@@ -11,7 +11,7 @@ export const confAPP = createSelector(confFeature, state => state.APP);
 export const confLANGUAGES = createSelector(confFeature, state => state.LANGUAGES);
 export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
-export const confAUTHEnable = createSelector(confAUTH, auth => true);
+export const confAUTHEnable = createSelector(confAUTH, auth => auth.enable || false);
 export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks) => ({
   ...state.MAP,
   ...{tracks: allTracks},
