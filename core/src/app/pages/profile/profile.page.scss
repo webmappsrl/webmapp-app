@@ -124,6 +124,7 @@ webmapp-page-profile {
     .webmapp-profile-tabs {
       position: relative;
       height: 20%;
+      margin-top: 2%;
       .webmapp-profile-tabs-tab-bar {
         justify-content: flex-start;
         height: calc(var(--wm-font-sm) + 20px);

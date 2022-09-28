@@ -4,12 +4,33 @@
 ></webmapp-modal-header>
 <ion-content>
   <ion-list class="webmapp-settings-list">
-    <ion-item class="webmapp-settings-button" button (click)="logout()" mode="md">
+    <ion-item
+      *ngIf="isLoggedIn"
+      class="webmapp-settings-button"
+      button
+      (click)="logout()"
+      mode="md"
+    >
       <ion-label> {{ "modals.settings.logout" | wmtrans }} </ion-label>
-      <i class="webmapp-icon-chevron-right-outline" slot="end"></i>
+      <i class="icon-outline-chevron-right-outline" slot="end"></i>
     </ion-item>
-    <ion-item class="webmapp-settings-version" mode="md">
+    <ion-item class="webmapp-settings-version" mode="md" *ngIf="false">
       <ion-label> {{ "modals.settings.version" | wmtrans }} {{ version }}</ion-label>
     </ion-item>
+    <form [formGroup]="langForm">
+      <ion-item>
+        <ion-label> {{'pages.profile.lang' | wmtrans}}</ion-label>
+        <ion-select
+          formControlName="lang"
+          placeholder="{{'pages.profile.langPlaceholder' | wmtrans}}"
+        >
+          <ion-select-option
+            [value]="lang"
+            *ngFor="let lang of langs$|async"
+            >{{lang}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </form>
   </ion-list>
 </ion-content>

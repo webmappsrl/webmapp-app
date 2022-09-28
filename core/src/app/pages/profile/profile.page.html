@@ -3,7 +3,7 @@
     <ion-buttons slot="start" class="webmapp-sidemenuapp">
       <ion-icon
         name="chevron-back"
-        [routerLink]="['/home']"
+        [routerLink]="['..']"
         class="webmapp-backbutton webmapp-backbutton-chevron"
       >
       </ion-icon>
@@ -19,7 +19,7 @@
       }"
       (click)="openSettings()"
     >
-      <i class="webmapp-icon-settings-outline"></i>
+      <i class="icon-outline-settings-outline"></i>
     </ion-fab-button>
     <ion-fab-button
       slot="end"
@@ -29,29 +29,16 @@
         webmapp-profile-header-toolbar-button-disabled
       "
     >
-      <i class="webmapp-icon-bell-outline"></i>
+      <i class="icon-outline-bell-outline"></i>
     </ion-fab-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
-  <form [formGroup]="langForm">
-    <ion-item>
-      <ion-label> {{'pages.profile.lang' | wmtrans}}</ion-label>
-      <ion-select
-        formControlName="lang"
-        placeholder="{{'pages.profile.langPlaceholder' | wmtrans}}"
-      >
-        <ion-select-option [value]="lang" *ngFor="let lang of langs$|async"
-          >{{lang}}</ion-select-option
-        >
-      </ion-select>
-    </ion-item>
-  </form>
   <ion-tabs class="webmapp-profile-tabs">
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
-        (click)="tabClick($event, 'profile-data')"
+        (click)="tabClick($event, '/profile/profile-data')"
         tab="profile-data"
         [routerLink]="['profile-data']"
         class="webmapp-profile-tabs-tab-button"
@@ -60,7 +47,8 @@
         <div class="webmapp-profile-tabs-tab-button-border"></div>
       </ion-tab-button>
       <ion-tab-button
-        (click)="tabClick($event, 'profile-records')"
+        *ngIf="(authEnable$|async)"
+        (click)="tabClick($event, '/profile/profile-records')"
         tab="profile-records"
         [routerLink]="['profile-records']"
         class="webmapp-profile-tabs-tab-button"
@@ -72,6 +60,17 @@
       </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>
+  <div class="webmapp-profile-links">
+    <ion-button [routerLink]="['/project']" size="small" fill="outline"
+      >{{'pages.profile.projectlink'|wmtrans}}</ion-button
+    >
+    <ion-button [routerLink]="['/disclaimer']" size="small" fill="outline"
+      >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
+    >
+    <ion-button [routerLink]="['/credits']" size="small" fill="outline"
+      >{{'pages.profile.creditslink'|wmtrans}}</ion-button
+    >
+  </div>
   <ng-container *ngIf="(authEnable$|async) === true">
     <ng-container *ngIf="!isLoggedIn">
       <div class="webmapp-profile-logged-out-slider-container">
@@ -136,32 +135,6 @@
           >
         </div>
       </div>
-      <div class="webmapp-profile-links">
-        <ion-button [routerLink]="['/project']" size="small" fill="outline"
-          >{{'pages.profile.projectlink'|wmtrans}}</ion-button
-        >
-        <ion-button [routerLink]="['/disclaimer']" size="small" fill="outline"
-          >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
-        >
-        <ion-button [routerLink]="['/credits']" size="small" fill="outline"
-          >{{'pages.profile.creditslink'|wmtrans}}</ion-button
-        >
-      </div>
     </ng-container>
-  </ng-container>
-  <ng-container *ngIf="(authEnable$|async) === false">
-    <ion-tabs class="webmapp-profile-tabs">
-      <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
-        <ion-tab-button
-          (click)="tabClick($event, 'profile-data')"
-          tab="profile-data"
-          [routerLink]="['profile-data']"
-          class="webmapp-profile-tabs-tab-button"
-        >
-          <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
-          <div class="webmapp-profile-tabs-tab-button-border"></div>
-        </ion-tab-button>
-      </ion-tab-bar>
-    </ion-tabs>
   </ng-container>
 </ion-content>

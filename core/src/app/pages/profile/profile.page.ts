@@ -1,13 +1,11 @@
-import {BehaviorSubject, Observable, Subject, from} from 'rxjs';
 import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
 import {ModalController, NavController} from '@ionic/angular';
+import {Observable, Subject, from} from 'rxjs';
 import {switchMap, take, takeUntil} from 'rxjs/operators';
 
 import {AlertController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {LanguagesService} from 'src/app/services/languages.service';
 import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
@@ -22,27 +20,23 @@ import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
   encapsulation: ViewEncapsulation.None,
 })
 export class ProfilePage implements OnInit, OnDestroy {
-  loggedOutSliderOptions: any;
-  isLoggedIn: boolean;
-  name: string;
-  email: string;
-  avatarUrl: string;
-  langForm: FormGroup;
-  langs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['it']);
-  authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
-
   private _destroyer: Subject<boolean> = new Subject<boolean>();
+
+  authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  avatarUrl: string;
+  email: string;
+  isLoggedIn: boolean;
+  loggedOutSliderOptions: any;
+  name: string;
 
   constructor(
     private _authService: AuthService,
     private _modalController: ModalController,
-    private _router: Router,
     private _navController: NavController,
-    private _langSvc: LanguagesService,
-    private _fb: FormBuilder,
     private _storeConf: Store<IConfRootState>,
     private _alertCtrl: AlertController,
     private _wmTrans: WmTransPipe,
+    private _router: Router,
   ) {
     this.loggedOutSliderOptions = {
       initialSlide: 0,
@@ -54,63 +48,6 @@ export class ProfilePage implements OnInit, OnDestroy {
     };
   }
 
-  private _initLang(): void {
-    this.langs$.next(this._langSvc.langs());
-    this.langForm = this._fb.group({
-      lang: [this._langSvc.currentLang],
-    });
-    this.langForm.valueChanges.subscribe(lang => this._langSvc.changeLang(lang.lang));
-  }
-
-  ngOnInit() {
-    this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
-      this.isLoggedIn = this._authService.isLoggedIn;
-      this.name = this._authService.name;
-      this.email = this._authService.email;
-    });
-    this._initLang();
-  }
-
-  tabClick(event: Event, tab: string): void {
-    event.stopImmediatePropagation();
-    this._router.navigate(['/profile/' + tab]);
-  }
-
-  login(): void {
-    this._modalController
-      .create({
-        component: LoginComponent,
-        swipeToClose: true,
-        mode: 'ios',
-        id: 'webmapp-login-modal',
-      })
-      .then(modal => {
-        modal.present();
-      });
-  }
-
-  openSettings(): void {
-    if (this.isLoggedIn) {
-      this._modalController
-        .create({
-          component: SettingsComponent,
-          swipeToClose: true,
-          mode: 'ios',
-          id: 'webmapp-login-modal',
-        })
-        .then(modal => {
-          modal.present();
-        });
-    }
-  }
-
-  signup(): void {
-    this._navController.navigateForward('registeruser');
-  }
-
-  ngOnDestroy(): void {
-    this._destroyer.next(true);
-  }
   deleteUserAlert(): void {
     from(
       this._alertCtrl.create({
@@ -161,5 +98,52 @@ export class ProfilePage implements OnInit, OnDestroy {
       .subscribe(l => {
         l.present();
       });
+  }
+
+  login(): void {
+    this._modalController
+      .create({
+        component: LoginComponent,
+        swipeToClose: true,
+        mode: 'ios',
+        id: 'webmapp-login-modal',
+      })
+      .then(modal => {
+        modal.present();
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._destroyer.next(true);
+  }
+
+  ngOnInit() {
+    this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
+      this.isLoggedIn = this._authService.isLoggedIn;
+      this.name = this._authService.name;
+      this.email = this._authService.email;
+    });
+  }
+
+  openSettings(): void {
+    this._modalController
+      .create({
+        component: SettingsComponent,
+        swipeToClose: true,
+        mode: 'ios',
+        id: 'webmapp-login-modal',
+      })
+      .then(modal => {
+        modal.present();
+      });
+  }
+
+  signup(): void {
+    this._navController.navigateForward('registeruser');
+  }
+
+  tabClick(event: Event, tab: string): void {
+    event.stopImmediatePropagation();
+    this._router.navigate([tab]);
   }
 }

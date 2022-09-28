@@ -10,18 +10,25 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
-    >{{'pages.favourites.nodata' | wmtrans}}</ion-label
-  >
-  <ion-list>
-    <webmapp-card-track
-      *ngFor="let track of tracks"
-      [track]="track"
-      (open)="open($event)"
-      (remove)="remove($event)"
+  <ng-container *ngIf="isLoggedIn$|async;else nologged">
+    <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
+      >{{'pages.favourites.nodata' | wmtrans}}</ion-label
     >
-    </webmapp-card-track>
-  </ion-list>
+    <ion-list>
+      <webmapp-card-track
+        *ngFor="let track of tracks"
+        [track]="track"
+        (open)="open($event)"
+        (remove)="remove($event)"
+      >
+      </webmapp-card-track> </ion-list
+  ></ng-container>
+  <ng-template #nologged>
+    <ion-label class="webmapp-favourites-nodata">
+      {{'non sei loggato. puoi loggare da'|wmtrans}}
+      <ion-button [routerLink]="['/profile']">{{'qui'|wmtrans}}</ion-button></ion-label
+    >
+  </ng-template>
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">

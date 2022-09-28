@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-icon
         name="chevron-back"
-        [routerLink]="['/home']"
+        [routerLink]="['..']"
         class="webmapp-backbutton webmapp-backbutton-chevron"
       >
       </ion-icon>
@@ -15,8 +15,10 @@
 <ion-content>
   <div
     class="wm-project-content"
-    *ngIf="innerHtml"
-    [innerHTML]="sanitizer.bypassSecurityTrustHtml(innerHtml)"
+    *ngIf="innerHtml$|async as inner;else empty"
+    [innerHTML]="sanitizer.bypassSecurityTrustHtml(inner.HTML)"
   ></div>
-  <div class="wm-project-content" *ngIf="!innerHtml"></div>
+  <ng-template #empty>
+    <div class="wm-project-content"></div>
+  </ng-template>
 </ion-content>

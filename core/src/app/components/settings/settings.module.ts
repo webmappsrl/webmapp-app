@@ -1,3 +1,5 @@
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
@@ -7,7 +9,7 @@ import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   declarations: [SettingsComponent],
-  imports: [CommonModule, IonicModule, PipeModule, SharedModule],
+  imports: [CommonModule, IonicModule, PipeModule, SharedModule, FormsModule, ReactiveFormsModule],
   exports: [SettingsComponent],
 })
 export class SettingsModule {}
