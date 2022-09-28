@@ -213,7 +213,7 @@
     </div>
 
     <div
-      *ngIf="authEnable$|async"
+      *ngIf="(authEnable$|async) && (isLoggedIn$|async)"
       (click)="favourite()"
       class="webmapp-pageroute-toolbox-button ion-activatable"
     >

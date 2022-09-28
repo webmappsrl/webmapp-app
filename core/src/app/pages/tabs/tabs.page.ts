@@ -1,5 +1,6 @@
 import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
 
+import {AuthService} from 'src/app/services/auth.service';
 import {Component} from '@angular/core';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IMapRootState} from 'src/app/store/map/map';
@@ -17,13 +18,17 @@ import {online} from 'src/app/store/network/network.selector';
 })
 export class TabsPage {
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  isLoggedIn$: Observable<boolean>;
   online$: Observable<boolean> = this._storeNetwork.select(online);
   constructor(
     private _statusService: StatusService,
     private _storeMap: Store<IMapRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeNetwork: Store<INetworkRootState>,
-  ) {}
+    private _authSvc: AuthService,
+  ) {
+    this.isLoggedIn$ = this._authSvc.isLoggedIn$;
+  }
 
   isBarHidden() {
     return this._statusService.isSelectedMapTrack;

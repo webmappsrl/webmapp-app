@@ -18,6 +18,7 @@ import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {auditTime, switchMap, take, tap} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
+import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
@@ -61,6 +62,7 @@ export class ItineraryPage implements OnDestroy {
   @ViewChild('moredetails') moreDetails: ElementRef;
 
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  isLoggedIn$: Observable<boolean>;
   currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
     this._storeMap.select(mapCurrentTrack);
   currentTrackProperties$: Observable<IGeojsonProperties> = this._storeMap
@@ -124,7 +126,9 @@ export class ItineraryPage implements OnDestroy {
     private _geohubService: GeohubService,
     private _coinService: CoinService,
     private _storeConf: Store<IConfRootState>,
+    private _authSvc: AuthService,
   ) {
+    this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.setAnimations();
     this.currentTrackProperties$
       .pipe(
