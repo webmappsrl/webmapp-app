@@ -6,15 +6,29 @@
 
 - SICAI: **12.1.17**
 
-- UCVS:**12.1.15**
+- UCVS:**12.1.19**
 
 - FUMAIOLOSENTIERI:**12.1.18**
 
 - GAVORRANO:**12.1.15**
 
+- CAMMINI: **12.1.17**
+
 ---
 
-**12.1.19**
+**12.1.20**
+
+- [1F]()(fix/track): eliminato il menu opzioni (tre puntini)
+- [2F]()(fix/track/download): aggiunta possibilità di interrompere download
+- [3F]()(fix/track/share): fixato bug condivisione su nuove versioni di android [fixx](https://docs.google.com/document/d/1CrE5wY48apcjg6jT-kz-mIE73JzPv3XtLRrxO8fhXCA/edit#heading=h.baz7r5xjckfp)
+- [4F]()(fix/preferiti): i preferiti ora sono visualizzati correttamente quando l'utente è loggato
+- [5F]()(fix/settings): aggiunta la sezione settings all'interno del profilo che comprende il logout e la scelta lingua
+- [6F]()(fix/login): la pagina profilo visualizza correttamente il contenuto in base allo stato di autenticazione
+- [7F]()(fix/donwload_preferiti): l'icona che invita al click ora è cliccabile
+- [3F]()(feature/tiles): aggiunto switch tiles webmapp/satellitare
+- ***
+
+  **12.1.19**
 
 - [1R]()(refactoring): creato un componente per la visualizzazione delle gallery presenti in dettagli mappa e track
 
