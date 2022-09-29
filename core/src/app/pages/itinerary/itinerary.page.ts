@@ -249,11 +249,6 @@ export class ItineraryPage implements OnDestroy {
     this.mapDegrees = deg;
   }
 
-  menu() {
-    this._menuController.enable(true, 'optionMenu');
-    this._menuController.open('optionMenu');
-  }
-
   navigate() {
     console.log('clicco su nav');
     this.closeMenu();
