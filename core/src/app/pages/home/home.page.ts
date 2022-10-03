@@ -8,9 +8,9 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {IHOME, ILAYER} from 'src/app/types/config';
+import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
 import {ModalController, NavController} from '@ionic/angular';
-import {confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
+import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {filter, first, map, startWith, switchMap, tap} from 'rxjs/operators';
 import {
   setCurrentFilters,
@@ -19,6 +19,7 @@ import {
   setCurrentTrackId,
 } from 'src/app/store/map/map.actions';
 
+import {DomSanitizer} from '@angular/platform-browser';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
@@ -43,6 +44,7 @@ export class HomePage implements OnInit {
   @Output('searchId') searchIdEvent: EventEmitter<number> = new EventEmitter<number>();
 
   cards$: Observable<IHIT[]> = of([]);
+  confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -71,6 +73,7 @@ export class HomePage implements OnInit {
     private _navController: NavController,
     private _modalCtrl: ModalController,
     private _cdr: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
   ) {
     this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
     const allPois: Observable<any[]> = this._storeMap.select(pois).pipe(

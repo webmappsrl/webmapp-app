@@ -14,6 +14,7 @@ interface IAPP {
   googlePlayUrl?: string;
   id: string;
   name: string;
+  welcome?: string;
 }
 
 interface IConfig {

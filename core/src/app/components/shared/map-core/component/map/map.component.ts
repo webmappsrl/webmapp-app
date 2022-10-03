@@ -113,7 +113,7 @@ export class WmMapComponent implements AfterViewInit {
       this._defZoom = conf.defZoom;
     }
 
-    this.tileLayers = null;
+    this.tileLayers = this._buildTileLayers(conf.tiles);
     this._reset();
 
     this.map = new Map({

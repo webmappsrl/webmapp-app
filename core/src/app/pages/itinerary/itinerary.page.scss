@@ -97,9 +97,8 @@
 
   max-height: 50px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .webmapp-pageroute-infopanel-icon {
@@ -199,6 +198,7 @@
 .webmapp-route-tab {
   width: 100%;
   display: block;
+  margin-bottom: 20px;
 }
 
 .webmapp-route-tabs {

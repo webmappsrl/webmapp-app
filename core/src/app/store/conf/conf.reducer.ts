@@ -1,4 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
+
 import {ICONF} from 'src/app/types/config';
 import {environment} from 'src/environments/environment';
 import {loadConfSuccess} from './conf.actions';
@@ -12,6 +13,7 @@ const initialConfState: ICONF = {
     name: 'Webmapp',
     geohubId: environment.geohubId || 1,
     id: 'it.webmapp',
+    welcome: 'pages.home.welcome',
   },
   OPTIONS: {
     baseUrl: '-',
@@ -102,7 +104,7 @@ export const confReducer = createReducer(
     return {
       ...conf,
       ...{
-        APP: {...state.APP, ...conf.APP},
+        APP: {...state.APP, ...removeNullAttributes(conf.APP)},
         THEME: {...state.THEME, ...conf.THEME},
         OPTIONS: {...state.OPTIONS, ...conf.OPTIONS},
         MAP: {...state.MAP, ...conf.MAP},
@@ -112,3 +114,13 @@ export const confReducer = createReducer(
     };
   }),
 );
+
+const removeNullAttributes = (attr: {[key: string]: any}): {[key: string]: any} => {
+  const res = {};
+  Object.keys(attr).forEach(k => {
+    if (attr[k] != null) {
+      res[k] = attr[k];
+    }
+  });
+  return res;
+};
