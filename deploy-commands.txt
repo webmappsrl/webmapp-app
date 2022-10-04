@@ -10,7 +10,7 @@ gulp build -i gavorrano -g 19
 gulp build -i sicai -g 20
 gulp build -i stelvio -g 23
 gulp build -i gasca -g 24
-gulp build -i itineraromanicaplus -g 28
+gulp build -i ir -g 28
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio

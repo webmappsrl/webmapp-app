@@ -38,6 +38,15 @@ const CONSOLE_COLORS = {
   BgCyan: '\x1b[46m',
   BgWhite: '\x1b[47m',
 };
+const wrongInstanceVersion = [
+  'fumaiolosentieri',
+  'pec',
+  'parcomaremma',
+  'cammini',
+  'ucvs',
+  'gavorrano',
+  'sicai',
+];
 
 function debug(message) {
   console.debug(CONSOLE_COLORS.Dim + '[DEBUG]   ' + CONSOLE_COLORS.Reset + ' ' + message);
@@ -650,6 +659,11 @@ function build(instanceName, geohubInstanceId) {
     if (!instanceName) {
       reject('Instance name requred. See gulp help');
       return;
+    }
+    if (wrongInstanceVersion.includes(instanceName)) {
+      info('Wrong version change it');
+      version.code = +`1${version.code}`;
+      version.version = `1${version.version}`;
     }
     if (!geohubInstanceId) {
       reject('Geohub instance id requred. See gulp help');
