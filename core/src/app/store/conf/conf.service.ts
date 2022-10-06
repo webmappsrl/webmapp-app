@@ -11,7 +11,6 @@ export class ConfService {
   private _geohubAppId: number = environment.geohubId || 1;
 
   constructor(private _http: HttpClient) {
-    console.log(environment);
     const hostname: string = window.location.hostname;
     if (hostname.indexOf('localhost') < 0) {
       const newGeohubId = parseInt(hostname.split('.')[0], this._geohubAppId);

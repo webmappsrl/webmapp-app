@@ -35,11 +35,9 @@ export class ConfigService {
   }
 
   get appName(): string {
-    return this._config.APP ? this._config.APP.name : 'Webmapp';
-  }
-
-  get project(): string {
-    return this._config.PROJECT ? this._config.PROJECT.HTML : '';
+    return this._config && this._config.APP && this._config.APP.name
+      ? this._config.APP.name
+      : 'Webmapp';
   }
 
   get availableLanguages(): Array<string> {
@@ -48,6 +46,10 @@ export class ConfigService {
 
   get defaultLanguage(): string {
     return 'it';
+  }
+
+  get project(): string {
+    return this._config.PROJECT ? this._config.PROJECT.HTML : '';
   }
 
   get version(): string {
@@ -60,8 +62,8 @@ export class ConfigService {
   initialize(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const isLocalServer: boolean = window.location.href.indexOf('localhost') !== -1;
-
-      if (!this._deviceService.isBrowser || isLocalServer) {
+      const deployOnWeb = environment.deployOnWeb;
+      if (!this._deviceService.isBrowser || isLocalServer || deployOnWeb) {
         const tmp: any = CONFIG;
         this._config = tmp.default;
 

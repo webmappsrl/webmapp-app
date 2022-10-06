@@ -26,9 +26,9 @@ import {IMAP} from 'src/app/types/config';
   selector: '[wmMapPois]',
 })
 export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges {
+  private _firstPoiId: number;
   private _poisClusterLayer: VectorLayer;
   private _selectedPoiLayer: VectorLayer;
-  private _firstPoiId: number;
 
   @Input() conf: IMAP;
   @Input() filters: any[] = [];
@@ -90,7 +90,6 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
               padding: this.padding,
               duration: 500,
             });
-            console.log(event);
             stopPropagation(event);
           } else {
             const poiFeature = this._getNearestFeatureOfCluster(this._poisClusterLayer, event);
