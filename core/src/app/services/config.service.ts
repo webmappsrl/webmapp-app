@@ -62,8 +62,7 @@ export class ConfigService {
   initialize(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const isLocalServer: boolean = window.location.href.indexOf('localhost') !== -1;
-      const deployOnWeb = environment.deployOnWeb;
-      if (!this._deviceService.isBrowser || isLocalServer || deployOnWeb) {
+      if (!this._deviceService.isBrowser || isLocalServer) {
         const tmp: any = CONFIG;
         this._config = tmp.default;
 

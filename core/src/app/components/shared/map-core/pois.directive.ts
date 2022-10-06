@@ -40,7 +40,6 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
       this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, FLAG_TRACK_ZINDEX + 100);
       this._selectedPoiLayer.getSource().clear();
       if (id > -1) {
-        this.padding = [50, 50, 400, 50];
         const currentPoi = this.pois.features.find(p => +p.properties.id === +id);
         if (currentPoi != null) {
           const icn = this._getIcnFromTaxonomies(currentPoi.properties.taxonomyIdentifiers);
@@ -54,13 +53,25 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
             type: 'icon',
             geometry,
           });
-          const iconStyle = new Style({
+          let iconStyle = new Style({
             image: new Icon({
               anchor: [0.5, 0.5],
-              scale: 0.7,
-              src: `${ICN_PATH}/${icn}_selected.png`,
+              scale: 0.5,
+              src: `${ICN_PATH}/${icn}.png`,
             }),
           });
+          console.log(currentPoi);
+          if (currentPoi.properties.svgIcon != null) {
+            iconStyle = new Style({
+              image: new Icon({
+                anchor: [0.5, 0.5],
+                scale: 1,
+                src: `data:image/svg+xml;utf8,${currentPoi.properties.svgIcon
+                  .replaceAll('<circle fill="darkorange"', '<circle fill="white" ')
+                  .replaceAll('<g fill="white"', '<g fill="darkorange" ')}`,
+              }),
+            });
+          }
           iconFeature.setStyle(iconStyle);
           iconFeature.setId(currentPoi.properties.id);
           const source = this._selectedPoiLayer.getSource();
@@ -69,8 +80,6 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
           this._fitView(geometry as any);
         }
       }
-    } else {
-      this._firstPoiId = id;
     }
   }
 
@@ -154,13 +163,24 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
           type: 'icon',
           geometry: new Point([position[0], position[1]]),
         });
-        const iconStyle = new Style({
+        let iconStyle = new Style({
           image: new Icon({
             anchor: [0.5, 0.5],
             scale: 0.5,
             src: `${ICN_PATH}/${icn}.png`,
           }),
         });
+        if (poi.properties.svgIcon != null) {
+          iconStyle = new Style({
+            image: new Icon({
+              anchor: [0.5, 0.5],
+              scale: 1,
+              src: `data:image/svg+xml;utf8,${poi.properties.svgIcon}`,
+              //src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024' width='32' height='32'><circle cx='512' cy='512' r='512' fill=\"red\" /><g transform='scale(0.8 0.8) translate(100, 100)' fill=\"white\"><path   d='M294.4 108.8l-54.4 297.6c-6.4 44.8 96 64 92.8 108.8l-12.8 348.8c-3.2 54.4 54.4 54.4 54.4 54.4s54.4 0 54.4-54.4l-12.8-348.8c-3.2-44.8 92.8-64 92.8-108.8l-54.4-297.6h-25.6l12.8 214.4-41.6 25.6-12.8-243.2h-25.6l-12.8 243.2-41.6-25.6 12.8-214.4h-25.6zM752 108.8c-38.4 0-105.6 35.2-131.2 89.6-22.4 38.4-28.8 128-28.8 182.4v134.4c0 44.8 57.6 54.4 80 54.4l-25.6 297.6c-6.4 54.4 54.4 54.4 54.4 54.4s54.4 0 54.4-54.4v-758.4h-3.2z'/></g></svg>",
+            }),
+          });
+        }
+
         iconFeature.setStyle(iconStyle);
         iconFeature.setId(poi.properties.id);
 

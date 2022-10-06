@@ -1,3 +1,4 @@
+import {BuildSvgDirective} from './build-svg.directive';
 import {CommonModule} from '@angular/common';
 import {DistancePipe} from './distance.pipe';
 import {DurationPipe} from './duration.pipe';
@@ -14,6 +15,7 @@ const pipes = [
   DurationPipe,
   WmGetFilterIcnPipe,
   WmGetIcnPipe,
+  BuildSvgDirective,
 ];
 @NgModule({
   declarations: pipes,

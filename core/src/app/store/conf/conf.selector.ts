@@ -31,6 +31,17 @@ export const confPOISFilter = createSelector(confPOIS, pois => {
   }
   return undefined;
 });
+export const confPoisIcons = createSelector(confPOISFilter, taxonomies => {
+  const res = {};
+  if (taxonomies != null && taxonomies.poi_type != null) {
+    const icons = taxonomies.poi_type.filter(p => p.icon != null);
+    icons.forEach(icon => {
+      res[icon.identifier] = icon.icon;
+    });
+  }
+  console.log(res);
+  return res;
+});
 export const confPROJECT = createSelector(confFeature, state => state.PROJECT);
 
 export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
