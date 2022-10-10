@@ -8,16 +8,17 @@
  *
  * */
 
-import {Injectable} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
-import {take} from 'rxjs/operators';
+import {skip, take} from 'rxjs/operators';
+
 import {ConfigService} from './config.service';
+import {IConfRootState} from '../store/conf/conf.reducer';
+import {ILANGUAGES} from '../types/config';
+import {Injectable} from '@angular/core';
 import {StorageService} from './base/storage.service';
 import {Store} from '@ngrx/store';
-import {IConfRootState} from '../store/conf/conf.reducer';
+import {TranslateService} from '@ngx-translate/core';
 import {confLANGUAGES} from '../store/conf/conf.selector';
-import {ILANGUAGES} from '../types/config';
 
 @Injectable({
   providedIn: 'root',
@@ -165,7 +166,7 @@ export class LanguagesService {
     this._defaultLang = this._configService.defaultLanguage;
     this._available = this._configService.availableLanguages;
 
-    this._confLANGUAGES$.pipe(take(1)).subscribe(lang => {
+    this._confLANGUAGES$.pipe(skip(1), take(1)).subscribe(lang => {
       this._translateService.addLangs(lang.available);
       const savedLang = localStorage.getItem('webmapp-language');
       if (savedLang != null) {
