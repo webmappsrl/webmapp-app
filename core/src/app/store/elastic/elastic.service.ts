@@ -1,6 +1,7 @@
+import {HttpClient, HttpParams} from '@angular/common/http';
+
 /* eslint-disable quote-props */
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
 const baseUrl = 'https://elastic-passtrough.herokuapp.com/search';
@@ -14,6 +15,12 @@ export class ElasticService {
     const hostname: string = window.location.hostname;
     if (hostname.indexOf('localhost') < 0) {
       const newGeohubId = parseInt(hostname.split('.')[0], environment.geohubId);
+      if (!Number.isNaN(newGeohubId)) {
+        this._geohubAppId = newGeohubId;
+      }
+    }
+    if (hostname.indexOf('mobile') > 0) {
+      const newGeohubId = parseInt(hostname.split('.')[0]);
       if (!Number.isNaN(newGeohubId)) {
         this._geohubAppId = newGeohubId;
       }

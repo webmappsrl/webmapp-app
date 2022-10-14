@@ -62,6 +62,7 @@ export class ConfigService {
   initialize(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       const isLocalServer: boolean = window.location.href.indexOf('localhost') !== -1;
+
       if (!this._deviceService.isBrowser || isLocalServer) {
         const tmp: any = CONFIG;
         this._config = tmp.default;
@@ -105,8 +106,13 @@ export class ConfigService {
               );
           });
       } else {
-        const url = '/config.json';
-
+        let url = '/config.json';
+        if (this._deviceService.isBrowser) {
+          const hostname: string = window.location.hostname;
+          const geohubId = parseInt(hostname.split('.')[0], 10) || 4;
+          environment.geohubId = geohubId;
+          url = `${environment.api}/api/app/webmapp/${environment.geohubId}/config.json`;
+        }
         this._communicationService.get(url + '?t=' + Date.now()).subscribe(
           response => {
             this._config = response;

@@ -26,7 +26,7 @@ export const confPOIS = createSelector(confMAP, map => {
   return undefined;
 });
 export const confPOISFilter = createSelector(confPOIS, pois => {
-  if (pois.taxonomies != null) {
+  if (pois && pois.taxonomies != null) {
     return pois.taxonomies;
   }
   return undefined;

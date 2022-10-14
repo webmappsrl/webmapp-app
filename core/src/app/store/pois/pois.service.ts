@@ -19,6 +19,12 @@ export class PoisService {
         this._geohubAppId = newGeohubId;
       }
     }
+    if (hostname.indexOf('mobile') > 0) {
+      const newGeohubId = parseInt(hostname.split('.')[0]);
+      if (!Number.isNaN(newGeohubId)) {
+        this._geohubAppId = newGeohubId;
+      }
+    }
   }
 
   public getPois(): Observable<any> {
