@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -31,6 +32,7 @@ import {filter} from 'rxjs/operators';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WmMapComponent implements AfterViewInit {
   private _centerExtent: Extent;
@@ -50,7 +52,7 @@ export class WmMapComponent implements AfterViewInit {
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   tileLayers: TileLayer[] = [];
 
-  constructor(private _tilesService: TilesService, private _mapSvc: MapService) {}
+  constructor(private _mapSvc: MapService) {}
 
   @Input() set conf(conf: IMAP) {
     this._conf = conf;
@@ -134,6 +136,9 @@ export class WmMapComponent implements AfterViewInit {
       target: this.olmap.nativeElement,
     });
     this._map$.next(this.map);
+    setTimeout(() => {
+      this.map.updateSize();
+    }, 500);
   }
 
   /**

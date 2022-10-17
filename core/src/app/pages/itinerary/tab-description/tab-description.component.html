@@ -10,7 +10,7 @@
       wmtrans}}</ion-label>
     <div
       class="webmapp-pageroute-tabdescription-description"
-      [innerHTML]="properties?.description | wmtrans"
+      [innerHTML]="domSanitazer.bypassSecurityTrustHtml(properties?.description | wmtrans)"
     ></div>
   </div>
 </ng-container>
