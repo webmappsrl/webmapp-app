@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import defaultImage from '../../../../assets/images/defaultImageB64.json';
 import {buffer, Extent} from 'ol/extent';
-
+import FlowLine from 'ol-ext/style/FlowLine';
 // ol imports
 import {Coordinate} from 'ol/coordinate';
 import Circle from 'ol/geom/Circle';
@@ -64,7 +64,7 @@ import MapBrowserEvent from 'ol/MapBrowserEvent';
 import Geometry from 'ol/geom/Geometry';
 import {AuthService} from 'src/app/services/auth.service';
 import {take, takeUntil} from 'rxjs/operators';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import Fill from 'ol/style/Fill';
 import LineString from 'ol/geom/LineString';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -79,6 +79,7 @@ import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selecto
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {getDistance} from 'ol/sphere';
+import {IMAP} from 'src/app/types/config';
 
 @Component({
   selector: 'itinerary-webmapp-map',
@@ -145,6 +146,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
 
   @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
   @Input('btnposition') btnposition: string = 'bottom';
+  @Input() conf: IMAP;
   @Input() focus: boolean = false;
   @Input('hideEndMarker') hideEndMarker: boolean = false;
   @Input('hidePosition') hidePosition: boolean = false;
@@ -547,6 +549,30 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
    */
   async drawTrack(trackgeojson: any) {
     const geojson: any = this.getGeoJson(trackgeojson);
+    const isFlowLine = this.conf.flow_line_quote_show || false;
+    const orangeTreshold = this.conf.flow_line_quote_orange || 800;
+    const redTreshold = this.conf.flow_line_quote_red || 1500;
+    const flowStyle = new FlowLine({
+      lineCap: 'butt',
+      color: function (f, step) {
+        const geometry = f.getGeometry().getCoordinates();
+        const position = +(geometry.length * step).toFixed();
+        const currentLocation = geometry[position];
+        let currentAltitude = 100;
+        try {
+          currentAltitude = currentLocation[2];
+        } catch (_) {}
+
+        if (currentAltitude >= orangeTreshold && currentAltitude < redTreshold) {
+          return 'orange';
+        }
+        if (currentAltitude >= redTreshold) {
+          return 'red';
+        }
+        return 'green';
+      },
+      width: 10,
+    });
     const features = new GeoJSON({
       featureProjection: 'EPSG:3857',
     }).readFeatures(geojson);
@@ -557,7 +583,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
           features,
         }),
         style: () => {
-          return this._getLineStyle('#CA1551');
+          return isFlowLine ? flowStyle : this._getLineStyle('#caaf15');
         },
         updateWhileAnimating: true,
         updateWhileInteracting: true,
@@ -704,6 +730,9 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       }
       if (changes.focus.currentValue == true) {
         this.btnposition = 'bottom';
+      }
+      if (this.conf != null) {
+        console.log(this.conf);
       }
       this._cdr.detectChanges();
     }

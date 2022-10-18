@@ -182,6 +182,9 @@ interface IMAP {
   bbox: [number, number, number, number];
   center?: [number, number];
   defZoom: number;
+  flow_line_quote_orange: number;
+  flow_line_quote_red: number;
+  flow_line_quote_show: boolean;
   layers?: ILAYER[];
   maxZoom: number;
   minZoom: number;

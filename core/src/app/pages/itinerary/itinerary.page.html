@@ -35,6 +35,7 @@
   <div #mapcontainer class="webmapp-pageroute-map-container">
     <itinerary-webmapp-map
       #map
+      [conf]=" mapConf$|async"
       [static]="false"
       [animation]="useAnimation"
       [track]="(currentTrack$|async)?.geometry"
