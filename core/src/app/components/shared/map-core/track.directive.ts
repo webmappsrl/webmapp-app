@@ -1,27 +1,29 @@
 import {Directive, Input, OnChanges, SimpleChanges} from '@angular/core';
-import Feature from 'ol/Feature';
-import Geometry from 'ol/geom/Geometry';
-import Point from 'ol/geom/Point';
-import VectorLayer from 'ol/layer/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
-import {fromLonLat, transform} from 'ol/proj';
-import VectorSource from 'ol/source/Vector';
-import Icon from 'ol/style/Icon';
-import FillStyle from 'ol/style/Fill';
-import Style from 'ol/style/Style';
-import Stroke from 'ol/style/Stroke';
-import StrokeStyle from 'ol/style/Stroke';
-import {endIconHtml, startIconHtml} from './icons';
-import {ILocation} from 'src/app/types/location';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import LineString from 'ol/geom/LineString';
-import CircleStyle from 'ol/style/Circle';
-import {ILineString} from 'src/app/types/model';
-import {Coordinate} from 'ol/coordinate';
 import {FLAG_TRACK_ZINDEX, POINTER_TRACK_ZINDEX, SELECTED_TRACK_ZINDEX} from './zIndex';
-import {WmMapBaseDirective} from './base.directive';
+import {endIconHtml, startIconHtml} from './icons';
+
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import CircleStyle from 'ol/style/Circle';
+import {Coordinate} from 'ol/coordinate';
+import Feature from 'ol/Feature';
+import FillStyle from 'ol/style/Fill';
+import FlowLine from 'ol-ext/style/FlowLine';
+import GeoJSON from 'ol/format/GeoJSON';
+import Geometry from 'ol/geom/Geometry';
+import {ILineString} from 'src/app/types/model';
+import {ILocation} from 'src/app/types/location';
 import {IMAP} from 'src/app/types/config';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
+import LineString from 'ol/geom/LineString';
+import Point from 'ol/geom/Point';
+import Stroke from 'ol/style/Stroke';
+import StrokeStyle from 'ol/style/Stroke';
+import Style from 'ol/style/Style';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import {WmMapBaseDirective} from './base.directive';
+import {transform} from 'ol/proj';
+
 @Directive({
   selector: '[wmMapTrack]',
 })
@@ -43,6 +45,30 @@ export class WmMapTrackDirective extends WmMapBaseDirective implements OnChanges
   @Input() trackElevationChartElements: ITrackElevationChartHoverElements;
 
   drawTrack(trackgeojson: any): void {
+    const isFlowLine = this.conf.flow_line_quote_show || false;
+    const orangeTreshold = this.conf.flow_line_quote_orange || 800;
+    const redTreshold = this.conf.flow_line_quote_red || 1500;
+    const flowStyle = new FlowLine({
+      lineCap: 'butt',
+      color: function (f, step) {
+        const geometry = f.getGeometry().getCoordinates();
+        const position = +(geometry.length * step).toFixed();
+        const currentLocation = geometry[position];
+        let currentAltitude = 100;
+        try {
+          currentAltitude = currentLocation[2];
+        } catch (_) {}
+
+        if (currentAltitude >= orangeTreshold && currentAltitude < redTreshold) {
+          return 'orange';
+        }
+        if (currentAltitude >= redTreshold) {
+          return 'red';
+        }
+        return 'green';
+      },
+      width: 10,
+    });
     const geojson: any = this.getGeoJson(trackgeojson);
     this._trackFeatures = new GeoJSON({
       featureProjection: 'EPSG:3857',
@@ -53,7 +79,7 @@ export class WmMapTrackDirective extends WmMapBaseDirective implements OnChanges
         features: this._trackFeatures,
       }),
       style: () => {
-        return this._getLineStyle('#caaf15');
+        return isFlowLine ? flowStyle : this._getLineStyle('#caaf15');
       },
       updateWhileAnimating: true,
       updateWhileInteracting: true,
@@ -75,7 +101,7 @@ export class WmMapTrackDirective extends WmMapBaseDirective implements OnChanges
       this._resetView();
       this._initTrack = false;
     }
-    if (this.track != null && this.map != null && this._initTrack === false) {
+    if (this.conf != null && this.track != null && this.map != null && this._initTrack === false) {
       this._init();
       this._initTrack = true;
     }

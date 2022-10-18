@@ -33,26 +33,28 @@
   </div>
 
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <itinerary-webmapp-map
-      #map
-      [conf]=" mapConf$|async"
-      [static]="false"
-      [animation]="useAnimation"
-      [track]="(currentTrack$|async)?.geometry"
-      [hideRegister]="true"
-      [hidePosition]="true"
-      [btnposition]="modeFullMap?'bottom': 'middle'"
-      [noPoiSelection]="true"
-      [alertPoiRadius]="(mapConf$|async)?.alert_poi_radius"
-      [focus]="focus$|async"
-      (clickpoi)="clickPoi($event)"
-      [height]="mapHeigth()"
-      [slopeChartElements]="trackElevationChartHoverElements$|async"
-      [cache]="useCache"
-      (rotate)="mapRotation($event)"
-      (touch)="resetFocus()"
-      (nearestPoiEvt)="nearestPoi$.next($event)"
-    ></itinerary-webmapp-map>
+    <ng-container *ngIf="mapConf$|async as mapConf">
+      <itinerary-webmapp-map
+        #map
+        [conf]="mapConf"
+        [static]="false"
+        [animation]="useAnimation"
+        [track]="(currentTrack$|async)?.geometry"
+        [hideRegister]="true"
+        [hidePosition]="true"
+        [btnposition]="modeFullMap?'bottom': 'middle'"
+        [noPoiSelection]="true"
+        [alertPoiRadius]="mapConf.alert_poi_radius"
+        [focus]="focus$|async"
+        (clickpoi)="clickPoi($event)"
+        [height]="mapHeigth()"
+        [slopeChartElements]="trackElevationChartHoverElements$|async"
+        [cache]="useCache"
+        (rotate)="mapRotation($event)"
+        (touch)="resetFocus()"
+        (nearestPoiEvt)="nearestPoi$.next($event)"
+      ></itinerary-webmapp-map>
+    </ng-container>
   </div>
 
   <div

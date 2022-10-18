@@ -359,7 +359,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
         } else {
           this.drawTrack(value);
         }
-      }, 0);
+      }, 400);
     } else {
       this.deleteTrack();
     }
@@ -735,6 +735,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
         console.log(this.conf);
       }
       this._cdr.detectChanges();
+      this._map.updateSize();
     }
   }
 
