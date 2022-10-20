@@ -14,6 +14,22 @@
 
 - CAMMINI: **12.1.17**
 
+- IR: **2.1.21**
+
+---
+
+**2.1.22**
+
+- [1F]()(feature): aggiunta la traduzione francese della app
+
+---
+
+**2.1.21**
+
+- [1F]()(feature): aggiunta flow line quote
+- [1F]()(feature): aggiunta colorazione alle descrizioni
+- [1F]()(improve): migliorato il caricamento delle tracks, inserendo livelli diversi di dettaglio in base allo zoom
+
 ---
 
 **12.1.20**
