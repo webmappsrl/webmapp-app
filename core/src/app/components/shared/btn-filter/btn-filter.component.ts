@@ -49,7 +49,6 @@ export class BtnFilterComponent implements OnChanges {
     } else {
       this.currentFilters$.next([...this.currentFilters$.value, filter]);
     }
-    console.log(this.currentFilters$.value);
     this.selectedFilters.emit(this.currentFilters$.value);
   }
 

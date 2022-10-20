@@ -60,7 +60,6 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
               src: `${ICN_PATH}/${icn}.png`,
             }),
           });
-          console.log(currentPoi);
           if (currentPoi.properties.svgIcon != null) {
             iconStyle = new Style({
               image: new Icon({

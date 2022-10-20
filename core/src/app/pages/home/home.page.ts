@@ -117,7 +117,7 @@ export class HomePage implements OnInit {
     // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
     await this._geoLocation.start();
     this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
-      this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);
+      //  this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);
     });
   }
 

@@ -28,7 +28,6 @@ export class DownloadlistPage implements OnInit {
 
   async ngOnInit() {
     this.tracks = await this._downloadService.getDownloadedTracks();
-    console.log(this.tracks);
   }
 
   open(track: IGeojsonFeature) {

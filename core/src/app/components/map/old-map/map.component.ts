@@ -529,7 +529,6 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     try {
       this._map.addLayer(this._track.layer);
       this._map.addLayer(this._track.markerslayer);
-      console.log('added layers');
     } catch (e) {}
     if (this.centerToTrack) {
       this._centerMapToTrack();

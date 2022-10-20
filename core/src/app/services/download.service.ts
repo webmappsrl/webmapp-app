@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Observable, ReplaySubject} from 'rxjs';
-import {DownloadedTrackComponents, DownloadStatus} from '../types/download';
+import {DownloadStatus, DownloadedTrackComponents} from '../types/download';
 import {IGeojsonFeature, IGeojsonFeatureDownloaded} from '../types/model';
-import {StorageService} from './base/storage.service';
-import {GEOHUB_TILES_DOMAIN} from '../constants/geohub';
-import {DOWNLOAD_INDEX_KEY} from '../constants/storage';
+import {Observable, ReplaySubject} from 'rxjs';
 
-import defaultImage from '../../assets/images/defaultImageB64.json';
+import {DOWNLOAD_INDEX_KEY} from '../constants/storage';
+import {GEOHUB_TILES_DOMAIN} from '../constants/geohub';
 import {IMapRootState} from '../store/map/map';
+import {Injectable} from '@angular/core';
+import {StorageService} from './base/storage.service';
 import {Store} from '@ngrx/store';
+import defaultImage from '../../assets/images/defaultImageB64.json';
 import {mapCurrentRelatedPoi} from '../store/map/map.selector';
 
 @Injectable({
@@ -321,12 +321,10 @@ export class DownloadService {
     // download poi (data) - DB key=poiId ??
     for (let i = 0; i < pois.length; i++) {
       const poi = pois[i];
-      console.log(poi);
       poisIds.push(poi.properties.id);
       imageUrlList.push(poi.properties.image);
       if (poi.properties.images) {
         for (let j = 0; j < poi.properties.images.length; j++) {
-          console.log(poi.properties.images[j]);
           const imgUrl = poi.properties.images[j];
 
           if (imgUrl) {

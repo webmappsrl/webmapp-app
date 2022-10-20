@@ -250,7 +250,6 @@ export class ItineraryPage implements OnDestroy {
   }
 
   navigate() {
-    console.log('clicco su nav');
     this.closeMenu();
     this.focus$.next(true);
     this.modeFullMap = true;

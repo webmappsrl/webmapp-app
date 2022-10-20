@@ -111,7 +111,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   }
 
   @Input() set disableLayers(disable: boolean) {
-    console.log('disable', disable);
     if (this._dataLayers != null) {
       this._highVectorTileLayer.setVisible(!disable);
       this._lowVectorTileLayer.setVisible(!disable);
@@ -217,7 +216,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_low_${this._confSvc.geohubAppId}`,
       map,
     );
-    console.log(this._lowVectorTileLayer.getLayerState());
     this._highVectorTileLayer = this._initializeHighDataLayer(
       `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_${this._confSvc.geohubAppId}`,
       map,
@@ -375,20 +373,16 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   private _resolutionLayerSwitcher(): void {
     if (this._dataLayers != null) {
       const currentZoom = this.map.getView().getZoom();
-      console.log(currentZoom);
       if (
         currentZoom > SWITCH_RESOLUTION_ZOOM_LEVEL - 2 &&
         this._highVectorTileLayer.getVisible() == false
       ) {
-        console.log('preload');
         this._highVectorTileLayer.setVisible(true);
       }
       if (currentZoom > SWITCH_RESOLUTION_ZOOM_LEVEL) {
-        console.log('high');
         this._highVectorTileLayer.setOpacity(1);
         this._lowVectorTileLayer.setOpacity(0);
       } else {
-        console.log('low');
         this._highVectorTileLayer.setOpacity(0);
         this._lowVectorTileLayer.setOpacity(1);
       }

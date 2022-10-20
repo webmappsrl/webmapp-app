@@ -45,7 +45,6 @@ export class TrackAudioComponent {
     playerElem.play();
   }
   constructor(private _translateSvc: TranslateService) {
-    console.log(this._translateSvc.currentLang);
     this.currentLang$.next(this._translateSvc.currentLang);
   }
 }

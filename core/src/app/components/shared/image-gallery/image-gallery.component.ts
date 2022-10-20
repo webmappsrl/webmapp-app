@@ -25,7 +25,6 @@ export class ImageGalleryComponent {
   });
   imageGallery$: BehaviorSubject<null | any[]> = new BehaviorSubject<null | any[]>(null);
   @Input() set imageGallery(imgGallery: any[]) {
-    console.log(imgGallery);
     if (imgGallery && imgGallery.length === 1) {
       this.sliderOptions$.next({
         slidesPerView: 1,

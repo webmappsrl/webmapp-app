@@ -609,7 +609,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     try {
       this._map.addLayer(this._track.layer);
       this._map.addLayer(this._track.markerslayer);
-      console.log('added layers');
     } catch (e) {}
     if (this.centerToTrack) {
       this._centerMapToTrack();
@@ -731,11 +730,11 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
       if (changes.focus.currentValue == true) {
         this.btnposition = 'bottom';
       }
-      if (this.conf != null) {
-        console.log(this.conf);
+
+      if (this._map != null) {
+        this._cdr.detectChanges();
+        this._map.updateSize();
       }
-      this._cdr.detectChanges();
-      this._map.updateSize();
     }
   }
 
