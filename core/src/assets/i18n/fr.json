@@ -88,14 +88,14 @@
       "info1": "Vous pouvez acheter un seul itinéraire",
       "info2": "Vous avez tout à disposition même sans connexion",
       "info3": "Recevez des notifications de proximité",
-      "subinfo1": "Achetez une seule pièce pour 1 €",
+      "subinfo1": "Achetez une seule pièce pour 1 €",
       "subinfo2": "Navigation précise même lorsque vous êtes hors ligne",
       "subinfo3": "Nous vous avertissons lorsque vous êtes à proximité de points d'intérêt le long du parcours"
     },
     "giftcoin": {
       "button": "Commencez à explorer",
-      "info": "Vous obtenez immédiatement 2 pièces webmapp en cadeau pour télécharger du contenu hors ligne !",
-      "title": "Bienvenue sur Webmapp !"
+      "info": "Vous obtenez immédiatement 2 pièces webmapp en cadeau pour télécharger du contenu hors ligne !",
+      "title": "Bienvenue sur Webmapp !"
     },
     "login": {
       "email": "E-mail",
@@ -106,7 +106,7 @@
           "emailRequired": "L'e-mail est requis",
           "passwordRequired": "Mot de passe requis"
         },
-        "generic": "Oops! Quelque chose s'est mal passé ! Attendez quelques minutes et réessayez."
+        "generic": "Oops! Quelque chose s'est mal passé ! Attendez quelques minutes et réessayez."
       },
       "forgotPassword": "Avez-vous oublié votre mot de passe?",
       "login": "Connexion",
@@ -132,7 +132,7 @@
           "cancel": "Annuler",
           "confirm": "Oui, supprimer",
           "text": "Si vous le supprimez, il ne sera pas ajouté à cet enregistrement",
-          "title": "Voulez-vous vraiment supprimer cette photo de l'enregistrement ?"
+          "title": "Voulez-vous vraiment supprimer cette photo de l'enregistrement ?"
         },
         "placeholder": "Ici vous pouvez entrer un titre",
         "savebtn": "Sauver",
@@ -147,7 +147,7 @@
     },
     "settings": {
       "alert": {
-        "logout": "Voulez-vous vraiment déconnecter votre compte ?"
+        "logout": "Voulez-vous vraiment déconnecter votre compte ?"
       },
       "logout": "Se déconnecter",
       "title": "Réglages",
@@ -160,12 +160,12 @@
       "continue2": "?",
       "info": "Vous pouvez consulter le solde de vos pièces directement dans votre espace personnel !",
       "or": "Ou",
-      "title": "Merci d'avoir acheté votre première pièce !"
+      "title": "Merci d'avoir acheté votre première pièce !"
     },
     "success": {
       "photos": {
         "text": "Vos photos ont été enregistrées avec succès. Vous pouvez les consulter en accédant à votre profil.",
-        "title": "Photos enregistrées avec succès !"
+        "title": "Photos enregistrées avec succès !"
       },
       "return": "Retour à explorer",
       "track": {
@@ -174,12 +174,12 @@
         "slope": "Pente",
         "text": "La trace a été enregistrée avec succès. Vous pouvez le consulter en vous connectant à votre profil.",
         "time": "Temps",
-        "title": "Activité enregistrée avec succès !",
+        "title": "Activité enregistrée avec succès !",
         "topspeed": "Pleine vitesse"
       },
       "waypoint": {
         "text": "Vous avez enregistré avec succès votre waypoint. Vous pouvez le consulter en vous connectant à votre profil.",
-        "title": "Waypoint enregistré avec succès !"
+        "title": "Waypoint enregistré avec succès !"
       }
     }
   },
@@ -249,8 +249,8 @@
       "modalconfirm": {
         "cancel": "Annuler",
         "confirm": "Quitter",
-        "text": "Quitter sans terminer le téléchargement du morceau ?",
-        "title": "Arrêter le téléchargement ?"
+        "text": "Quitter sans terminer le téléchargement du morceau ?",
+        "title": "Arrêter le téléchargement ?"
       },
       "modalNotImpemented": {
         "text": "Bientôt disponible",
@@ -288,7 +288,7 @@
       "data": {
         "data": "Utilisation de données",
         "downloads": "Téléchargements",
-        "tracks": "Pistes téléchargées"
+        "tracks": "Traces téléchargées"
       },
       "loggedOut": {
         "login": "S'identifier",
@@ -320,7 +320,7 @@
         "cancel": "Annuler",
         "confirm": "Confirm",
         "text": "Une fois validé, vous ne pourrez plus reprendre cette navigation",
-        "title": "Confirmez-vous que vous souhaitez mettre fin à l'enregistrement ?"
+        "title": "Confirmez-vous que vous souhaitez mettre fin à l'enregistrement ?"
       },
       "modalexit": {
         "cancel": "Annuler",
@@ -353,7 +353,7 @@
         "formtitleplaceholder": "Entrez un titre",
         "photoaction": "Charger",
         "photoactionshort": "Ajouter",
-        "photoadvice": "Taille maximale : 200 Mo",
+        "photoadvice": "Taille maximale : 200 Mo",
         "photoadviceshort": "(maximum 200 Mo)",
         "phototext": "photo de la galerie du téléphone",
         "phototextshort": "Photo",
@@ -409,7 +409,7 @@
       "btndnavigate": "Naviguer",
       "btndownload": "Télécharger",
       "btnfavourite": "Favorite",
-      "btnshare": "Share",
+      "btnshare": "Partager",
       "description": {
         "description": "Description",
         "gallery": "Galerie"
@@ -445,13 +445,13 @@
       },
       "favbtn": {
         "isFavourite": "Ajouté aux favoris !",
-        "isNotFavourite": "Supprimé des favoris !"
+        "isNotFavourite": "Supprimé des favoris !"
       },
       "modalconfirm": {
         "cancel": "Annuler",
         "confirm": "Sortir",
-        "text": "Quitter sans terminer le téléchargement du morceau ?",
-        "title": "Arrêter le téléchargement ?"
+        "text": "Quitter sans terminer le téléchargement du morceau ?",
+        "title": "Arrêter le téléchargement ?"
       },
       "navigate": "Naviguer",
       "share": "Partager",
@@ -472,8 +472,8 @@
       "button20": "Pack 20 Pièces",
       "button50": "Pack 50 Pièces",
       "main": "Pièces Webmapp",
-      "text": "Vous pouvez acheter une seule pièce ou choisir parmi un ou plusieurs packages !",
-      "text2": "Les pièces sont utilisées pour télécharger des itinéraires et du contenu hors ligne, et accéder à de nombreux avantages !",
+      "text": "Vous pouvez acheter une seule pièce ou choisir parmi un ou plusieurs packages !",
+      "text2": "Les pièces sont utilisées pour télécharger des itinéraires et du contenu hors ligne, et accéder à de nombreux avantages !",
       "title": "Magasin"
     },
     "trackdetail": {
@@ -507,7 +507,7 @@
         "formtypeplaceholder": "Sélectionner",
         "photoaction": "Charger",
         "photoactionshort": "ajouter",
-        "photoadvice": "Taille maximale : 200 Mo",
+        "photoadvice": "Taille maximale : 200 Mo",
         "photoadviceshort": "(max 200mb)",
         "phototext": "photo de la galerie du téléphone",
         "phototextshort": "photo",
@@ -576,6 +576,10 @@
   "elimina": "effacer",
   "Attenzione": "Attention",
   "Azione irreversibile": "Action irréversible",
-  "Vuoi veramente eliminare il tuo account?": "Voulez-vous vraiment supprimer votre compte ?",
-  "Annulla": "Annuler"
+  "Vuoi veramente eliminare il tuo account?": "Voulez-vous vraiment supprimer votre compte ?",
+  "Annulla": "Annuler",
+  "Come arrivare": "Comment aller là",
+  "Il Progetto": "Le projet",
+  "Filtri": "Filtrer",
+  "Escursionismo": "Randonnée"
 }
