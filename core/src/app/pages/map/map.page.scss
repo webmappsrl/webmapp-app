@@ -43,11 +43,16 @@ webmapp-map-page {
     padding: 10px;
 
     .webmapp-pagepoi-info-header {
-      padding: 10px;
       width: 100%;
       position: relative;
       color: black;
 
+      .webmapp-pagepoi-info-header-pre-title {
+        color: var(--wm-color-primary);
+        font-size: var(--wm-font-lg);
+        font-weight: var(--wm-font-weight-bold);
+        text-transform: uppercase;
+      }
       .webmapp-pagepoi-info-header-title {
         font-size: var(--wm-font-lg);
         font-weight: var(--wm-font-weight-bold);

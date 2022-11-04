@@ -15,6 +15,25 @@ export const pois = createSelector(poisFeature, confPoisIcons, (state, icons) =>
         const filteredArray = f.properties.taxonomyIdentifiers.filter(value =>
           iconKeys.includes(value),
         );
+        let address = '';
+        let address_link = '';
+        try {
+          address =
+            f.properties.addr_complete ??
+            [f.properties.addr_locality, f.properties.addr_street]
+              .filter(f => f != null)
+              .join(', ');
+        } catch (_) {
+          address = '';
+        }
+        try {
+          address_link = [f.properties.addr_locality, f.properties.addr_street]
+            .filter(f => f != null)
+            .join('+');
+        } catch (_) {
+          address_link = '';
+        }
+        f = {...f, properties: {...f.properties, ...{address, address_link}}};
         if (filteredArray.length > 0) {
           let p = {...f.properties, ...{svgIcon: icons[filteredArray[0]]}};
 

@@ -17,6 +17,7 @@ import {RecordingBtnComponent} from './recording-btn/recording-btn.component';
 import {SearchBarComponent} from './search-bar/search-bar.component';
 import {TrackAudioComponent} from './track-audio/track-audio.component';
 import {TranslateModule} from '@ngx-translate/core';
+import {RelatedUrlsComponent} from './related-urls/related-urls.component';
 
 const components = [
   LoginComponent,
@@ -31,6 +32,7 @@ const components = [
   TrackAudioComponent,
   ImageGalleryComponent,
   ModalImageComponent,
+  RelatedUrlsComponent,
 ];
 @NgModule({
   declarations: components,

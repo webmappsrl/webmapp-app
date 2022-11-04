@@ -98,18 +98,6 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     return style;
   };
 
-  @Input() conf: IMAP;
-  @Input() map: Map;
-  @Output() trackSelectedFromLayerEVT: EventEmitter<number> = new EventEmitter<number>();
-
-  constructor(
-    private _elRef: ElementRef,
-    private _confSvc: ConfService,
-    private _renderer: Renderer2,
-  ) {
-    super();
-  }
-
   @Input() set disableLayers(disable: boolean) {
     if (this._dataLayers != null) {
       this._highVectorTileLayer.setVisible(!disable);
@@ -122,6 +110,18 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
     if (l != null && l.bbox != null) {
       this.fitView(l.bbox);
     }
+  }
+
+  @Input() conf: IMAP;
+  @Input() map: Map;
+  @Output() trackSelectedFromLayerEVT: EventEmitter<number> = new EventEmitter<number>();
+
+  constructor(
+    private _elRef: ElementRef,
+    private _confSvc: ConfService,
+    private _renderer: Renderer2,
+  ) {
+    super();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
