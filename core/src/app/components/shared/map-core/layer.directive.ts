@@ -38,6 +38,7 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   private _defaultFeatureColor = DEF_LINE_COLOR;
   private _highVectorTileLayer: VectorTileLayer;
   private _ionProgress: any;
+  private _layerOrder: number[] = [];
   private _loaded = 0;
   private _loading = 0;
   private _lowLoaded = 0;
@@ -64,10 +65,10 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
       strokeStyle.setColor(this._getColorFromLayer(layerId));
     }
     this._handlingStrokeStyleWidth(strokeStyle, map);
-
+    const position = this._layerOrder.indexOf(+layers[0]);
     let style = new Style({
       stroke: strokeStyle,
-      zIndex: TRACK_ZINDEX + 1,
+      zIndex: TRACK_ZINDEX + position,
     });
     return style;
   };
@@ -188,6 +189,7 @@ export class WmMapLayerDirective extends WmMapBaseDirective implements OnChanges
   }
 
   private _initLayer(map: IMAP) {
+    this._layerOrder = map.layers.map(l => +l.id).reverse();
     this._dataLayers = this._initializeDataLayers(map);
     this._resolutionLayerSwitcher();
     this._highVectorTileLayer.setVisible(false);
