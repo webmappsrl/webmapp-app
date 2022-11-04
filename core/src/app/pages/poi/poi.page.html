@@ -17,6 +17,12 @@
   <ng-container *ngIf="currentPoi.properties as properties">
     <div class="webmapp-pagepoi-info-container">
       <div class="webmapp-pagepoi-info-header">
+        <div
+          class="webmapp-pagepoi-info-header-pre-title"
+          *ngIf="properties.taxonomy.poi_type as poiType"
+        >
+          {{ poiType.name | wmtrans}}
+        </div>
         <div class="webmapp-pagepoi-info-header-title" *ngIf="properties.name as name">
           {{ name | wmtrans}}
         </div>
@@ -42,39 +48,38 @@
           [hidden]="!properties.address"
           class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
         >
-          <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+          <i class="icon-outline-pin webmapp-pagepoi-info-icon"></i>
           {{ currentPoi.properties.address}}
           <ion-ripple-effect></ion-ripple-effect>
         </div>
         <div
-          [hidden]="!properties.phone"
+          *ngIf="properties.contact_phone as phone"
           class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-          (click)="phone(properties.phone)"
+          (click)="phone(phone)"
         >
-          <a href="tel:{{ properties.phone}}">
-            <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
-            {{ properties.phone}}</a
+          <a href="tel:{{phone}}">
+            <i class="icon-outline-phone webmapp-pagepoi-info-icon"></i>
+            {{phone}}</a
           >
           <ion-ripple-effect></ion-ripple-effect>
         </div>
         <div
-          [hidden]="!properties.email"
+          *ngIf="properties.contact_email as email"
           class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-          (click)="email(properties.email)"
+          (click)="email(email)"
         >
           <a href="mailto:{{ properties.email}}">
-            <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
+            <i class="icon-outline-mail webmapp-pagepoi-info-icon"></i>
             {{ currentPoi.properties.email}}
             <ion-ripple-effect></ion-ripple-effect>
           </a>
         </div>
         <div
-          [hidden]="!properties.url"
+          *ngIf="properties.related_url as relatedUrl"
           class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-          (click)="url(properties.url)"
+          (click)="url(relatedUrl)"
         >
-          <i class="webmapp-icon-pin-outline webmapp-pagepoi-info-icon"></i>
-          {{ properties.url}}
+          <webmapp-related-urls [relatedUrls]="relatedUrl"> </webmapp-related-urls>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
