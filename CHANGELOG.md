@@ -6,15 +6,21 @@
 
 - SICAI: **12.1.17**
 
-- UCVS:**12.1.19**
+- UCVS: **12.1.23**
 
-- FUMAIOLOSENTIERI:**12.1.18**
+- FUMAIOLOSENTIERI: **12.1.18** -> on going **12.1.23**
 
 - GAVORRANO:**12.1.15**
 
 - CAMMINI: **12.1.17**
 
 - IR: **2.1.21**
+
+---
+
+**2.1.23**
+
+- [1F]()(fix):fix grafici sul componente poi
 
 ---
 
