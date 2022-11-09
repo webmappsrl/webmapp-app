@@ -72,7 +72,7 @@
         <div class="webmapp-profile-tabs-tab-button-border"></div>
       </ion-tab-button>
       <ion-tab-button
-        *ngIf="(authEnable$|async)"
+        *ngIf="(authEnable$|async) && isLoggedIn"
         (click)="tabClick($event, '/profile/profile-records')"
         tab="profile-records"
         [routerLink]="['profile-records']"
