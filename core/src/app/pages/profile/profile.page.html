@@ -60,7 +60,7 @@
     </div>
   </ng-container>
 
-  <ion-tabs class="webmapp-profile-tabs">
+  <ion-tabs class="webmapp-profile-tabs" [ngStyle]="{'height':isLoggedIn ? '100%' : '25%' }">
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
         (click)="tabClick($event, '/profile/profile-data')"

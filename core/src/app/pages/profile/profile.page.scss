@@ -23,8 +23,10 @@ webmapp-page-profile {
     --user-container-padding: 15px;
     --user-container-content-height: 64px;
     .webmapp-profile-logged-out-slider-container {
+      height: 70%;
       .webmapp-profile-logged-out-slider {
         max-height: inherit;
+        height: inherit;
         --bullet-background-active: var(--wm-color-darkgrey);
         --bullet-background: rgba(var(--wm-color-darkgrey-rgb), 0.4);
         .webmapp-profile-logged-out-slide {
@@ -59,7 +61,7 @@ webmapp-page-profile {
       width: 100%;
       z-index: 2000;
       grid-template-columns: auto auto auto;
-      padding-bottom: 40px;
+      padding-bottom: 20px;
       .webmapp-profile-logged-out-login-button,
       .webmapp-profile-logged-out-signup-button {
         grid-column-start: 2;
@@ -117,7 +119,7 @@ webmapp-page-profile {
 
     .webmapp-profile-tabs {
       position: relative;
-      height: 20%;
+      height: 25%;
       margin-top: 2%;
       .webmapp-profile-tabs-tab-bar {
         justify-content: flex-start;
