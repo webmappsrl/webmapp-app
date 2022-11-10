@@ -1,4 +1,7 @@
 webmapp-page-profile {
+  ion-tab-bar {
+    display: flex !important;
+  }
   .webmapp-profile-header {
     display: flex;
     --border-width: 0;

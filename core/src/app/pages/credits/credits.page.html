@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button color="medium" (click)="cancel()">
+      <ion-button color="medium" (click)="cancel()" *ngIf="false">
         <ion-icon name="chevron-back" class="webmapp-backbutton webmapp-backbutton-chevron">
         </ion-icon>
       </ion-button>
@@ -21,7 +21,7 @@
   </div>
   <div class="credits__paragraph">
     <span class="credits__p-title">Webmapp</span>
-    <span [innerHTML]="'pages.credits.webmappContent1' | wmtrans : appNameObj"></span>
+    <span [innerHTML]="'pages.credits.webmappContent1' | wmtrans : 'stelvio'"></span>
     <span><a href="http://www.webmapp.it/">webmapp.it</a></span>
     <span [innerHTML]="'pages.credits.webmappContent2' | wmtrans"></span>
   </div>

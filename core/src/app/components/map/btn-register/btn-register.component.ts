@@ -88,12 +88,12 @@ export class BtnRegisterComponent implements OnInit {
           this.waypoint();
         },
       },
-      {
+      /*       {
         text: this.translations['components.map.register.vocal'],
         handler: () => {
           this.vocal();
         },
-      },
+      }, */
       {
         text: this.translations['components.map.register.cancel'],
         role: 'cancel',
