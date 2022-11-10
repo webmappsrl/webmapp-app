@@ -69,41 +69,44 @@ export class BtnRegisterComponent implements OnInit {
     //   this.isPopOverPresented = true;
     //   const { role } = await this.popover.onDidDismiss();
     //   this.isPopOverPresented = false;
-
+    const buttons = [
+      {
+        text: this.translations['components.map.register.track'],
+        handler: () => {
+          this.track();
+        },
+      },
+      {
+        text: this.translations['components.map.register.photo'],
+        handler: () => {
+          this.photo();
+        },
+      },
+      {
+        text: this.translations['components.map.register.waypoint'],
+        handler: () => {
+          this.waypoint();
+        },
+      },
+      {
+        text: this.translations['components.map.register.vocal'],
+        handler: () => {
+          this.vocal();
+        },
+      },
+      {
+        text: this.translations['components.map.register.cancel'],
+        role: 'cancel',
+        handler: () => {},
+      },
+    ];
+    if (this.registering) {
+      buttons.shift();
+    }
     this.actionSheetController
       .create({
         header: this.translations['components.map.register.title'],
-        buttons: [
-          {
-            text: this.translations['components.map.register.track'],
-            handler: () => {
-              this.track();
-            },
-          },
-          {
-            text: this.translations['components.map.register.photo'],
-            handler: () => {
-              this.photo();
-            },
-          },
-          {
-            text: this.translations['components.map.register.waypoint'],
-            handler: () => {
-              this.waypoint();
-            },
-          },
-          {
-            text: this.translations['components.map.register.vocal'],
-            handler: () => {
-              this.vocal();
-            },
-          },
-          {
-            text: this.translations['components.map.register.cancel'],
-            role: 'cancel',
-            handler: () => {},
-          },
-        ],
+        buttons,
       })
       .then(actionSheet => {
         actionSheet.present();
