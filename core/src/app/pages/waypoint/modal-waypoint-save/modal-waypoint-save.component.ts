@@ -35,19 +35,15 @@ export class ModalWaypointSaveComponent implements OnInit {
   ) {}
 
   async addPhotos() {
-    console.log('ADD PHOTO');
     let library = [];
     const loading = await this._loadingCtrl.create();
-    console.log('CREATE LOADING');
     loading.present();
-    console.log('PRESENT LOADING');
     try {
       library = await this._photoService.getPhotos();
     } catch (_) {
       loading.dismiss();
     }
     loading.dismiss();
-    console.log('DISMISS LOADING');
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
       const photoData = await this._photoService.getPhotoData(libraryItemCopy.photoURL),
