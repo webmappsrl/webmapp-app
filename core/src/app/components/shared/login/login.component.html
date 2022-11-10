@@ -88,7 +88,11 @@
       <button class="webmapp-login-submit-button">
         {{ "modals.login.login" | wmtrans }}
       </button>
-      <button type="button" (click)="forgotPassword()" class="webmapp-login-forgot-password-button">
+      <button
+        type="button"
+        (click)="openUrl('https://geohub.webmapp.it/password/reset')"
+        class="webmapp-login-forgot-password-button"
+      >
         {{ "modals.login.forgotPassword" | wmtrans }}
       </button>
     </div>

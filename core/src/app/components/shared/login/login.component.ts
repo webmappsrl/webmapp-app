@@ -1,9 +1,9 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, IonInput, ModalController } from '@ionic/angular';
-import { AuthService } from 'src/app/services/auth.service';
-import { LanguagesService } from 'src/app/services/languages.service';
+import {HttpErrorResponse} from '@angular/common/http';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AlertController, IonInput, ModalController} from '@ionic/angular';
+import {AuthService} from 'src/app/services/auth.service';
+import {LanguagesService} from 'src/app/services/languages.service';
 
 @Component({
   selector: 'webmapp-login-component',
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     private _authService: AuthService,
     private _formBuilder: FormBuilder,
     private _languagesService: LanguagesService,
-    private _modalController: ModalController
+    private _modalController: ModalController,
   ) {
     this.loginForm = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -45,27 +45,26 @@ export class LoginComponent implements OnInit {
   setFocus() {
     this.emailField.setFocus();
   }
-
+  openUrl(url: string): void {
+    window.open(url, '_blank');
+  }
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
-
   login(): void {
     this.isSubmitted = true;
     if (this.loginForm.valid) {
       this.logging = true;
-      this._authService
-        .login(this.emailField.value + '', this.passwordField.value + '')
-        .then(
-          () => {
-            this.logging = false;
-            this.dismiss();
-          },
-          (loginError: HttpErrorResponse) => {
-            this.logging = false;
-            this.showErrorAlert(loginError);
-          }
-        );
+      this._authService.login(this.emailField.value + '', this.passwordField.value + '').then(
+        () => {
+          this.logging = false;
+          this.dismiss();
+        },
+        (loginError: HttpErrorResponse) => {
+          this.logging = false;
+          this.showErrorAlert(loginError);
+        },
+      );
     }
   }
 
@@ -90,12 +89,12 @@ export class LoginComponent implements OnInit {
         ],
       })
       .then(
-        (alert) => {
+        alert => {
           alert.present();
         },
-        (alertError) => {
+        alertError => {
           console.warn(alertError);
-        }
+        },
       );
   }
 

@@ -67,7 +67,7 @@
       </ng-container>
     </div>
 
-    <div class="webmapp-registeruser-field-container">
+    <div class="webmapp-registeruser-field-container" *ngIf="false">
       <ion-label class="webmapp-registeruser-label">
         {{ "pages.registeruser.cf" | wmtrans }}
       </ion-label>
@@ -162,11 +162,17 @@
 
     <ion-label class="webmapp-registeruser-policy">
       {{ "pages.registeruser.privacy1" | wmtrans }}
-      <a class="webmapp-registeruser-policylink" href="#"
+      <a
+        class="webmapp-registeruser-policylink"
+        target="_blank"
+        href="https://webmapp.it/privacy-policy/"
         >{{ "pages.registeruser.privacylink1" | wmtrans }}</a
       >
       {{ "pages.registeruser.privacy2" | wmtrans }}
-      <a class="webmapp-registeruser-policylink" href="#"
+      <a
+        class="webmapp-registeruser-policylink"
+        target="_blank"
+        href="https://webmapp.it/privacy-policy/"
         >{{ "pages.registeruser.privacylink2" | wmtrans }}</a
       >
       {{ "pages.registeruser.privacy3" | wmtrans }}

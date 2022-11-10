@@ -38,7 +38,7 @@
   <ion-list class="webmapp-modalwaypoint-itemlist">
     <webmapp-form-field
       [(value)]="title"
-      [icon]="'webmapp-icon-list'"
+      [icon]="'icon-outline-list'"
       [iconColor]="'secondary'"
       [label]="'pages.waypoint.modalsave.formtitle'"
       [placeholder]="'pages.waypoint.modalsave.formtitleplaceholder'"
@@ -60,7 +60,7 @@
     <webmapp-form-field
       [(value)]="waypointtype"
       [required]="false"
-      [icon]="'webmapp-icon-activities'"
+      [icon]="'icon-outline-activities'"
       [iconColor]="'primary'"
       [label]="'pages.waypoint.modalsave.formtype'"
       [error]="'pages.waypoint.modalsave.formtypeerror'"
@@ -74,6 +74,11 @@
       >
         <ion-select-option value="waypoint">Segnavia</ion-select-option>
         <ion-select-option value="sightseen">Panorama</ion-select-option>
+        <ion-select-option value="signage">Segnaletica</ion-select-option>
+        <ion-select-option value="fallen-tree">Albero caduto</ion-select-option>
+        <ion-select-option value="landslide">Frana</ion-select-option>
+        <ion-select-option value="interrupted-passage">Passaggio interrotto</ion-select-option>
+        <ion-select-option value="missing-signage">Segnaletica mancante</ion-select-option>
       </ion-select>
     </webmapp-form-field>
 

@@ -202,6 +202,7 @@ export class GeohubService {
         description: waypoint.description,
         app_id: this._configService.appId,
         image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
+        waypoint_type: waypoint.waypointtype,
       },
     };
     const res = await this._communicationService
