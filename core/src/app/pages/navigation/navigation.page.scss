@@ -136,13 +136,11 @@
     --background-hover-opacity: 0;
   }
   &.webmapp-pageroute-fabbottom-top {
-    top: calc(115px + constant(safe-area-inset-top));
-    top: calc(115px + env(safe-area-inset-top));
+    top: calc(115px);
     bottom: auto;
     transition: top 0.3s;
     &.webmapp-pageroute-fabbottom-top-fullmap {
-      top: calc(65px + constant(safe-area-inset-top));
-      top: calc(65px + env(safe-area-inset-top));
+      top: calc(65px);
     }
   }
 }
@@ -274,8 +272,7 @@
 
 .webmapp-pageroute-btnfullmap {
   position: absolute;
-  top: calc(64px + constant(safe-area-inset-top));
-  top: calc(64px + env(safe-area-inset-top));
+  top: calc(64px);
   right: 10px;
   height: 40px;
   --border-radius: 30px;
@@ -289,8 +286,7 @@
   --background-hover-opacity: 0;
   transition: top 0.3s;
   &.webmapp-pageroute-btnfullmap-full {
-    top: calc(14px + constant(safe-area-inset-top));
-    top: calc(14px + env(safe-area-inset-top));
+    top: calc(14px);
   }
 
   --padding-start: 32px;

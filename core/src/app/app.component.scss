@@ -1,4 +1,7 @@
 webmapp-app-root {
+  ion-app {
+    margin-top: env(safe-area-inset-top);
+  }
   ion-router-outlet {
     height: 100%;
     position: initial;

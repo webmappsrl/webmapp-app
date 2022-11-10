@@ -1,11 +1,9 @@
 wm-modal-image {
   --background: white;
   --color: black;
-  margin-top: constant(safe-area-inset-top); // for ios 11.1
-  margin-top: env(safe-area-inset-top); // for ios 11.2 and onwards
+  margin-top: 0; // for ios 11.1
   margin-bottom: env(safe-area-inset-bottom);
-  height: calc(100% - constant(safe-area-inset-top));
-  height: calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: calc(100%);
 
   .gallery {
     height: 100%;
@@ -31,6 +29,5 @@ ion-slide {
 ion-fab-button {
   --background: white;
   --color: black;
-  top: calc(constant(safe-area-inset-top));
-  top: calc(env(safe-area-inset-top));
+  top: 0;
 }

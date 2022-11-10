@@ -7,6 +7,7 @@ import {GalleryComponent} from './gallery/gallery.component';
 import {GenericPopoverComponent} from './generic-popover/generic-popover.component';
 import {ImageGalleryComponent} from './image-gallery/image-gallery.component';
 import {ImgComponent} from './img/img.component';
+import {IntroComponent} from 'src/app/pages/home/intro/intro.component';
 import {IonicModule} from '@ionic/angular';
 import {LoginComponent} from './login/login.component';
 import {ModalHeaderComponent} from './partials/modal-header/modal-header.component';
@@ -32,6 +33,7 @@ const components = [
   TrackAudioComponent,
   ImageGalleryComponent,
   ModalImageComponent,
+  IntroComponent,
   RelatedUrlsComponent,
 ];
 @NgModule({

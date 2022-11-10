@@ -519,7 +519,12 @@ function initCapacitor(instanceName, id, name) {
 
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
-  sh.exec('ionic build' + outputRedirect, {
+  let configuration = '';
+  if (instanceName === 'stelvio') {
+    configuration = ' -c stelvio';
+  }
+  if (verbose) debug('ionic build' + configuration + outputRedirect);
+  sh.exec('ionic build' + configuration + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
   if (verbose) debug('Ionic build completed');

@@ -1,7 +1,5 @@
 <ion-content class="webmapp-home-content">
   <div class="wm-home-header-container">
-    <webmapp-home-intro class="wm-home-header-intro"> </webmapp-home-intro>
-
     <ion-label [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)">
     </ion-label>
     <webmapp-search-bar
