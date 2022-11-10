@@ -1,30 +1,36 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-  AlertController,
-  ModalController,
-  NavController,
-} from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { OldMapComponent } from 'src/app/components/map/old-map/map.component';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { ESuccessType } from '../../types/esuccess.enum';
-import { ModalSaveComponent } from './modal-save/modal-save.component';
-import { ModalSuccessComponent } from '../../components/modal-success/modal-success.component';
-import { SaveService } from 'src/app/services/save.service';
-import { ITrack } from 'src/app/types/track';
-import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
+import {AlertController, ModalController, NavController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {GeoutilsService} from 'src/app/services/geoutils.service';
+import {ESuccessType} from '../../types/esuccess.enum';
+import {ModalSaveComponent} from './modal-save/modal-save.component';
+import {ModalSuccessComponent} from '../../components/modal-success/modal-success.component';
+import {SaveService} from 'src/app/services/save.service';
+import {ITrack} from 'src/app/types/track';
+import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage implements OnInit, OnDestroy {
   @ViewChild('map') map: OldMapComponent;
 
   public opacity: number = 0;
-  public time: { hours: number; minutes: number; seconds: number } = {
+  public time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -48,8 +54,9 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _translate: TranslateService,
     private _alertController: AlertController,
     private _modalController: ModalController,
-    private _saveService: SaveService
-  ) { }
+    private _saveService: SaveService,
+    private _cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit() {
     if (this._geolocationService.location) {
@@ -72,9 +79,8 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.isPaused = this._geolocationService.paused;
       this.opacity = 1;
       this._timerInterval = setInterval(() => {
-        this.time = GeoutilsService.formatTime(
-          this._geolocationService.recordTime / 1000
-        );
+        this.time = GeoutilsService.formatTime(this._geolocationService.recordTime / 1000);
+        this._cdr.detectChanges();
       }, 1000);
       setTimeout(() => {
         this.updateMap();
@@ -89,18 +95,16 @@ export class RegisterPage implements OnInit, OnDestroy {
   updateMap() {
     if (this.isRecording && this._geolocationService.recordedFeature) {
       this.map.drawTrack(this._geolocationService.recordedFeature);
-      this.length = this._geoutilsService.getLength(
-        this._geolocationService.recordedFeature
-      );
+      this.length = this._geoutilsService.getLength(this._geolocationService.recordedFeature);
       // const timeSeconds = this._geoutilsService.getTime(
       //   this._geolocationService.recordedFeature
       // );
       // this.time = this.formatTime(timeSeconds);
       this.actualSpeed = this._geoutilsService.getCurrentSpeed(
-        this._geolocationService.recordedFeature
+        this._geolocationService.recordedFeature,
       );
       this.averageSpeed = this._geoutilsService.getAverageSpeed(
-        this._geolocationService.recordedFeature
+        this._geolocationService.recordedFeature,
       );
     }
   }
@@ -140,7 +144,7 @@ export class RegisterPage implements OnInit, OnDestroy {
           text: translation['pages.register.modalconfirm.cancel'],
           cssClass: 'webmapp-modalconfirm-btn',
           role: 'cancel',
-          handler: () => { },
+          handler: () => {},
         },
         {
           text: translation['pages.register.modalconfirm.confirm'],
@@ -156,11 +160,8 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async stopRecording() {
-
     await this._geolocationService.pauseRecording();
     this.isPaused = true;
-
-
 
     const modal = await this._modalController.create({
       component: ModalSaveComponent,
@@ -170,14 +171,14 @@ export class RegisterPage implements OnInit, OnDestroy {
 
     if (!res.data.dismissed && res.data.save) {
       try {
-      clearInterval(this._timerInterval);
-    } catch (e) { }
+        clearInterval(this._timerInterval);
+      } catch (e) {}
       const geojson = await this._geolocationService.stopRecording();
       const track: ITrack = Object.assign(
         {
           geojson,
         },
-        res.data.trackData
+        res.data.trackData,
       );
       const saved = await this._saveService.saveTrack(track);
       await this.openModalSuccess(saved);
@@ -187,8 +188,6 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.backToMap();
     }
   }
-
-
 
   async resume(event: MouseEvent) {
     await this._geolocationService.resumeRecording();
@@ -222,9 +221,9 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   reset() {
-    this.isRegestering = true
+    this.isRegestering = true;
     this.opacity = 0;
-    this.time = { hours: 0, minutes: 0, seconds: 0, };
+    this.time = {hours: 0, minutes: 0, seconds: 0};
     this.actualSpeed = 0;
     this.averageSpeed = 0;
     this.length = 0;
@@ -236,6 +235,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     try {
       clearInterval(this._timerInterval);
-    } catch (e) { }
+    } catch (e) {}
   }
 }

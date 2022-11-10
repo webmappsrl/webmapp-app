@@ -4,10 +4,9 @@ export class CStopwatch {
   private isPaused: boolean;
 
   constructor(stopwatchString?: string) {
-    const obj =
-      typeof stopwatchString !== 'undefined' ? JSON.parse(stopwatchString) : {};
+    const obj = typeof stopwatchString !== 'undefined' ? JSON.parse(stopwatchString) : {};
 
-    this.startTime = obj.startTime ? obj.startTime : undefined;
+    this.startTime = obj.startTime ? obj.startTime : Date.now();
     this.totalTime = obj.totalTime ? obj.totalTime : 0;
     this.isPaused = obj.isPaused ? obj.isPaused : false;
   }
@@ -38,9 +37,7 @@ export class CStopwatch {
    * Return the total active time in milliseconds
    */
   getTime(): number {
-    return this.isPaused
-      ? this.totalTime
-      : this.totalTime + Date.now() - this.startTime;
+    return this.isPaused ? this.totalTime : this.totalTime + Date.now() - this.startTime;
   }
 
   toString(): string {
