@@ -1,3 +1,4 @@
+import {NavController} from '@ionic/angular';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {BaseBoxComponent} from '../box';
 
@@ -8,4 +9,11 @@ import {BaseBoxComponent} from '../box';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class LayerBoxComponent extends BaseBoxComponent<any> {}
+export class LayerBoxComponent extends BaseBoxComponent<any> {
+  constructor(private _navCtrl: NavController) {
+    super();
+  }
+  openMap(): void {
+    this._navCtrl.navigateForward('map');
+  }
+}

@@ -59,9 +59,12 @@ webmapp-layer-box {
       line-height: 30px;
       bottom: 5%;
       right: 5%;
-    i{
-      font-size: 12px;
+      i {
+        font-size: 12px;
+      }
     }
+    .wm-box-click ~ .wm-box-click {
+      right: 11%;
     }
   }
 }

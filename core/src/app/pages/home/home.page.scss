@@ -1,4 +1,8 @@
 webmapp-page-home {
+  ion-breadcrumbs {
+    width: 90%;
+    margin: auto;
+  }
   .webmapp-home-content {
     --padding-bottom: 15px;
     --background: var(--wm-color-greybackground);
@@ -32,6 +36,7 @@ webmapp-page-home {
         height: 59px;
         display: block;
       }
+
       wm-btn-filter {
         font-family: var(--ion-font-family, inherit);
         margin-inline: 10px;

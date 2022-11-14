@@ -24,34 +24,29 @@
   </ng-container>
   <ng-container *ngIf="online$|async">
     <ng-container
-      *ngIf="(isTyping$|async)||(layerCards$|async)!=null||(selectedFilters$|async).length>0; else myhome"
+      *ngIf="(isTyping$|async)||(selectedFilters$|async).length>0||(currentLayer$|async)!=null; else myhome"
     >
-      <ion-segment [value]="currentTab$|async" (ionChange)="segmentChanged($event)">
-        <ng-container *ngIf="cards$|async as cards">
-          <ion-segment-button value="tracks" *ngIf="cards != null && cards.length> 0">
-            <ion-label> {{'tracks'| wmtrans}} <ion-badge>{{cards.length}} </ion-badge></ion-label>
-          </ion-segment-button>
-        </ng-container>
-        <ng-container *ngIf="poiCards$|async as poiCards">
-          <ion-segment-button value="pois" *ngIf="poiCards != null && poiCards.length> 0">
-            <ion-label> {{'POI'|wmtrans}} <ion-badge>{{poiCards.length}}</ion-badge></ion-label>
-          </ion-segment-button>
-        </ng-container>
-      </ion-segment>
-      <ng-container *ngIf="currentTab$|async as currentTab">
-        <ng-container *ngIf="currentTab === 'tracks'|| currentTab == null">
-          <wm-search-box
-            *ngFor="let card of cards$|async"
-            [data]="card"
-            (clickEVT)="searchCard(card.id)"
-          >
-          </wm-search-box>
-        </ng-container>
-        <div *ngIf="currentTab === 'pois'">
-          <wm-poi-box *ngFor="let c of poiCards$|async" [data]="c" (clickEVT)="setPoi(c.id)">
-          </wm-poi-box>
-        </div>
+      <ng-container *ngIf="(currentLayer$|async) as currentLayer; else  list">
+        <ion-breadcrumbs>
+          <ion-breadcrumb (click)="goToHome()">Home</ion-breadcrumb>
+          <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
+        </ion-breadcrumbs>
+        <wm-search-list
+          [cards]="layerCards$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
       </ng-container>
+      <ng-template #list>
+        <wm-search-list
+          [cards]="cards$|async"
+          [pois]="poiCards$|async"
+          [currentTab]="currentTab$|async"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
+      </ng-template>
     </ng-container>
 
     <ng-template #myhome>

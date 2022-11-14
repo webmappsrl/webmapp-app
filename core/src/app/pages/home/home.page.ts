@@ -150,13 +150,23 @@ export class HomePage implements OnInit {
     this.currentTab$.next('pois');
   }
 
-  setLayer(layer: ILAYER | null | number) {
+  setLayer(layer: ILAYER | null | any) {
+    if (layer != null) {
+      const cards = layer.tracks[layer.id] ?? [];
+      this.layerCards$.next(cards);
+      this._cdr.markForCheck();
+    } else {
+      this.layerCards$.next(null);
+    }
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
-    this._navController.navigateForward('map');
   }
 
   setPoi(id: number): void {
     this._navController.navigateForward('map');
     this._storeMap.dispatch(setCurrentPoiId({currentPoiId: id}));
+  }
+  goToHome(): void {
+    this.setLayer(null);
+    this._navController.navigateForward('home');
   }
 }
