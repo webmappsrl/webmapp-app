@@ -23,31 +23,54 @@
     <downloaded-tracks-box></downloaded-tracks-box>
   </ng-container>
   <ng-container *ngIf="online$|async">
-    <ng-container
-      *ngIf="(isTyping$|async)||(selectedFilters$|async).length>0||(currentLayer$|async)!=null; else myhome"
-    >
-      <ng-container *ngIf="(currentLayer$|async) as currentLayer; else  list">
-        <ion-breadcrumbs>
-          <ion-breadcrumb (click)="goToHome()">Home</ion-breadcrumb>
-          <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
-        </ion-breadcrumbs>
+    <ng-container *ngIf="currentLayer$|async as currentLayer;else noLayer">
+      <ion-breadcrumbs>
+        <ion-breadcrumb (click)="goToHome()">Home</ion-breadcrumb>
+        <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
+      </ion-breadcrumbs>
+      <ng-container *ngIf="(isTyping$|async);else noType">
+        <wm-search-list
+          [cards]="elasticSearchFilteredByLayer$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
+      </ng-container>
+      <ng-template #noType>
         <wm-search-list
           [cards]="layerCards$|async"
           [currentTab]="'tracks'"
           (selectedTrackEvt)="searchCard($event)"
           (selectedPoiEvt)="setPoi(+$event)"
         ></wm-search-list>
-      </ng-container>
-      <ng-template #list>
-        <wm-search-list
-          [cards]="cards$|async"
-          [pois]="poiCards$|async"
-          [currentTab]="currentTab$|async"
-          (selectedTrackEvt)="searchCard($event)"
-          (selectedPoiEvt)="setPoi(+$event)"
-        ></wm-search-list>
       </ng-template>
     </ng-container>
+    <ng-template #noLayer>
+      <ng-container
+        #noLayer
+        *ngIf="(isTyping$|async)||(selectedFilters$|async).length>0 else myhome"
+      >
+        <ng-container
+          *ngIf="(isTyping$|async)==false && (selectedFilters$|async).length  == 0 &&(currentLayer$|async) as currentLayer; else  list"
+        >
+          <wm-search-list
+            [cards]="layerCards$|async"
+            [currentTab]="'tracks'"
+            (selectedTrackEvt)="searchCard($event)"
+            (selectedPoiEvt)="setPoi(+$event)"
+          ></wm-search-list>
+        </ng-container>
+        <ng-template #list>
+          <wm-search-list
+            [cards]="cards$|async"
+            [pois]="poiCards$|async"
+            [currentTab]="currentTab$|async"
+            (selectedTrackEvt)="searchCard($event)"
+            (selectedPoiEvt)="setPoi(+$event)"
+          ></wm-search-list>
+        </ng-template>
+      </ng-container>
+    </ng-template>
 
     <ng-template #myhome>
       <wm-home

@@ -1,6 +1,5 @@
 import {BehaviorSubject, Observable, merge, of, zip} from 'rxjs';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -11,7 +10,7 @@ import {
 import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
 import {ModalController, NavController} from '@ionic/angular';
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
-import {filter, first, map, startWith, switchMap, tap} from 'rxjs/operators';
+import {filter, first, map, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {
   setCurrentFilters,
   setCurrentLayer,
@@ -51,9 +50,14 @@ export class HomePage implements OnInit {
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
+  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
+
+  elasticSearchFilteredByLayer$ = this.elasticSearch$.pipe(
+    withLatestFrom(this.currentLayer$),
+    map(([all, currentLayer]) => all.filter(l => l.layers.indexOf(+currentLayer.id) > -1)),
+  );
   isBackAvailable: boolean = false;
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
   mostViewedRoutes: Array<IGeojsonFeature>;
   nearRoutes: Array<IGeojsonFeature>;
   online$: Observable<boolean> = this._storeNetwork
