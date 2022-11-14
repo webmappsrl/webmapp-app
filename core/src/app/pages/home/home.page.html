@@ -55,30 +55,12 @@
     </ng-container>
 
     <ng-template #myhome>
-      <ng-container *ngFor="let box of confHOME$|async">
-        <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
-        <webmapp-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
-        </webmapp-box>
-        <webmapp-layer-box
-          *ngIf="box.box_type === 'layer'"
-          [data]="box.layer"
-          (clickEVT)="setLayer(box.layer)"
-        >
-        </webmapp-layer-box>
-        <ng-container *ngIf="box.box_type == 'track'">
-          <webmapp-base-box
-            class="home-base-box"
-            [data]="box"
-            (clickEVT)="searchCard(box.track_id)"
-          ></webmapp-base-box>
-        </ng-container>
-        <ng-container *ngIf="box.box_type == 'base'">
-          <webmapp-slider-box [data]="box" (clickEVT)="searchCard($event)"></webmapp-slider-box>
-        </ng-container>
-        <ng-container *ngIf="box.box_type ==  'external_url'">
-          <webmapp-external-url-box [data]="box"></webmapp-external-url-box>
-        </ng-container>
-      </ng-container>
+      <wm-home
+        [conf]="confHOME$|async"
+        (openSlugEvt)="openSlug($event)"
+        (selectedLayerEvt)="setLayer($event)"
+        (selectedTrackEvt)="searchCard($event)"
+      ></wm-home>
     </ng-template>
   </ng-container>
   <ng-container *ngIf="false">

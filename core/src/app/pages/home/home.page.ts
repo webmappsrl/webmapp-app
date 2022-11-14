@@ -29,7 +29,7 @@ import {IMapRootState} from 'src/app/store/map/map';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {Store} from '@ngrx/store';
-import {currentFilters} from 'src/app/store/map/map.selector';
+import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {pois} from 'src/app/store/pois/pois.selector';
@@ -47,6 +47,7 @@ export class HomePage implements OnInit {
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter);
+  currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);

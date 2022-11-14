@@ -1,0 +1,24 @@
+<ng-container *ngFor="let box of conf">
+  <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
+  <webmapp-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
+  </webmapp-box>
+  <webmapp-layer-box
+    *ngIf="box.box_type === 'layer'"
+    [data]="box.layer"
+    (clickEVT)="selectLayer(box.layer)"
+  >
+  </webmapp-layer-box>
+  <ng-container *ngIf="box.box_type == 'track'">
+    <webmapp-base-box
+      class="home-base-box"
+      [data]="box"
+      (clickEVT)="selectTrack(box.track_id)"
+    ></webmapp-base-box>
+  </ng-container>
+  <ng-container *ngIf="box.box_type == 'base'">
+    <webmapp-slider-box [data]="box" (clickEVT)="selectTrack($event)"></webmapp-slider-box>
+  </ng-container>
+  <ng-container *ngIf="box.box_type ==  'external_url'">
+    <webmapp-external-url-box [data]="box"></webmapp-external-url-box>
+  </ng-container>
+</ng-container>
