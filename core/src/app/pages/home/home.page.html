@@ -5,7 +5,7 @@
     <ion-label [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)">
     </ion-label>
     <webmapp-search-bar
-      *ngIf="showSearch && online$|async"
+      *ngIf="online$|async"
       [initSearch]="title"
       (isTypings)="isTyping$.next($event)"
       (words)="currentSearch$.next($event)"
@@ -80,17 +80,5 @@
         (selectedTrackEvt)="searchCard($event)"
       ></wm-home>
     </ng-template>
-  </ng-container>
-  <ng-container *ngIf="false">
-    <webmapp-card-slider
-      [title]="'pages.home.mostViewedTracks' | wmtrans"
-      [data]="mostViewedRoutes"
-    ></webmapp-card-slider>
-    <webmapp-card-slider
-      [title]="'pages.home.closerTracks' | wmtrans"
-      [nodata]="'pages.home.nocloserTracks' | wmtrans"
-      [data]="nearRoutes"
-      [showDistance]="true"
-    ></webmapp-card-slider>
   </ng-container>
 </ion-content>

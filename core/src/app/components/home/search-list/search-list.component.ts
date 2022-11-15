@@ -1,10 +1,10 @@
 import {
-  Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
-  Input,
+  Component,
   EventEmitter,
+  Input,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
@@ -16,25 +16,26 @@ import {BehaviorSubject} from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class SearchListComponent {
-  currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
-  @Input() cards: IHIT[];
-  @Input() pois: any[];
   @Input() set currentTab(tab: string) {
     this.currentTab$.next(tab);
   }
-  @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
+
+  @Input() cards: IHIT[];
+  @Input() pois: any[];
   @Output() selectedPoiEvt: EventEmitter<string | number> = new EventEmitter();
-  constructor() {}
+  @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
+
+  currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
 
   segmentChanged(evt: any): void {
     this.currentTab$.next(evt.detail.value);
   }
 
-  selectTrack(id: string | number): void {
-    this.selectedTrackEvt.emit(id);
-  }
-
   selectPoi(id: string | number): void {
     this.selectedPoiEvt.emit(id);
+  }
+
+  selectTrack(id: string | number): void {
+    this.selectedTrackEvt.emit(id);
   }
 }

@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   Output,
   ViewEncapsulation,
-  EventEmitter,
 } from '@angular/core';
+
 import {IHOME, ILAYER} from 'src/app/types/config';
 
 @Component({
@@ -16,17 +17,19 @@ import {IHOME, ILAYER} from 'src/app/types/config';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  constructor() {}
   @Input() conf: IHOME[];
+  @Output() openSlugEvt: EventEmitter<string> = new EventEmitter();
   @Output() selectedLayerEvt: EventEmitter<ILAYER | null | number> = new EventEmitter();
   @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
-  @Output() openSlugEvt: EventEmitter<string> = new EventEmitter();
-  selectLayer(layer: ILAYER | null | number): void {
-    this.selectedLayerEvt.emit(layer);
-  }
+
   openSlug(slug: string): void {
     this.openSlugEvt.emit(slug);
   }
+
+  selectLayer(layer: ILAYER | null | number): void {
+    this.selectedLayerEvt.emit(layer);
+  }
+
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
   }

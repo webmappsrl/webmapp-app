@@ -1,47 +1,46 @@
-import {BehaviorSubject, Observable, merge, of, zip} from 'rxjs';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
+import {DomSanitizer} from '@angular/platform-browser';
+
 import {ModalController, NavController} from '@ionic/angular';
-import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
+
+import {BehaviorSubject, merge, Observable, of, zip} from 'rxjs';
 import {filter, first, map, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+
+import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {
   setCurrentFilters,
   setCurrentLayer,
   setCurrentPoiId,
   setCurrentTrackId,
 } from 'src/app/store/map/map.actions';
+import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
 
-import {DomSanitizer} from '@angular/platform-browser';
-import {GeohubService} from 'src/app/services/geohub.service';
+import {Store} from '@ngrx/store';
+import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
-import {IGeojsonFeature} from 'src/app/types/model';
-import {IMapRootState} from 'src/app/store/map/map';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
-import {Store} from '@ngrx/store';
-import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
+import {IMapRootState} from 'src/app/store/map/map';
+import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
 
 @Component({
-  selector: 'webmapp-page-home',
+  selector: 'wm-page-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
-  @Output('searchId') searchIdEvent: EventEmitter<number> = new EventEmitter<number>();
-
   cards$: Observable<IHIT[]> = of([]);
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
@@ -50,32 +49,26 @@ export class HomePage implements OnInit {
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
-  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
-
   elasticSearchFilteredByLayer$ = this.elasticSearch$.pipe(
     withLatestFrom(this.currentLayer$),
     map(([all, currentLayer]) => all.filter(l => l.layers.indexOf(+currentLayer.id) > -1)),
   );
-  isBackAvailable: boolean = false;
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  mostViewedRoutes: Array<IGeojsonFeature>;
-  nearRoutes: Array<IGeojsonFeature>;
+  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
   online$: Observable<boolean> = this._storeNetwork
     .select(online)
     .pipe(tap(() => this._cdr.detectChanges()));
   poiCards$: Observable<any[]>;
   selectedFilters$: Observable<string[]> = this._storeMap.select(currentFilters);
-  showSearch: boolean = true;
   title: string;
 
   constructor(
-    private _geoHubService: GeohubService,
     private _geoLocation: GeolocationService,
     private _storeSearch: Store<IElasticSearchRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _navController: NavController,
+    private _navCtrl: NavController,
     private _modalCtrl: ModalController,
     private _cdr: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
@@ -118,6 +111,11 @@ export class HomePage implements OnInit {
     );
   }
 
+  goToHome(): void {
+    this.setLayer(null);
+    this._navCtrl.navigateForward('home');
+  }
+
   async ngOnInit() {
     // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
     await this._geoLocation.start();
@@ -141,20 +139,26 @@ export class HomePage implements OnInit {
     }
   }
 
-  searchCard(id: string | number) {
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +id}));
+  searchCard(id: string | number): void {
+    if (id != null) {
+      this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +id}));
+    }
   }
 
-  segmentChanged(ev: any) {
-    this.currentTab$.next(ev.detail.value);
+  segmentChanged(ev: any): void {
+    if (ev != null && ev.detail != null && ev.detail.value != null) {
+      this.currentTab$.next(ev.detail.value);
+    }
   }
 
   setCurrentFilters(filters: string[]): void {
-    this._storeMap.dispatch(setCurrentFilters({currentFilters: filters}));
-    this.currentTab$.next('pois');
+    if (filters != null) {
+      this._storeMap.dispatch(setCurrentFilters({currentFilters: filters}));
+      this.currentTab$.next('pois');
+    }
   }
 
-  setLayer(layer: ILAYER | null | any) {
+  setLayer(layer: ILAYER | null | any): void {
     if (layer != null) {
       const cards = layer.tracks[layer.id] ?? [];
       this.layerCards$.next(cards);
@@ -166,11 +170,9 @@ export class HomePage implements OnInit {
   }
 
   setPoi(id: number): void {
-    this._navController.navigateForward('map');
-    this._storeMap.dispatch(setCurrentPoiId({currentPoiId: id}));
-  }
-  goToHome(): void {
-    this.setLayer(null);
-    this._navController.navigateForward('home');
+    if (id != null) {
+      this._navCtrl.navigateForward('map');
+      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: id}));
+    }
   }
 }
