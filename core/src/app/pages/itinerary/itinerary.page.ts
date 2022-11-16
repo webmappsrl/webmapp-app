@@ -15,7 +15,7 @@ import {TranslateService} from '@ngx-translate/core';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {auditTime, switchMap, take, tap} from 'rxjs/operators';
+import {auditTime, switchMap, take, tap, map} from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
 import {AuthService} from 'src/app/services/auth.service';
@@ -63,6 +63,7 @@ export class ItineraryPage implements OnDestroy {
 
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
   isLoggedIn$: Observable<boolean>;
+  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
     this._storeMap.select(mapCurrentTrack);
   currentTrackProperties$: Observable<IGeojsonProperties> = this._storeMap
@@ -82,7 +83,20 @@ export class ItineraryPage implements OnDestroy {
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public itinerary: IGeojsonFeature;
   public lastScroll = 0;
-  mapConf$: Observable<any> = this._storeConf.select(confMAP);
+  private _flowLine$: BehaviorSubject<null | {
+    flow_line_quote_orange: number;
+    flow_line_quote_red: number;
+  }> = new BehaviorSubject<null>(null);
+  mapConf$: Observable<any> = this._storeConf.select(confMAP).pipe(
+    tap(conf => {
+      if (conf.flow_line_quote_show) {
+        this._flowLine$.next({
+          flow_line_quote_orange: conf.flow_line_quote_orange,
+          flow_line_quote_red: conf.flow_line_quote_red,
+        });
+      }
+    }),
+  );
   public mapDegrees = 0;
   //will be updated by real screen height
   public maxInfoHeigtDifference = 80;
@@ -169,6 +183,17 @@ export class ItineraryPage implements OnDestroy {
 
   closeMenu() {
     this._menuController.close('optionMenu');
+  }
+
+  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
+    const green = `Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)`;
+    const orange = `Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)`;
+    const red = `Livello 3: in alta quota (quota superiore ${redTreshold} metri)`;
+    return altitude < orangeTreshold
+      ? green
+      : altitude > orangeTreshold && altitude < redTreshold
+      ? orange
+      : red;
   }
 
   public async download() {
@@ -320,6 +345,15 @@ export class ItineraryPage implements OnDestroy {
   public setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
     if (elements != null) {
       this.trackElevationChartHoverElements$.next(elements);
+      if (this._flowLine$.value != null) {
+        this.flowPopoverText$.next(
+          this.getFlowPopoverText(
+            elements.location.altitude,
+            this._flowLine$.value.flow_line_quote_orange,
+            this._flowLine$.value.flow_line_quote_red,
+          ),
+        );
+      }
     }
   }
 
