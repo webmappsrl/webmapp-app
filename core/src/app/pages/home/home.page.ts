@@ -10,7 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {ModalController, NavController} from '@ionic/angular';
 
 import {BehaviorSubject, merge, Observable, of, zip} from 'rxjs';
-import {filter, first, map, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {
@@ -41,7 +41,6 @@ import {pois} from 'src/app/store/pois/pois.selector';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit {
-  cards$: Observable<IHIT[]> = of([]);
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter);
@@ -73,7 +72,6 @@ export class HomePage implements OnInit {
     private _cdr: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
   ) {
-    this.cards$ = merge(this.elasticSearch$).pipe(startWith([]));
     const allPois: Observable<any[]> = this._storeMap.select(pois).pipe(
       filter(p => p != null),
       map(p => ((p as any).features || []).map(p => (p as any).properties || [])),

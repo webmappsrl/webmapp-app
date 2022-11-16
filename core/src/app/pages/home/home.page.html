@@ -62,7 +62,7 @@
         </ng-container>
         <ng-template #list>
           <wm-search-list
-            [cards]="cards$|async"
+            [cards]="elasticSearch$|async"
             [pois]="poiCards$|async"
             [currentTab]="currentTab$|async"
             (selectedTrackEvt)="searchCard($event)"
