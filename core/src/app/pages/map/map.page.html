@@ -5,6 +5,8 @@
       wmMapLayer
       wmMapPois
       wmMapPosition
+      [wmMapOverlay]="enableOverLay$|async"
+      [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
       [reset]="resetEvt$|async"
       [layer]="currentLayer$|async"
       [conf]="confMap$|async"

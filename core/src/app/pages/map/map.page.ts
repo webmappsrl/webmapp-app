@@ -1,27 +1,16 @@
-import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import {IonSlides, NavController} from '@ionic/angular';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {IonSlides} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-import {confMAP, confPOIS} from 'src/app/store/conf/conf.selector';
+import {confGeohubId, confMAP, confPOIS} from 'src/app/store/conf/conf.selector';
 import {
   currentFilters,
   currentPoiID,
   mapCurrentLayer,
   padding,
 } from 'src/app/store/map/map.selector';
-import {map, startWith, tap, withLatestFrom} from 'rxjs/operators';
-import {
-  openDetails,
-  setCurrentFilters,
-  setCurrentPoiId,
-  setCurrentTrackId,
-} from 'src/app/store/map/map.actions';
+import {map, tap, withLatestFrom} from 'rxjs/operators';
+import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
 
 import {AuthService} from 'src/app/services/auth.service';
 import {Browser} from '@capacitor/browser';
@@ -52,6 +41,9 @@ export class MapPage {
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  enableOverLay$: Observable<boolean> = this._store
+    .select(confGeohubId)
+    .pipe(map(gid => gid === 13));
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   padding$: Observable<number[]> = this._store.select(padding);

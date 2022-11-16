@@ -1,3 +1,4 @@
+import {WmMapOverlayDirective} from './overlay.directive';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {BtnTiles} from './buttons/btn-tiles/btn-tiles';
 import {ButtonsModule} from './buttons/buttons.module';
@@ -17,6 +18,7 @@ const directives = [
   WmMapLayerDirective,
   WmMapPoisDirective,
   WmMapRelatedPoisDirective,
+  WmMapOverlayDirective,
 ];
 const components = [WmMapComponent];
 
