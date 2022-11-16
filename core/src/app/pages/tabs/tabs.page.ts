@@ -20,6 +20,7 @@ export class TabsPage {
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
   isLoggedIn$: Observable<boolean>;
   online$: Observable<boolean> = this._storeNetwork.select(online);
+
   constructor(
     private _statusService: StatusService,
     private _storeMap: Store<IMapRootState>,
@@ -35,7 +36,7 @@ export class TabsPage {
   }
 
   reset() {
-    this._storeMap.dispatch(setCurrentLayer({currentLayer: null}));
+    // this._storeMap.dispatch(setCurrentLayer({currentLayer: null}));
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
   }
 }

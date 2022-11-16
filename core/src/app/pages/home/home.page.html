@@ -5,7 +5,7 @@
     <ion-label [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)">
     </ion-label>
     <webmapp-search-bar
-      *ngIf="showSearch && online$|async"
+      *ngIf="online$|async"
       [initSearch]="title"
       (isTypings)="isTyping$.next($event)"
       (words)="currentSearch$.next($event)"
@@ -23,74 +23,62 @@
     <downloaded-tracks-box></downloaded-tracks-box>
   </ng-container>
   <ng-container *ngIf="online$|async">
-    <ng-container
-      *ngIf="(isTyping$|async)||(layerCards$|async)!=null||(selectedFilters$|async).length>0; else myhome"
-    >
-      <ion-segment [value]="currentTab$|async" (ionChange)="segmentChanged($event)">
-        <ng-container *ngIf="cards$|async as cards">
-          <ion-segment-button value="tracks" *ngIf="cards != null && cards.length> 0">
-            <ion-label> {{'tracks'| wmtrans}} <ion-badge>{{cards.length}} </ion-badge></ion-label>
-          </ion-segment-button>
-        </ng-container>
-        <ng-container *ngIf="poiCards$|async as poiCards">
-          <ion-segment-button value="pois" *ngIf="poiCards != null && poiCards.length> 0">
-            <ion-label> {{'POI'|wmtrans}} <ion-badge>{{poiCards.length}}</ion-badge></ion-label>
-          </ion-segment-button>
-        </ng-container>
-      </ion-segment>
-      <ng-container *ngIf="currentTab$|async as currentTab">
-        <ng-container *ngIf="currentTab === 'tracks'|| currentTab == null">
-          <wm-search-box
-            *ngFor="let card of cards$|async"
-            [data]="card"
-            (clickEVT)="searchCard(card.id)"
-          >
-          </wm-search-box>
-        </ng-container>
-        <div *ngIf="currentTab === 'pois'">
-          <wm-poi-box *ngFor="let c of poiCards$|async" [data]="c" (clickEVT)="setPoi(c.id)">
-          </wm-poi-box>
-        </div>
+    <ng-container *ngIf="currentLayer$|async as currentLayer;else noLayer">
+      <ion-breadcrumbs>
+        <ion-breadcrumb (click)="goToHome()">Home</ion-breadcrumb>
+        <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
+      </ion-breadcrumbs>
+      <ng-container *ngIf="(isTyping$|async);else noType">
+        <wm-search-list
+          [cards]="elasticSearchFilteredByLayer$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
       </ng-container>
+      <ng-template #noType>
+        <wm-search-list
+          [cards]="layerCards$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
+      </ng-template>
     </ng-container>
-
-    <ng-template #myhome>
-      <ng-container *ngFor="let box of confHOME$|async">
-        <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
-        <webmapp-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
-        </webmapp-box>
-        <webmapp-layer-box
-          *ngIf="box.box_type === 'layer'"
-          [data]="box.layer"
-          (clickEVT)="setLayer(box.layer)"
+    <ng-template #noLayer>
+      <ng-container
+        #noLayer
+        *ngIf="(isTyping$|async)||(selectedFilters$|async).length>0 else myhome"
+      >
+        <ng-container
+          *ngIf="(isTyping$|async)==false && (selectedFilters$|async).length  == 0 &&(currentLayer$|async) as currentLayer; else  list"
         >
-        </webmapp-layer-box>
-        <ng-container *ngIf="box.box_type == 'track'">
-          <webmapp-base-box
-            class="home-base-box"
-            [data]="box"
-            (clickEVT)="searchCard(box.track_id)"
-          ></webmapp-base-box>
+          <wm-search-list
+            [cards]="layerCards$|async"
+            [currentTab]="'tracks'"
+            (selectedTrackEvt)="searchCard($event)"
+            (selectedPoiEvt)="setPoi(+$event)"
+          ></wm-search-list>
         </ng-container>
-        <ng-container *ngIf="box.box_type == 'base'">
-          <webmapp-slider-box [data]="box" (clickEVT)="searchCard($event)"></webmapp-slider-box>
-        </ng-container>
-        <ng-container *ngIf="box.box_type ==  'external_url'">
-          <webmapp-external-url-box [data]="box"></webmapp-external-url-box>
-        </ng-container>
+        <ng-template #list>
+          <wm-search-list
+            [cards]="elasticSearch$|async"
+            [pois]="poiCards$|async"
+            [currentTab]="currentTab$|async"
+            (selectedTrackEvt)="searchCard($event)"
+            (selectedPoiEvt)="setPoi(+$event)"
+          ></wm-search-list>
+        </ng-template>
       </ng-container>
     </ng-template>
-  </ng-container>
-  <ng-container *ngIf="false">
-    <webmapp-card-slider
-      [title]="'pages.home.mostViewedTracks' | wmtrans"
-      [data]="mostViewedRoutes"
-    ></webmapp-card-slider>
-    <webmapp-card-slider
-      [title]="'pages.home.closerTracks' | wmtrans"
-      [nodata]="'pages.home.nocloserTracks' | wmtrans"
-      [data]="nearRoutes"
-      [showDistance]="true"
-    ></webmapp-card-slider>
+
+    <ng-template #myhome>
+      <wm-home
+        [conf]="confHOME$|async"
+        (openSlugEvt)="openSlug($event)"
+        (selectedLayerEvt)="setLayer($event)"
+        (selectedTrackEvt)="searchCard($event)"
+      ></wm-home>
+    </ng-template>
   </ng-container>
 </ion-content>

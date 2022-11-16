@@ -11,7 +11,7 @@ import {PipeModule} from 'src/app/pipes/pipe.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {IntroComponent} from './intro/intro.component';
-
+import {HomeModule} from 'src/app/components/home/home.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -24,6 +24,7 @@ import {IntroComponent} from './intro/intro.component';
     PipeModule,
     SharedModule,
     InnerHtmlModule,
+    HomeModule,
   ],
   declarations: [HomePage, IntroComponent],
   entryComponents: [],

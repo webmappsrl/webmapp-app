@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import {IHOMEITEM} from 'src/app/types/config';
+import {IHOMEITEM, ITRACKBOX} from 'src/app/types/config';
 import {BaseBoxComponent as BBaseBoxComponent} from '../box';
 
 @Component({
@@ -9,4 +9,4 @@ import {BaseBoxComponent as BBaseBoxComponent} from '../box';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class BaseBoxComponent extends BBaseBoxComponent<IHOMEITEM> {}
+export class BaseBoxComponent extends BBaseBoxComponent<IHOMEITEM | ITRACKBOX> {}
