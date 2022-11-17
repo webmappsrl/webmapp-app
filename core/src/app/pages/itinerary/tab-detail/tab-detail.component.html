@@ -46,7 +46,9 @@
     </ion-note>
   </ion-item>
 
-  <ion-item *ngIf="properties?.duration_backward as duration_backward">
+  <ion-item
+    *ngIf="properties?.roundtrip === false && properties?.duration_backward as duration_backward"
+  >
     <i class="icon-outline-duration webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label"
       >{{ "pages.route.detail.duration_backward" | wmtrans }}
@@ -64,7 +66,7 @@
     <ion-note slot="end" class="webmapp-pageroute-tabdetail-value"> {{ ascent }}m </ion-note>
   </ion-item>
 
-  <ion-item *ngIf="properties?.descent as descent">
+  <ion-item *ngIf="properties?.roundtrip === false &&  properties?.descent as descent">
     <i class="icon-outline-dislivello-negativo webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label">
       {{ "pages.route.detail.descent" | wmtrans }}
@@ -80,7 +82,7 @@
     <ion-note slot="end" class="webmapp-pageroute-tabdetail-value">{{ ele_from }}m</ion-note>
   </ion-item>
 
-  <ion-item *ngIf="properties?.ele_to as ele_to">
+  <ion-item *ngIf="properties?.roundtrip === false && properties?.ele_to as ele_to">
     <i class="icon-outline-minus webmapp-pageroute-tabdetail-icon"> </i>
     <ion-label start class="webmapp-pageroute-tabdetail-label">
       {{ "pages.route.detail.ele_to" | wmtrans }}

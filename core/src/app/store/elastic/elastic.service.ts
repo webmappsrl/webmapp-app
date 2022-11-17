@@ -1,10 +1,11 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 /* eslint-disable quote-props */
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';
-const baseUrl = 'https://elastic-passtrough.herokuapp.com/search';
+// const baseUrl = 'https://elastic-passtrough.herokuapp.com/search';
+const baseUrl = 'https://elastic-json.webmapp.it/search';
 @Injectable({
   providedIn: 'root',
 })
@@ -31,13 +32,14 @@ export class ElasticService {
     return this._geohubAppId ? `${baseUrl}/?id=${this._geohubAppId}` : baseUrl;
   }
 
+  public getALL(): Observable<IELASTIC> {
+    return this._http.request('get', this._baseUrl);
+  }
+
   public getSearch(inputTyped: string): Observable<IELASTIC> {
     return this._http.request(
       'get',
       inputTyped ? `${this._baseUrl}&query=${inputTyped}` : this._baseUrl,
     );
-  }
-  public getALL(): Observable<IELASTIC> {
-    return this._http.request('get', this._baseUrl);
   }
 }

@@ -32,6 +32,7 @@ import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
+import {fromHEXToColor} from 'src/app/components/shared/map-core/utils';
 
 @Component({
   selector: 'wm-page-home',
@@ -43,7 +44,21 @@ import {pois} from 'src/app/store/pois/pois.selector';
 export class HomePage implements OnInit {
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
-  confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter);
+  confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
+    map(p => {
+      if (p.poi_type != null) {
+        let poi_type = p.poi_type.map(p => {
+          if (p.icon != null && p.color != null) {
+            const namedPoiColor = fromHEXToColor[p.color] || 'darkorange';
+            return {...p, ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)}};
+          }
+          return p;
+        });
+        return {where: p.where, poi_type};
+      }
+      return p;
+    }),
+  );
   currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');

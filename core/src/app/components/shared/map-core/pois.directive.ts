@@ -22,6 +22,7 @@ import {buffer} from 'ol/extent';
 import {fromLonLat} from 'ol/proj';
 import {stopPropagation} from 'ol/events/Event';
 import {IMAP} from 'src/app/types/config';
+import {fromHEXToColor} from './utils';
 @Directive({
   selector: '[wmMapPois]',
 })
@@ -29,11 +30,6 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
   private _firstPoiId: number;
   private _poisClusterLayer: VectorLayer;
   private _selectedPoiLayer: VectorLayer;
-
-  @Input() conf: IMAP;
-  @Input() filters: any[] = [];
-  @Input() pois: any;
-  @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
 
   @Input('poi') set setPoi(id: number) {
     if (this.map != null) {
@@ -60,14 +56,27 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
               src: `${ICN_PATH}/${icn}.png`,
             }),
           });
-          if (currentPoi.properties.svgIcon != null) {
+          if (
+            currentPoi != null &&
+            currentPoi.properties != null &&
+            currentPoi.properties.svgIcon != null
+          ) {
+            const properties = currentPoi.properties || null;
+            const taxonomy = properties.taxonomy || null;
+            const poyType = taxonomy.poi_type || null;
+            const poiColor = poyType.color
+              ? poyType.color
+              : properties.color
+              ? properties.color
+              : '#ff8c00';
+            const namedPoiColor = fromHEXToColor[poiColor] || 'darkorange';
             iconStyle = new Style({
               image: new Icon({
                 anchor: [0.5, 0.5],
                 scale: 1,
                 src: `data:image/svg+xml;utf8,${currentPoi.properties.svgIcon
                   .replaceAll('<circle fill="darkorange"', '<circle fill="white" ')
-                  .replaceAll('<g fill="white"', '<g fill="darkorange" ')}`,
+                  .replaceAll(`<g fill="white"`, `<g fill="${namedPoiColor || 'darkorange'}" `)}`,
               }),
             });
           }
@@ -81,6 +90,11 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
       }
     }
   }
+
+  @Input() conf: IMAP;
+  @Input() filters: any[] = [];
+  @Input() pois: any;
+  @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
@@ -151,12 +165,21 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
 
     if (poiCollection) {
       for (const poi of poiCollection) {
+        const properties = poi.properties || null;
+        const taxonomy = properties.taxonomy || null;
+        const poyType = taxonomy.poi_type || null;
         const icn = this._getIcnFromTaxonomies(poi.properties.taxonomyIdentifiers);
         const coordinates = [
           poi.geometry.coordinates[0] as number,
           poi.geometry.coordinates[1] as number,
         ] || [0, 0];
 
+        const poiColor = poyType.color
+          ? poyType.color
+          : properties.color
+          ? properties.color
+          : '#ff8c00';
+        const namedPoiColor = fromHEXToColor[poiColor] || 'darkorange';
         const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
         const iconFeature = new Feature({
           type: 'icon',
@@ -169,12 +192,16 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
             src: `${ICN_PATH}/${icn}.png`,
           }),
         });
-        if (poi.properties.svgIcon != null) {
+        if (poi != null && poi.properties != null && poi.properties.svgIcon != null) {
+          const src = `data:image/svg+xml;utf8,${poi.properties.svgIcon.replaceAll(
+            'darkorange',
+            namedPoiColor,
+          )}`;
           iconStyle = new Style({
             image: new Icon({
               anchor: [0.5, 0.5],
               scale: 1,
-              src: `data:image/svg+xml;utf8,${poi.properties.svgIcon}`,
+              src,
               //src: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024' width='32' height='32'><circle cx='512' cy='512' r='512' fill=\"red\" /><g transform='scale(0.8 0.8) translate(100, 100)' fill=\"white\"><path   d='M294.4 108.8l-54.4 297.6c-6.4 44.8 96 64 92.8 108.8l-12.8 348.8c-3.2 54.4 54.4 54.4 54.4 54.4s54.4 0 54.4-54.4l-12.8-348.8c-3.2-44.8 92.8-64 92.8-108.8l-54.4-297.6h-25.6l12.8 214.4-41.6 25.6-12.8-243.2h-25.6l-12.8 243.2-41.6-25.6 12.8-214.4h-25.6zM752 108.8c-38.4 0-105.6 35.2-131.2 89.6-22.4 38.4-28.8 128-28.8 182.4v134.4c0 44.8 57.6 54.4 80 54.4l-25.6 297.6c-6.4 54.4 54.4 54.4 54.4 54.4s54.4 0 54.4-54.4v-758.4h-3.2z'/></g></svg>",
             }),
           });

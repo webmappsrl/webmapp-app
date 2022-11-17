@@ -25,12 +25,24 @@ export const confPOIS = createSelector(confMAP, map => {
   }
   return undefined;
 });
-export const confPOISFilter = createSelector(confPOIS, pois => {
-  if (pois && pois.taxonomies != null) {
-    return pois.taxonomies;
+
+export const confPOISFilter = createSelector(confMAP, map => {
+  if (map != null && map.pois != null && map.pois.taxonomies != null) {
+    let res: any = {};
+    const where = map.pois.taxonomies.where;
+    if (where) {
+      res.where = where;
+    }
+    const poi_type = map.pois.taxonomies.poi_type;
+    if (poi_type) {
+      res.poi_type = poi_type;
+    }
+
+    return res;
   }
   return undefined;
 });
+
 export const confPoisIcons = createSelector(confPOISFilter, taxonomies => {
   const res = {};
   if (taxonomies != null && taxonomies.poi_type != null) {
