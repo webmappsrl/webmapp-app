@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
 import {
   AlertController,
   Animation,
@@ -41,8 +41,13 @@ import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-c
   selector: 'webmapp-itinerary',
   templateUrl: './itinerary.page.html',
   styleUrls: ['./itinerary.page.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ItineraryPage implements OnDestroy {
+  private _flowLine$: BehaviorSubject<null | {
+    flow_line_quote_orange: number;
+    flow_line_quote_red: number;
+  }> = new BehaviorSubject<null>(null);
   private _tabChildEventSubscriptions: Array<Subscription> = [];
   private _trackID: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   private actualDownloadStatus: downloadPanelStatus;
@@ -62,8 +67,6 @@ export class ItineraryPage implements OnDestroy {
   @ViewChild('moredetails') moreDetails: ElementRef;
 
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
-  isLoggedIn$: Observable<boolean>;
-  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
     this._storeMap.select(mapCurrentTrack);
   currentTrackProperties$: Observable<IGeojsonProperties> = this._storeMap
@@ -75,18 +78,16 @@ export class ItineraryPage implements OnDestroy {
         }
       }),
     );
+  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   focus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public headerHeight = 105;
   public height = 700;
   public hideToolBarOver = false;
   public isFavourite: boolean = false;
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLoggedIn$: Observable<boolean>;
   public itinerary: IGeojsonFeature;
   public lastScroll = 0;
-  private _flowLine$: BehaviorSubject<null | {
-    flow_line_quote_orange: number;
-    flow_line_quote_red: number;
-  }> = new BehaviorSubject<null>(null);
   mapConf$: Observable<any> = this._storeConf.select(confMAP).pipe(
     tap(conf => {
       if (conf.flow_line_quote_show) {
@@ -185,17 +186,6 @@ export class ItineraryPage implements OnDestroy {
     this._menuController.close('optionMenu');
   }
 
-  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
-    const green = `Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)`;
-    const orange = `Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)`;
-    const red = `Livello 3: in alta quota (quota superiore ${redTreshold} metri)`;
-    return altitude < orangeTreshold
-      ? green
-      : altitude > orangeTreshold && altitude < redTreshold
-      ? orange
-      : red;
-  }
-
   public async download() {
     /*  const modalres = await this._coinService.openModal();
     if (modalres) {
@@ -254,6 +244,17 @@ export class ItineraryPage implements OnDestroy {
     );
 
     this.isFavourite$.next(!this.isFavourite$.value);
+  }
+
+  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
+    const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
+    const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
+    const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
+    return altitude < orangeTreshold
+      ? green
+      : altitude > orangeTreshold && altitude < redTreshold
+      ? orange
+      : red;
   }
 
   handleClick() {

@@ -78,7 +78,7 @@
             {{(currentTrackProperties$|async)?.name | wmtrans}}
           </ion-label>
           <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-            {{flowPopoverText}}
+            <div [innerHTML]="flowPopoverText"></div>
           </ion-label>
         </div>
       </div>
