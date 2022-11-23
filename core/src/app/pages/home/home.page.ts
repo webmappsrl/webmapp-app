@@ -149,6 +149,8 @@ export class HomePage implements OnInit {
         .then(modal => {
           modal.present();
         });
+    } else {
+      this._navCtrl.navigateForward(slug);
     }
   }
 
