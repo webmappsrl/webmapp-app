@@ -104,6 +104,11 @@ export class MapPage {
     this.currentPoi$.next(currentPoi);
   }
 
+  setPoi(poi:any): void {
+    console.log(poi.properties)
+    this.currentPoi$.next(poi);
+  }
+
   phone(_): void {}
 
   resetPoi(): void {
