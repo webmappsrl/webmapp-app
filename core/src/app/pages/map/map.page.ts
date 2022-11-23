@@ -112,9 +112,7 @@ export class MapPage {
   phone(_): void {}
 
   resetPoi(): void {
-    this._store.dispatch(openDetails({openDetails: false}));
     this.currentPoi$.next(null);
-    this.currentPoiID$.next(-1);
   }
 
   setCurrentFilters(filters: string[]): void {
