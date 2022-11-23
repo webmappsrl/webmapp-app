@@ -28,8 +28,8 @@ import {fromHEXToColor} from './utils';
 })
 export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges {
   private _firstPoiId: number;
-  private _poisClusterLayer: VectorLayer;
-  private _selectedPoiLayer: VectorLayer;
+  private _poisClusterLayer: VectorLayer<Cluster>;
+  private _selectedPoiLayer: VectorLayer<VectorSource>;
 
   @Input('poi') set setPoi(id: number) {
     if (this.map != null) {
@@ -230,7 +230,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
     });
   }
 
-  private _createCluster(clusterLayer: VectorLayer, zIndex: number) {
+  private _createCluster(clusterLayer: VectorLayer<Cluster>, zIndex: number) {
     if (!clusterLayer) {
       clusterLayer = new VectorLayer({
         source: new Cluster({
@@ -287,7 +287,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
     return clusterLayer;
   }
 
-  private _createLayer(layer: VectorLayer, zIndex: number) {
+  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number) {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({
@@ -344,7 +344,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
   }
 
   private _getNearestFeatureOfCluster(
-    layer: VectorLayer,
+    layer: VectorLayer<VectorSource>,
     evt: MapBrowserEvent<UIEvent>,
   ): Feature<Geometry> {
     const precision = this.map.getView().getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
@@ -379,7 +379,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
     return Array.from(intersection);
   }
 
-  private _isCluster(layer: VectorLayer, evt: MapBrowserEvent<UIEvent>): boolean {
+  private _isCluster(layer: VectorLayer<Cluster>, evt: MapBrowserEvent<UIEvent>): boolean {
     const precision = this.map.getView().getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     const features: Feature<Geometry>[] = [];
     const clusterSource = layer.getSource() as any;

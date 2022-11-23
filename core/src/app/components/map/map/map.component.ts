@@ -51,7 +51,6 @@ import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {Store} from '@ngrx/store';
 import StrokeStyle from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
-import TextPlacement from 'ol/style/TextPlacement';
 import TextStyle from 'ol/style/Text';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
@@ -64,6 +63,10 @@ import {defaults as defaultInteractions} from 'ol/interaction.js';
 import {fromLonLat} from 'ol/proj';
 import {getDistance} from 'ol/sphere.js';
 import {stopPropagation} from 'ol/events/Event';
+declare enum TextPlacement {
+  POINT = 'point',
+  LINE = 'line',
+}
 
 const initPadding = [0, 0, 0, 0];
 const zoomDuration = 500;
@@ -96,7 +99,7 @@ export class MapComponent implements OnDestroy {
   private _dataLayers: Array<VectorTileLayer>;
   private _defZoom: number = initMinZoom;
   private _defaultFeatureColor = DEF_LINE_COLOR;
-  private _elevationChartLayer: VectorLayer;
+  private _elevationChartLayer: VectorLayer<VectorSource>;
   private _elevationChartPoint: Feature<Point>;
   private _elevationChartSource: VectorSource;
   private _elevationChartTrack: Feature<LineString>;
@@ -107,11 +110,11 @@ export class MapComponent implements OnDestroy {
   private _maxZoom: number = initMaxZoom;
   private _padding$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(initPadding);
   private _poiMarkers: IPoiMarker[] = [];
-  private _poisLayer: VectorLayer;
+  private _poisLayer: VectorLayer<VectorSource>;
   private _selectInteraction: SelectInteraction;
   private _selectedFeature$: BehaviorSubject<FeatureLike | null> =
     new BehaviorSubject<FeatureLike | null>(null);
-  private _selectedPoiLayer: VectorLayer;
+  private _selectedPoiLayer: VectorLayer<VectorSource>;
   private _selectedPoiMarker: IPoiMarker;
   private _styleJson: any;
   private _updateMapSub: Subscription = Subscription.EMPTY;
@@ -240,7 +243,7 @@ export class MapComponent implements OnDestroy {
     this._mapCurrentLayerSub.unsubscribe();
   }
 
-  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>): void {
+  private _addIconToLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>): void {
     layer.getSource().addFeature(icon);
   }
 
@@ -326,7 +329,7 @@ export class MapComponent implements OnDestroy {
     return {iconFeature, style};
   }
 
-  private _createLayer(layer: VectorLayer, zIndex: number): VectorLayer {
+  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number): VectorLayer<VectorSource> {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({
@@ -607,7 +610,7 @@ export class MapComponent implements OnDestroy {
   }
 
   private _getNearestFeatureOfLayer(
-    layer: VectorLayer,
+    layer: VectorLayer<VectorSource>,
     evt: MapBrowserEvent<UIEvent>,
   ): Feature<Geometry> {
     const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
@@ -698,7 +701,7 @@ export class MapComponent implements OnDestroy {
       this._map.getTargetElement().style.cursor = 'grab';
     });
 
-    this._map.on('pointermove', (event: MapBrowserEvent) => {
+    this._map.on('pointermove', (event: MapBrowserEvent<UIEvent>) => {
       try {
         const features: Array<FeatureLike> = this._map.getFeaturesAtPixel(event.pixel);
         if (features.length) {
@@ -728,7 +731,7 @@ export class MapComponent implements OnDestroy {
     this._mapInit$.next(true);
   }
 
-  private _initializeBaseLayers(): Array<TileLayer> {
+  private _initializeBaseLayers(): TileLayer<XYZ>[] {
     return [
       new TileLayer({
         source: this._initializeBaseSource(),
@@ -1071,7 +1074,7 @@ export class MapComponent implements OnDestroy {
     return interactions;
   }
 
-  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _removeIconFromLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     if (source.hasFeature(icon)) {
       source.removeFeature(icon);

@@ -65,9 +65,9 @@ export class NavMapTrackDirective {
   </svg>`;
   private _startFeature: Feature<Geometry>;
   private _endFeature: Feature<Geometry>;
-  private _startEndLayer: VectorLayer;
+  private _startEndLayer: VectorLayer<VectorSource>;;
   private _trackFeatures: Feature<Geometry>[];
-  private _trackLayer: VectorLayer;
+  private _trackLayer: VectorLayer<VectorSource>;;
 
   private _init(): void {
     const startPosition = this._track.geometry.coordinates[0];

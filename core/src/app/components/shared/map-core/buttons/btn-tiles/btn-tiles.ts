@@ -1,3 +1,4 @@
+import {XYZ} from 'ol/source';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -30,7 +31,7 @@ import TileLayer from 'ol/layer/Tile';
   encapsulation: ViewEncapsulation.None,
 })
 export class BtnTiles implements OnChanges {
-  @Input() tileLayers: TileLayer[];
+  @Input() tileLayers: TileLayer<XYZ>[];
 
   currentTileLayerIdx$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   currentValue = 'v0';

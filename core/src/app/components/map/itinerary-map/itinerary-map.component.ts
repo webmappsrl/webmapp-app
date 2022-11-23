@@ -88,7 +88,7 @@ import {IMAP} from 'src/app/types/config';
 })
 export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChanges {
   private _bottomPadding: number = 0;
-  private _clusterLayer: VectorLayer;
+  private _clusterLayer: VectorLayer<VectorSource>;
   private _clusterMarkers: ClusterMarker[] = [];
   private _currentLocation;
   private _defaultFeatureColor = DEF_LINE_COLOR;
@@ -105,7 +105,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     startLocation?: ILocation;
   };
   private _locationIcon: {
-    layer: VectorLayer;
+    layer: VectorLayer<VectorSource>;
     location: Feature;
     accuracy: Feature;
     point: Point;
@@ -118,7 +118,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   private _locationIconStyle: Style;
   private _map: Map;
   private _poiMarkers: PoiMarker[] = [];
-  private _poisLayer: VectorLayer;
+  private _poisLayer: VectorLayer<VectorSource>;
   private _position: ILocation = null;
   private _rightPadding: number = 0;
   private _selectedPoi: {
@@ -129,16 +129,16 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     animating?;
     startTime?;
   } = {};
-  private _selectedPoiLayer: VectorLayer;
+  private _selectedPoiLayer: VectorLayer<VectorSource>;
   private _selectedPoiMarker: IPoiMarker;
-  private _slopeChartLayer: VectorLayer;
+  private _slopeChartLayer: VectorLayer<VectorSource>;
   private _slopeChartPoint: Feature<Point>;
   private _slopeChartSource: VectorSource;
   private _slopeChartTrack: Feature<LineString>;
   private _topPadding: number = 0;
   private _track: {
-    layer: VectorLayer;
-    markerslayer: VectorLayer;
+    layer: VectorLayer<VectorSource>;
+    markerslayer: VectorLayer<VectorSource>;
     track: Feature[];
     registeredTrack: ITrack;
   };
@@ -387,7 +387,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     return ret;
   }
 
-  _getNearestFeatureOfLayer(layer: VectorLayer, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
+  _getNearestFeatureOfLayer(layer: VectorLayer<VectorSource>, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
     const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     let nearestFeature = null;
     const features: Feature<Geometry>[] = [];
@@ -669,7 +669,6 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
           target: this.scaleLineContainer.nativeElement,
         }),
       ],
-      interactions,
       moveTolerance: 3,
     });
 
@@ -796,7 +795,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     this._lastClusterMarkerTransparency = transparent;
   }
 
-  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _addIconToLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     layer.getSource().addFeature(icon);
   }
@@ -1118,7 +1117,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     return {iconFeature, style};
   }
 
-  private _createLayer(layer: VectorLayer, zIndex: number) {
+  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number) {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({
@@ -1471,7 +1470,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     }
   }
 
-  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _removeIconFromLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     if (source.hasFeature(icon)) {
       source.removeFeature(icon);

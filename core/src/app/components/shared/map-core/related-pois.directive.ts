@@ -28,8 +28,8 @@ export class WmMapRelatedPoisDirective extends WmMapBaseDirective implements OnC
   private _defaultFeatureColor = DEF_LINE_COLOR;
   private _initPois;
   private _poiMarkers: PoiMarker[] = [];
-  private _poisLayer: VectorLayer;
-  private _selectedPoiLayer: VectorLayer;
+  private _poisLayer: VectorLayer<VectorSource>;
+  private _selectedPoiLayer: VectorLayer<VectorSource>;
   private _selectedPoiMarker: PoiMarker;
 
   @Input() conf: IMAP;
@@ -95,7 +95,7 @@ export class WmMapRelatedPoisDirective extends WmMapBaseDirective implements OnC
     }
   }
 
-  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _addIconToLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     if (layer != null) {
       layer.getSource().addFeature(icon);
     }
@@ -183,7 +183,7 @@ export class WmMapRelatedPoisDirective extends WmMapBaseDirective implements OnC
     return {iconFeature, style};
   }
 
-  private _createLayer(layer: VectorLayer, zIndex: number) {
+  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number) {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({
@@ -311,7 +311,7 @@ export class WmMapRelatedPoisDirective extends WmMapBaseDirective implements OnC
   }
 
   private _getNearestFeatureOfLayer(
-    layer: VectorLayer,
+    layer: VectorLayer<VectorSource>,
     evt: MapBrowserEvent<UIEvent>,
   ): Feature<Geometry> {
     const precision = this.map.getView().getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
@@ -339,7 +339,7 @@ export class WmMapRelatedPoisDirective extends WmMapBaseDirective implements OnC
     return nearestFeature;
   }
 
-  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _removeIconFromLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     if (source.hasFeature(icon)) {
       source.removeFeature(icon);

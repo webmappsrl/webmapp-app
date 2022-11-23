@@ -251,11 +251,11 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   private _clusterMarkers: ClusterMarker[] = [];
-  private _clusterLayer: VectorLayer;
+  private _clusterLayer: VectorLayer<VectorSource>;
 
   private _poiMarkers: PoiMarker[] = [];
-  private _poisLayer: VectorLayer;
-  private _slectedPoiLayer: VectorLayer;
+  private _poisLayer: VectorLayer<VectorSource>;
+  private _slectedPoiLayer: VectorLayer<VectorSource>;
 
   private _position: ILocation = null;
   private _height: number;
@@ -275,7 +275,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   private _locationIconStyle: Style;
   private _locationIconArrowStyle: Style;
   private _locationIcon: {
-    layer: VectorLayer;
+    layer: VectorLayer<VectorSource>;
     location: Feature;
     accuracy: Feature;
     point: Point;
@@ -284,8 +284,8 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   };
 
   private _track: {
-    layer: VectorLayer;
-    markerslayer: VectorLayer;
+    layer: VectorLayer<VectorSource>;
+    markerslayer: VectorLayer<VectorSource>;
     track: Feature[];
     registeredTrack: ITrack;
   };
@@ -300,7 +300,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
 
   private _location: ILocation;
 
-  private _slopeChartLayer: VectorLayer;
+  private _slopeChartLayer: VectorLayer<VectorSource>;
   private _slopeChartSource: VectorSource;
   private _slopeChartPoint: Feature<Point>;
   private _slopeChartTrack: Feature<LineString>;
@@ -1295,7 +1295,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     return img;
   }
 
-  private _createLayer(layer: VectorLayer, zIndex: number) {
+  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number) {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({
@@ -1310,12 +1310,12 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     return layer;
   }
 
-  private _addIconToLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _addIconToLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     layer.getSource().addFeature(icon);
   }
 
-  private _removeIconFromLayer(layer: VectorLayer, icon: Feature<Geometry>) {
+  private _removeIconFromLayer(layer: VectorLayer<VectorSource>, icon: Feature<Geometry>) {
     const source = layer.getSource();
     if (source.hasFeature(icon)) {
       source.removeFeature(icon);
@@ -1344,7 +1344,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  _getNearestFeatureOfLayer(layer: VectorLayer, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
+  _getNearestFeatureOfLayer(layer: VectorLayer<VectorSource>, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
     const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     let nearestFeature = null;
     const features: Feature<Geometry>[] = [];
