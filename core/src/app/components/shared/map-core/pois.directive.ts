@@ -172,15 +172,9 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
         }
       });
     }
-    if (
-      changes &&
-      ((changes.filters != null && changes.filters.firstChange === false) ||
-        changes.WmMapPoisUnselectPoi != null)
-    ) {
+    if (changes && changes.WmMapPoisUnselectPoi != null) {
       clearLayer(this._selectedPoiLayer);
-    }
-
-    if (this.map != null && this.pois != null) {
+    } else if (this.map != null && this.pois != null) {
       if (this.filters.length > 0) {
         if (this._poisClusterLayer != null) {
           this._poisClusterLayer.getSource().clear();
