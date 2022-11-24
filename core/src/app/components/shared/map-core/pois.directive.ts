@@ -191,8 +191,10 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
         var c = e.element.get('features');
 
         if (c.length === 1 && this.map.getView().getZoom() === this.map.getView().getMaxZoom()) {
-          this.currentPoiEvt.emit(c[0].getProperties());
-          this._selectedPoiLayer.getSource().clear();
+          const poi = c[0].getProperties();
+          this.currentPoiEvt.emit(poi);
+          this._selectIcon(poi);
+          this._fitView(poi.geometry);
         }
       });
     }
