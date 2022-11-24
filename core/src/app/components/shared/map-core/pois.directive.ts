@@ -178,28 +178,29 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
         changes.WmMapPoisUnselectPoi != null)
     ) {
       clearLayer(this._selectedPoiLayer);
-      if (this.map != null && this.pois != null) {
-        if (this.filters.length > 0) {
-          if (this._poisClusterLayer != null) {
-            this._poisClusterLayer.getSource().clear();
-            (this._poisClusterLayer.getSource() as any).getSource().clear();
-          }
-          const selectedFeatures = this.pois.features.filter(
-            p => this._intersection(p.properties.taxonomyIdentifiers, this.filters).length > 0,
-          );
-          this._addPoisFeature(selectedFeatures);
-        } else {
-          this._addPoisFeature(this.pois.features);
-        }
-        selectCluster.getFeatures().on(['add'], e => {
-          var c = e.element.get('features');
+    }
 
-          if (c.length === 1 && this.map.getView().getZoom() === this.map.getView().getMaxZoom()) {
-            this.currentPoiEvt.emit(c[0].getProperties());
-            this._selectedPoiLayer.getSource().clear();
-          }
-        });
+    if (this.map != null && this.pois != null) {
+      if (this.filters.length > 0) {
+        if (this._poisClusterLayer != null) {
+          this._poisClusterLayer.getSource().clear();
+          (this._poisClusterLayer.getSource() as any).getSource().clear();
+        }
+        const selectedFeatures = this.pois.features.filter(
+          p => this._intersection(p.properties.taxonomyIdentifiers, this.filters).length > 0,
+        );
+        this._addPoisFeature(selectedFeatures);
+      } else {
+        this._addPoisFeature(this.pois.features);
       }
+      selectCluster.getFeatures().on(['add'], e => {
+        var c = e.element.get('features');
+
+        if (c.length === 1 && this.map.getView().getZoom() === this.map.getView().getMaxZoom()) {
+          this.currentPoiEvt.emit(c[0].getProperties());
+          this._selectedPoiLayer.getSource().clear();
+        }
+      });
     }
     if (
       changes.map != null &&
