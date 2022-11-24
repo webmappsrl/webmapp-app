@@ -2,7 +2,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {IonSlides} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-import {confGeohubId, confMAP, confPOIS} from 'src/app/store/conf/conf.selector';
+import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {
   currentFilters,
   currentPoiID,
@@ -17,6 +17,7 @@ import {Browser} from '@capacitor/browser';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {Store} from '@ngrx/store';
 import {pois} from 'src/app/store/pois/pois.selector';
+import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 
 @Component({
   selector: 'webmapp-map-page',
@@ -36,6 +37,21 @@ export class MapPage {
     }),
   );
   confPOIS$: Observable<any> = this._store.select(confPOIS);
+  confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
+    map(p => {
+      if (p.poi_type != null) {
+        let poi_type = p.poi_type.map(p => {
+          if (p.icon != null && p.color != null) {
+            const namedPoiColor = fromHEXToColor[p.color] || 'darkorange';
+            return {...p, ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)}};
+          }
+          return p;
+        });
+        return {where: p.where, poi_type};
+      }
+      return p;
+    }),
+  );
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);

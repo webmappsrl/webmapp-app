@@ -34,7 +34,7 @@
   <ng-container *ngIf="confPOIS$|async as confPois">
     <wm-btn-filter
       *ngIf="confPois.apppoisApiLayer"
-      [filters]="confPois.taxonomies"
+      [filters]="confPOISFilter$|async"
       [initSelectedFilters]="currentFilters$|async"
       (selectedFilters)="setCurrentFilters($event)"
     ></wm-btn-filter>
