@@ -5,6 +5,7 @@
       wmMapLayer
       wmMapPois
       wmMapPosition
+      [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
       [wmMapOverlay]="enableOverLay$|async"
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
       [reset]="resetEvt$|async"
@@ -21,6 +22,7 @@
       (locationEvt)="setCurrentLocation($event)"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
       (poi-click)="openPoi($event)"
+      (currentPoiEvt)="setPoi($event)"
     ></wm-map>
   </div>
   <div class="wm-fab-buttons">
@@ -32,7 +34,7 @@
   <ng-container *ngIf="confPOIS$|async as confPois">
     <wm-btn-filter
       *ngIf="confPois.apppoisApiLayer"
-      [filters]="confPois.taxonomies"
+      [filters]="confPOISFilter$|async"
       [initSelectedFilters]="currentFilters$|async"
       (selectedFilters)="setCurrentFilters($event)"
     ></wm-btn-filter>

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {
   AlertController,
   Animation,
@@ -43,7 +43,7 @@ import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-c
   styleUrls: ['./itinerary.page.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ItineraryPage implements OnDestroy {
+export class ItineraryPage implements AfterViewInit, OnDestroy {
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -144,7 +144,6 @@ export class ItineraryPage implements OnDestroy {
     private _authSvc: AuthService,
   ) {
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
-    this.setAnimations();
     this.currentTrackProperties$
       .pipe(
         switchMap(t => {
@@ -181,7 +180,9 @@ export class ItineraryPage implements OnDestroy {
       this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +id}));
     }, 500);
   }
-
+ngAfterViewInit(): void {
+ // this.setAnimations();
+}
   closeMenu() {
     this._menuController.close('optionMenu');
   }

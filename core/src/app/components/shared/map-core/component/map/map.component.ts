@@ -50,7 +50,7 @@ export class WmMapComponent implements AfterViewInit {
   map: Map;
   map$: Observable<Map> = this._map$.pipe(filter(f => f != null));
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  tileLayers: TileLayer[] = [];
+  tileLayers: TileLayer<XYZ>[] = [];
 
   constructor(private _mapSvc: MapService) {}
 
@@ -71,7 +71,7 @@ export class WmMapComponent implements AfterViewInit {
     }, 0);
   }
 
-  private _buildTileLayers(tiles: {[name: string]: string}[]): TileLayer[] {
+  private _buildTileLayers(tiles: {[name: string]: string}[]): TileLayer<XYZ>[] {
     return (
       tiles.map((tile, index) => {
         return new TileLayer({
