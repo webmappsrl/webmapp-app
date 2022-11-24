@@ -4,7 +4,7 @@ import {Pipe, PipeTransform} from '@angular/core';
   name: 'getFilterIcn',
 })
 export class WmGetFilterIcnPipe implements PipeTransform {
-  transform(identifier: string, filters: string[]): string {
+  transform(identifier = '', filters: string[]): string {
     const outline = 'icn-outline-';
     let selected = '';
     if (filters.indexOf(identifier) >= 0) {
