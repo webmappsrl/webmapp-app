@@ -22,23 +22,91 @@ import {buffer, createEmpty, extend} from 'ol/extent';
 import {fromLonLat} from 'ol/proj';
 import {IMAP} from 'src/app/types/config';
 import {fromHEXToColor} from './utils';
-import { clusterHullStyle, createCluster, createHull, createLayer, nearestFeatureOfCluster, selectCluster, setCurrentCluser } from 'src/app/shared/map-core/utils';
+import {
+  clearLayer,
+  clusterHullStyle,
+  createCluster,
+  createHull,
+  createLayer,
+  intersectionBetweenArrays,
+  nearestFeatureOfCluster,
+  selectCluster,
+  setCurrentCluster,
+} from 'src/app/shared/map-core/utils';
 @Directive({
   selector: '[wmMapPois]',
 })
 export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges {
   private _firstPoiId: number;
+  private _hullCluserLayer: VectorLayer<VectorSource>;
   private _poisClusterLayer: VectorLayer<Cluster>;
   private _selectedPoiLayer: VectorLayer<VectorSource>;
-  private _hullCluserLayer: VectorLayer<VectorSource>;
-  @Output() currentPoiEvt: EventEmitter<any> = new EventEmitter<any>();
-  @Input('poi') set setPoi(id: number) {
 
+  @Input('poi') set setPoi(id: number) {
+    if (this.map != null) {
+      this._selectedPoiLayer = this._createLayer(this._selectedPoiLayer, FLAG_TRACK_ZINDEX + 100);
+      this._selectedPoiLayer.getSource().clear();
+      if (id > -1) {
+        const currentPoi = this.pois.features.find(p => +p.properties.id === +id);
+        if (currentPoi != null) {
+          const icn = this._getIcnFromTaxonomies(currentPoi.properties.taxonomyIdentifiers);
+          const coordinates = [
+            currentPoi.geometry.coordinates[0] as number,
+            currentPoi.geometry.coordinates[1] as number,
+          ] || [0, 0];
+          const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
+          const geometry = new Point([position[0], position[1]]);
+          const iconFeature = new Feature({
+            type: 'icon',
+            geometry,
+          });
+          let iconStyle = new Style({
+            image: new Icon({
+              anchor: [0.5, 0.5],
+              scale: 0.5,
+              src: `${ICN_PATH}/${icn}.png`,
+            }),
+          });
+          if (
+            currentPoi != null &&
+            currentPoi.properties != null &&
+            currentPoi.properties.svgIcon != null
+          ) {
+            const properties = currentPoi.properties || null;
+            const taxonomy = properties.taxonomy || null;
+            const poyType = taxonomy.poi_type || null;
+            const poiColor = poyType.color
+              ? poyType.color
+              : properties.color
+              ? properties.color
+              : '#ff8c00';
+            const namedPoiColor = fromHEXToColor[poiColor] || 'darkorange';
+            iconStyle = new Style({
+              image: new Icon({
+                anchor: [0.5, 0.5],
+                scale: 1,
+                src: `data:image/svg+xml;utf8,${currentPoi.properties.svgIcon
+                  .replaceAll('<circle fill="darkorange"', '<circle fill="white" ')
+                  .replaceAll(`<g fill="white"`, `<g fill="${namedPoiColor || 'darkorange'}" `)}`,
+              }),
+            });
+          }
+          iconFeature.setStyle(iconStyle);
+          iconFeature.setId(currentPoi.properties.id);
+          const source = this._selectedPoiLayer.getSource();
+          source.addFeature(iconFeature);
+          source.changed();
+          this._fitView(geometry as any);
+        }
+      }
+    }
   }
 
+  @Input() WmMapPoisUnselectPoi: boolean;
   @Input() conf: IMAP;
   @Input() filters: any[] = [];
   @Input() pois: any;
+  @Output() currentPoiEvt: EventEmitter<any> = new EventEmitter<any>();
   @Output('poi-click') poiClick: EventEmitter<number> = new EventEmitter<number>();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,7 +129,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
           }
           this._poisClusterLayer.getFeatures(event.pixel).then(features => {
             if (features.length > 0) {
-              setCurrentCluser(features[0]);
+              setCurrentCluster(features[0]);
               const clusterMembers = features[0].get('features');
               this._hullCluserLayer.setStyle(clusterHullStyle);
               if (clusterMembers.length > 1) {
@@ -86,13 +154,13 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
               } else {
                 selectCluster.setActive(true);
                 const poiFeature = nearestFeatureOfCluster(this._poisClusterLayer, event, this.map);
-    
+
                 if (poiFeature) {
                   const poi = poiFeature.getProperties();
                   this.currentPoiEvt.emit(poi);
-                  this._selectIcon(poi)
+                  this._selectIcon(poi);
                   this._fitView(poi.geometry);
-                } 
+                }
               }
             }
           });
@@ -104,7 +172,13 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
         }
       });
     }
-    if (this.map != null && this.pois != null) {
+    if (
+      changes &&
+      ((changes.filters != null && changes.filters.firstChange === false) ||
+        changes.WmMapPoisUnselectPoi != null)
+    ) {
+      clearLayer(this._selectedPoiLayer);
+    } else if (this.map != null && this.pois != null) {
       if (this.filters.length > 0) {
         if (this._poisClusterLayer != null) {
           this._poisClusterLayer.getSource().clear();
@@ -309,7 +383,7 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
       optOptions = {
         maxZoom: this.map.getView().getMaxZoom() - 1,
         duration: 1000,
-        padding:[0,0,250,0]
+        padding: [0, 0, 250, 0],
       };
     }
     this.map.getView().fit(geometryOrExtent, optOptions);
@@ -366,6 +440,66 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
     return nearestFeature;
   }
 
+  private _initDirective(): void {
+    if (this._firstPoiId != null) {
+      this.setPoi = this._firstPoiId;
+    }
+    this.map.on('click', event => {
+      if (this._selectedPoiLayer == null) {
+        this._selectedPoiLayer = createLayer(this._selectedPoiLayer, FLAG_TRACK_ZINDEX + 100);
+        this.map.addLayer(this._selectedPoiLayer);
+      }
+      this._selectedPoiLayer.getSource().clear();
+      try {
+        if (this.map.getView().getZoom() === this.map.getView().getMaxZoom()) {
+          selectCluster.setActive(true);
+        } else {
+          selectCluster.setActive(false);
+        }
+        this._poisClusterLayer.getFeatures(event.pixel).then(features => {
+          if (features.length > 0) {
+            setCurrentCluster(features[0]);
+            const clusterMembers = features[0].get('features');
+            this._hullCluserLayer.setStyle(clusterHullStyle);
+            if (clusterMembers.length > 1) {
+              // Calculate the extent of the cluster members.
+              const extent = createEmpty();
+              clusterMembers.forEach(feature => extend(extent, feature.getGeometry().getExtent()));
+              const view = this.map.getView();
+              setTimeout(() => {
+                if (view.getZoom() === view.getMaxZoom()) {
+                  selectCluster.setActive(true);
+                }
+                // Zoom to the extent of the cluster members.
+                view.fit(extent, {duration: 500, padding: [50, 50, 50, 50]});
+                setTimeout(() => {
+                  if (view.getZoom() === view.getMaxZoom()) {
+                    selectCluster.setActive(true);
+                  }
+                }, 200);
+              }, 400);
+            } else {
+              selectCluster.setActive(true);
+              const poiFeature = nearestFeatureOfCluster(this._poisClusterLayer, event, this.map);
+
+              if (poiFeature) {
+                const poi = poiFeature.getProperties();
+                this.currentPoiEvt.emit(poi);
+                this._selectIcon(poi);
+                this._fitView(poi.geometry);
+              }
+            }
+          }
+        });
+        setTimeout(() => {
+          this._activateInteractions();
+        }, 1200);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  }
+
   private _intersection(a: any[], b: any[]): any[] {
     var setA = new Set(a);
     var setB = new Set(b);
@@ -398,17 +532,16 @@ export class WmMapPoisDirective extends WmMapBaseDirective implements OnChanges 
     if (currentPoi != null) {
       const icn = this._getIcnFromTaxonomies(currentPoi.properties.taxonomyIdentifiers);
       let geometry = null;
-      if(currentPoi.geometry.coordinates != null) {
-
+      if (currentPoi.geometry.coordinates != null) {
         const coordinates = [
           currentPoi.geometry.coordinates[0] as number,
-        currentPoi.geometry.coordinates[1] as number,
-      ] || [0, 0];
-      const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
-       geometry = new Point([position[0], position[1]]);
-    } else {
-      geometry =currentPoi.geometry;
-    }
+          currentPoi.geometry.coordinates[1] as number,
+        ] || [0, 0];
+        const position = fromLonLat([coordinates[0] as number, coordinates[1] as number]);
+        geometry = new Point([position[0], position[1]]);
+      } else {
+        geometry = currentPoi.geometry;
+      }
       const iconFeature = new Feature({
         type: 'icon',
         geometry,

@@ -53,6 +53,7 @@ export class MapPage {
     .select(pois)
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   slideOptions = {
     on: {
@@ -104,15 +105,11 @@ export class MapPage {
     this.currentPoi$.next(currentPoi);
   }
 
-  setPoi(poi:any): void {
-    console.log(poi.properties)
-    this.currentPoi$.next(poi);
-  }
-
   phone(_): void {}
 
   resetPoi(): void {
     this.currentPoi$.next(null);
+    this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
   }
 
   setCurrentFilters(filters: string[]): void {
@@ -121,6 +118,11 @@ export class MapPage {
 
   setCurrentLocation(event): void {
     this.currentPosition$.next(event);
+  }
+
+  setPoi(poi: any): void {
+    console.log(poi.properties);
+    this.currentPoi$.next(poi);
   }
 
   showPhoto(idx) {
