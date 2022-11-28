@@ -2,27 +2,28 @@
   <div class="webmapp-pageroute-map-container">
     <wm-map
       #wmap
-      wmMapLayer
-      wmMapPois
-      wmMapPosition
-      [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
-      [wmMapOverlay]="enableOverLay$|async"
-      [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
-      [reset]="resetEvt$|async"
-      [layer]="currentLayer$|async"
       [conf]="confMap$|async"
-      [map]="wmap.map$|async"
+      [map]="(wmap.map$|async)"
+      [reset]="resetEvt$|async"
+      [padding]="padding$|async"
+      wmMapLayer
+      [layer]="currentLayer$|async"
+      [dataLayerUrls]="dataLayerUrls$|async"
+      [disableLayers]="(currentFilters$|async).length > 0"
+      (trackSelectedFromLayerEVT)="goToTrack($event)"
+      wmMapPois
       [poi]="currentPoiID$|async"
       [pois]="pois$|async"
-      [padding]="padding$|async"
       [filters]="currentFilters$|async"
-      [position]="setCurrentPosition$|async"
-      [isLoggedIn]="isLoggedIn$|async"
-      [disableLayers]="(currentFilters$|async).length > 0"
-      (locationEvt)="setCurrentLocation($event)"
-      (trackSelectedFromLayerEVT)="goToTrack($event)"
+      [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
+      [onClick]="wmap.clickEVT$"
       (poi-click)="openPoi($event)"
       (currentPoiEvt)="setPoi($event)"
+      wmMapPosition
+      [position]="setCurrentPosition$|async"
+      (locationEvt)="setCurrentLocation($event)"
+      [wmMapOverlay]="enableOverLay$|async"
+      [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
     ></wm-map>
   </div>
   <div class="wm-fab-buttons">

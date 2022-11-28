@@ -1,6 +1,21 @@
 @import 'src/theme/mixins.scss';
 @import '~@ionic/angular/css/ionic-swiper';
 webmapp-map-page {
+  .webmapp-pageroute-map-container {
+    width: 100%;
+    height: 100%;
+    display: block;
+    height: 100vh;
+    position: relative;
+    .webmapp-pageroute-map {
+      width: 100%;
+
+      // height: 360px;
+      // margin-top: 110px;
+      // margin-bottom: 47px;
+      display: block;
+    }
+  }
   ion-progress-bar {
     position: absolute;
     top: 0;
@@ -8,6 +23,10 @@ webmapp-map-page {
     left: 0;
     right: 0;
     width: 0%;
+  }
+  wm-map {
+    width: 100%;
+    height: 100%;
   }
   .success {
     .progress {

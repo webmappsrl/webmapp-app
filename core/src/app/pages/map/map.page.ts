@@ -1,24 +1,29 @@
-import {BehaviorSubject, Observable} from 'rxjs';
 import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
 import {IonSlides} from '@ionic/angular';
-import {beforeInit, setTransition, setTranslate} from '../poi/utils';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
+
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
+import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {
   currentFilters,
   currentPoiID,
   mapCurrentLayer,
   padding,
 } from 'src/app/store/map/map.selector';
-import {map, tap, withLatestFrom} from 'rxjs/operators';
-import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {loadPois} from 'src/app/store/pois/pois.actions';
+import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
-import {AuthService} from 'src/app/services/auth.service';
 import {Browser} from '@capacitor/browser';
-import {DeviceService} from 'src/app/services/base/device.service';
 import {Store} from '@ngrx/store';
-import {pois} from 'src/app/store/pois/pois.selector';
+import {AuthService} from 'src/app/services/auth.service';
+import {DeviceService} from 'src/app/services/base/device.service';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
-
+import {pois} from 'src/app/store/pois/pois.selector';
+export interface IDATALAYER {
+  high: string;
+  low: string;
+}
 @Component({
   selector: 'webmapp-map-page',
   templateUrl: './map.page.html',
@@ -32,7 +37,7 @@ export class MapPage {
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
-        // this._store.dispatch(loadPois());
+        this._store.dispatch(loadPois());
       }
     }),
   );
@@ -57,9 +62,9 @@ export class MapPage {
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  enableOverLay$: Observable<boolean> = this._store
-    .select(confGeohubId)
-    .pipe(map(gid => gid === 13));
+  dataLayerUrls$: Observable<IDATALAYER>;
+  enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   padding$: Observable<number[]> = this._store.select(padding);
@@ -85,6 +90,18 @@ export class MapPage {
     private _deviceService: DeviceService,
     private _authSvc: AuthService,
   ) {
+    this.dataLayerUrls$ = this.geohubId$.pipe(
+      filter(g => g != null),
+      map(geohubId => {
+        if (geohubId == 13) {
+          this.enableOverLay$.next(true);
+        }
+        return {
+          low: `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_low_${geohubId}`,
+          high: `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_high_${geohubId}`,
+        } as IDATALAYER;
+      }),
+    );
     this.sliderOptions = {
       initialSlide: 0,
       speed: 400,
@@ -114,9 +131,9 @@ export class MapPage {
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
 
-  openPoi(poiID: number) {
+  openPoi(poiID: Event | number) {
     this._store.dispatch(openDetails({openDetails: true}));
-    this.currentPoiID$.next(poiID);
+    this.currentPoiID$.next(+poiID);
     const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
     this.currentPoi$.next(currentPoi);
   }
@@ -137,8 +154,11 @@ export class MapPage {
   }
 
   setPoi(poi: any): void {
-    console.log(poi.properties);
-    this.currentPoi$.next(poi);
+    const oldID = this.currentPoi$.value?.properties?.id || -1;
+    if (oldID != poi.properties.id) {
+      console.log(poi.properties);
+      this.currentPoi$.next(poi);
+    }
   }
 
   showPhoto(idx) {
