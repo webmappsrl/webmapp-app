@@ -18,7 +18,7 @@ import {Browser} from '@capacitor/browser';
 import {Store} from '@ngrx/store';
 import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
-import {fromHEXToColor} from 'src/app/shared/map-core/utils';
+import {fromHEXToColor, Log} from 'src/app/shared/map-core/utils';
 import {pois} from 'src/app/store/pois/pois.selector';
 export interface IDATALAYER {
   high: string;
@@ -157,11 +157,9 @@ export class MapPage {
   setCurrentLocation(event): void {
     this.currentPosition$.next(event);
   }
-
   setPoi(poi: any): void {
     const oldID = this.currentPoi$.value?.properties?.id || -1;
     if (oldID != poi.properties.id) {
-      console.log(poi.properties);
       this.currentPoi$.next(poi);
     }
   }

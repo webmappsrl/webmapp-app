@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
+import {Log} from 'src/app/shared/map-core/utils';
 
 import {IHOME, ILAYER} from 'src/app/types/config';
 
@@ -35,7 +36,5 @@ export class HomeComponent implements OnChanges {
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
+  ngOnChanges(changes: SimpleChanges): void {}
 }
