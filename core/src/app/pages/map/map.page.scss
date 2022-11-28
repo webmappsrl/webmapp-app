@@ -5,7 +5,6 @@ webmapp-map-page {
     width: 100%;
     height: 100%;
     display: block;
-    height: 100vh;
     position: relative;
     .webmapp-pageroute-map {
       width: 100%;
@@ -59,6 +58,7 @@ webmapp-map-page {
     border-radius: 15px;
     background: white;
     width: 100%;
+    height: calc(100% - 57px) !important;
     padding: 10px;
 
     .webmapp-pagepoi-info-header {

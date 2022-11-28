@@ -24,7 +24,12 @@
       (locationEvt)="setCurrentLocation($event)"
       [wmMapOverlay]="enableOverLay$|async"
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
-    ></wm-map>
+    >
+      <wm-btn-track-recording
+        *ngIf="isTrackRecordingEnable$|async"
+        (start-recording)="startRecording$.next($event)"
+      ></wm-btn-track-recording>
+    </wm-map>
   </div>
   <div class="wm-fab-buttons">
     <wm-btn-center-position

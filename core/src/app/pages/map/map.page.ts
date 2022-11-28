@@ -39,6 +39,9 @@ export class MapPage {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
         this._store.dispatch(loadPois());
       }
+      if (c != null && c.record_track_show) {
+        this.isTrackRecordingEnable$.next(true);
+      }
     }),
   );
   confPOIS$: Observable<any> = this._store.select(confPOIS);
@@ -67,6 +70,7 @@ export class MapPage {
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
+  isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
@@ -84,6 +88,7 @@ export class MapPage {
     },
   };
   public sliderOptions: any;
+  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     private _store: Store,
