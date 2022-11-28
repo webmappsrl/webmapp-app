@@ -3,7 +3,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -16,7 +18,7 @@ import {IHOME, ILAYER} from 'src/app/types/config';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent {
+export class HomeComponent implements OnChanges {
   @Input() conf: IHOME[];
   @Output() openSlugEvt: EventEmitter<string> = new EventEmitter();
   @Output() selectedLayerEvt: EventEmitter<ILAYER | null | number> = new EventEmitter();
@@ -32,5 +34,8 @@ export class HomeComponent {
 
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 }

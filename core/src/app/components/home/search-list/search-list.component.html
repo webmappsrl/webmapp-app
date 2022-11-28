@@ -16,10 +16,14 @@
 </ion-segment>
 <ng-container *ngIf="currentTab$|async as currentTab">
   <ng-container *ngIf="currentTab === 'tracks'|| currentTab == null">
-    <wm-search-box *ngFor="let card of cards" [data]="card" (clickEVT)="selectTrack(card.id)">
-    </wm-search-box>
+    <ng-container *ngFor="let card of cards; let idx=index">
+      <wm-search-box *ngIf="idx <200" [data]="card" (clickEVT)="selectTrack(card.id)">
+      </wm-search-box>
+    </ng-container>
   </ng-container>
   <div *ngIf="currentTab === 'pois'">
-    <wm-poi-box *ngFor="let c of pois" [data]="c" (clickEVT)="selectPoi(c.id)"> </wm-poi-box>
+    <ng-container *ngFor="let c of pois;let idx=index">
+      <wm-poi-box *ngIf="idx <200" [data]="c" (clickEVT)="selectPoi(c.id)"> </wm-poi-box>
+    </ng-container>
   </div>
 </ng-container>

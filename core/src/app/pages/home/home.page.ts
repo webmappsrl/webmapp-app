@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -41,7 +43,7 @@ import {fromHEXToColor} from 'src/app/components/shared/map-core/utils';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnChanges {
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
@@ -127,6 +129,9 @@ export class HomePage implements OnInit {
   goToHome(): void {
     this.setLayer(null);
     this._navCtrl.navigateForward('home');
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
   }
 
   async ngOnInit() {
