@@ -125,7 +125,7 @@ export class MapPage {
   }
 
   email(_): void {}
-
+  @Log()
   goToTrack(id: number) {
     this.resetPoi();
     this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
