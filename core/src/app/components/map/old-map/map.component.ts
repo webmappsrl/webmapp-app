@@ -372,7 +372,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
       extent: this._mapService.extentFromLonLat([-180, -85, 180, 85]),
     });
 
-    let interactions = null;
+    let interactions = undefined;
     if (this.static) {
       interactions = defaultInteractions({
         doubleClickZoom: false,
@@ -1344,7 +1344,10 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  _getNearestFeatureOfLayer(layer: VectorLayer<VectorSource>, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
+  _getNearestFeatureOfLayer(
+    layer: VectorLayer<VectorSource>,
+    evt: MapBrowserEvent<UIEvent>,
+  ): Feature<Geometry> {
     const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     let nearestFeature = null;
     const features: Feature<Geometry>[] = [];

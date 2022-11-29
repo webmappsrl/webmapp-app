@@ -1,4 +1,4 @@
-@import "src/theme/mixins.scss";
+@import 'src/theme/mixins.scss';
 
 .webmapp-pageroute-content {
   position: relative;
@@ -8,10 +8,10 @@
   position: absolute;
   width: 100%;
   z-index: 999;
-    opacity: 1;
-    transition: height 0.3s, opacity 0.3s;
+  opacity: 1;
+  transition: height 0.3s, opacity 0.3s;
 
-  .webmapp-pageroute-header-hide{
+  .webmapp-pageroute-header-hide {
     opacity: 0;
     height: 0;
   }
@@ -33,6 +33,7 @@
 
 .webmapp-pageroute-map-container {
   width: 100%;
+  height: 100%;
   display: block;
   height: 100vh;
   position: relative;
@@ -54,7 +55,7 @@
   z-index: 10100;
   transition: bottom 0.3s;
 
-  &.webmapp-pageroute-infopanel-hide{
+  &.webmapp-pageroute-infopanel-hide {
     bottom: -840px !important;
   }
 
@@ -209,7 +210,7 @@
         color: var(--wm-color-dark);
         font-weight: var(--wm-font-weight-bold);
         ::after {
-          content: "";
+          content: '';
           display: block;
           width: 40%;
           margin-left: 30%;
@@ -282,7 +283,7 @@
   --color: var(--wm-color-dark);
   --background: var(--wm-color-light);
   --background-activated: var(--wm-color-dark);
-  --background-activated-opacity: 0.25; 
+  --background-activated-opacity: 0.25;
   --background-focused: var(--wm-color-light);
   --background-focused-opacity: 0;
   --background-hover: var(--wm-color-light);
@@ -293,9 +294,8 @@
     top: calc(14px + env(safe-area-inset-top));
   }
 
-
   --padding-start: 32px;
-  ion-icon{
+  ion-icon {
     font-size: var(--wm-font-xxlg);
     position: absolute;
     left: -24px;
@@ -312,12 +312,12 @@
   background: var(--wm-color-dark);
   border-radius: 30px;
   bottom: 360px;
-  transition: bottom 0.3s,opacity 0.5s;
+  transition: bottom 0.3s, opacity 0.5s;
   opacity: 1;
-    z-index: 10500;
+  z-index: 10500;
   &.webmapp-pageroute-toolbox-hide {
     opacity: 0;
-    transition: opacity 0.5s ;
+    transition: opacity 0.5s;
   }
   &.webmapp-pageroute-toolbox-fullmap {
     bottom: 10px;
@@ -326,12 +326,12 @@
   &.webmapp-pageroute-toolbox-hideover {
     opacity: 0;
     bottom: 10px;
-    transition: bottom 0s,opacity 0.6s ;
+    transition: bottom 0s, opacity 0.6s;
   }
   &.webmapp-pageroute-toolbox-over {
     opacity: 1;
     bottom: 10px;
-    transition: bottom 0s,opacity 0.6s ;
+    transition: bottom 0s, opacity 0.6s;
   }
 
   .webmapp-pageroute-toolbox-button {

@@ -6,9 +6,9 @@
 
 - SICAI: **12.1.17**
 
-- UCVS: **12.1.23**
+- UCVS: **12.1.28**
 
-- FUMAIOLOSENTIERI: **12.1.18** -> on going **12.1.23**
+- FUMAIOLOSENTIERI: **12.1.28**
 
 - GAVORRANO:**12.1.15**
 

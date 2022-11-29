@@ -89,12 +89,6 @@ export class BtnRegisterComponent implements OnInit {
         },
       },
       {
-        text: this.translations['components.map.register.vocal'],
-        handler: () => {
-          this.vocal();
-        },
-      },
-      {
         text: this.translations['components.map.register.cancel'],
         role: 'cancel',
         handler: () => {},
