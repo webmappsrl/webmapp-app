@@ -34,7 +34,7 @@ import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
-import {fromHEXToColor} from 'src/app/components/shared/map-core/utils';
+import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 
 @Component({
   selector: 'wm-page-home',

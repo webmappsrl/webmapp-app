@@ -14,7 +14,7 @@ import {OldMapComponent} from './old-map/map.component';
 import {PipeModule} from 'src/app/pipes/pipe.module';
 import {PopoverRegisterComponent} from './popover-register/popover-register.component';
 import {TranslateModule} from '@ngx-translate/core';
-import {WmMapModule} from '../shared/map-core/map-core.module';
+import {WmMapModule} from 'src/app/shared/map-core/map-core.module';
 @NgModule({
   declarations: [
     BtnGeolocationComponent,
