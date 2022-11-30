@@ -20,31 +20,33 @@
       (poi-click)="openPoi($event)"
       (currentPoiEvt)="setPoi($event)"
       wmMapPosition
-      [position]="setCurrentPosition$|async"
-      (locationEvt)="setCurrentLocation($event)"
+      [wmMapPositioncurrentLocation]="currentPosition$|async"
+      [wmMapPositionCenter]="centerPositionEvt$|async"
       [wmMapOverlay]="enableOverLay$|async"
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
     >
+      <div top-right>
+        <ng-container *ngIf="confPOIS$|async as confPois">
+          <wm-btn-filter
+            *ngIf="confPois.apppoisApiLayer"
+            [filters]="confPOISFilter$|async"
+            [initSelectedFilters]="currentFilters$|async"
+            (selectedFilters)="setCurrentFilters($event)"
+          ></wm-btn-filter>
+        </ng-container>
+      </div>
       <wm-btn-track-recording
+        bottom-right
         *ngIf="isTrackRecordingEnable$|async"
         (start-recording)="startRecording$.next($event)"
       ></wm-btn-track-recording>
+      <wm-btn-center-position
+        bottom-right
+        *ngIf="false"
+        (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+      ></wm-btn-center-position>
     </wm-map>
   </div>
-  <div class="wm-fab-buttons">
-    <wm-btn-center-position
-      *ngIf="false"
-      (click)="setCurrentPosition$.next($event)"
-    ></wm-btn-center-position>
-  </div>
-  <ng-container *ngIf="confPOIS$|async as confPois">
-    <wm-btn-filter
-      *ngIf="confPois.apppoisApiLayer"
-      [filters]="confPOISFilter$|async"
-      [initSelectedFilters]="currentFilters$|async"
-      (selectedFilters)="setCurrentFilters($event)"
-    ></wm-btn-filter>
-  </ng-container>
 
   <ng-container *ngIf="currentPoi$|async as currentPoi">
     <ng-container *ngIf="currentPoi.properties as properties">

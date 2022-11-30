@@ -18,6 +18,7 @@ import {SearchBarComponent} from './search-bar/search-bar.component';
 import {TrackAudioComponent} from './track-audio/track-audio.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {RelatedUrlsComponent} from './related-urls/related-urls.component';
+import {ButtonsModule} from './buttons/buttons.module';
 
 const components = [
   LoginComponent,
@@ -43,7 +44,8 @@ const components = [
     ReactiveFormsModule,
     TranslateModule,
     PipeModule,
+    ButtonsModule,
   ],
-  exports: components,
+  exports: [...components, ButtonsModule],
 })
 export class SharedModule {}

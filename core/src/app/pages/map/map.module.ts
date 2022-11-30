@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {TranslateModule} from '@ngx-translate/core';
 
-import {ButtonsModule} from 'src/app/components/shared/map-core/buttons/buttons.module';
+import {ButtonsModule} from 'src/app/components/shared/buttons/buttons.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {PipeModule} from 'src/app/pipes/pipe.module';
 import {WmMapModule} from 'src/app/shared/map-core/map-core.module';

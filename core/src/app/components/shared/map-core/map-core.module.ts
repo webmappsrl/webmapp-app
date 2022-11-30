@@ -1,7 +1,7 @@
 import {WmMapOverlayDirective} from './overlay.directive';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
-import {BtnTiles} from './buttons/btn-tiles/btn-tiles';
-import {ButtonsModule} from './buttons/buttons.module';
+import {BtnTiles} from '../buttons/btn-tiles/btn-tiles';
+import {ButtonsModule} from '../buttons/buttons.module';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {WmMapComponent} from './component/map/map.component';
@@ -24,7 +24,7 @@ const components = [WmMapComponent];
 
 @NgModule({
   declarations: [...components, ...directives],
-  imports: [CommonModule, ButtonsModule],
+  imports: [CommonModule],
   providers: [BackgroundGeolocation],
   exports: [...components, ...directives],
 })

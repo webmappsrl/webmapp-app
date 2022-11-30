@@ -3,6 +3,8 @@ webmapp-filter {
   ion-segment {
     --background: var(--wm-color-primary);
   }
+  z-index: 1;
+  display: block;
 }
 ion-segment {
   ion-segment-button {

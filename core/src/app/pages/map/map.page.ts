@@ -1,7 +1,14 @@
-import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+  ViewEncapsulation,
+  OnDestroy,
+  EventEmitter,
+} from '@angular/core';
 import {IonSlides} from '@ionic/angular';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, from, Observable, Subscription} from 'rxjs';
+import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
@@ -20,6 +27,13 @@ import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {fromHEXToColor, Log} from 'src/app/shared/map-core/utils';
 import {pois} from 'src/app/store/pois/pois.selector';
+import {
+  BackgroundGeolocation,
+  BackgroundGeolocationConfig,
+  BackgroundGeolocationEvents,
+  BackgroundGeolocationLocationProvider,
+  BackgroundGeolocationResponse,
+} from '@awesome-cordova-plugins/background-geolocation/ngx';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -31,9 +45,9 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage {
+export class MapPage implements OnDestroy {
   @ViewChild('gallery') slider: IonSlides;
-
+  private _bgLocSub: Subscription = Subscription.EMPTY;
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
@@ -77,6 +91,7 @@ export class MapPage {
   pois$: Observable<any> = this._store
     .select(pois)
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
+  centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -94,6 +109,7 @@ export class MapPage {
     private _store: Store,
     private _deviceService: DeviceService,
     private _authSvc: AuthService,
+    private _backgroundGeolocation: BackgroundGeolocation,
   ) {
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
@@ -122,6 +138,69 @@ export class MapPage {
       .subscribe(([id, pois]) => {
         if (id != null && pois != null) this.openPoi(id);
       });
+
+    this._initBackgroundGeolocation();
+  }
+  ngOnDestroy(): void {
+    this._bgLocSub.unsubscribe();
+  }
+  private _initBackgroundGeolocation(): void {
+    const androidConfig: BackgroundGeolocationConfig = {
+      startOnBoot: false,
+      interval: 1500,
+      fastestInterval: 1500,
+      startForeground: false,
+    };
+    const commonConfig: BackgroundGeolocationConfig = {
+      desiredAccuracy: 0,
+      activityType: 'OtherNavigation',
+      stationaryRadius: 0,
+      locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
+      debug: false,
+      stopOnTerminate: true,
+    };
+    const config: BackgroundGeolocationConfig = {
+      ...commonConfig,
+      ...androidConfig,
+    };
+    from(
+      this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
+        console.log('ERROR', e);
+        return {
+          longitude: 14.0618579,
+          latitude: 37.494745,
+          bearing: 0,
+        } as BackgroundGeolocationResponse;
+      }),
+    )
+      .pipe(take(1))
+      .subscribe((loc: BackgroundGeolocationResponse) => {
+        if (loc != null) {
+          this.setCurrentLocation(loc);
+        }
+      });
+    this._backgroundGeolocation
+      .configure(config)
+      .then(() => {
+        this._bgLocSub = this._backgroundGeolocation
+          .on(BackgroundGeolocationEvents.location)
+          .subscribe((loc: BackgroundGeolocationResponse) => {
+            this.setCurrentLocation(loc);
+          });
+      })
+      .catch((e: Error) => {
+        console.log('ERROR', e);
+        navigator.geolocation.watchPosition(
+          res => {
+            this.setCurrentLocation(res.coords);
+          },
+          function errorCallback(error) {
+            // console.log(error);
+          },
+          {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
+        );
+      });
+    this._backgroundGeolocation.start();
   }
 
   email(_): void {}

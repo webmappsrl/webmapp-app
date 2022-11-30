@@ -32,11 +32,7 @@ webmapp-map-page {
       background: green;
     }
   }
-  wm-btn-filter {
-    position: absolute;
-    top: calc(2% + env(safe-area-inset-top));
-    right: calc(2% + 50px) !important;
-  }
+
   .webmapp-poi-close {
     position: fixed;
     top: calc(10px + env(safe-area-inset-top));
