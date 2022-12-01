@@ -30,7 +30,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "/Users/bongiu/Documents/apps/webmapp-app/core/src/app/shared/map-core/assets",
+                "input": "src/app/shared/map-core/assets",
                 "output": "map-core/assets"
               },
               {
