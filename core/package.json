@@ -58,6 +58,7 @@
     "cordova-plugin-telerik-imagepicker": "^2.3.6",
     "cordova-sqlite-storage": "^6.0.0",
     "cordova.plugins.diagnostic": "^6.0.4",
+    "graphhopper-js-api-client": "^5.0.2",
     "ol": "7.1.0",
     "ol-ext": "^4.0.2",
     "rxjs": "~6.6.0",

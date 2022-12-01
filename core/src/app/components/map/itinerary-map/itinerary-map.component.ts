@@ -80,13 +80,18 @@ import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {getDistance} from 'ol/sphere';
 import {IMAP} from 'src/app/types/config';
+import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
+import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 
 @Component({
   selector: 'itinerary-webmapp-map',
   templateUrl: './itinerary-map.component.html',
   styleUrls: ['./itinerary-map.component.scss'],
 })
-export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class ItineraryMapComponent
+  extends GeolocationPage
+  implements AfterViewInit, OnDestroy, OnChanges
+{
   private _bottomPadding: number = 0;
   private _clusterLayer: VectorLayer<VectorSource>;
   private _clusterMarkers: ClusterMarker[] = [];
@@ -191,7 +196,9 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     private _tilesService: TilesService,
     private _storeMap: Store<IMapRootState>,
     private _cdr: ChangeDetectorRef,
+    _backgroundGeolocation: BackgroundGeolocation,
   ) {
+    super(_backgroundGeolocation);
     this._locationIcon = {
       layer: null,
       location: null,
@@ -387,7 +394,10 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
     return ret;
   }
 
-  _getNearestFeatureOfLayer(layer: VectorLayer<VectorSource>, evt: MapBrowserEvent<UIEvent>): Feature<Geometry> {
+  _getNearestFeatureOfLayer(
+    layer: VectorLayer<VectorSource>,
+    evt: MapBrowserEvent<UIEvent>,
+  ): Feature<Geometry> {
     const precision = this._view.getResolution() * DEF_MAP_CLUSTER_CLICK_TOLERANCE;
     let nearestFeature = null;
     const features: Feature<Geometry>[] = [];
@@ -738,6 +748,7 @@ export class ItineraryMapComponent implements AfterViewInit, OnDestroy, OnChange
   }
 
   ngOnDestroy() {
+    super.ngOnDestroy();
     clearInterval(this.timer);
     this._destroyer.next(true);
   }

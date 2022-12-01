@@ -7,8 +7,8 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {IonSlides} from '@ionic/angular';
-import {BehaviorSubject, from, Observable, Subscription} from 'rxjs';
-import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
@@ -27,13 +27,8 @@ import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {fromHEXToColor, Log} from 'src/app/shared/map-core/utils';
 import {pois} from 'src/app/store/pois/pois.selector';
-import {
-  BackgroundGeolocation,
-  BackgroundGeolocationConfig,
-  BackgroundGeolocationEvents,
-  BackgroundGeolocationLocationProvider,
-  BackgroundGeolocationResponse,
-} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {GeolocationPage} from '../abstract/geolocation';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -45,9 +40,8 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage implements OnDestroy {
+export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild('gallery') slider: IonSlides;
-  private _bgLocSub: Subscription = Subscription.EMPTY;
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
@@ -78,7 +72,6 @@ export class MapPage implements OnDestroy {
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
-  currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   dataLayerUrls$: Observable<IDATALAYER>;
   enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   geohubId$ = this._store.select(confGeohubId);
@@ -91,10 +84,8 @@ export class MapPage implements OnDestroy {
   pois$: Observable<any> = this._store
     .select(pois)
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
-  centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  setCurrentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   slideOptions = {
     on: {
       beforeInit,
@@ -103,14 +94,14 @@ export class MapPage implements OnDestroy {
     },
   };
   public sliderOptions: any;
-  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(
     private _store: Store,
     private _deviceService: DeviceService,
     private _authSvc: AuthService,
-    private _backgroundGeolocation: BackgroundGeolocation,
+    _backgroundGeolocation: BackgroundGeolocation,
   ) {
+    super(_backgroundGeolocation);
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -138,69 +129,10 @@ export class MapPage implements OnDestroy {
       .subscribe(([id, pois]) => {
         if (id != null && pois != null) this.openPoi(id);
       });
+  }
 
-    this._initBackgroundGeolocation();
-  }
   ngOnDestroy(): void {
-    this._bgLocSub.unsubscribe();
-  }
-  private _initBackgroundGeolocation(): void {
-    const androidConfig: BackgroundGeolocationConfig = {
-      startOnBoot: false,
-      interval: 1500,
-      fastestInterval: 1500,
-      startForeground: false,
-    };
-    const commonConfig: BackgroundGeolocationConfig = {
-      desiredAccuracy: 0,
-      activityType: 'OtherNavigation',
-      stationaryRadius: 0,
-      locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-      debug: false,
-      stopOnTerminate: true,
-    };
-    const config: BackgroundGeolocationConfig = {
-      ...commonConfig,
-      ...androidConfig,
-    };
-    from(
-      this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
-        console.log('ERROR', e);
-        return {
-          longitude: 14.0618579,
-          latitude: 37.494745,
-          bearing: 0,
-        } as BackgroundGeolocationResponse;
-      }),
-    )
-      .pipe(take(1))
-      .subscribe((loc: BackgroundGeolocationResponse) => {
-        if (loc != null) {
-          this.setCurrentLocation(loc);
-        }
-      });
-    this._backgroundGeolocation
-      .configure(config)
-      .then(() => {
-        this._bgLocSub = this._backgroundGeolocation
-          .on(BackgroundGeolocationEvents.location)
-          .subscribe((loc: BackgroundGeolocationResponse) => {
-            this.setCurrentLocation(loc);
-          });
-      })
-      .catch((e: Error) => {
-        console.log('ERROR', e);
-        navigator.geolocation.watchPosition(
-          res => {
-            this.setCurrentLocation(res.coords);
-          },
-          function errorCallback(error) {
-            // console.log(error);
-          },
-          {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
-        );
-      });
-    this._backgroundGeolocation.start();
+    super.ngOnDestroy();
   }
 
   email(_): void {}
@@ -233,9 +165,6 @@ export class MapPage implements OnDestroy {
     this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
 
-  setCurrentLocation(event): void {
-    this.currentPosition$.next(event);
-  }
   setPoi(poi: any): void {
     const oldID = this.currentPoi$.value?.properties?.id || -1;
     if (oldID != poi.properties.id) {
