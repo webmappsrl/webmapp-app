@@ -194,7 +194,7 @@ export class MapComponent implements OnDestroy {
       });
   }
 
-  @Input('padding') set mapPadding(padding: number[]) {
+  @Input('wmMapPadding') set mapPadding(padding: number[]) {
     this._padding$.next(padding);
     if (padding != null && padding[3] != null) {
       this.scaleLineStyle$.next(padding[3]);
@@ -329,7 +329,10 @@ export class MapComponent implements OnDestroy {
     return {iconFeature, style};
   }
 
-  private _createLayer(layer: VectorLayer<VectorSource>, zIndex: number): VectorLayer<VectorSource> {
+  private _createLayer(
+    layer: VectorLayer<VectorSource>,
+    zIndex: number,
+  ): VectorLayer<VectorSource> {
     if (!layer) {
       layer = new VectorLayer({
         source: new VectorSource({

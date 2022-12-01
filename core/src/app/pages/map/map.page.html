@@ -2,19 +2,19 @@
   <div class="webmapp-pageroute-map-container">
     <wm-map
       #wmap
-      [conf]="confMap$|async"
-      [map]="(wmap.map$|async)"
+      [wmMapConf]="confMap$|async"
+      [wmMapMap]="(wmap.map$|async)"
       [reset]="resetEvt$|async"
-      [padding]="padding$|async"
+      [wmMapPadding]="padding$|async"
       wmMapLayer
-      [layer]="currentLayer$|async"
-      [dataLayerUrls]="dataLayerUrls$|async"
-      [disableLayers]="(currentFilters$|async).length > 0"
+      [wmMapLayerLayer]="currentLayer$|async"
+      [wmMapLayerDataLayerUrls]="dataLayerUrls$|async"
+      [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
       wmMapPois
-      [poi]="currentPoiID$|async"
-      [pois]="pois$|async"
-      [filters]="currentFilters$|async"
+      [wmMapPoisPoi]="currentPoiID$|async"
+      [wmMapPoisPois]="pois$|async"
+      [wmMapPoisFilters]="currentFilters$|async"
       [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
       [onClick]="wmap.clickEVT$"
       (poi-click)="openPoi($event)"
