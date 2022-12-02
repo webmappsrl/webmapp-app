@@ -33,28 +33,46 @@
   </div>
 
   <div #mapcontainer class="webmapp-pageroute-map-container">
-    <ng-container *ngIf="mapConf$|async as mapConf">
-      <itinerary-webmapp-map
-        #map
-        [conf]="mapConf"
-        [static]="false"
-        [animation]="useAnimation"
-        [track]="(currentTrack$|async)?.geometry"
-        [hideRegister]="true"
-        [hidePosition]="true"
-        [btnposition]="modeFullMap?'bottom': 'middle'"
-        [noPoiSelection]="true"
-        [alertPoiRadius]="mapConf.alert_poi_radius"
-        [focus]="focus$|async"
-        (clickpoi)="clickPoi($event)"
-        [height]="mapHeigth()"
-        [slopeChartElements]="trackElevationChartHoverElements$|async"
-        [cache]="useCache"
-        (rotate)="mapRotation($event)"
-        (touch)="resetFocus()"
-        (nearestPoiEvt)="nearestPoi$.next($event)"
-      ></itinerary-webmapp-map>
-    </ng-container>
+    <wm-map
+      #wmap
+      [wmMapConf]="mapConf$|async"
+      [wmMapMap]="(wmap.map$|async)"
+      [onClick]="wmap.clickEVT$"
+      (wmMapRotate)="mapRotation($event)"
+      wmMapTrack
+      [track]="(currentTrack$|async)"
+      wmMapTrackRelatedPois
+      [wmMapTrackRelatedPoisAlertPoiRadius]="(mapConf$|async).alert_poi_radius"
+      (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
+      (related-poi-click)="clickPoi($event)"
+      wmMapPosition
+      [wmMapPositionfocus]="focus$|async"
+      [wmMapPositioncurrentLocation]="currentPosition$|async"
+      [trackElevationChartElements]="trackElevationChartHoverElements$|async"
+    >
+      <ion-button
+        top-right
+        class="webmapp-pageroute-btnfullmap"
+        [hidden]="opacity < 0.5"
+        [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}"
+        (click)="toogleFullMap()"
+      >
+        <div [hidden]="!modeFullMap">
+          <ion-icon name="close-outline"></ion-icon>
+        </div>
+        <div [hidden]="modeFullMap">
+          <ion-icon name="resize-outline"></ion-icon>
+        </div>
+      </ion-button>
+      <webmapp-btn-orientation
+        bottom-right
+        class="webmapp-map-fab"
+        [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}"
+        [degrees]="wmap.mapDegrees"
+        (click)="wmap.orientNorth()"
+      >
+      </webmapp-btn-orientation>
+    </wm-map>
   </div>
 
   <div
@@ -187,18 +205,4 @@
       <ion-ripple-effect></ion-ripple-effect>
     </div>
   </div>
-
-  <ion-button
-    class="webmapp-pageroute-btnfullmap"
-    [hidden]="opacity < 0.5"
-    [ngClass]="{'webmapp-pageroute-btnfullmap-full':modeFullMap}"
-    (click)="toogleFullMap()"
-  >
-    <div [hidden]="!modeFullMap">
-      <ion-icon name="close-outline"></ion-icon>
-    </div>
-    <div [hidden]="modeFullMap">
-      <ion-icon name="resize-outline"></ion-icon>
-    </div>
-  </ion-button>
 </ion-content>

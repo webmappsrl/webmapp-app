@@ -1,4 +1,14 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   AlertController,
   Animation,
@@ -26,7 +36,7 @@ import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {confAUTHEnable, confMAP} from 'src/app/store/conf/conf.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
-import {mapCurrentTrack, mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
+import {mapCurrentTrack, mapCurrentTrackProperties, padding} from 'src/app/store/map/map.selector';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {
   IGeojsonFeature,
@@ -43,7 +53,7 @@ import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-c
   styleUrls: ['./itinerary.page.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ItineraryPage implements AfterViewInit, OnDestroy {
+export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnDestroy {
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -78,6 +88,7 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
         }
       }),
     );
+  padding$: Observable<number[]> = this._storeMap.select(padding);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   focus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public headerHeight = 105;
@@ -142,7 +153,9 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
     private _coinService: CoinService,
     private _storeConf: Store<IConfRootState>,
     private _authSvc: AuthService,
+    backgroundGeolocation: BackgroundGeolocation,
   ) {
+    super(backgroundGeolocation);
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentTrackProperties$
       .pipe(
@@ -164,13 +177,12 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
     this._navController.back();
   }
 
-  clickPoi(poi: IGeojsonPoi | Feature<Geometry>) {
+  clickPoi(poi: IGeojsonPoi | Feature<Geometry> | number) {
+    console.log(poi);
+    let id = poi;
     this._navController.navigateForward(['poi']);
     setTimeout(() => {
-      let id =
-        (poi as IGeojsonPoi).properties != null && (poi as IGeojsonPoi).properties.id != null
-          ? +(poi as IGeojsonPoi).properties.id
-          : undefined;
+      id = typeof id === 'number' ? id : poi && (poi as any)?.getId();
       if (id == undefined) {
         const prop = (poi as Feature<Geometry>).getProperties();
         if (prop != null && prop.id != null) {
@@ -180,9 +192,9 @@ export class ItineraryPage implements AfterViewInit, OnDestroy {
       this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +id}));
     }, 500);
   }
-ngAfterViewInit(): void {
- // this.setAnimations();
-}
+  ngAfterViewInit(): void {
+    // this.setAnimations();
+  }
   closeMenu() {
     this._menuController.close('optionMenu');
   }
@@ -283,6 +295,7 @@ ngAfterViewInit(): void {
   }
 
   ngOnDestroy(): void {
+    super.ngOnDestroy();
     this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
   }
 

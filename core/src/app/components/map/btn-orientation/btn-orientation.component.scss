@@ -1,10 +1,10 @@
-@import "src/theme/mixins.scss";
+@import 'src/theme/mixins.scss';
 
 .webmapp-btn-orientation-fab {
   margin: 0;
   @include box-shadow-light;
   border-radius: 20px;
-
+  z-index: 2;
   &.webmapp-btn-orientation-fab-light {
     --background: var(--wm-color-light);
     --color: var(--wm-color-dark);
@@ -17,10 +17,11 @@
   }
 }
 
-.webmapp-btn-orientation-icon{
-    font-size: 28px;
+.webmapp-btn-orientation-icon {
+  font-size: 28px;
 }
 
-.path2,.path4{
-  margin-left:1px;
+.path2,
+.path4 {
+  margin-left: 1px;
 }

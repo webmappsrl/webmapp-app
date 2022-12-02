@@ -1,3 +1,4 @@
+import {WmMapModule} from './../../shared/map-core/map-core.module';
 import {CommonModule} from '@angular/common';
 import {DownloadPanelComponent} from './download-panel/download-panel.component';
 import {FavBtnComponent} from './fav-btn/fav-btn.component';
@@ -29,6 +30,7 @@ import {TranslateModule} from '@ngx-translate/core';
     MapModule,
     PipeModule,
     SharedModule,
+    WmMapModule,
   ],
   declarations: [
     ItineraryPage,

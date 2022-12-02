@@ -149,97 +149,6 @@ export class ItineraryMapComponent
   };
   private _view: View;
 
-  @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
-  @Input('btnposition') btnposition: string = 'bottom';
-  @Input() conf: IMAP;
-  @Input() focus: boolean = false;
-  @Input('hideEndMarker') hideEndMarker: boolean = false;
-  @Input('hidePosition') hidePosition: boolean = false;
-  @Input('hideRegister') hideRegister: boolean = false;
-  @Input('noPoiSelection') nopoiSelection: boolean = false;
-  @Input('registering') registering: boolean = false;
-  @Input('showLayer') showLayer: boolean = false;
-  @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
-  @Input('animation') useAnimation: boolean = true;
-  @Input('cache') useCache: boolean = false;
-  @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
-  @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
-  @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
-  @Output() moveBtn: EventEmitter<number> = new EventEmitter();
-  @Output() nearestPoiEvt: EventEmitter<Feature<Geometry>> = new EventEmitter();
-  @Output() rotate: EventEmitter<number> = new EventEmitter();
-  @Output() touch: EventEmitter<any> = new EventEmitter();
-  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
-  @ViewChild('clusterContainer', {read: ViewContainerRef}) clusterContainer;
-  @ViewChild('map') mapDiv: ElementRef;
-  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
-
-  public centerToTrack: boolean = false;
-  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
-  public isLoggedIn: boolean = false;
-  public isRecordEnabled: boolean = false;
-  public isRecording: boolean = false;
-  public locationState: EMapLocationState;
-  public mapDegrees: number;
-  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
-  public showRecBtn: boolean = true;
-  public sortedComponent: any[] = [];
-  public static: boolean;
-  public timer: any;
-
-  constructor(
-    private _authService: AuthService,
-    private _configService: ConfigService,
-    private _geohubService: GeohubService,
-    private _mapService: MapService,
-    private _markerService: MarkerService,
-    private _tilesService: TilesService,
-    private _storeMap: Store<IMapRootState>,
-    private _cdr: ChangeDetectorRef,
-    _backgroundGeolocation: BackgroundGeolocation,
-  ) {
-    super(_backgroundGeolocation);
-    this._locationIcon = {
-      layer: null,
-      location: null,
-      accuracy: null,
-      point: null,
-      circle: null,
-      icon: 'locationIcon',
-    };
-
-    this._track = {
-      layer: null,
-      track: null,
-      markerslayer: null,
-      registeredTrack: null,
-    };
-
-    this._locationAnimationState = {
-      animating: false,
-    };
-    this._locationIconArrow = new Icon({
-      src: 'assets/images/location-icon-arrow.png',
-      scale: 0.33,
-      size: [125, 125],
-      rotateWithView: false,
-    });
-    this._locationIconStyle = new Style({
-      image: new Icon({
-        src: 'assets/images/location-icon.png',
-        scale: 0.29,
-        size: [125, 125],
-      }),
-      zIndex: DEF_LOCATION_Z_INDEX,
-    });
-    this._locationIconArrowStyle = new Style({
-      image: this._locationIconArrow,
-      zIndex: DEF_LOCATION_Z_INDEX,
-    });
-
-    this.isRecordEnabled = this._configService.isRecordEnabled();
-  }
-
   @Input('bottomPadding') set bottomPadding(value: number) {
     if (this._bottomPadding != value) {
       this._bottomPadding = value;
@@ -374,6 +283,97 @@ export class ItineraryMapComponent
 
   get itineraryMap(): Map {
     return this._map;
+  }
+
+  @Input() alertPoiRadius: number = ALERT_POI_RADIUS;
+  @Input('btnposition') btnposition: string = 'bottom';
+  @Input() conf: IMAP;
+  @Input() focus: boolean = false;
+  @Input('hideEndMarker') hideEndMarker: boolean = false;
+  @Input('hidePosition') hidePosition: boolean = false;
+  @Input('hideRegister') hideRegister: boolean = false;
+  @Input('noPoiSelection') nopoiSelection: boolean = false;
+  @Input('registering') registering: boolean = false;
+  @Input('showLayer') showLayer: boolean = false;
+  @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
+  @Input('animation') useAnimation: boolean = true;
+  @Input('cache') useCache: boolean = false;
+  @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
+  @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
+  @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
+  @Output() moveBtn: EventEmitter<number> = new EventEmitter();
+  @Output() nearestPoiEvt: EventEmitter<Feature<Geometry>> = new EventEmitter();
+  @Output() rotate: EventEmitter<number> = new EventEmitter();
+  @Output() touch: EventEmitter<any> = new EventEmitter();
+  @Output() unlocked: EventEmitter<boolean> = new EventEmitter();
+  @ViewChild('clusterContainer', {read: ViewContainerRef}) clusterContainer;
+  @ViewChild('map') mapDiv: ElementRef;
+  @ViewChild('scaleLineContainer') scaleLineContainer: ElementRef;
+
+  public centerToTrack: boolean = false;
+  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
+  public isLoggedIn: boolean = false;
+  public isRecordEnabled: boolean = false;
+  public isRecording: boolean = false;
+  public locationState: EMapLocationState;
+  public mapDegrees: number;
+  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
+  public showRecBtn: boolean = true;
+  public sortedComponent: any[] = [];
+  public static: boolean;
+  public timer: any;
+
+  constructor(
+    private _authService: AuthService,
+    private _configService: ConfigService,
+    private _geohubService: GeohubService,
+    private _mapService: MapService,
+    private _markerService: MarkerService,
+    private _tilesService: TilesService,
+    private _storeMap: Store<IMapRootState>,
+    private _cdr: ChangeDetectorRef,
+    _backgroundGeolocation: BackgroundGeolocation,
+  ) {
+    super(_backgroundGeolocation);
+    this._locationIcon = {
+      layer: null,
+      location: null,
+      accuracy: null,
+      point: null,
+      circle: null,
+      icon: 'locationIcon',
+    };
+
+    this._track = {
+      layer: null,
+      track: null,
+      markerslayer: null,
+      registeredTrack: null,
+    };
+
+    this._locationAnimationState = {
+      animating: false,
+    };
+    this._locationIconArrow = new Icon({
+      src: 'assets/images/location-icon-arrow.png',
+      scale: 0.33,
+      size: [125, 125],
+      rotateWithView: false,
+    });
+    this._locationIconStyle = new Style({
+      image: new Icon({
+        src: 'assets/images/location-icon.png',
+        scale: 0.29,
+        size: [125, 125],
+      }),
+      zIndex: DEF_LOCATION_Z_INDEX,
+    });
+    this._locationIconArrowStyle = new Style({
+      image: this._locationIconArrow,
+      zIndex: DEF_LOCATION_Z_INDEX,
+    });
+
+    this.isRecordEnabled = this._configService.isRecordEnabled();
   }
 
   _distance(c1: Coordinate, c2: Coordinate) {
@@ -559,9 +559,9 @@ export class ItineraryMapComponent
    */
   async drawTrack(trackgeojson: any) {
     const geojson: any = this.getGeoJson(trackgeojson);
-    const isFlowLine = this.conf.flow_line_quote_show || false;
-    const orangeTreshold = this.conf.flow_line_quote_orange || 800;
-    const redTreshold = this.conf.flow_line_quote_red || 1500;
+    const isFlowLine = this.conf?.flow_line_quote_show ?? false;
+    const orangeTreshold = this.conf?.flow_line_quote_orange ?? 800;
+    const redTreshold = this.conf?.flow_line_quote_red ?? 1500;
     const flowStyle = new FlowLine({
       lineCap: 'butt',
       color: function (f, step) {
