@@ -61,12 +61,6 @@ export class BtnTrackRecordingComponent {
             },
           },
           {
-            text: this._translateSvc.instant('components.map.register.vocal'),
-            handler: () => {
-              this.vocal();
-            },
-          },
-          {
             text: this._translateSvc.instant('components.map.register.cancel'),
             role: 'cancel',
             handler: () => {},
@@ -78,17 +72,16 @@ export class BtnTrackRecordingComponent {
       });
   }
 
-  private _track(): void {
-    const location: ILocation = this._geolocationSvc.location;
-    let state: any = {};
-
-    if (location && location.latitude && location.longitude) {
-      state = {
-        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
-      };
-    }
-
-    this._navCtrl.navigateForward('register');
+  async openModalSuccess(photos) {
+    const modaSuccess = await this._modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.PHOTOS,
+        photos,
+      },
+    });
+    await modaSuccess.present();
+    await modaSuccess.onDidDismiss();
   }
 
   async photo() {
@@ -119,15 +112,16 @@ export class BtnTrackRecordingComponent {
     this._navCtrl.navigateForward('waypoint');
   }
 
-  async openModalSuccess(photos) {
-    const modaSuccess = await this._modalController.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.PHOTOS,
-        photos,
-      },
-    });
-    await modaSuccess.present();
-    await modaSuccess.onDidDismiss();
+  private _track(): void {
+    const location: ILocation = this._geolocationSvc.location;
+    let state: any = {};
+
+    if (location && location.latitude && location.longitude) {
+      state = {
+        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
+      };
+    }
+
+    this._navCtrl.navigateForward('register');
   }
 }
