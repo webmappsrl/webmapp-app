@@ -35,6 +35,7 @@
   <div #mapcontainer class="webmapp-pageroute-map-container">
     <wm-map
       #wmap
+      wmMapTarget="ol-map-track"
       [wmMapConf]="mapConf$|async"
       [wmMapMap]="(wmap.map$|async)"
       [onClick]="wmap.clickEVT$"

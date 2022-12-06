@@ -42,6 +42,7 @@ export interface IDATALAYER {
 })
 export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild('gallery') slider: IonSlides;
+
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
@@ -131,20 +132,25 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {
-    super.ngOnDestroy();
-  }
-
-  email(_): void {}
   @Log()
   goToTrack(id: number) {
     this.resetPoi();
     this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
   }
 
+  email(_): void {}
+
+  ionViewDidEnter() {
+    this.resetEvt$.next(this.resetEvt$.value + 1);
+  }
+
   ionViewWillLeave() {
     this.resetPoi();
     this.resetEvt$.next(this.resetEvt$.value + 1);
+  }
+
+  ngOnDestroy(): void {
+    super.ngOnDestroy();
   }
 
   openPoi(poiID: Event | number) {
