@@ -36,6 +36,7 @@
       <wm-btn-track-recording
         bottom-right
         *ngIf="isTrackRecordingEnable$|async"
+        [isLogged]="isLoggedIn$|async"
         (start-recording)="startRecording$.next($event)"
       ></wm-btn-track-recording>
       <wm-btn-center-position

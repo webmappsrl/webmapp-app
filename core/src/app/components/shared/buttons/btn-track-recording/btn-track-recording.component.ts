@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Input,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphoto
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
 import {TranslateService} from '@ngx-translate/core';
+import {LoginComponent} from '../../login/login.component';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -25,6 +27,7 @@ import {TranslateService} from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BtnTrackRecordingComponent {
+  @Input() isLogged = false;
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -38,37 +41,54 @@ export class BtnTrackRecordingComponent {
   ) {}
 
   openActionSheet() {
-    this._actionSheetCtrl
+    if (this.isLogged) {
+      this._actionSheetCtrl
+        .create({
+          header: this._translateSvc.instant('components.map.register.title'),
+          buttons: [
+            {
+              text: this._translateSvc.instant('components.map.register.track'),
+              handler: () => {
+                this._track();
+              },
+            },
+            {
+              text: this._translateSvc.instant('components.map.register.photo'),
+              handler: () => {
+                this.photo();
+              },
+            },
+            {
+              text: this._translateSvc.instant('components.map.register.waypoint'),
+              handler: () => {
+                this.waypoint();
+              },
+            },
+            {
+              text: this._translateSvc.instant('components.map.register.cancel'),
+              role: 'cancel',
+              handler: () => {},
+            },
+          ],
+        })
+        .then(actionSheet => {
+          actionSheet.present();
+        });
+    } else {
+      this.openModalLogin();
+    }
+  }
+
+  openModalLogin() {
+    this._modalController
       .create({
-        header: this._translateSvc.instant('components.map.register.title'),
-        buttons: [
-          {
-            text: this._translateSvc.instant('components.map.register.track'),
-            handler: () => {
-              this._track();
-            },
-          },
-          {
-            text: this._translateSvc.instant('components.map.register.photo'),
-            handler: () => {
-              this.photo();
-            },
-          },
-          {
-            text: this._translateSvc.instant('components.map.register.waypoint'),
-            handler: () => {
-              this.waypoint();
-            },
-          },
-          {
-            text: this._translateSvc.instant('components.map.register.cancel'),
-            role: 'cancel',
-            handler: () => {},
-          },
-        ],
+        component: LoginComponent,
+        swipeToClose: true,
+        mode: 'ios',
+        id: 'webmapp-login-modal',
       })
-      .then(actionSheet => {
-        actionSheet.present();
+      .then(modal => {
+        modal.present();
       });
   }
 
