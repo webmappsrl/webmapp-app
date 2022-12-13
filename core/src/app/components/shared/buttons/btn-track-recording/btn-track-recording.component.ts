@@ -89,6 +89,13 @@ export class BtnTrackRecordingComponent {
       })
       .then(modal => {
         modal.present();
+        modal.onWillDismiss().then(res => {
+          this.isLogged = res.data as boolean;
+          if (this.isLogged) {
+            this.openActionSheet();
+          }
+        });
+       
       });
   }
 

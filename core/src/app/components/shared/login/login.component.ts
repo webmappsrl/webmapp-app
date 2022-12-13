@@ -11,13 +11,17 @@ import {LanguagesService} from 'src/app/services/languages.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  get errorControl() {
+    return this.loginForm.controls;
+  }
+
   @ViewChild('email') emailField: IonInput;
   @ViewChild('password') passwordField: IonInput;
 
-  public showPassword: boolean = false;
-  public logging: boolean = false;
   public isSubmitted: boolean = false;
+  public logging: boolean = false;
   public loginForm: FormGroup;
+  public showPassword: boolean = false;
 
   constructor(
     private _alertController: AlertController,
@@ -32,32 +36,19 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  get errorControl() {
-    return this.loginForm.controls;
+  dismiss(): void {
+    this._modalController.dismiss(this.logging);
   }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.setFocus();
-    }, 1000);
-  }
+  forgotPassword(): void {}
 
-  setFocus() {
-    this.emailField.setFocus();
-  }
-  openUrl(url: string): void {
-    window.open(url, '_blank');
-  }
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
-  }
   login(): void {
     this.isSubmitted = true;
     if (this.loginForm.valid) {
       this.logging = true;
       this._authService.login(this.emailField.value + '', this.passwordField.value + '').then(
-        () => {
-          this.logging = false;
+        res => {
+          this.logging = res;
           this.dismiss();
         },
         (loginError: HttpErrorResponse) => {
@@ -66,6 +57,20 @@ export class LoginComponent implements OnInit {
         },
       );
     }
+  }
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.setFocus();
+    }, 1000);
+  }
+
+  openUrl(url: string): void {
+    window.open(url, '_blank');
+  }
+
+  setFocus() {
+    this.emailField.setFocus();
   }
 
   showErrorAlert(error: HttpErrorResponse): void {
@@ -98,9 +103,7 @@ export class LoginComponent implements OnInit {
       );
   }
 
-  forgotPassword(): void {}
-
-  dismiss(): void {
-    this._modalController.dismiss('webmapp-login-modal');
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }
