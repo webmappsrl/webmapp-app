@@ -1,9 +1,6 @@
-import {setCurrentLayer, setCurrentTrackId} from 'src/app/store/map/map.actions';
-
 import {AuthService} from 'src/app/services/auth.service';
 import {Component} from '@angular/core';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {IMapRootState} from 'src/app/store/map/map';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {Observable} from 'rxjs';
 import {StatusService} from 'src/app/services/status.service';
@@ -23,7 +20,6 @@ export class TabsPage {
 
   constructor(
     private _statusService: StatusService,
-    private _storeMap: Store<IMapRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeNetwork: Store<INetworkRootState>,
     private _authSvc: AuthService,
@@ -33,10 +29,5 @@ export class TabsPage {
 
   isBarHidden() {
     return this._statusService.isSelectedMapTrack;
-  }
-
-  reset() {
-    // this._storeMap.dispatch(setCurrentLayer({currentLayer: null}));
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: null}));
   }
 }
