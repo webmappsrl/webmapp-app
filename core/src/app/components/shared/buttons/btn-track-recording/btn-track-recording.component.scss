@@ -4,7 +4,6 @@ wm-btn-track-recording {
   ion-fab-button {
     @include box-shadow-light;
 
-    margin: 0;
     border-radius: 20px;
 
     --color: var(--wm-color-primary);

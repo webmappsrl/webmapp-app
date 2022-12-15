@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {IonSlides} from '@ionic/angular';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, tap, withLatestFrom, switchMap, startWith} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
@@ -16,6 +16,7 @@ import {
   currentFilters,
   currentPoiID,
   mapCurrentLayer,
+  mapCurrentTrack,
   padding,
 } from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
@@ -29,6 +30,8 @@ import {fromHEXToColor, Log} from 'src/app/shared/map-core/utils';
 import {pois} from 'src/app/store/pois/pois.selector';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {GeolocationPage} from '../abstract/geolocation';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {GeohubService} from 'src/app/services/geohub.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -41,6 +44,8 @@ export interface IDATALAYER {
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage extends GeolocationPage implements OnDestroy {
+  readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+
   @ViewChild('gallery') slider: IonSlides;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
@@ -73,6 +78,11 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
+    switchMap(id => this._geohubSVC.getEcTrack(id)),
+    startWith(null),
+  );
+  layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   dataLayerUrls$: Observable<IDATALAYER>;
   enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   geohubId$ = this._store.select(confGeohubId);
@@ -100,6 +110,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     private _store: Store,
     private _deviceService: DeviceService,
     private _authSvc: AuthService,
+    private _geohubSVC: GeohubService,
     _backgroundGeolocation: BackgroundGeolocation,
   ) {
     super(_backgroundGeolocation);
@@ -132,13 +143,17 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       });
   }
 
-  @Log()
+  email(_): void {}
+
   goToTrack(id: number) {
     this.resetPoi();
-    this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
+    this.trackid$.next(id);
+    if (id != null && id !== -1) {
+      this.layerOpacity$.next(true);
+    } else {
+      this.layerOpacity$.next(false);
+    }
   }
-
-  email(_): void {}
 
   ionViewDidEnter() {
     this.resetEvt$.next(this.resetEvt$.value + 1);

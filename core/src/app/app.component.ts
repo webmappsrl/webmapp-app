@@ -81,9 +81,7 @@ export class AppComponent {
         SplashScreen.hide();
       },
     );
-    this._currentTrack$.pipe(filter(t => t != null)).subscribe(_ => {
-      this._navController.navigateForward('itinerary');
-    });
+
     this._downloadService.init();
 
     this._googleAnalytics

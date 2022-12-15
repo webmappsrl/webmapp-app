@@ -88,6 +88,7 @@ export class GeohubService {
    * @returns
    */
   async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+    if (id == null) return null;
     const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
       (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
     );

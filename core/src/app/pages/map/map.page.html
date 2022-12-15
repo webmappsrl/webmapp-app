@@ -8,6 +8,7 @@
       [wmMapLayerLayer]="currentLayer$|async"
       [wmMapLayerDataLayerUrls]="dataLayerUrls$|async"
       [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
+      [wmMapLayerOpacity]="layerOpacity$|async"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
       wmMapPois
       [wmMapPoisPoi]="currentPoiID$|async"
@@ -22,7 +23,15 @@
       [wmMapPositionCenter]="centerPositionEvt$|async"
       [wmMapOverlay]="enableOverLay$|async"
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
+      wmMapTrack
+      [track]="currentTrack$|async"
+      wmMapTrackRelatedPois
     >
+    <div top-left>
+      <ion-fab-button *ngIf="(trackid$|async)!= null" (click)="goToTrack(null)"size="small" class="webmapp-pagepoi-btntop">
+        <i class="icon-outline-close"></i>
+      </ion-fab-button>
+    </div>
       <div top-right>
         <ng-container *ngIf="confPOIS$|async as confPois">
           <wm-btn-filter
@@ -33,17 +42,24 @@
           ></wm-btn-filter>
         </ng-container>
       </div>
-      <wm-btn-track-recording
-        bottom-right
-        *ngIf="isTrackRecordingEnable$|async"
-        [isLogged]="isLoggedIn$|async"
-        (start-recording)="startRecording$.next($event)"
-      ></wm-btn-track-recording>
-      <wm-btn-center-position
-        bottom-right
-        *ngIf="false"
-        (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
-      ></wm-btn-center-position>
+      <div bottom-right>
+        <wm-btn-orientation
+          *ngIf="(trackid$|async)!= null"
+          class="webmapp-map-fab"
+          [degrees]="wmap.mapDegrees"
+          (click)="wmap.orientNorth()"
+        >
+        </wm-btn-orientation>
+        <wm-btn-track-recording
+          *ngIf="isTrackRecordingEnable$|async"
+          [isLogged]="isLoggedIn$|async"
+          (start-recording)="startRecording$.next($event)"
+        ></wm-btn-track-recording>
+        <wm-btn-center-position
+          *ngIf="false"
+          (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+        ></wm-btn-center-position>
+      </div>
     </wm-map>
   </div>
 
