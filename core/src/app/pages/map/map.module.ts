@@ -12,6 +12,7 @@ import {RegisterPageModule} from '../register/register.module';
 import {MapPageRoutingModule} from './map-routing.module';
 import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
 import {MapPage} from './map.page';
+import { MapTrackDetailsComponent } from './map-track-details/map-track-details.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,6 @@ import {MapPage} from './map.page';
     ButtonsModule,
     RegisterPageModule,
   ],
-  declarations: [MapPage, MapTrackCardComponent],
+  declarations: [MapPage, MapTrackCardComponent, MapTrackDetailsComponent],
 })
 export class MapPageModule {}

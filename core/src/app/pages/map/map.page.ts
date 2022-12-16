@@ -32,6 +32,7 @@ import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geoloca
 import {GeolocationPage} from '../abstract/geolocation';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
+import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -47,6 +48,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
   @ViewChild('gallery') slider: IonSlides;
+  @ViewChild(MapTrackDetailsComponent) mapTrackDetailsCmp: MapTrackDetailsComponent;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
@@ -150,8 +152,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.trackid$.next(id);
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
+      this.mapTrackDetailsCmp.open();
     } else {
       this.layerOpacity$.next(false);
+      this.mapTrackDetailsCmp.close();
     }
   }
 

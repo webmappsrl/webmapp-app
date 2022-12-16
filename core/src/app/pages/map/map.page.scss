@@ -6,12 +6,46 @@ webmapp-map-page {
     height: 100%;
     display: block;
     position: relative;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: nowrap;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: flex-start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -webkit-align-content: stretch;
+    -ms-flex-line-pack: stretch;
+    align-content: stretch;
+    -webkit-align-items: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+
+    > * {
+      -webkit-order: 0;
+      -ms-flex-order: 0;
+      order: 0;
+      -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+      flex: 0 1 auto;
+      -webkit-align-self: auto;
+      -ms-flex-item-align: auto;
+      align-self: auto;
+    }
     .webmapp-pageroute-map {
       width: 100%;
 
       // height: 360px;
       // margin-top: 110px;
       // margin-bottom: 47px;
+      display: block;
+    }
+    .opened {
+      height: 50%;
       display: block;
     }
   }
@@ -121,6 +155,4 @@ webmapp-map-page {
       }
     }
   }
-
-
 }
