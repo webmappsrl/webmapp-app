@@ -28,9 +28,13 @@
       wmMapTrackRelatedPois
     >
     <div top-left>
-      <ion-fab-button *ngIf="(trackid$|async)!= null" (click)="goToTrack(null)"size="small" class="webmapp-pagepoi-btntop">
-        <i class="icon-outline-close"></i>
-      </ion-fab-button>
+      <ng-container  *ngIf="(trackid$|async)!= null" >
+        <ion-fab-button (click)="goToTrack(null)"size="small" class="webmapp-pagepoi-btntop">
+          <i class="icon-outline-close"></i>
+        </ion-fab-button>
+
+      </ng-container>
+
     </div>
       <div top-right>
         <ng-container *ngIf="confPOIS$|async as confPois">
@@ -59,8 +63,32 @@
           *ngIf="false"
           (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
         ></wm-btn-center-position>
+        <ion-fab-button
+        top-right
+        class="webmapp-pageroute-btnfullmap"
+        *ngIf="(trackid$|async)!= null"
+        (click)="toogleFullMap()"
+      >
+        <div [hidden]="!modeFullMap">
+          <ion-icon name="close-outline"></ion-icon>
+        </div>
+        <div [hidden]="modeFullMap">
+          <ion-icon name="resize-outline"></ion-icon>
+        </div>
+      </ion-fab-button>
       </div>
     </wm-map>
-    <wm-map-track-details></wm-map-track-details>
+    <wm-map-track-details>
+      <ng-container *ngIf="currentTrack$|async as currentTrack">
+        <ng-container *ngIf="currentTrack.properties as prop">
+          <ion-label class="webmapp-pageroute-infopanel-name">
+            {{prop?.name | wmtrans}}
+          </ion-label>
+          <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
+            <div [innerHTML]="flowPopoverText"></div>
+          </ion-label>
+        </ng-container>
+      </ng-container>
+    </wm-map-track-details>
   </div>
 </ion-content>

@@ -46,7 +46,7 @@ export interface IDATALAYER {
 })
 export class MapPage extends GeolocationPage implements OnDestroy {
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-
+  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   @ViewChild(MapTrackDetailsComponent) mapTrackDetailsCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
 
@@ -91,6 +91,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  modeFullMap = false;
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
@@ -155,7 +156,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       this.mapTrackDetailsCmp.open();
     } else {
       this.layerOpacity$.next(false);
-      this.mapTrackDetailsCmp.close();
+      this.mapTrackDetailsCmp.none();
     }
   }
 
@@ -202,6 +203,15 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     setTimeout(() => {
       this.slider.slideTo(idx);
     }, 300);
+  }
+
+  toogleFullMap() {
+    this.modeFullMap = !this.modeFullMap;
+    if (this.mapTrackDetailsCmp.isNone) {
+      this.mapTrackDetailsCmp.open();
+    } else {
+      this.mapTrackDetailsCmp.none();
+    }
   }
 
   async url(url) {
