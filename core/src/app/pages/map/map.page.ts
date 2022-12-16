@@ -47,8 +47,8 @@ export interface IDATALAYER {
 export class MapPage extends GeolocationPage implements OnDestroy {
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
-  @ViewChild('gallery') slider: IonSlides;
   @ViewChild(MapTrackDetailsComponent) mapTrackDetailsCmp: MapTrackDetailsComponent;
+  @ViewChild('gallery') slider: IonSlides;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(c => {
@@ -84,13 +84,13 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     switchMap(id => this._geohubSVC.getEcTrack(id)),
     startWith(null),
   );
-  layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   dataLayerUrls$: Observable<IDATALAYER>;
   enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
