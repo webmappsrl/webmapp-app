@@ -13,6 +13,7 @@ import {MapPageRoutingModule} from './map-routing.module';
 import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
 import {MapPage} from './map.page';
 import { MapTrackDetailsComponent } from './map-track-details/map-track-details.component';
+import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { MapTrackDetailsComponent } from './map-track-details/map-track-details.
     WmMapModule,
     ButtonsModule,
     RegisterPageModule,
+    WmCoreModule,
   ],
   declarations: [MapPage, MapTrackCardComponent, MapTrackDetailsComponent],
 })

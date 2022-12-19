@@ -1,6 +1,10 @@
-<ion-card>
-    <div class="webmapp-pageroute-infopanel-drag" #dragHandleIcon>
-        <div class="webmapp-pageroute-infopanel-drag-handle"></div>
+<div class="wm-drag">
+  <div class="wm-drag-btn" #dragHandleIcon>
+    <div class="wm-drag-handle">
     </div>
-    <ng-content></ng-content>
+  </div>
+  <ng-content select="[header]"></ng-content>
+</div>
+<ion-card>
+  <ng-content ></ng-content>
 </ion-card>

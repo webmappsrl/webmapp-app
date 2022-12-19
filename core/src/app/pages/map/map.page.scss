@@ -56,6 +56,26 @@ webmapp-map-page {
     right: 0;
     width: 0%;
   }
+  ion-fab-button {
+    @include box-shadow-light;
+
+    border-radius: 20px;
+
+    --color: var(--wm-color-primary);
+    --background: var(--wm-color-light);
+    --background-activated: var(--wm-color-primary);
+    --background-activated-opacity: 0.25;
+    --background-focused: var(--wm-color-light);
+    --background-focused-opacity: 0;
+    --background-hover: var(--wm-color-light);
+    --background-hover-opacity: 0;
+    i {
+      width: 42px;
+      height: 42px;
+      padding: 9px;
+      font-size: var(--wm-font-icon);
+    }
+  }
   wm-map {
     width: 100%;
     height: 100%;

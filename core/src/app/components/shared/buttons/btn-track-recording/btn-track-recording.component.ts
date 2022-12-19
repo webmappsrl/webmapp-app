@@ -40,45 +40,6 @@ export class BtnTrackRecordingComponent {
     private _saveService: SaveService,
   ) {}
 
-  openActionSheet() {
-    if (this.isLogged) {
-      this._actionSheetCtrl
-        .create({
-          header: this._translateSvc.instant('components.map.register.title'),
-          buttons: [
-            {
-              text: this._translateSvc.instant('components.map.register.track'),
-              handler: () => {
-                this._track();
-              },
-            },
-            {
-              text: this._translateSvc.instant('components.map.register.photo'),
-              handler: () => {
-                this.photo();
-              },
-            },
-            {
-              text: this._translateSvc.instant('components.map.register.waypoint'),
-              handler: () => {
-                this.waypoint();
-              },
-            },
-            {
-              text: this._translateSvc.instant('components.map.register.cancel'),
-              role: 'cancel',
-              handler: () => {},
-            },
-          ],
-        })
-        .then(actionSheet => {
-          actionSheet.present();
-        });
-    } else {
-      this.openModalLogin();
-    }
-  }
-
   openModalLogin() {
     this._modalController
       .create({
@@ -91,11 +52,7 @@ export class BtnTrackRecordingComponent {
         modal.present();
         modal.onWillDismiss().then(res => {
           this.isLogged = res.data as boolean;
-          if (this.isLogged) {
-            this.openActionSheet();
-          }
         });
-       
       });
   }
 
@@ -112,43 +69,49 @@ export class BtnTrackRecordingComponent {
   }
 
   async photo() {
-    let photoCollection = await this._photoService.addPhotos();
+    if (this.isLogged) {
+      let photoCollection = await this._photoService.addPhotos();
 
-    const modal = await this._modalController.create({
-      component: ModalphotosaveComponent,
-      componentProps: {
-        photos: photoCollection,
-      },
-    });
-    await modal.present();
-    const res = await modal.onDidDismiss();
+      const modal = await this._modalController.create({
+        component: ModalphotosaveComponent,
+        componentProps: {
+          photos: photoCollection,
+        },
+      });
+      await modal.present();
+      const res = await modal.onDidDismiss();
 
-    if (!res.data.dismissed) {
-      await this._saveService.savePhotos(res.data.photos);
-
-      await this.openModalSuccess(res.data.photos);
+      if (!res.data.dismissed) {
+        await this._saveService.savePhotos(res.data.photos);
+        await this.openModalSuccess(res.data.photos);
+      }
+    } else {
+      this.openModalLogin();
     }
-
-    // Can be set to the src of an image now
-    // imageElement.src = imageUrl;
   }
-
-  vocal(): void {}
 
   waypoint() {
-    this._navCtrl.navigateForward('waypoint');
+    if (this.isLogged) {
+      this._navCtrl.navigateForward('waypoint');
+    } else {
+      this.openModalLogin();
+    }
   }
 
-  private _track(): void {
-    const location: ILocation = this._geolocationSvc.location;
-    let state: any = {};
+  track(): void {
+    if (this.isLogged) {
+      const location: ILocation = this._geolocationSvc.location;
+      let state: any = {};
 
-    if (location && location.latitude && location.longitude) {
-      state = {
-        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
-      };
+      if (location && location.latitude && location.longitude) {
+        state = {
+          startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
+        };
+      }
+
+      this._navCtrl.navigateForward('register');
+    } else {
+      this.openModalLogin();
     }
-
-    this._navCtrl.navigateForward('register');
   }
 }

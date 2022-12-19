@@ -12,8 +12,8 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
   selector: 'wm-map-track-details',
   templateUrl: './map-track-details.component.html',
   styleUrls: ['./map-track-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapTrackDetailsComponent implements AfterViewInit {
   private _animationClose: Animation;
@@ -73,7 +73,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       const animationClosePanel = this._animationCtrl
         .create()
         .addElement(this._elRef.nativeElement)
-        .fromTo('height', `${this.maxInfoheight - this.minInfoheight}px`, '75px');
+        .fromTo('height', `${this.maxInfoheight - this.minInfoheight}px`, '55px');
       const animationNonePanel = this._animationCtrl
         .create()
         .addElement(this._elRef.nativeElement)

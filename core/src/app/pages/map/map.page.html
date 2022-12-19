@@ -25,17 +25,16 @@
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
       wmMapTrack
       [track]="currentTrack$|async"
+      [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
     >
-    <div top-left>
-      <ng-container  *ngIf="(trackid$|async)!= null" >
-        <ion-fab-button (click)="goToTrack(null)"size="small" class="webmapp-pagepoi-btntop">
-          <i class="icon-outline-close"></i>
-        </ion-fab-button>
-
-      </ng-container>
-
-    </div>
+      <div top-left>
+        <ng-container *ngIf="(trackid$|async)!= null">
+          <ion-fab-button (click)="goToTrack(null)" size="small" class="webmapp-pagepoi-btntop">
+            <i class="icon-outline-close"></i>
+          </ion-fab-button>
+        </ng-container>
+      </div>
       <div top-right>
         <ng-container *ngIf="confPOIS$|async as confPois">
           <wm-btn-filter
@@ -47,48 +46,121 @@
         </ng-container>
       </div>
       <div bottom-right>
-        <wm-btn-orientation
+        <ion-fab
+          #fab1
+          class="social"
+          slot="fixed"
+          vertical="top"
+          horizontal="start"
           *ngIf="(trackid$|async)!= null"
-          class="webmapp-map-fab"
-          [degrees]="wmap.mapDegrees"
-          (click)="wmap.orientNorth()"
+          (click)="fab2.close();fab3.close()"
         >
-        </wm-btn-orientation>
-        <wm-btn-track-recording
+          <ion-fab-button>
+            <ion-icon name="share-social-outline"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="start">
+            <ion-fab-button>
+              <ion-icon name="download-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button>
+              <ion-icon name="share-social-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab-list>
+        </ion-fab>
+        <ion-fab
+          #fab2
+          class="social"
+          slot="fixed"
+          vertical="top"
+          horizontal="start"
+          (click)="fab1.close();fab3.close()"
+          *ngIf="(trackid$|async)!= null"
+        >
+          <ion-fab-button>
+            <ion-icon name="locate-outline"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-list side="start">
+            <wm-btn-orientation
+              *ngIf="(trackid$|async)!= null"
+              class="webmapp-map-fab"
+              [degrees]="wmap.mapDegrees"
+              (click)="wmap.orientNorth()"
+            >
+            </wm-btn-orientation>
+            <ion-fab-button>
+              <ion-icon name="navigate-outline"></ion-icon>
+            </ion-fab-button>
+            <wm-btn-center-position
+              *ngIf="false"
+              (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+            ></wm-btn-center-position>
+          </ion-fab-list>
+        </ion-fab>
+        <ion-fab slot="fixed" vertical="top" horizontal="start" #fab3
+        (click)="fab2?.close();fab1?.close()">
+          <ion-fab-button size="small" class="wm-btn-register-fab">
+            <i class="icon-outline-recording"></i>
+          </ion-fab-button>
+          <wm-btn-track-recording
           *ngIf="isTrackRecordingEnable$|async"
           [isLogged]="isLoggedIn$|async"
           (start-recording)="startRecording$.next($event)"
         ></wm-btn-track-recording>
-        <wm-btn-center-position
-          *ngIf="false"
-          (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
-        ></wm-btn-center-position>
-        <ion-fab-button
-        top-right
-        class="webmapp-pageroute-btnfullmap"
-        *ngIf="(trackid$|async)!= null"
-        (click)="toogleFullMap()"
-      >
-        <div [hidden]="!modeFullMap">
-          <ion-icon name="close-outline"></ion-icon>
-        </div>
-        <div [hidden]="modeFullMap">
-          <ion-icon name="resize-outline"></ion-icon>
-        </div>
-      </ion-fab-button>
+        </ion-fab>
+        
+
+        <ion-fab
+          class="social"
+          slot="fixed"
+          vertical="top"
+          horizontal="start"
+          *ngIf="(trackid$|async)!= null"
+        >
+          <ion-fab-button top-right *ngIf="(trackid$|async)!= null" (click)="toogleFullMap()">
+            <div>
+              <ion-icon [attr.name]="modeFullMap?'resize-outline':'close-outline'"></ion-icon>
+            </div>
+          </ion-fab-button>
+        </ion-fab>
       </div>
     </wm-map>
     <wm-map-track-details>
-      <ng-container *ngIf="currentTrack$|async as currentTrack">
+      <div header>
+        <ion-title
+          *ngIf="currentTrack$|async as currentTrack"
+          class="webmapp-pageroute-infopanel-name"
+        >
+          {{currentTrack?.properties?.name | wmtrans}}
+        </ion-title>
+      </div>
+      <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
         <ng-container *ngIf="currentTrack.properties as prop">
-          <ion-label class="webmapp-pageroute-infopanel-name">
-            {{prop?.name | wmtrans}}
-          </ion-label>
           <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
             <div [innerHTML]="flowPopoverText"></div>
           </ion-label>
+          <wm-slope-chart
+            [currentTrack]="currentTrack$|async"
+            (hover)="setTrackElevationChartHoverElements($event)"
+          ></wm-slope-chart>
+          <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
         </ng-container>
       </ng-container>
+      <ng-template #skeleton>
+        <ion-skeleton-text
+          [animated]="true"
+          style="height:15px;width: 90%;margin:auto"
+        ></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:80px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
+      </ng-template>
     </wm-map-track-details>
   </div>
 </ion-content>

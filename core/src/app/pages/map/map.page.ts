@@ -6,7 +6,7 @@ import {
   OnDestroy,
   EventEmitter,
 } from '@angular/core';
-import {IonSlides} from '@ionic/angular';
+import {IonFab, IonSlides} from '@ionic/angular';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, tap, withLatestFrom, switchMap, startWith} from 'rxjs/operators';
 
@@ -33,6 +33,7 @@ import {GeolocationPage} from '../abstract/geolocation';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -45,12 +46,26 @@ export interface IDATALAYER {
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage extends GeolocationPage implements OnDestroy {
+  private _flowLine$: BehaviorSubject<null | {
+    flow_line_quote_orange: number;
+    flow_line_quote_red: number;
+  }> = new BehaviorSubject<null>(null);
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   @ViewChild(MapTrackDetailsComponent) mapTrackDetailsCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
-
+  @ViewChild('fab1') fab1: IonFab;
+  @ViewChild('fab2') fab2: IonFab;
+  @ViewChild('fab3') fab3: IonFab;
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
+    tap(conf => {
+      if (conf.flow_line_quote_show) {
+        this._flowLine$.next({
+          flow_line_quote_orange: conf.flow_line_quote_orange,
+          flow_line_quote_red: conf.flow_line_quote_red,
+        });
+      }
+    }),
     tap(c => {
       if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
         this._store.dispatch(loadPois());
@@ -107,6 +122,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       setTransition,
     },
   };
+  trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
+    new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
   public sliderOptions: any;
 
   constructor(
@@ -216,5 +233,31 @@ export class MapPage extends GeolocationPage implements OnDestroy {
 
   async url(url) {
     await Browser.open({url});
+  }
+
+  setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
+    if (elements != null) {
+      this.trackElevationChartHoverElements$.next(elements);
+      if (this._flowLine$.value != null) {
+        this.flowPopoverText$.next(
+          this.getFlowPopoverText(
+            elements.location.altitude,
+            this._flowLine$.value.flow_line_quote_orange,
+            this._flowLine$.value.flow_line_quote_red,
+          ),
+        );
+      }
+    }
+  }
+
+  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
+    const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
+    const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
+    const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
+    return altitude < orangeTreshold
+      ? green
+      : altitude > orangeTreshold && altitude < redTreshold
+      ? orange
+      : red;
   }
 }
