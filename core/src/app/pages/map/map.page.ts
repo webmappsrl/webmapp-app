@@ -107,6 +107,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
+  showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
@@ -249,7 +250,20 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       }
     }
   }
-
+  openTrackDownload(): void {
+    if (this.mapTrackDetailsCmp.isOpen) {
+      this.mapTrackDetailsCmp.none();
+    }
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+  closeDownload(): void {
+    this.showDownload$.next(false);
+    setTimeout(() => {
+      this.mapTrackDetailsCmp.open();
+    }, 300);
+  }
   getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
     const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
     const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;

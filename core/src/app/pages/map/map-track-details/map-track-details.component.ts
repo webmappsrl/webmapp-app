@@ -27,6 +27,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   minInfoheight = 350;
   stepStatus = 1;
   isNone = false;
+  isOpen = true;
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   constructor(
     private _elRef: ElementRef,
@@ -37,6 +38,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   close(): void {
     this.isNone = false;
+    this.isOpen = false;
     this._animationNone.progressEnd(1, 0.1);
   }
 
@@ -56,6 +58,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       this._animationClose.progressEnd(0, 1);
     }
     this.isNone = false;
+    this.isOpen = true;
   }
 
   none(): void {
@@ -63,6 +66,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       this._animationNone.progressEnd(1, 0);
     }
     this.isNone = true;
+    this.isOpen = false;
   }
 
   async setAnimations() {

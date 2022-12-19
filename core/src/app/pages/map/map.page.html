@@ -30,7 +30,11 @@
     >
       <div top-left>
         <ng-container *ngIf="(trackid$|async)!= null">
-          <ion-fab-button (click)="goToTrack(null)" size="small" class="webmapp-pagepoi-btntop">
+          <ion-fab-button
+            (click)="goToTrack(null);this.showDownload$.next(false)"
+            size="small"
+            class="webmapp-pagepoi-btntop"
+          >
             <i class="icon-outline-close"></i>
           </ion-fab-button>
         </ng-container>
@@ -59,7 +63,7 @@
             <ion-icon name="share-social-outline"></ion-icon>
           </ion-fab-button>
           <ion-fab-list side="start">
-            <ion-fab-button>
+            <ion-fab-button (click)="openTrackDownload()">
               <ion-icon name="download-outline"></ion-icon>
             </ion-fab-button>
             <ion-fab-button>
@@ -96,18 +100,22 @@
             ></wm-btn-center-position>
           </ion-fab-list>
         </ion-fab>
-        <ion-fab slot="fixed" vertical="top" horizontal="start" #fab3
-        (click)="fab2?.close();fab1?.close()">
+        <ion-fab
+          slot="fixed"
+          vertical="top"
+          horizontal="start"
+          #fab3
+          (click)="fab2?.close();fab1?.close()"
+        >
           <ion-fab-button size="small" class="wm-btn-register-fab">
             <i class="icon-outline-recording"></i>
           </ion-fab-button>
           <wm-btn-track-recording
-          *ngIf="isTrackRecordingEnable$|async"
-          [isLogged]="isLoggedIn$|async"
-          (start-recording)="startRecording$.next($event)"
-        ></wm-btn-track-recording>
+            *ngIf="isTrackRecordingEnable$|async"
+            [isLogged]="isLoggedIn$|async"
+            (start-recording)="startRecording$.next($event)"
+          ></wm-btn-track-recording>
         </ion-fab>
-        
 
         <ion-fab
           class="social"
@@ -133,6 +141,7 @@
           {{currentTrack?.properties?.name | wmtrans}}
         </ion-title>
       </div>
+
       <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
         <ng-container *ngIf="currentTrack.properties as prop">
           <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
@@ -162,5 +171,10 @@
         <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
       </ng-template>
     </wm-map-track-details>
+    <wm-download
+      *ngIf="showDownload$|async"
+      [track]="currentTrack$|async"
+      (closeEvt)="closeDownload()"
+    ></wm-download>
   </div>
 </ion-content>
