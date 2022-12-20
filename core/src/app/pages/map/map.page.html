@@ -27,11 +27,12 @@
       [track]="currentTrack$|async"
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
+      (related-poi-click)="openPoi($event)"
     >
       <div top-left>
         <ng-container *ngIf="(trackid$|async)!= null">
           <ion-fab-button
-            (click)="goToTrack(null);this.showDownload$.next(false)"
+            (click)="close();this.showDownload$.next(false)"
             size="small"
             class="webmapp-pagepoi-btntop"
           >
@@ -133,27 +134,108 @@
       </div>
     </wm-map>
     <wm-map-track-details #details>
-      <div header>
-        <ion-title
-          *ngIf="currentTrack$|async as currentTrack"
-          class="webmapp-pageroute-infopanel-name"
-        >
-          {{currentTrack?.properties?.name | wmtrans}}
-        </ion-title>
-      </div>
+      <ng-container *ngIf="currentPoi$|async as currentPoi;else track;">
+        <ng-container *ngIf="currentPoi.properties as properties">
+          <div class="webmapp-pagepoi-info-container">
+            <div class="webmapp-pagepoi-info-header">
+              <div
+                class="webmapp-pagepoi-info-header-pre-title"
+                *ngIf="properties.taxonomy.poi_type as poiType"
+              >
+                {{ poiType.name | wmtrans}}
+              </div>
+              <div class="webmapp-pagepoi-info-header-title" *ngIf="properties.name as name">
+                {{ name | wmtrans}}
+              </div>
 
-      <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
-        <ng-container *ngIf="currentTrack.properties as prop">
-          <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-            <div [innerHTML]="flowPopoverText"></div>
-          </ion-label>
-          <wm-slope-chart
-            [currentTrack]="currentTrack$|async"
-            (hover)="setTrackElevationChartHoverElements($event)"
-          ></wm-slope-chart>
-          <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
+              <div class="webmapp-pagepoi-info-header-arrows">
+                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+                  <i class="icon-outline-arrow-left" (click)="prevPoi()"></i>
+                  <ion-ripple-effect></ion-ripple-effect>
+                </div>
+                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+                  <i
+                    class="icon-outline-arrow-right webmapp-pagepoi-info-header-arrow-icon"
+                    (click)="nextPoi()"
+                  ></i>
+                  <ion-ripple-effect></ion-ripple-effect>
+                </div>
+              </div>
+            </div>
+
+            <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+              <wm-image-gallery [imageGallery]="properties.image_gallery"></wm-image-gallery>
+              <div
+                [hidden]="!properties.address"
+                class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+              >
+                <i class="icon-outline-pin webmapp-pagepoi-info-icon"></i>
+                {{ currentPoi.properties.address}}
+                <ion-ripple-effect></ion-ripple-effect>
+              </div>
+              <div
+                *ngIf="properties.contact_phone as phone"
+                class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+                (click)="phone(phone)"
+              >
+                <a href="tel:{{phone}}">
+                  <i class="icon-outline-phone webmapp-pagepoi-info-icon"></i>
+                  {{phone}}</a
+                >
+                <ion-ripple-effect></ion-ripple-effect>
+              </div>
+              <div
+                *ngIf="properties.contact_email as email"
+                class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+                (click)="email(email)"
+              >
+                <a href="mailto:{{ properties.email}}">
+                  <i class="icon-outline-mail webmapp-pagepoi-info-icon"></i>
+                  {{ currentPoi.properties.email}}
+                  <ion-ripple-effect></ion-ripple-effect>
+                </a>
+              </div>
+              <div
+                *ngIf="properties.related_url as relatedUrl"
+                class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+                (click)="url(relatedUrl)"
+              >
+                <webmapp-related-urls [relatedUrls]="relatedUrl"> </webmapp-related-urls>
+                <ion-ripple-effect></ion-ripple-effect>
+              </div>
+
+              <div
+                class="webmapp-pagepoi-info-body-description"
+                [innerHTML]="properties.description | wmtrans"
+              ></div>
+              <ng-container *ngIf="properties.audio">
+                <webmapp-track-audio [audio]="properties.audio"></webmapp-track-audio>
+              </ng-container>
+            </ion-content>
+          </div>
         </ng-container>
       </ng-container>
+      <ng-template #track>
+        <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
+          <div header>
+            <ion-title class="webmapp-pageroute-infopanel-name">
+              {{currentTrack?.properties?.name | wmtrans}}
+            </ion-title>
+          </div>
+
+          <ng-container *ngIf="currentTrack.properties as prop">
+            <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
+              <div [innerHTML]="flowPopoverText"></div>
+            </ion-label>
+            <wm-slope-chart
+              [currentTrack]="currentTrack$|async"
+              (hover)="setTrackElevationChartHoverElements($event)"
+            ></wm-slope-chart>
+            <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+
       <ng-template #skeleton>
         <ion-skeleton-text
           [animated]="true"
@@ -171,6 +253,7 @@
         <ion-skeleton-text [animated]="true" style="height:20px;width: 100%"></ion-skeleton-text>
       </ng-template>
     </wm-map-track-details>
+
     <wm-download
       *ngIf="showDownload$|async"
       [track]="currentTrack$|async"

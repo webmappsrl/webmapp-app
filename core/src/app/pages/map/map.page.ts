@@ -187,11 +187,22 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       ? orange
       : red;
   }
+  close(): void {
+    if (this.currentPoi$.value != null) {
+      const currentVal = this.trackid$.value;
+      this.trackid$.next(null);
+      setTimeout(() => {
+        this.goToTrack(currentVal);
+      }, 300);
+    } else if (this.trackid$ != null) {
+      this.goToTrack(null);
+    }
+  }
 
   goToTrack(id: number) {
     this.resetPoi();
     this.trackid$.next(id);
-    this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
+    // this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
       this.mapTrackDetailsCmp.open();

@@ -34,7 +34,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   ) {}
 
   full(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height}px`);
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 40}px`);
   }
 
   open(): void {
