@@ -8,20 +8,12 @@ import {
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {filter, switchMap, take, tap} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {DownloadService} from 'src/app/services/download.service';
 import {DownloadStatus} from 'src/app/types/download';
-import {IGeojsonFeature} from 'src/app/types/model';
-import {IMapRootState} from 'src/app/store/map/map';
 import {NavController} from '@ionic/angular';
-import {Observable} from 'rxjs';
-import {StatusService} from 'src/app/services/status.service';
-import {Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
-import {mapCurrentTrack} from 'src/app/store/map/map.selector';
 
 @Component({
   selector: 'wm-download-panel',
@@ -50,7 +42,7 @@ export class WmDownloadPanelComponent implements OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.track != null && changes.track.currentValue != null) {
-      this.completeDownloads();
+      this.start();
     }
   }
   start() {

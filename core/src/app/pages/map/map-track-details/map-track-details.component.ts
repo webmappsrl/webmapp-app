@@ -16,8 +16,7 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapTrackDetailsComponent implements AfterViewInit {
-  private _animationClose: Animation;
-  private _animationNone: Animation;
+  private _animationSwipe: Animation;
   private _gesture: Gesture;
   private _started: boolean = false;
   private _initialStep: number = 1;
@@ -25,9 +24,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   height = 700;
   maxInfoheight = 850;
   minInfoheight = 350;
-  stepStatus = 1;
-  isNone = false;
-  isOpen = true;
+  stepStatus = 0;
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
   constructor(
     private _elRef: ElementRef,
@@ -36,10 +33,30 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
   ) {}
 
+  full(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height}px`);
+  }
+
+  open(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.maxInfoheight / 2}px`);
+  }
+
   close(): void {
-    this.isNone = false;
-    this.isOpen = false;
-    this._animationNone.progressEnd(1, 0.1);
+    this.setAnimations(`${this._getCurrentHeight()}px`, '56px');
+  }
+
+  none(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
+  }
+
+  toggle(): boolean {
+    if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
+      this.open();
+      return true;
+    } else {
+      this.close();
+      return false;
+    }
   }
 
   handleClick(): void {
@@ -49,65 +66,51 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.setAnimations();
+    this._setGesture();
+  }
+  private _getCurrentHeight(): number {
+    return this._elRef.nativeElement.offsetHeight;
   }
 
-  open(): void {
-    if (this.isNone) {
-      this._animationNone.progressEnd(0, 1);
-    } else {
-      this._animationClose.progressEnd(0, 1);
-    }
-    this.isNone = false;
-    this.isOpen = true;
-  }
-
-  none(): void {
-    if (!this.isNone) {
-      this._animationNone.progressEnd(1, 0);
-    }
-    this.isNone = true;
-    this.isOpen = false;
-  }
-
-  async setAnimations() {
+  async setAnimations(from = '0px', to = '0px') {
     await this._platform.ready();
     this.height = this._platform.height();
+    this._animationSwipe?.destroy();
     this.maxInfoheight = this.height - 80;
     if (this._elRef != null && this._elRef.nativeElement != null) {
-      const animationClosePanel = this._animationCtrl
+      const animationSwipePanel = this._animationCtrl
         .create()
         .addElement(this._elRef.nativeElement)
-        .fromTo('height', `${this.maxInfoheight - this.minInfoheight}px`, '55px');
-      const animationNonePanel = this._animationCtrl
-        .create()
-        .addElement(this._elRef.nativeElement)
-        .fromTo('height', `${this.maxInfoheight - this.minInfoheight}px`, '0px');
+        .fromTo('height', from, to);
 
-      this._animationClose = this._animationCtrl
+      this._animationSwipe = this._animationCtrl
         .create()
         .duration(250)
-        .addAnimation([animationClosePanel]);
-
-      this._animationNone = this._animationCtrl
-        .create()
-        .duration(250)
-        .addAnimation([animationNonePanel]);
-      this._gesture = this._gestureCtrl.create({
-        el: this.dragHandleIcon.nativeElement,
-        threshold: 0,
-        gestureName: 'handler-drag',
-        onMove: ev => this.onMove(ev),
-        onEnd: ev => this.onEnd(ev),
-      });
-
-      this._gesture.enable(true);
+        .addAnimation([animationSwipePanel]);
+      await this._animationSwipe.play();
     }
   }
 
+  private _setGesture() {
+    this._gesture = this._gestureCtrl.create({
+      el: this.dragHandleIcon.nativeElement,
+      threshold: 0,
+      gestureName: 'handler-drag',
+      onStart: ev => {
+        if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
+          this.open();
+        } else {
+          this.full();
+        }
+      },
+    });
+
+    this._gesture.enable(true);
+  }
   private endAnimation(shouldComplete: boolean, step: number) {
     console.log(step);
-    this._animationClose.progressEnd(shouldComplete ? 1 : 0, step);
-    this._animationClose.onFinish(() => {
+    this._animationSwipe.progressEnd(shouldComplete ? 1 : 0, step);
+    this._animationSwipe.onFinish(() => {
       this._gesture.enable(true);
     });
     this.stepStatus = shouldComplete ? 0 : 1;
@@ -126,12 +129,12 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   private onMove(ev) {
     if (!this._started) {
-      this._animationClose.progressStart(false);
+      this._animationSwipe.progressStart(false);
       this._started = true;
     }
     const step = this.getStep(ev);
     console.log(step);
-    this._animationClose.progressStep(step);
+    this._animationSwipe.progressStep(step);
   }
   private getStep(ev) {
     const delta = this._initialStep - ev.deltaY;
@@ -139,7 +142,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   }
   private _clamp(min: number, n: number, max: number): number {
     const val = Math.max(min, Math.min(n, max));
-    this.stepStatus = 1 - val;
+    this.stepStatus = val;
     return this.stepStatus;
   }
 }

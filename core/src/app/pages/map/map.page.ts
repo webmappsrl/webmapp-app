@@ -50,13 +50,16 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
+
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
-  @ViewChild(MapTrackDetailsComponent) mapTrackDetailsCmp: MapTrackDetailsComponent;
-  @ViewChild('gallery') slider: IonSlides;
+
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
+  @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
+  @ViewChild('download') mapTrackDownloadCmp: MapTrackDetailsComponent;
+  @ViewChild('gallery') slider: IonSlides;
+
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
       if (conf.flow_line_quote_show) {
@@ -101,13 +104,13 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   );
   dataLayerUrls$: Observable<IDATALAYER>;
   enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
-  showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
@@ -116,6 +119,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   slideOptions = {
     on: {
       beforeInit,
@@ -123,9 +127,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       setTransition,
     },
   };
+  public sliderOptions: any;
   trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
     new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
-  public sliderOptions: any;
 
   constructor(
     private _store: Store,
@@ -164,11 +168,30 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       });
   }
 
+  closeDownload(): void {
+    this.showDownload$.next(false);
+    setTimeout(() => {
+      this.mapTrackDetailsCmp.open();
+    }, 300);
+  }
+
   email(_): void {}
+
+  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
+    const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
+    const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
+    const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
+    return altitude < orangeTreshold
+      ? green
+      : altitude > orangeTreshold && altitude < redTreshold
+      ? orange
+      : red;
+  }
 
   goToTrack(id: number) {
     this.resetPoi();
     this.trackid$.next(id);
+    this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
       this.mapTrackDetailsCmp.open();
@@ -198,6 +221,13 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.currentPoi$.next(currentPoi);
   }
 
+  openTrackDownload(): void {
+    this.mapTrackDetailsCmp.none();
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
   phone(_): void {}
 
   resetPoi(): void {
@@ -216,26 +246,6 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     }
   }
 
-  showPhoto(idx) {
-    this.imagePoiToggle$.next(true);
-    setTimeout(() => {
-      this.slider.slideTo(idx);
-    }, 300);
-  }
-
-  toogleFullMap() {
-    this.modeFullMap = !this.modeFullMap;
-    if (this.mapTrackDetailsCmp.isNone) {
-      this.mapTrackDetailsCmp.open();
-    } else {
-      this.mapTrackDetailsCmp.none();
-    }
-  }
-
-  async url(url) {
-    await Browser.open({url});
-  }
-
   setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
     if (elements != null) {
       this.trackElevationChartHoverElements$.next(elements);
@@ -250,28 +260,19 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       }
     }
   }
-  openTrackDownload(): void {
-    if (this.mapTrackDetailsCmp.isOpen) {
-      this.mapTrackDetailsCmp.none();
-    }
+
+  showPhoto(idx) {
+    this.imagePoiToggle$.next(true);
     setTimeout(() => {
-      this.showDownload$.next(true);
+      this.slider.slideTo(idx);
     }, 300);
   }
-  closeDownload(): void {
-    this.showDownload$.next(false);
-    setTimeout(() => {
-      this.mapTrackDetailsCmp.open();
-    }, 300);
+
+  toogleFullMap() {
+    this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
   }
-  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
-    const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
-    const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
-    const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
-    return altitude < orangeTreshold
-      ? green
-      : altitude > orangeTreshold && altitude < redTreshold
-      ? orange
-      : red;
+
+  async url(url) {
+    await Browser.open({url});
   }
 }
