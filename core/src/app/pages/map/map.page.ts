@@ -172,7 +172,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   close(): void {
-    if (this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.value != null) {
+    if (this.currentPoi$.value != null) {
       const currentVal = this.trackid$.value;
       this.trackid$.next(null);
       setTimeout(() => {
