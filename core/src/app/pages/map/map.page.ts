@@ -1,14 +1,14 @@
+import {IGeojsonFeature} from './../../../../../instances/parcomaremma/src/app/types/model.d';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {IonFab, IonSlides} from '@ionic/angular';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, map, tap, withLatestFrom, switchMap, startWith} from 'rxjs/operators';
+import {BehaviorSubject, Observable, zip} from 'rxjs';
+import {filter, map, tap, withLatestFrom, switchMap, startWith, concatMap} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
@@ -34,6 +34,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
+import {preventDefault} from 'ol/events/Event';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -97,7 +98,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   );
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store.select(mapCurrentLayer);
-  currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  currentPoi$: BehaviorSubject<IGeojsonFeature> = new BehaviorSubject<IGeojsonFeature | null>(null);
+  currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
+    new BehaviorSubject<IGeojsonFeature | null>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -115,6 +118,19 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
   padding$: Observable<number[]> = this._store.select(padding);
+  poiProperties$: Observable<any> = this.currentPoi$.pipe(
+    withLatestFrom(this.currentRelatedPoi$),
+    map(([poi, relatedPoi]) => {
+      if (relatedPoi != null) {
+        const prop = {...relatedPoi.properties, ...{isRelated: true}};
+        return prop;
+      }
+      if (poi != null) {
+        return poi.properties;
+      }
+      return null;
+    }),
+  );
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
   pois$: Observable<any> = this._store
@@ -172,9 +188,11 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   close(): void {
-    if (this.currentPoi$.value != null) {
+    if (this.currentRelatedPoi$.value != null || this.currentPoi$.value != null) {
       const currentVal = this.trackid$.value;
       this.trackid$.next(null);
+      this.currentRelatedPoi$.next(null);
+      this.currentPoi$.next(null);
       setTimeout(() => {
         this.goToTrack(currentVal);
       }, 300);
@@ -215,8 +233,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       this.mapTrackDetailsCmp.none();
     }
   }
-  setCurrentPoi(poi) {
-    this.currentPoi$.next(poi);
+  setCurrentPoi(poi: IGeojsonFeature) {
+    this.currentRelatedPoi$.next(poi);
   }
   ionViewDidEnter() {
     this.resetEvt$.next(this.resetEvt$.value + 1);
@@ -260,12 +278,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
 
-  setPoi(poi: any): void {
-    const oldID =
-      this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.value?.properties?.id || -1;
-    if (oldID != poi.properties.id) {
-      this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.next(poi);
-    }
+  setPoi(poi: IGeojsonFeature): void {
+    this.currentPoi$.next(poi);
+    this.mapTrackDetailsCmp.open();
   }
 
   setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
@@ -299,7 +314,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   private _poiReset(): void {
-    this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.next(null);
+    this.currentRelatedPoi$.next(null);
+    this.currentPoi$.next(null);
     this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
   }
 }
