@@ -4,19 +4,18 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
-  EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, tap, withLatestFrom, switchMap, startWith} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
-import {openDetails, setCurrentFilters, setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {
   currentFilters,
   currentPoiID,
   mapCurrentLayer,
-  mapCurrentTrack,
   padding,
 } from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
@@ -34,6 +33,7 @@ import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-
 import {GeohubService} from 'src/app/services/geohub.service';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
+import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -57,8 +57,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
   @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
-  @ViewChild('download') mapTrackDownloadCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
+  @ViewChild(wmMapTrackRelatedPoisDirective)
+  wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -98,6 +99,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   currentLayer$ = this._store.select(mapCurrentLayer);
   currentPoi$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
     switchMap(id => this._geohubSVC.getEcTrack(id)),
     startWith(null),
@@ -164,8 +167,20 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       .select(currentPoiID)
       .pipe(withLatestFrom(this.pois$))
       .subscribe(([id, pois]) => {
-        if (id != null && pois != null) this.openPoi(id);
+        if (id != null && pois != null) this.poiOpen(id);
       });
+  }
+
+  close(): void {
+    if (this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.value != null) {
+      const currentVal = this.trackid$.value;
+      this.trackid$.next(null);
+      setTimeout(() => {
+        this.goToTrack(currentVal);
+      }, 300);
+    } else if (this.trackid$ != null) {
+      this.goToTrack(null);
+    }
   }
 
   closeDownload(): void {
@@ -187,20 +202,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       ? orange
       : red;
   }
-  close(): void {
-    if (this.currentPoi$.value != null) {
-      const currentVal = this.trackid$.value;
-      this.trackid$.next(null);
-      setTimeout(() => {
-        this.goToTrack(currentVal);
-      }, 300);
-    } else if (this.trackid$ != null) {
-      this.goToTrack(null);
-    }
-  }
 
   goToTrack(id: number) {
-    this.resetPoi();
+    this._poiReset();
     this.trackid$.next(id);
     // this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
     if (id != null && id !== -1) {
@@ -211,25 +215,20 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       this.mapTrackDetailsCmp.none();
     }
   }
-
+  setCurrentPoi(poi) {
+    this.currentPoi$.next(poi);
+  }
   ionViewDidEnter() {
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
 
   ionViewWillLeave() {
-    this.resetPoi();
+    this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
-  }
-
-  openPoi(poiID: Event | number) {
-    this._store.dispatch(openDetails({openDetails: true}));
-    this.currentPoiID$.next(+poiID);
-    const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
-    this.currentPoi$.next(currentPoi);
   }
 
   openTrackDownload(): void {
@@ -241,9 +240,20 @@ export class MapPage extends GeolocationPage implements OnDestroy {
 
   phone(_): void {}
 
-  resetPoi(): void {
-    this.currentPoi$.next(null);
-    this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
+  poiNext(): void {
+    this.wmMapTrackRelatedPoisDirective.poiNext();
+  }
+
+  poiOpen(poiID: Event | number) {
+    //this._store.dispatch(openDetails({openDetails: true}));
+    this.currentPoiID$.next(+poiID);
+    const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
+
+    // this.currentPoi$.next(currentPoi);
+  }
+
+  poiPrev(): void {
+    this.wmMapTrackRelatedPoisDirective.poiPrev();
   }
 
   setCurrentFilters(filters: string[]): void {
@@ -251,9 +261,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   setPoi(poi: any): void {
-    const oldID = this.currentPoi$.value?.properties?.id || -1;
+    const oldID =
+      this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.value?.properties?.id || -1;
     if (oldID != poi.properties.id) {
-      this.currentPoi$.next(poi);
+      this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.next(poi);
     }
   }
 
@@ -285,5 +296,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
 
   async url(url) {
     await Browser.open({url});
+  }
+
+  private _poiReset(): void {
+    this.wmMapTrackRelatedPoisDirective.currentRelatedPoi$.next(null);
+    this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
   }
 }

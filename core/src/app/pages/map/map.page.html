@@ -16,7 +16,6 @@
       [wmMapPoisFilters]="currentFilters$|async"
       [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
       [onClick]="wmap.clickEVT$"
-      (poi-click)="openPoi($event)"
       (currentPoiEvt)="setPoi($event)"
       wmMapPosition
       [wmMapPositioncurrentLocation]="currentPosition$|async"
@@ -27,7 +26,9 @@
       [track]="currentTrack$|async"
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
-      (related-poi-click)="openPoi($event)"
+      (related-poi-next)="currentPoiNextID$.next($event)"
+      (related-poi-click)="poiOpen($event)"
+      (related-poi)="setCurrentPoi($event)"
     >
       <div top-left>
         <ng-container *ngIf="(trackid$|async)!= null">
@@ -134,7 +135,7 @@
       </div>
     </wm-map>
     <wm-map-track-details #details>
-      <ng-container *ngIf="currentPoi$|async as currentPoi;else track;">
+      <ng-container *ngIf="(currentPoi$)|async as currentPoi;else track;">
         <ng-container *ngIf="currentPoi.properties as properties">
           <div class="webmapp-pagepoi-info-container">
             <div class="webmapp-pagepoi-info-header">
@@ -150,13 +151,13 @@
 
               <div class="webmapp-pagepoi-info-header-arrows">
                 <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
-                  <i class="icon-outline-arrow-left" (click)="prevPoi()"></i>
+                  <i class="icon-outline-arrow-left" (click)="poiPrev()"></i>
                   <ion-ripple-effect></ion-ripple-effect>
                 </div>
                 <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
                   <i
                     class="icon-outline-arrow-right webmapp-pagepoi-info-header-arrow-icon"
-                    (click)="nextPoi()"
+                    (click)="poiNext()"
                   ></i>
                   <ion-ripple-effect></ion-ripple-effect>
                 </div>
