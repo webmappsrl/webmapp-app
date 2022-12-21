@@ -1,6 +1,18 @@
 @import 'src/theme/mixins.scss';
 @import '~@ionic/angular/css/ionic-swiper';
 webmapp-map-page {
+  wm-map-popover {
+    display: none;
+  }
+  .orange {
+    color: orange;
+  }
+  .green {
+    color: green;
+  }
+  .red {
+    color: red;
+  }
   .webmapp-pageroute-map-container {
     width: 100%;
     height: 100%;
