@@ -34,9 +34,6 @@ import {startNetworkMonitoring} from './store/network/network.actions';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-  private _currentTrack$: Observable<CGeojsonLineStringFeature> =
-    this._storeMap.select(mapCurrentTrack);
-
   public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;

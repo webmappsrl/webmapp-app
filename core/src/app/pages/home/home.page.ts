@@ -35,6 +35,7 @@ import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
+import {NavigationExtras} from '@angular/router';
 
 @Component({
   selector: 'wm-page-home',
@@ -161,7 +162,12 @@ export class HomePage implements OnInit, OnChanges {
 
   searchCard(id: string | number): void {
     if (id != null) {
-      this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +id}));
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          track: id,
+        },
+      };
+      this._navCtrl.navigateForward('map', navigationExtras);
     }
   }
 

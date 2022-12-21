@@ -5,6 +5,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
+  AfterViewInit,
 } from '@angular/core';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {BehaviorSubject, Observable, zip} from 'rxjs';
@@ -16,6 +17,7 @@ import {
   currentFilters,
   currentPoiID,
   mapCurrentLayer,
+  mapCurrentTrack,
   padding,
 } from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
@@ -34,7 +36,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
-import {preventDefault} from 'ol/events/Event';
+import {ActivatedRoute} from '@angular/router';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -46,14 +48,13 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage extends GeolocationPage implements OnDestroy {
+export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit {
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
 
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
@@ -155,9 +156,11 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     private _deviceService: DeviceService,
     private _authSvc: AuthService,
     private _geohubSVC: GeohubService,
+    private _route: ActivatedRoute,
     _backgroundGeolocation: BackgroundGeolocation,
   ) {
     super(_backgroundGeolocation);
+
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -317,5 +320,14 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.currentRelatedPoi$.next(null);
     this.currentPoi$.next(null);
     this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
+  }
+
+  ngAfterViewInit(): void {
+    this._route.queryParams.subscribe(params => {
+      const id = params.track;
+      if (id != null) {
+        this.goToTrack(id);
+      }
+    });
   }
 }
