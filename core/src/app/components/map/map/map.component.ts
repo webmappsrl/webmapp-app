@@ -120,6 +120,49 @@ export class MapComponent implements OnDestroy {
   private _updateMapSub: Subscription = Subscription.EMPTY;
   private _view: View;
 
+  @Input('wmMapPadding') set mapPadding(padding: number[]) {
+    this._padding$.next(padding);
+    if (padding != null && padding[3] != null) {
+      this.scaleLineStyle$.next(padding[3]);
+    }
+
+    if (this._view != null) {
+      this._fitView(new Point(this._view.getCenter()), {
+        padding: this._padding$.value,
+        duration: zoomDuration,
+      });
+    }
+
+    if (this._map != null) {
+      this._map.updateSize();
+    }
+  }
+
+  @Input('resize') set resizeMap(_) {
+    if (this._map != null) {
+      this._map.updateSize();
+    }
+  }
+
+  @Input('poi') set setPoi(id: number) {
+    if (id === -1 && this._selectedPoiLayer != null) {
+      this._map.removeLayer(this._selectedPoiLayer);
+      this._selectedPoiLayer = undefined;
+    } else {
+      const currentPoi = this._poiMarkers.find(p => +p.id === +id);
+      if (currentPoi != null) {
+        this._fitView(currentPoi.icon.getGeometry() as any);
+        this._selectCurrentPoi(currentPoi);
+      }
+    }
+  }
+
+  @Input('trackElevationChartElements') set trackElevationChartElements(
+    value: ITrackElevationChartHoverElements,
+  ) {
+    this._drawTemporaryLocationFeature(value?.location, value?.track);
+  }
+
   @Input('disableTrackSelection') disableTrackSelection = false;
   @Input('start-view') startView: number[] = startView;
   @Output('feature-click') featureClick: EventEmitter<number> = new EventEmitter<number>();
@@ -192,49 +235,6 @@ export class MapComponent implements OnDestroy {
       .subscribe((map: IMAP) => {
         this._zone.run(() => this._initMap(map));
       });
-  }
-
-  @Input('wmMapPadding') set mapPadding(padding: number[]) {
-    this._padding$.next(padding);
-    if (padding != null && padding[3] != null) {
-      this.scaleLineStyle$.next(padding[3]);
-    }
-
-    if (this._view != null) {
-      this._fitView(new Point(this._view.getCenter()), {
-        padding: this._padding$.value,
-        duration: zoomDuration,
-      });
-    }
-
-    if (this._map != null) {
-      this._map.updateSize();
-    }
-  }
-
-  @Input('resize') set resizeMap(_) {
-    if (this._map != null) {
-      this._map.updateSize();
-    }
-  }
-
-  @Input('poi') set setPoi(id: number) {
-    if (id === -1 && this._selectedPoiLayer != null) {
-      this._map.removeLayer(this._selectedPoiLayer);
-      this._selectedPoiLayer = undefined;
-    } else {
-      const currentPoi = this._poiMarkers.find(p => +p.id === +id);
-      if (currentPoi != null) {
-        this._fitView(currentPoi.icon.getGeometry() as any);
-        this._selectCurrentPoi(currentPoi);
-      }
-    }
-  }
-
-  @Input('trackElevationChartElements') set trackElevationChartElements(
-    value: ITrackElevationChartHoverElements,
-  ) {
-    this._drawTemporaryLocationFeature(value?.location, value?.track);
   }
 
   ngOnDestroy(): void {

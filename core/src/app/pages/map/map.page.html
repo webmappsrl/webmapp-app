@@ -106,13 +106,13 @@
           vertical="top"
           horizontal="start"
           #fab3
+          *ngIf="isTrackRecordingEnable$|async"
           (click)="fab2?.close();fab1?.close()"
         >
           <ion-fab-button size="small" class="wm-btn-register-fab">
             <i class="icon-outline-recording"></i>
           </ion-fab-button>
           <wm-btn-track-recording
-            *ngIf="isTrackRecordingEnable$|async"
             [isLogged]="isLoggedIn$|async"
             (start-recording)="startRecording$.next($event)"
           ></wm-btn-track-recording>
