@@ -57,7 +57,7 @@
           slot="fixed"
           vertical="top"
           horizontal="start"
-          *ngIf="(trackid$|async)!= null"
+          *ngIf="trackid$|async as trackId"
           (click)="fab2.close();fab3.close()"
         >
           <ion-fab-button>
@@ -67,7 +67,7 @@
             <ion-fab-button (click)="openTrackDownload()">
               <ion-icon name="download-outline"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button>
+            <ion-fab-button (click)="openTrackShare(trackId)">
               <ion-icon name="share-social-outline"></ion-icon>
             </ion-fab-button>
           </ion-fab-list>

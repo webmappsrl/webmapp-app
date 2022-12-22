@@ -5,11 +5,10 @@ wm-map-track-details {
     height: auto;
     text-align: center;
     display: block;
-    position: fixed;
+    position: absolute;
     background-color: white;
     z-index: 99;
     .wm-drag-btn {
-
       .wm-drag-handle {
         background-color: var(--wm-color-grey);
         display: inline-block;
@@ -35,5 +34,4 @@ wm-map-track-details {
     padding: 10px;
     height: 100%;
   }
-
 }

@@ -1,5 +1,3 @@
-import {WmMapComponent} from './../../../../../instances/catab/src/app/shared/map-core/components/map/map.component';
-import {IGeojsonFeature} from './../../../../../instances/parcomaremma/src/app/types/model.d';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,7 +7,7 @@ import {
 } from '@angular/core';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {filter, map, tap, switchMap, startWith, catchError} from 'rxjs/operators';
+import {filter, map, tap, switchMap, startWith} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
@@ -31,6 +29,9 @@ import {MapTrackDetailsComponent} from './map-track-details/map-track-details.co
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
 import {ActivatedRoute} from '@angular/router';
+import {ShareService} from 'src/app/services/share.service';
+import {WmMapComponent} from 'src/app/shared/map-core/components';
+import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -43,6 +44,7 @@ export interface IDATALAYER {
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage extends GeolocationPage implements OnDestroy {
+  private _bboxLayer = null;
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -55,9 +57,9 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild('fab3') fab3: IonFab;
   @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
+  @ViewChild('wmap') wmMapComponent: WmMapComponent;
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
-  @ViewChild('wmap') wmMapComponent: WmMapComponent;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -104,7 +106,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
   currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
-    switchMap(id => this._geohubSVC.getEcTrack(id)),
+    switchMap(id => this._geohubSvc.getEcTrack(id)),
     startWith(null),
   );
   dataLayerUrls$: Observable<IDATALAYER>;
@@ -150,13 +152,14 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   public sliderOptions: any;
   trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
     new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
-  private _bboxLayer = null;
+
   constructor(
     private _store: Store,
-    private _deviceService: DeviceService,
+    private _deviceSvc: DeviceService,
     private _authSvc: AuthService,
-    private _geohubSVC: GeohubService,
+    private _geohubSvc: GeohubService,
     private _route: ActivatedRoute,
+    private _shareSvc: ShareService,
     _backgroundGeolocation: BackgroundGeolocation,
   ) {
     super(_backgroundGeolocation);
@@ -179,7 +182,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       spaceBetween: 10,
       slidesOffsetAfter: 15,
       slidesOffsetBefore: 15,
-      slidesPerView: this._deviceService.width / 235,
+      slidesPerView: this._deviceSvc.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
   }
@@ -187,9 +190,12 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   close(): void {
     if (this.currentRelatedPoi$.value != null || this.currentPoi$.value != null) {
       const currentVal = this.trackid$.value;
-      this.trackid$.next(null);
       this.currentRelatedPoi$.next(null);
       this.currentPoi$.next(null);
+      this.wmMapComponent.map.getView().animate({
+        duration: 0,
+        rotation: 0,
+      });
       setTimeout(() => {
         this.goToTrack(currentVal);
       }, 300);
@@ -219,9 +225,13 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   goToTrack(id: number) {
+    console.log(id);
     this._poiReset();
+    this.wmMapComponent.map.getView().animate({
+      duration: 0,
+      rotation: 0,
+    });
     this.trackid$.next(id);
-    // this._store.dispatch(setCurrentTrackId({currentTrackId: +id}));
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
       this.mapTrackDetailsCmp.open();
@@ -259,6 +269,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     setTimeout(() => {
       this.showDownload$.next(true);
     }, 300);
+  }
+
+  openTrackShare(trackId: number): void {
+    this._shareSvc.shareTrackByID(trackId);
   }
 
   phone(_): void {}

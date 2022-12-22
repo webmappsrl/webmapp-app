@@ -18,14 +18,16 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 export class MapTrackDetailsComponent implements AfterViewInit {
   private _animationSwipe: Animation;
   private _gesture: Gesture;
-  private _started: boolean = false;
   private _initialStep: number = 1;
+  private _started: boolean = false;
+
+  @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
   maxInfoheight = 850;
   minInfoheight = 350;
   stepStatus = 0;
-  @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
+
   constructor(
     private _elRef: ElementRef,
     private _platform: Platform,
@@ -33,30 +35,12 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
   ) {}
 
-  full(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 40}px`);
-  }
-
-  open(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.maxInfoheight / 2}px`);
-  }
-
   close(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '56px');
   }
 
-  none(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
-  }
-
-  toggle(): boolean {
-    if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
-      this.open();
-      return true;
-    } else {
-      this.close();
-      return false;
-    }
+  full(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
   }
 
   handleClick(): void {
@@ -68,8 +52,13 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     this.setAnimations();
     this._setGesture();
   }
-  private _getCurrentHeight(): number {
-    return this._elRef.nativeElement.offsetHeight;
+
+  none(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
+  }
+
+  open(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.maxInfoheight / 2}px`);
   }
 
   async setAnimations(from = '0px', to = '0px') {
@@ -91,6 +80,26 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     }
   }
 
+  toggle(): boolean {
+    if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
+      this.open();
+      return true;
+    } else {
+      this.close();
+      return false;
+    }
+  }
+
+  private _clamp(min: number, n: number, max: number): number {
+    const val = Math.max(min, Math.min(n, max));
+    this.stepStatus = val;
+    return this.stepStatus;
+  }
+
+  private _getCurrentHeight(): number {
+    return this._elRef.nativeElement.offsetHeight;
+  }
+
   private _setGesture() {
     this._gesture = this._gestureCtrl.create({
       el: this.dragHandleIcon.nativeElement,
@@ -107,6 +116,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
     this._gesture.enable(true);
   }
+
   private endAnimation(shouldComplete: boolean, step: number) {
     console.log(step);
     this._animationSwipe.progressEnd(shouldComplete ? 1 : 0, step);
@@ -114,6 +124,11 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       this._gesture.enable(true);
     });
     this.stepStatus = shouldComplete ? 0 : 1;
+  }
+
+  private getStep(ev) {
+    const delta = this._initialStep - ev.deltaY;
+    return this._clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
   }
 
   private onEnd(ev) {
@@ -135,14 +150,5 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     const step = this.getStep(ev);
     console.log(step);
     this._animationSwipe.progressStep(step);
-  }
-  private getStep(ev) {
-    const delta = this._initialStep - ev.deltaY;
-    return this._clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
-  }
-  private _clamp(min: number, n: number, max: number): number {
-    const val = Math.max(min, Math.min(n, max));
-    this.stepStatus = val;
-    return this.stepStatus;
   }
 }
