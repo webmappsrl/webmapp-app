@@ -27,7 +27,6 @@
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
       (related-poi-next)="currentPoiNextID$.next($event)"
-      (related-poi-click)="poiOpen($event)"
       (related-poi)="setCurrentPoi($event)"
     >
       <div top-left>

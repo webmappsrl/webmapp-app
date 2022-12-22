@@ -1,3 +1,4 @@
+import {WmMapComponent} from './../../../../../instances/catab/src/app/shared/map-core/components/map/map.component';
 import {IGeojsonFeature} from './../../../../../instances/parcomaremma/src/app/types/model.d';
 import {
   ChangeDetectionStrategy,
@@ -5,21 +6,14 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
-  AfterViewInit,
 } from '@angular/core';
 import {IonFab, IonSlides} from '@ionic/angular';
-import {BehaviorSubject, Observable, zip} from 'rxjs';
-import {filter, map, tap, withLatestFrom, switchMap, startWith, concatMap} from 'rxjs/operators';
+import {BehaviorSubject, merge, Observable} from 'rxjs';
+import {filter, map, tap, switchMap, startWith, catchError} from 'rxjs/operators';
 
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
-import {
-  currentFilters,
-  currentPoiID,
-  mapCurrentLayer,
-  mapCurrentTrack,
-  padding,
-} from 'src/app/store/map/map.selector';
+import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
@@ -27,7 +21,7 @@ import {Browser} from '@capacitor/browser';
 import {Store} from '@ngrx/store';
 import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
-import {fromHEXToColor, Log} from 'src/app/shared/map-core/utils';
+import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {pois} from 'src/app/store/pois/pois.selector';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {GeolocationPage} from '../abstract/geolocation';
@@ -48,7 +42,7 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit {
+export class MapPage extends GeolocationPage implements OnDestroy {
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -63,6 +57,7 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
   @ViewChild('gallery') slider: IonSlides;
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
+  @ViewChild('wmap') wmMapComponent: WmMapComponent;
 
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -99,7 +94,9 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
     }),
   );
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
-  currentLayer$ = this._store.select(mapCurrentLayer);
+  currentLayer$ = this._store
+    .select(mapCurrentLayer)
+    .pipe(tap(l => (this._bboxLayer = l?.bbox ?? null)));
   currentPoi$: BehaviorSubject<IGeojsonFeature> = new BehaviorSubject<IGeojsonFeature | null>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -121,18 +118,20 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
   modeFullMap = false;
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-  poiProperties$: Observable<any> = this.currentPoi$.pipe(
-    withLatestFrom(this.currentRelatedPoi$),
-    map(([poi, relatedPoi]) => {
-      if (relatedPoi != null) {
-        const prop = {...relatedPoi.properties, ...{isRelated: true}};
-        return prop;
-      }
-      if (poi != null) {
-        return poi.properties;
-      }
-      return null;
-    }),
+  poiProperties = this.currentPoi$.pipe(map(p => p.properties));
+  poiProperties$: Observable<any> = merge(
+    this.currentPoi$.pipe(
+      map(p => {
+        if (p == null) return null;
+        return p.properties;
+      }),
+    ),
+    this.currentRelatedPoi$.pipe(
+      map(p => {
+        if (p == null) return null;
+        return {...p.properties, ...{isRelated: true}};
+      }),
+    ),
   );
   pois: any[];
   pois$: Observable<any> = this._store
@@ -151,7 +150,7 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
   public sliderOptions: any;
   trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
     new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
-
+  private _bboxLayer = null;
   constructor(
     private _store: Store,
     private _deviceService: DeviceService,
@@ -183,12 +182,6 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
       slidesPerView: this._deviceService.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
-    this._store
-      .select(currentPoiID)
-      .pipe(withLatestFrom(this.pois$))
-      .subscribe(([id, pois]) => {
-        if (id != null && pois != null) this.poiOpen(id);
-      });
   }
 
   close(): void {
@@ -238,22 +231,23 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
     }
   }
 
-  ionViewDidEnter() {
+  ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
+  }
+
+  ionViewWillEnter(): void {
+    const id = this._route.snapshot.queryParams['track'];
+    this._route.snapshot.queryParams = {};
+    if (id != null) {
+      this.goToTrack(id);
+    }
   }
 
   ionViewWillLeave() {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
-  }
-
-  ngAfterViewInit(): void {
-    this._route.queryParams.subscribe(params => {
-      const id = params.track;
-      if (id != null) {
-        this.goToTrack(id);
-      }
-    });
+    this.trackid$.next(null);
+    this.mapTrackDetailsCmp.none();
   }
 
   ngOnDestroy(): void {
@@ -271,14 +265,6 @@ export class MapPage extends GeolocationPage implements OnDestroy, AfterViewInit
 
   poiNext(): void {
     this.wmMapTrackRelatedPoisDirective.poiNext();
-  }
-
-  poiOpen(poiID: Event | number) {
-    //this._store.dispatch(openDetails({openDetails: true}));
-    this.currentPoiID$.next(+poiID);
-    const currentPoi = this.pois.filter(p => +p.properties.id === poiID)[0] ?? null;
-
-    // this.currentPoi$.next(currentPoi);
   }
 
   poiPrev(): void {
