@@ -68,6 +68,9 @@ webmapp-map-page {
     right: 0;
     width: 0%;
   }
+  ion-fab {
+    display: block;
+  }
   ion-fab-button {
     @include box-shadow-light;
 
@@ -87,6 +90,9 @@ webmapp-map-page {
       padding: 9px;
       font-size: var(--wm-font-icon);
     }
+  }
+  ion-fab-list {
+    position: absolute;
   }
   wm-map {
     width: 100%;

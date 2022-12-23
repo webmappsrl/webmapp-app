@@ -1,37 +1,38 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   ViewChild,
   ViewEncapsulation,
-  OnDestroy,
 } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides} from '@ionic/angular';
+import {Store} from '@ngrx/store';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {filter, map, tap, switchMap, startWith} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, tap} from 'rxjs/operators';
 
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {AuthService} from 'src/app/services/auth.service';
+import {DeviceService} from 'src/app/services/base/device.service';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {ShareService} from 'src/app/services/share.service';
+import {WmMapComponent} from 'src/app/shared/map-core/components';
+import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
+import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
+import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
+import {pois} from 'src/app/store/pois/pois.selector';
+import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
+
+import {GeolocationPage} from '../abstract/geolocation';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
-import {Browser} from '@capacitor/browser';
-import {Store} from '@ngrx/store';
-import {AuthService} from 'src/app/services/auth.service';
-import {DeviceService} from 'src/app/services/base/device.service';
-import {fromHEXToColor} from 'src/app/shared/map-core/utils';
-import {pois} from 'src/app/store/pois/pois.selector';
-import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
-import {GeolocationPage} from '../abstract/geolocation';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {GeohubService} from 'src/app/services/geohub.service';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
-import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
-import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
-import {ActivatedRoute} from '@angular/router';
-import {ShareService} from 'src/app/services/share.service';
-import {WmMapComponent} from 'src/app/shared/map-core/components';
-import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -256,7 +257,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   ionViewWillLeave() {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
-    this.trackid$.next(null);
+    this.goToTrack(null);
     this.mapTrackDetailsCmp.none();
   }
 

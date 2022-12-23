@@ -53,12 +53,11 @@
       <div bottom-right>
         <ion-fab
           #fab1
-          class="social"
           slot="fixed"
           vertical="top"
           horizontal="start"
           *ngIf="trackid$|async as trackId"
-          (click)="fab2.close();fab3.close()"
+          (click)="fab2?.close();fab3?.close()"
         >
           <ion-fab-button>
             <ion-icon name="share-social-outline"></ion-icon>
@@ -78,7 +77,7 @@
           slot="fixed"
           vertical="top"
           horizontal="start"
-          (click)="fab1.close();fab3.close()"
+          (click)="fab1?.close();fab3?.close()"
           *ngIf="(trackid$|async)!= null"
         >
           <ion-fab-button>
