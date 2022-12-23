@@ -7,6 +7,7 @@ wm-map-track-details {
     display: block;
     position: absolute;
     background-color: white;
+    font-size: medium;
     z-index: 99;
     .wm-drag-btn {
       .wm-drag-handle {
@@ -28,10 +29,34 @@ wm-map-track-details {
     z-index: 99;
   }
   ion-card {
-    margin: 20px 0 0 0 !important;
     margin-inline: 0 !important;
-    overflow: auto;
+    margin: 0;
     padding: 10px;
     height: 100%;
+    ion-card-header {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: auto;
+      text-align: left;
+      display: block;
+      position: absolute;
+      background-color: white;
+      z-index: 99;
+      .wm-drag-btn {
+        .wm-drag-handle {
+          background-color: var(--wm-color-grey);
+          display: inline-block;
+          width: 55px;
+          height: 5px;
+          border-radius: 5px;
+        }
+      }
+    }
+    ion-card-content {
+      height: 100%;
+      top: 66px;
+      overflow: scroll;
+    }
   }
 }

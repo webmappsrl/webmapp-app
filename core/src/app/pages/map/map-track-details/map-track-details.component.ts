@@ -36,7 +36,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   ) {}
 
   close(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '56px');
+    this.setAnimations(`${this._getCurrentHeight()}px`, '9%');
   }
 
   full(): void {
@@ -81,7 +81,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   }
 
   toggle(): boolean {
-    if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
+    if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() <= 110) {
       this.open();
       return true;
     } else {

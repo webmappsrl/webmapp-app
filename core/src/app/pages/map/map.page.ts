@@ -11,7 +11,7 @@ import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {filter, map, startWith, switchMap, tap} from 'rxjs/operators';
+import {filter, map, startWith, switchMap, tap, distinctUntilChanged} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {AuthService} from 'src/app/services/auth.service';
@@ -124,12 +124,14 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
   poiProperties$: Observable<any> = merge(
     this.currentPoi$.pipe(
+      distinctUntilChanged(),
       map(p => {
         if (p == null) return null;
         return p.properties;
       }),
     ),
     this.currentRelatedPoi$.pipe(
+      distinctUntilChanged(),
       map(p => {
         if (p == null) return null;
         return {...p.properties, ...{isRelated: true}};
