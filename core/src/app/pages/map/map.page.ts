@@ -10,6 +10,8 @@ import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geoloca
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {Store} from '@ngrx/store';
+import {Feature} from 'ol';
+import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, merge, Observable} from 'rxjs';
 import {filter, map, startWith, switchMap, tap, distinctUntilChanged} from 'rxjs/operators';
 
@@ -119,6 +121,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
+  nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
+    new BehaviorSubject<Feature<Geometry> | null>(null);
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
@@ -292,8 +296,14 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
 
-  setCurrentPoi(poi: IGeojsonFeature) {
-    this.currentRelatedPoi$.next(poi);
+  setCurrentPoi(poi: IGeojsonFeature | null) {
+    if (poi != null) {
+      this.currentRelatedPoi$.next(poi);
+    }
+  }
+  setNearestPoi(nearestPoi: Feature<Geometry>): void {
+    const id = +nearestPoi.getId();
+    this.wmMapTrackRelatedPoisDirective.setPoi = id;
   }
 
   setPoi(poi: IGeojsonFeature): void {

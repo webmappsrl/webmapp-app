@@ -193,13 +193,14 @@ webmapp-map-page {
           }
         }
       }
-      .webmapp-pagepoi-info-body-description {
-        padding: 10px 0;
-      }
     }
   }
+  .webmapp-pagepoi-info-body-description {
+    padding: 10px 0;
+    margin-bottom: 10%;
+  }
   .close-menu {
-    top: 0;
+    top: -5px;
     height: 30px;
     width: 30px;
     margin-right: 10px;

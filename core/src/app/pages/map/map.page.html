@@ -27,6 +27,7 @@
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
       (related-poi-next)="currentPoiNextID$.next($event)"
+      (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
       (related-poi)="setCurrentPoi($event)"
     >
       <div top-left>
@@ -217,20 +218,39 @@
         </div>
       </ng-container>
       <ng-template #track>
-        <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
-          <div header></div>
+        <ion-content scrollY="true" scroll-events="true">
+          <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
+            <div header></div>
 
-          <ng-container *ngIf="currentTrack.properties as prop">
-            <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-              <div [innerHTML]="flowPopoverText"></div>
-            </ion-label>
-            <wm-slope-chart
-              [currentTrack]="currentTrack$|async"
-              (hover)="setTrackElevationChartHoverElements($event)"
-            ></wm-slope-chart>
-            <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
+            <ng-container *ngIf="currentTrack.properties as prop">
+              <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
+                <div [innerHTML]="flowPopoverText"></div>
+              </ion-label>
+              <ng-container *ngIf="(confMap$|async).alert_poi_show">
+                <ng-container *ngIf="nearestPoi$|async as nearestPoi">
+                  <webmapp-tab-nearest-poi
+                    [nearestPoi]="nearestPoi"
+                    (click)="setNearestPoi(nearestPoi)"
+                  ></webmapp-tab-nearest-poi>
+                </ng-container>
+              </ng-container>
+              <wm-slope-chart
+                [currentTrack]="currentTrack$|async"
+                (hover)="setTrackElevationChartHoverElements($event)"
+              ></wm-slope-chart>
+              <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
+              <wm-tab-howto [properties]="prop"></wm-tab-howto>
+              <div
+                class="webmapp-pagepoi-info-body-description"
+                [innerHTML]="prop?.description | wmtrans"
+              ></div>
+              <ng-container *ngIf="prop?.audio">
+                <ion-title>{{'Descrizione Audio'|wmtrans}}</ion-title>
+                <webmapp-track-audio [audio]="prop.audio"></webmapp-track-audio>
+              </ng-container>
+            </ng-container>
           </ng-container>
-        </ng-container>
+        </ion-content>
       </ng-template>
 
       <ng-template #skeleton>

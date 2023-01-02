@@ -19,6 +19,8 @@ import {TrackAudioComponent} from './track-audio/track-audio.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {RelatedUrlsComponent} from './related-urls/related-urls.component';
 import {ButtonsModule} from './buttons/buttons.module';
+import {TabNearestPoiComponent} from './tab-nearest-poi/tab-nearest-poi.component';
+import {TabHowtoComponent} from './tab-howto/tab-howto.component';
 
 const components = [
   LoginComponent,
@@ -34,6 +36,8 @@ const components = [
   ImageGalleryComponent,
   ModalImageComponent,
   RelatedUrlsComponent,
+  TabNearestPoiComponent,
+  TabHowtoComponent,
 ];
 @NgModule({
   declarations: components,
