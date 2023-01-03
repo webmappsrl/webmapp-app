@@ -12,7 +12,7 @@ import {map, withLatestFrom} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
-  selector: 'webmapp-track-audio',
+  selector: 'wm-track-audio',
   templateUrl: './track-audio.component.html',
   styleUrls: ['./track-audio.component.scss'],
   encapsulation: ViewEncapsulation.None,

@@ -3,10 +3,10 @@
     <ng-container *ngIf="modeFullMap ">
       <ng-container *ngIf="nearestPoi$|async as nearestPoi">
         <div class="message">
-          <webmapp-tab-nearest-poi
+          <wm-tab-nearest-poi
             [nearestPoi]="nearestPoi"
             (click)="clickPoi(nearestPoi)"
-          ></webmapp-tab-nearest-poi>
+          ></wm-tab-nearest-poi>
         </div>
       </ng-container>
     </ng-container>
@@ -104,10 +104,10 @@
       <ion-content #moredetails scrollY="true" scroll-events="true" (ionScroll)="scroll($event)">
         <ng-container *ngIf="(mapConf$|async).alert_poi_show">
           <ng-container *ngIf="nearestPoi$|async as nearestPoi">
-            <webmapp-tab-nearest-poi
+            <wm-tab-nearest-poi
               [nearestPoi]="nearestPoi"
               (click)="clickPoi(nearestPoi)"
-            ></webmapp-tab-nearest-poi>
+            ></wm-tab-nearest-poi>
           </ng-container>
         </ng-container>
         <webmapp-tab-detail
@@ -118,9 +118,7 @@
         <webmapp-tab-description class="webmapp-route-tab"></webmapp-tab-description>
         <ng-container *ngIf="(currentTrackProperties$|async)?.audio">
           <ion-title>{{'Descrizione Audio'|wmtrans}}</ion-title>
-          <webmapp-track-audio
-            [audio]="(currentTrackProperties$|async)?.audio"
-          ></webmapp-track-audio>
+          <wm-track-audio [audio]="(currentTrackProperties$|async)?.audio"></wm-track-audio>
         </ng-container>
       </ion-content>
     </ion-card>

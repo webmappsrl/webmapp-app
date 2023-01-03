@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   analyticsId: '285809815',
-  geohubId: 17,
+  geohubId: 13,
   api: 'https://geohub.webmapp.it',
   // api: 'http://127.0.0.1:8000',
 };

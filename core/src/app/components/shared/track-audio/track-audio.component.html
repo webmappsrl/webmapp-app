@@ -1,3 +1,4 @@
+<ion-title>{{'Descrizione Audio'|wmtrans}}</ion-title>
 <ion-segment (ionChange)="changeLang($event)" value="{{currentLang$|async}}">
   <ion-segment-button *ngFor="let lang of (langs$|async)" [value]="lang">
     <ion-label>{{lang}}</ion-label>

@@ -1,11 +1,13 @@
 /* eslint-disable @angular-eslint/template/eqeqeq */
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 @Component({
-  selector: 'webmapp-related-urls',
+  selector: 'wm-related-urls',
   template: `
-    <div *ngIf="relatedUrls !== null">
+    <div *ngIf="relatedUrls != null" 
+      class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
+    >
         <ng-container *ngFor="let item of relatedUrls|keyvalue">
-            <a [href]="item.value" target="_blank" style="display:block">
+            <a  style="display:block"  (click)="url(item.value)">
                 <i class="icon-outline-globe webmapp-pagepoi-info-icon"></i>
                 {{item.key}}
             </a>
@@ -16,4 +18,8 @@ import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 })
 export class RelatedUrlsComponent {
   @Input('relatedUrls') relatedUrls: {[label: string]: string};
+  url(url: string): void {
+    url = url.replace(/^https?:\/\//, '');
+    window.open(`https://${url}`, '_blank');
+  }
 }

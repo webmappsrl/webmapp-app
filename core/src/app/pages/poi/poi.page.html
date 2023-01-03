@@ -79,7 +79,7 @@
           class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
           (click)="url(relatedUrl)"
         >
-          <webmapp-related-urls [relatedUrls]="relatedUrl"> </webmapp-related-urls>
+          <wm-related-urls [relatedUrls]="relatedUrl"> </wm-related-urls>
           <ion-ripple-effect></ion-ripple-effect>
         </div>
 
@@ -88,7 +88,7 @@
           [innerHTML]="properties.description | wmtrans"
         ></div>
         <ng-container *ngIf="properties.audio">
-          <webmapp-track-audio [audio]="properties.audio"></webmapp-track-audio>
+          <wm-track-audio [audio]="properties.audio"></wm-track-audio>
         </ng-container>
       </ion-content>
     </div>

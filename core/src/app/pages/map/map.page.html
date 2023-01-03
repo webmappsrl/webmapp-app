@@ -26,7 +26,7 @@
       [track]="currentTrack$|async"
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
-      (related-poi-next)="currentPoiNextID$.next($event)"
+      (related-poi-next)="currentPoiNextID$.next(+$event)"
       (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
       (related-poi)="setCurrentPoi($event)"
     >
@@ -168,52 +168,19 @@
         <div class="webmapp-pagepoi-info-container">
           <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
             <wm-image-gallery [imageGallery]="properties?.image_gallery"></wm-image-gallery>
-            <div
-              [hidden]="!properties?.address"
-              class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-            >
-              <i class="icon-outline-pin webmapp-pagepoi-info-icon"></i>
-              {{ properties?.address}}
-              <ion-ripple-effect></ion-ripple-effect>
-            </div>
-            <div
-              *ngIf="properties?.contact_phone as phone"
-              class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-              (click)="phone(phone)"
-            >
-              <a href="tel:{{phone}}">
-                <i class="icon-outline-phone webmapp-pagepoi-info-icon"></i>
-                {{phone}}</a
-              >
-              <ion-ripple-effect></ion-ripple-effect>
-            </div>
-            <div
-              *ngIf="properties?.contact_email as email"
-              class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-              (click)="email(email)"
-            >
-              <a href="mailto:{{ properties?.email}}">
-                <i class="icon-outline-mail webmapp-pagepoi-info-icon"></i>
-                {{ properties?.email}}
-                <ion-ripple-effect></ion-ripple-effect>
-              </a>
-            </div>
-            <div
+            <wm-address *ngIf="properties?.address as address" [address]="address"></wm-address>
+            <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
+            <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
+            <wm-related-urls
               *ngIf="properties?.related_url as relatedUrl"
-              class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
-              (click)="url(relatedUrl)"
+              [relatedUrls]="relatedUrl"
             >
-              <webmapp-related-urls [relatedUrls]="relatedUrl"> </webmapp-related-urls>
-              <ion-ripple-effect></ion-ripple-effect>
-            </div>
-
-            <div
-              class="webmapp-pagepoi-info-body-description"
-              [innerHTML]="properties?.description | wmtrans"
-            ></div>
-            <ng-container *ngIf="properties?.audio">
-              <webmapp-track-audio [audio]="properties?.audio"></webmapp-track-audio>
-            </ng-container>
+            </wm-related-urls>
+            <wm-tab-description
+              *ngIf="properties?.description"
+              [description]="properties?.description"
+            ></wm-tab-description>
+            <wm-track-audio *ngIf="properties?.audio" [audio]="properties?.audio"></wm-track-audio>
           </ion-content>
         </div>
       </ng-container>
@@ -227,12 +194,11 @@
                 <div [innerHTML]="flowPopoverText"></div>
               </ion-label>
               <ng-container *ngIf="(confMap$|async).alert_poi_show">
-                <ng-container *ngIf="nearestPoi$|async as nearestPoi">
-                  <webmapp-tab-nearest-poi
-                    [nearestPoi]="nearestPoi"
-                    (click)="setNearestPoi(nearestPoi)"
-                  ></webmapp-tab-nearest-poi>
-                </ng-container>
+                <wm-tab-nearest-poi
+                  *ngIf="nearestPoi$|async as nearestPoi"
+                  [nearestPoi]="nearestPoi"
+                  (click)="setNearestPoi(nearestPoi)"
+                ></wm-tab-nearest-poi>
               </ng-container>
               <wm-slope-chart
                 [currentTrack]="currentTrack$|async"
@@ -240,14 +206,15 @@
               ></wm-slope-chart>
               <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
               <wm-tab-howto [properties]="prop"></wm-tab-howto>
-              <div
-                class="webmapp-pagepoi-info-body-description"
-                [innerHTML]="prop?.description | wmtrans"
-              ></div>
-              <ng-container *ngIf="prop?.audio">
-                <ion-title>{{'Descrizione Audio'|wmtrans}}</ion-title>
-                <webmapp-track-audio [audio]="prop.audio"></webmapp-track-audio>
-              </ng-container>
+              <wm-tab-image-gallery
+                *ngIf="prop?.image_gallery?.length"
+                [imageGallery]="prop.image_gallery"
+              ></wm-tab-image-gallery>
+              <wm-tab-description
+                *ngIf="prop?.description != null"
+                [description]="prop.description"
+              ></wm-tab-description>
+              <wm-track-audio *ngIf="prop?.audio" [audio]="prop.audio"></wm-track-audio>
             </ng-container>
           </ng-container>
         </ion-content>
