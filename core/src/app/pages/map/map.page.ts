@@ -232,7 +232,6 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   goToTrack(id: number) {
-    console.log(id);
     this._poiReset();
     this.wmMapComponent.map.getView().animate({
       duration: 0,
