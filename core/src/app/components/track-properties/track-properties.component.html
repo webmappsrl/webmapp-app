@@ -1,0 +1,16 @@
+<ng-content></ng-content>
+<ng-container *ngIf="track!= null">
+  <ng-container *ngIf="track.properties  as prop">
+    <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
+    <wm-tab-howto [properties]="prop"></wm-tab-howto>
+    <wm-tab-image-gallery
+      *ngIf="prop?.image_gallery?.length"
+      [imageGallery]="prop.image_gallery"
+    ></wm-tab-image-gallery>
+    <wm-tab-description
+      *ngIf="prop?.description != null"
+      [description]="prop.description"
+    ></wm-tab-description>
+    <wm-track-audio *ngIf="prop?.audio" [audio]="prop.audio"></wm-track-audio>
+  </ng-container>
+</ng-container>

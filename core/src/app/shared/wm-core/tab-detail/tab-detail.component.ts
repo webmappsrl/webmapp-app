@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewEncapsulation,
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {IMapRootState} from 'src/app/store/map/map';
@@ -11,6 +18,7 @@ import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
   templateUrl: './tab-detail.component.html',
   styleUrls: ['./tab-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class WmTabDetailComponent {
   public route: IGeojsonFeature;

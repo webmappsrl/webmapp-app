@@ -173,34 +173,24 @@
         <ion-content scrollY="true" scroll-events="true">
           <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
             <div header></div>
-
-            <ng-container *ngIf="currentTrack.properties as prop">
-              <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-                <div [innerHTML]="flowPopoverText"></div>
-              </ion-label>
-              <ng-container *ngIf="(confMap$|async).alert_poi_show">
-                <wm-tab-nearest-poi
-                  *ngIf="nearestPoi$|async as nearestPoi"
-                  [nearestPoi]="nearestPoi"
-                  (click)="setNearestPoi(nearestPoi)"
-                ></wm-tab-nearest-poi>
+            <wm-track-properties [track]="currentTrack">
+              <ng-container *ngIf="currentTrack.properties as prop">
+                <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
+                  <div [innerHTML]="flowPopoverText"></div>
+                </ion-label>
+                <ng-container *ngIf="(confMap$|async).alert_poi_show">
+                  <wm-tab-nearest-poi
+                    *ngIf="nearestPoi$|async as nearestPoi"
+                    [nearestPoi]="nearestPoi"
+                    (click)="setNearestPoi(nearestPoi)"
+                  ></wm-tab-nearest-poi>
+                </ng-container>
+                <wm-slope-chart
+                  [currentTrack]="currentTrack$|async"
+                  (hover)="setTrackElevationChartHoverElements($event)"
+                ></wm-slope-chart>
               </ng-container>
-              <wm-slope-chart
-                [currentTrack]="currentTrack$|async"
-                (hover)="setTrackElevationChartHoverElements($event)"
-              ></wm-slope-chart>
-              <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
-              <wm-tab-howto [properties]="prop"></wm-tab-howto>
-              <wm-tab-image-gallery
-                *ngIf="prop?.image_gallery?.length"
-                [imageGallery]="prop.image_gallery"
-              ></wm-tab-image-gallery>
-              <wm-tab-description
-                *ngIf="prop?.description != null"
-                [description]="prop.description"
-              ></wm-tab-description>
-              <wm-track-audio *ngIf="prop?.audio" [audio]="prop.audio"></wm-track-audio>
-            </ng-container>
+            </wm-track-properties>
           </ng-container>
         </ion-content>
       </ng-template>

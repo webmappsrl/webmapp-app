@@ -15,6 +15,7 @@ import {MapPage} from './map.page';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properties.module';
+import {TrackPropetiesModule} from 'src/app/components/track-properties/track-properties.module';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properti
     RegisterPageModule,
     WmCoreModule,
     PoiPropetiesModule,
+    TrackPropetiesModule,
   ],
   declarations: [MapPage, MapTrackCardComponent, MapTrackDetailsComponent],
 })
