@@ -165,24 +165,9 @@
         </ion-fab>
       </div>
       <ng-container *ngIf="poiProperties$|async as properties;else track;">
-        <div class="webmapp-pagepoi-info-container">
-          <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
-            <wm-image-gallery [imageGallery]="properties?.image_gallery"></wm-image-gallery>
-            <wm-address *ngIf="properties?.address as address" [address]="address"></wm-address>
-            <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
-            <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
-            <wm-related-urls
-              *ngIf="properties?.related_url as relatedUrl"
-              [relatedUrls]="relatedUrl"
-            >
-            </wm-related-urls>
-            <wm-tab-description
-              *ngIf="properties?.description"
-              [description]="properties?.description"
-            ></wm-tab-description>
-            <wm-track-audio *ngIf="properties?.audio" [audio]="properties?.audio"></wm-track-audio>
-          </ion-content>
-        </div>
+        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+          <wm-poi-properties [properties]="properties"></wm-poi-properties>
+        </ion-content>
       </ng-container>
       <ng-template #track>
         <ion-content scrollY="true" scroll-events="true">
