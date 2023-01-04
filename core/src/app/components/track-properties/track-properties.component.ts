@@ -9,5 +9,4 @@ import {Component, ChangeDetectionStrategy, Input, ViewEncapsulation} from '@ang
 })
 export class TrackPropertiesComponent {
   @Input() track;
-  constructor() {}
 }

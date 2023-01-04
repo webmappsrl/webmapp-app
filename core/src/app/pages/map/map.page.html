@@ -20,6 +20,7 @@
       wmMapPosition
       [wmMapPositioncurrentLocation]="currentPosition$|async"
       [wmMapPositionCenter]="centerPositionEvt$|async"
+      [wmMapPositionfocus]="wmMapPositionfocus$|async"
       [wmMapOverlay]="enableOverLay$|async"
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
       wmMapTrack
@@ -32,11 +33,7 @@
     >
       <div top-left>
         <ng-container *ngIf="(trackid$|async)!= null||(currentPoi$|async)!= null">
-          <ion-fab-button
-            (click)="close();this.showDownload$.next(false)"
-            size="small"
-            class="webmapp-pagepoi-btntop"
-          >
+          <ion-fab-button (click)="close()" size="small" class="webmapp-pagepoi-btntop">
             <i class="icon-outline-close"></i>
           </ion-fab-button>
         </ng-container>
@@ -54,7 +51,6 @@
       <div bottom-right>
         <ion-fab
           #fab1
-          class="social"
           slot="fixed"
           vertical="top"
           horizontal="start"
@@ -75,7 +71,6 @@
         </ion-fab>
         <ion-fab
           #fab2
-          class="social"
           slot="fixed"
           vertical="top"
           horizontal="start"
@@ -93,7 +88,7 @@
               (click)="wmap.orientNorth()"
             >
             </wm-btn-orientation>
-            <ion-fab-button>
+            <ion-fab-button (click)="navigation()">
               <ion-icon name="navigate-outline"></ion-icon>
             </ion-fab-button>
             <wm-btn-center-position

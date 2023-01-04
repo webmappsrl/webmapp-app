@@ -159,6 +159,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   public sliderOptions: any;
   trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
     new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
+  wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private _store: Store,
@@ -195,6 +196,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   close(): void {
+    this.showDownload$.next(false);
+    this.wmMapPositionfocus$.next(false);
     if (this.currentRelatedPoi$.value != null || this.currentPoi$.value != null) {
       const currentVal = this.trackid$.value;
       this.currentRelatedPoi$.next(null);
@@ -266,6 +269,16 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.mapTrackDetailsCmp.none();
   }
 
+  navigation(): void {
+    const open = !this.wmMapPositionfocus$.value;
+    this.wmMapPositionfocus$.next(open);
+    if (open) {
+      this.mapTrackDetailsCmp.none();
+    } else {
+      this.mapTrackDetailsCmp.close();
+    }
+  }
+
   ngOnDestroy(): void {
     super.ngOnDestroy();
   }
@@ -300,6 +313,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       this.currentRelatedPoi$.next(poi);
     }
   }
+
   setNearestPoi(nearestPoi: Feature<Geometry>): void {
     const id = +nearestPoi.getId();
     this.wmMapTrackRelatedPoisDirective.setPoi = id;
