@@ -12,6 +12,7 @@ export const confLANGUAGES = createSelector(confFeature, state => state.LANGUAGE
 export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
 export const confAUTHEnable = createSelector(confAUTH, auth => auth.enable || false);
+export const confJIDOUPDATETIME = createSelector(confFeature, state => state.JIDO_UPDATE_TIME);
 export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks) => ({
   ...state.MAP,
   ...{tracks: allTracks},

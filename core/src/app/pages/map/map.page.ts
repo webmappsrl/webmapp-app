@@ -24,7 +24,13 @@ import {WmMapComponent} from 'src/app/shared/map-core/components';
 import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
-import {confGeohubId, confMAP, confPOIS, confPOISFilter} from 'src/app/store/conf/conf.selector';
+import {
+  confGeohubId,
+  confMAP,
+  confPOIS,
+  confPOISFilter,
+  confJIDOUPDATETIME,
+} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
@@ -64,6 +70,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
 
+  confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
       if (conf.flow_line_quote_show) {
