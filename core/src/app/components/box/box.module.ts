@@ -1,3 +1,4 @@
+import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 import {BaseBoxComponent} from './base-box/base-box.component';
 import {BoxComponent} from './box/box.component';
 import {CardsModule} from '../cards/cards.module';
@@ -26,7 +27,15 @@ const boxComponents = [
 ];
 @NgModule({
   declarations: boxComponents,
-  imports: [CommonModule, IonicModule, PipeModule, TranslateModule, SharedModule, CardsModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    PipeModule,
+    TranslateModule,
+    SharedModule,
+    CardsModule,
+    WmCoreModule,
+  ],
   exports: boxComponents,
 })
 export class BoxModule {}

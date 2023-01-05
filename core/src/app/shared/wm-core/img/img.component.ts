@@ -14,18 +14,16 @@ import {IWmImage} from 'src/app/types/model';
 import defaultImage from 'src/assets/images/defaultImageB64.json';
 
 @Component({
-  selector: 'webmapp-img',
+  selector: 'wm-img',
   templateUrl: './img.component.html',
   styleUrls: ['./img.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ImgComponent {
-  public image$: Observable<string | ArrayBuffer | null> = of(null);
+export class WmImgComponent {
   private _loadSrcEVT$: BehaviorSubject<IWmImage | string | null> = new BehaviorSubject<
     IWmImage | string | null
   >(null);
-  @Input('size') size: string;
 
   @Input('src') set setSrc(src: IWmImage | string | null) {
     if (src == null) {
@@ -33,6 +31,10 @@ export class ImgComponent {
     }
     this._loadSrcEVT$.next(src);
   }
+
+  @Input('size') size: string;
+
+  public image$: Observable<string | ArrayBuffer | null> = of(null);
 
   constructor(private download: DownloadService) {
     this.image$ = this._loadSrcEVT$.pipe(

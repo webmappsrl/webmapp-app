@@ -8,17 +8,14 @@
     (click)="setFavourite()"
   >
   </i>
-  <div
-    #favouriteanimation
-    class="webmapp-maptrackcard-favourite-animation"
-  ></div>
-  <webmapp-img
+  <div #favouriteanimation class="webmapp-maptrackcard-favourite-animation"></div>
+  <wm-img
     [src]="track.properties?.feature_image"
     size="108x137"
     class="webmapp-maptrackcard-image"
     (click)="open()"
   >
-  </webmapp-img>
+  </wm-img>
   <div class="webmapp-maptrackcard-info" (click)="open()">
     <ion-label
       class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-name"
@@ -33,20 +30,13 @@
         webmapp-maptrackcard-info-label webmapp-maptrackcard-info-difficulty
       "
     >
-      <i class="webmapp-maptrackcard-info-icon webmapp-icon-difficulty-high">
-      </i>
+      <i class="webmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"> </i>
       {{ track.properties.difficulty | wmtrans }}
     </ion-label>
-    <ion-label
-      class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-distance"
-    >
+    <ion-label class="webmapp-maptrackcard-info-label webmapp-maptrackcard-info-distance">
       <i class="webmapp-maptrackcard-info-icon webmapp-icon-distance"> </i>
       {{ track.properties.distance }} Km
     </ion-label>
   </div>
-  <i
-    class="webmapp-maptrackcard-exit webmapp-icon-close-outline"
-    (click)="exit()"
-  >
-  </i>
+  <i class="webmapp-maptrackcard-exit webmapp-icon-close-outline" (click)="exit()"> </i>
 </ion-card>

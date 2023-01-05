@@ -6,11 +6,11 @@
     #slider
   >
     <ion-slide *ngFor="let image of imageGallery;let idx = index">
-      <webmapp-img
+      <wm-img
         [src]="image.url"
         class="webmapp-pagepoi-info-body-photo"
         (click)="showPhoto(idx)"
-      ></webmapp-img>
+      ></wm-img>
     </ion-slide>
   </ion-slides>
 </ng-container>

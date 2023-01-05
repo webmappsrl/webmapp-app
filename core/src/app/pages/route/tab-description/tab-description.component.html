@@ -10,18 +10,21 @@
     #slider
   >
     <ion-slide *ngFor="let photo of route?.properties.image_gallery; let idx = index">
-      <webmapp-img
+      <wm-img
         [src]="photo"
         size="250x150"
         class="webmapp-pageroute-tabdescription-photo"
         (click)="showPhoto(idx)"
-      ></webmapp-img>
+      ></wm-img>
     </ion-slide>
   </ion-slides>
 </div>
 <div>
-  <ion-label class="webmapp-pageroute-tabdescription-title">{{'pages.route.description.description' |
-      wmtrans}}</ion-label>
+  <ion-label
+    class="webmapp-pageroute-tabdescription-title"
+    >{{'pages.route.description.description' |
+      wmtrans}}</ion-label
+  >
   <div
     class="webmapp-pageroute-tabdescription-description"
     [innerHTML]="this.route?.properties?.description | wmtrans"

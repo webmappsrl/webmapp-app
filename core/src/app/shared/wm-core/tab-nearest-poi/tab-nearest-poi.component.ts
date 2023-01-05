@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'wm-tab-nearest-poi',
@@ -6,6 +6,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   styleUrls: ['./tab-nearest-poi.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class TabNearestPoiComponent {
+export class WmTabNearestPoiComponent {
   @Input() nearestPoi: any | null;
 }

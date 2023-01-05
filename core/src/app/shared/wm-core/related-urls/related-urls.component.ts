@@ -16,8 +16,9 @@ import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RelatedUrlsComponent {
+export class WmRelatedUrlsComponent {
   @Input('relatedUrls') relatedUrls: {[label: string]: string};
+
   url(url: string): void {
     url = url.replace(/^https?:\/\//, '');
     window.open(`https://${url}`, '_blank');

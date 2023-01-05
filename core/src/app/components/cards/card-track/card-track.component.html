@@ -1,14 +1,17 @@
 <ion-item button lines="none" class="webmapp-cardtrack-card">
-  <webmapp-img
+  <wm-img
     [src]="track.properties?.feature_image"
     size="118x138"
     (click)="open()"
     class="webmapp-cardtrack-image"
   >
-  </webmapp-img>
+  </wm-img>
   <div class="webmapp-cardtrack-info" (click)="open()">
-    <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-name">{{track.properties.name | wmtrans
-    }}</ion-label>
+    <ion-label
+      class="webmapp-cardtrack-info-label webmapp-cardtrack-info-name"
+      >{{track.properties.name | wmtrans
+      }}</ion-label
+    >
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
       {{track.properties.duration_forward | minutetime}}</ion-label
     >

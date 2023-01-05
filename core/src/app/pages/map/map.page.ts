@@ -22,6 +22,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/components';
 import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
+import {WmMapPoisDirective} from 'src/app/shared/map-core/directives';
 import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {
@@ -67,6 +68,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
   @ViewChild('wmap') wmMapComponent: WmMapComponent;
+  @ViewChild(WmMapPoisDirective) wmMapPoisDirective: WmMapPoisDirective;
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
 
@@ -262,10 +264,14 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   ionViewWillEnter(): void {
-    const id = this._route.snapshot.queryParams['track'];
+    const trackId = this._route.snapshot.queryParams['track'];
+    const poiId = this._route.snapshot.queryParams['poi'];
     this._route.snapshot.queryParams = {};
-    if (id != null) {
-      this.goToTrack(id);
+    if (trackId != null) {
+      this.goToTrack(trackId);
+    }
+    if (poiId != null) {
+      this.wmMapPoisDirective.setPoi(+poiId);
     }
   }
 
