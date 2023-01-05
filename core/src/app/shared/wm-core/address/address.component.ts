@@ -1,21 +1,19 @@
 /* eslint-disable @angular-eslint/template/eqeqeq */
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 @Component({
-  selector: 'wm-email',
+  selector: 'wm-address',
   template: `
             <div
-              *ngIf="email != null"
+            *ngIf="address != null"
               class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
             >
-              <a href="mailto:{{email}}">
-                <i class="icon-outline-mail webmapp-pagepoi-info-icon"></i>
-                {{ email}}
-                <ion-ripple-effect></ion-ripple-effect>
-              </a>
+              <i class="icon-outline-pin webmapp-pagepoi-info-icon"></i>
+              {{address}}
+              <ion-ripple-effect></ion-ripple-effect>
             </div>
 `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmailComponent {
-  @Input() email: string;
+export class WmAddressComponent {
+  @Input() address: string;
 }

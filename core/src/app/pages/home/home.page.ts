@@ -198,7 +198,14 @@ export class HomePage implements OnInit, OnChanges {
   setPoi(id: number): void {
     if (id != null) {
       this._navCtrl.navigateForward('map');
-      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: id}));
+      if (id != null) {
+        let navigationExtras: NavigationExtras = {
+          queryParams: {
+            poi: id,
+          },
+        };
+        this._navCtrl.navigateForward('map', navigationExtras);
+      }
     }
   }
 }

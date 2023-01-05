@@ -1,19 +1,21 @@
 /* eslint-disable @angular-eslint/template/eqeqeq */
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 @Component({
-  selector: 'wm-address',
+  selector: 'wm-phone',
   template: `
             <div
-            *ngIf="address != null"
+              *ngIf="phone != null"
               class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
             >
-              <i class="icon-outline-pin webmapp-pagepoi-info-icon"></i>
-              {{address}}
+              <a href="tel:{{phone}}">
+                <i class="icon-outline-phone webmapp-pagepoi-info-icon"></i>
+                {{phone}}</a
+              >
               <ion-ripple-effect></ion-ripple-effect>
             </div>
 `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressComponent {
-  @Input() address: string;
+export class WmPhoneComponent {
+  @Input() phone: string;
 }

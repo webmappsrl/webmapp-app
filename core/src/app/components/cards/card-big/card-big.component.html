@@ -1,9 +1,5 @@
 <ion-card class="webmapp-card-big-container" (click)="open()">
-  <webmapp-img
-    class="webmapp-card-big-image-container"
-    [src]="feature_image"
-    size="225x100"
-  ></webmapp-img>
+  <wm-img class="webmapp-card-big-image-container" [src]="feature_image" size="225x100"></wm-img>
   <ion-card-header class="webmapp-card-big-header">
     <ng-container *ngIf="title$|async as title; else skeletonTemplate">
       <ion-card-subtitle class="webmapp-card-big-subtitle">
@@ -17,14 +13,8 @@
       </ion-label>
     </ng-container>
     <ng-template #skeletonTemplate>
-      <ion-skeleton-text
-        class="webmapp-card-big-subtitle-skeleton"
-        animated
-      ></ion-skeleton-text>
-      <ion-skeleton-text
-        class="webmapp-card-big-title-skeleton"
-        animated
-      ></ion-skeleton-text>
+      <ion-skeleton-text class="webmapp-card-big-subtitle-skeleton" animated></ion-skeleton-text>
+      <ion-skeleton-text class="webmapp-card-big-title-skeleton" animated></ion-skeleton-text>
     </ng-template>
   </ion-card-header>
 </ion-card>

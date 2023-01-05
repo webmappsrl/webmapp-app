@@ -1,8 +1,4 @@
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {IMapRootState} from 'src/app/store/map/map';
-import {mapCurrentTrackProperties} from 'src/app/store/map/map.selector';
 import {IGeojsonProperties} from 'src/app/types/model';
 
 @Component({
@@ -12,7 +8,8 @@ import {IGeojsonProperties} from 'src/app/types/model';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabHowtoComponent {
+export class WmTabHowtoComponent {
   @Input() properties: IGeojsonProperties;
+
   constructor() {}
 }

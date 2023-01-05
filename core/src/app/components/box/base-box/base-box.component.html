@@ -1,9 +1,5 @@
 <ion-card class="webmapp-base-box-container" (click)="clickEVT.emit()">
-  <webmapp-img
-    class="webmapp-base-box-image-container"
-    [src]="data.image_url"
-    size="225x100"
-  ></webmapp-img>
+  <wm-img class="webmapp-base-box-image-container" [src]="data.image_url" size="225x100"></wm-img>
   <ion-card-header class="webmapp-base-box-header">
     <ng-container *ngIf="data else skeletonTemplate">
       <ion-card-title class="webmapp-base-box-title">
