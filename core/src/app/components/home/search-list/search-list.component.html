@@ -9,7 +9,7 @@
   <ng-container>
     <ion-segment-button value="pois" *ngIf="pois != null && pois.length> 0">
       <ion-label>
-        {{'POI'|wmtrans}} <ion-badge>{{pois.length}}</ion-badge></ion-label
+        {{'POI'|wmtrans}} <ion-badge>{{pois.length > 200 ? 200: pois.length}}</ion-badge></ion-label
       >
     </ion-segment-button>
   </ng-container>

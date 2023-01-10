@@ -11,6 +11,7 @@
       [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
       [wmMapLayerOpacity]="layerOpacity$|async"
       (trackSelectedFromLayerEVT)="goToTrack($event)"
+      (colorSelectedFromLayerEVT)="trackColor$.next($event)"
       wmMapPois
       [wmMapPoisPoi]="currentPoiID$|async"
       [wmMapPoisPois]="pois$|async"
@@ -26,6 +27,7 @@
       [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
       wmMapTrack
       [track]="currentTrack$|async"
+      [wmMapTrackColor]="trackColor$|async"
       [trackElevationChartElements]="trackElevationChartHoverElements$|async"
       wmMapTrackRelatedPois
       (related-poi-next)="currentPoiNextID$.next(+$event)"

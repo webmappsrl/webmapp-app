@@ -60,6 +60,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
 
+  readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
   @ViewChild('fab1') fab1: IonFab;
