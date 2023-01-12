@@ -9,6 +9,9 @@ import {
   searchElastic,
   searchElasticFail,
   searchElasticSuccess,
+  layerTracksElastic,
+  layerTracksElasticSuccess,
+  layerTracksElasticFail,
 } from './elastic.actions';
 import {ElasticService} from './elastic.service';
 
@@ -35,6 +38,18 @@ export class ElasticEffects {
         this._elasticSVC.getALL().pipe(
           map(all => allElasticSuccess({all})),
           catchError(e => of(allElasticFail())),
+        ),
+      ),
+    ),
+  );
+
+  layerTracksElastic$ = createEffect(() =>
+    this._actions$.pipe(
+      ofType(layerTracksElastic),
+      switchMap(action =>
+        this._elasticSVC.getLayerTracks((action as any).layer, (action as any).search).pipe(
+          map(tracks => layerTracksElasticSuccess({tracks})),
+          catchError(e => of(layerTracksElasticFail())),
         ),
       ),
     ),

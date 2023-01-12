@@ -9,6 +9,7 @@
       [initSearch]="title"
       (isTypings)="isTyping$.next($event)"
       (words)="currentSearch$.next($event)"
+      [currentLayer]="currentLayer$"
     >
     </webmapp-search-bar>
     <wm-btn-filter
@@ -38,7 +39,7 @@
       </ng-container>
       <ng-template #noType>
         <wm-search-list
-          [cards]="layerCards$|async"
+          [cards]="allTracks$|async"
           [currentTab]="'tracks'"
           (selectedTrackEvt)="searchCard($event)"
           (selectedPoiEvt)="setPoi(+$event)"

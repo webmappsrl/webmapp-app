@@ -54,7 +54,6 @@ export class AppComponent {
   ) {
     this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
-    this._storeElasticAll.dispatch(allElastic());
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
     this._storeConf

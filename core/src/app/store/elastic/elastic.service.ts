@@ -42,4 +42,16 @@ export class ElasticService {
       inputTyped ? `${this._baseUrl}&query=${inputTyped}` : this._baseUrl,
     );
   }
+  public getLayerTracks(layer: number, inputTyped: string): Observable<IELASTIC> {
+    let query = this._baseUrl;
+    if (inputTyped != null) {
+      query = `${query}&query=${inputTyped}`;
+    }
+
+    if (layer != null) {
+      query = `${query}&layer=${layer}`;
+    }
+
+    return this._http.request('get', query);
+  }
 }

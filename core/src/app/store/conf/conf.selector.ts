@@ -60,18 +60,30 @@ export const confTHEMEVariables = createSelector(confTHEME, (theme: ITHEME) =>
   getCSSVariables(theme),
 );
 
-export const confHOME = createSelector(confFeature, elasticAll, (state, all) => {
-  if (
-    state.HOME != null &&
-    state.MAP != null &&
-    state.MAP.layers != null &&
-    all != null &&
-    all.length > 0
-  ) {
+export const confPreHOME = createSelector(confFeature, state => {
+  if (state.HOME != null && state.MAP != null && state.MAP.layers != null) {
     const home: IHOME[] = [];
     state.HOME.forEach(el => {
       if (el.box_type === 'layer') {
-        const layers = getLayers([el.layer as number], state.MAP.layers, all);
+        const layers = getLayers([el.layer as number], state.MAP.layers, []);
+        home.push({...el, ...{layer: layers[0]}});
+      } else {
+        home.push(el);
+      }
+    });
+
+    return home;
+  }
+
+  return state.HOME;
+});
+
+export const confHOME = createSelector(confFeature, state => {
+  if (state.HOME != null && state.MAP != null && state.MAP.layers != null) {
+    const home: IHOME[] = [];
+    state.HOME.forEach(el => {
+      if (el.box_type === 'layer') {
+        const layers = getLayers([el.layer as number], state.MAP.layers, []);
         home.push({...el, ...{layer: layers[0]}});
       } else {
         home.push(el);

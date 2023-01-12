@@ -28,7 +28,7 @@ import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inne
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
-import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
+import {elasticLayerTracks, elasticSearch} from 'src/app/store/elastic/elastic.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
@@ -36,6 +36,7 @@ import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {NavigationExtras} from '@angular/router';
+import {layerTracksElastic} from 'src/app/store/elastic/elastic.actions';
 
 @Component({
   selector: 'wm-page-home',
@@ -45,6 +46,7 @@ import {NavigationExtras} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit, OnChanges {
+  allTracks$: Observable<IHIT[]> = this._storeConf.select(elasticLayerTracks);
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
@@ -131,6 +133,7 @@ export class HomePage implements OnInit, OnChanges {
     this.setLayer(null);
     this._navCtrl.navigateForward('home');
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     console.log(changes);
   }
@@ -184,15 +187,11 @@ export class HomePage implements OnInit, OnChanges {
     }
   }
 
-  setLayer(layer: ILAYER | null | any): void {
-    if (layer != null) {
-      const cards = layer.tracks[layer.id] ?? [];
-      this.layerCards$.next(cards);
-      this._cdr.markForCheck();
-    } else {
-      this.layerCards$.next(null);
-    }
+  async setLayer(layer: ILAYER | null | any) {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
+    if (layer != null && layer.id != null) {
+      this._storeMap.dispatch(layerTracksElastic({layer: layer.id, inputTyped: ''}));
+    }
   }
 
   setPoi(id: number): void {
