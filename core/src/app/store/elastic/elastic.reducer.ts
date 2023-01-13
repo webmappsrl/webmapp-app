@@ -1,9 +1,5 @@
 import {createReducer, on} from '@ngrx/store';
-import {
-  allElasticSuccess,
-  searchElasticSuccess,
-  layerTracksElasticSuccess,
-} from './elastic.actions';
+import {allElasticSuccess, searchElasticSuccess} from './elastic.actions';
 
 export const searchKey = 'search';
 export const allKey = 'all';
@@ -22,10 +18,4 @@ export const elasticSearchReducer = createReducer(
 export const elasticAllReducer = createReducer(
   initialConfState,
   on(allElasticSuccess, (state, {all}) => ({state, ...all})),
-);
-export const elasticLayerTracksReducer = createReducer(
-  initialConfState,
-  on(layerTracksElasticSuccess, (state, {tracks}) => {
-    return {state, ...tracks};
-  }),
 );

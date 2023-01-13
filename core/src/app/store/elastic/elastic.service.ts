@@ -32,17 +32,11 @@ export class ElasticService {
     return this._geohubAppId ? `${baseUrl}/?id=${this._geohubAppId}` : baseUrl;
   }
 
-  public getALL(): Observable<IELASTIC> {
+  getALL(): Observable<IELASTIC> {
     return this._http.request('get', this._baseUrl);
   }
 
-  public getSearch(inputTyped: string): Observable<IELASTIC> {
-    return this._http.request(
-      'get',
-      inputTyped ? `${this._baseUrl}&query=${inputTyped}` : this._baseUrl,
-    );
-  }
-  public getLayerTracks(layer: number, inputTyped: string): Observable<IELASTIC> {
+  getSearch(inputTyped?: string, layer?: number): Observable<IELASTIC> {
     let query = this._baseUrl;
     if (inputTyped != null) {
       query = `${query}&query=${inputTyped}`;

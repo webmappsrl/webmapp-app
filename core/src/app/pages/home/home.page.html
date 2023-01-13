@@ -9,7 +9,7 @@
       [initSearch]="title"
       (isTypings)="isTyping$.next($event)"
       (words)="currentSearch$.next($event)"
-      [currentLayer]="currentLayer$"
+      [currentLayer]="currentLayer$|async"
     >
     </webmapp-search-bar>
     <wm-btn-filter
@@ -26,7 +26,7 @@
   <ng-container *ngIf="online$|async">
     <ng-container *ngIf="currentLayer$|async as currentLayer;else noLayer">
       <ion-breadcrumbs>
-        <ion-breadcrumb (click)="goToHome()">Home</ion-breadcrumb>
+        <ion-breadcrumb (click)="goToHome()">{{'Home'|wmtrans}}</ion-breadcrumb>
         <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
       </ion-breadcrumbs>
       <ng-container *ngIf="(isTyping$|async);else noType">
@@ -39,7 +39,8 @@
       </ng-container>
       <ng-template #noType>
         <wm-search-list
-          [cards]="allTracks$|async"
+          *ngIf="elasticSearch$|async as elasticSearch"
+          [cards]="elasticSearch"
           [currentTab]="'tracks'"
           (selectedTrackEvt)="searchCard($event)"
           (selectedPoiEvt)="setPoi(+$event)"
@@ -63,7 +64,8 @@
         </ng-container>
         <ng-template #list>
           <wm-search-list
-            [cards]="elasticSearch$|async"
+            *ngIf="elasticSearch$|async as elasticSearch"
+            [cards]="elasticSearch"
             [pois]="poiCards$|async"
             [currentTab]="currentTab$|async"
             (selectedTrackEvt)="searchCard($event)"

@@ -9,9 +9,3 @@ export const elasticSearch = createSelector(elasticSearchFeature, (state: Search
 export const elasticAll = createSelector(elasticAllFeature, (state: SearchResponse<IHIT>) =>
   state != null && state.hits && state.hits.hits ? state.hits.hits.map(hit => hit._source) : [],
 );
-
-export const elasticLayerTracks = createSelector(
-  elasticTracksFeature,
-  (state: SearchResponse<IHIT>) =>
-    state != null && state.hits && state.hits.hits ? state.hits.hits.map(hit => hit._source) : [],
-);
