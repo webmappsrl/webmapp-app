@@ -1,7 +1,6 @@
 <ng-container *ngFor="let box of conf">
   <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
-  <webmapp-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
-  </webmapp-box>
+  <wm-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)"> </wm-box>
   <webmapp-layer-box
     *ngIf="box.box_type === 'layer'"
     [data]="box.layer"

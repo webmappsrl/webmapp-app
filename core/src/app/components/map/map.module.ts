@@ -11,7 +11,7 @@ import {MapComponent} from './map/map.component';
 import {NavMapModule} from './nav-map/nav-map.module';
 import {NgModule} from '@angular/core';
 import {OldMapComponent} from './old-map/map.component';
-import {PipeModule} from 'src/app/pipes/pipe.module';
+import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {PopoverRegisterComponent} from './popover-register/popover-register.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {WmMapModule} from 'src/app/shared/map-core/map-core.module';

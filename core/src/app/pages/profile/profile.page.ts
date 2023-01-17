@@ -10,7 +10,7 @@ import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {Store} from '@ngrx/store';
-import {WmTransPipe} from 'src/app/pipes/wmtrans.pipe';
+import {WmTransPipe} from 'src/app/shared/wm-core/pipes/wmtrans.pipe';
 import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
 
 @Component({

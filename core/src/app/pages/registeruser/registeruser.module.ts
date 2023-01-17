@@ -1,15 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { IonicModule } from '@ionic/angular';
+import {IonicModule} from '@ionic/angular';
 
-import { RegisteruserPageRoutingModule } from './registeruser-routing.module';
+import {RegisteruserPageRoutingModule} from './registeruser-routing.module';
 
-import { RegisteruserPage } from './registeruser.page';
-import { TranslateModule } from '@ngx-translate/core';
-import { PipeModule } from 'src/app/pipes/pipe.module';
-import { SharedModule } from 'src/app/components/shared/shared.module';
+import {RegisteruserPage} from './registeruser.page';
+import {TranslateModule} from '@ngx-translate/core';
+import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {SharedModule} from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -20,8 +20,8 @@ import { SharedModule } from 'src/app/components/shared/shared.module';
     ReactiveFormsModule,
     TranslateModule,
     SharedModule,
-    PipeModule
+    PipeModule,
   ],
-  declarations: [RegisteruserPage]
+  declarations: [RegisteruserPage],
 })
 export class RegisteruserPageModule {}

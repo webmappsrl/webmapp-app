@@ -3,7 +3,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {StatusService} from 'src/app/services/status.service';
 import {TranslateService} from '@ngx-translate/core';
-import {WmTransPipe} from 'src/app/pipes/wmtrans.pipe';
+import {WmTransPipe} from 'src/app/shared/wm-core/pipes/wmtrans.pipe';
 
 @Component({
   selector: 'app-modal-store-success',

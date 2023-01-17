@@ -4,7 +4,7 @@ import {BaseBoxComponent as BBaseBoxComponent} from '../box';
 import {ISLUGBOX} from 'src/app/types/config';
 
 @Component({
-  selector: 'webmapp-box',
+  selector: 'wm-box',
   templateUrl: './box.component.html',
   styleUrls: ['./box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

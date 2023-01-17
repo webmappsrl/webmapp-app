@@ -7,7 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {ItineraryPage} from './itinerary.page';
 import {MapModule} from 'src/app/components/map/map.module';
 import {NgModule} from '@angular/core';
-import {PipeModule} from 'src/app/pipes/pipe.module';
+import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {RoutePageRoutingModule} from './itinerary-routing.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {SlopeChartComponent} from './slope-chart/slope-chart.component';
