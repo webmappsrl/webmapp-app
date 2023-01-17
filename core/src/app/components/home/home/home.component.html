@@ -1,18 +1,18 @@
 <ng-container *ngFor="let box of conf">
   <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
   <wm-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)"> </wm-box>
-  <webmapp-layer-box
+  <wm-layer-box
     *ngIf="box.box_type === 'layer'"
     [data]="box.layer"
     (clickEVT)="selectLayer(box.layer)"
   >
-  </webmapp-layer-box>
+  </wm-layer-box>
   <ng-container *ngIf="box.box_type == 'track'">
-    <webmapp-base-box
+    <wm-base-box
       class="home-base-box"
       [data]="box"
       (clickEVT)="selectTrack(box.track_id)"
-    ></webmapp-base-box>
+    ></wm-base-box>
   </ng-container>
   <ng-container *ngIf="box.box_type == 'base'">
     <webmapp-slider-box [data]="box" (clickEVT)="selectTrack($event)"></webmapp-slider-box>

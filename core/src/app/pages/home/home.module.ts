@@ -11,6 +11,7 @@ import {SharedModule} from 'src/app/components/shared/shared.module';
 import {TranslateModule} from '@ngx-translate/core';
 import {IntroComponent} from './intro/intro.component';
 import {HomeModule} from 'src/app/components/home/home.module';
+import {BoxModule} from 'src/app/components/box/box.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -23,6 +24,7 @@ import {HomeModule} from 'src/app/components/home/home.module';
     InnerHtmlModule,
     HomeModule,
     WmCoreModule,
+    BoxModule,
   ],
   declarations: [HomePage, IntroComponent],
   entryComponents: [],

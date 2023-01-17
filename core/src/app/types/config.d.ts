@@ -74,6 +74,10 @@ type ITITLEBOX = IBOX & {
 type ILAYERBOX = IBOX & {
   box_type: 'layer';
   layer: number | ILAYER;
+  feature_image: 'string';
+  style: {
+    [attr: string]: any;
+  };
 };
 
 type ITRACKBOX = IBOX & {
@@ -107,7 +111,8 @@ type IHOMEITEMURL = IHOMEBASEITEM & {
 type IHOMEITEM = IHOMEITEMTRACK | IHOMEITEMURL;
 type IBASEBOX = IBOX & {
   box_type: 'base';
-  items: IHOMEITEM[];
+  items: IHOMEITEMTRACK[];
+  image_url?: string;
 };
 type IHOME = ITITLEBOX | ILAYERBOX | IBASEBOX | IEXTERNALURLBOX | ISLUGBOX | ITRACKBOX;
 interface IOPTIONS {

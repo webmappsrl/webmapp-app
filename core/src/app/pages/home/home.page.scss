@@ -12,11 +12,11 @@ wm-page-home {
       height: 100%;
       width: 100%;
       max-height: 186px;
-      .webmapp-base-box-container,
+      .wm-base-box-container,
       ion-card {
         width: auto;
       }
-      .webmapp-base-box-container {
+      .wm-base-box-container {
         margin: 0px 10px;
       }
     }
@@ -48,7 +48,7 @@ wm-page-home {
     webmapp-card-big,
     webmapp-card-slider,
     webmapp-slider-box,
-    webmapp-base-box,
+    wm-base-box,
     h3 {
       margin-inline: 10px;
     }

@@ -19,6 +19,7 @@ import {IBASEBOX} from 'src/app/types/config';
 export class SliderBoxComponent {
   @Input('data') data: IBASEBOX;
   @Output() public clickEVT: EventEmitter<number> = new EventEmitter<number>();
+
   public sliderOptions: any;
 
   constructor(private _deviceService: DeviceService) {
@@ -31,6 +32,7 @@ export class SliderBoxComponent {
       slidesPerView: this._deviceService.width / 235,
     };
   }
+
   open(id: number): void {
     this.clickEVT.emit(id);
   }
