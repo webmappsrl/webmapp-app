@@ -9,7 +9,7 @@ const baseUrl = 'https://elastic-json.webmapp.it/search';
 @Injectable({
   providedIn: 'root',
 })
-export class ElasticService {
+export class ApiService {
   private _geohubAppId: number = environment.geohubId;
 
   /**
@@ -39,19 +39,7 @@ export class ElasticService {
 
   /**
    * @description
-   * This function is named getALL() and it returns an Observable of type IELASTIC.
-   * It uses the HTTP request method to make a GET request to the base URL stored in
-   * the _baseUrl variable.
-   * @returns {*}  {Observable<IELASTIC>}
-   * @memberof ElasticService
-   */
-  getALL(): Observable<IELASTIC> {
-    return this._http.request('get', this._baseUrl);
-  }
-
-  /**
-   * @description
-   * This function is called getSearch and takes two optional parameters,
+   * This function is called getQuery and takes two optional parameters,
    * inputTyped and layer. It returns an Observable of type IELASTIC.
    * It builds a query string using the baseUrl and the two optional parameters
    * if they are provided. It then makes a GET request to the built query string and returns
@@ -62,7 +50,7 @@ export class ElasticService {
    * @returns {*}  {Observable<IELASTIC>}
    * @memberof ElasticService
    */
-  getSearch(inputTyped?: string, layer?: number): Observable<IELASTIC> {
+  getQuery(inputTyped?: string, layer?: number): Observable<IELASTIC> {
     let query = this._baseUrl;
 
     if (inputTyped) {

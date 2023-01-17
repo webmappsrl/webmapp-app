@@ -1,30 +1,22 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {NavController, Platform} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import {filter, take} from 'rxjs/operators';
 
-import {CGeojsonLineStringFeature} from './classes/features/cgeojson-line-string-feature';
-import {DEF_MAP_LOCATION_ZOOM} from './constants/map';
 import {DownloadService} from './services/download.service';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {IConfRootState} from './store/conf/conf.reducer';
-import {IElasticAllRootState} from './store/elastic/elastic.reducer';
-import {ILocation} from './types/location';
-import {IMapRootState} from './store/map/map';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {LanguagesService} from './services/languages.service';
-import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
 import {SaveService} from './services/save.service';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {StatusService} from './services/status.service';
 import {Store} from '@ngrx/store';
-import {allElastic} from './store/elastic/elastic.actions';
 import {confMAP} from './store/conf/conf.selector';
 import {environment} from 'src/environments/environment';
 import {loadConf} from './store/conf/conf.actions';
 import {loadPois} from './store/pois/pois.actions';
-import {mapCurrentTrack} from './store/map/map.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 
 @Component({
@@ -43,13 +35,10 @@ export class AppComponent {
     private _platform: Platform,
     private _googleAnalytics: GoogleAnalytics,
     private _downloadService: DownloadService,
-    private _navController: NavController,
     private router: Router,
     private status: StatusService,
     private saveService: SaveService,
     private _storeConf: Store<IConfRootState>,
-    private _storeElasticAll: Store<IElasticAllRootState>,
-    private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
   ) {
     this._languagesService.initialize();
@@ -103,6 +92,16 @@ export class AppComponent {
 
   isRecording() {}
 
+  /**
+   * @description
+   * This function returns a string based on the current URL.
+   * It takes the URL and parses it into a tree structure. If the tree has a root with children,
+   * it takes the path of the first segment of the primary child.
+   * Depending on what this path is, it returns one of four strings:
+   * 'none', 'high', 'middle', or 'low'. If none of these conditions are met, it returns 'low' by default.
+   * @returns {*}
+   * @memberof AppComponent
+   */
   recBtnPosition() {
     const tree = this.router.parseUrl(this.router.url);
     if (tree?.root?.children && tree.root.children['primary']) {
@@ -111,15 +110,9 @@ export class AppComponent {
         case 'register':
           return 'none';
         case 'route':
-          if (this.status.showingRouteDetails) {
-            return 'high';
-          }
-          return 'middle';
+          return this.status.showingRouteDetails ? 'high' : 'middle';
         case 'map':
-          if (this.status.showingMapResults) {
-            return 'middlehigh';
-          }
-          return 'low';
+          return this.status.showingMapResults ? 'middlehigh' : 'low';
       }
     }
     return 'low';
@@ -127,6 +120,15 @@ export class AppComponent {
 
   recordingClick(ev) {}
 
+  /**
+   * @description
+   * This function is used to save unsaved contents.
+   * It uses the saveService object to upload the unsaved contents.
+   * The setInterval() method is used to call the uploadUnsavedContents() method at a regular interval,
+   * which is specified by the GEOHUB_SAVING_TRY_INTERVAL constant.
+   * The setTimeout() method is used to call the uploadUnsavedContents() method after 2000 milliseconds (2 seconds).
+   * @memberof AppComponent
+   */
   saveGeneratedContentsNowAndInterval() {
     setInterval(() => {
       this.saveService.uploadUnsavedContents();

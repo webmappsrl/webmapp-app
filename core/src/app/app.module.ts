@@ -3,7 +3,6 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {SQLite, SQLiteDatabaseConfig, SQLiteObject} from '@ionic-native/sqlite/ngx';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {elasticAllReducer, elasticSearchReducer} from './store/elastic/elastic.reducer';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -12,7 +11,6 @@ import {ConfEffects} from './store/conf/conf.effects';
 import {ConfigService} from './services/config.service';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {EffectsModule} from '@ngrx/effects';
-import {ElasticEffects} from './store/elastic/elastic.effects';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {ImagePicker} from '@ionic-native/image-picker/ngx';
 import {IonicStorageModule} from '@ionic/storage-angular';
@@ -77,15 +75,13 @@ class SQLiteMock {
     StoreModule.forRoot(
       {
         conf: confReducer,
-        search: elasticSearchReducer,
-        all: elasticAllReducer,
         map: UIReducer,
         network: networkReducer,
         pois: poisReducer,
       },
       {},
     ),
-    EffectsModule.forRoot([ConfEffects, ElasticEffects, MapEffects, NetworkEffects, PoisEffects]),
+    EffectsModule.forRoot([ConfEffects, MapEffects, NetworkEffects, PoisEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode

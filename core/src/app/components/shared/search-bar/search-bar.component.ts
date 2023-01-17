@@ -3,10 +3,10 @@ import {ILAYER} from 'src/app/types/config';
 import {Component, EventEmitter, Input, Output, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
-import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
+import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
 import {Store} from '@ngrx/store';
 import {debounceTime} from 'rxjs/operators';
-import {searchElastic} from 'src/app/store/elastic/elastic.actions';
+import {query} from 'src/app/shared/wm-core/api/api.actions';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',
@@ -39,7 +39,7 @@ export class SearchBarComponent implements OnDestroy {
      * This code is subscribing to a searchForm valueChanges observable.
      * It is using the debounceTime operator to wait 500 milliseconds before emitting the value from the observable.
      * If the words and search are not null and the search is not an empty string,
-     * it dispatches a searchElastic action with either the inputTyped and layer or just the inputTyped.
+     * it dispatches a query action with either the inputTyped and layer or just the inputTyped.
      * It then emits two events, one for isTypingsEVT with a boolean value of true, and one for wordsEVT
      * with the words.search as its value. If the words and search are null or an empty string,
      * it emits an event for isTypingsEVT with a boolean value of false.
@@ -47,9 +47,9 @@ export class SearchBarComponent implements OnDestroy {
     this._searchSub$ = this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe(words => {
       if (words && words.search != null && words.search !== '') {
         if (this._currentLayer != null) {
-          store.dispatch(searchElastic({inputTyped: words.search, layer: this._currentLayer}));
+          store.dispatch(query({inputTyped: words.search, layer: this._currentLayer}));
         } else {
-          store.dispatch(searchElastic({inputTyped: words.search}));
+          store.dispatch(query({inputTyped: words.search}));
         }
         this.isTypingsEVT.emit(true);
         this.wordsEVT.emit(words.search);

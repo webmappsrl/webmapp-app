@@ -17,6 +17,10 @@ import {WmEmailComponent} from './email/email.component';
 import {WmPhoneComponent} from './phone/phone.component';
 import {WmAddressComponent} from './address/address.component';
 import {WmImgComponent} from './img/img.component';
+import {StoreModule} from '@ngrx/store';
+import {elasticQueryReducer} from './api/api.reducer';
+import {EffectsModule} from '@ngrx/effects';
+import {ApiEffects} from './api/api.effects';
 const directives = [];
 const components = [
   WmAddressComponent,
@@ -36,7 +40,13 @@ const components = [
 
 @NgModule({
   declarations: [...components, ...directives],
-  imports: [CommonModule, IonicModule, PipeModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    PipeModule,
+    StoreModule.forFeature('query', elasticQueryReducer),
+    EffectsModule.forFeature([ApiEffects]),
+  ],
   exports: [...components, ...directives],
 })
 export class WmCoreModule {}

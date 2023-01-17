@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { BaseBoxComponent } from '../box';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {BaseBoxComponent} from '../box';
 
 @Component({
   selector: 'wm-search-box',
@@ -8,7 +8,4 @@ import { BaseBoxComponent } from '../box';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class SearchBoxComponent extends BaseBoxComponent<IHIT> {
-
-
-}
+export class SearchBoxComponent extends BaseBoxComponent<IHIT> {}

@@ -15,20 +15,15 @@ import {BehaviorSubject, merge, Observable, of, zip} from 'rxjs';
 import {filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
-import {
-  setCurrentFilters,
-  setCurrentLayer,
-  setCurrentPoiId,
-  setCurrentTrackId,
-} from 'src/app/store/map/map.actions';
+import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
 import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
 
 import {Store} from '@ngrx/store';
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {IElasticSearchRootState} from 'src/app/store/elastic/elastic.reducer';
-import {elasticSearch} from 'src/app/store/elastic/elastic.selector';
+import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
+import {queryApi} from 'src/app/shared/wm-core/api/api.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
@@ -36,7 +31,7 @@ import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {NavigationExtras} from '@angular/router';
-import {searchElastic} from 'src/app/store/elastic/elastic.actions';
+import {query} from 'src/app/shared/wm-core/api/api.actions';
 
 @Component({
   selector: 'wm-page-home',
@@ -66,7 +61,7 @@ export class HomePage implements OnInit, OnChanges {
   currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
-  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(elasticSearch);
+  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(queryApi);
   elasticSearchFilteredByLayer$ = this.elasticSearch$.pipe(
     withLatestFrom(this.currentLayer$),
     map(([all, currentLayer]) => all.filter(l => l.layers.indexOf(+currentLayer.id) > -1)),
@@ -130,7 +125,7 @@ export class HomePage implements OnInit, OnChanges {
 
   goToHome(): void {
     this.setLayer(null);
-    this._storeMap.dispatch(searchElastic({inputTyped: this.currentSearch$.value}));
+    this._storeMap.dispatch(query({inputTyped: this.currentSearch$.value}));
     this._navCtrl.navigateForward('home');
   }
 
@@ -190,7 +185,7 @@ export class HomePage implements OnInit, OnChanges {
   async setLayer(layer: ILAYER | null | any) {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
     if (layer != null && layer.id != null) {
-      this._storeMap.dispatch(searchElastic({layer: layer.id}));
+      this._storeMap.dispatch(query({layer: layer.id}));
     }
   }
 

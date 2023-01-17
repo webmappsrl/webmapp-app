@@ -2,7 +2,6 @@ import {ICONF, IHOME, IHOMEOLD, ILAYER, ITHEME} from 'src/app/types/config';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 import {confFeatureKey} from './conf.reducer';
-import {elasticAll} from '../elastic/elastic.selector';
 import {getCSSVariables} from '../../functions/theme';
 
 const confFeature = createFeatureSelector<ICONF>(confFeatureKey);
@@ -13,9 +12,8 @@ export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
 export const confAUTHEnable = createSelector(confAUTH, auth => auth.enable || false);
 export const confJIDOUPDATETIME = createSelector(confFeature, state => state.JIDO_UPDATE_TIME);
-export const confMAP = createSelector(confFeature, elasticAll, (state, allTracks) => ({
+export const confMAP = createSelector(confFeature, state => ({
   ...state.MAP,
-  ...{tracks: allTracks},
 }));
 export const confGeohubId = createSelector(confAPP, state => state.geohubId);
 export const confTHEME = createSelector(confFeature, state => state.THEME);
