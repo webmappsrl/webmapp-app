@@ -10,10 +10,10 @@
     [data]="box"
     (clickEVT)="selectTrack(box.track_id)"
   ></wm-track-box>
-  <ng-container *ngIf="box.box_type == 'base'">
-    <webmapp-slider-box [data]="box" (clickEVT)="selectTrack($event)"></webmapp-slider-box>
-  </ng-container>
-  <ng-container *ngIf="box.box_type ==  'external_url'">
-    <webmapp-external-url-box [data]="box"></webmapp-external-url-box>
-  </ng-container>
+  <wm-slider-box
+    *ngIf="box.box_type == 'base'"
+    [data]="box"
+    (clickEVT)="selectTrack($event)"
+  ></wm-slider-box>
+  <wm-external-url-box *ngIf="box.box_type ===  'external_url'" [data]="box"></wm-external-url-box>
 </ng-container>

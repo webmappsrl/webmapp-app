@@ -8,21 +8,22 @@ import {
 } from '@angular/core';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {IBASEBOX} from 'src/app/types/config';
+import {BaseBoxComponent} from '../box';
 
 @Component({
-  selector: 'webmapp-slider-box',
+  selector: 'wm-slider-box',
   templateUrl: './slider-box.component.html',
   styleUrls: ['./slider-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class SliderBoxComponent {
-  @Input('data') data: IBASEBOX;
+export class SliderBoxComponent extends BaseBoxComponent<IBASEBOX> {
   @Output() public clickEVT: EventEmitter<number> = new EventEmitter<number>();
 
   public sliderOptions: any;
 
   constructor(private _deviceService: DeviceService) {
+    super();
     this.sliderOptions = {
       initialSlide: 0,
       speed: 400,
