@@ -4,10 +4,10 @@ import {BaseBoxComponent as BBaseBoxComponent} from '../box';
 import {ISLUGBOX} from 'src/app/types/config';
 
 @Component({
-  selector: 'wm-box',
-  templateUrl: './box.component.html',
-  styleUrls: ['./box.component.scss'],
+  selector: 'wm-slug-box',
+  templateUrl: './slug-box.component.html',
+  styleUrls: ['./slug-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class BoxComponent extends BBaseBoxComponent<ISLUGBOX> {}
+export class SlugBoxComponent extends BBaseBoxComponent<ISLUGBOX> {}

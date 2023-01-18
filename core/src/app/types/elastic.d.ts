@@ -3,7 +3,7 @@ interface IELASTIC {
 }
 interface IHIT {
   cai_scale: string;
-  feature_image: string;
+  feature_image: string | any;
   ref: string;
   distance: string;
   name: string;

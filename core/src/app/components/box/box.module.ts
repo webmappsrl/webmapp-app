@@ -1,5 +1,5 @@
 import {BaseBoxComponent} from './base-box/base-box.component';
-import {BoxComponent} from './box/box.component';
+import {SlugBoxComponent} from './slug-box/slug-box.component';
 import {CardsModule} from '../../shared/wm-core/cards/cards.module';
 import {CommonModule} from '@angular/common';
 import {DownloadedTracksBoxComponent} from './downloaded-tracks-box/downloaded-tracks-box.component';
@@ -14,6 +14,7 @@ import {SharedModule} from '../shared/shared.module';
 import {SliderBoxComponent} from './slider-box/slider-box.component';
 import {TranslateModule} from '@ngx-translate/core';
 import {WmSharedModule} from '../../shared/wm-core/shared/shared.module';
+import {TrackBoxComponent} from './track-box/track-box.component';
 
 const boxComponents = [
   LayerBoxComponent,
@@ -22,8 +23,9 @@ const boxComponents = [
   DownloadedTracksBoxComponent,
   SliderBoxComponent,
   BaseBoxComponent,
-  BoxComponent,
+  SlugBoxComponent,
   PoiBoxComponent,
+  TrackBoxComponent,
 ];
 @NgModule({
   declarations: boxComponents,

@@ -1,7 +1,7 @@
 import {NavController} from '@ionic/angular';
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {BaseBoxComponent} from '../box';
-import {ILAYERBOX} from 'src/app/types/config';
+import {ILAYER, ILAYERBOX} from 'src/app/types/config';
 
 @Component({
   selector: 'wm-layer-box',
@@ -11,9 +11,12 @@ import {ILAYERBOX} from 'src/app/types/config';
   encapsulation: ViewEncapsulation.None,
 })
 export class LayerBoxComponent extends BaseBoxComponent<ILAYERBOX> {
+  @Input() buttons = true;
+
   constructor(private _navCtrl: NavController) {
     super();
   }
+
   openMap(): void {
     this._navCtrl.navigateForward('map');
   }

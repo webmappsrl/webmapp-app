@@ -73,8 +73,7 @@ type ITITLEBOX = IBOX & {
 };
 type ILAYERBOX = IBOX & {
   box_type: 'layer';
-  layer: number | ILAYER;
-  feature_image: 'string';
+  layer: ILAYER;
   style: {
     [attr: string]: any;
   };
@@ -83,6 +82,7 @@ type ILAYERBOX = IBOX & {
 type ITRACKBOX = IBOX & {
   box_type: 'track';
   track_id: number;
+  image_url: string;
 };
 
 type IHOMEBASEITEM = {
@@ -216,6 +216,7 @@ interface ILAYER {
   subtitle: string;
   title: string;
   tracks?: {[name: string]: IHIT[]};
+  feature_image: 'string';
 }
 interface IOVERLAYERS {
   alert?: boolean;
