@@ -3,6 +3,12 @@
   <wm-slug-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
   </wm-slug-box>
   <wm-layer-box *ngIf="box.box_type === 'layer'" [data]="box" (clickEVT)="selectLayer(box.layer)">
+    <div class="wm-box-click" (click)="openMap()">
+      <i class="icon-outline-map-outline"></i>
+    </div>
+    <div class="wm-box-click">
+      <i class="icon-outline-list"></i>
+    </div>
   </wm-layer-box>
   <wm-track-box
     *ngIf="box.box_type == 'track'"

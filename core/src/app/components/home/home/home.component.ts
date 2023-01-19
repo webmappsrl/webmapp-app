@@ -6,6 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
+import {NavController} from '@ionic/angular';
 
 import {DeviceService} from 'src/app/services/base/device.service';
 import {IHOME, ILAYER} from 'src/app/types/config';
@@ -23,7 +24,7 @@ export class HomeComponent {
   @Output() selectedLayerEvt: EventEmitter<ILAYER | null | number> = new EventEmitter();
   @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
 
-  constructor(public deviceService: DeviceService) {}
+  constructor(public deviceService: DeviceService, private _navCtrl: NavController) {}
 
   openSlug(slug: string): void {
     this.openSlugEvt.emit(slug);
@@ -35,5 +36,9 @@ export class HomeComponent {
 
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
+  }
+
+  openMap(): void {
+    this._navCtrl.navigateForward('map');
   }
 }
