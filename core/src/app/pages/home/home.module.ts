@@ -1,5 +1,5 @@
 import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
-import {CardsModule} from 'src/app/shared/wm-core/cards/cards.module';
+import {CardsModule} from 'src/app/components/cards/cards.module';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HomePage} from './home.page';

@@ -9,7 +9,7 @@ import {FavouritesPageRoutingModule} from './favourites-routing.module';
 import {FavouritesPage} from './favourites.page';
 import {TranslateModule} from '@ngx-translate/core';
 import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
-import {CardsModule} from 'src/app/shared/wm-core/cards/cards.module';
+import {CardsModule} from 'src/app/components/cards/cards.module';
 
 @NgModule({
   imports: [
