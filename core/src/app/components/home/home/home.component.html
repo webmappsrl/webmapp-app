@@ -13,6 +13,7 @@
   <wm-slider-box
     *ngIf="box.box_type == 'base'"
     [data]="box"
+    [width]="deviceService.width"
     (clickEVT)="selectTrack($event)"
   ></wm-slider-box>
   <wm-external-url-box *ngIf="box.box_type ===  'external_url'" [data]="box"></wm-external-url-box>

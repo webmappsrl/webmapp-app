@@ -3,13 +3,11 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   Output,
-  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
-import {Log} from 'src/app/shared/map-core/utils';
 
+import {DeviceService} from 'src/app/services/base/device.service';
 import {IHOME, ILAYER} from 'src/app/types/config';
 
 @Component({
@@ -19,11 +17,13 @@ import {IHOME, ILAYER} from 'src/app/types/config';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeComponent implements OnChanges {
+export class HomeComponent {
   @Input() conf: IHOME[];
   @Output() openSlugEvt: EventEmitter<string> = new EventEmitter();
   @Output() selectedLayerEvt: EventEmitter<ILAYER | null | number> = new EventEmitter();
   @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
+
+  constructor(public deviceService: DeviceService) {}
 
   openSlug(slug: string): void {
     this.openSlugEvt.emit(slug);
@@ -36,5 +36,4 @@ export class HomeComponent implements OnChanges {
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
   }
-  ngOnChanges(changes: SimpleChanges): void {}
 }
