@@ -16,6 +16,8 @@ import {MapTrackDetailsComponent} from './map-track-details/map-track-details.co
 import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properties.module';
 import {TrackPropetiesModule} from 'src/app/components/track-properties/track-properties.module';
+import {WmDownloadPanelComponent} from './download-panel/download-panel.component';
+import {WmDownloadComponent} from './download/download.component';
 
 @NgModule({
   imports: [
@@ -33,6 +35,12 @@ import {TrackPropetiesModule} from 'src/app/components/track-properties/track-pr
     PoiPropetiesModule,
     TrackPropetiesModule,
   ],
-  declarations: [MapPage, MapTrackCardComponent, MapTrackDetailsComponent],
+  declarations: [
+    MapPage,
+    MapTrackCardComponent,
+    MapTrackDetailsComponent,
+    WmDownloadComponent,
+    WmDownloadPanelComponent,
+  ],
 })
 export class MapPageModule {}

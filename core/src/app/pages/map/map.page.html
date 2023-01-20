@@ -211,10 +211,6 @@
       </ng-template>
     </wm-map-track-details>
 
-    <wm-download
-      *ngIf="showDownload$|async"
-      [track]="currentTrack$|async"
-      (closeEvt)="closeDownload()"
-    ></wm-download>
+    <wm-download *ngIf="showDownload$|async" [track]="currentTrack$|async"></wm-download>
   </div>
 </ion-content>

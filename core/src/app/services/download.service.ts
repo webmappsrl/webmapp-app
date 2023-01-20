@@ -296,9 +296,12 @@ export class DownloadService {
     const imageUrlList: string[] = [];
 
     // download track with geojson (data) - DB key=trackid
-    const pois = this._relatedPoi.filter(
-      p => p.properties != null && p.properties.image != null && p.properties.images != null,
-    );
+    const pois =
+      this._relatedPoi != null
+        ? this._relatedPoi.filter(
+            p => p.properties != null && p.properties.image != null && p.properties.images != null,
+          )
+        : [];
     const dataTotal = 1 + pois.length;
     sizeMb += await this.saveTrack(track, dataTotal); // TODO async
     console.log('------- ~ DownloadService ~ startDownload ~ track.properties', track.properties);
