@@ -36,12 +36,12 @@ import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
 import {pois} from 'src/app/store/pois/pois.selector';
-import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 
 import {GeolocationPage} from '../abstract/geolocation';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
+import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -167,8 +167,8 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     },
   };
   public sliderOptions: any;
-  trackElevationChartHoverElements$: BehaviorSubject<ITrackElevationChartHoverElements | null> =
-    new BehaviorSubject<ITrackElevationChartHoverElements | null>(null);
+  trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
+    new BehaviorSubject<ISlopeChartHoverElements | null>(null);
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -338,7 +338,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.mapTrackDetailsCmp.open();
   }
 
-  setTrackElevationChartHoverElements(elements?: ITrackElevationChartHoverElements): void {
+  setTrackElevationChartHoverElements(elements?: ISlopeChartHoverElements): void {
     if (elements != null) {
       this.trackElevationChartHoverElements$.next(elements);
       if (this._flowLine$.value != null) {
