@@ -11,6 +11,12 @@
       *ngIf="prop?.description != null"
       [description]="prop.description"
     ></wm-tab-description>
+    <div *ngIf="prop?.osm_url as osm" target="_blank">
+      <ion-icon class="wm-icn " name="link-outline" slot="start"></ion-icon>
+      <a class="webmapp-track-download-urls-item-label" [href]="osm">
+        {{ "Vedi su OpenStreetMap" | wmtrans }}
+      </a>
+    </div>
     <wm-track-audio *ngIf="prop?.audio" [audio]="prop.audio"></wm-track-audio>
   </ng-container>
 </ng-container>
