@@ -18,6 +18,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ButtonsModule} from './buttons/buttons.module';
 import {TabImageGalleryComponent} from '../../shared/wm-core/tab-image-gallery/tab-image-gallery.component';
 import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
+import {WmSharedModule} from 'src/app/shared/wm-core/shared/shared.module';
 const components = [
   LoginComponent,
   ModalHeaderComponent,
@@ -41,6 +42,7 @@ const components = [
     TranslateModule,
     PipeModule,
     ButtonsModule,
+    WmSharedModule,
   ],
   exports: [...components, ButtonsModule],
 })

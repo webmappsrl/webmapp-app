@@ -2,6 +2,7 @@
   <div class="webmapp-pagepoi-info-body">
     <wm-image-gallery [imageGallery]="properties?.image_gallery"></wm-image-gallery>
     <wm-address *ngIf="properties?.address as address" [address]="address"></wm-address>
+    <wm-elevation *ngIf="properties?.ele as ele" [elevation]="ele"></wm-elevation>
     <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
     <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
     <wm-related-urls *ngIf="properties?.related_url as relatedUrl" [relatedUrls]="relatedUrl">
