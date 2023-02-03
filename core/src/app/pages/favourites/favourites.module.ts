@@ -7,8 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {FavouritesPageRoutingModule} from './favourites-routing.module';
 
 import {FavouritesPage} from './favourites.page';
-import {TranslateModule} from '@ngx-translate/core';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {CardsModule} from 'src/app/components/cards/cards.module';
 
 @NgModule({
@@ -17,8 +16,7 @@ import {CardsModule} from 'src/app/components/cards/cards.module';
     FormsModule,
     IonicModule,
     FavouritesPageRoutingModule,
-    TranslateModule,
-    PipeModule,
+    WmPipeModule,
     CardsModule,
   ],
   declarations: [FavouritesPage],

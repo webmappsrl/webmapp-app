@@ -17,21 +17,10 @@
     <ion-item class="webmapp-settings-version" mode="md" *ngIf="false">
       <ion-label> {{ "modals.settings.version" | wmtrans }} {{ version }}</ion-label>
     </ion-item>
-    <form [formGroup]="langForm" *ngIf="(langs$|async).length > 1">
-      <ion-item>
-        <ion-label> {{'pages.profile.lang' | wmtrans}}</ion-label>
-        <ion-select
-          formControlName="lang"
-          placeholder="{{'pages.profile.langPlaceholder' | wmtrans}}"
-        >
-          <ion-select-option
-            [value]="lang"
-            *ngFor="let lang of langs$|async"
-            >{{lang}}</ion-select-option
-          >
-        </ion-select>
-      </ion-item>
-    </form>
+    <wm-lang-selector
+      [langs]="(langs$|async)?.available"
+      [defaultLang]="(langs$|async)?.default"
+    ></wm-lang-selector>
   </ion-list>
   <div class="webmapp-profile-links">
     <ion-button

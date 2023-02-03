@@ -11,13 +11,11 @@ import {LoginComponent} from './login/login.component';
 import {ModalHeaderComponent} from './partials/modal-header/modal-header.component';
 import {ModalImageComponent} from './image-gallery/modal-image/modal-image.component';
 import {NgModule} from '@angular/core';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {RecordingBtnComponent} from './recording-btn/recording-btn.component';
 import {SearchBarComponent} from './search-bar/search-bar.component';
-import {TranslateModule} from '@ngx-translate/core';
 import {ButtonsModule} from './buttons/buttons.module';
 import {TabImageGalleryComponent} from '../../shared/wm-core/tab-image-gallery/tab-image-gallery.component';
-import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 import {WmSharedModule} from 'src/app/shared/wm-core/shared/shared.module';
 const components = [
   LoginComponent,
@@ -39,8 +37,7 @@ const components = [
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    TranslateModule,
-    PipeModule,
+    WmPipeModule,
     ButtonsModule,
     WmSharedModule,
   ],

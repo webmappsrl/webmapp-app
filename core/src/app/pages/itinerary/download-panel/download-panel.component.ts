@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {filter, switchMap, take, tap} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -8,9 +8,8 @@ import {IGeojsonFeature} from 'src/app/types/model';
 import {IMapRootState} from 'src/app/store/map/map';
 import {NavController} from '@ionic/angular';
 import {Observable} from 'rxjs';
-import {StatusService} from 'src/app/services/status.service';
 import {Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
+
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {mapCurrentTrack} from 'src/app/store/map/map.selector';
 
@@ -20,24 +19,21 @@ import {mapCurrentTrack} from 'src/app/store/map/map.selector';
   styleUrls: ['./download-panel.component.scss'],
 })
 export class DownloadPanelComponent {
-  public track: IGeojsonFeature;
-  public isInit = true;
-  public isDownloading = false;
-  public isDownloaded = false;
-
-  public downloadElements;
-
-  private myEventSubscription;
-
   private _currentTrack$: Observable<CGeojsonLineStringFeature> =
     this._storeMap.select(mapCurrentTrack);
+  private myEventSubscription;
 
-  @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
+  @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
+
+  public downloadElements;
+  public isDownloaded = false;
+  public isDownloading = false;
+  public isInit = true;
+  public track: IGeojsonFeature;
 
   constructor(
-    private _statusService: StatusService,
     private _downloadService: DownloadService,
     private _navController: NavController,
     private _storeMap: Store<IMapRootState>,
@@ -55,6 +51,22 @@ export class DownloadPanelComponent {
         }
       });
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
+  }
+
+  completeDownloads() {
+    if (this.myEventSubscription) {
+      this.myEventSubscription.unsubscribe();
+    }
+    this.changeStatus.emit(downloadPanelStatus.FINISH);
+
+    this.isInit = false;
+    this.isDownloading = false;
+    this.isDownloaded = true;
+  }
+
+  gotoDownloads() {
+    this._navController.navigateForward(['/downloadlist']);
+    this.exit.emit(null);
   }
 
   start() {
@@ -100,20 +112,5 @@ export class DownloadPanelComponent {
     if (status && status.finish) {
       this.completeDownloads();
     }
-  }
-  gotoDownloads() {
-    this._navController.navigateForward(['/downloadlist']);
-    this.exit.emit(null);
-  }
-
-  completeDownloads() {
-    if (this.myEventSubscription) {
-      this.myEventSubscription.unsubscribe();
-    }
-    this.changeStatus.emit(downloadPanelStatus.FINISH);
-
-    this.isInit = false;
-    this.isDownloading = false;
-    this.isDownloaded = true;
   }
 }

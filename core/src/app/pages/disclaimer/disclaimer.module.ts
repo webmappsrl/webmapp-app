@@ -7,10 +7,10 @@ import {IonicModule} from '@ionic/angular';
 import {DisclaimerPageRoutingModule} from './disclaimer-routing.module';
 
 import {DisclaimerPage} from './disclaimer.page';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, DisclaimerPageRoutingModule, PipeModule],
+  imports: [CommonModule, FormsModule, IonicModule, DisclaimerPageRoutingModule, WmPipeModule],
   declarations: [DisclaimerPage],
 })
 export class DisclaimerPageModule {}

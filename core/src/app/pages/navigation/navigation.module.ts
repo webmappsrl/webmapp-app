@@ -6,10 +6,9 @@ import {IonicModule} from '@ionic/angular';
 
 import {RoutePageRoutingModule} from './navigation-routing.module';
 
-import {TranslateModule} from '@ngx-translate/core';
 import {MapModule} from 'src/app/components/map/map.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {NavigationPage} from './navigation.page';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
 import {SlopeChartComponent} from './slope-chart/slope-chart.component';
@@ -21,9 +20,8 @@ import {NavMapModule} from 'src/app/components/map/nav-map/nav-map.module';
     FormsModule,
     IonicModule,
     RoutePageRoutingModule,
-    TranslateModule,
     MapModule,
-    PipeModule,
+    WmPipeModule,
     SharedModule,
     NavMapModule,
   ],

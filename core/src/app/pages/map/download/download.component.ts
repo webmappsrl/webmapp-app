@@ -8,13 +8,14 @@ import {
   Output,
 } from '@angular/core';
 import {AlertController} from '@ionic/angular';
-import {TranslateService} from '@ngx-translate/core';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 import {downloadPanelStatus} from '../../../shared/wm-core/types/downloadpanel.enum';
 
 @Component({
   selector: 'wm-download',
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss'],
+  providers: [LangService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
@@ -24,7 +25,7 @@ export class WmDownloadComponent implements OnInit {
   @Input() track: any;
   @Output() closeEvt: EventEmitter<void> = new EventEmitter<void>();
 
-  constructor(private _alertCtrl: AlertController, private _translate: TranslateService) {}
+  constructor(private _alertCtrl: AlertController, private _translate: LangService) {}
 
   public downloadStatus(status: downloadPanelStatus) {
     this._actualDownloadStatus = status;

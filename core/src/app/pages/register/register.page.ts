@@ -8,7 +8,6 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
-import {TranslateService} from '@ngx-translate/core';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
@@ -18,59 +17,53 @@ import {ModalSuccessComponent} from '../../components/modal-success/modal-succes
 import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
+  providers: [LangService],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage implements OnInit, OnDestroy {
+  private _timerInterval: any;
+
   @ViewChild('map') map: OldMapComponent;
 
+  public actualSpeed: number = 0;
+  public averageSpeed: number = 0;
+  public isPaused = false;
+  public isRecording = false;
+  public isRegestering = true;
+  public length: number = 0;
+  public location: number[];
   public opacity: number = 0;
   public time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
     minutes: 0,
     seconds: 0,
   };
-  public actualSpeed: number = 0;
-  public averageSpeed: number = 0;
-  public length: number = 0;
-
-  public isRecording = false;
-  public isPaused = false;
-  public isRegestering = true;
-
-  public location: number[];
-
-  private _timerInterval: any;
 
   constructor(
     private _geolocationService: GeolocationService,
     private _geoutilsService: GeoutilsService,
     private _navCtrl: NavController,
-    private _translate: TranslateService,
+    private _translate: LangService,
     private _alertController: AlertController,
     private _modalController: ModalController,
     private _saveService: SaveService,
     private _cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit() {
-    if (this._geolocationService.location) {
-      this.location = [
-        this._geolocationService.location.longitude,
-        this._geolocationService.location.latitude,
-        DEF_MAP_LOCATION_ZOOM,
-      ];
-    }
-    this._geolocationService.onLocationChange.subscribe(() => {
-      this.updateMap();
-    });
+  backToMap() {
+    this._navCtrl.navigateForward('map');
+    this.reset();
+  }
 
-    this.checkRecording();
+  background(ev) {
+    this.backToMap();
   }
 
   checkRecording() {
@@ -88,25 +81,46 @@ export class RegisterPage implements OnInit, OnDestroy {
     }
   }
 
-  recordMove(ev) {
-    this.opacity = ev;
+  ngOnDestroy() {
+    try {
+      clearInterval(this._timerInterval);
+    } catch (e) {}
   }
 
-  updateMap() {
-    if (this.isRecording && this._geolocationService.recordedFeature) {
-      this.map.drawTrack(this._geolocationService.recordedFeature);
-      this.length = this._geoutilsService.getLength(this._geolocationService.recordedFeature);
-      // const timeSeconds = this._geoutilsService.getTime(
-      //   this._geolocationService.recordedFeature
-      // );
-      // this.time = this.formatTime(timeSeconds);
-      this.actualSpeed = this._geoutilsService.getCurrentSpeed(
-        this._geolocationService.recordedFeature,
-      );
-      this.averageSpeed = this._geoutilsService.getAverageSpeed(
-        this._geolocationService.recordedFeature,
-      );
+  ngOnInit() {
+    if (this._geolocationService.location) {
+      this.location = [
+        this._geolocationService.location.longitude,
+        this._geolocationService.location.latitude,
+        DEF_MAP_LOCATION_ZOOM,
+      ];
     }
+    this._geolocationService.onLocationChange.subscribe(() => {
+      this.updateMap();
+    });
+
+    this.checkRecording();
+  }
+
+  async openModalSuccess(track) {
+    const modaSuccess = await this._modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.TRACK,
+        track,
+      },
+    });
+    await modaSuccess.present();
+    // await modaSuccess.onDidDismiss();
+  }
+
+  async pause(event: MouseEvent) {
+    await this._geolocationService.pauseRecording();
+    this.isPaused = true;
+  }
+
+  recordMove(ev) {
+    this.opacity = ev;
   }
 
   /**
@@ -116,11 +130,27 @@ export class RegisterPage implements OnInit, OnDestroy {
    *
    * @returns
    */
-
   async recordStart(event: boolean) {
     this.isPaused = false;
     await this._geolocationService.startRecording();
     this.checkRecording();
+  }
+
+  reset() {
+    this.isRegestering = true;
+    this.opacity = 0;
+    this.time = {hours: 0, minutes: 0, seconds: 0};
+    this.actualSpeed = 0;
+    this.averageSpeed = 0;
+    this.length = 0;
+    this.isRecording = false;
+    this.isPaused = false;
+    this._geolocationService.stopRecording();
+  }
+
+  async resume(event: MouseEvent) {
+    await this._geolocationService.resumeRecording();
+    this.isPaused = false;
   }
 
   async stop(event: MouseEvent) {
@@ -189,52 +219,20 @@ export class RegisterPage implements OnInit, OnDestroy {
     }
   }
 
-  async resume(event: MouseEvent) {
-    await this._geolocationService.resumeRecording();
-    this.isPaused = false;
-  }
-
-  async pause(event: MouseEvent) {
-    await this._geolocationService.pauseRecording();
-    this.isPaused = true;
-  }
-
-  async openModalSuccess(track) {
-    const modaSuccess = await this._modalController.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.TRACK,
-        track,
-      },
-    });
-    await modaSuccess.present();
-    // await modaSuccess.onDidDismiss();
-  }
-
-  background(ev) {
-    this.backToMap();
-  }
-
-  backToMap() {
-    this._navCtrl.navigateForward('map');
-    this.reset();
-  }
-
-  reset() {
-    this.isRegestering = true;
-    this.opacity = 0;
-    this.time = {hours: 0, minutes: 0, seconds: 0};
-    this.actualSpeed = 0;
-    this.averageSpeed = 0;
-    this.length = 0;
-    this.isRecording = false;
-    this.isPaused = false;
-    this._geolocationService.stopRecording();
-  }
-
-  ngOnDestroy() {
-    try {
-      clearInterval(this._timerInterval);
-    } catch (e) {}
+  updateMap() {
+    if (this.isRecording && this._geolocationService.recordedFeature) {
+      this.map.drawTrack(this._geolocationService.recordedFeature);
+      this.length = this._geoutilsService.getLength(this._geolocationService.recordedFeature);
+      // const timeSeconds = this._geoutilsService.getTime(
+      //   this._geolocationService.recordedFeature
+      // );
+      // this.time = this.formatTime(timeSeconds);
+      this.actualSpeed = this._geoutilsService.getCurrentSpeed(
+        this._geolocationService.recordedFeature,
+      );
+      this.averageSpeed = this._geoutilsService.getAverageSpeed(
+        this._geolocationService.recordedFeature,
+      );
+    }
   }
 }

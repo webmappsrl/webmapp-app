@@ -8,15 +8,16 @@ import {
   Validators,
 } from '@angular/forms';
 import {LoadingController, NavController, PopoverController} from '@ionic/angular';
-import {TranslateService} from '@ngx-translate/core';
 import {GenericPopoverComponent} from 'src/app/components/shared/generic-popover/generic-popover.component';
 import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 
 @Component({
   selector: 'app-registeruser',
   templateUrl: './registeruser.page.html',
   styleUrls: ['./registeruser.page.scss'],
+  providers: [LangService],
 })
 export class RegisteruserPage implements OnInit {
   private cfregex =
@@ -43,7 +44,7 @@ export class RegisteruserPage implements OnInit {
     private _authservice: AuthService,
     public popoverController: PopoverController,
     public loadingController: LoadingController,
-    private translate: TranslateService,
+    private translate: LangService,
   ) {
     this.registerForm = this._formBuilder.group(
       {

@@ -2,15 +2,15 @@ import {ConfService} from '../store/conf/conf.service';
 import {IGeojsonFeature} from '../types/model';
 import {Injectable} from '@angular/core';
 import {Share} from '@capacitor/share';
-import {TranslateService} from '@ngx-translate/core';
 import {environment} from 'src/environments/environment';
+import {LangService} from '../shared/wm-core/localization/lang.service';
 const DEFAULT_ROUTE_LINK_BASEURL = `${environment.api}/track/`;
 
 export interface ShareObject {
-  title?: string;
-  text?: string;
-  url?: string;
   dialogTitle?: string;
+  text?: string;
+  title?: string;
+  url?: string;
 }
 
 @Injectable({
@@ -24,7 +24,7 @@ export class ShareService {
     dialogTitle: 'Share with buddies',
   };
 
-  constructor(private _translate: TranslateService, private _confSvc: ConfService) {
+  constructor(private _translate: LangService, private _confSvc: ConfService) {
     this._translate
       .get([
         'services.share.title',
@@ -40,18 +40,6 @@ export class ShareService {
       });
   }
 
-  public async shareRoute(route: IGeojsonFeature) {
-    return this.share({
-      url: `${DEFAULT_ROUTE_LINK_BASEURL}${route.properties.id}`,
-    });
-  }
-
-  public async shareTrackByID(id: number) {
-    return this.share({
-      url: `${DEFAULT_ROUTE_LINK_BASEURL}${id}?app_id=${this._confSvc.geohubAppId}`,
-    });
-  }
-
   /**
    *
    * Share something with the app sharing system
@@ -64,5 +52,17 @@ export class ShareService {
       '------- ~ file: share.service.ts ~ line 20 ~ ShareService ~ share ~ shareRet',
       shareRet,
     );
+  }
+
+  public async shareRoute(route: IGeojsonFeature) {
+    return this.share({
+      url: `${DEFAULT_ROUTE_LINK_BASEURL}${route.properties.id}`,
+    });
+  }
+
+  public async shareTrackByID(id: number) {
+    return this.share({
+      url: `${DEFAULT_ROUTE_LINK_BASEURL}${id}?app_id=${this._confSvc.geohubAppId}`,
+    });
   }
 }

@@ -1,30 +1,81 @@
-import { Injectable } from '@angular/core';
-import { CGeojsonLineStringFeature } from '../classes/features/cgeojson-line-string-feature';
-import { ILocation } from '../types/location';
-import { ISaveIndexObj } from '../types/save';
-import { ESaveObjType } from '../types/save.enum';
-import { IRegisterItem, ITrack } from '../types/track';
-import { WaypointSave } from '../types/waypoint';
-import { StorageService } from './base/storage.service';
-import { GeohubService } from './geohub.service';
-import { IPhotoItem, PhotoService } from './photo.service';
+import {Injectable} from '@angular/core';
+import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
+import {ISaveIndexObj} from '../types/save';
+import {ESaveObjType} from '../types/save.enum';
+import {IRegisterItem, ITrack} from '../types/track';
+import {WaypointSave} from '../types/waypoint';
+import {StorageService} from './base/storage.service';
+import {GeohubService} from './geohub.service';
+import {IPhotoItem, PhotoService} from './photo.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SaveService {
-  private _indexKey = 'index';
-  private _index: { lastId: number; objects: ISaveIndexObj[] } = {
+  private _index: {lastId: number; objects: ISaveIndexObj[]} = {
     lastId: 0,
     objects: [],
   };
+  private _indexKey = 'index';
 
   constructor(
     private _photoService: PhotoService,
     private _storage: StorageService,
-    private geohub: GeohubService
+    private geohub: GeohubService,
   ) {
     this._recoverIndex();
+  }
+
+  public async getGenerics(type: ESaveObjType): Promise<any[]> {
+    const res = [];
+    for (const obj of this._index.objects) {
+      if (obj.type === type && !obj.deleted) {
+        const ret = await this._getGenericById(obj.key);
+        if (ret) {
+          res.push(ret);
+        }
+      }
+    }
+    return res;
+  }
+
+  public async getPhotos(): Promise<IPhotoItem[]> {
+    return this.getGenerics(ESaveObjType.PHOTO);
+  }
+
+  public async getTrack(key: string): Promise<ITrack> {
+    const ret = await this._getGenericById(key);
+    this._initTrack(ret);
+    return ret;
+  }
+
+  public async getTrackPhotos(track: ITrack): Promise<IPhotoItem[]> {
+    const coll = [];
+    for (const photoKey of track.photoKeys) {
+      const photo = await this._getGenericById(photoKey);
+      coll.push(photo);
+    }
+    return coll;
+  }
+
+  public async getTracks(): Promise<ITrack[]> {
+    const ret: ITrack[] = await this.getGenerics(ESaveObjType.TRACK);
+    ret.forEach(t => {
+      this._initTrack(t);
+    });
+    return ret;
+  }
+
+  /**
+   * Get all the object save on storage but not on the cloud
+   */
+  public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
+    let ret = this._index.objects.filter(X => X.saved === false);
+    return ret;
+  }
+
+  public async getWaypoints(): Promise<WaypointSave[]> {
+    return this.getGenerics(ESaveObjType.WAYPOINT);
   }
 
   /**
@@ -51,6 +102,18 @@ export class SaveService {
   }
 
   /**
+   * Save a track and its photos into the storage
+   *
+   * @param track the track to be saved
+   */
+  public async saveTrack(track: ITrack): Promise<ITrack> {
+    const trackCopy = Object.assign({}, track);
+    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
+    trackCopy.key = key;
+    return trackCopy;
+  }
+
+  /**
    * Save a waypoint into the storage
    *
    * @param waypoint the waypoint to be saved
@@ -60,24 +123,12 @@ export class SaveService {
     await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
   }
 
-  /**
-   * Save a track and its photos into the storage
-   *
-   * @param track the track to be saved
-   */
-  public async saveTrack(track: ITrack) : Promise<ITrack> {
-    const trackCopy = Object.assign({}, track);
-    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
-    trackCopy.key = key;
-    return trackCopy;
-  }
-
   public async updateTrack(newTrack: ITrack) {
     const trackToSave = JSON.parse(JSON.stringify(newTrack));
     const originalTrack = await this.getTrack(trackToSave.key);
     console.log(
       '------- ~ file: save.service.ts ~ line 82 ~ SaveService ~ updateTrack ~ originalTrack',
-      originalTrack
+      originalTrack,
     );
     const photoKeys: string[] = [];
     trackToSave.photoKeys = [];
@@ -86,12 +137,10 @@ export class SaveService {
       trackToSave.photoKey.push(photoTrack.key);
     }
     trackToSave.photos = null;
-    const deletedPhotos = originalTrack.photoKeys.filter((x) =>
-      photoKeys.find((y) => x !== y)
-    );
+    const deletedPhotos = originalTrack.photoKeys.filter(x => photoKeys.find(y => x !== y));
     console.log(
       '------- ~ file: save.service.ts ~ line 87 ~ SaveService ~ updateTrack ~ deletedPhotos',
-      deletedPhotos
+      deletedPhotos,
     );
     for (const photokey of deletedPhotos) {
       //this.deleteGeneric(photokey);
@@ -104,15 +153,11 @@ export class SaveService {
 
     let contents = await this.getUnsavedObjects();
     contents = contents.sort((a, b) =>
-      a.type == (ESaveObjType.PHOTO || a.type == ESaveObjType.PHOTOTRACK)
-        ? 1
-        : -1
+      a.type == (ESaveObjType.PHOTO || a.type == ESaveObjType.PHOTOTRACK) ? 1 : -1,
     );
 
     for (let i = 0; i < contents.length; i++) {
-      const indexObj = this._index.objects.find(
-        (x) => x.key === contents[i].key
-      );
+      const indexObj = this._index.objects.find(x => x.key === contents[i].key);
       switch (contents[i].type) {
         case ESaveObjType.PHOTO:
           const photo: IPhotoItem = await this._getGenericById(contents[i].key);
@@ -126,9 +171,7 @@ export class SaveService {
           break;
 
         case ESaveObjType.WAYPOINT:
-          const waypoint: WaypointSave = await this._getGenericById(
-            contents[i].key
-          );
+          const waypoint: WaypointSave = await this._getGenericById(contents[i].key);
 
           if (waypoint?.photos?.length) {
             let i: number = 0;
@@ -206,56 +249,11 @@ export class SaveService {
     }
   }
 
-  /**
-   * Get all the object save on storage but not on the cloud
-   */
-  public async getUnsavedObjects(): Promise<ISaveIndexObj[]> {
-    let ret = this._index.objects.filter((X) => X.saved === false);
-    return ret;
-  }
-
-  public async getWaypoints(): Promise<WaypointSave[]> {
-    return this.getGenerics(ESaveObjType.WAYPOINT);
-  }
-
-  public async getPhotos(): Promise<IPhotoItem[]> {
-    return this.getGenerics(ESaveObjType.PHOTO);
-  }
-
-  public async getTracks(): Promise<ITrack[]> {
-    const ret: ITrack[] = await this.getGenerics(ESaveObjType.TRACK);
-    ret.forEach((t) => {
-      this._initTrack(t);
-    });
-    return ret;
-  }
-
-  public async getTrack(key: string): Promise<ITrack> {
-    const ret = await this._getGenericById(key);
-    this._initTrack(ret);
-    return ret;
-  }
-
-  public async getTrackPhotos(track: ITrack): Promise<IPhotoItem[]> {
-    const coll = [];
-    for (const photoKey of track.photoKeys) {
-      const photo = await this._getGenericById(photoKey);
-      coll.push(photo);
-    }
-    return coll;
-  }
-
-  public async getGenerics(type: ESaveObjType): Promise<any[]> {
-    const res = [];
-    for (const obj of this._index.objects) {
-      if (obj.type === type && !obj.deleted) {
-        const ret = await this._getGenericById(obj.key);
-        if (ret) {
-          res.push(ret);
-        }
-      }
-    }
-    return res;
+  private async _deleteGeneric(key): Promise<any> {
+    await this._storage.removeByKey(key);
+    const indexObj = this._index.objects.find(x => x.key === key);
+    indexObj.deleted = true;
+    await this._updateIndex();
   }
 
   private async _getGenericById(key): Promise<any> {
@@ -268,30 +266,27 @@ export class SaveService {
     return returnObj;
   }
 
-  private async _deleteGeneric(key): Promise<any> {
-    await this._storage.removeByKey(key);
-    const indexObj = this._index.objects.find((x) => x.key === key);
-    indexObj.deleted = true;
-    await this._updateIndex();
+  private _getLastId() {
+    return this._index.lastId++;
   }
 
-  private async _updateGeneric(key, value: IRegisterItem): Promise<any> {
-    await this._storage.removeByKey(key);
-    await this._storage.setByKey(key, value);
-    const indexObj = this._index.objects.find((x) => x.key === key);
-    indexObj.edited = true;
-    await this._updateIndex();
+  private _initTrack(track: ITrack) {
+    // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
+    const gj = track.geojson;
+    track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }
 
-  private async _savePhotoTrack(photo: IPhotoItem): Promise<string> {
-    await this._photoService.setPhotoData(photo);
-    return await this._saveGeneric(photo, ESaveObjType.PHOTOTRACK);
+  private async _recoverIndex() {
+    const ret = await this._storage.getByKey(this._indexKey);
+    if (ret) {
+      this._index = ret;
+    }
   }
 
   private async _saveGeneric(
     object: IRegisterItem,
     type: ESaveObjType,
-    skipUpload?: boolean
+    skipUpload?: boolean,
   ): Promise<string> {
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
@@ -312,24 +307,20 @@ export class SaveService {
     return key;
   }
 
-  private _getLastId() {
-    return this._index.lastId++;
+  private async _savePhotoTrack(photo: IPhotoItem): Promise<string> {
+    await this._photoService.setPhotoData(photo);
+    return await this._saveGeneric(photo, ESaveObjType.PHOTOTRACK);
   }
 
-  private async _recoverIndex() {
-    const ret = await this._storage.getByKey(this._indexKey);
-    if (ret) {
-      this._index = ret;
-    }
+  private async _updateGeneric(key, value: IRegisterItem): Promise<any> {
+    await this._storage.removeByKey(key);
+    await this._storage.setByKey(key, value);
+    const indexObj = this._index.objects.find(x => x.key === key);
+    indexObj.edited = true;
+    await this._updateIndex();
   }
 
   private async _updateIndex() {
     await this._storage.setByKey(this._indexKey, this._index);
-  }
-
-  private _initTrack(track: ITrack) {
-    // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
-    const gj = track.geojson;
-    track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
   }
 }

@@ -2,28 +2,32 @@ import {Component, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {filter, take} from 'rxjs/operators';
 
-import {DownloadService} from './services/download.service';
-import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
-import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
-import {IConfRootState} from './store/conf/conf.reducer';
-import {INetworkRootState} from './store/network/netwotk.reducer';
-import {LanguagesService} from './services/languages.service';
 import {Router} from '@angular/router';
-import {SaveService} from './services/save.service';
 import {SplashScreen} from '@capacitor/splash-screen';
-import {StatusService} from './services/status.service';
+import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {Store} from '@ngrx/store';
-import {confMAP} from './store/conf/conf.selector';
+import {appEN} from 'src/assets/i18n/en';
+import {appFR} from 'src/assets/i18n/fr';
+import {appIT} from 'src/assets/i18n/it';
 import {environment} from 'src/environments/environment';
+import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
+import {DownloadService} from './services/download.service';
+import {SaveService} from './services/save.service';
+import {StatusService} from './services/status.service';
+import {LangService} from './shared/wm-core/localization/lang.service';
 import {loadConf} from './store/conf/conf.actions';
-import {loadPois} from './store/pois/pois.actions';
+import {IConfRootState} from './store/conf/conf.reducer';
+import {confMAP} from './store/conf/conf.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
+import {INetworkRootState} from './store/network/netwotk.reducer';
+import {loadPois} from './store/pois/pois.actions';
 
 @Component({
   selector: 'webmapp-app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  providers: [LangService],
 })
 export class AppComponent {
   public image_gallery: any[];
@@ -31,7 +35,6 @@ export class AppComponent {
   public showingPhotos = false;
 
   constructor(
-    private _languagesService: LanguagesService,
     private _platform: Platform,
     private _googleAnalytics: GoogleAnalytics,
     private _downloadService: DownloadService,
@@ -40,10 +43,13 @@ export class AppComponent {
     private saveService: SaveService,
     private _storeConf: Store<IConfRootState>,
     private _storeNetwork: Store<INetworkRootState>,
+    private _langService: LangService,
   ) {
-    this._languagesService.initialize();
     this._storeConf.dispatch(loadConf());
     this._storeNetwork.dispatch(startNetworkMonitoring());
+    this._langService.setTranslation('it', appIT, true);
+    this._langService.setTranslation('en', appEN, true);
+    this._langService.setTranslation('fr', appFR, true);
 
     this._storeConf
       .select(confMAP)

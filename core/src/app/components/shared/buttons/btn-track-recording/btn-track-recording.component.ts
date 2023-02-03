@@ -1,4 +1,4 @@
-import {ActionSheetController, ModalController, NavController} from '@ionic/angular';
+import {ModalController, NavController} from '@ionic/angular';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +16,6 @@ import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-succ
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
-import {TranslateService} from '@ngx-translate/core';
 import {LoginComponent} from '../../login/login.component';
 
 @Component({
@@ -31,8 +30,6 @@ export class BtnTrackRecordingComponent {
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
-    private _actionSheetCtrl: ActionSheetController,
-    private _translateSvc: TranslateService,
     private _navCtrl: NavController,
     private _geolocationSvc: GeolocationService,
     private _modalController: ModalController,
@@ -90,14 +87,6 @@ export class BtnTrackRecordingComponent {
     }
   }
 
-  waypoint() {
-    if (this.isLogged) {
-      this._navCtrl.navigateForward('waypoint');
-    } else {
-      this.openModalLogin();
-    }
-  }
-
   track(): void {
     if (this.isLogged) {
       const location: ILocation = this._geolocationSvc.location;
@@ -110,6 +99,14 @@ export class BtnTrackRecordingComponent {
       }
 
       this._navCtrl.navigateForward('register');
+    } else {
+      this.openModalLogin();
+    }
+  }
+
+  waypoint() {
+    if (this.isLogged) {
+      this._navCtrl.navigateForward('waypoint');
     } else {
       this.openModalLogin();
     }

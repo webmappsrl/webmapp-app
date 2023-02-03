@@ -1,25 +1,23 @@
 import {AlertController, ModalController} from '@ionic/angular';
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-
+import {confLANGUAGES} from 'src/app/store/conf/conf.selector';
 import {AuthService} from 'src/app/services/auth.service';
-import {BehaviorSubject} from 'rxjs';
 import {ConfigService} from 'src/app/services/config.service';
 import {CreditsPage} from 'src/app/pages/credits/credits.page';
 import {DisclaimerPage} from 'src/app/pages/disclaimer/disclaimer.page';
-import {LanguagesService} from 'src/app/services/languages.service';
 import {ProjectPage} from 'src/app/pages/project/project.page';
-import {Router} from '@angular/router';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'webmapp-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
+  providers: [LangService],
 })
 export class SettingsComponent implements OnInit {
   isLoggedIn: boolean;
-  langForm: FormGroup;
-  langs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(['it']);
+  langs$ = this._store.select(confLANGUAGES);
   public version = '0.0.0';
 
   constructor(
@@ -27,9 +25,8 @@ export class SettingsComponent implements OnInit {
     private _authService: AuthService,
     private _modalController: ModalController,
     private _configService: ConfigService,
-    private _langSvc: LanguagesService,
-    private _fb: FormBuilder,
-    private _router: Router,
+    private _langSvc: LangService,
+    private _store: Store<any>,
   ) {}
 
   dismiss(): void {
@@ -40,14 +37,14 @@ export class SettingsComponent implements OnInit {
     this._alertController
       .create({
         mode: 'ios',
-        header: this._langSvc.translate('generic.warning'),
-        message: this._langSvc.translate('modals.settings.alert.logout'),
+        header: this._langSvc.instant('generic.warning'),
+        message: this._langSvc.instant('modals.settings.alert.logout'),
         buttons: [
           {
-            text: this._langSvc.translate('generic.cancel'),
+            text: this._langSvc.instant('generic.cancel'),
           },
           {
-            text: this._langSvc.translate('generic.confirm'),
+            text: this._langSvc.instant('generic.confirm'),
             handler: () => {
               this._authService.logout();
               this.dismiss();
@@ -64,6 +61,12 @@ export class SettingsComponent implements OnInit {
         },
       );
   }
+
+  ngOnInit() {
+    this.version = this._configService.version;
+    this.isLoggedIn = this._authService.isLoggedIn;
+  }
+
   async openCmp(nameCmp: string) {
     const cmp =
       nameCmp === 'project' ? ProjectPage : nameCmp === 'disclaimer' ? DisclaimerPage : CreditsPage;
@@ -73,19 +76,5 @@ export class SettingsComponent implements OnInit {
       mode: 'ios',
     });
     pmodal.present();
-  }
-
-  ngOnInit() {
-    this.version = this._configService.version;
-    this.isLoggedIn = this._authService.isLoggedIn;
-    this._initLang();
-  }
-
-  private _initLang(): void {
-    this.langs$.next(this._langSvc.langs());
-    this.langForm = this._fb.group({
-      lang: [this._langSvc.currentLang],
-    });
-    this.langForm.valueChanges.subscribe(lang => this._langSvc.changeLang(lang.lang));
   }
 }

@@ -3,12 +3,13 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AlertController, IonInput, ModalController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
-import {LanguagesService} from 'src/app/services/languages.service';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-login-component',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  providers: [LangService],
 })
 export class LoginComponent implements OnInit {
   get errorControl() {
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
     private _alertController: AlertController,
     private _authService: AuthService,
     private _formBuilder: FormBuilder,
-    private _languagesService: LanguagesService,
+    private _languagesService: LangService,
     private _modalController: ModalController,
   ) {
     this.loginForm = this._formBuilder.group({
@@ -85,11 +86,11 @@ export class LoginComponent implements OnInit {
     this._alertController
       .create({
         mode: 'ios',
-        header: this._languagesService.translate('generic.warning'),
-        message: this._languagesService.translate(errorMessage),
+        header: this._languagesService.instant('generic.warning'),
+        message: this._languagesService.instant(errorMessage),
         buttons: [
           {
-            text: this._languagesService.translate('generic.ok'),
+            text: this._languagesService.instant('generic.ok'),
           },
         ],
       })

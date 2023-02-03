@@ -30,12 +30,142 @@ const FAVOURITE_PAGESIZE = 3;
 })
 export class GeohubService {
   private _ecTracks: Array<CGeojsonLineStringFeature>;
+  private _favourites: Array<number> = null;
+
   constructor(
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService,
   ) {
     this._ecTracks = [];
+  }
+
+  async favourites(): Promise<number[]> {
+    if (!this._favourites) {
+      try {
+        const {favorites} = await this._communicationService
+          .get(`${environment.api}/api/ec/track/favorite/list`)
+          .toPromise();
+        this._favourites = favorites;
+      } catch (err) {
+        console.log('------- ~ GeohubService ~ favourites ~ err', err);
+      }
+    }
+    return this._favourites;
+  }
+
+  async getDetailsPoisForTrack(id: number): Promise<Array<IGeojsonPoiDetailed>> {
+    const mock = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          properties: {
+            id: 1,
+            image:
+              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
+            images: ['https://picsum.photos/250/150', 'https://picsum.photos/250/150'],
+            name: {it: 'esempio', en: 'example'},
+            description: {it: 'descrizione poi', en: 'desc'},
+            email: 'pippo@gmail.com',
+            phone: '12345678',
+            address: 'Via di qua 0',
+            url: 'http://www.google.com',
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [11.1022, 42.66137],
+          },
+        },
+        {
+          properties: {
+            id: 2,
+            image:
+              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg',
+            images: [
+              'https://picsum.photos/250/150',
+              'https://picsum.photos/250/150',
+              'https://picsum.photos/250/150',
+              'https://picsum.photos/250/150',
+            ],
+            name: {it: 'esempio 2 ', en: 'example'},
+            description: {
+              it: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu. Vestibulum vehicula porttitor lacus, et sodales lorem vehicula vel. Quisque commodo mi id faucibus mollis. Nam porttitor, enim nec consequat commodo, dui lacus suscipit ante, in scelerisque lectus nibh eu turpis. Nulla metus risus, tristique vitae cursus vitae, hendrerit quis dolor. Donec tincidunt quis nulla sed lobortis. Aliquam eget nunc fringilla, fermentum sem ac, condimentum neque. Phasellus id aliquet sem, nec facilisis orci. Maecenas ultricies sollicitudin auctor. Cras quis orci placerat neque viverra tempor. Mauris et dolor rutrum, rutrum elit a, consectetur sem. Sed a erat nunc. Aliquam suscipit tincidunt semper. Morbi maximus eros diam.
+                        Praesent dapibus, turpis in pulvinar efficitur, justo elit pulvinar lectus, non varius quam massa et sapien. Integer pulvinar diam lacus, in aliquam massa efficitur at. Suspendisse interdum auctor erat et lobortis. Sed a quam nunc. Mauris vitae erat placerat, interdum magna ac, accumsan urna. Suspendisse eu suscipit dolor. In hac habitasse platea dictumst. Cras volutpat risus a magna scelerisque, sed facilisis leo ullamcorper. In placerat ante a metus molestie euismod. Nulla ante sem, sollicitudin at dolor vel, fermentum ornare erat. Quisque posuere vitae risus ac porta. Nullam dapibus tincidunt quam non dictum. Vestibulum scelerisque nunc et lectus ornare, vitae mattis ante dictum. Aliquam erat volutpat. Praesent congue lacus mi, sed consequat nibh dapibus vel. Suspendisse potenti.
+                        Cras gravida eros felis, sit amet commodo odio convallis id. In mi eros, pretium sed magna a, rutrum pretium neque. Suspendisse feugiat aliquet nunc non venenatis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum pellentesque dictum dictum. Aenean ultrices consectetur congue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce ullamcorper nisl dolor, a dapibus magna fermentum vel. Donec a maximus lectus. Donec posuere hendrerit enim placerat imperdiet. Aliquam commodo est lacus, at lacinia erat volutpat ac. Quisque in nisl aliquam, lobortis ante at, aliquam diam. Sed eu sagittis arcu. Nulla facilisi. Nam egestas sem tellus, eu ultricies neque ultrices sit amet.
+                        Morbi efficitur magna a vestibulum auctor. Praesent pellentesque risus ac urna scelerisque, non consequat justo commodo. Curabitur viverra lacus non magna tristique consectetur quis eu dolor. Etiam consectetur ornare nibh eget tempor. Fusce pulvinar, lacus eget dictum finibus, tortor elit finibus libero, ac convallis est enim nec risus. Duis faucibus, urna ac placerat blandit, justo tortor mattis arcu, in euismod arcu neque ac turpis. Duis sodales massa vel laoreet tempor. Suspendisse fringilla neque ut ante aliquet, vel rhoncus erat semper. Donec ut lacinia lorem, sed porta massa. Suspendisse quis nisi at lorem accumsan ornare. Duis tristique metus at sapien viverra ullamcorper. Curabitur venenatis justo nibh, sed venenatis nulla elementum eu. Nullam vulputate urna maximus vestibulum suscipit. Phasellus semper lacus vitae lacinia convallis. Cras tempus nec lorem vitae faucibus.
+                        Pellentesque ac nibh eros. Pellentesque tempus consectetur metus, eu euismod augue. Aenean a facilisis felis. Suspendisse potenti. Proin venenatis, nunc a dictum fermentum, nibh augue dignissim lacus, ut congue dui ante ut est. Mauris cursus faucibus eros, ut euismod urna. Duis ut tempor nulla. Nunc facilisis semper diam vitae aliquam. Pellentesque non imperdiet odio. Donec accumsan viverra metus eu sollicitudin. In elit neque, tristique in turpis et, rutrum gravida mi.`,
+              en: 'desc',
+            },
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [11.108, 42.658],
+          },
+        },
+      ],
+    };
+    let call = this._communicationService.get(
+      `${environment.api}/api/ec/track/get_related_simple/${id}`,
+    );
+    call = of(mock);
+    const res = await call.pipe(map(x => x.features)).toPromise();
+    return res;
+  }
+
+  /**
+   * Get an instance of the specified ec media
+   *
+   * @param {string} id the ec media id
+   *
+   * @returns {IGeojsonFeature}
+   */
+  async getEcMedia(id: string): Promise<IGeojsonFeature> {
+    return undefined;
+  }
+
+  /**
+   * Get an instance of the specified ec poi
+   *
+   * @param {string} id the ec poi id
+   *
+   * @returns {IGeojsonFeature}
+   */
+  getEcPoi(id: string): IGeojsonFeature {
+    return undefined;
+  }
+
+  /**
+   * Get an instance of the specified ec track
+   *
+   * @param id the ec track id
+   *
+   * @returns
+   */
+  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+    if (id == null) return null;
+    const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
+      (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
+    );
+    if (cacheResult) {
+      return cacheResult;
+    }
+    if (id > -1) {
+      const result = await this._communicationService
+        .get(`${environment.api}/api/ec/track/${id}`)
+        .pipe(
+          map((apiResult: CGeojsonLineStringFeature) => {
+            return apiResult;
+          }),
+        )
+        .toPromise();
+
+      this._ecTracks.push(result);
+      if (this._ecTracks.length > 10) {
+        this._ecTracks.splice(0, 1);
+      }
+
+      return result;
+    }
   }
 
   /**
@@ -80,77 +210,27 @@ export class GeohubService {
     return res;
   }
 
-  /**
-   * Get an instance of the specified ec track
-   *
-   * @param id the ec track id
-   *
-   * @returns
-   */
-  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
-    if (id == null) return null;
-    const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
-      (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
-    );
-    if (cacheResult) {
-      return cacheResult;
-    }
-    if (id > -1) {
-      const result = await this._communicationService
-        .get(`${environment.api}/api/ec/track/${id}`)
-        .pipe(
-          map((apiResult: CGeojsonLineStringFeature) => {
-            return apiResult;
-          }),
-        )
-        .toPromise();
+  async getFavouriteTracks(page: number = 0): Promise<Array<IGeojsonFeature>> {
+    const favourites = await this.favourites();
 
-      this._ecTracks.push(result);
-      if (this._ecTracks.length > 10) {
-        this._ecTracks.splice(0, 1);
-      }
-
-      return result;
+    let ids: number[] = [];
+    if (favourites) {
+      ids = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
     }
+
+    return this.getTracks(ids);
   }
 
   /**
-   * Get an instance of the specified ec poi
+   * Get an array with the closest ec tracks to the specified location
    *
-   * @param {string} id the ec poi id
-   *
-   * @returns {IGeojsonFeature}
+   * @returns {Array<IGeojsonFeature>}
    */
-  getEcPoi(id: string): IGeojsonFeature {
-    return undefined;
-  }
-
-  /**
-   * Get an instance of the specified ec media
-   *
-   * @param {string} id the ec media id
-   *
-   * @returns {IGeojsonFeature}
-   */
-  async getEcMedia(id: string): Promise<IGeojsonFeature> {
-    return undefined;
-  }
-
-  /**
-   * Perform a search with the given params
-   *
-   * @returns {Array<RouteCluster>}
-   */
-  async search(
-    boundingbox: number[],
-    filters,
-    referenceTrackId: number,
-  ): Promise<IGeojsonClusterApiResponse> {
-    let url = `${environment.api}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
-    if (referenceTrackId) {
-      url += `&reference_id=${referenceTrackId}`;
-    }
-    const res = await this._communicationService.get(url).toPromise();
+  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
+    const res = await this._communicationService
+      .get(`${environment.api}/api/ec/track/most_viewed?app_id=${this._configService.appId}`)
+      .pipe(map(x => x.features))
+      .toPromise();
     return res;
   }
 
@@ -171,49 +251,79 @@ export class GeohubService {
     return res;
   }
 
-  /**
-   * Get an array with the closest ec tracks to the specified location
-   *
-   * @returns {Array<IGeojsonFeature>}
-   */
-  async getMostViewedEcTracks(): Promise<Array<IGeojsonFeature>> {
+  async getPoiForTrack(id: number): Promise<Array<IGeojsonPoi>> {
+    const mock = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          properties: {
+            id: 1,
+            image:
+              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [11.1022, 42.66137],
+          },
+        },
+        {
+          properties: {
+            id: 2,
+            image:
+              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg',
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [11.108, 42.658],
+          },
+        },
+      ],
+    };
+    let call = this._communicationService.get(
+      `${environment.api}/api/ec/track/get_related_simple/${id}`,
+    );
+    call = of(mock);
+    const res = await call.pipe(map(x => x.features)).toPromise();
+    return res;
+  }
+
+  async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
-      .get(`${environment.api}/api/ec/track/most_viewed?app_id=${this._configService.appId}`)
+      .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
       .pipe(map(x => x.features))
       .toPromise();
     return res;
   }
 
   /**
-   * Save a waypoint as a EC POI to the Geohub
+   * Get a where taxonomy (form cache if available)
    *
-   * @param waypoint the waypoint to save
-   *
-   * @returns
+   * @param id id of the where taxonomy
+   * @returns a where taxonomy
    */
-  async saveWaypoint(waypoint: WaypointSave) {
-    const data = {
-      type: 'Feature',
-      geometry: {
-        type: EGeojsonGeometryTypes.POINT,
-        coordinates: [waypoint.position.longitude, waypoint.position.latitude],
-      },
-      properties: {
-        name: waypoint.title,
-        description: waypoint.description,
-        app_id: this._configService.appId,
-        image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
-        waypoint_type: waypoint.waypointtype,
-      },
-    };
+  async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
+    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
+    const cached = await this._getFromCache(cacheId);
+    if (cached) return cached;
     const res = await this._communicationService
-      .post(`${environment.api}/api/ugc/poi/store`, data, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
+      .get(`${environment.api}/api/taxonomy/where/${id}`)
+      .pipe(
+        map(value => {
+          delete value.geometry;
+          this._setInCache(cacheId, value);
+          return value;
         }),
-      })
+      )
       .toPromise();
     return res;
+  }
+
+  async isFavouriteTrack(trackId: number): Promise<boolean> {
+    const favourites = await this.favourites();
+    if (favourites && favourites.length) {
+      return !!favourites.find(x => x == trackId);
+    }
+    return false;
   }
 
   /**
@@ -289,98 +399,94 @@ export class GeohubService {
     return res;
   }
 
-  async getDetailsPoisForTrack(id: number): Promise<Array<IGeojsonPoiDetailed>> {
-    const mock = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          properties: {
-            id: 1,
-            image:
-              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
-            images: ['https://picsum.photos/250/150', 'https://picsum.photos/250/150'],
-            name: {it: 'esempio', en: 'example'},
-            description: {it: 'descrizione poi', en: 'desc'},
-            email: 'pippo@gmail.com',
-            phone: '12345678',
-            address: 'Via di qua 0',
-            url: 'http://www.google.com',
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [11.1022, 42.66137],
-          },
-        },
-        {
-          properties: {
-            id: 2,
-            image:
-              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg',
-            images: [
-              'https://picsum.photos/250/150',
-              'https://picsum.photos/250/150',
-              'https://picsum.photos/250/150',
-              'https://picsum.photos/250/150',
-            ],
-            name: {it: 'esempio 2 ', en: 'example'},
-            description: {
-              it: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce consectetur dapibus risus et euismod. Curabitur vel elit arcu. Vestibulum vehicula porttitor lacus, et sodales lorem vehicula vel. Quisque commodo mi id faucibus mollis. Nam porttitor, enim nec consequat commodo, dui lacus suscipit ante, in scelerisque lectus nibh eu turpis. Nulla metus risus, tristique vitae cursus vitae, hendrerit quis dolor. Donec tincidunt quis nulla sed lobortis. Aliquam eget nunc fringilla, fermentum sem ac, condimentum neque. Phasellus id aliquet sem, nec facilisis orci. Maecenas ultricies sollicitudin auctor. Cras quis orci placerat neque viverra tempor. Mauris et dolor rutrum, rutrum elit a, consectetur sem. Sed a erat nunc. Aliquam suscipit tincidunt semper. Morbi maximus eros diam.
-                        Praesent dapibus, turpis in pulvinar efficitur, justo elit pulvinar lectus, non varius quam massa et sapien. Integer pulvinar diam lacus, in aliquam massa efficitur at. Suspendisse interdum auctor erat et lobortis. Sed a quam nunc. Mauris vitae erat placerat, interdum magna ac, accumsan urna. Suspendisse eu suscipit dolor. In hac habitasse platea dictumst. Cras volutpat risus a magna scelerisque, sed facilisis leo ullamcorper. In placerat ante a metus molestie euismod. Nulla ante sem, sollicitudin at dolor vel, fermentum ornare erat. Quisque posuere vitae risus ac porta. Nullam dapibus tincidunt quam non dictum. Vestibulum scelerisque nunc et lectus ornare, vitae mattis ante dictum. Aliquam erat volutpat. Praesent congue lacus mi, sed consequat nibh dapibus vel. Suspendisse potenti.
-                        Cras gravida eros felis, sit amet commodo odio convallis id. In mi eros, pretium sed magna a, rutrum pretium neque. Suspendisse feugiat aliquet nunc non venenatis. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum pellentesque dictum dictum. Aenean ultrices consectetur congue. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce ullamcorper nisl dolor, a dapibus magna fermentum vel. Donec a maximus lectus. Donec posuere hendrerit enim placerat imperdiet. Aliquam commodo est lacus, at lacinia erat volutpat ac. Quisque in nisl aliquam, lobortis ante at, aliquam diam. Sed eu sagittis arcu. Nulla facilisi. Nam egestas sem tellus, eu ultricies neque ultrices sit amet.
-                        Morbi efficitur magna a vestibulum auctor. Praesent pellentesque risus ac urna scelerisque, non consequat justo commodo. Curabitur viverra lacus non magna tristique consectetur quis eu dolor. Etiam consectetur ornare nibh eget tempor. Fusce pulvinar, lacus eget dictum finibus, tortor elit finibus libero, ac convallis est enim nec risus. Duis faucibus, urna ac placerat blandit, justo tortor mattis arcu, in euismod arcu neque ac turpis. Duis sodales massa vel laoreet tempor. Suspendisse fringilla neque ut ante aliquet, vel rhoncus erat semper. Donec ut lacinia lorem, sed porta massa. Suspendisse quis nisi at lorem accumsan ornare. Duis tristique metus at sapien viverra ullamcorper. Curabitur venenatis justo nibh, sed venenatis nulla elementum eu. Nullam vulputate urna maximus vestibulum suscipit. Phasellus semper lacus vitae lacinia convallis. Cras tempus nec lorem vitae faucibus.
-                        Pellentesque ac nibh eros. Pellentesque tempus consectetur metus, eu euismod augue. Aenean a facilisis felis. Suspendisse potenti. Proin venenatis, nunc a dictum fermentum, nibh augue dignissim lacus, ut congue dui ante ut est. Mauris cursus faucibus eros, ut euismod urna. Duis ut tempor nulla. Nunc facilisis semper diam vitae aliquam. Pellentesque non imperdiet odio. Donec accumsan viverra metus eu sollicitudin. In elit neque, tristique in turpis et, rutrum gravida mi.`,
-              en: 'desc',
-            },
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [11.108, 42.658],
-          },
-        },
-      ],
+  /**
+   * Save a waypoint as a EC POI to the Geohub
+   *
+   * @param waypoint the waypoint to save
+   *
+   * @returns
+   */
+  async saveWaypoint(waypoint: WaypointSave) {
+    const data = {
+      type: 'Feature',
+      geometry: {
+        type: EGeojsonGeometryTypes.POINT,
+        coordinates: [waypoint.position.longitude, waypoint.position.latitude],
+      },
+      properties: {
+        name: waypoint.title,
+        description: waypoint.description,
+        app_id: this._configService.appId,
+        image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
+        waypoint_type: waypoint.waypointtype,
+      },
     };
-    let call = this._communicationService.get(
-      `${environment.api}/api/ec/track/get_related_simple/${id}`,
-    );
-    call = of(mock);
-    const res = await call.pipe(map(x => x.features)).toPromise();
+    const res = await this._communicationService
+      .post(`${environment.api}/api/ugc/poi/store`, data, {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      })
+      .toPromise();
     return res;
   }
 
-  async getPoiForTrack(id: number): Promise<Array<IGeojsonPoi>> {
-    const mock = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          properties: {
-            id: 1,
-            image:
-              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/83_150x150.jpg',
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [11.1022, 42.66137],
-          },
-        },
-        {
-          properties: {
-            id: 2,
-            image:
-              'https://ecmedia.s3.eu-central-1.amazonaws.com/EcMedia/Resize/150x150/107_150x150.jpg',
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [11.108, 42.658],
-          },
-        },
-      ],
-    };
-    let call = this._communicationService.get(
-      `${environment.api}/api/ec/track/get_related_simple/${id}`,
-    );
-    call = of(mock);
-    const res = await call.pipe(map(x => x.features)).toPromise();
+  /**
+   * Perform a search with the given params
+   *
+   * @returns {Array<RouteCluster>}
+   */
+  async search(
+    boundingbox: number[],
+    filters,
+    referenceTrackId: number,
+  ): Promise<IGeojsonClusterApiResponse> {
+    let url = `${environment.api}/api/ec/track/search?bbox=${boundingbox[0]},${boundingbox[1]},${boundingbox[2]},${boundingbox[3]}&app_id=${this._configService.appId}`;
+    if (referenceTrackId) {
+      url += `&reference_id=${referenceTrackId}`;
+    }
+    const res = await this._communicationService.get(url).toPromise();
     return res;
+  }
+
+  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<boolean> {
+    if (isFavourite) {
+      await this._communicationService
+        .post(
+          `${environment.api}/api/ec/track/favorite/add/${trackId}`,
+          null,
+          new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+        )
+        .toPromise();
+    } else {
+      await this._communicationService
+        .post(
+          `${environment.api}/api/ec/track/favorite/remove/${trackId}`,
+          null,
+          new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+        )
+        .toPromise();
+    }
+
+    const favourites = await this.favourites();
+    let idx = -1;
+    if (favourites && favourites.length) {
+      idx = favourites.findIndex(x => x === trackId);
+    }
+    if (isFavourite) {
+      if (idx < 0) {
+        favourites.push(trackId);
+      }
+    } else {
+      if (idx >= 0) {
+        favourites.splice(idx, 1);
+      }
+    }
+    return isFavourite;
   }
 
   public async stringSearch(searchstring: string): Promise<SearchStringResult> {
@@ -429,112 +535,6 @@ export class GeohubService {
     call = of(mock);
     const res = await call.toPromise();
     return res;
-  }
-
-  /**
-   * Get a where taxonomy (form cache if available)
-   *
-   * @param id id of the where taxonomy
-   * @returns a where taxonomy
-   */
-  async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
-    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
-    const cached = await this._getFromCache(cacheId);
-    if (cached) return cached;
-    const res = await this._communicationService
-      .get(`${environment.api}/api/taxonomy/where/${id}`)
-      .pipe(
-        map(value => {
-          delete value.geometry;
-          this._setInCache(cacheId, value);
-          return value;
-        }),
-      )
-      .toPromise();
-    return res;
-  }
-
-  private _favourites: Array<number> = null;
-
-  async getFavouriteTracks(page: number = 0): Promise<Array<IGeojsonFeature>> {
-    const favourites = await this.favourites();
-
-    let ids: number[] = [];
-    if (favourites) {
-      ids = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
-    }
-
-    return this.getTracks(ids);
-  }
-
-  async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
-    const res = await this._communicationService
-      .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
-      .pipe(map(x => x.features))
-      .toPromise();
-    return res;
-  }
-
-  async favourites(): Promise<number[]> {
-    if (!this._favourites) {
-      try {
-        const {favorites} = await this._communicationService
-          .get(`${environment.api}/api/ec/track/favorite/list`)
-          .toPromise();
-        this._favourites = favorites;
-      } catch (err) {
-        console.log('------- ~ GeohubService ~ favourites ~ err', err);
-      }
-    }
-    return this._favourites;
-  }
-
-  async setFavouriteTrack(trackId: number, isFavourite: boolean): Promise<boolean> {
-    if (isFavourite) {
-      await this._communicationService
-        .post(
-          `${environment.api}/api/ec/track/favorite/add/${trackId}`,
-          null,
-          new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
-        )
-        .toPromise();
-    } else {
-      await this._communicationService
-        .post(
-          `${environment.api}/api/ec/track/favorite/remove/${trackId}`,
-          null,
-          new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
-        )
-        .toPromise();
-    }
-
-    const favourites = await this.favourites();
-    let idx = -1;
-    if (favourites && favourites.length) {
-      idx = favourites.findIndex(x => x === trackId);
-    }
-    if (isFavourite) {
-      if (idx < 0) {
-        favourites.push(trackId);
-      }
-    } else {
-      if (idx >= 0) {
-        favourites.splice(idx, 1);
-      }
-    }
-    return isFavourite;
-  }
-
-  async isFavouriteTrack(trackId: number): Promise<boolean> {
-    const favourites = await this.favourites();
-    if (favourites && favourites.length) {
-      return !!favourites.find(x => x == trackId);
-    }
-    return false;
   }
 
   private async _getFromCache(cacheId: string): Promise<any> {

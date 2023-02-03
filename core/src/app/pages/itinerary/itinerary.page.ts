@@ -5,7 +5,6 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -21,7 +20,6 @@ import {
   Platform,
 } from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
@@ -46,11 +44,13 @@ import {
 } from 'src/app/types/model';
 import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-itinerary',
   templateUrl: './itinerary.page.html',
   styleUrls: ['./itinerary.page.scss'],
+  providers: [LangService],
   encapsulation: ViewEncapsulation.None,
 })
 export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnDestroy {
@@ -88,7 +88,6 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
         }
       }),
     );
-  padding$: Observable<number[]> = this._storeMap.select(padding);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   focus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public headerHeight = 105;
@@ -119,6 +118,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
   public opacity = 1;
+  padding$: Observable<number[]> = this._storeMap.select(padding);
   public pois: Array<IGeojsonPoi> = null;
   public scrollShowButtonThreshold = 450;
   public scrollThreshold = 50;
@@ -146,7 +146,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
     private animationCtrl: AnimationController,
     private gestureCtrl: GestureController,
     private _alertController: AlertController,
-    private _translate: TranslateService,
+    private _translate: LangService,
     private _storeMap: Store<IMapRootState>,
     private _shareService: ShareService,
     private _geohubService: GeohubService,
@@ -192,9 +192,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
       this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +id}));
     }, 500);
   }
-  ngAfterViewInit(): void {
-    // this.setAnimations();
-  }
+
   closeMenu() {
     this._menuController.close('optionMenu');
   }
@@ -292,6 +290,10 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
     this.closeMenu();
     this.focus$.next(true);
     this.modeFullMap = true;
+  }
+
+  ngAfterViewInit(): void {
+    // this.setAnimations();
   }
 
   ngOnDestroy(): void {

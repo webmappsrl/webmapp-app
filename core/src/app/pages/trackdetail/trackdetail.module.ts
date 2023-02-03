@@ -3,7 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 import {MapModule} from 'src/app/components/map/map.module';
 import {NgModule} from '@angular/core';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {TrackdetailPage} from './trackdetail.page';
 import {TrackdetailPageRoutingModule} from './trackdetail-routing.module';
 
@@ -13,7 +13,7 @@ import {TrackdetailPageRoutingModule} from './trackdetail-routing.module';
     FormsModule,
     IonicModule,
     TrackdetailPageRoutingModule,
-    PipeModule,
+    WmPipeModule,
     MapModule,
   ],
   declarations: [TrackdetailPage],

@@ -14,27 +14,29 @@ import {ModalSuccessComponent} from '../../modal-success/modal-success.component
 import {ModalphotosaveComponent} from '../../modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
-import {TranslateService} from '@ngx-translate/core';
+
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 // import { PopoverRegisterComponent } from '../popover-register/popover-register.component';
 
 @Component({
   selector: 'webmapp-btn-register',
   templateUrl: './btn-register.component.html',
   styleUrls: ['./btn-register.component.scss'],
+  providers: [LangService],
 })
 export class BtnRegisterComponent implements OnInit {
+  private translations = [];
+
   // @Input('color') color: string = '';
   @Input('registering') registering: boolean = false;
 
   public isPopOverPresented = false;
-  private translations = [];
 
   // private popover: HTMLIonPopoverElement;
-
   constructor(
     // public popoverController: PopoverController,
     private actionSheetController: ActionSheetController,
-    private translate: TranslateService,
+    private translate: LangService,
     private _geolocationService: GeolocationService,
     private _modalController: ModalController,
     private _navCtrl: NavController,
@@ -53,6 +55,40 @@ export class BtnRegisterComponent implements OnInit {
         'components.map.register.cancel',
       ])
       .subscribe(t => (this.translations = t));
+  }
+
+  async openModalSuccess(photos) {
+    const modaSuccess = await this._modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.PHOTOS,
+        photos,
+      },
+    });
+    await modaSuccess.present();
+    await modaSuccess.onDidDismiss();
+  }
+
+  async photo() {
+    let photoCollection = await this._photoService.addPhotos();
+
+    const modal = await this._modalController.create({
+      component: ModalphotosaveComponent,
+      componentProps: {
+        photos: photoCollection,
+      },
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
+
+    if (!res.data.dismissed) {
+      await this._saveService.savePhotos(res.data.photos);
+
+      await this.openModalSuccess(res.data.photos);
+    }
+
+    // Can be set to the src of an image now
+    // imageElement.src = imageUrl;
   }
 
   async presentPopOver(ev: any) {
@@ -120,47 +156,13 @@ export class BtnRegisterComponent implements OnInit {
     this._navCtrl.navigateForward('register');
   }
 
-  async photo() {
-    let photoCollection = await this._photoService.addPhotos();
-
-    const modal = await this._modalController.create({
-      component: ModalphotosaveComponent,
-      componentProps: {
-        photos: photoCollection,
-      },
-    });
-    await modal.present();
-    const res = await modal.onDidDismiss();
-
-    if (!res.data.dismissed) {
-      await this._saveService.savePhotos(res.data.photos);
-
-      await this.openModalSuccess(res.data.photos);
-    }
-
-    // Can be set to the src of an image now
-    // imageElement.src = imageUrl;
-  }
-
-  waypoint() {
-    this._navCtrl.navigateForward('waypoint');
-  }
-
   vocal() {
     console.log(
       '---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal',
     );
   }
 
-  async openModalSuccess(photos) {
-    const modaSuccess = await this._modalController.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.PHOTOS,
-        photos,
-      },
-    });
-    await modaSuccess.present();
-    await modaSuccess.onDidDismiss();
+  waypoint() {
+    this._navCtrl.navigateForward('waypoint');
   }
 }

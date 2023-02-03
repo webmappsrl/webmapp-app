@@ -10,13 +10,14 @@ import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {Store} from '@ngrx/store';
-import {WmTransPipe} from 'src/app/shared/wm-core/pipes/wmtrans.pipe';
 import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
+  providers: [LangService],
   encapsulation: ViewEncapsulation.None,
 })
 export class ProfilePage implements OnInit, OnDestroy {
@@ -35,7 +36,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     private _navController: NavController,
     private _storeConf: Store<IConfRootState>,
     private _alertCtrl: AlertController,
-    private _wmTrans: WmTransPipe,
+    private _translateService: LangService,
     private _router: Router,
   ) {
     this.loggedOutSliderOptions = {
@@ -51,19 +52,19 @@ export class ProfilePage implements OnInit, OnDestroy {
   deleteUserAlert(): void {
     from(
       this._alertCtrl.create({
-        header: this._wmTrans.transform('Attenzione'),
-        subHeader: this._wmTrans.transform('Azione irreversibile'),
-        message: this._wmTrans.transform('Vuoi veramente eliminare il tuo account?'),
+        header: this._translateService.instant('Attenzione'),
+        subHeader: this._translateService.instant('Azione irreversibile'),
+        message: this._translateService.instant('Vuoi veramente eliminare il tuo account?'),
         buttons: [
           {
-            text: this._wmTrans.transform('Annulla'),
+            text: this._translateService.instant('Annulla'),
             role: 'cancel',
             handler: () => {
               window.alert('cancel');
             },
           },
           {
-            text: this._wmTrans.transform('elimina'),
+            text: this._translateService.instant('elimina'),
             role: 'confirm',
             handler: () => {
               this._authService
@@ -72,10 +73,10 @@ export class ProfilePage implements OnInit, OnDestroy {
                   switchMap(res => {
                     return from(
                       this._alertCtrl.create({
-                        message: this._wmTrans.transform(res.error || res.success),
+                        message: this._translateService.instant(res.error || res.success),
                         buttons: [
                           {
-                            text: this._wmTrans.transform('ok'),
+                            text: this._translateService.instant('ok'),
                             role: 'ok',
                             handler: () => {
                               if (res.success != null) {

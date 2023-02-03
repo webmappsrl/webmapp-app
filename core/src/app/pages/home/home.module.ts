@@ -1,4 +1,3 @@
-import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 import {CardsModule} from 'src/app/components/cards/cards.module';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
@@ -8,10 +7,10 @@ import {InnerHtmlModule} from 'src/app/components/modal-inner-html/modal-inner-h
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {SharedModule} from 'src/app/components/shared/shared.module';
-import {TranslateModule} from '@ngx-translate/core';
 import {IntroComponent} from './intro/intro.component';
 import {HomeModule} from 'src/app/components/home/home.module';
 import {BoxModule} from 'src/app/components/box/box.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -19,12 +18,11 @@ import {BoxModule} from 'src/app/components/box/box.module';
     IonicModule,
     CardsModule,
     HomePageRoutingModule,
-    TranslateModule.forChild(),
     SharedModule,
     InnerHtmlModule,
     HomeModule,
-    WmCoreModule,
     BoxModule,
+    WmPipeModule,
   ],
   declarations: [HomePage, IntroComponent],
   entryComponents: [],

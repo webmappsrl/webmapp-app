@@ -4,10 +4,10 @@ import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {PhotolistPage} from './photolist.page';
 import {PhotolistPageRoutingModule} from './photolist-routing.module';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, PhotolistPageRoutingModule, PipeModule],
+  imports: [CommonModule, FormsModule, IonicModule, PhotolistPageRoutingModule, WmPipeModule],
   declarations: [PhotolistPage],
 })
 export class PhotolistPageModule {}

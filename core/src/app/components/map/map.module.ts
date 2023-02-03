@@ -11,9 +11,8 @@ import {MapComponent} from './map/map.component';
 import {NavMapModule} from './nav-map/nav-map.module';
 import {NgModule} from '@angular/core';
 import {OldMapComponent} from './old-map/map.component';
-import {PipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {PopoverRegisterComponent} from './popover-register/popover-register.component';
-import {TranslateModule} from '@ngx-translate/core';
 import {WmMapModule} from 'src/app/shared/map-core/map-core.module';
 @NgModule({
   declarations: [
@@ -28,7 +27,7 @@ import {WmMapModule} from 'src/app/shared/map-core/map-core.module';
     OldMapComponent,
     ItineraryMapComponent,
   ],
-  imports: [CommonModule, IonicModule, TranslateModule, NavMapModule, WmMapModule, PipeModule],
+  imports: [CommonModule, IonicModule, NavMapModule, WmMapModule, WmPipeModule],
   exports: [
     BtnRegisterComponent,
     BtnOrientationComponent,
