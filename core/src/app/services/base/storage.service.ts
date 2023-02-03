@@ -22,7 +22,6 @@ import {IGeojsonFeature, IGeojsonFeatureDownloaded, IGeojsonPoiDetailed} from 's
 import {Md5} from 'ts-md5/dist/md5';
 
 import {Filesystem, Directory, Encoding} from '@capacitor/filesystem';
-import {IConfig} from 'src/app/types/config';
 
 @Injectable({
   providedIn: 'root',

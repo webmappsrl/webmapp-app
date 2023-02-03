@@ -1,5 +1,10 @@
 <ng-container *ngFor="let box of conf">
-  <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title}}</h3>
+  <h3 *ngIf="box.box_type === 'title'" class="webmapp-home-title">{{box.title|wmtrans}}</h3>
+  <wm-poi-type-filter-box
+    *ngIf="box.box_type === 'poi_type_filter'"
+    [data]="box"
+    (clickEVT)="this.filterClickEvt.emit(box.identifier);"
+  ></wm-poi-type-filter-box>
   <wm-slug-box *ngIf="box.box_type === 'slug'" [data]="box" (clickEVT)="openSlug(box.slug)">
   </wm-slug-box>
   <wm-layer-box *ngIf="box.box_type === 'layer'" [data]="box" (clickEVT)="selectLayer(box.layer)">

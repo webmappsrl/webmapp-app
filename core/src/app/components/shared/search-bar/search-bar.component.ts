@@ -1,5 +1,4 @@
 import {Subscription} from 'rxjs/internal/Subscription';
-import {ILAYER} from 'src/app/types/config';
 import {Component, EventEmitter, Input, Output, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 

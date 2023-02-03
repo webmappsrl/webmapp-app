@@ -1,5 +1,4 @@
 import {HttpClient} from '@angular/common/http';
-import {ICONF} from 'src/app/types/config';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from 'src/environments/environment';

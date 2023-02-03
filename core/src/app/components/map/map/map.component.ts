@@ -17,7 +17,6 @@ import {Collection, MapBrowserEvent} from 'ol';
 import {Extent, buffer} from 'ol/extent';
 import Feature, {FeatureLike} from 'ol/Feature';
 import {IGeojsonFeature, ILineString} from 'src/app/types/model';
-import {ILAYER, IMAP, ITHEME} from 'src/app/types/config';
 import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
 import View, {FitOptions} from 'ol/View';
 import {confMAP, confTHEME} from 'src/app/store/conf/conf.selector';

@@ -9,7 +9,6 @@ import {
 import {NavController} from '@ionic/angular';
 
 import {DeviceService} from 'src/app/services/base/device.service';
-import {IHOME, ILAYER} from 'src/app/types/config';
 
 @Component({
   selector: 'wm-home',
@@ -23,7 +22,7 @@ export class HomeComponent {
   @Output() openSlugEvt: EventEmitter<string> = new EventEmitter();
   @Output() selectedLayerEvt: EventEmitter<ILAYER | null | number> = new EventEmitter();
   @Output() selectedTrackEvt: EventEmitter<string | number> = new EventEmitter();
-
+  @Output() filterClickEvt: EventEmitter<string> = new EventEmitter();
   constructor(public deviceService: DeviceService, private _navCtrl: NavController) {}
 
   openSlug(slug: string): void {

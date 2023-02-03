@@ -79,7 +79,6 @@ import {mapCurrentPoi, mapCurrentRelatedPoi} from 'src/app/store/map/map.selecto
 import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {getDistance} from 'ol/sphere';
-import {IMAP} from 'src/app/types/config';
 import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 

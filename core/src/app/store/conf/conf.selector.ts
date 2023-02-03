@@ -1,4 +1,3 @@
-import {ICONF, IHOME, IHOMEOLD, ILAYER, ITHEME} from 'src/app/types/config';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 import {confFeatureKey} from './conf.reducer';

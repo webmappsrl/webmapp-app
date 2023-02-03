@@ -1,3 +1,4 @@
+import {BtnFilterComponent} from './../../../../../instances/infomont/src/app/components/shared/btn-filter/btn-filter.component';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -5,6 +6,7 @@ import {
   OnChanges,
   OnInit,
   SimpleChanges,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -16,7 +18,6 @@ import {filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
-import {IAPP, IHOME, ILAYER} from 'src/app/types/config';
 
 import {Store} from '@ngrx/store';
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
@@ -41,6 +42,7 @@ import {query} from 'src/app/shared/wm-core/api/api.actions';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnInit, OnChanges {
+  @ViewChild('filterCmp') filterCmp: BtnFilterComponent;
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
@@ -157,7 +159,9 @@ export class HomePage implements OnInit, OnChanges {
       this._navCtrl.navigateForward(slug);
     }
   }
-
+  toggleFilter(identifier: string): void {
+    this.filterCmp.addFilter(identifier);
+  }
   searchCard(id: string | number): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {

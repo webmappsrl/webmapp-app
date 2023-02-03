@@ -13,6 +13,7 @@
     >
     </webmapp-search-bar>
     <wm-btn-filter
+      #filterCmp
       *ngIf="poiCards$|async"
       [filters]="confPOISFilter$|async"
       [initSelectedFilters]="selectedFilters$|async"
@@ -81,6 +82,7 @@
         (openSlugEvt)="openSlug($event)"
         (selectedLayerEvt)="setLayer($event)"
         (selectedTrackEvt)="searchCard($event)"
+        (filterClickEvt)="toggleFilter($event)"
       ></wm-home>
     </ng-template>
   </ng-container>

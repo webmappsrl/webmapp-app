@@ -9,7 +9,6 @@ import * as CONFIG from '../../../config.json';
 
 import {CommunicationService} from './base/communication.service';
 import {DeviceService} from './base/device.service';
-import {IConfig} from '../types/config';
 import {Injectable} from '@angular/core';
 import {StorageService} from './base/storage.service';
 import {environment} from 'src/environments/environment';
