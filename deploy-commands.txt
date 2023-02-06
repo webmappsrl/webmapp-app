@@ -8,12 +8,14 @@ gulp build -i catab -g 13
 gulp build -i ucvs -g 17
 gulp build -i gavorrano -g 19
 gulp build -i sicai -g 20
+gulp build -i portable -g 22
 gulp build -i stelvio -g 23
 gulp build -i gasca -g 24
 gulp build -i valsabbia -g 25
 gulp build -i osm2cai -g 26
 gulp build -i ir -g 28
 gulp build -i fie -g 29
+gulp build -i logos -g 34
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio

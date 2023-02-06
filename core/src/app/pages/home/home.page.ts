@@ -1,4 +1,3 @@
-import {BtnFilterComponent} from './../../../../../instances/infomont/src/app/components/shared/btn-filter/btn-filter.component';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -33,6 +32,7 @@ import {pois} from 'src/app/store/pois/pois.selector';
 import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {NavigationExtras} from '@angular/router';
 import {query} from 'src/app/shared/wm-core/api/api.actions';
+import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
 
 @Component({
   selector: 'wm-page-home',
@@ -43,6 +43,7 @@ import {query} from 'src/app/shared/wm-core/api/api.actions';
 })
 export class HomePage implements OnInit, OnChanges {
   @ViewChild('filterCmp') filterCmp: BtnFilterComponent;
+
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
   confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
@@ -159,9 +160,7 @@ export class HomePage implements OnInit, OnChanges {
       this._navCtrl.navigateForward(slug);
     }
   }
-  toggleFilter(identifier: string): void {
-    this.filterCmp.addFilter(identifier);
-  }
+
   searchCard(id: string | number): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {
@@ -205,5 +204,9 @@ export class HomePage implements OnInit, OnChanges {
         this._navCtrl.navigateForward('map', navigationExtras);
       }
     }
+  }
+
+  toggleFilter(identifier: string): void {
+    this.filterCmp.addFilter(identifier);
   }
 }
