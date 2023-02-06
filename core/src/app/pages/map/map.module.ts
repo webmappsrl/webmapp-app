@@ -16,6 +16,7 @@ import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properti
 import {TrackPropetiesModule} from 'src/app/components/track-properties/track-properties.module';
 import {WmDownloadPanelComponent} from './download-panel/download-panel.component';
 import {WmDownloadComponent} from './download/download.component';
+import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import {WmDownloadComponent} from './download/download.component';
     RegisterPageModule,
     PoiPropetiesModule,
     TrackPropetiesModule,
+    WmCoreModule,
   ],
   declarations: [
     MapPage,
