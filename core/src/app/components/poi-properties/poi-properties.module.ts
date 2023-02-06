@@ -4,7 +4,7 @@ import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
-import {declarations, WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
+import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 
 const components = [PoiPropertiesComponent];
 @NgModule({
