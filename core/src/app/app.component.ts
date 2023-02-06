@@ -17,7 +17,7 @@ import {StatusService} from './services/status.service';
 import {LangService} from './shared/wm-core/localization/lang.service';
 import {loadConf} from './store/conf/conf.actions';
 import {IConfRootState} from './store/conf/conf.reducer';
-import {confMAP} from './store/conf/conf.selector';
+import {confLANGUAGES, confMAP} from './store/conf/conf.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {loadPois} from './store/pois/pois.actions';
@@ -47,7 +47,6 @@ export class AppComponent {
   ) {
     this._storeConf.dispatch(loadConf());
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this._langService.initLang('en');
     this._langService.setTranslation('it', appIT, true);
     this._langService.setTranslation('en', appEN, true);
     this._langService.setTranslation('fr', appFR, true);
@@ -62,6 +61,15 @@ export class AppComponent {
         if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
           this._storeConf.dispatch(loadPois());
         }
+      });
+    this._storeConf
+      .select(confLANGUAGES)
+      .pipe(
+        filter(p => p != null),
+        take(2),
+      )
+      .subscribe(l => {
+        this._langService.initLang(l.default);
       });
     this._platform.ready().then(
       () => {
