@@ -47,6 +47,7 @@ export class AppComponent {
   ) {
     this._storeConf.dispatch(loadConf());
     this._storeNetwork.dispatch(startNetworkMonitoring());
+    this._langService.initLang('en');
     this._langService.setTranslation('it', appIT, true);
     this._langService.setTranslation('en', appEN, true);
     this._langService.setTranslation('fr', appFR, true);
