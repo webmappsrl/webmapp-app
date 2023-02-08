@@ -9,7 +9,18 @@
   font-style: normal;
   font-display: block;
 }
-
+.ol-popup {
+  max-width: 300px;
+  min-width: 100px;
+  min-height: 1em;
+}
+/* Image on popup */
+.ol-popup img {
+  float: left;
+  margin: 0 0.5em 0 0;
+  max-width: 100px;
+  max-height: 100px;
+}
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */

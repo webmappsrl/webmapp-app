@@ -17,7 +17,6 @@
       [wmMapPoisPois]="pois$|async"
       [wmMapPoisFilters]="currentFilters$|async"
       [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
-      [onClick]="wmap.clickEVT$"
       (currentPoiEvt)="setPoi($event)"
       wmMapPosition
       [wmMapPositioncurrentLocation]="currentPosition$|async"
