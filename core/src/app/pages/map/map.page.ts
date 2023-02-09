@@ -217,18 +217,19 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   close(): void {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
-    if (this.currentRelatedPoi$.value != null || this.currentPoi$.value != null) {
-      const currentVal = this.trackid$.value;
+    const isCurrentPoi = this.currentRelatedPoi$.value != null || this.currentPoi$.value != null;
+    if (isCurrentPoi) {
       this.currentRelatedPoi$.next(null);
       this.currentPoi$.next(null);
-      this.wmMapComponent.map.getView().animate({
-        duration: 0,
-        rotation: 0,
-      });
-      setTimeout(() => {
-        this.goToTrack(currentVal);
-      }, 300);
-    } else if (this.trackid$ != null) {
+      this.wmMapComponent.resetRotation();
+      if (this.wmMapTrackRelatedPoisDirective != null) {
+        this.wmMapTrackRelatedPoisDirective.setPoi = -1;
+      }
+
+      if (this.trackid$.value == null) {
+        this.goToTrack(null);
+      }
+    } else if (this.trackid$.value != null) {
       this.goToTrack(null);
     }
   }
@@ -255,10 +256,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
 
   goToTrack(id: number) {
     this._poiReset();
-    this.wmMapComponent.map.getView().animate({
-      duration: 0,
-      rotation: 0,
-    });
+    this.wmMapComponent.resetRotation();
     this.trackid$.next(id);
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
