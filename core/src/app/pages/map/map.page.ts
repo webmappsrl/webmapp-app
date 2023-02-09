@@ -12,8 +12,16 @@ import {IonFab, IonSlides} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, merge, Observable} from 'rxjs';
-import {filter, map, startWith, switchMap, tap, distinctUntilChanged} from 'rxjs/operators';
+import {BehaviorSubject, merge, Observable, of} from 'rxjs';
+import {
+  filter,
+  map,
+  startWith,
+  switchMap,
+  tap,
+  distinctUntilChanged,
+  catchError,
+} from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {AuthService} from 'src/app/services/auth.service';
@@ -123,6 +131,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     startWith(null),
   );
   dataLayerUrls$: Observable<IDATALAYER>;
+  detailsIsOpen$: Observable<boolean>;
   enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
@@ -274,6 +283,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     if (poiId != null) {
       this.wmMapPoisDirective.setPoi(+poiId);
     }
+    this.detailsIsOpen$ = this.mapTrackDetailsCmp.isOpen$.pipe(
+      startWith(false),
+      catchError(() => of(false)),
+    );
   }
 
   ionViewWillLeave() {

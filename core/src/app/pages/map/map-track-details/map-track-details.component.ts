@@ -7,6 +7,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {Animation, AnimationController, Gesture, GestureController, Platform} from '@ionic/angular';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'wm-map-track-details',
@@ -24,6 +25,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
+  isOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   maxInfoheight = 850;
   minInfoheight = 350;
   stepStatus = 0;
@@ -37,10 +39,12 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   close(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '9%');
+    this.isOpen$.next(false);
   }
 
   full(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
+    this.isOpen$.next(true);
   }
 
   handleClick(): void {
@@ -55,10 +59,12 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   none(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
+    this.isOpen$.next(false);
   }
 
   open(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, `${this.maxInfoheight / 2}px`);
+    this.isOpen$.next(true);
   }
 
   async setAnimations(from = '0px', to = '0px') {

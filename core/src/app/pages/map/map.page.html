@@ -34,7 +34,7 @@
       (related-poi)="setCurrentPoi($event)"
     >
       <div top-left>
-        <ng-container *ngIf="(trackid$|async)!= null||(currentPoi$|async)!= null">
+        <ng-container *ngIf="(detailsIsOpen$|async) === true">
           <ion-fab-button (click)="close()" size="small" class="webmapp-pagepoi-btntop">
             <i class="icon-outline-close"></i>
           </ion-fab-button>
