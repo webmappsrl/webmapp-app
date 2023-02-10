@@ -153,12 +153,22 @@ export class MapPage extends GeolocationPage implements OnDestroy {
         if (p == null) return null;
         return p.properties;
       }),
+      share(),
+      tap(() => {
+        this._poiReset();
+        this.trackid$.next(null);
+        this.layerOpacity$.next(false);
+      }),
     ),
     this.currentRelatedPoi$.pipe(
       distinctUntilChanged(),
       map(p => {
         if (p == null) return null;
-        return p.properties;
+        return {...p.properties, ...{isRelated: true}};
+      }),
+      share(),
+      tap(() => {
+        this.currentPoi$.next(null);
       }),
     ),
   ).pipe(share());
