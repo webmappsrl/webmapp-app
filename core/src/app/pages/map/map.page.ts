@@ -21,6 +21,7 @@ import {
   tap,
   distinctUntilChanged,
   catchError,
+  share,
 } from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -157,10 +158,10 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       distinctUntilChanged(),
       map(p => {
         if (p == null) return null;
-        return {...p.properties, ...{isRelated: true}};
+        return p.properties;
       }),
     ),
-  );
+  ).pipe(share());
   pois: any[];
   pois$: Observable<any> = this._store
     .select(pois)

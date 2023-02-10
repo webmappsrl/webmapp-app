@@ -120,7 +120,7 @@
     <wm-map-track-details #details>
       <div header>
         <div class="webmapp-info-header-container">
-          <ng-container *ngIf="poiProperties$|async as properties;else trackHeader;">
+          <ng-container *ngIf="poiProperties$|async as properties">
             <div class="webmapp-pagepoi-info-header">
               <div
                 class="webmapp-pagepoi-info-header-pre-title"
@@ -147,11 +147,9 @@
               </div>
             </div>
           </ng-container>
-          <ng-template #trackHeader>
-            <ion-title #trackHeader *ngIf="currentTrack$|async as currentTrack;">
-              {{currentTrack?.properties?.name | wmtrans}}
-            </ion-title>
-          </ng-template>
+          <ion-title *ngIf="!(poiProperties$|async) && currentTrack$|async as currentTrack;">
+            {{currentTrack?.properties?.name | wmtrans}}
+          </ion-title>
         </div>
         <ion-fab class="close-menu" slot="fixed" vertical="top" horizontal="end">
           <ion-fab-button top-right (click)="toogleFullMap()">
@@ -161,15 +159,14 @@
           </ion-fab-button>
         </ion-fab>
       </div>
-      <ng-container *ngIf="poiProperties$|async as properties;else track;">
+      <ng-container *ngIf="poiProperties$|async as properties;">
         <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
           <wm-poi-properties [properties]="properties"></wm-poi-properties>
         </ion-content>
       </ng-container>
-      <ng-template #track>
+      <ng-container *ngIf="!(poiProperties$|async)">
         <ion-content scrollY="true" scroll-events="true">
           <ng-container *ngIf="currentTrack$|async as currentTrack; else skeleton">
-            <div header></div>
             <wm-track-properties [track]="currentTrack">
               <ng-container *ngIf="currentTrack.properties as prop">
                 <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
@@ -183,14 +180,14 @@
                   ></wm-tab-nearest-poi>
                 </ng-container>
                 <wm-slope-chart
-                  [currentTrack]="currentTrack$|async"
+                  [currentTrack]="currentTrack"
                   (hover)="setTrackElevationChartHoverElements($event)"
                 ></wm-slope-chart>
               </ng-container>
             </wm-track-properties>
           </ng-container>
         </ion-content>
-      </ng-template>
+      </ng-container>
 
       <ng-template #skeleton>
         <ion-skeleton-text
