@@ -155,7 +155,6 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       }),
       share(),
       tap(() => {
-        this._poiReset();
         this.trackid$.next(null);
         this.layerOpacity$.next(false);
       }),
