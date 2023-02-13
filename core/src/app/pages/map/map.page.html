@@ -126,10 +126,10 @@
                 class="webmapp-pagepoi-info-header-pre-title"
                 *ngIf="properties?.taxonomy.poi_type as poiType"
               >
-                {{ localTranslate(poiType.name) }}
+                {{ poiType.name|wmtrans}}
               </div>
               <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
-                {{ localTranslate(name) }}
+                {{name|wmtrans}}
               </div>
 
               <div class="webmapp-pagepoi-info-header-arrows" *ngIf="properties?.isRelated">
@@ -148,7 +148,7 @@
             </div>
           </ng-container>
           <ion-title *ngIf="!(poiProperties$|async) && currentTrack$|async as currentTrack;">
-            {{localTranslate(currentTrack?.properties?.name) }}
+            {{currentTrack?.properties?.name|wmtrans }}
           </ion-title>
         </div>
         <ion-fab class="close-menu" slot="fixed" vertical="top" horizontal="end">

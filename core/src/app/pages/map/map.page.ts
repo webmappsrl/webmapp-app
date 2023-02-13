@@ -81,7 +81,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   @ViewChild(WmMapPoisDirective) wmMapPoisDirective: WmMapPoisDirective;
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
-  lang = localStorage.getItem('wm-lang') || 'it';
+
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -139,6 +139,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  lang = localStorage.getItem('wm-lang') || 'it';
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
@@ -347,10 +348,6 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     if (poi != null) {
       this.currentRelatedPoi$.next(poi);
     }
-  }
-
-  localTranslate(value): string {
-    return value[this.lang] ?? value['it'] ?? value;
   }
 
   setNearestPoi(nearestPoi: Feature<Geometry>): void {
