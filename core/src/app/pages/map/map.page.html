@@ -50,27 +50,20 @@
           ></wm-btn-filter>
         </ng-container>
       </div>
+
       <div bottom-right>
-        <ion-fab
-          #fab1
-          slot="fixed"
-          vertical="top"
-          horizontal="start"
-          *ngIf="trackid$|async as trackId"
-          (click)="fab2?.close();fab3?.close()"
-        >
-          <ion-fab-button>
-            <ion-icon name="share-social-outline"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="start">
-            <ion-fab-button (click)="openTrackDownload()">
-              <ion-icon name="download-outline"></ion-icon>
-            </ion-fab-button>
+        <ng-container *ngIf="trackid$|async as trackId">
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
             <ion-fab-button (click)="openTrackShare(trackId)">
               <ion-icon name="share-social-outline"></ion-icon>
             </ion-fab-button>
-          </ion-fab-list>
-        </ion-fab>
+          </ion-fab>
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="openTrackDownload()">
+              <ion-icon name="download-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </ng-container>
         <ion-fab
           #fab2
           slot="fixed"
