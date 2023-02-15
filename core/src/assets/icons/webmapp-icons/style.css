@@ -10,17 +10,41 @@
   font-display: block;
 }
 .ol-popup {
-  max-width: 300px;
-  min-width: 100px;
-  min-height: 1em;
+  max-height: 400px;
+  min-width: 300px;
 }
-/* Image on popup */
-.ol-popup img {
-  float: left;
-  margin: 0 0.5em 0 0;
-  max-width: 100px;
-  max-height: 100px;
+.ol-popup .closeBox {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
 }
+.ol-popup .img-cnt {
+  position: relative;
+  height: 200px;
+}
+.ol-popup .img-cnt img {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  height: inherit;
+  width: 100%;
+}
+
+.ol-popup.hasclosebox .ol-popup-content {
+  margin: 0;
+}
+.ol-popup .ol-popup-content {
+  padding: 0;
+  margin: 0;
+}
+.ol-popup .ol-popup-content div ion-card {
+  margin: 0;
+}
+
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
