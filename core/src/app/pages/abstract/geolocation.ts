@@ -14,16 +14,23 @@ import {take} from 'rxjs/operators';
 @Directive()
 export abstract class GeolocationPage implements OnDestroy {
   private _bgLocSub: Subscription = Subscription.EMPTY;
-  currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
+  currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor(private _backgroundGeolocation: BackgroundGeolocation) {
     this._initBackgroundGeolocation();
   }
+
   ngOnDestroy(): void {
     this._bgLocSub.unsubscribe();
   }
+
+  setCurrentLocation(event): void {
+    this.currentPosition$.next(event);
+  }
+
   private _initBackgroundGeolocation(): void {
     const androidConfig: BackgroundGeolocationConfig = {
       startOnBoot: false,
@@ -46,11 +53,15 @@ export abstract class GeolocationPage implements OnDestroy {
     from(
       this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
         console.log('ERROR', e);
-        return {
-          longitude: 14.0618579,
-          latitude: 37.494745,
-          bearing: 0,
-        } as BackgroundGeolocationResponse;
+        navigator.geolocation.watchPosition(
+          res => {
+            return res.coords;
+          },
+          function errorCallback(error) {
+            // console.log(error);
+          },
+          {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
+        );
       }),
     )
       .pipe(take(1))
@@ -81,9 +92,5 @@ export abstract class GeolocationPage implements OnDestroy {
         );
       });
     this._backgroundGeolocation.start();
-  }
-
-  setCurrentLocation(event): void {
-    this.currentPosition$.next(event);
   }
 }
