@@ -80,7 +80,7 @@ export class DownloadService {
   }
 
   public async downloadBase64Img(url): Promise<string | ArrayBuffer> {
-    let opt = {};
+    let opt: RequestInit = {mode: 'no-cors'};
     // if (this.platform.is('mobile')) {
     //   opt = { mode: 'no-cors' };
     // }

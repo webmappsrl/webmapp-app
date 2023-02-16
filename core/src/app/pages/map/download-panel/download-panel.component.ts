@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -12,7 +13,6 @@ import {
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {DownloadService} from 'src/app/services/download.service';
 import {DownloadStatus} from 'src/app/types/download';
-import {NavController} from '@ionic/angular';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 
 @Component({
@@ -37,7 +37,7 @@ export class WmDownloadPanelComponent implements OnChanges {
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
 
-  constructor(private _downloadService: DownloadService, private _navController: NavController) {
+  constructor(private _downloadSvc: DownloadService, private _cdr: ChangeDetectorRef) {
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -54,11 +54,11 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.changeStatus.emit(downloadPanelStatus.DOWNLOADING);
 
     this.updateStatus(null);
-    this.myEventSubscription = this._downloadService.onChangeStatus.subscribe(x => {
+    this.myEventSubscription = this._downloadSvc.onChangeStatus.subscribe(x => {
       this.updateStatus(x);
     });
 
-    this._downloadService.startDownload(this.track);
+    this._downloadSvc.startDownload(this.track);
     // this.updateStatus(null);
   }
 
@@ -88,9 +88,9 @@ export class WmDownloadPanelComponent implements OnChanges {
     if (status && status.finish) {
       this.completeDownloads();
     }
+    this._cdr.detectChanges();
   }
   gotoDownloads() {
-    this._navController.navigateForward(['/downloadlist']);
     this.exit.emit(null);
   }
 

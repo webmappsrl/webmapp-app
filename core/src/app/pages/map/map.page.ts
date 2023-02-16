@@ -2,17 +2,18 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
+  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, merge, Observable, of} from 'rxjs';
+import {BehaviorSubject, merge, Observable, of, Subscription} from 'rxjs';
 import {
   filter,
   map,
@@ -62,12 +63,13 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage extends GeolocationPage implements OnDestroy {
+export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   private _bboxLayer = null;
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
+  private _routerSub: Subscription = Subscription.EMPTY;
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
@@ -197,6 +199,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     private _authSvc: AuthService,
     private _geohubSvc: GeohubService,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _shareSvc: ShareService,
     _backgroundGeolocation: BackgroundGeolocation,
   ) {
@@ -265,6 +268,11 @@ export class MapPage extends GeolocationPage implements OnDestroy {
       : red;
   }
 
+  goToPage(page: String): void {
+    this.close();
+    this._router.navigate([page]);
+  }
+
   goToTrack(id: number) {
     this._poiReset();
     this.wmMapComponent.resetRotation();
@@ -279,19 +287,13 @@ export class MapPage extends GeolocationPage implements OnDestroy {
   }
 
   ionViewDidEnter(): void {
+    console.log('ciao');
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
 
   ionViewWillEnter(): void {
-    const trackId = this._route.snapshot.queryParams['track'];
-    const poiId = this._route.snapshot.queryParams['poi'];
-    this._route.snapshot.queryParams = {};
-    if (trackId != null) {
-      this.goToTrack(trackId);
-    }
-    if (poiId != null) {
-      this.wmMapPoisDirective.setPoi(+poiId);
-    }
+    console.log('ciao');
+
     this.detailsIsOpen$ = this.mapTrackDetailsCmp.isOpen$.pipe(
       startWith(false),
       catchError(() => of(false)),
@@ -303,6 +305,7 @@ export class MapPage extends GeolocationPage implements OnDestroy {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.goToTrack(null);
     this.mapTrackDetailsCmp.none();
+    this.showDownload$.next(false);
   }
 
   navigation(): void {
@@ -317,6 +320,22 @@ export class MapPage extends GeolocationPage implements OnDestroy {
 
   ngOnDestroy(): void {
     super.ngOnDestroy();
+    this._routerSub.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this._routerSub = this._route.queryParams.subscribe(queryParams => {
+      setTimeout(() => {
+        const trackId = queryParams['track'];
+        const poiId = queryParams['poi'];
+        if (trackId != null) {
+          this.goToTrack(trackId);
+        }
+        if (poiId != null) {
+          this.wmMapPoisDirective.setPoi(+poiId);
+        }
+      }, 300);
+    });
   }
 
   openTrackDownload(): void {

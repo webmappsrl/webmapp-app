@@ -24,6 +24,7 @@ export class WmDownloadComponent implements OnInit {
 
   @Input() track: any;
   @Output() closeEvt: EventEmitter<void> = new EventEmitter<void>();
+  @Output() goToEvt: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private _alertCtrl: AlertController, private _translate: LangService) {}
 
@@ -66,6 +67,7 @@ export class WmDownloadComponent implements OnInit {
       await alert.present();
     } else {
       //   this.showDownload = false;
+      this.goToEvt.emit('downloadlist');
     }
   }
 
