@@ -23,6 +23,7 @@ import {
   distinctUntilChanged,
   catchError,
   share,
+  take,
 } from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -175,9 +176,10 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     ),
   ).pipe(share());
   pois: any[];
-  pois$: Observable<any> = this._store
-    .select(pois)
-    .pipe(tap(p => (this.pois = (p && p.features) ?? null)));
+  pois$: Observable<any> = this._store.select(pois).pipe(
+    tap(p => (this.pois = (p && p.features) ?? null)),
+    take(1),
+  );
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

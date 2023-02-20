@@ -1,5 +1,5 @@
 import {AuthService} from 'src/app/services/auth.service';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {Observable} from 'rxjs';
@@ -12,6 +12,8 @@ import {online} from 'src/app/store/network/network.selector';
   selector: 'webmapp-page-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsPage {
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
