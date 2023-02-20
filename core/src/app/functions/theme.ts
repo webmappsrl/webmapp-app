@@ -1,5 +1,4 @@
-import Color from 'color';
-
+import _color from 'color';
 /**
  * Return a contrast color based on the color param
  *
@@ -28,7 +27,7 @@ const defaults: ITHEME = {
   fontFamilyContent: 'Roboto',
   theme: 'webmapp',
 };
-export const _color = v => Color(v.trim().replace('\t', ''));
+export const Color = v => _color(v.trim().replace('\t', ''));
 export const contrast = (color: any, ratio: number = 0.8): string => {
   if (color === '#000000') {
     return '#ffffff';
@@ -37,7 +36,7 @@ export const contrast = (color: any, ratio: number = 0.8): string => {
     return '#000000';
   }
 
-  color = _color(color);
+  color = Color(color);
   return color.isDark() ? color.lighten(ratio).hex() : color.darken(ratio).hex();
 };
 

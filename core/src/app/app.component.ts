@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {filter, take} from 'rxjs/operators';
 
@@ -17,10 +17,12 @@ import {StatusService} from './services/status.service';
 import {LangService} from './shared/wm-core/localization/lang.service';
 import {loadConf} from './store/conf/conf.actions';
 import {IConfRootState} from './store/conf/conf.reducer';
-import {confLANGUAGES, confMAP} from './store/conf/conf.selector';
+import {confLANGUAGES, confMAP, confTHEMEVariables} from './store/conf/conf.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {loadPois} from './store/pois/pois.actions';
+import {DOCUMENT} from '@angular/common';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -30,6 +32,7 @@ import {loadPois} from './store/pois/pois.actions';
   providers: [LangService],
 })
 export class AppComponent {
+  confTHEMEVariables$: Observable<any> = this._storeConf.select(confTHEMEVariables);
   public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;
@@ -44,8 +47,10 @@ export class AppComponent {
     private _storeConf: Store<IConfRootState>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
+    @Inject(DOCUMENT) private _document: Document,
   ) {
     this._storeConf.dispatch(loadConf());
+    this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
     this._storeConf
@@ -151,5 +156,13 @@ export class AppComponent {
     setTimeout(() => {
       this.saveService.uploadUnsavedContents();
     }, 2000);
+  }
+
+  private _setGlobalCSS(css: {[name: string]: string | number}) {
+    const rootDocument = this._document.querySelector(':root');
+    console.log(css);
+    Object.keys(css).forEach(element => {
+      (rootDocument as any).style.setProperty(element, `${css[element]}`);
+    });
   }
 }

@@ -287,13 +287,10 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter(): void {
-    console.log('ciao');
     this.resetEvt$.next(this.resetEvt$.value + 1);
   }
 
   ionViewWillEnter(): void {
-    console.log('ciao');
-
     this.detailsIsOpen$ = this.mapTrackDetailsCmp.isOpen$.pipe(
       startWith(false),
       catchError(() => of(false)),
