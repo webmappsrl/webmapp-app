@@ -3,7 +3,9 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
@@ -15,7 +17,7 @@ import {BehaviorSubject} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class SearchListComponent {
+export class SearchListComponent implements OnChanges {
   @Input() set currentTab(tab: string) {
     this.currentTab$.next(tab);
   }
@@ -37,5 +39,23 @@ export class SearchListComponent {
 
   selectTrack(id: string | number): void {
     this.selectedTrackEvt.emit(id);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      this.pois != null &&
+      this.pois.length > 0 &&
+      this.cards != null &&
+      this.cards.length === 0
+    ) {
+      this.currentTab$.next('pois');
+    }
+    if (
+      this.pois != null &&
+      this.pois.length === 0 &&
+      this.cards != null &&
+      this.cards.length > 0
+    ) {
+      this.currentTab$.next('tracks');
+    }
   }
 }

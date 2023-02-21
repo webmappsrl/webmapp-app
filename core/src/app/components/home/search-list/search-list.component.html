@@ -1,18 +1,15 @@
 <ion-segment [value]="currentTab$|async" (ionChange)="segmentChanged($event)">
-  <ng-container>
-    <ion-segment-button value="tracks" *ngIf="cards != null && cards.length> 0">
-      <ion-label>
-        {{'tracce'| wmtrans}} <ion-badge>{{cards.length}} </ion-badge></ion-label
-      >
-    </ion-segment-button>
-  </ng-container>
-  <ng-container>
-    <ion-segment-button value="pois" *ngIf="pois != null && pois.length> 0">
-      <ion-label>
-        {{'POI'|wmtrans}} <ion-badge>{{pois.length > 200 ? 200: pois.length}}</ion-badge></ion-label
-      >
-    </ion-segment-button>
-  </ng-container>
+  <ion-segment-button value="tracks" *ngIf="cards != null && cards.length> 0">
+    <ion-label>
+      {{'tracce'| wmtrans}}
+      <ion-badge>{{cards.length === 200? '>': ''}}{{cards.length}} </ion-badge></ion-label
+    >
+  </ion-segment-button>
+  <ion-segment-button value="pois" *ngIf="pois != null && pois.length> 0">
+    <ion-label>
+      {{'POI'|wmtrans}} <ion-badge>{{pois.length > 200 ? 200: pois.length}}</ion-badge></ion-label
+    >
+  </ion-segment-button>
 </ion-segment>
 <ng-container *ngIf="currentTab$|async as currentTab">
   <ng-container *ngIf="currentTab === 'tracks'|| currentTab == null">
