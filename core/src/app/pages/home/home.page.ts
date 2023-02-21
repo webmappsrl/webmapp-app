@@ -33,6 +33,7 @@ import {fromHEXToColor} from 'src/app/shared/map-core/utils';
 import {NavigationExtras} from '@angular/router';
 import {query} from 'src/app/shared/wm-core/api/api.actions';
 import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
+import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 
 @Component({
   selector: 'wm-page-home',
@@ -43,6 +44,7 @@ import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filte
 })
 export class HomePage implements OnInit, OnChanges {
   @ViewChild('filterCmp') filterCmp: BtnFilterComponent;
+  @ViewChild('searchCmp') searchCmp: SearchBarComponent;
 
   confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
   confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
@@ -63,11 +65,15 @@ export class HomePage implements OnInit, OnChanges {
   );
   currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('tracks');
-  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(queryApi);
-  elasticSearchFilteredByLayer$ = this.elasticSearch$.pipe(
+  currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('home');
+  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(queryApi).pipe(
     withLatestFrom(this.currentLayer$),
-    map(([all, currentLayer]) => all.filter(l => l.layers.indexOf(+currentLayer.id) > -1)),
+    map(([all, currentLayer]) => {
+      if (currentLayer != null) {
+        return all.filter(l => l.layers.indexOf(+currentLayer.id) > -1);
+      }
+      return all;
+    }),
   );
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
@@ -77,7 +83,10 @@ export class HomePage implements OnInit, OnChanges {
   poiCards$: Observable<any[]>;
   selectedFilters$: Observable<string[]> = this._storeMap.select(currentFilters);
   title: string;
-
+  currentSelectedFilter$: Observable<any>;
+  currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
   constructor(
     private _geoLocation: GeolocationService,
     private _storeSearch: Store<IElasticSearchRootState>,
@@ -115,20 +124,36 @@ export class HomePage implements OnInit, OnChanges {
           return nameCondition && whereCondition && poiTypeCondition && isSearch;
         }) as any[];
       }),
-      tap(pois => {
-        if (pois.length === 0) {
-          this.currentTab$.next('tracks');
-        }
-      }),
     );
     this.poiCards$ = merge(this.currentSearch$, this.selectedFilters$).pipe(
       switchMap(_ => selectedPois),
+    );
+
+    this.currentSelectedFilter$ = this.currentSelectedIndentiFierFilter$.asObservable().pipe(
+      withLatestFrom(this.confPOISFilter$),
+      map(([identifier, filters]) => {
+        const filterKeys = Object.keys(filters);
+        for (let i = 0; i < filterKeys.length; i++) {
+          const filterKey = filterKeys[i];
+          if (filters[filterKey] != null) {
+            for (let j = 0; j < filters[filterKey].length; j++) {
+              const filter = filters[filterKey][j];
+              if (filter.identifier === identifier) {
+                return filter;
+              }
+            }
+          }
+        }
+        return null;
+      }),
     );
   }
 
   goToHome(): void {
     this.setLayer(null);
-    this._storeMap.dispatch(query({inputTyped: this.currentSearch$.value}));
+    this.currentTab$.next('home');
+    this.setCurrentFilters([]);
+    this.searchCmp.reset();
     this._navCtrl.navigateForward('home');
   }
 
@@ -161,6 +186,13 @@ export class HomePage implements OnInit, OnChanges {
     }
   }
 
+  checkTab(isTyping: boolean) {
+    if (isTyping) {
+      const currentTab = `${this.currentTab$.value.replace('-search', '')}-search`;
+      this.currentTab$.next(currentTab);
+    }
+  }
+
   searchCard(id: string | number): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {
@@ -174,14 +206,21 @@ export class HomePage implements OnInit, OnChanges {
 
   segmentChanged(ev: any): void {
     if (ev != null && ev.detail != null && ev.detail.value != null) {
-      this.currentTab$.next(ev.detail.value);
+      // this.currentTab$.next(ev.detail.value);
     }
   }
 
   setCurrentFilters(filters: string[]): void {
     if (filters != null) {
       this._storeMap.dispatch(setCurrentFilters({currentFilters: filters}));
-      this.currentTab$.next('pois');
+      if (filters.length > 0) {
+        this.currentTab$.next('pois');
+      }
+      if (filters.length === 1) {
+        this.currentSelectedIndentiFierFilter$.next(filters[0]);
+      } else {
+        this.currentSelectedIndentiFierFilter$.next(null);
+      }
     }
   }
 
@@ -189,6 +228,7 @@ export class HomePage implements OnInit, OnChanges {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
     if (layer != null && layer.id != null) {
       this._storeMap.dispatch(query({layer: layer.id}));
+      this.currentTab$.next('tracks');
     }
   }
 

@@ -5,9 +5,10 @@
     <ion-label [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)">
     </ion-label>
     <webmapp-search-bar
+      #searchCmp
       *ngIf="online$|async"
       [initSearch]="title"
-      (isTypings)="isTyping$.next($event)"
+      (isTypings)="isTyping$.next($event);checkTab($event)"
       (words)="currentSearch$.next($event)"
       [currentLayer]="currentLayer$|async"
     >
@@ -25,65 +26,77 @@
     <downloaded-tracks-box></downloaded-tracks-box>
   </ng-container>
   <ng-container *ngIf="online$|async">
-    <ng-container *ngIf="currentLayer$|async as currentLayer;else noLayer">
+    <ng-container *ngIf="currentTab$|async as currentTab">
       <ion-breadcrumbs>
-        <ion-breadcrumb (click)="goToHome()">{{'Home'|wmtrans}}</ion-breadcrumb>
-        <ion-breadcrumb> {{currentLayer.title}}</ion-breadcrumb>
-      </ion-breadcrumbs>
-      <ng-container *ngIf="(isTyping$|async);else noType">
-        <wm-search-list
-          [cards]="elasticSearchFilteredByLayer$|async"
-          [currentTab]="'tracks'"
-          (selectedTrackEvt)="searchCard($event)"
-          (selectedPoiEvt)="setPoi(+$event)"
-        ></wm-search-list>
-      </ng-container>
-      <ng-template #noType>
-        <wm-search-list
-          *ngIf="elasticSearch$|async as elasticSearch"
-          [cards]="elasticSearch"
-          [currentTab]="'tracks'"
-          (selectedTrackEvt)="searchCard($event)"
-          (selectedPoiEvt)="setPoi(+$event)"
-        ></wm-search-list>
-      </ng-template>
-    </ng-container>
-    <ng-template #noLayer>
-      <ng-container
-        #noLayer
-        *ngIf="(isTyping$|async)||(selectedFilters$|async).length>0 else myhome"
-      >
-        <ng-container
-          *ngIf="(isTyping$|async)==false && (selectedFilters$|async).length  == 0 &&(currentLayer$|async) as currentLayer; else  list"
+        <ion-breadcrumb (click)="goToHome()" *ngIf="currentTab != 'home'"
+          >{{'Home'|wmtrans}}</ion-breadcrumb
         >
-          <wm-search-list
-            [cards]="layerCards$|async"
-            [currentTab]="'tracks'"
-            (selectedTrackEvt)="searchCard($event)"
-            (selectedPoiEvt)="setPoi(+$event)"
-          ></wm-search-list>
+        <ion-breadcrumb
+          *ngIf="currentLayer$|async as currentLayer"
+          (click)="currentTab$.next('tracks');searchCmp.reset()"
+        >
+          {{currentLayer.title|wmtrans}}</ion-breadcrumb
+        >
+        <ng-container *ngIf="(poiCards$|async) as poiCards">
+          <ion-breadcrumb
+            *ngIf="(selectedFilters$|async) as filters"
+            (click)="currentTab$.next('pois');searchCmp.reset()"
+          >
+            <ng-container *ngIf="(selectedFilters$|async) as filters;">
+              <ng-container *ngIf="filters.length ===1">
+                {{(currentSelectedFilter$|async)?.name|wmtrans}}
+              </ng-container>
+              <ng-container *ngIf="filters.length >1">POIS</ng-container>
+            </ng-container>
+          </ion-breadcrumb>
         </ng-container>
-        <ng-template #list>
-          <wm-search-list
-            *ngIf="elasticSearch$|async as elasticSearch"
-            [cards]="elasticSearch"
-            [pois]="poiCards$|async"
-            [currentTab]="currentTab$|async"
-            (selectedTrackEvt)="searchCard($event)"
-            (selectedPoiEvt)="setPoi(+$event)"
-          ></wm-search-list>
-        </ng-template>
-      </ng-container>
-    </ng-template>
-
-    <ng-template #myhome>
+        <ion-breadcrumb *ngIf="currentTab.indexOf('search')>0">
+          {{'search'|wmtrans}}</ion-breadcrumb
+        >
+      </ion-breadcrumbs>
       <wm-home
+        *ngIf="currentTab === 'home'"
         [conf]="confHOME$|async"
         (openSlugEvt)="openSlug($event)"
         (selectedLayerEvt)="setLayer($event)"
         (selectedTrackEvt)="searchCard($event)"
         (filterClickEvt)="toggleFilter($event)"
       ></wm-home>
-    </ng-template>
+      <wm-search-list
+        *ngIf="currentTab === 'tracks'"
+        [cards]="elasticSearch$|async"
+        [currentTab]="'tracks'"
+        (selectedTrackEvt)="searchCard($event)"
+      ></wm-search-list>
+      <wm-search-list
+        *ngIf="currentTab === 'pois'"
+        [pois]="poiCards$|async"
+        [currentTab]="'pois'"
+        (selectedPoiEvt)="setPoi(+$event)"
+      ></wm-search-list>
+      <ng-container *ngIf="currentTab === 'pois-search'">
+        <wm-search-list
+          [pois]="poiCards$|async"
+          [currentTab]="'pois'"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
+      </ng-container>
+      <ng-container *ngIf="currentTab === 'tracks-search'">
+        <wm-search-list
+          [cards]="elasticSearch$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+        ></wm-search-list>
+      </ng-container>
+      <ng-container *ngIf="currentTab === 'home-search'">
+        <wm-search-list
+          [pois]="poiCards$|async"
+          [cards]="elasticSearch$|async"
+          [currentTab]="'tracks'"
+          (selectedTrackEvt)="searchCard($event)"
+          (selectedPoiEvt)="setPoi(+$event)"
+        ></wm-search-list>
+      </ng-container>
+    </ng-container>
   </ng-container>
 </ion-content>

@@ -30,7 +30,7 @@ export class SearchBarComponent implements OnDestroy {
 
   searchForm: FormGroup;
 
-  constructor(fb: FormBuilder, store: Store<IElasticSearchRootState>) {
+  constructor(fb: FormBuilder, private _store: Store<IElasticSearchRootState>) {
     this.searchForm = fb.group({
       search: [''],
     });
@@ -45,11 +45,7 @@ export class SearchBarComponent implements OnDestroy {
      **/
     this._searchSub$ = this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe(words => {
       if (words && words.search != null && words.search !== '') {
-        if (this._currentLayer != null) {
-          store.dispatch(query({inputTyped: words.search, layer: this._currentLayer}));
-        } else {
-          store.dispatch(query({inputTyped: words.search}));
-        }
+        this._query(words.search);
         this.isTypingsEVT.emit(true);
         this.wordsEVT.emit(words.search);
       } else {
@@ -66,10 +62,19 @@ export class SearchBarComponent implements OnDestroy {
    */
   reset(): void {
     this.searchForm.reset();
+    this._query();
     this.wordsEVT.emit('');
     this.isTypingsEVT.emit(false);
   }
   ngOnDestroy(): void {
     this._searchSub$.unsubscribe();
+  }
+
+  private _query(inputTyped = ''): void {
+    if (this._currentLayer != null) {
+      this._store.dispatch(query({inputTyped, layer: this._currentLayer}));
+    } else {
+      this._store.dispatch(query({inputTyped}));
+    }
   }
 }
