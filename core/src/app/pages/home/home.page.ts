@@ -65,6 +65,10 @@ export class HomePage implements OnInit, OnChanges {
   );
   currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  currentSelectedFilter$: Observable<any>;
+  currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
   currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('home');
   elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(queryApi).pipe(
     withLatestFrom(this.currentLayer$),
@@ -83,10 +87,7 @@ export class HomePage implements OnInit, OnChanges {
   poiCards$: Observable<any[]>;
   selectedFilters$: Observable<string[]> = this._storeMap.select(currentFilters);
   title: string;
-  currentSelectedFilter$: Observable<any>;
-  currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
-  >(null);
+
   constructor(
     private _geoLocation: GeolocationService,
     private _storeSearch: Store<IElasticSearchRootState>,
@@ -149,6 +150,13 @@ export class HomePage implements OnInit, OnChanges {
     );
   }
 
+  checkTab(isTyping: boolean) {
+    if (isTyping) {
+      const currentTab = `${this.currentTab$.value.replace('-search', '')}-search`;
+      this.currentTab$.next(currentTab);
+    }
+  }
+
   goToHome(): void {
     this.setLayer(null);
     this.currentTab$.next('home');
@@ -186,19 +194,13 @@ export class HomePage implements OnInit, OnChanges {
     }
   }
 
-  checkTab(isTyping: boolean) {
-    if (isTyping) {
-      const currentTab = `${this.currentTab$.value.replace('-search', '')}-search`;
-      this.currentTab$.next(currentTab);
-    }
-  }
-
   searchCard(id: string | number): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {
         queryParams: {
           track: id,
         },
+        queryParamsHandling: 'merge'
       };
       this._navCtrl.navigateForward('map', navigationExtras);
     }

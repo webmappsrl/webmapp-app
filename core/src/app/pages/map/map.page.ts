@@ -333,6 +333,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
         if (poiId != null) {
           this.wmMapPoisDirective.setPoi(+poiId);
         }
+        this._route.snapshot.queryParams = {};
       }, 300);
     });
   }
