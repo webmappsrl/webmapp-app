@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -23,13 +25,15 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   private _started: boolean = false;
 
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
+  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
 
   height = 700;
   isOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   maxInfoheight = 850;
   minInfoheight = 350;
   stepStatus = 0;
-
+  modeFullMap = false;
   constructor(
     private _elRef: ElementRef,
     private _platform: Platform,
@@ -38,7 +42,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   ) {}
 
   close(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '9%');
+    this.setAnimations(`${this._getCurrentHeight()}px`, '60px');
     this.isOpen$.next(false);
   }
 
@@ -60,11 +64,17 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   none(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
+    this.closeEVT.emit();
   }
 
   open(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.maxInfoheight / 2}px`);
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${320}px`);
     this.isOpen$.next(true);
+  }
+
+  toogleFullMap() {
+    this.modeFullMap = !this.toggle();
+    this.toggleEVT.emit();
   }
 
   async setAnimations(from = '0px', to = '0px') {
@@ -112,6 +122,8 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       threshold: 0,
       gestureName: 'handler-drag',
       onStart: ev => {
+        this.toggleEVT.emit();
+
         if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
           this.open();
         } else {

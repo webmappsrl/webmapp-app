@@ -1,9 +1,21 @@
+<ng-container *ngIf="(isOpen$|async) === true">
+  <ion-fab-button (click)="none()" size="small" class="wm-close-btn">
+    <i class="icon-outline-close"></i>
+  </ion-fab-button>
+</ng-container>
 <ion-card>
   <ion-card-header class="wm-drag">
     <div class="wm-drag-btn" #dragHandleIcon>
       <div class="wm-drag-handle"></div>
     </div>
-    <ng-content select="[header]"></ng-content>
+    <div>
+      <ion-fab class="close-menu" slot="fixed" vertical="top" horizontal="end">
+        <ion-fab-button top-right (click)="toogleFullMap()">
+          <ion-icon [attr.name]="modeFullMap?'resize-outline':'arrow-down-outline'"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </div>
+    <ng-content select="[header]"> </ng-content>
   </ion-card-header>
   <ion-card-content>
     <ng-content></ng-content>

@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -74,7 +75,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-
+  previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
@@ -203,6 +204,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
     private _shareSvc: ShareService,
+    private _cdr: ChangeDetectorRef,
     _backgroundGeolocation: BackgroundGeolocation,
   ) {
     super(_backgroundGeolocation);
@@ -274,10 +276,14 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     this.close();
     this._router.navigate([page]);
   }
-
+  togglePreviewTrack(): void {
+    this.previewTrack$.next(!this.previewTrack$.value);
+    this._cdr.detectChanges();
+  }
   goToTrack(id: number) {
     this._poiReset();
     this.wmMapComponent.resetRotation();
+    this.previewTrack$.next(true);
     this.trackid$.next(id);
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);

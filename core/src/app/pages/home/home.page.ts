@@ -200,7 +200,7 @@ export class HomePage implements OnInit, OnChanges {
         queryParams: {
           track: id,
         },
-        queryParamsHandling: 'merge'
+        queryParamsHandling: 'merge',
       };
       this._navCtrl.navigateForward('map', navigationExtras);
     }
