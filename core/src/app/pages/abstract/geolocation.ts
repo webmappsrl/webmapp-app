@@ -6,6 +6,7 @@ import {
   BackgroundGeolocationLocationProvider,
   BackgroundGeolocationResponse,
 } from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {Platform} from '@ionic/angular';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {from} from 'rxjs/internal/observable/from';
 import {Subscription} from 'rxjs/internal/Subscription';
@@ -19,8 +20,13 @@ export abstract class GeolocationPage implements OnDestroy {
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor(private _backgroundGeolocation: BackgroundGeolocation) {
-    this._initBackgroundGeolocation();
+  constructor(private _backgroundGeolocation: BackgroundGeolocation, platform: Platform) {
+    platform.ready().then(() => {
+      this._initBackgroundGeolocation();
+    });
+    platform.resume.subscribe(() => {
+      this._backgroundGeolocation.start();
+    });
   }
 
   ngOnDestroy(): void {

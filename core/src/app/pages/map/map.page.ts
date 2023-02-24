@@ -10,7 +10,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {Browser} from '@capacitor/browser';
-import {IonFab, IonSlides} from '@ionic/angular';
+import {IonFab, IonSlides, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
@@ -207,8 +207,9 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     private _shareSvc: ShareService,
     private _cdr: ChangeDetectorRef,
     _backgroundGeolocation: BackgroundGeolocation,
+    _platform: Platform,
   ) {
-    super(_backgroundGeolocation);
+    super(_backgroundGeolocation, _platform);
 
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),

@@ -81,6 +81,7 @@ import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {getDistance} from 'ol/sphere';
 import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
+import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'itinerary-webmapp-map',
@@ -332,8 +333,9 @@ export class ItineraryMapComponent
     private _storeMap: Store<IMapRootState>,
     private _cdr: ChangeDetectorRef,
     _backgroundGeolocation: BackgroundGeolocation,
+    _platform: Platform,
   ) {
-    super(_backgroundGeolocation);
+    super(_backgroundGeolocation, _platform);
     this._locationIcon = {
       layer: null,
       location: null,

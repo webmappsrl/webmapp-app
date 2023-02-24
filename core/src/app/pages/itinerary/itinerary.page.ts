@@ -155,7 +155,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
     private _authSvc: AuthService,
     backgroundGeolocation: BackgroundGeolocation,
   ) {
-    super(backgroundGeolocation);
+    super(backgroundGeolocation, _platform);
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentTrackProperties$
       .pipe(
