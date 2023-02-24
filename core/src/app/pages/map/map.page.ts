@@ -75,7 +75,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-  previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
@@ -181,6 +181,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     tap(p => (this.pois = (p && p.features) ?? null)),
     take(1),
   );
+  previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -276,10 +277,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     this.close();
     this._router.navigate([page]);
   }
-  togglePreviewTrack(): void {
-    this.previewTrack$.next(!this.previewTrack$.value);
-    this._cdr.detectChanges();
-  }
+
   goToTrack(id: number) {
     this._poiReset();
     this.wmMapComponent.resetRotation();
@@ -314,12 +312,11 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   }
 
   navigation(): void {
-    const open = !this.wmMapPositionfocus$.value;
-    this.wmMapPositionfocus$.next(open);
-    if (open) {
-      this.mapTrackDetailsCmp.none();
-    } else {
-      this.mapTrackDetailsCmp.close();
+    const isFocused = !this.wmMapPositionfocus$.value;
+    this.wmMapPositionfocus$.next(isFocused);
+    this.previewTrack$.next(false);
+    if (isFocused) {
+      this.mapTrackDetailsCmp.onlyTitle();
     }
   }
 
@@ -405,6 +402,11 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     setTimeout(() => {
       this.slider.slideTo(idx);
     }, 300);
+  }
+
+  togglePreviewTrack(): void {
+    this.previewTrack$.next(!this.previewTrack$.value);
+    this._cdr.detectChanges();
   }
 
   toogleFullMap() {

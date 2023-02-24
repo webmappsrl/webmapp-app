@@ -24,27 +24,23 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   private _initialStep: number = 1;
   private _started: boolean = false;
 
-  @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
-  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
   @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
+  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
+  @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
   isOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   maxInfoheight = 850;
   minInfoheight = 350;
-  stepStatus = 0;
   modeFullMap = false;
+  stepStatus = 0;
+
   constructor(
     private _elRef: ElementRef,
     private _platform: Platform,
     private _animationCtrl: AnimationController,
     private _gestureCtrl: GestureController,
   ) {}
-
-  close(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '60px');
-    this.isOpen$.next(false);
-  }
 
   full(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
@@ -67,14 +63,14 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     this.closeEVT.emit();
   }
 
-  open(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${320}px`);
+  onlyTitle(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, '60px');
     this.isOpen$.next(true);
   }
 
-  toogleFullMap() {
-    this.modeFullMap = !this.toggle();
-    this.toggleEVT.emit();
+  open(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${320}px`);
+    this.isOpen$.next(true);
   }
 
   async setAnimations(from = '0px', to = '0px') {
@@ -101,9 +97,14 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       this.open();
       return true;
     } else {
-      this.close();
+      this.onlyTitle();
       return false;
     }
+  }
+
+  toogleFullMap() {
+    this.modeFullMap = !this.toggle();
+    this.toggleEVT.emit();
   }
 
   private _clamp(min: number, n: number, max: number): number {
