@@ -248,6 +248,8 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
 
       if (this.trackid$.value == null) {
         this.goToTrack(null);
+      } else {
+        this.mapTrackDetailsCmp.open();
       }
     } else if (this.trackid$.value != null) {
       this.goToTrack(null);
