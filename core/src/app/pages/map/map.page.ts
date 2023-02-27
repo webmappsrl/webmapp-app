@@ -345,7 +345,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   }
 
   openTrackDownload(): void {
-    this.mapTrackDetailsCmp.none();
+    this.mapTrackDetailsCmp.background();
     setTimeout(() => {
       this.showDownload$.next(true);
     }, 300);

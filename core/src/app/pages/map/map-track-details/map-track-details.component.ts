@@ -58,9 +58,13 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   }
 
   none(): void {
+    this.background();
+    this.closeEVT.emit();
+  }
+
+  background(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
-    this.closeEVT.emit();
   }
 
   onlyTitle(): void {
