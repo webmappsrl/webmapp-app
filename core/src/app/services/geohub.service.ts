@@ -377,14 +377,19 @@ export class GeohubService {
     geometry.coordinates = geometry.coordinates.map((x: any) => {
       return [x[0], x[1]];
     });
+    const propeties = track;
+    delete propeties.geojson;
     const data = {
       type: 'Feature',
       geometry: geometry,
       properties: {
-        name: track.title,
-        description: track.description,
-        app_id: this._configService.appId,
-        image_gallery: track.photoKeys ? track.photoKeys : [],
+        ...{
+          name: track.title,
+          description: track.description,
+          app_id: this._configService.appId,
+          image_gallery: track.photoKeys ? track.photoKeys : [],
+        },
+        ...propeties,
       },
     };
     const res = await this._communicationService
