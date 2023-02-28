@@ -377,7 +377,7 @@ export class GeohubService {
     geometry.coordinates = geometry.coordinates.map((x: any) => {
       return [x[0], x[1]];
     });
-    const propeties = track;
+    const propeties = {...track};
     delete propeties.geojson;
     const data = {
       type: 'Feature',

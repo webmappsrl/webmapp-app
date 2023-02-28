@@ -51,7 +51,7 @@ export class SaveService {
 
   public async getTrackPhotos(track: ITrack): Promise<IPhotoItem[]> {
     const coll = [];
-    for (const photoKey of track.photoKeys) {
+    for (const photoKey of track.photoKeys || []) {
       const photo = await this._getGenericById(photoKey);
       coll.push(photo);
     }
