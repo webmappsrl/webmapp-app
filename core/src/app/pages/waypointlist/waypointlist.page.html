@@ -19,11 +19,11 @@
   <ion-list>
     <ion-item *ngFor="let waypoint of waypoints" button detail (click)="open(waypoint)">
       <div start class="webmapp-waypointlist-item-map">
-        <webmapp-map
+        <old-webmapp-map
           [static]="true"
           [animation]="false"
           [position]="waypoint.displayPosition"
-        ></webmapp-map>
+        ></old-webmapp-map>
       </div>
       <div>
         <div class="webmapp-waypointlist-item-title">{{waypoint.title}}</div>

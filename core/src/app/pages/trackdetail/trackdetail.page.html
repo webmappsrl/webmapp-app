@@ -46,7 +46,7 @@
 </ion-header>
 
 <ion-content id="main">
-  <webmapp-map class="webmapp-trackdetail-map" #map static="true" [track]="track"></webmapp-map>
+  <old-webmapp-map class="webmapp-trackdetail-map" #map [track]="track"></old-webmapp-map>
 
   <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
 

@@ -39,7 +39,7 @@
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack" (click)="openTrack(track)">
       <div class="webmapp-modalsuccess-infopanel-top">
         <div class="webmapp-modalsuccess-infopanel-top-map">
-          <webmapp-map [track]="track" [static]="true" [animation]="false"></webmapp-map>
+          <old-webmapp-map [track]="track" [static]="true" [animation]="false"></old-webmapp-map>
         </div>
         <div class="webmapp-modalsuccess-infopanel-top-info">
           <div class="webmapp-modalsuccess-infopanel-top-name">{{track.title}}</div>
@@ -51,6 +51,8 @@
         <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
         {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
         '2.0-0'
+
+
 
 
         }}:{{trackTime?.seconds| number : '2.0-0'}}
@@ -162,11 +164,11 @@
           <ion-row>
             <ion-col size="4">
               <div class="webmapp-modalsuccess-infopanel-top-map">
-                <webmapp-map
+                <old-webmapp-map
                   [static]="true"
                   [animation]="false"
                   [position]="displayPosition"
-                ></webmapp-map>
+                ></old-webmapp-map>
               </div>
             </ion-col>
             <ion-col
