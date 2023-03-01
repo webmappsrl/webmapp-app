@@ -26,7 +26,7 @@ export class ProfilePage implements OnInit, OnDestroy {
   authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
   avatarUrl: string;
   email: string;
-  isLoggedIn: boolean;
+  isLoggedIn$: Observable<boolean>;
   loggedOutSliderOptions: any;
   name: string;
 
@@ -120,7 +120,7 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
-      this.isLoggedIn = this._authService.isLoggedIn;
+      this.isLoggedIn$ = this._authService.isLoggedIn$;
       this.name = this._authService.name;
       this.email = this._authService.email;
     });
