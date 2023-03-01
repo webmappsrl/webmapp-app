@@ -225,7 +225,7 @@ export class AuthService {
 
     this._userData = user;
     this._onStateChange.next(this._userData);
-
+    this.isLoggedIn$.next(true);
     return this._storageService.setUser(user);
   }
 }

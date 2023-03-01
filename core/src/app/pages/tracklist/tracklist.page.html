@@ -19,12 +19,12 @@
   <ion-list>
     <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
       <div start class="webmapp-tracklist-item-map">
-        <webmapp-map
+        <old-webmapp-map
           [static]="true"
           [animation]="false"
           [track]="track"
           [height]="60"
-        ></webmapp-map>
+        ></old-webmapp-map>
       </div>
       <div>
         <div class="webmapp-tracklist-item-title">{{track.title}}</div>

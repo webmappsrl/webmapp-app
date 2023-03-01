@@ -6,6 +6,7 @@ import {NgModule} from '@angular/core';
 import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {TracklistPage} from './tracklist.page';
 import {TracklistPageRoutingModule} from './tracklist-routing.module';
+import {WmMapModule} from 'src/app/shared/map-core/map-core.module';
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import {TracklistPageRoutingModule} from './tracklist-routing.module';
     TracklistPageRoutingModule,
     WmPipeModule,
     MapModule,
+    WmMapModule,
   ],
   declarations: [TracklistPage],
 })

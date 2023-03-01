@@ -16,9 +16,13 @@ export class CGeojsonLineStringFeature extends CGeojsonFeature {
    */
   addCoordinates(location: ILocation): void {
     if (!this._geometry) this._initializeGeometry();
-    const newPoint: IPoint = [location.longitude, location.latitude];
-    if (location.altitude) newPoint.push(location.altitude);
-    (this._geometry.coordinates as ILineString).push(newPoint);
+    try {
+      const newPoint: IPoint = [location.longitude, location.latitude];
+      if (location.altitude) newPoint.push(location.altitude);
+      (this._geometry.coordinates as ILineString).push(newPoint);
+    } catch(e) {
+      console.warn(e);
+    }
   }
 
   /**

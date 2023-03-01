@@ -441,38 +441,36 @@ export class GeolocationService {
           },
         );
       } else {
-        if (this._deviceService.isLocalServer) {
-          this._state.isActive = true;
-          this._state.isLoading = true;
-          this.onGeolocationStateChange.next(this._state);
+        this._state.isActive = true;
+        this._state.isLoading = true;
+        this.onGeolocationStateChange.next(this._state);
 
-          setInterval(() => {
-            navigator.geolocation.watchPosition(
-              res => {
-                let bearing: number = Math.random() * 360;
+        setInterval(() => {
+          navigator.geolocation.watchPosition(
+            res => {
+              let bearing: number = Math.random() * 360;
 
-                this._locationUpdate({
-                  altitude: res.coords.altitude,
-                  latitude: res.coords.latitude,
-                  longitude: res.coords.longitude,
-                  id: 1,
-                  accuracy: res.coords.accuracy,
-                  time: res.timestamp,
-                  speed: res.coords.speed,
-                  locationProvider: this._backgroundGeolocation
-                    ? this._backgroundGeolocation.RAW_PROVIDER
-                    : null,
-                  provider: 'gps',
-                  bearing,
-                });
-              },
-              function errorCallback(error) {
-                // console.log(error);
-              },
-              {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
-            );
-          }, 2000);
-        }
+              this._locationUpdate({
+                altitude: res.coords.altitude,
+                latitude: res.coords.latitude,
+                longitude: res.coords.longitude,
+                id: 1,
+                accuracy: res.coords.accuracy,
+                time: res.timestamp,
+                speed: res.coords.speed,
+                locationProvider: this._backgroundGeolocation
+                  ? this._backgroundGeolocation.RAW_PROVIDER
+                  : null,
+                provider: 'gps',
+                bearing,
+              });
+            },
+            function errorCallback(error) {
+              // console.log(error);
+            },
+            {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
+          );
+        }, 1000);
 
         resolve(this._state);
       }
