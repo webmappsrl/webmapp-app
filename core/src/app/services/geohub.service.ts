@@ -347,7 +347,7 @@ export class GeohubService {
         description: photo.description,
         name: photo.description,
         app_id: this._configService.appId,
-        // position: photo.position,
+        position: photo?.position,
       },
     };
 

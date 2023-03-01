@@ -1,138 +1,142 @@
-<ion-menu side="end" menuId="optionMenu" contentId="main">
+<ng-container *ngIf="track$|async as track">
+  <ion-menu side="end" menuId="optionMenu" contentId="main">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-icon
+            name="close-outline"
+            class="webmapp-trackdetail-menuclose"
+            (click)="closeMenu()"
+          ></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <ion-item (click)="edit()">
+          <i class="webmapp-icon-edit-outline " start></i>
+          <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|wmtrans}}</div>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="trash-outline" start></ion-icon>
+          <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.delete'|wmtrans}}</div>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
+        <ion-back-button
+          mode="ios"
+          defaultHref="map"
+          text=""
+          class="webmapp-backbutton webmapp-backbutton-dark"
+        ></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{'pages.trackdetail.title'|wmtrans}}</ion-title>
+      <ion-buttons slot="end">
         <ion-icon
-          name="close-outline"
-          class="webmapp-trackdetail-menuclose"
-          (click)="closeMenu()"
+          name="ellipsis-vertical"
+          class="webmapp-trackdetail-menuopen"
+          (click)="menu()"
         ></ion-icon>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item (click)="edit()">
-        <i class="webmapp-icon-edit-outline " start></i>
-        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.edit'|wmtrans}}</div>
+
+  <ion-content id="main">
+    <old-webmapp-map class="webmapp-trackdetail-map" #map [track]="track"></old-webmapp-map>
+
+    <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
+
+    <ion-list class="webmapp-trackdetail-itemlist">
+      <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.title">
+        <i class="icon-outline-list webmapp-trackdetail-icon secondary" start></i>
+        <div class="webmapp-trackdetail-item-title">{{track?.title}}</div>
       </ion-item>
-      <ion-item>
-        <ion-icon name="trash-outline" start></ion-icon>
-        <div class="webmapp-trackdetail-menuitem">{{'pages.trackdetail.delete'|wmtrans}}</div>
+
+      <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.description">
+        <i class="webmapp-icon-document webmapp-trackdetail-icon tertiary" start></i>
+        <div>
+          <div class="webmapp-trackdetail-item-description">{{track?.description|wmtrans}}</div>
+        </div>
+      </ion-item>
+
+      <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.activity">
+        <i class="webmapp-icon-document webmapp-trackdetail-icon primary" start></i>
+        {{track?.activity|wmtrans}}
+      </ion-item>
+
+      <ion-item
+        class="webmapp-trackdetail-item"
+        lines="none"
+        *ngIf="track.photos != null && track.photos.length > 0"
+      >
+        <i class="webmapp-icon-camera webmapp-trackdetail-icon secondary" start></i>
+        {{'pages.trackdetail.photos'|wmtrans}}
+      </ion-item>
+    </ion-list>
+    <ng-container *ngIf="track!= null &&track.photos != null && track.photos.length >0">
+      <ion-slides
+        pager="false"
+        [options]="sliderOptions"
+        class="webmapp-trackdetail-photoslider"
+        #slider
+      >
+        <ion-slide *ngFor="let photo of track.photos;let idx = index">
+          <div class="webmapp-trackdetail-photocontainer">
+            <ion-img [src]="getPhoto(photo)" class="webmapp-trackdetail-photo"></ion-img>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </ng-container>
+
+    <div class="webmapp-trackdetail-details">{{'pages.trackdetail.details'|wmtrans}}</div>
+
+    <ion-list>
+      <ion-item class="webmapp-trackdetail-detail">
+        <ion-label class="webmapp-trackdetail-detail-name">
+          {{'pages.trackdetail.time' | wmtrans}}
+        </ion-label>
+        <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+          {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
+          '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
+        </ion-label>
+      </ion-item>
+      <ion-item class="webmapp-trackdetail-detail">
+        <ion-label class="webmapp-trackdetail-detail-name">
+          {{'pages.trackdetail.distance' | wmtrans}}
+        </ion-label>
+        <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+          {{trackDistance | number:'1.0-0'}}
+        </ion-label>
+      </ion-item>
+      <ion-item class="webmapp-trackdetail-detail">
+        <ion-label class="webmapp-trackdetail-detail-name">
+          {{'pages.trackdetail.slope' | wmtrans}}
+        </ion-label>
+        <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+          {{trackSlope | number:'1.0-0'}}m
+        </ion-label>
+      </ion-item>
+      <ion-item class="webmapp-trackdetail-detail">
+        <ion-label class="webmapp-trackdetail-detail-name">
+          {{'pages.trackdetail.avgspeed' | wmtrans}}
+        </ion-label>
+        <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+          {{trackAvgSpeed | number:'1.1-1'}} km/h
+        </ion-label>
+      </ion-item>
+      <ion-item class="webmapp-trackdetail-detail">
+        <ion-label class="webmapp-trackdetail-detail-name">
+          {{'pages.trackdetail.topspeed' | wmtrans}}
+        </ion-label>
+        <ion-label slot="end" class="webmapp-trackdetail-detail-value">
+          {{trackTopSpeed | number:'1.1-1'}} km/h
+        </ion-label>
       </ion-item>
     </ion-list>
   </ion-content>
-</ion-menu>
-
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button
-        mode="ios"
-        defaultHref="map"
-        text=""
-        class="webmapp-backbutton webmapp-backbutton-dark"
-      ></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{'pages.trackdetail.title'|wmtrans}}</ion-title>
-    <ion-buttons slot="end">
-      <ion-icon
-        name="ellipsis-vertical"
-        class="webmapp-trackdetail-menuopen"
-        (click)="menu()"
-      ></ion-icon>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content id="main">
-  <old-webmapp-map class="webmapp-trackdetail-map" #map [track]="track"></old-webmapp-map>
-
-  <div class="webmapp-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
-
-  <ion-list class="webmapp-trackdetail-itemlist">
-    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.title">
-      <i class="icon-outline-list webmapp-trackdetail-icon secondary" start></i>
-      <div class="webmapp-trackdetail-item-title">{{track?.title}}</div>
-    </ion-item>
-
-    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.description">
-      <i class="webmapp-icon-document webmapp-trackdetail-icon tertiary" start></i>
-      <div>
-        <div class="webmapp-trackdetail-item-description">{{track?.description|wmtrans}}</div>
-      </div>
-    </ion-item>
-
-    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="track?.activity">
-      <i class="webmapp-icon-document webmapp-trackdetail-icon primary" start></i>
-      {{track?.activity|wmtrans}}
-    </ion-item>
-
-    <ion-item class="webmapp-trackdetail-item" lines="none" *ngIf="photos && photos.length">
-      <i class="webmapp-icon-camera webmapp-trackdetail-icon secondary" start></i>
-      {{'pages.trackdetail.photos'|wmtrans}}
-    </ion-item>
-  </ion-list>
-
-  <ion-slides
-    pager="false"
-    [options]="sliderOptions"
-    class="webmapp-trackdetail-photoslider"
-    #slider
-  >
-    <ion-slide *ngFor="let photo of photos;let idx = index">
-      <div class="webmapp-trackdetail-photocontainer">
-        <ion-img
-          [src]="photo.rawData ? photo.rawData : photo.datasrc"
-          class="webmapp-trackdetail-photo"
-        ></ion-img>
-      </div>
-    </ion-slide>
-  </ion-slides>
-
-  <div class="webmapp-trackdetail-details">{{'pages.trackdetail.details'|wmtrans}}</div>
-
-  <ion-list>
-    <ion-item class="webmapp-trackdetail-detail">
-      <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.time' | wmtrans}}
-      </ion-label>
-      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
-        {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
-        '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
-      </ion-label>
-    </ion-item>
-    <ion-item class="webmapp-trackdetail-detail">
-      <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.distance' | wmtrans}}
-      </ion-label>
-      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
-        {{trackDistance | number:'1.0-0'}}
-      </ion-label>
-    </ion-item>
-    <ion-item class="webmapp-trackdetail-detail">
-      <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.slope' | wmtrans}}
-      </ion-label>
-      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
-        {{trackSlope | number:'1.0-0'}}m
-      </ion-label>
-    </ion-item>
-    <ion-item class="webmapp-trackdetail-detail">
-      <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.avgspeed' | wmtrans}}
-      </ion-label>
-      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
-        {{trackAvgSpeed | number:'1.1-1'}} km/h
-      </ion-label>
-    </ion-item>
-    <ion-item class="webmapp-trackdetail-detail">
-      <ion-label class="webmapp-trackdetail-detail-name">
-        {{'pages.trackdetail.topspeed' | wmtrans}}
-      </ion-label>
-      <ion-label slot="end" class="webmapp-trackdetail-detail-value">
-        {{trackTopSpeed | number:'1.1-1'}} km/h
-      </ion-label>
-    </ion-item>
-  </ion-list>
-</ion-content>
+</ng-container>

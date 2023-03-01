@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
 import {ActivatedRoute} from '@angular/router';
 import {MenuController, ModalController} from '@ionic/angular';
+import {BehaviorSubject} from 'rxjs';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {IPhotoItem} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
@@ -13,7 +15,7 @@ import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
   styleUrls: ['./trackdetail.page.scss'],
 })
 export class TrackdetailPage implements OnInit {
-  public track: ITrack;
+  track$: BehaviorSubject<ITrack | null> = new BehaviorSubject(null);
 
   public trackTime = {hours: 0, minutes: 0, seconds: 0};
   public trackDistance: number;
@@ -33,35 +35,30 @@ export class TrackdetailPage implements OnInit {
     private _geoUtils: GeoutilsService,
     private _saveService: SaveService,
     private _modalController: ModalController,
+    private _sanitizer: DomSanitizer,
   ) {}
 
   ngOnInit() {
     this._route.queryParams.subscribe(async params => {
       const t = JSON.parse(params.track);
       console.log('------- ~ TrackdetailPage ~ this._route.queryParams.subscribe ~ t', t);
-      this.track = await this._saveService.getTrack(t.key);
+      const track = await this._saveService.getTrack(t.key);
       console.log(
         '------- ~ file: trackdetail.page.ts ~ line 35 ~ TrackdetailPage ~ this.track',
-        this.track,
+        track,
       );
-      this.trackDistance = this._geoUtils.getLength(this.track.geojson);
-      this.trackSlope = this._geoUtils.getSlope(this.track.geojson);
-      this.trackAvgSpeed = this._geoUtils.getAverageSpeed(this.track.geojson);
-      this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track.geojson);
-      this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(this.track.geojson));
-
-      this.getPhotos();
+      this.trackDistance = this._geoUtils.getLength(track.geojson);
+      this.trackSlope = this._geoUtils.getSlope(track.geojson);
+      this.trackAvgSpeed = this._geoUtils.getAverageSpeed(track.geojson);
+      this.trackTopSpeed = this._geoUtils.getTopSpeed(track.geojson);
+      this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson));
+      console.log(track);
+      this.track$.next(track);
     });
   }
-
-  async getPhotos() {
-    this.photos = await this._saveService.getTrackPhotos(this.track);
-    console.log(
-      '------- ~ file: trackdetail.page.ts ~ line 63 ~ TrackdetailPage ~ getPhotos ~ this.photos',
-      this.photos,
-    );
+  sanitize(url: string) {
+    return this._sanitizer.bypassSecurityTrustUrl(url);
   }
-
   menu() {
     this._menuController.enable(true, 'optionMenu');
     this._menuController.open('optionMenu');
@@ -75,7 +72,7 @@ export class TrackdetailPage implements OnInit {
     const modal = await this._modalController.create({
       component: ModalSaveComponent,
       componentProps: {
-        track: this.track,
+        track: this.track$.value,
         photos: this.photos,
       },
     });
@@ -87,11 +84,21 @@ export class TrackdetailPage implements OnInit {
     );
 
     if (!res.data.dismissed) {
-      const track: ITrack = Object.assign(this.track, res.data.trackData);
+      const track: ITrack = Object.assign(this.track$.value, res.data.trackData);
 
       await this._saveService.updateTrack(track);
 
+      this.track$.next(track);
+
       //await this.openModalSuccess(track);
+    }
+  }
+
+  getPhoto(photo: IPhotoItem): string {
+    if (photo.rawData) {
+      return photo.rawData;
+    } else {
+      return photo.datasrc;
     }
   }
 }

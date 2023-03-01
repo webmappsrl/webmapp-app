@@ -45,7 +45,8 @@ export class SaveService {
 
   public async getTrack(key: string): Promise<ITrack> {
     const ret = await this._getGenericById(key);
-    this._initTrack(ret);
+    await this._initTrack(ret);
+    console.log(ret);
     return ret;
   }
 
@@ -60,8 +61,8 @@ export class SaveService {
 
   public async getTracks(): Promise<ITrack[]> {
     const ret: ITrack[] = await this.getGenerics(ESaveObjType.TRACK);
-    ret.forEach(t => {
-      this._initTrack(t);
+    ret.forEach(async t => {
+      await this._initTrack(t);
     });
     return ret;
   }
@@ -213,12 +214,16 @@ export class SaveService {
             let i: number = 0;
             while (i < track.photos.length) {
               const photo: IPhotoItem = track.photos[i];
-              await this._saveGeneric(photo, ESaveObjType.PHOTOTRACK);
+              const photoKey = await this._savePhotoTrack(photo);
+              const photoStored: IPhotoItem = await this._getGenericById(photoKey);
+              this._updateGeneric(photoKey, photoStored);
               try {
                 const resP = await this.geohub.savePhoto(photo);
                 if (resP && !resP.error && resP.id) {
                   if (!track.photoKeys) track.photoKeys = [];
+                  if (!track.storedPhotoKeys) track.storedPhotoKeys = [];
                   track.photoKeys.push(resP.id);
+                  track.storedPhotoKeys.push(photoKey);
                   track.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
                 } else {
                   console.warn('A track photo could not be uploaded');
@@ -242,17 +247,8 @@ export class SaveService {
           break;
 
         case ESaveObjType.PHOTOTRACK:
-          console.warn('PHOTOTRACK elements should not exists');
-          const trackPhoto: IPhotoItem = await this._getGenericById(contents[i].key);
-          await this._photoService.setPhotoData(photo);
-          this.uploadUnsavedContents();
-          if (resP && !resP.error && resP.id) {
-            indexObj.saved = true;
-            photo.id = resP.id;
-            this._updateGeneric(contents[i].key, photo);
-          }
+          console.log('aaa');
           break;
-        //TODO save each type of content
       }
       await this._updateIndex();
     }
@@ -279,10 +275,17 @@ export class SaveService {
     return this._index.lastId++;
   }
 
-  private _initTrack(track: ITrack) {
+  private async _initTrack(track: ITrack) {
     // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
     const gj = track.geojson;
     track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
+    for (let i = 0; i < (track.storedPhotoKeys || []).length; i++) {
+      const element = track.storedPhotoKeys[i];
+      const photo = await this._getGenericById(element);
+      photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
+      track.photos.push(photo);
+    }
+    console.log(track);
   }
 
   private async _recoverIndex() {
@@ -318,7 +321,7 @@ export class SaveService {
 
   private async _savePhotoTrack(photo: IPhotoItem): Promise<string> {
     await this._photoService.setPhotoData(photo);
-    return await this._saveGeneric(photo, ESaveObjType.PHOTOTRACK);
+    return await this._saveGeneric(photo, ESaveObjType.PHOTO, true);
   }
 
   private async _updateGeneric(key, value: IRegisterItem): Promise<any> {
