@@ -145,6 +145,7 @@ export class SaveService {
     for (const photokey of deletedPhotos) {
       //this.deleteGeneric(photokey);
     }
+    trackToSave.photoKeys = photoKeys;
     this._updateGeneric(trackToSave.key, trackToSave);
   }
 
@@ -212,7 +213,7 @@ export class SaveService {
             let i: number = 0;
             while (i < track.photos.length) {
               const photo: IPhotoItem = track.photos[i];
-              await this._photoService.setPhotoData(photo);
+              await this._saveGeneric(photo, ESaveObjType.PHOTOTRACK);
               try {
                 const resP = await this.geohub.savePhoto(photo);
                 if (resP && !resP.error && resP.id) {
@@ -242,6 +243,14 @@ export class SaveService {
 
         case ESaveObjType.PHOTOTRACK:
           console.warn('PHOTOTRACK elements should not exists');
+          const trackPhoto: IPhotoItem = await this._getGenericById(contents[i].key);
+          await this._photoService.setPhotoData(photo);
+          this.uploadUnsavedContents();
+          if (resP && !resP.error && resP.id) {
+            indexObj.saved = true;
+            photo.id = resP.id;
+            this._updateGeneric(contents[i].key, photo);
+          }
           break;
         //TODO save each type of content
       }
