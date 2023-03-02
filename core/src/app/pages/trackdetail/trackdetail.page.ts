@@ -40,9 +40,7 @@ export class TrackdetailPage implements OnInit {
 
   ngOnInit() {
     this._route.queryParams.subscribe(async params => {
-      const t = JSON.parse(params.track);
-      console.log('------- ~ TrackdetailPage ~ this._route.queryParams.subscribe ~ t', t);
-      const track = await this._saveService.getTrack(t.key);
+      const track = await this._saveService.getTrack(params.track);
       console.log(
         '------- ~ file: trackdetail.page.ts ~ line 35 ~ TrackdetailPage ~ this.track',
         track,
