@@ -13,4 +13,5 @@ export interface WaypointSave extends IRegisterItem {
   id?: string;
   photos?: Array<IPhotoItem>;
   photoKeys?: Array<string>;
+  nominatim: {[key: string]: any};
 }

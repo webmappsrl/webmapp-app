@@ -424,6 +424,7 @@ export class GeohubService {
         app_id: this._configService.appId,
         image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
         waypoint_type: waypoint.waypointtype,
+        ...waypoint,
       },
     };
     const res = await this._communicationService

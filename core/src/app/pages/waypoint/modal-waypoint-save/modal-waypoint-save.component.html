@@ -21,21 +21,12 @@
     [position]="displayPosition"
   ></old-webmapp-map>
 
-  <div class="webmapp-modalwaypoint-extrinfo">
-    <div class="webmapp-modalwaypoint-extrinfo-icon">
-      <i class="webmapp-icon-pin-outline"></i>
-    </div>
-    <div class="webmapp-modalwaypoint-extrinfo-text">
-      <div class="webmapp-modalwaypoint-extrinfo-textcity">
-        {{ positionCity }}
-      </div>
-      <div class="webmapp-modalwaypoint-extrinfo-textposition">
-        {{ positionString }}
-      </div>
-    </div>
-  </div>
-
   <ion-list class="webmapp-modalwaypoint-itemlist">
+    <ion-item class="webmapp-formfield-item">
+      <ion-label class="webmapp-formfield-label" position="stacked">
+        {{  nominatim.display_name  | wmtrans }}
+      </ion-label>
+    </ion-item>
     <webmapp-form-field
       [(value)]="title"
       [icon]="'icon-outline-list'"
