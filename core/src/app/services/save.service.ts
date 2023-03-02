@@ -36,7 +36,7 @@ export class SaveService {
         }
       }
     }
-    return res;
+    return res.reverse();
   }
 
   public async getPhotos(): Promise<IPhotoItem[]> {
@@ -46,7 +46,6 @@ export class SaveService {
   public async getTrack(key: string): Promise<ITrack> {
     const ret = await this._getGenericById(key);
     await this._initTrack(ret);
-    console.log(ret);
     return ret;
   }
 
@@ -79,7 +78,14 @@ export class SaveService {
     return this.getGenerics(ESaveObjType.WAYPOINT);
   }
   public async getWaypoint(key: string): Promise<WaypointSave> {
-    return this._getGenericById(key);
+    const wp = await this._getGenericById(key);
+    for (let i = 0; i < (wp.storedPhotoKeys || []).length; i++) {
+      const element = wp.storedPhotoKeys[i];
+      const photo = await this._getGenericById(element);
+      photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
+      wp.photos.push(photo);
+    }
+    return wp;
   }
 
   /**
@@ -184,12 +190,16 @@ export class SaveService {
             let i: number = 0;
             while (i < waypoint.photos.length) {
               const photo: IPhotoItem = waypoint.photos[i];
-              await this._photoService.setPhotoData(photo);
+              const photoKey = await this._savePhotoTrack(photo);
+              const photoStored: IPhotoItem = await this._getGenericById(photoKey);
+              this._updateGeneric(photoKey, photoStored);
               try {
                 const resP = await this.geohub.savePhoto(photo);
                 if (resP && !resP.error && resP.id) {
                   if (!waypoint.photoKeys) waypoint.photoKeys = [];
+                  if (!waypoint.storedPhotoKeys) waypoint.storedPhotoKeys = [];
                   waypoint.photoKeys.push(resP.id);
+                  waypoint.storedPhotoKeys.push(photoKey);
                   waypoint.photos.splice(i, 1); // Photo uploaded correctly, delete it from the photos to upload
                 } else {
                   console.warn('A waypoint photo could not be uploaded');

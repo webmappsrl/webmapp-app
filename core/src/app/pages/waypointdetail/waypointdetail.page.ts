@@ -3,6 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MenuController} from '@ionic/angular';
 import {from, Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
+import {IPhotoItem} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
 import {WaypointSave} from 'src/app/types/waypoint';
 
@@ -15,7 +16,9 @@ import {WaypointSave} from 'src/app/types/waypoint';
 })
 export class WaypointdetailPage {
   waypoint$: Observable<WaypointSave>;
-
+  sliderOptions: any = {
+    slidesPerView: 2.5,
+  };
   constructor(
     private _route: ActivatedRoute,
     private _menuController: MenuController,
@@ -28,6 +31,13 @@ export class WaypointdetailPage {
 
   closeMenu(): void {
     this._menuController.close('optionMenu');
+  }
+  getPhoto(photo: IPhotoItem): string {
+    if (photo.rawData) {
+      return photo.rawData;
+    } else {
+      return photo.datasrc;
+    }
   }
 
   menu(): void {

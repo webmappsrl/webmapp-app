@@ -67,16 +67,40 @@
         {{waypoint.waypointtype| wmtrans}}
       </ion-item>
 
-      <ion-item class="wm-waypointdetail-item" lines="none">
+      <ion-item class="wm-waypointdetail-item" lines="none" *ngIf="waypoint.nominatim as nominatim">
         <i class="webmapp-icon-pin-outline wm-waypointdetail-icon secondary" start></i>
         <div>
-          <div class="wm-waypointdetail-item-city">{{waypoint?.city}}</div>
-          <div class="wm-waypointdetail-item-position">
-            {{waypoint?.position?.latitude}}, {{ waypoint?.position?.longitude }}
+          <div class="wm-waypointdetail-item-city" *ngIf="nominatim.display_name as displayName">
+            {{displayName}}
+          </div>
+          <div class="wm-waypointdetail-item-position" *ngIf="waypoint.position as position">
+            lat: {{position.latitude}}, lon: {{ position.longitude }}
           </div>
         </div>
       </ion-item>
 
+      <ion-item
+        class="wm-waypointdetail-item"
+        lines="none"
+        *ngIf="waypoint.photos != null && waypoint.photos.length > 0"
+      >
+        <i class="webmapp-icon-camera wm-trackdetail-icon secondary" start></i>
+        {{'pages.trackdetail.photos'|wmtrans}}
+      </ion-item>
+      <ng-container *ngIf="waypoint!= null &&waypoint.photos != null && waypoint.photos.length >0">
+        <ion-slides
+          pager="false"
+          [options]="sliderOptions"
+          class="wm-waypointdetail-photoslider"
+          #slider
+        >
+          <ion-slide *ngFor="let photo of waypoint.photos;let idx = index">
+            <div class="wm-waypointdetail-photocontainer">
+              <ion-img [src]="getPhoto(photo)" class="wm-waypointdetail-photo"></ion-img>
+            </div>
+          </ion-slide>
+        </ion-slides>
+      </ng-container>
       <ion-item class="wm-waypointdetail-item" lines="none" *ngIf="waypoint?.description">
         <i class="webmapp-icon-document wm-waypointdetail-icon tertiary" start></i>
         {{waypoint.description}}
