@@ -1,75 +1,76 @@
-.webmapp-trackdetail-map {
-    height: 295px;
-    width: 100%;
-    display: block;
+wm-trackdetail {
+.wm-trackdetail-map {
+  height: 295px;
+  width: 100%;
+  display: block;
 }
 
-.webmapp-trackdetail-date {
-    padding: 15px 15px 0;
-    font-size: var(--wm-font-sm);
-    color: var(--wm-color-darkgrey);
+.wm-trackdetail-date {
+  padding: 15px 15px 0;
+  font-size: var(--wm-font-sm);
+  color: var(--wm-color-darkgrey);
 }
 
-.webmapp-trackdetail-item {
-    color: var(--wm-color-dark);
-    .webmapp-trackdetail-icon {
-        margin-right: 10px;
-        &.primary {
-            color: var(--wm-color-primary);
-        }
-
-        &.secondary {
-            color: var(--wm-color-secondary);
-        }
-
-        &.tertiary {
-            color: var(--wm-color-tertiary);
-        }
+.wm-trackdetail-item {
+  color: var(--wm-color-dark);
+  .wm-trackdetail-icon {
+    margin-right: 10px;
+    &.primary {
+      color: var(--wm-color-primary);
     }
 
-    .webmapp-trackdetail-item-title {
-        font-weight: var(--wm-font-weight-bold);
+    &.secondary {
+      color: var(--wm-color-secondary);
     }
-}
 
-
-.webmapp-trackdetail-photoslider {
-    padding: 15px 0;
-    overflow: visible;
-    .webmapp-trackdetail-photocontainer {
-      position: relative;
-      .webmapp-trackdetail-photo {
-        height: 100px;
-        width: 140px;
-        &::part(image) {
-          object-fit: cover;
-          border-radius: 15px;
-        }
-      }
+    &.tertiary {
+      color: var(--wm-color-tertiary);
     }
   }
 
-.webmapp-trackdetail-details {
+  .wm-trackdetail-item-title {
     font-weight: var(--wm-font-weight-bold);
-    padding: 0 20px;
-}
-.webmapp-trackdetail-detail {
-    .webmapp-trackdetail-detail-name {
-        color: var(--wm-color-darkgrey);
-    }
-    .webmapp-trackdetail-detail-value {
-        font-weight: var(--wm-font-weight-bold);
-        text-align: right;
-    }
+  }
 }
 
-.webmapp-trackdetail-menuopen {
-    padding: 15px;
+.wm-trackdetail-photoslider {
+  padding: 15px 0;
+  overflow: visible;
+  .wm-trackdetail-photocontainer {
+    position: relative;
+    .wm-trackdetail-photo {
+      height: 100px;
+      width: 140px;
+      &::part(image) {
+        object-fit: cover;
+        border-radius: 15px;
+      }
+    }
+  }
 }
-.webmapp-trackdetail-menuclose {
-    font-size: 28px;
-    padding: 15px;
+
+.wm-trackdetail-details {
+  font-weight: var(--wm-font-weight-bold);
+  padding: 0 20px;
 }
-.webmapp-trackdetail-menuitem {
-    padding: 5px 20px;
+.wm-trackdetail-detail {
+  .wm-trackdetail-detail-name {
+    color: var(--wm-color-darkgrey);
+  }
+  .wm-trackdetail-detail-value {
+    font-weight: var(--wm-font-weight-bold);
+    text-align: right;
+  }
+}
+
+.wm-trackdetail-menuopen {
+  padding: 15px;
+}
+.wm-trackdetail-menuclose {
+  font-size: 28px;
+  padding: 15px;
+}
+.wm-trackdetail-menuitem {
+  padding: 5px 20px;
+}
 }
