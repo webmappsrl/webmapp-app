@@ -10,12 +10,10 @@
     <ion-title>{{'pages.tracklist.title'|wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
-<ng-container *ngIf="(tracks$|async) as tracks">
-  <ion-content>
-    <div class="wm-tracklist-noitem" *ngIf="!tracks?.length">
-      {{'pages.tracklist.noitem'|wmtrans}}
-    </div>
-    <ion-list>
+<ion-content>
+  <ion-list>
+    <ng-container *ngIf="(tracks$|async) as tracks;else noTracks">
+      <ng-container *ngIf="tracks.length>0;else noTracks"></ng-container>
       <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
         <div start class="wm-tracklist-item-map">
           <old-webmapp-map
@@ -30,6 +28,9 @@
           <div class="wm-tracklist-item-date">{{track.date | date : "d MMMM YYYY - HH:mm"}}</div>
         </div>
       </ion-item>
-    </ion-list>
-  </ion-content>
-</ng-container>
+    </ng-container>
+    <ng-template #noTracks>
+      <div class="wm-tracklist-noitem">{{'pages.tracklist.noitem'|wmtrans}}</div>
+    </ng-template>
+  </ion-list>
+</ion-content>

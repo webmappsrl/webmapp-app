@@ -107,7 +107,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     if (!this.isValid()) {
       return;
     }
-    const waypoint: WaypointSave = {
+    const waypoint: WaypointSave = await this._saveService.saveWaypoint({
       position: this.position,
       displayPosition: this.displayPosition,
       title: this.title,
@@ -116,9 +116,7 @@ export class ModalWaypointSaveComponent implements OnInit {
       city: this.positionCity,
       date: new Date(),
       photos: this.photos,
-    };
-
-    await this._saveService.saveWaypoint(waypoint);
+    });
 
     this._modalController.dismiss();
 

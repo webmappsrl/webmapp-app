@@ -1,51 +1,51 @@
-.webmapp-waypointdetail-map {
-    height: 210px;
-    width: 100%;
+.wm-waypointdetail-map {
+  height: 210px;
+  width: 100%;
+  display: block;
+}
+
+.wm-waypointdetail-date {
+  padding: 15px 15px 0;
+  font-size: var(--wm-font-sm);
+  color: var(--wm-color-darkgrey);
+}
+
+.wm-waypointdetail-item {
+  color: var(--wm-color-dark);
+  .wm-waypointdetail-icon {
+    margin-right: 10px;
+    &.primary {
+      color: var(--wm-color-primary);
+    }
+
+    &.secondary {
+      color: var(--wm-color-secondary);
+    }
+
+    &.tertiary {
+      color: var(--wm-color-tertiary);
+    }
+  }
+
+  .wm-waypointdetail-item-title {
+    font-weight: var(--wm-font-weight-bold);
+  }
+
+  .wm-waypointdetail-item-city {
     display: block;
+  }
+
+  .wm-waypointdetail-item-position {
+    display: block;
+  }
 }
-
-.webmapp-waypointdetail-date {
-    padding: 15px 15px 0;
-    font-size: var(--wm-font-sm);
-    color: var(--wm-color-darkgrey);
+.wm-waypointdetail-menuopen {
+  padding: 15px;
 }
-
-.webmapp-waypointdetail-item {
-    color: var(--wm-color-dark);
-    .webmapp-waypointdetail-icon {
-        margin-right: 10px;
-        &.primary {
-            color: var(--wm-color-primary);
-        }
-
-        &.secondary {
-            color: var(--wm-color-secondary);
-        }
-
-        &.tertiary {
-            color: var(--wm-color-tertiary);
-        }
-    }
-
-    .webmapp-waypointdetail-item-title {
-        font-weight: var(--wm-font-weight-bold);
-    }
-
-    .webmapp-waypointdetail-item-city {
-        display: block;
-    }
-
-    .webmapp-waypointdetail-item-position {
-        display: block;
-    }
+.wm-waypointdetail-menuclose {
+  font-size: 28px;
+  padding: 15px;
 }
-.webmapp-waypointdetail-menuopen {
-    padding: 15px;
-}
-.webmapp-waypointdetail-menuclose {
-    font-size: 28px;
-    padding: 15px;
-}
-.webmapp-waypointdetail-menuitem{
-    padding: 5px 20px;
+.wm-waypointdetail-menuitem {
+  padding: 5px 20px;
 }

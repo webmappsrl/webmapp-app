@@ -585,4 +585,11 @@ export const appIT = {
   'poi_type': 'punti di interesse',
   'where': 'luoghi',
   'I tuoi dati': 'I tuoi dati',
+  'waypoint': 'Segnavia',
+  'landslide': 'Frana',
+  'sightseen': 'Panorama',
+  'signage': 'Segnaletica',
+  'fallen-tree': 'Albero caduto',
+  'interrupted-passage': 'Passaggio interrotto',
+  'missing-signage': 'Segnaletica mancante',
 };

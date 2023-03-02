@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MenuController, ModalController} from '@ionic/angular';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, from, Observable, of} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {IPhotoItem} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
@@ -20,12 +21,17 @@ export class TrackdetailPage {
   public sliderOptions: any = {
     slidesPerView: 2.5,
   };
-  track$: BehaviorSubject<ITrack | null> = new BehaviorSubject(null);
-  public trackAvgSpeed: number;
-  public trackDistance: number;
-  public trackSlope: number;
-  public trackTime = {hours: 0, minutes: 0, seconds: 0};
-  public trackTopSpeed: number;
+  track$: Observable<ITrack>;
+  currentTrack: ITrack;
+  trackAvgSpeed$: Observable<number>;
+  trackDistance$: Observable<number>;
+  trackSlope$: Observable<number>;
+  trackTime$: Observable<{
+    seconds: number;
+    minutes: number;
+    hours: number;
+  }> = of({hours: 0, minutes: 0, seconds: 0});
+  trackTopSpeed$: Observable<number>;
 
   constructor(
     private _route: ActivatedRoute,
@@ -34,15 +40,19 @@ export class TrackdetailPage {
     private _menuCtrl: MenuController,
     private _modalCtrl: ModalController,
   ) {
-    this._route.queryParams.subscribe(async params => {
-      const track = await this._saveSvc.getTrack(params.track);
-      this.trackDistance = this._geoUtils.getLength(track.geojson);
-      this.trackSlope = this._geoUtils.getSlope(track.geojson);
-      this.trackAvgSpeed = this._geoUtils.getAverageSpeed(track.geojson);
-      this.trackTopSpeed = this._geoUtils.getTopSpeed(track.geojson);
-      this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson));
-      this.track$.next(track);
-    });
+    this.track$ = this._route.queryParams.pipe(
+      switchMap(param => from(this._saveSvc.getTrack(param.track))),
+      tap(t => (this.currentTrack = t)),
+    );
+    this.trackDistance$ = this.track$.pipe(map(track => this._geoUtils.getLength(track.geojson)));
+    this.trackSlope$ = this.track$.pipe(map(track => this._geoUtils.getSlope(track.geojson)));
+    this.trackAvgSpeed$ = this.track$.pipe(
+      map(track => this._geoUtils.getAverageSpeed(track.geojson)),
+    );
+    this.trackTopSpeed$ = this.track$.pipe(map(track => this._geoUtils.getTopSpeed(track.geojson)));
+    this.trackTime$ = this.track$.pipe(
+      map(track => GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson))),
+    );
   }
 
   closeMenu(): void {
@@ -53,16 +63,16 @@ export class TrackdetailPage {
     const modal = await this._modalCtrl.create({
       component: ModalSaveComponent,
       componentProps: {
-        track: this.track$.value,
+        track: this.currentTrack,
         photos: this.photos,
       },
     });
     await modal.present();
     const res = await modal.onDidDismiss();
     if (!res.data.dismissed) {
-      const track: ITrack = Object.assign(this.track$.value, res.data.trackData);
+      const track: ITrack = Object.assign(this.currentTrack, res.data.trackData);
       await this._saveSvc.updateTrack(track);
-      this.track$.next(track);
+      // this.track$.next(track);
     }
   }
 

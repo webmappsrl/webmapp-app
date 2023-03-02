@@ -78,6 +78,9 @@ export class SaveService {
   public async getWaypoints(): Promise<WaypointSave[]> {
     return this.getGenerics(ESaveObjType.WAYPOINT);
   }
+  public async getWaypoint(key: string): Promise<WaypointSave> {
+    return this._getGenericById(key);
+  }
 
   /**
    * Save a photo into the storage
@@ -119,9 +122,11 @@ export class SaveService {
    *
    * @param waypoint the waypoint to be saved
    */
-  public async saveWaypoint(waypoint: WaypointSave) {
+  public async saveWaypoint(waypoint: WaypointSave): Promise<WaypointSave> {
     const waypointCopy = Object.assign({}, waypoint);
-    await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
+    const key = await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
+    waypointCopy.key = key;
+    return waypointCopy;
   }
 
   public async updateTrack(newTrack: ITrack) {

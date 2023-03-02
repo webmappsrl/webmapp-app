@@ -1,6 +1,6 @@
-import { IPhotoItem } from '../services/photo.service';
-import { ILocation } from './location';
-import { IRegisterItem } from './track';
+import {IPhotoItem} from '../services/photo.service';
+import {ILocation} from './location';
+import {IRegisterItem} from './track';
 
 export interface WaypointSave extends IRegisterItem {
   position: ILocation;

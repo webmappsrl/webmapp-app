@@ -13,24 +13,27 @@
 </ion-header>
 
 <ion-content>
-  <div class="webmapp-waypointlist-noitem" *ngIf="!waypoints?.length>0">
-    {{'pages.waypointlist.noitem'|wmtrans}}
-  </div>
   <ion-list>
-    <ion-item *ngFor="let waypoint of waypoints" button detail (click)="open(waypoint)">
-      <div start class="webmapp-waypointlist-item-map">
-        <old-webmapp-map
-          [static]="true"
-          [animation]="false"
-          [position]="waypoint.displayPosition"
-        ></old-webmapp-map>
-      </div>
-      <div>
-        <div class="webmapp-waypointlist-item-title">{{waypoint.title}}</div>
-        <div class="webmapp-waypointlist-item-date">
-          {{waypoint.date | date : "d MMMM YYYY - HH:mm"}}
+    <ng-container *ngIf="waypoints$|async as waypoints;else noWaypoints">
+      <ng-container *ngIf="waypoints.length>0;else noWaypoints"></ng-container>
+      <ion-item *ngFor="let waypoint of waypoints" button detail (click)="open(waypoint)">
+        <div start class="wm-waypointlist-item-map">
+          <old-webmapp-map
+            [static]="true"
+            [animation]="false"
+            [position]="waypoint.displayPosition"
+          ></old-webmapp-map>
         </div>
-      </div>
-    </ion-item>
+        <div>
+          <div class="wm-waypointlist-item-title">{{waypoint.title}}</div>
+          <div class="wm-waypointlist-item-date">
+            {{waypoint.date | date : "d MMMM YYYY - HH:mm"}}
+          </div>
+        </div>
+      </ion-item>
+    </ng-container>
+    <ng-template #noWaypoints>
+      <div class="wm-waypointlist-noitem">{{'pages.waypointlist.noitem'|wmtrans}}</div>
+    </ng-template>
   </ion-list>
 </ion-content>
