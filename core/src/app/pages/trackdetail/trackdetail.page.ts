@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {MenuController, ModalController} from '@ionic/angular';
 import {BehaviorSubject} from 'rxjs';
@@ -16,7 +15,7 @@ import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class TrackdetailPage implements OnInit {
+export class TrackdetailPage {
   public photos: IPhotoItem[] = [];
   public sliderOptions: any = {
     slidesPerView: 2.5,
@@ -34,8 +33,17 @@ export class TrackdetailPage implements OnInit {
     private _saveSvc: SaveService,
     private _menuCtrl: MenuController,
     private _modalCtrl: ModalController,
-    private _sanitizer: DomSanitizer,
-  ) {}
+  ) {
+    this._route.queryParams.subscribe(async params => {
+      const track = await this._saveSvc.getTrack(params.track);
+      this.trackDistance = this._geoUtils.getLength(track.geojson);
+      this.trackSlope = this._geoUtils.getSlope(track.geojson);
+      this.trackAvgSpeed = this._geoUtils.getAverageSpeed(track.geojson);
+      this.trackTopSpeed = this._geoUtils.getTopSpeed(track.geojson);
+      this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson));
+      this.track$.next(track);
+    });
+  }
 
   closeMenu(): void {
     this._menuCtrl.close('optionMenu');
@@ -69,22 +77,5 @@ export class TrackdetailPage implements OnInit {
   menu(): void {
     this._menuCtrl.enable(true, 'optionMenu');
     this._menuCtrl.open('optionMenu');
-  }
-
-  ngOnInit(): void {
-    this._route.queryParams.subscribe(async params => {
-      const track = await this._saveSvc.getTrack(params.track);
-      this.trackDistance = this._geoUtils.getLength(track.geojson);
-      this.trackSlope = this._geoUtils.getSlope(track.geojson);
-      this.trackAvgSpeed = this._geoUtils.getAverageSpeed(track.geojson);
-      this.trackTopSpeed = this._geoUtils.getTopSpeed(track.geojson);
-      this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson));
-      console.log(track);
-      this.track$.next(track);
-    });
-  }
-
-  sanitize(url: string): SafeUrl {
-    return this._sanitizer.bypassSecurityTrustUrl(url);
   }
 }
