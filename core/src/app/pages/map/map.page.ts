@@ -112,7 +112,10 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
         let poi_type = p.poi_type.map(p => {
           if (p.icon != null && p.color != null) {
             const namedPoiColor = fromHEXToColor[p.color] || 'darkorange';
-            return {...p, ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)}};
+            return {
+              ...p,
+              ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)},
+            };
           }
           return p;
         });
@@ -179,6 +182,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   pois: any[];
   pois$: Observable<any> = this._store.select(pois).pipe(
     tap(p => (this.pois = (p && p.features) ?? null)),
+    filter(p => p != null),
     take(1),
   );
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
