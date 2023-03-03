@@ -307,7 +307,8 @@ export class PhotoService {
     return Capacitor.convertFileSrc(uriResult.uri);
   }
 
-  public async setPhotoData(photo: IPhotoItem) {
+  public async setPhotoData(photo: IPhotoItem): Promise<void> {
+    if (photo == null) return;
     console.log('------- ~ PhotoService ~ setPhotoData ~ photo', photo);
     let photoURL = photo.photoURL;
     if (photo.photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1)

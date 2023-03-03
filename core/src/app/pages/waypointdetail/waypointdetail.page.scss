@@ -1,51 +1,67 @@
-.webmapp-waypointdetail-map {
+wm-waypointdetail {
+  .wm-waypointdetail-map {
     height: 210px;
     width: 100%;
     display: block;
-}
+  }
 
-.webmapp-waypointdetail-date {
+  .wm-waypointdetail-date {
     padding: 15px 15px 0;
     font-size: var(--wm-font-sm);
     color: var(--wm-color-darkgrey);
-}
-
-.webmapp-waypointdetail-item {
+  }
+  .wm-waypointdetail-photoslider {
+    padding: 15px 0;
+    overflow: visible;
+    .wm-waypointdetail-photocontainer {
+      position: relative;
+      .wm-waypointdetail-photo {
+        height: 100px;
+        width: 140px;
+        &::part(image) {
+          object-fit: cover;
+          border-radius: 15px;
+        }
+      }
+    }
+  }
+  .wm-waypointdetail-item {
     color: var(--wm-color-dark);
-    .webmapp-waypointdetail-icon {
-        margin-right: 10px;
-        &.primary {
-            color: var(--wm-color-primary);
-        }
+    .wm-waypointdetail-icon {
+      margin-right: 10px;
+      &.primary {
+        color: var(--wm-color-primary);
+      }
 
-        &.secondary {
-            color: var(--wm-color-secondary);
-        }
+      &.secondary {
+        color: var(--wm-color-secondary);
+      }
 
-        &.tertiary {
-            color: var(--wm-color-tertiary);
-        }
+      &.tertiary {
+        color: var(--wm-color-tertiary);
+      }
     }
 
-    .webmapp-waypointdetail-item-title {
-        font-weight: var(--wm-font-weight-bold);
+    .wm-waypointdetail-item-title {
+      font-weight: var(--wm-font-weight-bold);
     }
 
-    .webmapp-waypointdetail-item-city {
-        display: block;
+    .wm-waypointdetail-item-city {
+      display: block;
     }
 
-    .webmapp-waypointdetail-item-position {
-        display: block;
+    .wm-waypointdetail-item-position {
+      display: block;
     }
-}
-.webmapp-waypointdetail-menuopen {
+  }
+  .wm-waypointdetail-menuopen {
     padding: 15px;
-}
-.webmapp-waypointdetail-menuclose {
+  }
+  .wm-waypointdetail-menuclose {
     font-size: 28px;
     padding: 15px;
-}
-.webmapp-waypointdetail-menuitem{
+  }
+  .wm-waypointdetail-menuitem {
     padding: 5px 20px;
+  }
 }

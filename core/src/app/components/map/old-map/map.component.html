@@ -15,6 +15,7 @@
   </webmapp-btn-register>
 
   <webmapp-btn-geolocation
+    *ngIf="!static"
     class="webmapp-map-fab"
     color="light"
     [state]="locationState"

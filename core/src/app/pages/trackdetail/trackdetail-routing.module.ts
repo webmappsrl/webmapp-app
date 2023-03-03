@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 
-import { TrackdetailPage } from './trackdetail.page';
+import {TrackdetailPage} from './trackdetail.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: TrackdetailPage
-  }
+    component: TrackdetailPage,
+  },
 ];
 
 @NgModule({

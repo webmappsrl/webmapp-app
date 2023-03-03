@@ -21,21 +21,12 @@
     [position]="displayPosition"
   ></old-webmapp-map>
 
-  <div class="webmapp-modalwaypoint-extrinfo">
-    <div class="webmapp-modalwaypoint-extrinfo-icon">
-      <i class="webmapp-icon-pin-outline"></i>
-    </div>
-    <div class="webmapp-modalwaypoint-extrinfo-text">
-      <div class="webmapp-modalwaypoint-extrinfo-textcity">
-        {{ positionCity }}
-      </div>
-      <div class="webmapp-modalwaypoint-extrinfo-textposition">
-        {{ positionString }}
-      </div>
-    </div>
-  </div>
-
   <ion-list class="webmapp-modalwaypoint-itemlist">
+    <ion-item class="webmapp-formfield-item">
+      <ion-label class="webmapp-formfield-label" position="stacked">
+        {{  nominatim.display_name  | wmtrans }}
+      </ion-label>
+    </ion-item>
     <webmapp-form-field
       [(value)]="title"
       [icon]="'icon-outline-list'"
@@ -72,13 +63,16 @@
         [(ngModel)]="waypointtype"
         placeholder="{{'pages.waypoint.modalsave.formtypeplaceholder'|wmtrans}}"
       >
-        <ion-select-option value="waypoint">Segnavia</ion-select-option>
-        <ion-select-option value="sightseen">Panorama</ion-select-option>
-        <ion-select-option value="signage">Segnaletica</ion-select-option>
-        <ion-select-option value="fallen-tree">Albero caduto</ion-select-option>
-        <ion-select-option value="landslide">Frana</ion-select-option>
-        <ion-select-option value="interrupted-passage">Passaggio interrotto</ion-select-option>
-        <ion-select-option value="missing-signage">Segnaletica mancante</ion-select-option>
+        <ion-select-option value="waypoint">{{'waypoint'|wmtrans}}</ion-select-option>
+        <ion-select-option value="sightseen">{{'sightseen'|wmtrans}}</ion-select-option>
+        <ion-select-option value="signage">{{'signage'|wmtrans}}</ion-select-option>
+        <ion-select-option value="fallen-tree">{{'fallen-tree'|wmtrans}}</ion-select-option>
+        <ion-select-option value="landslide">{{'landslide'|wmtrans}}</ion-select-option>
+        <ion-select-option
+          value="interrupted-passage"
+          >{{'interrupted-passage'|wmtrans}}</ion-select-option
+        >
+        <ion-select-option value="missing-signage">{{'missing-signage'|wmtrans}}</ion-select-option>
       </ion-select>
     </webmapp-form-field>
 

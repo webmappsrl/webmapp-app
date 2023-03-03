@@ -14,13 +14,12 @@ import {Md5} from 'ts-md5';
   styleUrls: ['./modal-waypoint-save.component.scss'],
 })
 export class ModalWaypointSaveComponent implements OnInit {
-  private _loading;
-
   public description: string;
   public displayPosition: ILocation;
   public isValidArray: boolean[] = [false, false];
   public photos: any[] = [];
   public position: ILocation;
+  nominatim: any;
   public positionCity: string = 'città';
   public positionString: string;
   public title: string;
@@ -107,7 +106,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     if (!this.isValid()) {
       return;
     }
-    const waypoint: WaypointSave = {
+    const waypoint: WaypointSave = await this._saveService.saveWaypoint({
       position: this.position,
       displayPosition: this.displayPosition,
       title: this.title,
@@ -116,9 +115,8 @@ export class ModalWaypointSaveComponent implements OnInit {
       city: this.positionCity,
       date: new Date(),
       photos: this.photos,
-    };
-
-    await this._saveService.saveWaypoint(waypoint);
+      nominatim: this.nominatim,
+    });
 
     this._modalController.dismiss();
 

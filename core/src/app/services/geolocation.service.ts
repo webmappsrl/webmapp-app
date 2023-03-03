@@ -87,6 +87,9 @@ export class GeolocationService {
 
         this._enableBackgroundGeolocationHandlers();
       });
+      this._platform.resume.subscribe(() => {
+        this._backgroundGeolocation.start();
+      });
     }
   }
 

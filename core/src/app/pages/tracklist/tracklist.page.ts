@@ -1,36 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { NavigationOptions } from '@ionic/angular/providers/nav-controller';
-import { SaveService } from 'src/app/services/save.service';
-import { ITrack } from 'src/app/types/track';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {NavController} from '@ionic/angular';
+import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
+import {from, Observable} from 'rxjs';
+import {SaveService} from 'src/app/services/save.service';
+import {ITrack} from 'src/app/types/track';
 
 @Component({
-  selector: 'webmapp-tracklist',
+  selector: 'wm-tracklist',
   templateUrl: './tracklist.page.html',
   styleUrls: ['./tracklist.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-export class TracklistPage implements OnInit {
-  public tracks: ITrack[];
+export class TracklistPage {
+  public tracks$: Observable<ITrack[]>;
 
-  constructor(
-    private _saveService: SaveService,
-    private _navController: NavController
-  ) {}
-
-  async ngOnInit() {
-    this.tracks = await this._saveService.getTracks();
-    console.log(
-      '------- ~ file: tracklist.page.ts ~ line 23 ~ TracklistPage ~ ngOnInit ~ this.tracks',
-      this.tracks
-    );
+  constructor(private _saveSvc: SaveService, private _navCtrl: NavController) {
+    this.tracks$ = from(this._saveSvc.getTracks());
   }
 
-  open(track) {
+  open(track): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        track: JSON.stringify(track),
+        track: track.key,
       },
     };
-    this._navController.navigateForward('trackdetail', navigationExtras);
+    this._navCtrl.navigateForward('trackdetail', navigationExtras);
   }
 }

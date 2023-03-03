@@ -28,8 +28,11 @@
         {{'pages.waypoint.here' | wmtrans}}
       </div>
     </div>
-    <div class="webmapp-pagewaypoint-infopanel-bottom">
-      <div class="webmapp-pagewaypoint-infopanel-bottom-title">{{position1}}</div>
+    <div
+      class="webmapp-pagewaypoint-infopanel-bottom"
+      *ngIf="this.nominatimObj$|async as nominatimObj"
+    >
+      <div class="webmapp-pagewaypoint-infopanel-bottom-title">{{nominatimObj.display_name}}</div>
       <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{position2}}</div>
       <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{locationString}}</div>
     </div>

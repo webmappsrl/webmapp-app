@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <!-- <ion-back-button defaultHref="/profile/profile-records" text="" class="webmapp-backbutton"></ion-back-button> -->
       <ion-icon
         name="chevron-back"
         [routerLink]="['/profile/profile-records']"
@@ -11,25 +10,27 @@
     <ion-title>{{'pages.tracklist.title'|wmtrans}}</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <div class="webmapp-tracklist-noitem" *ngIf="!tracks?.length">
-    {{'pages.tracklist.noitem'|wmtrans}}
-  </div>
   <ion-list>
-    <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
-      <div start class="webmapp-tracklist-item-map">
-        <old-webmapp-map
-          [static]="true"
-          [animation]="false"
-          [track]="track"
-          [height]="60"
-        ></old-webmapp-map>
-      </div>
-      <div>
-        <div class="webmapp-tracklist-item-title">{{track.title}}</div>
-        <div class="webmapp-tracklist-item-date">{{track.date | date : "d MMMM YYYY - HH:mm"}}</div>
-      </div>
-    </ion-item>
+    <ng-container *ngIf="(tracks$|async) as tracks;else noTracks">
+      <ng-container *ngIf="tracks.length>0;else noTracks"></ng-container>
+      <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
+        <div start class="wm-tracklist-item-map">
+          <old-webmapp-map
+            [static]="true"
+            [animation]="false"
+            [track]="track"
+            [height]="60"
+          ></old-webmapp-map>
+        </div>
+        <div>
+          <div class="wm-tracklist-item-title">{{track.title}}</div>
+          <div class="wm-tracklist-item-date">{{track.date | date : "d MMMM YYYY - HH:mm"}}</div>
+        </div>
+      </ion-item>
+    </ng-container>
+    <ng-template #noTracks>
+      <div class="wm-tracklist-noitem">{{'pages.tracklist.noitem'|wmtrans}}</div>
+    </ng-template>
   </ion-list>
 </ion-content>
