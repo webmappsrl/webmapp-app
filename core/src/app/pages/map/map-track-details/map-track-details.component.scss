@@ -1,7 +1,8 @@
 wm-map-track-details {
   .wm-close-btn {
     position: absolute;
-    top: 20px;
+    top: constant(safe-area-inset-top, 30px); // for ios 11.1
+    top: env(safe-area-inset-top, 30px); // for ios 11.2 and onwards
   }
   .wm-drag {
     width: 100%;
