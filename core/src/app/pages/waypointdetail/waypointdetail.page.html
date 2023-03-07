@@ -1,5 +1,6 @@
 <ng-container *ngIf="waypoint$|async as waypoint">
-  <ion-menu side="end" menuId="optionMenu" contentId="main">
+  <!-- menu modifica edit disabilitato -->
+  <ion-menu side="end" menuId="optionMenu" contentId="main" *ngIf="false">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -36,7 +37,8 @@
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{'pages.waypointdetail.title'|wmtrans}}</ion-title>
-      <ion-buttons slot="end">
+      <!-- menu modifica edit disabilitato -->
+      <ion-buttons slot="end" *ngIf="false">
         <ion-icon
           name="ellipsis-vertical"
           class="wm-waypointdetail-menuopen"

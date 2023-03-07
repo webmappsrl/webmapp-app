@@ -1,7 +1,7 @@
 <ion-menu side="end" menuId="optionMenu" contentId="main">
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start">
+      <ion-buttons slot="start" *ngIf="false">
         <ion-icon
           name="close-outline"
           class="webmapp-photodetail-menuclose"
@@ -35,7 +35,8 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.photodetail.title'|wmtrans}}</ion-title>
-    <ion-buttons slot="end">
+    <!-- menu modifica edit disabilitato -->
+    <ion-buttons slot="end" *ngIf="false">
       <ion-icon
         name="ellipsis-vertical"
         class="webmapp-photodetail-menuopen"
