@@ -228,7 +228,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
       const interactions = defaultInteractions({
         doubleClickZoom: !value,
         dragPan: !value,
-        mouseWheelZoom: !value,
+        mouseWheelZoom: true,
         pinchRotate: false,
       });
       this._map.getInteractions().forEach(inter => {
@@ -902,9 +902,10 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
           ? this._rightPadding
           : Math.min(Math.max(this._map.getSize()[0] * 0.1, 10), 20),
       ];
-
+      this._view.setMaxZoom(30);
       this._view.fit(this._track.layer.getSource().getExtent(), {
-        padding: padding,
+        size: this._map.getSize(),
+        padding: [10, 10, 10, 10],
         duration: this.useAnimation ? DEF_MAP_CLUSTER_ZOOM_DURATION : 0,
       });
     }

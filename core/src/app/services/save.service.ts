@@ -39,6 +39,10 @@ export class SaveService {
     return res.reverse();
   }
 
+  public async getPhoto(key: string): Promise<IPhotoItem> {
+    return this._getGenericById(key);
+  }
+
   public async getPhotos(): Promise<IPhotoItem[]> {
     return this.getGenerics(ESaveObjType.PHOTO);
   }
@@ -74,9 +78,6 @@ export class SaveService {
     return ret;
   }
 
-  public async getWaypoints(): Promise<WaypointSave[]> {
-    return this.getGenerics(ESaveObjType.WAYPOINT);
-  }
   public async getWaypoint(key: string): Promise<WaypointSave> {
     const wp = await this._getGenericById(key);
     for (let i = 0; i < (wp.storedPhotoKeys || []).length; i++) {
@@ -86,6 +87,22 @@ export class SaveService {
       wp.photos.push(photo);
     }
     return wp;
+  }
+
+  public async getWaypoints(): Promise<WaypointSave[]> {
+    return this.getGenerics(ESaveObjType.WAYPOINT);
+  }
+
+  /**
+   * Save a track and its photos into the storage
+   *
+   * @param track the track to be saved
+   */
+  public async restoreTrack(track: ITrack): Promise<ITrack> {
+    const trackCopy = Object.assign({}, track);
+    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK, true);
+    trackCopy.key = key;
+    return trackCopy;
   }
 
   /**
@@ -293,7 +310,9 @@ export class SaveService {
   private async _initTrack(track: ITrack) {
     // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
     const gj = track.geojson;
-    track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
+    try {
+      track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
+    } catch (_) {}
     for (let i = 0; i < (track.storedPhotoKeys || []).length; i++) {
       const element = track.storedPhotoKeys[i];
       const photo = await this._getGenericById(element);
@@ -313,13 +332,13 @@ export class SaveService {
   private async _saveGeneric(
     object: IRegisterItem,
     type: ESaveObjType,
-    skipUpload?: boolean,
+    skipUpload = false,
   ): Promise<string> {
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
       key,
       type,
-      saved: false,
+      saved: skipUpload,
       edited: false,
     };
     this._index.objects.push(insertObj);

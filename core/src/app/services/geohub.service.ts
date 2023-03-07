@@ -295,6 +295,17 @@ export class GeohubService {
     return res;
   }
 
+  async getUgcTracks() {
+    return await this._communicationService
+      .get(
+        `${environment.api}/api/ugc/track/index`,
+        new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      )
+      .toPromise();
+  }
+
   /**
    * Get a where taxonomy (form cache if available)
    *

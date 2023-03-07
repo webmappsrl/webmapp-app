@@ -45,7 +45,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="main">
+<ion-content id="main" *ngIf="photo$|async as photo">
   <ion-img [src]="photo.photoURL" class="webmapp-photodetail-image"></ion-img>
 
   <div class="webmapp-photodetail-date">{{photo.date | date : "dd MMMM YYYY"}}</div>
