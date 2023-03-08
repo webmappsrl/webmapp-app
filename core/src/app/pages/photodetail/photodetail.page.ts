@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {IPhotoItem} from 'src/app/services/photo.service';
 import {MenuController} from '@ionic/angular';
@@ -24,11 +24,11 @@ export class PhotodetailPage {
     );
   }
 
-  closeMenu() {
+  closeMenu(): void {
     this._menuController.close('optionMenu');
   }
 
-  menu() {
+  menu(): void {
     this._menuController.enable(true, 'optionMenu');
     this._menuController.open('optionMenu');
   }
