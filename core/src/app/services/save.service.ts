@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {forkJoin, from, Observable} from 'rxjs';
 import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
 import {ISaveIndexObj} from '../types/save';
 import {ESaveObjType} from '../types/save.enum';
@@ -286,6 +287,25 @@ export class SaveService {
     }
   }
 
+  deleteTrack(track: ITrack): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deleteTrack(+track.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(track.key)),
+    });
+  }
+
+  deletePhoto(photo: IPhotoItem): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deletePhoto(+photo.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(photo.key)),
+    });
+  }
+  deleteWaypoint(waypoint: WaypointSave): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deleteWaypoint(+waypoint.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(waypoint.key)),
+    });
+  }
   private async _deleteGeneric(key): Promise<any> {
     await this._storage.removeByKey(key);
     const indexObj = this._index.objects.find(x => x.key === key);

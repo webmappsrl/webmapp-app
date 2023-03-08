@@ -20,8 +20,8 @@ import {StorageService} from './base/storage.service';
 import {TAXONOMYWHERE_STORAGE_KEY} from '../constants/storage';
 import {WaypointSave} from '../types/waypoint';
 import {environment} from 'src/environments/environment';
-import {map} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 
 const FAVOURITE_PAGESIZE = 3;
 
@@ -413,6 +413,33 @@ export class GeohubService {
       )
       .toPromise();
     return res;
+  }
+
+  deleteTrack(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/track/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
+  }
+
+  deletePhoto(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/media/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
+  }
+
+  deleteWaypoint(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/poi/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
   }
 
   /**

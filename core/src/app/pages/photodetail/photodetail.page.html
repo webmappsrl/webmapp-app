@@ -1,7 +1,7 @@
 <ion-menu side="end" menuId="optionMenu" contentId="main">
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start" *ngIf="false">
+      <ion-buttons slot="start">
         <ion-icon
           name="close-outline"
           class="webmapp-photodetail-menuclose"
@@ -10,18 +10,6 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item>
-        <i class="webmapp-icon-edit-outline" start></i>
-        <div class="webmapp-photodetail-menuitem">{{'pages.photodetail.edit'|wmtrans}}</div>
-      </ion-item>
-      <ion-item>
-        <ion-icon name="trash-outline" start></ion-icon>
-        <div class="webmapp-photodetail-menuitem">{{'pages.photodetail.delete'|wmtrans}}</div>
-      </ion-item>
-    </ion-list>
-  </ion-content>
 </ion-menu>
 
 <ion-header>
@@ -35,13 +23,10 @@
       ></ion-back-button>
     </ion-buttons>
     <ion-title>{{'pages.photodetail.title'|wmtrans}}</ion-title>
-    <!-- menu modifica edit disabilitato -->
-    <ion-buttons slot="end" *ngIf="false">
-      <ion-icon
-        name="ellipsis-vertical"
-        class="webmapp-photodetail-menuopen"
-        (click)="menu()"
-      ></ion-icon>
+    <ion-buttons slot="end">
+      <ion-button (click)="delete()">
+        <ion-icon name="trash-outline" start></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

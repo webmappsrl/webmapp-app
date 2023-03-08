@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewEncapsulation,
+} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
@@ -15,9 +20,11 @@ import {ITrack} from 'src/app/types/track';
 export class TracklistPage {
   public tracks$: Observable<ITrack[]>;
 
-  constructor(private _saveSvc: SaveService, private _navCtrl: NavController) {
-    this.tracks$ = from(this._saveSvc.getTracks());
-  }
+  constructor(
+    private _saveSvc: SaveService,
+    private _navCtrl: NavController,
+    private _cdr: ChangeDetectorRef,
+  ) {}
 
   open(track): void {
     const navigationExtras: NavigationOptions = {
@@ -26,5 +33,10 @@ export class TracklistPage {
       },
     };
     this._navCtrl.navigateForward('trackdetail', navigationExtras);
+  }
+
+  ionViewWillEnter(): void {
+    this.tracks$ = from(this._saveSvc.getTracks());
+    this._cdr.detectChanges();
   }
 }

@@ -1,31 +1,4 @@
 <ng-container *ngIf="waypoint$|async as waypoint">
-  <!-- menu modifica edit disabilitato -->
-  <ion-menu side="end" menuId="optionMenu" contentId="main" *ngIf="false">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-icon
-            name="close-outline"
-            class="wm-waypointdetail-menuclose"
-            (click)="closeMenu()"
-          ></ion-icon>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item>
-          <i class="webmapp-icon-edit-outline " start></i>
-          <div class="wm-waypointdetail-menuitem">{{'pages.waypointdetail.edit'|wmtrans}}</div>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="trash-outline" start></ion-icon>
-          <div class="wm-waypointdetail-menuitem">{{'pages.waypointdetail.delete'|wmtrans}}</div>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
-
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -37,13 +10,10 @@
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{'pages.waypointdetail.title'|wmtrans}}</ion-title>
-      <!-- menu modifica edit disabilitato -->
-      <ion-buttons slot="end" *ngIf="false">
-        <ion-icon
-          name="ellipsis-vertical"
-          class="wm-waypointdetail-menuopen"
-          (click)="menu()"
-        ></ion-icon>
+      <ion-buttons slot="end">
+        <ion-button (click)="delete()">
+          <ion-icon name="trash-outline" start></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -98,7 +68,7 @@
         >
           <ion-slide *ngFor="let photo of waypoint.photos;let idx = index">
             <div class="wm-waypointdetail-photocontainer">
-              <ion-img [src]="getPhoto(photo)" class="wm-waypointdetail-photo"></ion-img>
+              <ion-img [src]="photo|wmCreateBlob" class="wm-waypointdetail-photo"></ion-img>
             </div>
           </ion-slide>
         </ion-slides>

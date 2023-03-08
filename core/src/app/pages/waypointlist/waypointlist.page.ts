@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewEncapsulation,
+} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
@@ -15,16 +20,23 @@ import {WaypointSave} from 'src/app/types/waypoint';
 export class WaypointlistPage {
   waypoints$: Observable<WaypointSave[]>;
 
-  constructor(private _saveService: SaveService, private _navController: NavController) {
-    this.waypoints$ = from(this._saveService.getWaypoints());
-  }
+  constructor(
+    private _saveSvc: SaveService,
+    private _navCtrl: NavController,
+    private _cdr: ChangeDetectorRef,
+  ) {}
 
-  open(waypoint) {
+  open(waypoint): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
         waypoint: waypoint.key,
       },
     };
-    this._navController.navigateForward('waypointdetail', navigationExtras);
+    this._navCtrl.navigateForward('waypointdetail', navigationExtras);
+  }
+
+  ionViewWillEnter(): void {
+    this.waypoints$ = from(this._saveSvc.getWaypoints());
+    this._cdr.detectChanges();
   }
 }

@@ -1,13 +1,20 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {MenuController, ModalController} from '@ionic/angular';
-import {BehaviorSubject, from, Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {
+  AlertController,
+  MenuController,
+  ModalController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
+import {from, Observable, of} from 'rxjs';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {IPhotoItem} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'wm-trackdetail',
@@ -39,6 +46,10 @@ export class TrackdetailPage {
     private _saveSvc: SaveService,
     private _menuCtrl: MenuController,
     private _modalCtrl: ModalController,
+    private _alertCtrl: AlertController,
+    private _translateSvc: TranslateService,
+    private _navCtlr: NavController,
+    private _toastCtrl: ToastController,
   ) {
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),
@@ -75,17 +86,62 @@ export class TrackdetailPage {
       // this.track$.next(track);
     }
   }
-
-  getPhoto(photo: IPhotoItem): string {
-    if (photo.rawData) {
-      return photo.rawData;
-    } else {
-      return photo.datasrc;
-    }
+  delete(): void {
+    from(
+      this._alertCtrl.create({
+        cssClass: 'my-custom-class',
+        header: this._translateSvc.instant('ATTENZIONE'),
+        message: this._translateSvc.instant('Sei sicuro di voler cancellare questa traccia?'),
+        buttons: [
+          {
+            text: this._translateSvc.instant('cancella'),
+            cssClass: 'webmapp-modalconfirm-btn',
+            role: 'destructive',
+            handler: () => this.deleteAction(),
+          },
+          {
+            text: this._translateSvc.instant('annulla'),
+            cssClass: 'webmapp-modalconfirm-btn',
+            role: 'cancel',
+            handler: () => {},
+          },
+        ],
+      }),
+    )
+      .pipe(
+        switchMap(alert => {
+          alert.present();
+          return from(alert.onWillDismiss());
+        }),
+        take(1),
+      )
+      .subscribe(() => {});
   }
 
   menu(): void {
     this._menuCtrl.enable(true, 'optionMenu');
     this._menuCtrl.open('optionMenu');
+  }
+
+  deleteAction(): void {
+    this._saveSvc
+      .deleteTrack(this.currentTrack)
+      .pipe(
+        take(1),
+        switchMap(_ => from(this.presentToast())),
+      )
+      .subscribe(() => {
+        this._navCtlr.navigateForward('tracklist');
+      });
+  }
+
+  presentToast(): Observable<void> {
+    return from(
+      this._toastCtrl.create({
+        message: this._translateSvc.instant('Foto correttamente cancellata'),
+        duration: 1500,
+        position: 'bottom',
+      }),
+    ).pipe(switchMap(t => t.present()));
   }
 }

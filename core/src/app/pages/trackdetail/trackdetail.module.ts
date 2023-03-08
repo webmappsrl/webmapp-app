@@ -1,3 +1,4 @@
+import {AppPipeModule} from './../../pipes/pipes.module';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
@@ -15,6 +16,7 @@ import {TrackdetailPageRoutingModule} from './trackdetail-routing.module';
     TrackdetailPageRoutingModule,
     WmPipeModule,
     MapModule,
+    AppPipeModule,
   ],
   declarations: [TrackdetailPage],
 })

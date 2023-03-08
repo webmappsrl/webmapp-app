@@ -577,5 +577,13 @@
   "Attenzione": "Attention",
   "Azione irreversibile": "Irreversible action",
   "Vuoi veramente eliminare il tuo account?": "Do you really want to delete your account?",
-  "Annulla": "Cancel"
+  "Annulla": "Cancel",
+  "Cancella": "Delete",
+  "ATTENZIONE": "WARNING",
+  "Foto correttamente cancellata": "Photo successfully deleted",
+  "Traccia correttamente cancellata": "Track successfully deleted",
+  "Waypoint correttamente cancellato": "Waypoint successfully deleted",
+  "Sei sicuro di voler cancellare questa foto?": "Are you sure you want to delete this photo?",
+  "Sei sicuro di voler cancellare questa traccia?": "Are you sure you want to delete this track?",
+  "Sei sicuro di voler cancellare questo waypoint?": "Are you sure you want to delete this waypoint?"
 }

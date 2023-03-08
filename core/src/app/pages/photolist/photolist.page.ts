@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewEncapsulation,
+} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
@@ -12,21 +17,26 @@ import {SaveService} from 'src/app/services/save.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PhotolistPage implements OnInit {
+export class PhotolistPage {
   public photos$: Observable<IPhotoItem[]>;
 
-  constructor(private _saveService: SaveService, private _navController: NavController) {}
+  constructor(
+    private _saveSvc: SaveService,
+    private _navCtrl: NavController,
+    private _cdr: ChangeDetectorRef,
+  ) {}
 
-  async ngOnInit() {
-    this.photos$ = from(this._saveService.getPhotos());
-  }
-
-  open(photo: IPhotoItem) {
+  open(photo: IPhotoItem): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
         photo: photo.key,
       },
     };
-    this._navController.navigateForward('photodetail', navigationExtras);
+    this._navCtrl.navigateForward('photodetail', navigationExtras);
+  }
+
+  ionViewWillEnter(): void {
+    this.photos$ = from(this._saveSvc.getPhotos());
+    this._cdr.detectChanges();
   }
 }

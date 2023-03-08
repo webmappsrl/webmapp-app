@@ -1,31 +1,18 @@
-<ng-container *ngIf="track$|async as track">
-  <!-- menu modifica edit disabilitato -->
-  <ion-menu side="end" menuId="optionMenu" contentId="main" *ngIf="false">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-icon
-            name="close-outline"
-            class="wm-trackdetail-menuclose"
-            (click)="closeMenu()"
-          ></ion-icon>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-list>
-        <ion-item (click)="edit()">
-          <i class="webmapp-icon-edit-outline " start></i>
-          <div class="wm-trackdetail-menuitem">{{'pages.trackdetail.edit'|wmtrans}}</div>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="trash-outline" start></ion-icon>
-          <div class="wm-trackdetail-menuitem">{{'pages.trackdetail.delete'|wmtrans}}</div>
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+<ion-menu side="end" menuId="optionMenu" contentId="main">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-icon
+          name="close-outline"
+          class="wm-trackdetail-menuclose"
+          (click)="closeMenu()"
+        ></ion-icon>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+</ion-menu>
 
+<ng-container *ngIf="track$|async as track">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -37,13 +24,10 @@
         ></ion-back-button>
       </ion-buttons>
       <ion-title>{{'pages.trackdetail.title'|wmtrans}}</ion-title>
-      <!-- menu modifica edit disabilitato -->
-      <ion-buttons slot="end" *ngIf="false">
-        <ion-icon
-          name="ellipsis-vertical"
-          class="wm-trackdetail-menuopen"
-          (click)="menu()"
-        ></ion-icon>
+      <ion-buttons slot="end">
+        <ion-button (click)="delete()">
+          <ion-icon name="trash-outline" start></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -95,7 +79,7 @@
       >
         <ion-slide *ngFor="let photo of track.photos;let idx = index">
           <div class="wm-trackdetail-photocontainer">
-            <ion-img [src]="getPhoto(photo)" class="wm-trackdetail-photo"></ion-img>
+            <ion-img [src]="photo|wmCreateBlob" class="wm-trackdetail-photo"></ion-img>
           </div>
         </ion-slide>
       </ion-slides>
