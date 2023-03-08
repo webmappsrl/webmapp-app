@@ -84,7 +84,9 @@ export class ModalSuccessComponent implements OnInit {
 
         setTimeout(() => {
           //need for slider to use correct slides per view
-          this.slider.update();
+          if (this.slider) {
+            this.slider.update();
+          }
         }, 100);
 
         break;

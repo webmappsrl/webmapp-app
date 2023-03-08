@@ -38,8 +38,7 @@ export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
   providedIn: 'root',
 })
 export class PhotoService {
-  private _useBase64 = false;
-
+  private _isBase64 = false;
   private _options = {
     // Android only. Max images to be selected, defaults to 15. If this is set to 1, upon
     // selection of a single image, the plugin will return it.
@@ -60,7 +59,7 @@ export class PhotoService {
     // available options are
     // window.imagePicker.OutputType.FILE_URI (0) or
     // window.imagePicker.OutputType.BASE64_STRING (1)
-    outputType: this._useBase64 ? 1 : 0,
+    outputType: this._isBase64 ? 1 : 0,
   };
   private translations = [];
 
@@ -225,7 +224,7 @@ export class PhotoService {
       const images = await this._imagePicker.getPictures(this._options);
       for (let i = 0; i < images.length; i++) {
         let data = null;
-        if (this._useBase64) {
+        if (this._isBase64) {
           data = `data:image/jpeg;base64,${images[i]}`;
         } else {
           data = Capacitor.convertFileSrc(images[i]); //TODO check source of file
@@ -310,14 +309,16 @@ export class PhotoService {
   public async setPhotoData(photo: IPhotoItem): Promise<void> {
     if (photo == null) return;
     console.log('------- ~ PhotoService ~ setPhotoData ~ photo', photo);
-    let photoURL = photo.photoURL;
-    if (photo.photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1)
+    const photoURL = photo.photoURL;
+    if (photoURL && photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1) {
       photo.photoURL = await this.savePhotoToDataDirectory(photo);
+    }
 
     if (!photo.rawData) photo.rawData = JSON.stringify({});
     try {
       let rawData = JSON.parse(photo.rawData);
-      if (!rawData?.arrayBuffer) photo.rawData = await this.getPhotoData(photo.photoURL);
+      if (!rawData?.arrayBuffer)
+        photo.rawData = await this.getPhotoData(photo.photoURL ? photo.photoURL : photo.datasrc);
       photo.blob = await this.getPhotoFile(photo);
     } catch (e) {
       console.log('Error setting photo blob', e);

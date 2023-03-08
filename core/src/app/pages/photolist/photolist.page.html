@@ -18,7 +18,12 @@
   </div>
   <ion-list>
     <ion-item *ngFor="let photo of photos" button detail (click)="open(photo)">
-      <ion-img [src]="photo.photoURL" start class="webmapp-photolist-item-image"></ion-img>
+      <pre>{{photo|json}}</pre>
+      <ion-img
+        [src]="photo.photoURL||photo.datasrc"
+        start
+        class="webmapp-photolist-item-image"
+      ></ion-img>
       <div>
         <div class="webmapp-photolist-item-title">{{photo.description|wmtrans}}</div>
         <div class="webmapp-photolist-item-date">{{photo.date | date : "d MMMM YYYY - HH:mm"}}</div>

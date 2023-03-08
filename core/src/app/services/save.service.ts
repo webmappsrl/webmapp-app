@@ -332,13 +332,13 @@ export class SaveService {
   private async _saveGeneric(
     object: IRegisterItem,
     type: ESaveObjType,
-    skipUpload = false,
+    skipUpload?: boolean,
   ): Promise<string> {
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
       key,
       type,
-      saved: skipUpload,
+      saved: false,
       edited: false,
     };
     this._index.objects.push(insertObj);
