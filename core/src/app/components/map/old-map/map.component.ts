@@ -226,8 +226,8 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     this.static = value;
     if (this._map) {
       const interactions = defaultInteractions({
-        doubleClickZoom: !value,
-        dragPan: !value,
+        doubleClickZoom: this.zoomEnabled,
+        dragPan: this.zoomEnabled,
         mouseWheelZoom: true,
         pinchRotate: false,
       });
@@ -269,6 +269,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   @Input('start-view') startView: number[] = [10.4147, 43.7118, 9];
   @Input('animation') useAnimation: boolean = true;
   @Input('cache') useCache: boolean = false;
+  @Input() zoomEnabled = false;
   @Output() clickcluster: EventEmitter<IGeojsonCluster> = new EventEmitter();
   @Output() clickpoi: EventEmitter<IGeojsonPoi> = new EventEmitter();
   @Output() move: EventEmitter<MapMoveEvent> = new EventEmitter();
@@ -583,7 +584,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
         dragPan: false,
         // keyboardPan: false,
         // keyboardZoom: false,
-        mouseWheelZoom: false,
+        mouseWheelZoom: this.zoomEnabled,
         // pointer: false,
         // select: false
         pinchRotate: false,
