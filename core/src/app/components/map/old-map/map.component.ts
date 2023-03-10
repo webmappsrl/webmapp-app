@@ -247,13 +247,15 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   @Input('track') set track(value: any) {
     if (value) {
       setTimeout(() => {
-        this._track.registeredTrack = value;
-        this.centerToTrack = true;
-        if (value.geojson) {
-          this.drawTrack(value.geojson);
-        } else {
-          this.drawTrack(value);
-        }
+        this._map.once('rendercomplete', () => {
+          this._track.registeredTrack = value;
+          this.centerToTrack = true;
+          if (value.geojson) {
+            this.drawTrack(value.geojson);
+          } else {
+            this.drawTrack(value);
+          }
+        });
       }, 0);
     } else {
       this.deleteTrack();
@@ -616,7 +618,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
 
     //TODO: test for ensure presence of map
     this.timer = setInterval(() => {
-      if (this.static) {
+      if (this.static && this.zoomEnabled === false) {
         if (this._track.registeredTrack && this._track.registeredTrack.geojson) {
           this.centerToTrack = true;
           this.drawTrack(this._track.registeredTrack.geojson);
