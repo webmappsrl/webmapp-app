@@ -63,7 +63,13 @@ export class HomePage implements OnInit, OnChanges {
       return p;
     }),
   );
-  currentLayer$ = this._storeMap.select(mapCurrentLayer);
+  currentLayer$ = this._storeMap.select(mapCurrentLayer).pipe(
+    tap(l => {
+      if (l == null) {
+        this.currentTab$.next('home');
+      }
+    }),
+  );
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentSelectedFilter$: Observable<any>;
   currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
