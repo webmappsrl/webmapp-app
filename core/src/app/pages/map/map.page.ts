@@ -43,6 +43,7 @@ import {
   confPOIS,
   confPOISFilter,
   confJIDOUPDATETIME,
+  confAUTHEnable,
 } from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
@@ -72,7 +73,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
   private _routerSub: Subscription = Subscription.EMPTY;
-
+  isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
@@ -105,6 +106,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
       }
     }),
   );
+  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   confPOIS$: Observable<any> = this._store.select(confPOIS);
   confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
     map(p => {
@@ -285,11 +287,13 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     this._router.navigate([page]);
   }
 
-  goToTrack(id: number) {
+  async goToTrack(id: number): Promise<void> {
     this._poiReset();
     this.wmMapComponent.resetRotation();
     this.previewTrack$.next(true);
     this.trackid$.next(id);
+    const isFav = await this._geohubSvc.isFavouriteTrack(id);
+    this.isFavourite$.next(isFav);
     if (id != null && id !== -1) {
       this.layerOpacity$.next(true);
       this.mapTrackDetailsCmp.open();
@@ -310,12 +314,17 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     );
   }
 
-  ionViewWillLeave() {
+  ionViewWillLeave(): void {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.goToTrack(null);
     this.mapTrackDetailsCmp.none();
     this.showDownload$.next(false);
+  }
+
+  async favourite(trackID): Promise<void> {
+    const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
+    this.isFavourite$.next(isFav);
   }
 
   navigation(): void {

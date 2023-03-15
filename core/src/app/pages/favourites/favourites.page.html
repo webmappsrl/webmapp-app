@@ -11,18 +11,20 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ng-container *ngIf="isLoggedIn$|async;else nologged">
-    <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
-      >{{'pages.favourites.nodata' | wmtrans}}</ion-label
-    >
-    <ion-list>
-      <webmapp-card-track
-        *ngFor="let track of tracks"
-        [track]="track"
-        (open)="open($event)"
-        (remove)="remove($event)"
+    <ng-container *ngIf="tracks$|async as tracks">
+      <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
+        >{{'pages.favourites.nodata' | wmtrans}}</ion-label
       >
-      </webmapp-card-track> </ion-list
-  ></ng-container>
+      <ion-list>
+        <webmapp-card-track
+          *ngFor="let track of tracks"
+          [track]="track"
+          (open)="open($event)"
+          (remove)="remove($event)"
+        >
+        </webmapp-card-track> </ion-list
+    ></ng-container>
+  </ng-container>
   <ng-template #nologged>
     <ion-label class="webmapp-favourites-nodata">
       {{'non sei loggato. puoi loggare da'|wmtrans}}

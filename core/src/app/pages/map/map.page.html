@@ -44,6 +44,17 @@
       </div>
 
       <div bottom-right>
+        <ng-container
+          *ngIf="(authEnable$|async) && (isLoggedIn$|async) && (trackid$|async) as trackId"
+        >
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="favourite(trackId)">
+              <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
+              <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </ng-container>
+
         <ng-container *ngIf="trackid$|async as trackId">
           <ion-fab slot="fixed" vertical="top" horizontal="start">
             <ion-fab-button (click)="openTrackShare(trackId)">

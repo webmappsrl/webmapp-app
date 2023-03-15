@@ -1,12 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {IonInfiniteScroll, NavController} from '@ionic/angular';
+import {IonInfiniteScroll} from '@ionic/angular';
 
 import {AuthService} from 'src/app/services/auth.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {IGeojsonFeature} from 'src/app/types/model';
-import {IMapRootState} from 'src/app/store/map/map';
-import {Store} from '@ngrx/store';
-import {setCurrentTrackId} from 'src/app/store/map/map.actions';
+import {NavigationExtras, Router} from '@angular/router';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'webmapp-favourites',
@@ -19,18 +18,17 @@ export class FavouritesPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   isLoggedIn$ = this._authService.isLoggedIn$;
-  public tracks: IGeojsonFeature[] = [];
+  tracks$: BehaviorSubject<IGeojsonFeature[]> = new BehaviorSubject<IGeojsonFeature[]>(null);
 
   constructor(
     private _geoHubService: GeohubService,
-    private _navController: NavController,
-    private _storeMap: Store<IMapRootState>,
     private _authService: AuthService,
+    private _router: Router,
   ) {}
 
   async doRefresh(event) {
     this.page = 0;
-    this.tracks = await this._geoHubService.getFavouriteTracks();
+    this.tracks$.next(await this._geoHubService.getFavouriteTracks());
     if (event) {
       event.target.complete();
     }
@@ -41,10 +39,11 @@ export class FavouritesPage implements OnInit {
   }
 
   async loadData(event) {
-    const newpageResults = await this._geoHubService.getFavouriteTracks(++this.page);
-    newpageResults.forEach(fav => {
-      this.tracks.push(fav);
-    });
+    this.tracks$.next([
+      ...this.tracks$.value,
+      ...(await this._geoHubService.getFavouriteTracks(++this.page)),
+    ]);
+
     event.target.complete();
   }
 
@@ -54,13 +53,21 @@ export class FavouritesPage implements OnInit {
 
   open(track: IGeojsonFeature) {
     const clickedFeatureId = track.properties.id;
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId}));
-    this._navController.navigateForward('/itinerary');
+    if (clickedFeatureId != null) {
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          track: clickedFeatureId,
+        },
+      };
+      this._router.navigate(['map'], navigationExtras);
+    }
   }
 
   async remove(track: IGeojsonFeature) {
     await this._geoHubService.setFavouriteTrack(track.properties.id, false);
-    const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
-    this.tracks.splice(idx, 1);
+    const idx = this.tracks$.value.findIndex(x => x.properties.id == track.properties.id);
+    const currentTracks = this.tracks$.value;
+    currentTracks.splice(idx, 1);
+    this.tracks$.next([...currentTracks]);
   }
 }
