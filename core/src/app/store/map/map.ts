@@ -3,8 +3,8 @@ import {IGeojsonPoiDetailed, IGeojsonProperties} from 'src/app/types/model';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 
 export interface IMapRootState {
-  currentLayer?: ILAYER;
   currentFilters?: any;
+  currentLayer?: ILAYER;
   currentPoi?: IGeojsonPoiDetailed;
   currentPoiId?: number;
   currentPoiIds?: number[];
@@ -12,7 +12,8 @@ export interface IMapRootState {
   currentRelatedPoi?: IGeojsonPoiDetailed[];
   currentTrack?: CGeojsonLineStringFeature;
   currentTrackProperties?: IGeojsonProperties;
+  goToHome?: boolean;
   nextPoiIndex?: number;
-  prevPoiIndex?: number;
   padding: number[];
+  prevPoiIndex?: number;
 }

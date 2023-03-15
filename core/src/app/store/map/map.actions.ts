@@ -27,5 +27,6 @@ export const loadTrackSuccess = createAction(
   props<{currentTrack: CGeojsonLineStringFeature | null}>(),
 );
 
+export const goToHome = createAction('[map] go to home');
 export const loadConfFail = createAction('[map] Set current layer Success Fail');
 export const loadTrackFail = createAction('[map] Fail load track');

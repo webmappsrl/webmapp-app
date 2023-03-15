@@ -1,6 +1,6 @@
-<ion-tabs>
+<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab()">
   <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
-    <ion-tab-button tab="home" (click)="resetLayer()">
+    <ion-tab-button tab="home" (click)="setCurrentTab()">
       <i class="icon-outline-home webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.home' | wmtrans}} </ion-label>
     </ion-tab-button>

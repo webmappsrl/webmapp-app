@@ -34,3 +34,6 @@ export const padding = createSelector(feature, state =>
 export const currentFilters = createSelector(feature, state =>
   state && state.currentFilters ? state.currentFilters : [],
 );
+export const toggleHome = createSelector(feature, state =>
+  state && state.goToHome != null ? state.goToHome : true,
+);

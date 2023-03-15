@@ -2,9 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnChanges,
+  OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -12,28 +11,28 @@ import {DomSanitizer} from '@angular/platform-browser';
 
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, merge, Observable, of, zip} from 'rxjs';
-import {filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, merge, Observable, Subscription, zip} from 'rxjs';
+import {debounceTime, filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
 
+import {NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
+import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
+import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {fromHEXToColor} from 'src/app/shared/map-core/utils';
+import {query} from 'src/app/shared/wm-core/api/api.actions';
 import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
 import {queryApi} from 'src/app/shared/wm-core/api/api.selector';
+import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IMapRootState} from 'src/app/store/map/map';
-import {currentFilters, mapCurrentLayer} from 'src/app/store/map/map.selector';
+import {currentFilters, mapCurrentLayer, toggleHome} from 'src/app/store/map/map.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
-import {fromHEXToColor} from 'src/app/shared/map-core/utils';
-import {NavigationExtras} from '@angular/router';
-import {query} from 'src/app/shared/wm-core/api/api.actions';
-import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
-import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 
 @Component({
   selector: 'wm-page-home',
@@ -42,7 +41,9 @@ import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-ba
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage implements OnInit, OnChanges {
+export class HomePage implements OnInit, OnDestroy {
+  private _goToHomeSub: Subscription = Subscription.EMPTY;
+
   @ViewChild('filterCmp') filterCmp: BtnFilterComponent;
   @ViewChild('searchCmp') searchCmp: SearchBarComponent;
 
@@ -63,13 +64,7 @@ export class HomePage implements OnInit, OnChanges {
       return p;
     }),
   );
-  currentLayer$ = this._storeMap.select(mapCurrentLayer).pipe(
-    tap(l => {
-      if (l == null) {
-        this.currentTab$.next('home');
-      }
-    }),
-  );
+  currentLayer$ = this._storeMap.select(mapCurrentLayer);
   currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentSelectedFilter$: Observable<any>;
   currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
@@ -85,6 +80,7 @@ export class HomePage implements OnInit, OnChanges {
       return all;
     }),
   );
+  goToHome$: Observable<any> = this._storeMap.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
   online$: Observable<boolean> = this._storeNetwork
@@ -154,6 +150,10 @@ export class HomePage implements OnInit, OnChanges {
         return null;
       }),
     );
+
+    this._goToHomeSub = this.goToHome$.pipe(debounceTime(300)).subscribe(() => {
+      this.goToHome();
+    });
   }
 
   checkTab(isTyping: boolean) {
@@ -171,11 +171,11 @@ export class HomePage implements OnInit, OnChanges {
     this._navCtrl.navigateForward('home');
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
+  ngOnDestroy(): void {
+    this._goToHomeSub.unsubscribe();
   }
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
     await this._geoLocation.start();
     this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
@@ -232,7 +232,7 @@ export class HomePage implements OnInit, OnChanges {
     }
   }
 
-  async setLayer(layer: ILAYER | null | any) {
+  async setLayer(layer: ILAYER | null | any): Promise<void> {
     this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
     if (layer != null && layer.id != null) {
       this._storeMap.dispatch(query({layer: layer.id}));

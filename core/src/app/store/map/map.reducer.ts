@@ -5,6 +5,7 @@ import {
   setCurrentFilters,
   setCurrentLayer,
   setCurrentPoiId,
+  goToHome,
 } from './map.actions';
 
 import {IMapRootState} from './map';
@@ -69,6 +70,13 @@ export const UIReducer = createReducer(
     return {
       ...state,
       padding: openDetails ? [50, 50, 400, 50] : [50, 50, 50, 50],
+    };
+  }),
+  on(goToHome, state => {
+    const goToHome = state && state.goToHome != null ? !state.goToHome : true;
+    return {
+      ...state,
+      goToHome,
     };
   }),
 );
