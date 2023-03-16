@@ -54,10 +54,12 @@
           {{'search'|wmtrans}}</ion-breadcrumb
         >
       </ion-breadcrumbs>
-      <div class="layer-details" *ngIf="currentLayer$|async as layer">
-        <a>{{layer.subtitle|wmtrans}}</a>
-        <p>{{layer.description|wmtrans}}</p>
-      </div>
+      <ng-container *ngIf="currentLayer$|async as layer">
+        <div class="layer-details" *ngIf="layer.subtitle!=null || layer.description!= null">
+          <a *ngIf="layer.subtitle as subtitle">{{subtitle|wmtrans}}</a>
+          <p *ngIf="layer.description as description">{{description|wmtrans}}</p>
+        </div>
+      </ng-container>
       <wm-home
         *ngIf="currentTab === 'home'"
         [conf]="confHOME$|async"

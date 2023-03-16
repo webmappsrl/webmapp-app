@@ -1,7 +1,22 @@
 wm-page-home {
-  ion-breadcrumbs {
+  ion-breadcrumbs,
+  .layer-details {
     width: 90%;
     margin: auto;
+  }
+  .layer-details {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    a,
+    p {
+      margin: auto;
+      flex: 0 1 auto;
+      align-self: auto;
+    }
   }
   .webmapp-home-content {
     --padding-bottom: 15px;
