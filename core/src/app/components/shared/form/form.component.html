@@ -1,0 +1,92 @@
+<ng-container *ngIf="disabled === false && (forms$|async) as forms">
+  <ng-container *ngIf="forms.length> 1">
+    <ion-list>
+      <ion-item>
+        <ion-select class="wm-form-field-select" [(ngModel)]="formId">
+          <ion-select-option
+            *ngFor="let form of forms; let idx=index"
+            [value]="idx"
+            >{{form.label|wmtrans}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ng-container>
+<form [formGroup]="formGroup">
+  <ion-card *ngIf="disabled;else modifiable">
+    <ng-content select="[header]"></ng-content>
+    <ng-container *ngFor="let field of (currentForm$|async).fields;let idx = index">
+      <ion-card-header *ngIf="idx===0">
+        <ion-card-title> {{formGroup.value[field.name]}}</ion-card-title>
+      </ion-card-header>
+      <ng-container *ngIf="idx>0">
+        <ion-card-header>
+          <ion-card-subtitle>
+            <i class="{{field.type|getFormFieldIcn}} wm-form-field-icon secondary"></i>
+            {{ field.label | wmtrans }}</ion-card-subtitle
+          >
+        </ion-card-header>
+
+        <ion-card-content>
+          <ng-container *ngIf="field.type!= 'select'">
+            {{formGroup.value[field.name]}}
+          </ng-container>
+          <ng-container *ngIf="field.type === 'select'">
+            {{field.values|getFormFieldValue:formGroup.value[field.name]|wmtrans}}
+          </ng-container>
+        </ion-card-content>
+      </ng-container>
+    </ng-container>
+    <ng-content></ng-content>
+  </ion-card>
+
+  <ng-template #modifiable>
+    <ng-container *ngFor="let field of (currentForm$|async).fields">
+      <ion-item class="wm-form-field">
+        <i class="{{field.type|getFormFieldIcn}} wm-form-field-icon secondary"></i>
+
+        <ion-label class="wm-form-field-label" position="stacked">
+          {{ field.label | wmtrans }}
+
+          <span *ngIf="field.required" class="wm-form-field-label-required"> * </span>
+        </ion-label>
+        <container-element [ngSwitch]="field.type">
+          <ion-input
+            *ngSwitchCase="'text'"
+            [placeholder]="field.placeholder | wmtrans"
+            [formControlName]="field.name"
+            [disabled]="disabled"
+          ></ion-input>
+
+          <ion-textarea
+            *ngSwitchCase="'textarea'"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder | wmtrans"
+            [disabled]="disabled"
+          ></ion-textarea>
+          <ion-select
+            *ngSwitchCase="'select'"
+            class="wm-form-field-select"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder|wmtrans"
+            [disabled]="disabled"
+          >
+            <ion-select-option
+              *ngFor="let opt of field.values"
+              [value]="opt.value"
+              >{{opt.label|wmtrans}}</ion-select-option
+            >
+          </ion-select>
+        </container-element>
+      </ion-item>
+
+      <div class="wm-form-field-error" *ngIf="formGroup.controls[field.name]?.errors as errors">
+        <ng-container
+          *ngIf="errors.required"
+          >{{'questo campo è obbligatorio'|wmtrans}}</ng-container
+        >
+      </div>
+    </ng-container>
+  </ng-template>
+</form>

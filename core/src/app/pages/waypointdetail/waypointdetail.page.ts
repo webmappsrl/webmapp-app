@@ -1,11 +1,14 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AlertController, MenuController, NavController, ToastController} from '@ionic/angular';
+import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
-import {switchMap, take, tap} from 'rxjs/operators';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 import {IPhotoItem} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
+import {IConfRootState} from 'src/app/store/conf/conf.reducer';
+import {confPOIFORMS} from 'src/app/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 
 @Component({
@@ -21,6 +24,7 @@ export class WaypointdetailPage {
   sliderOptions: any = {
     slidesPerView: 2.5,
   };
+  confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
   constructor(
     private _route: ActivatedRoute,
     private _menuCtrl: MenuController,
@@ -29,6 +33,7 @@ export class WaypointdetailPage {
     private _saveSvc: SaveService,
     private _navCtlr: NavController,
     private _toastCtrl: ToastController,
+    private _storeConf: Store<IConfRootState>,
   ) {
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),

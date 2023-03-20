@@ -20,62 +20,13 @@
     [static]="true"
     [position]="displayPosition"
   ></old-webmapp-map>
-
   <ion-list class="webmapp-modalwaypoint-itemlist">
     <ion-item class="webmapp-formfield-item">
       <ion-label class="webmapp-formfield-label" position="stacked">
         {{  nominatim.display_name  | wmtrans }}
       </ion-label>
     </ion-item>
-    <webmapp-form-field
-      [(value)]="title"
-      [icon]="'icon-outline-list'"
-      [iconColor]="'secondary'"
-      [label]="'pages.waypoint.modalsave.formtitle'"
-      [placeholder]="'pages.waypoint.modalsave.formtitleplaceholder'"
-      [required]="true"
-      [error]="'pages.waypoint.modalsave.formtitleerror'"
-      [validate]="validate"
-      (validChange)="setIsValid(0,$event)"
-    ></webmapp-form-field>
-
-    <webmapp-form-field
-      [(value)]="description"
-      [icon]="'webmapp-icon-document'"
-      [iconColor]="'tertiary'"
-      [label]="'pages.waypoint.modalsave.formdescription'"
-      [placeholder]="'pages.waypoint.modalsave.formdescriptionplaceholder'"
-      [textArea]="true"
-    ></webmapp-form-field>
-
-    <webmapp-form-field
-      [(value)]="waypointtype"
-      [required]="false"
-      [icon]="'icon-outline-activities'"
-      [iconColor]="'primary'"
-      [label]="'pages.waypoint.modalsave.formtype'"
-      [error]="'pages.waypoint.modalsave.formtypeerror'"
-      [validate]="validate"
-      (validChange)="setIsValid(1,$event)"
-    >
-      <ion-select
-        class="webmapp-modalwaypoint-itemlist-select"
-        [(ngModel)]="waypointtype"
-        placeholder="{{'pages.waypoint.modalsave.formtypeplaceholder'|wmtrans}}"
-      >
-        <ion-select-option value="waypoint">{{'waypoint'|wmtrans}}</ion-select-option>
-        <ion-select-option value="sightseen">{{'sightseen'|wmtrans}}</ion-select-option>
-        <ion-select-option value="signage">{{'signage'|wmtrans}}</ion-select-option>
-        <ion-select-option value="fallen-tree">{{'fallen-tree'|wmtrans}}</ion-select-option>
-        <ion-select-option value="landslide">{{'landslide'|wmtrans}}</ion-select-option>
-        <ion-select-option
-          value="interrupted-passage"
-          >{{'interrupted-passage'|wmtrans}}</ion-select-option
-        >
-        <ion-select-option value="missing-signage">{{'missing-signage'|wmtrans}}</ion-select-option>
-      </ion-select>
-    </webmapp-form-field>
-
+    <wm-form [confPOIFORMS]="confPOIFORMS$|async" (formGroupEvt)="fg = $event"></wm-form>
     <webmapp-form-field
       [icon]="'webmapp-icon-camera'"
       [iconColor]="'secondary'"

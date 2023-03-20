@@ -7,6 +7,7 @@ import {NgModule} from '@angular/core';
 import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {WaypointdetailPage} from './waypointdetail.page';
 import {WaypointdetailPageRoutingModule} from './waypointdetail-routing.module';
+import {SharedModule} from 'src/app/components/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import {WaypointdetailPageRoutingModule} from './waypointdetail-routing.module';
     WmPipeModule,
     MapModule,
     AppPipeModule,
+    SharedModule,
   ],
   declarations: [WaypointdetailPage],
 })

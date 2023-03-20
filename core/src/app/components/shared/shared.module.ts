@@ -17,6 +17,9 @@ import {SearchBarComponent} from './search-bar/search-bar.component';
 import {ButtonsModule} from './buttons/buttons.module';
 import {TabImageGalleryComponent} from '../../shared/wm-core/tab-image-gallery/tab-image-gallery.component';
 import {WmSharedModule} from 'src/app/shared/wm-core/shared/shared.module';
+import {WmFormComponent} from './form/form.component';
+import {getFormFieldIcnPipe} from './pipes/get-form-field-icn.pipe';
+import {getFormFieldValuePipe} from './pipes/get-form-field-value.pipe';
 const components = [
   LoginComponent,
   ModalHeaderComponent,
@@ -29,6 +32,9 @@ const components = [
   ImageGalleryComponent,
   ModalImageComponent,
   TabImageGalleryComponent,
+  WmFormComponent,
+  getFormFieldIcnPipe,
+  getFormFieldValuePipe,
 ];
 @NgModule({
   declarations: components,

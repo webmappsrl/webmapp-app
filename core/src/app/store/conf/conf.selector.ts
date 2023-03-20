@@ -6,6 +6,7 @@ import {getCSSVariables} from '../../functions/theme';
 const confFeature = createFeatureSelector<ICONF>(confFeatureKey);
 
 export const confAPP = createSelector(confFeature, state => state.APP);
+export const confPOIFORMS = createSelector(confAPP, app => app.poi_acquisition_form);
 export const confLANGUAGES = createSelector(confFeature, state => state.LANGUAGES);
 export const confOPTIONS = createSelector(confFeature, state => state.OPTIONS);
 export const confAUTH = createSelector(confFeature, state => state.AUTH);
