@@ -246,7 +246,7 @@ export class GeolocationService {
     this._backgroundGeolocation = BackgroundGeolocation;
     this._config = {
       locationProvider: this._backgroundGeolocation.RAW_PROVIDER,
-      desiredAccuracy: 10,
+      desiredAccuracy: this._backgroundGeolocation.HIGH_ACCURACY,
       distanceFilter: 3,
       stationaryRadius: 0,
       stopOnTerminate: true,
