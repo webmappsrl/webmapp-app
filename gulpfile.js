@@ -619,7 +619,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
 <resources>
     <string name="mauron85_bgloc_account_name">@string/app_name</string>
     <string name="mauron85_bgloc_account_type">$PACKAGE_NAME.account</string>
-    <string name="mauron85_bgloc_content_authority">$PACKAGE_NAME.provider</string>
+    <string name="mauron85_bgloc_content_authority">$PACKAGE_NAME.${appName}.provider</string>
     <string name="app_name">${appName}</string>
     <string name="title_activity_main">${appName}</string>
     <string name="package_name">${appId}</string>
