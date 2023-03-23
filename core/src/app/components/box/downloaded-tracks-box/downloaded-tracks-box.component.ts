@@ -9,6 +9,7 @@ import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 import {offline} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {switchMap} from 'rxjs/operators';
+import {NavigationExtras} from '@angular/router';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -17,13 +18,13 @@ import {switchMap} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
-  tracks$: Observable<IGeojsonFeatureDownloaded[] | null>;
   offline$: Observable<boolean> = this._storeNetwork.select(offline);
+  tracks$: Observable<IGeojsonFeatureDownloaded[] | null>;
+
   constructor(
     private _downloadService: DownloadService,
-    private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _navController: NavController,
+    private _navCtrl: NavController,
   ) {
     this.tracks$ = this.offline$.pipe(
       switchMap(off => {
@@ -37,9 +38,16 @@ export class DownloadedTracksBoxComponent {
   }
 
   open(track: IGeojsonFeatureDownloaded) {
-    const clickedFeatureId = track.properties.id;
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId, track}));
-    this._navController.navigateForward('/itinerary');
+    const id = track.properties.id;
+    if (id != null) {
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          track: id,
+        },
+        queryParamsHandling: 'merge',
+      };
+      this._navCtrl.navigateForward('map', navigationExtras);
+    }
   }
 
   sizeInMB(size) {

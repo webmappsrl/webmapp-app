@@ -55,6 +55,10 @@ import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
+import {online} from 'src/app/store/network/network.selector';
+import {XYZ} from 'ol/source';
+import {TilesService} from 'src/app/services/tiles.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -73,7 +77,8 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
   private _routerSub: Subscription = Subscription.EMPTY;
-  isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  onLine$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
@@ -87,6 +92,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   @ViewChild(wmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
 
+  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -106,7 +112,6 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
       }
     }),
   );
-  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   confPOIS$: Observable<any> = this._store.select(confPOIS);
   confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
     map(p => {
@@ -146,6 +151,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   lang = localStorage.getItem('wm-lang') || 'it';
@@ -153,6 +159,9 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   modeFullMap = false;
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
+  online$: Observable<boolean> = this._storeNetwork
+    .select(online)
+    .pipe(tap(() => this._cdr.detectChanges()));
   padding$: Observable<number[]> = this._store.select(padding);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
@@ -211,7 +220,9 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
     private _shareSvc: ShareService,
+    private _tilesSvc: TilesService,
     private _cdr: ChangeDetectorRef,
+    private _storeNetwork: Store<INetworkRootState>,
     _backgroundGeolocation: BackgroundGeolocation,
     _platform: Platform,
   ) {
@@ -271,6 +282,11 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
 
   email(_): void {}
 
+  async favourite(trackID): Promise<void> {
+    const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
+    this.isFavourite$.next(isFav);
+  }
+
   getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
     const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
     const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
@@ -302,9 +318,32 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
       this.mapTrackDetailsCmp.none();
     }
   }
+  initializeBaseSource = () => {
+    return new XYZ({
+      maxZoom: 16,
+      minZoom: 1,
+      tileLoadFunction: (tile: any, url: string) => {
+        const coords = this._tilesSvc.getCoordsFromUr(url);
 
+        this._tilesSvc
+          .getTile(coords, true)
+          .then((tileString: string) => {
+            tile.getImage().src = tileString;
+          })
+          .catch(() => {
+            tile.getImage().src = url;
+          });
+      },
+      tileUrlFunction: c => {
+        return this._tilesSvc.getTileFromWeb(c);
+      },
+      projection: 'EPSG:3857',
+      tileSize: [256, 256],
+    });
+  };
   ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
+    this.onLine$.next(navigator.onLine);
   }
 
   ionViewWillEnter(): void {
@@ -320,11 +359,6 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     this.goToTrack(null);
     this.mapTrackDetailsCmp.none();
     this.showDownload$.next(false);
-  }
-
-  async favourite(trackID): Promise<void> {
-    const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
-    this.isFavourite$.next(isFav);
   }
 
   navigation(): void {

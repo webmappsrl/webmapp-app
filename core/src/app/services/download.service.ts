@@ -10,6 +10,7 @@ import {StorageService} from './base/storage.service';
 import {Store} from '@ngrx/store';
 import defaultImage from '../../assets/images/defaultImageB64.json';
 import {mapCurrentRelatedPoi} from '../store/map/map.selector';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class DownloadService {
   constructor(
     private storage: StorageService,
     private _storeMap: Store<IMapRootState>, // private communicationService: CommunicationService, // private db: DbService
+    private _http: HttpClient,
   ) {
     this.storage.onReady.subscribe(x => {
       this.storage.getByKey(DOWNLOAD_INDEX_KEY).then(val => {
@@ -80,25 +82,29 @@ export class DownloadService {
   }
 
   public async downloadBase64Img(url): Promise<string | ArrayBuffer> {
-    let opt: RequestInit = {mode: 'no-cors'};
-    // if (this.platform.is('mobile')) {
-    //   opt = { mode: 'no-cors' };
-    // }
-    const data = await fetch(url, opt);
-    const blob = await data.blob();
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      try {
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          resolve(base64data);
-        };
-      } catch (error) {
-        console.log('------- ~ getB64img ~ error', error);
-        resolve('');
-      }
-    });
+    try {
+      let opt: RequestInit = {};
+      // if (this.platform.is('mobile')) {
+      //   opt = { mode: 'no-cors' };
+      // }
+      const data = await fetch(url, opt);
+      const blob = await data.blob();
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        try {
+          reader.onloadend = () => {
+            const base64data = reader.result;
+            resolve(base64data);
+          };
+        } catch (error) {
+          console.log('------- ~ getB64img ~ error', error);
+          resolve('');
+        }
+      });
+    } catch (_) {
+      return new Promise(resolve => resolve('url'));
+    }
   }
 
   public async downloadImages(urlList: string[], referenceTrack): Promise<number> {
@@ -178,6 +184,10 @@ export class DownloadService {
       this.imgCache.push({key: url, value: base64data});
       return base64data;
     }
+  }
+
+  public async getDownloadedTrack(trackId): Promise<IGeojsonFeatureDownloaded> {
+    return this.storage.getTrack(trackId);
   }
 
   public async getDownloadedTracks(): Promise<Array<IGeojsonFeatureDownloaded>> {
@@ -307,15 +317,23 @@ export class DownloadService {
     console.log('------- ~ DownloadService ~ startDownload ~ track.properties', track.properties);
     if (track.properties.feature_image && track.properties.feature_image.sizes) {
       imageUrlList.push(track.properties.feature_image.url);
+      track.properties.feature_image.url = (await this.downloadBase64Img(
+        track.properties.feature_image.url,
+      )) as string;
       for (let p in track.properties.feature_image.sizes) {
         imageUrlList.push(track.properties.feature_image.sizes[p]);
+        track.properties.feature_image.sizes[p] = (await this.downloadBase64Img(
+          track.properties.feature_image.sizes[p],
+        )) as string;
       }
     }
     if (track.properties.image_gallery) {
-      track.properties.image_gallery.forEach(img => {
+      track.properties.image_gallery.forEach(async img => {
         imageUrlList.push(img.url);
+        img.url = (await this.downloadBase64Img(img.url)) as string;
         for (let p in img.sizes) {
           imageUrlList.push(img.sizes[p]);
+          img.sizes[p] = (await this.downloadBase64Img(img.sizes[p])) as string;
         }
       });
     }
@@ -326,12 +344,16 @@ export class DownloadService {
       const poi = pois[i];
       poisIds.push(poi.properties.id);
       imageUrlList.push(poi.properties.image);
+      poi.properties.image = (await this.downloadBase64Img(poi.properties.image)) as string;
       if (poi.properties.images) {
         for (let j = 0; j < poi.properties.images.length; j++) {
           const imgUrl = poi.properties.images[j];
 
           if (imgUrl) {
             imageUrlList.push(imgUrl);
+            poi.properties.images[j] = (await this.downloadBase64Img(
+              poi.properties.images[j],
+            )) as string;
           }
           sizeMb += await this.savePoi(poi, dataTotal); // TODO async
         }
