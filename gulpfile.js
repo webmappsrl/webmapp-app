@@ -618,15 +618,15 @@ function updateAndroidPlatform(instanceName, appId, appName) {
         const stringXml = `<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="mauron85_bgloc_account_name">@string/app_name</string>
-    <string name="mauron85_bgloc_account_type">$PACKAGE_NAME.account</string>
-    <string name="mauron85_bgloc_content_authority">$PACKAGE_NAME.${appName}.provider</string>
+    <string name="mauron85_bgloc_account_type">${appId}.account</string>
+    <string name="mauron85_bgloc_content_authority">${appId}.provider</string>
     <string name="app_name">${appName}</string>
     <string name="title_activity_main">${appName}</string>
     <string name="package_name">${appId}</string>
     <string name="custom_url_scheme">${appId}</string>
     <string name="plugin_bgloc_account_name">Webmapp</string>
-    <string name="plugin_bgloc_account_type">$ACCOUNT_TYPE</string>
-    <string name="plugin_bgloc_content_authority">$PACKAGE_NAME.provider</string>
+    <string name="plugin_bgloc_account_type">${appId}</string>
+    <string name="plugin_bgloc_content_authority">${appId}.provider</string>
 </resources>
         `;
         try {
