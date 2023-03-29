@@ -53,12 +53,12 @@ import {pois} from 'src/app/store/pois/pois.selector';
 import {GeolocationPage} from '../abstract/geolocation';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
-import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {online} from 'src/app/store/network/network.selector';
 import {XYZ} from 'ol/source';
 import {TilesService} from 'src/app/services/tiles.service';
+import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -77,7 +77,6 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
   private _routerSub: Subscription = Subscription.EMPTY;
-  onLine$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
@@ -151,6 +150,29 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  initializeBaseSource = () => {
+    return new XYZ({
+      maxZoom: 16,
+      minZoom: 1,
+      tileLoadFunction: (tile: any, url: string) => {
+        const coords = this._tilesSvc.getCoordsFromUr(url);
+
+        this._tilesSvc
+          .getTile(coords, true)
+          .then((tileString: string) => {
+            tile.getImage().src = tileString;
+          })
+          .catch(() => {
+            tile.getImage().src = url;
+          });
+      },
+      tileUrlFunction: c => {
+        return this._tilesSvc.getTileFromWeb(c);
+      },
+      projection: 'EPSG:3857',
+      tileSize: [256, 256],
+    });
+  };
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -159,6 +181,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   modeFullMap = false;
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
+  onLine$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   online$: Observable<boolean> = this._storeNetwork
     .select(online)
     .pipe(tap(() => this._cdr.detectChanges()));
@@ -271,6 +294,10 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     } else if (this.trackid$.value != null) {
       this.goToTrack(null);
     }
+
+    if (!navigator.onLine) {
+      this._router.navigate(['home']);
+    }
   }
 
   closeDownload(): void {
@@ -318,29 +345,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
       this.mapTrackDetailsCmp.none();
     }
   }
-  initializeBaseSource = () => {
-    return new XYZ({
-      maxZoom: 16,
-      minZoom: 1,
-      tileLoadFunction: (tile: any, url: string) => {
-        const coords = this._tilesSvc.getCoordsFromUr(url);
 
-        this._tilesSvc
-          .getTile(coords, true)
-          .then((tileString: string) => {
-            tile.getImage().src = tileString;
-          })
-          .catch(() => {
-            tile.getImage().src = url;
-          });
-      },
-      tileUrlFunction: c => {
-        return this._tilesSvc.getTileFromWeb(c);
-      },
-      projection: 'EPSG:3857',
-      tileSize: [256, 256],
-    });
-  };
   ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.onLine$.next(navigator.onLine);

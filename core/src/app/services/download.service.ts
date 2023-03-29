@@ -317,23 +317,16 @@ export class DownloadService {
     console.log('------- ~ DownloadService ~ startDownload ~ track.properties', track.properties);
     if (track.properties.feature_image && track.properties.feature_image.sizes) {
       imageUrlList.push(track.properties.feature_image.url);
-      track.properties.feature_image.url = (await this.downloadBase64Img(
-        track.properties.feature_image.url,
-      )) as string;
+
       for (let p in track.properties.feature_image.sizes) {
         imageUrlList.push(track.properties.feature_image.sizes[p]);
-        track.properties.feature_image.sizes[p] = (await this.downloadBase64Img(
-          track.properties.feature_image.sizes[p],
-        )) as string;
       }
     }
     if (track.properties.image_gallery) {
       track.properties.image_gallery.forEach(async img => {
         imageUrlList.push(img.url);
-        img.url = (await this.downloadBase64Img(img.url)) as string;
         for (let p in img.sizes) {
           imageUrlList.push(img.sizes[p]);
-          img.sizes[p] = (await this.downloadBase64Img(img.sizes[p])) as string;
         }
       });
     }
@@ -344,16 +337,11 @@ export class DownloadService {
       const poi = pois[i];
       poisIds.push(poi.properties.id);
       imageUrlList.push(poi.properties.image);
-      poi.properties.image = (await this.downloadBase64Img(poi.properties.image)) as string;
       if (poi.properties.images) {
         for (let j = 0; j < poi.properties.images.length; j++) {
           const imgUrl = poi.properties.images[j];
-
           if (imgUrl) {
             imageUrlList.push(imgUrl);
-            poi.properties.images[j] = (await this.downloadBase64Img(
-              poi.properties.images[j],
-            )) as string;
           }
           sizeMb += await this.savePoi(poi, dataTotal); // TODO async
         }

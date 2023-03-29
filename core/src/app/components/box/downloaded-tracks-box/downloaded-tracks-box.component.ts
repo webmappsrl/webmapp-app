@@ -8,8 +8,9 @@ import {setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 import {offline} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, startWith} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
+import {StorageService} from 'src/app/services/base/storage.service';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -18,7 +19,9 @@ import {NavigationExtras} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
-  offline$: Observable<boolean> = this._storeNetwork.select(offline);
+  offline$: Observable<boolean> = this._storeNetwork
+    .select(offline)
+    .pipe(startWith(!navigator.onLine));
   tracks$: Observable<IGeojsonFeatureDownloaded[] | null>;
 
   constructor(
@@ -29,6 +32,7 @@ export class DownloadedTracksBoxComponent {
     this.tracks$ = this.offline$.pipe(
       switchMap(off => {
         if (off) {
+          console.log('download tracks');
           return from(this._downloadService.getDownloadedTracks());
         } else {
           return of(null);

@@ -98,6 +98,19 @@ export interface IWmImage {
     '1440x500': string;
   };
   url: string;
+  base64?: string;
+  base64sizes?: {
+    '108x148': string;
+    '108x137': string;
+    '225x100': string;
+    '250x150': string;
+    '118x138': string;
+    '108x139': string;
+    '118x117': string;
+    '335x250': string;
+    '400x200': string;
+    '1440x500': string;
+  };
 }
 
 export interface IGeojsonGeneric {
@@ -152,7 +165,7 @@ export interface WhereTaxonomy {
   source_id: number;
   updated_at: Date;
 
-// excerpt: null,
+  // excerpt: null,
   // source: null,
   // user_id: null,
   // identifier: toscana,

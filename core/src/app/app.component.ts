@@ -4,12 +4,10 @@ import {filter, take} from 'rxjs/operators';
 
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
-import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {Store} from '@ngrx/store';
 import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
-import {environment} from 'src/environments/environment';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
 import {DownloadService} from './services/download.service';
 import {SaveService} from './services/save.service';
@@ -39,7 +37,6 @@ export class AppComponent {
 
   constructor(
     private _platform: Platform,
-    private _googleAnalytics: GoogleAnalytics,
     private _downloadService: DownloadService,
     private router: Router,
     private status: StatusService,
@@ -88,16 +85,6 @@ export class AppComponent {
     );
 
     this._downloadService.init();
-
-    this._googleAnalytics
-      .startTrackerWithId(environment.analyticsId)
-      .then(() => {
-        console.log('Google analytics is ready now');
-        this._googleAnalytics.trackView('test');
-        // Tracker is ready
-        // You can now track pages or set additional information such as AppVersion or UserId
-      })
-      .catch(e => console.log('Error starting GoogleAnalytics', e));
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;

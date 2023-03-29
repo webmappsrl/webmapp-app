@@ -11,8 +11,18 @@ import {DomSanitizer} from '@angular/platform-browser';
 
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, merge, Observable, Subscription, zip} from 'rxjs';
-import {debounceTime, filter, first, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription, zip} from 'rxjs';
+import {
+  debounceTime,
+  filter,
+  first,
+  map,
+  share,
+  startWith,
+  switchMap,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
@@ -30,9 +40,9 @@ import {queryApi} from 'src/app/shared/wm-core/api/api.selector';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IMapRootState} from 'src/app/store/map/map';
 import {currentFilters, mapCurrentLayer, toggleHome} from 'src/app/store/map/map.selector';
-import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
+import {loadConf} from 'src/app/store/conf/conf.actions';
 
 @Component({
   selector: 'wm-page-home',
@@ -83,9 +93,19 @@ export class HomePage implements OnInit, OnDestroy {
   goToHome$: Observable<any> = this._storeMap.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
-  online$: Observable<boolean> = this._storeNetwork
-    .select(online)
-    .pipe(tap(() => this._cdr.detectChanges()));
+  online$: Observable<boolean> = merge(
+    of(null),
+    fromEvent(window, 'online'),
+    fromEvent(window, 'offline'),
+  ).pipe(
+    map(() => navigator.onLine),
+    startWith(false),
+    tap(online => {
+      if (online) {
+        this._storeConf.dispatch(loadConf());
+      }
+    }),
+  );
   poiCards$: Observable<any[]>;
   selectedFilters$: Observable<string[]> = this._storeMap.select(currentFilters);
   title: string;

@@ -95,6 +95,26 @@ const initialConfState: ICONF = {
   AUTH: {
     enable: false,
   },
+  MAP: {
+    bbox: [-180, -85, 180, 85],
+    defZoom: 5,
+    maxZoom: 15,
+    minZoom: 5,
+    maxStrokeWidth: 6,
+    minStrokeWidth: 3,
+    tiles: [
+      {
+        'webmapp': 'https://api.webmapp.it/tiles/{z}/{x}/{y}.png',
+      },
+    ],
+    start_end_icons_show: false,
+    start_end_icons_min_zoom: 10,
+    ref_on_track_show: false,
+    ref_on_track_min_zoom: 10,
+    flow_line_quote_show: false,
+    flow_line_quote_orange: 800,
+    flow_line_quote_red: 1500,
+  },
 };
 export const confReducer = createReducer(
   initialConfState,
