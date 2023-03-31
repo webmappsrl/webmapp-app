@@ -1,118 +1,186 @@
 <ion-content scrollY="false">
   <div class="webmapp-pageroute-map-container">
-    <wm-map
-      #wmap
-      [wmMapConf]="confMap$|async"
-      wmMapLayer
-      [jidoUpdateTime]="confJIDOUPDATETIME$|async"
-      [wmMapLayerLayer]="currentLayer$|async"
-      [wmMapLayerDataLayerUrls]="dataLayerUrls$|async"
-      [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
-      [wmMapLayerOpacity]="layerOpacity$|async"
-      (trackSelectedFromLayerEVT)="goToTrack($event)"
-      (colorSelectedFromLayerEVT)="trackColor$.next($event)"
-      wmMapPois
-      [wmMapPoisPoi]="currentPoiID$|async"
-      [wmMapPoisPois]="pois$|async"
-      [wmMapPoisFilters]="currentFilters$|async"
-      [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
-      (currentPoiEvt)="setPoi($event)"
-      wmMapPosition
-      [wmMapPositioncurrentLocation]="currentPosition$|async"
-      [wmMapPositionCenter]="centerPositionEvt$|async"
-      [wmMapPositionfocus]="wmMapPositionfocus$|async"
-      [wmMapOverlay]="enableOverLay$|async"
-      [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
-      wmMapTrack
-      [track]="currentTrack$|async"
-      [wmMapTrackColor]="trackColor$|async"
-      [trackElevationChartElements]="trackElevationChartHoverElements$|async"
-      wmMapTrackRelatedPois
-      (related-poi-next)="currentPoiNextID$.next(+$event)"
-      (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
-      (related-poi)="setCurrentPoi($event)"
-    >
-      <div top-right>
-        <ng-container *ngIf="confPOIS$|async as confPois">
-          <wm-btn-filter
-            *ngIf="confPois.apppoisApiLayer"
-            [filters]="confPOISFilter$|async"
-            [initSelectedFilters]="currentFilters$|async"
-            (selectedFilters)="setCurrentFilters($event)"
-          ></wm-btn-filter>
-        </ng-container>
-      </div>
+    <ng-container *ngIf="online$|async;else offline">
+      <wm-map
+        #wmap
+        [wmMapConf]="confMap$|async"
+        wmMapLayer
+        [jidoUpdateTime]="confJIDOUPDATETIME$|async"
+        [wmMapLayerLayer]="currentLayer$|async"
+        [wmMapLayerDataLayerUrls]="dataLayerUrls$|async"
+        [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
+        [wmMapLayerOpacity]="layerOpacity$|async"
+        (trackSelectedFromLayerEVT)="goToTrack($event)"
+        (colorSelectedFromLayerEVT)="trackColor$.next($event)"
+        wmMapPois
+        [wmMapPoisPoi]="currentPoiID$|async"
+        [wmMapPoisPois]="pois$|async"
+        [wmMapPoisFilters]="currentFilters$|async"
+        [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
+        (currentPoiEvt)="setPoi($event)"
+        wmMapPosition
+        [wmMapPositioncurrentLocation]="currentPosition$|async"
+        [wmMapPositionCenter]="centerPositionEvt$|async"
+        [wmMapPositionfocus]="wmMapPositionfocus$|async"
+        [wmMapOverlay]="enableOverLay$|async"
+        [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
+        wmMapTrack
+        [track]="currentTrack$|async"
+        [wmMapTrackColor]="trackColor$|async"
+        [trackElevationChartElements]="trackElevationChartHoverElements$|async"
+        wmMapTrackRelatedPois
+        (related-poi-next)="currentPoiNextID$.next(+$event)"
+        (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
+        (related-poi)="setCurrentPoi($event)"
+      >
+        <div top-right>
+          <ng-container *ngIf="confPOIS$|async as confPois">
+            <wm-btn-filter
+              *ngIf="confPois.apppoisApiLayer"
+              [filters]="confPOISFilter$|async"
+              [initSelectedFilters]="currentFilters$|async"
+              (selectedFilters)="setCurrentFilters($event)"
+            ></wm-btn-filter>
+          </ng-container>
+        </div>
 
-      <div bottom-right>
-        <ng-container
-          *ngIf="(authEnable$|async) && (isLoggedIn$|async) && (trackid$|async) as trackId"
-        >
-          <ion-fab slot="fixed" vertical="top" horizontal="start">
-            <ion-fab-button (click)="favourite(trackId)">
-              <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
-              <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
-            </ion-fab-button>
-          </ion-fab>
-        </ng-container>
+        <div bottom-right>
+          <ng-container
+            *ngIf="(authEnable$|async) && (isLoggedIn$|async) && (trackid$|async) as trackId"
+          >
+            <ion-fab slot="fixed" vertical="top" horizontal="start">
+              <ion-fab-button (click)="favourite(trackId)">
+                <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
+                <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </ng-container>
 
-        <ng-container *ngIf="trackid$|async as trackId">
-          <ion-fab slot="fixed" vertical="top" horizontal="start">
-            <ion-fab-button (click)="openTrackShare(trackId)">
-              <ion-icon name="share-social-outline"></ion-icon>
+          <ng-container *ngIf="trackid$|async as trackId">
+            <ion-fab slot="fixed" vertical="top" horizontal="start">
+              <ion-fab-button (click)="openTrackShare(trackId)">
+                <ion-icon name="share-social-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+            <ion-fab slot="fixed" vertical="top" horizontal="start">
+              <ion-fab-button (click)="openTrackDownload()">
+                <ion-icon name="download-outline"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </ng-container>
+          <ion-fab
+            #fab2
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            (click)="fab1?.close();fab3?.close()"
+            *ngIf="(trackid$|async)!= null"
+          >
+            <ion-fab-button>
+              <ion-icon name="locate-outline"></ion-icon>
             </ion-fab-button>
+            <ion-fab-list side="start">
+              <wm-btn-orientation
+                *ngIf="(trackid$|async)!= null"
+                class="webmapp-map-fab"
+                [degrees]="wmap.mapDegrees"
+                (click)="wmap.orientNorth()"
+              >
+              </wm-btn-orientation>
+              <ion-fab-button (click)="navigation()">
+                <ion-icon name="navigate-outline"></ion-icon>
+              </ion-fab-button>
+              <wm-btn-center-position
+                *ngIf="false"
+                (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+              ></wm-btn-center-position>
+            </ion-fab-list>
           </ion-fab>
-          <ion-fab slot="fixed" vertical="top" horizontal="start">
-            <ion-fab-button (click)="openTrackDownload()">
-              <ion-icon name="download-outline"></ion-icon>
+          <ion-fab
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            #fab3
+            *ngIf="isTrackRecordingEnable$|async"
+            (click)="fab2?.close();fab1?.close()"
+          >
+            <ion-fab-button size="small" class="wm-btn-register-fab">
+              <i class="icon-outline-recording"></i>
             </ion-fab-button>
+            <wm-btn-track-recording
+              [isLogged]="isLoggedIn$|async"
+              (start-recording)="startRecording$.next($event)"
+            ></wm-btn-track-recording>
           </ion-fab>
-        </ng-container>
-        <ion-fab
-          #fab2
-          slot="fixed"
-          vertical="top"
-          horizontal="start"
-          (click)="fab1?.close();fab3?.close()"
-          *ngIf="(trackid$|async)!= null"
-        >
-          <ion-fab-button>
-            <ion-icon name="locate-outline"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="start">
-            <wm-btn-orientation
-              *ngIf="(trackid$|async)!= null"
-              class="webmapp-map-fab"
-              [degrees]="wmap.mapDegrees"
-              (click)="wmap.orientNorth()"
-            >
-            </wm-btn-orientation>
-            <ion-fab-button (click)="navigation()">
-              <ion-icon name="navigate-outline"></ion-icon>
+        </div>
+      </wm-map>
+    </ng-container>
+    <ng-template #offline>
+      <wm-map
+        #wmap
+        [initBaseSource]="initializeBaseSource"
+        [wmMapConf]="confMap$|async"
+        wmMapPosition
+        [wmMapPositioncurrentLocation]="currentPosition$|async"
+        [wmMapPositionCenter]="centerPositionEvt$|async"
+        [wmMapPositionfocus]="wmMapPositionfocus$|async"
+        wmMapTrack
+        [track]="currentTrack$|async"
+        [wmMapTrackColor]="trackColor$|async"
+        [trackElevationChartElements]="trackElevationChartHoverElements$|async"
+        wmMapTrackRelatedPois
+        (related-poi-next)="currentPoiNextID$.next(+$event)"
+        (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
+        (related-poi)="setCurrentPoi($event)"
+      >
+        <div bottom-right>
+          <ion-fab
+            #fab2
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            (click)="fab1?.close();fab3?.close()"
+            *ngIf="(trackid$|async)!= null"
+          >
+            <ion-fab-button>
+              <ion-icon name="locate-outline"></ion-icon>
             </ion-fab-button>
-            <wm-btn-center-position
-              *ngIf="false"
-              (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
-            ></wm-btn-center-position>
-          </ion-fab-list>
-        </ion-fab>
-        <ion-fab
-          slot="fixed"
-          vertical="top"
-          horizontal="start"
-          #fab3
-          *ngIf="isTrackRecordingEnable$|async"
-          (click)="fab2?.close();fab1?.close()"
-        >
-          <ion-fab-button size="small" class="wm-btn-register-fab">
-            <i class="icon-outline-recording"></i>
-          </ion-fab-button>
-          <wm-btn-track-recording
-            [isLogged]="isLoggedIn$|async"
-            (start-recording)="startRecording$.next($event)"
-          ></wm-btn-track-recording>
-        </ion-fab>
-      </div>
-    </wm-map>
+            <ion-fab-list side="start">
+              <wm-btn-orientation
+                *ngIf="(trackid$|async)!= null"
+                class="webmapp-map-fab"
+                [degrees]="wmap.mapDegrees"
+                (click)="wmap.orientNorth()"
+              >
+              </wm-btn-orientation>
+              <ion-fab-button (click)="navigation()">
+                <ion-icon name="navigate-outline"></ion-icon>
+              </ion-fab-button>
+              <wm-btn-center-position
+                *ngIf="false"
+                (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+              ></wm-btn-center-position>
+            </ion-fab-list>
+          </ion-fab>
+          <ion-fab
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            #fab3
+            *ngIf="isTrackRecordingEnable$|async"
+            (click)="fab2?.close();fab1?.close()"
+          >
+            <ion-fab-button size="small" class="wm-btn-register-fab">
+              <i class="icon-outline-recording"></i>
+            </ion-fab-button>
+            <wm-btn-track-recording
+              [isLogged]="isLoggedIn$|async"
+              (start-recording)="startRecording$.next($event)"
+            ></wm-btn-track-recording>
+          </ion-fab>
+        </div>
+      </wm-map>
+    </ng-template>
     <wm-map-track-details #details (toggleEVT)="previewTrack$.next(false)" (closeEVT)="close()">
       <div header>
         <div class="webmapp-info-header-container">

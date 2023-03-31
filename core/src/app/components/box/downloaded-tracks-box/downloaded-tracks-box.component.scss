@@ -1,81 +1,40 @@
 @import 'src/theme/mixins.scss';
 downloaded-tracks-box {
-  .list-md {
-    background-color: transparent;
-  }
-  ion-item {
-    --ion-item-background: transparent;
-    border-radius: 8px !important;
-  }
-  .webmapp-cardtrack-card {
+  margin-top: calc(126px + constant(safe-area-inset-top));
+  margin-top: calc(126px + env(safe-area-inset-top));
+  top: calc(126px + constant(safe-area-inset-top));
+  top: calc(126px + env(safe-area-inset-top));
+  height: 100%;
+
+  ion-text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-end;
+    align-items: flex-end;
+    height: calc(46px + env(safe-area-inset-top));
+    min-height: 80px;
+
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    // height: 137px;
-    position: relative;
-    --detail-icon-color: var(--wm-color-primary);
-    --detail-icon-opacity: 1;
-    // @include box-shadow-light;
-    --detail-icon-font-size: 32px;
-    .webmapp-cardtrack-image {
-      min-height: 145px;
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    box-sizing: border-box;
+    z-index: 999;
+
+    h1,
+    ion-icon {
+      order: 0;
+      flex: 0 1 auto;
+      align-self: center;
     }
-
-    .webmapp-cardtrack-info {
-      left: 116px;
-      position: absolute;
-      padding: 10px;
-      padding-left: 15px;
-      top: 0px;
-
-      width: 261px;
-
-      .webmapp-cardtrack-info-label {
-        display: block;
-        color: var(--wm-color-dark);
-        text-align: left;
-        min-height: 30px;
-      }
-
-      .webmapp-cardtrack-info-name {
-        text-align: left;
-        font-weight: var(--wm-font-weight-bold);
-        font-size: var(--wm-font-md);
-        min-height: 40px;
-        //   max-height: 50px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: break-spaces;
-      }
-      .webmapp-cardtrack-info-time {
-        font-size: var(--wm-font-sm);
-      }
-      .webmapp-cardtrack-info-difficulty {
-        font-size: var(--wm-font-sm);
-        font-weight: var(--wm-font-weight-light);
-      }
-      .webmapp-cardtrack-info-distance {
-        font-size: var(--wm-font-sm);
-        font-weight: var(--wm-font-weight-light);
-      }
-      .webmapp-cardtrack-info-icon {
-        font-size: var(--wm-font-xxlg);
-        color: var(--wm-color-primary);
-      }
-    }
-    .webmapp-cardtrack-remove {
-      position: absolute;
-      bottom: -5px;
-      right: -5px;
-      display: block;
-      padding: 10px;
-      text-decoration: underline;
-      cursor: pointer;
-      z-index: 900;
-      color: var(--wm-color-darkgrey);
-      font-size: var(--wm-font-sm);
-      font-weight: var(--wm-font-weight-light);
-    }
+  }
+  .downloaded-tracks-box-content {
+    margin-top: calc(26px + env(safe-area-inset-top));
+    box-sizing: border-box;
   }
 }

@@ -20,9 +20,9 @@ import {StorageService} from './base/storage.service';
 import {TAXONOMYWHERE_STORAGE_KEY} from '../constants/storage';
 import {WaypointSave} from '../types/waypoint';
 import {environment} from 'src/environments/environment';
-import {map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-
+import {DownloadService} from './download.service';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
@@ -36,8 +36,36 @@ export class GeohubService {
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService,
+    private _downloadSvc: DownloadService,
   ) {
     this._ecTracks = [];
+  }
+
+  deletePhoto(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/media/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
+  }
+
+  deleteTrack(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/track/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
+  }
+
+  deleteWaypoint(id: number): Observable<any> {
+    return this._communicationService.get(
+      `${environment.api}/api/ugc/poi/delete/${id}`,
+      new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    );
   }
 
   async favourites(): Promise<number[]> {
@@ -153,6 +181,12 @@ export class GeohubService {
       const result = await this._communicationService
         .get(`${environment.api}/api/ec/track/${id}`)
         .pipe(
+          catchError(e => {
+            if (!navigator.onLine) {
+              return this._downloadSvc.getDownloadedTrack(+id);
+            }
+            return of(null);
+          }),
           map((apiResult: CGeojsonLineStringFeature) => {
             return apiResult;
           }),
@@ -413,33 +447,6 @@ export class GeohubService {
       )
       .toPromise();
     return res;
-  }
-
-  deleteTrack(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/track/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
-  }
-
-  deletePhoto(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/media/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
-  }
-
-  deleteWaypoint(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/poi/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
   }
 
   /**

@@ -6,8 +6,9 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {BehaviorSubject, Observable, from, of} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {IonSlides, ModalController} from '@ionic/angular';
+import {StorageService} from 'src/app/services/base/storage.service';
 import {beforeInit, setTransition, setTranslate} from '../utils';
 
 @Component({
@@ -15,13 +16,21 @@ import {beforeInit, setTransition, setTranslate} from '../utils';
   templateUrl: './modal-image.component.html',
   styleUrls: ['./modal-image.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalImageComponent implements AfterViewInit {
-  @ViewChild('gallery') slider: IonSlides;
   @Input() set idx(val) {
     this.idx$.next(val);
   }
+
   @Input() imageGallery: any;
+  @ViewChild('gallery') slider: IonSlides;
+
+  getActiveIndex$: Promise<number>;
+  getStorageImage = (url: string) => {
+    return this._storageSvc.getImage(url) as Promise<any>;
+  };
+  idx$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   slideOptions = {
     on: {
       beforeInit,
@@ -29,11 +38,17 @@ export class ModalImageComponent implements AfterViewInit {
       setTransition,
     },
   };
-  idx$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  getActiveIndex$: Promise<number>;
-  constructor(private _modalCtrl: ModalController) {}
+
+  constructor(private _modalCtrl: ModalController, private _storageSvc: StorageService) {}
+
   closeModal(): void {
     this._modalCtrl.dismiss();
+  }
+
+  next(): void {
+    let currentIdx = this.idx$.value;
+    this.idx$.next(currentIdx + 1);
+    this.slider.slideTo(currentIdx + 1);
   }
 
   ngAfterViewInit(): void {
@@ -41,17 +56,14 @@ export class ModalImageComponent implements AfterViewInit {
     this.getActiveIndex$ = Promise.resolve(this.slider.getActiveIndex());
     this.slider.ionSlideDidChange;
   }
-  prev() {
+
+  prev(): void {
     let currentIdx = this.idx$.value;
     this.idx$.next(currentIdx - 1);
     this.slider.slideTo(currentIdx - 1);
   }
-  next() {
-    let currentIdx = this.idx$.value;
-    this.idx$.next(currentIdx + 1);
-    this.slider.slideTo(currentIdx + 1);
-  }
-  async updateIdx() {
+
+  async updateIdx(): Promise<void> {
     const currentIdx = await this.slider.getActiveIndex();
     this.idx$.next(currentIdx);
   }

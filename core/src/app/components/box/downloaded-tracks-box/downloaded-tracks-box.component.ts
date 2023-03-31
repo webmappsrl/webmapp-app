@@ -3,12 +3,11 @@ import {NavController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {from, Observable, of} from 'rxjs';
 import {DownloadService} from 'src/app/services/download.service';
-import {IMapRootState} from 'src/app/store/map/map';
-import {setCurrentTrackId} from 'src/app/store/map/map.actions';
-import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 import {offline} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {switchMap} from 'rxjs/operators';
+import {startWith, map} from 'rxjs/operators';
+import {NavigationExtras} from '@angular/router';
+import {StorageService} from 'src/app/services/base/storage.service';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -17,37 +16,34 @@ import {switchMap} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
-  tracks$: Observable<IGeojsonFeatureDownloaded[] | null>;
-  offline$: Observable<boolean> = this._storeNetwork.select(offline);
+  getStorageImage = (url: string) => {
+    return this._storageSvc.getImage(url) as Promise<any>;
+  };
+  offline$: Observable<boolean> = this._storeNetwork
+    .select(offline)
+    .pipe(startWith(!navigator.onLine));
+  tracks$: Observable<IHIT[]>;
+
   constructor(
-    private _downloadService: DownloadService,
-    private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _navController: NavController,
+    private _navCtrl: NavController,
+    private _downloadSvc: DownloadService,
+    private _storageSvc: StorageService,
   ) {
-    this.tracks$ = this.offline$.pipe(
-      switchMap(off => {
-        if (off) {
-          return from(this._downloadService.getDownloadedTracks());
-        } else {
-          return of(null);
-        }
-      }),
+    this.tracks$ = from(this._downloadSvc.getDownloadedTracks()).pipe(
+      map(t => t.map(track => track.properties as unknown as IHIT)),
     );
   }
 
-  open(track: IGeojsonFeatureDownloaded) {
-    const clickedFeatureId = track.properties.id;
-    this._storeMap.dispatch(setCurrentTrackId({currentTrackId: +clickedFeatureId, track}));
-    this._navController.navigateForward('/itinerary');
-  }
-
-  sizeInMB(size) {
-    const million = 1000000;
-    if (size > million) {
-      return Math.round(size / million);
-    } else {
-      return Math.round((size * 100) / million) / 100;
+  open(id: number): void {
+    if (id != null) {
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          track: id,
+        },
+        queryParamsHandling: 'merge',
+      };
+      this._navCtrl.navigateForward('map', navigationExtras);
     }
   }
 }

@@ -2,6 +2,7 @@
   <wm-img
     [src]="track.properties?.feature_image"
     size="118x138"
+    [offlineFn]="getStorageImage"
     (click)="open()"
     class="webmapp-cardtrack-image"
   >
@@ -15,17 +16,26 @@
     <ion-label *ngIf="!isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
       {{track.properties.duration_forward | minutetime}}</ion-label
     >
-    <ion-label *ngIf="isDownload" class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time">
-      {{sizeInMB(track.properties.size)}} MB</ion-label
+    <ion-label
+      *ngIf="isDownload && track?.properties?.size"
+      class="webmapp-cardtrack-info-label webmapp-cardtrack-info-time"
     >
-    <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty">
+      {{track.properties.size| wmToMb}}</ion-label
+    >
+    <ion-label
+      class="webmapp-cardtrack-info-label webmapp-cardtrack-info-difficulty"
+      *ngIf="track?.properties?.difficulty"
+    >
       <i
         class="webmapp-cardtrack-info-icon wπcard-traebmapp-maptrackcard-info-icon webmapp-icon-difficulty-high"
       >
       </i>
       {{track.properties.difficulty | wmtrans }}
     </ion-label>
-    <ion-label class="webmapp-cardtrack-info-label webmapp-cardtrack-info-distance">
+    <ion-label
+      class="webmapp-cardtrack-info-label webmapp-cardtrack-info-distance"
+      *ngIf="track?.properties?.distance"
+    >
       <i class="webmapp-cardtrack-info-icon webmapp-icon-distance"> </i>
       {{track.properties.distance}} Km
     </ion-label>

@@ -1,31 +1,32 @@
 <ion-content class="webmapp-home-content">
-  <div class="wm-home-header-container">
-    <webmapp-home-intro class="wm-home-header-intro"> </webmapp-home-intro>
-
-    <ion-label [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)">
-    </ion-label>
-    <webmapp-search-bar
-      #searchCmp
-      *ngIf="online$|async"
-      [initSearch]="title"
-      (isTypings)="isTyping$.next($event);checkTab($event)"
-      (words)="currentSearch$.next($event)"
-      [currentLayer]="currentLayer$|async"
-    >
-    </webmapp-search-bar>
-    <wm-btn-filter
-      #filterCmp
-      *ngIf="poiCards$|async"
-      [filters]="confPOISFilter$|async"
-      [initSelectedFilters]="selectedFilters$|async"
-      (selectedFilters)="setCurrentFilters($event)"
-    ></wm-btn-filter>
-  </div>
-
-  <ng-container *ngIf="(online$|async) === false">
-    <downloaded-tracks-box></downloaded-tracks-box>
+  <ng-container *ngIf="(online$|async)=== false">
+    <div class="wm-home-header-container">
+      <downloaded-tracks-box></downloaded-tracks-box>
+    </div>
   </ng-container>
-  <ng-container *ngIf="online$|async">
+  <ng-container *ngIf="(online$|async) === true">
+    <div class="wm-home-header-container">
+      <webmapp-home-intro class="wm-home-header-intro"> </webmapp-home-intro>
+      <ion-label
+        [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)"
+      >
+      </ion-label>
+      <webmapp-search-bar
+        #searchCmp
+        [initSearch]="title"
+        (isTypings)="isTyping$.next($event);checkTab($event)"
+        (words)="currentSearch$.next($event)"
+        [currentLayer]="currentLayer$|async"
+      >
+      </webmapp-search-bar>
+      <wm-btn-filter
+        #filterCmp
+        *ngIf="poiCards$|async"
+        [filters]="confPOISFilter$|async"
+        [initSelectedFilters]="selectedFilters$|async"
+        (selectedFilters)="setCurrentFilters($event)"
+      ></wm-btn-filter>
+    </div>
     <ng-container *ngIf="currentTab$|async as currentTab">
       <ion-breadcrumbs>
         <ion-breadcrumb (click)="goToHome()" *ngIf="currentTab != 'home'"

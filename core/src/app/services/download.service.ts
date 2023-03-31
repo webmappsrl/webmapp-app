@@ -10,6 +10,7 @@ import {StorageService} from './base/storage.service';
 import {Store} from '@ngrx/store';
 import defaultImage from '../../assets/images/defaultImageB64.json';
 import {mapCurrentRelatedPoi} from '../store/map/map.selector';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,7 @@ export class DownloadService {
   constructor(
     private storage: StorageService,
     private _storeMap: Store<IMapRootState>, // private communicationService: CommunicationService, // private db: DbService
+    private _http: HttpClient,
   ) {
     this.storage.onReady.subscribe(x => {
       this.storage.getByKey(DOWNLOAD_INDEX_KEY).then(val => {
@@ -80,25 +82,30 @@ export class DownloadService {
   }
 
   public async downloadBase64Img(url): Promise<string | ArrayBuffer> {
-    let opt: RequestInit = {mode: 'no-cors'};
-    // if (this.platform.is('mobile')) {
-    //   opt = { mode: 'no-cors' };
-    // }
-    const data = await fetch(url, opt);
-    const blob = await data.blob();
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      try {
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          resolve(base64data);
-        };
-      } catch (error) {
-        console.log('------- ~ getB64img ~ error', error);
-        resolve('');
-      }
-    });
+    try {
+      let opt: RequestInit = {};
+      // if (this.platform.is('mobile')) {
+      //   opt = { mode: 'no-cors' };
+      // }
+      const data = await fetch(url, opt);
+      const blob = await data.blob();
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        try {
+          reader.onloadend = () => {
+            const base64data = reader.result;
+            resolve(base64data);
+          };
+        } catch (error) {
+          console.log('------- ~ getB64img ~ error', error);
+          resolve(null);
+        }
+      });
+    } catch (_) {
+      console.warn(_, url);
+      return new Promise(resolve => resolve(null));
+    }
   }
 
   public async downloadImages(urlList: string[], referenceTrack): Promise<number> {
@@ -178,6 +185,10 @@ export class DownloadService {
       this.imgCache.push({key: url, value: base64data});
       return base64data;
     }
+  }
+
+  public async getDownloadedTrack(trackId): Promise<IGeojsonFeatureDownloaded> {
+    return this.storage.getTrack(trackId);
   }
 
   public async getDownloadedTracks(): Promise<Array<IGeojsonFeatureDownloaded>> {
@@ -307,12 +318,13 @@ export class DownloadService {
     console.log('------- ~ DownloadService ~ startDownload ~ track.properties', track.properties);
     if (track.properties.feature_image && track.properties.feature_image.sizes) {
       imageUrlList.push(track.properties.feature_image.url);
+
       for (let p in track.properties.feature_image.sizes) {
         imageUrlList.push(track.properties.feature_image.sizes[p]);
       }
     }
     if (track.properties.image_gallery) {
-      track.properties.image_gallery.forEach(img => {
+      track.properties.image_gallery.forEach(async img => {
         imageUrlList.push(img.url);
         for (let p in img.sizes) {
           imageUrlList.push(img.sizes[p]);
@@ -329,7 +341,6 @@ export class DownloadService {
       if (poi.properties.images) {
         for (let j = 0; j < poi.properties.images.length; j++) {
           const imgUrl = poi.properties.images[j];
-
           if (imgUrl) {
             imageUrlList.push(imgUrl);
           }
@@ -337,7 +348,8 @@ export class DownloadService {
         }
       }
     }
-    sizeMb += await this.downloadImages(imageUrlList, track); // TODO async
+    const images = [...new Set(this._findImageLinks(track).concat(imageUrlList))];
+    sizeMb += await this.downloadImages(images, track); // TODO async
 
     this.addToIndex({
       trackId: track.properties.id,
@@ -393,5 +405,26 @@ export class DownloadService {
       install: 1,
     });
     await this.storage.setTrack(newTrack.properties.id, newTrack);
+  }
+
+  private _findImageLinks(json: any): string[] {
+    const links: string[] = [];
+
+    function search(obj: any) {
+      for (const prop in obj) {
+        if (typeof obj[prop] === 'object') {
+          search(obj[prop]);
+        } else if (typeof obj[prop] === 'string') {
+          const match = obj[prop].match(/\bhttps?:\/\/\S+(?:png|jpe?g|gif)\b/gi);
+          if (match) {
+            links.push(...match);
+          }
+        }
+      }
+    }
+
+    search(json);
+
+    return links;
   }
 }

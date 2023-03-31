@@ -1,6 +1,9 @@
 <ng-container *ngIf="properties!= null">
   <div class="webmapp-pagepoi-info-body">
-    <wm-image-gallery [imageGallery]="properties?.image_gallery"></wm-image-gallery>
+    <wm-image-gallery
+      *ngIf="properties?.image_gallery?.length"
+      [imageGallery]="properties?.image_gallery"
+    ></wm-image-gallery>
     <wm-address *ngIf="properties?.address as address" [address]="address"></wm-address>
     <wm-elevation *ngIf="properties?.ele as ele" [elevation]="ele"></wm-elevation>
     <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>

@@ -5,7 +5,9 @@ export const confFeatureKey = 'conf';
 export interface INetworkRootState {
   online: boolean;
 }
-const initialNetworkState: INetworkRootState = null;
+const initialNetworkState: INetworkRootState = {
+  online: navigator.onLine,
+};
 export const networkReducer = createReducer(
   initialNetworkState,
   on(startNetworkMonitoringSuccess, (state, {online}) => {

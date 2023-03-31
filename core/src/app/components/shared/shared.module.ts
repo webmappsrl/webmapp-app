@@ -15,11 +15,13 @@ import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {RecordingBtnComponent} from './recording-btn/recording-btn.component';
 import {SearchBarComponent} from './search-bar/search-bar.component';
 import {ButtonsModule} from './buttons/buttons.module';
-import {TabImageGalleryComponent} from '../../shared/wm-core/tab-image-gallery/tab-image-gallery.component';
 import {WmSharedModule} from 'src/app/shared/wm-core/shared/shared.module';
 import {WmFormComponent} from './form/form.component';
 import {getFormFieldIcnPipe} from './pipes/get-form-field-icn.pipe';
 import {getFormFieldValuePipe} from './pipes/get-form-field-value.pipe';
+import {TabImageGalleryComponent} from './tab-image-gallery/tab-image-gallery.component';
+import {SearchListComponent} from './search-list/search-list.component';
+import {WmCoreModule} from 'src/app/shared/wm-core/wm-core.module';
 const components = [
   LoginComponent,
   ModalHeaderComponent,
@@ -31,10 +33,11 @@ const components = [
   BtnFilterComponent,
   ImageGalleryComponent,
   ModalImageComponent,
-  TabImageGalleryComponent,
   WmFormComponent,
   getFormFieldIcnPipe,
   getFormFieldValuePipe,
+  TabImageGalleryComponent,
+  SearchListComponent,
 ];
 @NgModule({
   declarations: components,
@@ -46,6 +49,7 @@ const components = [
     WmPipeModule,
     ButtonsModule,
     WmSharedModule,
+    WmCoreModule,
   ],
   exports: [...components, ButtonsModule],
 })
