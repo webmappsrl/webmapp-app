@@ -6,7 +6,11 @@
   </ion-fab>
   <ion-slides #gallery class="gallery" [options]="slideOptions" (ionSlideTouchEnd)="updateIdx()">
     <ion-slide *ngFor="let image of imageGallery; let idx = index" pager="true">
-      <wm-img [src]="image.url" class="webmapp-pagepoi-info-body-photo"></wm-img>
+      <wm-img
+        [src]="image.url"
+        class="webmapp-pagepoi-info-body-photo"
+        [offlineFn]="getStorageImage"
+      ></wm-img>
     </ion-slide>
   </ion-slides>
   <ng-container *ngIf="imageGallery.length > 1">

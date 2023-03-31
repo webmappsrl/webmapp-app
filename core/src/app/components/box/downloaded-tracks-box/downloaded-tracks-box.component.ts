@@ -3,12 +3,9 @@ import {NavController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {from, Observable, of} from 'rxjs';
 import {DownloadService} from 'src/app/services/download.service';
-import {IMapRootState} from 'src/app/store/map/map';
-import {setCurrentTrackId} from 'src/app/store/map/map.actions';
-import {IGeojsonFeatureDownloaded} from 'src/app/types/model';
 import {offline} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {switchMap, startWith} from 'rxjs/operators';
+import {startWith, map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {StorageService} from 'src/app/services/base/storage.service';
 @Component({
@@ -19,30 +16,26 @@ import {StorageService} from 'src/app/services/base/storage.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
+  getStorageImage = (url: string) => {
+    return this._storageSvc.getImage(url) as Promise<any>;
+  };
   offline$: Observable<boolean> = this._storeNetwork
     .select(offline)
     .pipe(startWith(!navigator.onLine));
-  tracks$: Observable<IGeojsonFeatureDownloaded[] | null>;
+  tracks$: Observable<IHIT[]>;
 
   constructor(
-    private _downloadService: DownloadService,
     private _storeNetwork: Store<INetworkRootState>,
     private _navCtrl: NavController,
+    private _downloadSvc: DownloadService,
+    private _storageSvc: StorageService,
   ) {
-    this.tracks$ = this.offline$.pipe(
-      switchMap(off => {
-        if (off) {
-          console.log('download tracks');
-          return from(this._downloadService.getDownloadedTracks());
-        } else {
-          return of(null);
-        }
-      }),
+    this.tracks$ = from(this._downloadSvc.getDownloadedTracks()).pipe(
+      map(t => t.map(track => track.properties as unknown as IHIT)),
     );
   }
 
-  open(track: IGeojsonFeatureDownloaded) {
-    const id = track.properties.id;
+  open(id: number): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {
         queryParams: {
@@ -51,15 +44,6 @@ export class DownloadedTracksBoxComponent {
         queryParamsHandling: 'merge',
       };
       this._navCtrl.navigateForward('map', navigationExtras);
-    }
-  }
-
-  sizeInMB(size) {
-    const million = 1000000;
-    if (size > million) {
-      return Math.round(size / million);
-    } else {
-      return Math.round((size * 100) / million) / 100;
     }
   }
 }

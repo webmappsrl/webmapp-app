@@ -99,11 +99,12 @@ export class DownloadService {
           };
         } catch (error) {
           console.log('------- ~ getB64img ~ error', error);
-          resolve('');
+          resolve(null);
         }
       });
     } catch (_) {
-      return new Promise(resolve => resolve('url'));
+      console.warn(_, url);
+      return new Promise(resolve => resolve(null));
     }
   }
 
@@ -347,7 +348,8 @@ export class DownloadService {
         }
       }
     }
-    sizeMb += await this.downloadImages(imageUrlList, track); // TODO async
+    const images = [...new Set(this._findImageLinks(track).concat(imageUrlList))];
+    sizeMb += await this.downloadImages(images, track); // TODO async
 
     this.addToIndex({
       trackId: track.properties.id,
@@ -403,5 +405,26 @@ export class DownloadService {
       install: 1,
     });
     await this.storage.setTrack(newTrack.properties.id, newTrack);
+  }
+
+  private _findImageLinks(json: any): string[] {
+    const links: string[] = [];
+
+    function search(obj: any) {
+      for (const prop in obj) {
+        if (typeof obj[prop] === 'object') {
+          search(obj[prop]);
+        } else if (typeof obj[prop] === 'string') {
+          const match = obj[prop].match(/\bhttps?:\/\/\S+(?:png|jpe?g|gif)\b/gi);
+          if (match) {
+            links.push(...match);
+          }
+        }
+      }
+    }
+
+    search(json);
+
+    return links;
   }
 }

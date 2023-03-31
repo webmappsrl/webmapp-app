@@ -96,7 +96,7 @@ const initialConfState: ICONF = {
     enable: false,
   },
   MAP: {
-    bbox: [-180, -85, 180, 85],
+    bbox: [4.25, 35.45, 20.19, 49.12],
     defZoom: 5,
     maxZoom: 15,
     minZoom: 5,

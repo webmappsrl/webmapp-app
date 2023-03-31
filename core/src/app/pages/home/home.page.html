@@ -1,6 +1,8 @@
 <ion-content class="webmapp-home-content">
   <ng-container *ngIf="(online$|async)=== false">
-    <downloaded-tracks-box *ngIf="(online$|async) ===false"></downloaded-tracks-box>
+    <div class="wm-home-header-container">
+      <downloaded-tracks-box></downloaded-tracks-box>
+    </div>
   </ng-container>
   <ng-container *ngIf="(online$|async) === true">
     <div class="wm-home-header-container">

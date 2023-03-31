@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
@@ -17,7 +16,6 @@ import {
   filter,
   first,
   map,
-  share,
   startWith,
   switchMap,
   tap,
@@ -115,10 +113,8 @@ export class HomePage implements OnInit, OnDestroy {
     private _storeSearch: Store<IElasticSearchRootState>,
     private _storeConf: Store<IConfRootState>,
     private _storeMap: Store<IMapRootState>,
-    private _storeNetwork: Store<INetworkRootState>,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
-    private _cdr: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
   ) {
     const allPois: Observable<any[]> = this._storeMap.select(pois).pipe(
@@ -187,7 +183,9 @@ export class HomePage implements OnInit, OnDestroy {
     this.setLayer(null);
     this.currentTab$.next('home');
     this.setCurrentFilters([]);
-    this.searchCmp.reset();
+    try {
+      this.searchCmp.reset();
+    } catch (_) {}
     this._navCtrl.navigateForward('home');
   }
 
@@ -196,11 +194,8 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    // this.mostViewedRoutes = await this._geoHubService.getMostViewedEcTracks();
     await this._geoLocation.start();
-    this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {
-      //  this.nearRoutes = await this._geoHubService.getNearEcTracks(pos);
-    });
+    this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {});
   }
 
   openSlug(slug: string): void {

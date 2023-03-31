@@ -1,4 +1,6 @@
 wm-page-home {
+  top: calc(56px + constant(safe-area-inset-top));
+  top: calc(56px + env(safe-area-inset-top));
   ion-breadcrumbs,
   .layer-details {
     width: 90%;

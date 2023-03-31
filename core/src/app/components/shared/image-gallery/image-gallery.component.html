@@ -9,6 +9,7 @@
       <wm-img
         [src]="image.url"
         class="webmapp-pagepoi-info-body-photo"
+        [offlineFn]="getStorageImage"
         (click)="showPhoto(idx)"
       ></wm-img>
     </ion-slide>
