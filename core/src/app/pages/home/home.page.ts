@@ -194,7 +194,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    await this._geoLocation.start();
     this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {});
   }
 

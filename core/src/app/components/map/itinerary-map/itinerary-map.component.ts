@@ -335,7 +335,7 @@ export class ItineraryMapComponent
     _backgroundGeolocation: BackgroundGeolocation,
     _platform: Platform,
   ) {
-    super(_backgroundGeolocation, _platform);
+    super( _platform);
     this._locationIcon = {
       layer: null,
       location: null,
