@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
+import {Location} from 'src/app/types/location';
 import {Coordinate} from 'ol/coordinate';
 import {Extent} from 'ol/extent';
 import {transform, transformExtent} from 'ol/proj';
 import {getDistance} from 'ol/sphere.js'; // Throws problems importing normally
-import {ILocation} from 'src/app/types/location';
 
 @Injectable({
   providedIn: 'root',
@@ -12,19 +12,14 @@ export class MapService {
   constructor() {}
 
   /**
-   * Return a value for the distance between the two point using a screen-fixed unit
+   * Transform a set of [lon, lat](EPSG:4326) coordinates in EPSG:3857
    *
-   * @param {ILocation} point1 the first location
-   * @param {ILocation} point2 the second location
-   * @param {number} resolution the view resolution
+   * @param {Coordinate} coordinates the [lon, lat](EPSG:4326) coordinates
    *
-   * @returns {number}
+   * @returns {Coordinate} the coordinates [lon, lat](EPSG:4326)
    */
-  getFixedDistance(point1: ILocation, point2: ILocation, resolution: number): number {
-    return (
-      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
-      resolution
-    );
+  coordsFromLonLat(coordinates: Coordinate): Coordinate {
+    return transform(coordinates, 'EPSG:4326', 'EPSG:3857');
   }
 
   /**
@@ -39,14 +34,14 @@ export class MapService {
   }
 
   /**
-   * Transform a set of [lon, lat](EPSG:4326) coordinates in EPSG:3857
+   * Transform a set of [minLon, minLat, maxLon, maxLat](EPSG:4326) coordinates in EPSG:3857
    *
-   * @param {Coordinate} coordinates the [lon, lat](EPSG:4326) coordinates
+   * @param {Extent} extent the [minLon, minLat, maxLon, maxLat](EPSG:4326) extent
    *
-   * @returns {Coordinate} the coordinates [lon, lat](EPSG:4326)
+   * @returns {Extent} the extent [minLon, minLat, maxLon, maxLat](EPSG:4326)
    */
-  coordsFromLonLat(coordinates: Coordinate): Coordinate {
-    return transform(coordinates, 'EPSG:4326', 'EPSG:3857');
+  extentFromLonLat(extent: Extent): Extent {
+    return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
   }
 
   /**
@@ -61,23 +56,12 @@ export class MapService {
   }
 
   /**
-   * Transform a set of [minLon, minLat, maxLon, maxLat](EPSG:4326) coordinates in EPSG:3857
-   *
-   * @param {Extent} extent the [minLon, minLat, maxLon, maxLat](EPSG:4326) extent
-   *
-   * @returns {Extent} the extent [minLon, minLat, maxLon, maxLat](EPSG:4326)
-   */
-  extentFromLonLat(extent: Extent): Extent {
-    return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
-  }
-
-  /**
    * Return the distance in meters between two locations
    *
    * @param point1 the first location
    * @param point2 the second location
    */
-  getDistanceBetweenPoints(point1: ILocation, point2: ILocation): number {
+  getDistanceBetweenPoints(point1: Location, point2: Location): number {
     let R: number = 6371e3;
     let lat1: number = (point1.latitude * Math.PI) / 180;
     let lat2: number = (point2.latitude * Math.PI) / 180;
@@ -92,5 +76,21 @@ export class MapService {
     let c: number = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     return R * c;
+  }
+
+  /**
+   * Return a value for the distance between the two point using a screen-fixed unit
+   *
+   * @param {Location} point1 the first location
+   * @param {Location} point2 the second location
+   * @param {number} resolution the view resolution
+   *
+   * @returns {number}
+   */
+  getFixedDistance(point1: Location, point2: Location, resolution: number): number {
+    return (
+      getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
+      resolution
+    );
   }
 }

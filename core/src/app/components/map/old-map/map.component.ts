@@ -41,8 +41,6 @@ import {
 } from '../../../constants/map';
 
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {ILocation} from 'src/app/types/location';
-import {CLocation} from 'src/app/classes/clocation';
 import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
 import {MapService} from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
@@ -63,6 +61,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {MarkerService} from 'src/app/services/marker.service';
 import {TilesService} from 'src/app/services/tiles.service';
 import {ConfigService} from 'src/app/services/config.service';
+import {Location} from 'src/app/types/location';
 import layerVector from 'ol/layer/Vector';
 import sourceVector from 'ol/source/Vector';
 
@@ -89,13 +88,13 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   private _height: number;
   private _lastClusterMarkerTransparency;
   private _leftPadding: number = 0;
-  private _location: ILocation;
+  private _location: Location;
   private _locationAnimationState: {
-    goalLocation?: ILocation;
+    goalLocation?: Location;
     goalAccuracy?: number;
     animating: boolean;
     startTime?: number;
-    startLocation?: ILocation;
+    startLocation?: Location;
   };
   private _locationIcon: {
     layer: VectorLayer<VectorSource>;
@@ -112,7 +111,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   private _map: Map;
   private _poiMarkers: PoiMarker[] = [];
   private _poisLayer: VectorLayer<VectorSource>;
-  private _position: ILocation = null;
+  private _position: Location = null;
   private _rightPadding: number = 0;
   private _selectedPoi: {
     lastSelectedPoi?: IGeojsonPoi;
@@ -198,7 +197,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @Input('position') set position(value: ILocation) {
+  @Input('position') set position(value: Location) {
     if (value) {
       setTimeout(() => {
         this._position = value;
@@ -450,7 +449,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
    *
    * @param location the new location
    */
-  animateLocation(location?: ILocation) {
+  animateLocation(location?: Location) {
     if (typeof location?.accuracy === 'number' && location.accuracy >= 0)
       this._locationAnimationState.goalAccuracy = location.accuracy;
 
@@ -463,12 +462,11 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
       const coordinates: Coordinate = this._mapService.coordsToLonLat(
         this._locationIcon.point.getCoordinates(),
       );
-      this._locationAnimationState.startLocation = new CLocation(
-        coordinates[0],
-        coordinates[1],
-        undefined,
-        this._locationIcon.circle.getRadius(),
-      );
+      this._locationAnimationState.startLocation = {
+        longitude: coordinates[0],
+        latitude: coordinates[1],
+        accuracy: this._locationIcon.circle.getRadius(),
+      };
       if (!this._locationAnimationState.animating) {
         this._locationAnimationState.animating = true;
       }
@@ -658,7 +656,10 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
 
           if (
             this._mapService.getFixedDistance(
-              new CLocation(centerCoordinates[0], centerCoordinates[1]),
+              {
+                longitude: centerCoordinates[0],
+                latitude: centerCoordinates[1],
+              },
               this._location,
               this._view.getResolution(),
             ) > 30
@@ -823,12 +824,12 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
             );
           } else {
             // Update location
-            const newLocation: CLocation = new CLocation(
-              this._locationAnimationState.startLocation.longitude + delta * deltaLongitude,
-              this._locationAnimationState.startLocation.latitude + delta * deltaLatitude,
-              undefined,
-              this._locationAnimationState.startLocation.accuracy + delta * deltaAccuracy,
-            );
+            const newLocation: Location = {
+              longitude:
+                this._locationAnimationState.startLocation.longitude + delta * deltaLongitude,
+              latitude: this._locationAnimationState.startLocation.latitude + delta * deltaLatitude,
+              accuracy: this._locationAnimationState.startLocation.accuracy + delta * deltaAccuracy,
+            } as Location;
             this._setLocation(newLocation);
           }
         } else {
@@ -1110,7 +1111,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   }
 
   private _drawTemporaryLocationFeature(
-    location?: ILocation,
+    location?: Location,
     track?: CGeojsonLineStringFeature,
   ): void {
     if (location) {
@@ -1357,7 +1358,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
    *
    * @param location the location
    */
-  private _setLocation(location: ILocation): void {
+  private _setLocation(location: Location): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
         location?.longitude,
         location?.latitude,

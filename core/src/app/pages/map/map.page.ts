@@ -139,7 +139,7 @@ export class MapPage implements OnInit, OnDestroy {
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
-  currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
   currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
@@ -274,10 +274,7 @@ export class MapPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
-    this._geolocationSvc.onLocationChange.subscribe(val => {
-      console.log('backgroundGeolocation->onLocationChange', val);
-      this.currentPosition$.next(val);
-    });
+    this.currentPosition$ =this._geolocationSvc.onLocationChange;
   }
 
   close(): void {

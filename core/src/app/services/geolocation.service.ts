@@ -1,25 +1,19 @@
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Platform} from '@ionic/angular';
 
 import {BehaviorSubject, ReplaySubject, Subscription, from} from 'rxjs';
-import {CLocation} from '../classes/clocation';
 import {CStopwatch} from '../classes/cstopwatch';
 import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
-import {LangService} from '../shared/wm-core/localization/lang.service';
-import {IGeolocationServiceState, ILocation} from '../types/location';
-import {DeviceService} from './base/device.service';
-// eslint-disable-next-line @typescript-eslint/naming-convention
+import {IGeolocationServiceState} from '../types/location';
 import {BackgroundGeolocationPlugin, Location} from '@capacitor-community/background-geolocation';
 import {registerPlugin} from '@capacitor/core';
-import {filter, switchMap} from 'rxjs/operators';
-const DEBUG_MODE = false;
 
 const backgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('BackgroundGeolocation');
 @Injectable({
   providedIn: 'root',
 })
 export class GeolocationService {
-  private _currentLocation: CLocation;
+  private _currentLocation: Location;
   private _currentLocationSub: Subscription = Subscription.EMPTY;
   private _recordStopwatch: CStopwatch;
   private _recordedFeature: CGeojsonLineStringFeature;
@@ -39,7 +33,7 @@ export class GeolocationService {
     return !!this?._state?.isLoading;
   }
 
-  get location(): ILocation {
+  get location(): Location {
     return this?._currentLocation;
   }
 
@@ -62,18 +56,93 @@ export class GeolocationService {
   public onGeolocationStateChange: ReplaySubject<IGeolocationServiceState> =
     new ReplaySubject<IGeolocationServiceState>(1);
   // External events
-  public onLocationChange: ReplaySubject<ILocation> = new ReplaySubject<ILocation>(1);
+  public onLocationChange: ReplaySubject<Location> = new ReplaySubject<Location>(1);
   onPause$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   onRecord$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   onStart$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    private _deviceService: DeviceService,
-    private _platform: Platform,
-    private _ngZone: NgZone,
-    private _translateService: LangService,
-  ) {
-    console.log('backgroundGeolocation->GeolocationService constructor');
+  constructor(private _platform: Platform) {}
+
+  _nativeWatcher(): void {
+    backgroundGeolocation
+      .addWatcher(
+        {
+          // If the "backgroundMessage" option is defined, the watcher will
+          // provide location updates whether the app is in the background or the
+          // foreground. If it is not defined, location updates are only
+          // guaranteed in the foreground. This is true on both platforms.
+
+          // On Android, a notification must be shown to continue receiving
+          // location updates in the background. This option specifies the text of
+          // that notification.
+          backgroundMessage: 'Cancel to prevent battery drain.',
+
+          // The title of the notification mentioned above. Defaults to "Using
+          // your location".
+          backgroundTitle: 'Tracking You.',
+
+          // Whether permissions should be requested from the user automatically,
+          // if they are not already granted. Defaults to "true".
+          requestPermissions: true,
+
+          // If "true", stale locations may be delivered while the device
+          // obtains a GPS fix. You are responsible for checking the "time"
+          // property. If "false", locations are guaranteed to be up to date.
+          // Defaults to "false".
+          stale: false,
+
+          // The minimum number of metres between subsequent locations. Defaults
+          // to 0.
+          distanceFilter: 0,
+        },
+        (location, error) => {
+          if (error) {
+            if (error.code === 'NOT_AUTHORIZED') {
+              if (
+                window.confirm(
+                  'This app needs your location, ' +
+                    'but does not have permission.\n\n' +
+                    'Open settings now?',
+                )
+              ) {
+                // It can be useful to direct the user to their device's
+                // settings when location permissions have been denied. The
+                // plugin provides the 'openSettings' method to do exactly
+                // this.
+                backgroundGeolocation.openSettings();
+              }
+            }
+            return console.error(error);
+          }
+          console.log(
+            'backgroundGeolocation->GeolocationService location:',
+            JSON.stringify(location),
+          );
+          if (this.onStart$.value) {
+            this._locationUpdate(location);
+          }
+          return console.log(location);
+        },
+      )
+      .then(watcher_id => {
+        // When a watcher is no longer needed, it should be removed by calling
+        // 'removeWatcher' with an object containing its ID.
+        this._watcher.next(watcher_id);
+        console.log('backgroundGeolocation->GeolocationService watcher_id: ', watcher_id);
+      });
+  }
+
+  _webWatcher(): void {
+    this._watcher.next('navigator');
+    navigator.geolocation.watchPosition(
+      res => {
+        this._locationUpdate((res as any).coords);
+      },
+      function errorCallback(error) {
+        // console.log(error);
+      },
+      {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
+    );
   }
 
   /**
@@ -105,70 +174,13 @@ export class GeolocationService {
   start(): void {
     this.onStart$.next(true);
     if (this._watcher.value == null) {
-      console.log('backgroundGeolocation->GeolocationService start');
-      backgroundGeolocation
-        .addWatcher(
-          {
-            // If the "backgroundMessage" option is defined, the watcher will
-            // provide location updates whether the app is in the background or the
-            // foreground. If it is not defined, location updates are only
-            // guaranteed in the foreground. This is true on both platforms.
-
-            // On Android, a notification must be shown to continue receiving
-            // location updates in the background. This option specifies the text of
-            // that notification.
-            backgroundMessage: 'Cancel to prevent battery drain.',
-
-            // The title of the notification mentioned above. Defaults to "Using
-            // your location".
-            backgroundTitle: 'Tracking You.',
-
-            // Whether permissions should be requested from the user automatically,
-            // if they are not already granted. Defaults to "true".
-            requestPermissions: true,
-
-            // If "true", stale locations may be delivered while the device
-            // obtains a GPS fix. You are responsible for checking the "time"
-            // property. If "false", locations are guaranteed to be up to date.
-            // Defaults to "false".
-            stale: false,
-
-            // The minimum number of metres between subsequent locations. Defaults
-            // to 0.
-            distanceFilter: 0,
-          },
-          (location, error) => {
-            if (error) {
-              if (error.code === 'NOT_AUTHORIZED') {
-                if (
-                  window.confirm(
-                    'This app needs your location, ' +
-                      'but does not have permission.\n\n' +
-                      'Open settings now?',
-                  )
-                ) {
-                  // It can be useful to direct the user to their device's
-                  // settings when location permissions have been denied. The
-                  // plugin provides the 'openSettings' method to do exactly
-                  // this.
-                  backgroundGeolocation.openSettings();
-                }
-              }
-              return console.error(error);
-            }
-            console.log('backgroundGeolocation->GeolocationService location');
-            if (this.onStart$.value) {
-              this._locationUpdate(location);
-            }
-            return console.log(location);
-          },
-        )
-        .then(watcher_id => {
-          // When a watcher is no longer needed, it should be removed by calling
-          // 'removeWatcher' with an object containing its ID.
-          this._watcher.next(watcher_id);
-          console.log('backgroundGeolocation->GeolocationService watcher_id: ', watcher_id);
-        });
+      if (this._platform.is('desktop')) {
+        console.log('backgroundGeolocation->GeolocationService start desktop');
+        this._webWatcher();
+      } else {
+        console.log('backgroundGeolocation->GeolocationService start native');
+        this._nativeWatcher();
+      }
     }
   }
 
@@ -196,6 +208,7 @@ export class GeolocationService {
       id: this._watcher.value,
     });
     this._watcher.next(null);
+    this._currentLocationSub.unsubscribe();
   }
 
   /**
@@ -206,10 +219,10 @@ export class GeolocationService {
     return this._stopRecording();
   }
 
-  private _addLocationToRecordedFeature(location: any): void {
+  private _addLocationToRecordedFeature(location: Location): void {
     this._recordedFeature.addCoordinates(location);
     const timestamps: Array<number> = this._recordedFeature?.properties?.timestamps ?? [];
-    timestamps.push(location.timestamp);
+    timestamps.push(location.time);
     this._recordedFeature.setProperty('timestamps', timestamps);
   }
 
@@ -233,30 +246,7 @@ export class GeolocationService {
       else return;
     }
 
-    const newLocation: CLocation = new CLocation(
-      rawLocation.longitude,
-      rawLocation.latitude,
-      rawLocation.altitude &&
-      typeof rawLocation.altitude === 'number' &&
-      !Number.isNaN(rawLocation.altitude)
-        ? rawLocation.altitude
-        : undefined,
-      rawLocation.accuracy &&
-      typeof rawLocation.accuracy === 'number' &&
-      !Number.isNaN(rawLocation.accuracy)
-        ? rawLocation.accuracy
-        : undefined,
-      rawLocation.speed && typeof rawLocation.speed === 'number' && !Number.isNaN(rawLocation.speed)
-        ? rawLocation.speed
-        : undefined,
-      rawLocation.bearing &&
-      typeof rawLocation.bearing === 'number' &&
-      !Number.isNaN(rawLocation.bearing)
-        ? rawLocation.bearing
-        : undefined,
-    );
-
-    this._currentLocation = newLocation;
+    this._currentLocation = rawLocation;
 
     if (this.onRecord$.value && !this.onPause$.value) {
       this._addLocationToRecordedFeature(this._currentLocation);

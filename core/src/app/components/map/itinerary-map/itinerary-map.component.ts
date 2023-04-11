@@ -51,8 +51,6 @@ import {
   TRACKMARKERLAYERZINDEX,
 } from '../../../constants/map';
 
-import {ILocation} from 'src/app/types/location';
-import {CLocation} from 'src/app/classes/clocation';
 import {EMapLocationState} from 'src/app/types/emap-location-state.enum';
 import {MapService} from 'src/app/services/base/map.service';
 import Stroke from 'ol/style/Stroke';
@@ -82,6 +80,7 @@ import {getDistance} from 'ol/sphere';
 import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
 import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {Platform} from '@ionic/angular';
+import {Location} from 'src/app/types/location';
 
 @Component({
   selector: 'itinerary-webmapp-map',
@@ -101,13 +100,13 @@ export class ItineraryMapComponent
   private _height: number;
   private _lastClusterMarkerTransparency;
   private _leftPadding: number = 0;
-  private _location: ILocation;
+  private _location: Location;
   private _locationAnimationState: {
-    goalLocation?: ILocation;
+    goalLocation?: Location;
     goalAccuracy?: number;
     animating: boolean;
     startTime?: number;
-    startLocation?: ILocation;
+    startLocation?: Location;
   };
   private _locationIcon: {
     layer: VectorLayer<VectorSource>;
@@ -124,7 +123,7 @@ export class ItineraryMapComponent
   private _map: Map;
   private _poiMarkers: PoiMarker[] = [];
   private _poisLayer: VectorLayer<VectorSource>;
-  private _position: ILocation = null;
+  private _position: Location = null;
   private _rightPadding: number = 0;
   private _selectedPoi: {
     lastSelectedPoi?: IGeojsonPoi;
@@ -211,7 +210,7 @@ export class ItineraryMapComponent
     }
   }
 
-  @Input('position') set position(value: ILocation) {
+  @Input('position') set position(value: Location) {
     if (value) {
       setTimeout(() => {
         this._position = value;
@@ -335,7 +334,7 @@ export class ItineraryMapComponent
     _backgroundGeolocation: BackgroundGeolocation,
     _platform: Platform,
   ) {
-    super( _platform);
+    super(_platform);
     this._locationIcon = {
       layer: null,
       location: null,
@@ -484,7 +483,7 @@ export class ItineraryMapComponent
    *
    * @param location the new location
    */
-  animateLocation(location?: ILocation) {
+  animateLocation(location?: Location) {
     if (typeof location?.accuracy === 'number' && location.accuracy >= 0)
       this._locationAnimationState.goalAccuracy = location.accuracy;
 
@@ -497,12 +496,11 @@ export class ItineraryMapComponent
       const coordinates: Coordinate = this._mapService.coordsToLonLat(
         this._locationIcon.point.getCoordinates(),
       );
-      this._locationAnimationState.startLocation = new CLocation(
-        coordinates[0],
-        coordinates[1],
-        undefined,
-        this._locationIcon.circle.getRadius(),
-      );
+      this._locationAnimationState.startLocation = {
+        longitude: coordinates[0],
+        latitude: coordinates[1],
+        accuracy: this._locationIcon.circle.getRadius(),
+      } as Location;
       if (!this._locationAnimationState.animating) {
         this._locationAnimationState.animating = true;
       }
@@ -889,12 +887,12 @@ export class ItineraryMapComponent
             );
           } else {
             // Update location
-            const newLocation: CLocation = new CLocation(
-              this._locationAnimationState.startLocation.longitude + delta * deltaLongitude,
-              this._locationAnimationState.startLocation.latitude + delta * deltaLatitude,
-              undefined,
-              this._locationAnimationState.startLocation.accuracy + delta * deltaAccuracy,
-            );
+            const newLocation: Location = {
+              longitude:
+                this._locationAnimationState.startLocation.longitude + delta * deltaLongitude,
+              latitude: this._locationAnimationState.startLocation.latitude + delta * deltaLatitude,
+              accuracy: this._locationAnimationState.startLocation.accuracy + delta * deltaAccuracy,
+            };
             this._setLocation(newLocation);
           }
         } else {
@@ -1263,7 +1261,7 @@ export class ItineraryMapComponent
   }
 
   private _drawTemporaryLocationFeature(
-    location?: ILocation,
+    location?: Location,
     track?: CGeojsonLineStringFeature,
   ): void {
     if (location) {
@@ -1511,7 +1509,7 @@ export class ItineraryMapComponent
    *
    * @param location the location
    */
-  private _setLocation(location: ILocation): void {
+  private _setLocation(location: Location): void {
     const mapLocation: Coordinate = this._mapService.coordsFromLonLat([
         location?.longitude,
         location?.latitude,

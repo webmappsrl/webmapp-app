@@ -15,11 +15,11 @@ import {
 import {HttpClient} from '@angular/common/http';
 import {IRegisterItem} from '../types/track';
 import {Filesystem, Directory, GetUriResult} from '@capacitor/filesystem';
-import {ILocation} from '../types/location';
 import {GeolocationService} from './geolocation.service';
 import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController} from '@ionic/angular';
 import {LangService} from '../shared/wm-core/localization/lang.service';
+import {Location} from 'src/app/types/location';
 
 export interface IPhotoItem extends IRegisterItem {
   blob?: Blob;
@@ -28,7 +28,7 @@ export interface IPhotoItem extends IRegisterItem {
   exif?: any;
   id: string;
   photoURL: string;
-  position: ILocation;
+  position: Location;
   rawData?: string;
 }
 
