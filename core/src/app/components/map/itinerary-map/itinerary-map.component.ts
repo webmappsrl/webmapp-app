@@ -78,7 +78,6 @@ import SimpleGeometry from 'ol/geom/SimpleGeometry';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {getDistance} from 'ol/sphere';
 import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
-import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {Platform} from '@ionic/angular';
 import {Location} from 'src/app/types/location';
 
@@ -331,7 +330,6 @@ export class ItineraryMapComponent
     private _tilesService: TilesService,
     private _storeMap: Store<IMapRootState>,
     private _cdr: ChangeDetectorRef,
-    _backgroundGeolocation: BackgroundGeolocation,
     _platform: Platform,
   ) {
     super(_platform);

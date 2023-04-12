@@ -1,4 +1,3 @@
-import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {GeolocationPage} from 'src/app/pages/abstract/geolocation';
 import {
   AfterViewInit,
@@ -153,9 +152,8 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
     private _coinService: CoinService,
     private _storeConf: Store<IConfRootState>,
     private _authSvc: AuthService,
-    backgroundGeolocation: BackgroundGeolocation,
   ) {
-    super( _platform);
+    super(_platform);
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentTrackProperties$
       .pipe(

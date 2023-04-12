@@ -27,6 +27,27 @@ export class SaveService {
     this._recoverIndex();
   }
 
+  deletePhoto(photo: IPhotoItem): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deletePhoto(+photo.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(photo.key)),
+    });
+  }
+
+  deleteTrack(track: ITrack): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deleteTrack(+track.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(track.key)),
+    });
+  }
+
+  deleteWaypoint(waypoint: WaypointSave): Observable<any> {
+    return forkJoin({
+      deleteFromAPI: this.geohub.deleteWaypoint(+waypoint.id),
+      deleteFromSTORAGE: from(this._deleteGeneric(waypoint.key)),
+    });
+  }
+
   public async getGenerics(type: ESaveObjType): Promise<any[]> {
     const res = [];
     for (const obj of this._index.objects) {
@@ -287,25 +308,6 @@ export class SaveService {
     }
   }
 
-  deleteTrack(track: ITrack): Observable<any> {
-    return forkJoin({
-      deleteFromAPI: this.geohub.deleteTrack(+track.id),
-      deleteFromSTORAGE: from(this._deleteGeneric(track.key)),
-    });
-  }
-
-  deletePhoto(photo: IPhotoItem): Observable<any> {
-    return forkJoin({
-      deleteFromAPI: this.geohub.deletePhoto(+photo.id),
-      deleteFromSTORAGE: from(this._deleteGeneric(photo.key)),
-    });
-  }
-  deleteWaypoint(waypoint: WaypointSave): Observable<any> {
-    return forkJoin({
-      deleteFromAPI: this.geohub.deleteWaypoint(+waypoint.id),
-      deleteFromSTORAGE: from(this._deleteGeneric(waypoint.key)),
-    });
-  }
   private async _deleteGeneric(key): Promise<any> {
     await this._storage.removeByKey(key);
     const indexObj = this._index.objects.find(x => x.key === key);

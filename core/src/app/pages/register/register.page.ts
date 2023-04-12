@@ -85,6 +85,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    console.log('register.page -> ngOnDestroy');
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}
@@ -182,6 +183,7 @@ export class RegisterPage implements OnInit, OnDestroy {
           geojson,
         },
         res.data.trackData,
+        {rawData: JSON.stringify(geojson.properties)},
       );
       const saved = await this._saveSvc.saveTrack(track);
 
@@ -201,7 +203,9 @@ export class RegisterPage implements OnInit, OnDestroy {
       //   this._geolocationSvc.recordedFeature
       // );
       // this.time = this.formatTime(timeSeconds);
-      this.actualSpeed = this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
+      this.actualSpeed =
+        this._geolocationSvc.location.speed ??
+        this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
       this.averageSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
     }
   }

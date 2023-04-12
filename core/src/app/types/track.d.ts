@@ -8,12 +8,13 @@ export interface IRegisterItem {
 }
 
 export interface ITrack extends IRegisterItem {
+  activity: string;
+  description?: string;
   geojson?: CGeojsonLineStringFeature;
-  photos: IPhotoItem[];
+  id?: string;
   photoKeys: string[];
+  photos: IPhotoItem[];
+  rawData?: any;
   storedPhotoKeys?: string[];
   title: string;
-  description?: string;
-  activity: string;
-  id?: string;
 }

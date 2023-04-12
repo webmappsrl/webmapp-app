@@ -274,7 +274,7 @@ export class MapPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
-    this.currentPosition$ =this._geolocationSvc.onLocationChange;
+    this.currentPosition$ = this._geolocationSvc.onLocationChange;
   }
 
   close(): void {
@@ -379,6 +379,7 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('map.page -> ngOnDestroy');
     this._routerSub.unsubscribe();
   }
 

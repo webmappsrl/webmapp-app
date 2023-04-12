@@ -15,6 +15,7 @@ const backgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('Backg
 export class GeolocationService {
   private _currentLocation: Location;
   private _currentLocationSub: Subscription = Subscription.EMPTY;
+  private _distanceFilter: number = 0;
   private _recordStopwatch: CStopwatch;
   private _recordedFeature: CGeojsonLineStringFeature;
   private _state: IGeolocationServiceState = {
@@ -27,6 +28,11 @@ export class GeolocationService {
 
   get active(): boolean {
     return !!this?._state?.isActive;
+  }
+
+  set distanceFilter(value: number) {
+    this._distanceFilter = value;
+    this.stop();
   }
 
   get loading(): boolean {
@@ -93,7 +99,7 @@ export class GeolocationService {
 
           // The minimum number of metres between subsequent locations. Defaults
           // to 0.
-          distanceFilter: 0,
+          distanceFilter: this._distanceFilter,
         },
         (location, error) => {
           if (error) {
@@ -136,7 +142,7 @@ export class GeolocationService {
     this._watcher.next('navigator');
     navigator.geolocation.watchPosition(
       res => {
-        this._locationUpdate((res as any).coords);
+        this._locationUpdate((res as any).coords as Location);
       },
       function errorCallback(error) {
         // console.log(error);
@@ -222,8 +228,25 @@ export class GeolocationService {
   private _addLocationToRecordedFeature(location: Location): void {
     this._recordedFeature.addCoordinates(location);
     const timestamps: Array<number> = this._recordedFeature?.properties?.timestamps ?? [];
+    const locations: Array<Location> = this._recordedFeature?.properties?.locations ?? [];
+    locations.push(location);
     timestamps.push(location.time);
     this._recordedFeature.setProperty('timestamps', timestamps);
+    this._recordedFeature.setProperty('locations', locations);
+  }
+
+  private _cloneAsObject(obj) {
+    if (obj === null || !(obj instanceof Object)) {
+      return obj;
+    }
+    var temp = obj instanceof Array ? [] : {};
+    // ReSharper disable once MissingHasOwnPropertyInForeach
+    for (var key in obj) {
+      if (obj[key] != null) {
+        temp[key] = this._cloneAsObject(obj[key]);
+      }
+    }
+    return temp;
   }
 
   /**
@@ -232,6 +255,7 @@ export class GeolocationService {
    * @param rawLocation the new location
    */
   private _locationUpdate(rawLocation: Location) {
+    rawLocation = this._cloneAsObject(rawLocation);
     if (Number.isNaN(rawLocation.latitude) || Number.isNaN(rawLocation.longitude)) return;
 
     if (rawLocation.latitude && typeof rawLocation.latitude !== 'number') {
@@ -251,7 +275,10 @@ export class GeolocationService {
     if (this.onRecord$.value && !this.onPause$.value) {
       this._addLocationToRecordedFeature(this._currentLocation);
     }
-
+    console.log(
+      'backgroundGeolocation->GeolocationService location update: ',
+      JSON.stringify(this._currentLocation),
+    );
     this.onLocationChange.next(this._currentLocation);
   }
 

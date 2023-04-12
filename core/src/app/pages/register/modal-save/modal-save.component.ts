@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
-import { ITrack } from 'src/app/types/track';
-import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
-import { Md5 } from 'ts-md5';
-import { activities } from 'src/app/constants/activities';
+import {Component, OnInit} from '@angular/core';
+import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {ITrack} from 'src/app/types/track';
+import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
+import {Md5} from 'ts-md5';
+import {activities} from 'src/app/constants/activities';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -12,36 +12,64 @@ import { activities } from 'src/app/constants/activities';
   styleUrls: ['./modal-save.component.scss'],
 })
 export class ModalSaveComponent implements OnInit {
-  public title: string;
-  public description: string;
-  public activity: string;
-  public validate = false;
-  public isValidArray:boolean[] = [false,false];
-
   public activities = activities;
-
+  public activity: string;
+  public description: string;
+  public isValidArray: boolean[] = [false, false];
   public photos: any[] = [];
-
+  public title: string;
   public track: ITrack;
+  public validate = false;
 
   constructor(
     private _modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
     private _photoService: PhotoService,
-    private actionSheetController:ActionSheetController
+    private actionSheetController: ActionSheetController,
   ) {}
 
-  ngOnInit() {
-    if (this.track) {
-      this.title = this.track.title;
-      this.description = this.track.description;
-      this.activity = this.track.activity;
-    }
+  async addPhotos() {
+    const library = await this._photoService.getPhotos();
+    library.forEach(async libraryItem => {
+      const libraryItemCopy = Object.assign({selected: false}, libraryItem);
+      const photoData = await this._photoService.getPhotoData(libraryItemCopy.photoURL),
+        md5 = Md5.hashStr(JSON.stringify(photoData));
+      let exists: boolean = false;
+      for (let p of this.photos) {
+        const pData = await this._photoService.getPhotoData(p.photoURL),
+          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        if (md5 === pictureMd5) {
+          exists = true;
+          break;
+        }
+      }
+      if (!exists) this.photos.push(libraryItemCopy);
+    });
   }
 
-  async close(){
+  backToMap() {
+    this._modalController.dismiss({
+      dismissed: false,
+      save: false,
+    });
+  }
 
+  backToRecording() {
+    this._modalController.dismiss({
+      dismissed: true,
+    });
+  }
+
+  backToSuccess(trackData) {
+    this._modalController.dismiss({
+      trackData,
+      dismissed: false,
+      save: true,
+    });
+  }
+
+  async close() {
     const translation = await this._translate
       .get([
         'pages.register.modalsave.closemodal.title',
@@ -51,32 +79,33 @@ export class ModalSaveComponent implements OnInit {
       ])
       .toPromise();
 
-    this.actionSheetController.create({
-      // header: translation['pages.register.modalsave.closemodal.title'],
-      buttons: [
-        {
-          text: translation['pages.register.modalsave.closemodal.back'],
-          handler: () => {
-            this.backToRecording();
+    this.actionSheetController
+      .create({
+        // header: translation['pages.register.modalsave.closemodal.title'],
+        buttons: [
+          {
+            text: translation['pages.register.modalsave.closemodal.back'],
+            handler: () => {
+              this.backToRecording();
+            },
           },
-        },
-        {
-          text: translation['pages.register.modalsave.closemodal.delete'],
-          role: 'destructive',
-          handler: () => {
-            this.exit();
+          {
+            text: translation['pages.register.modalsave.closemodal.delete'],
+            role: 'destructive',
+            handler: () => {
+              this.exit();
+            },
           },
-        },        
-        {
-          text: translation['pages.register.modalsave.closemodal.cancel'],
-          role: 'cancel',
-          handler: () => { },
-        },
-      ],
-    }).then(actionSheet => {
-      actionSheet.present();
-    });
-
+          {
+            text: translation['pages.register.modalsave.closemodal.cancel'],
+            role: 'cancel',
+            handler: () => {},
+          },
+        ],
+      })
+      .then(actionSheet => {
+        actionSheet.present();
+      });
   }
 
   async exit() {
@@ -114,8 +143,33 @@ export class ModalSaveComponent implements OnInit {
     await alert.present();
   }
 
+  isValid() {
+    this.validate = true;
+    const allValid = this.isValidArray.reduce((x, curr) => {
+      return curr && x;
+    }, true);
+    return allValid;
+  }
+
+  ngOnInit() {
+    if (this.track) {
+      this.title = this.track.title;
+      this.description = this.track.description;
+      this.activity = this.track.activity;
+    }
+  }
+
+  remove(image: IPhotoItem) {
+    const i = this.photos.findIndex(
+      x => x.photoURL === image.photoURL || (!!x.key && !!image.key && x.key === image.key),
+    );
+    if (i > -1) {
+      this.photos.splice(i, 1);
+    }
+  }
+
   save() {
-    if(!this.isValid()){
+    if (!this.isValid()) {
       return;
     }
     const trackData: ITrack = {
@@ -129,67 +183,7 @@ export class ModalSaveComponent implements OnInit {
     this.backToSuccess(trackData);
   }
 
-  backToRecording(){
-    this._modalController.dismiss({
-      dismissed: true,
-    });
+  setIsValid(idx: number, isValid: boolean) {
+    this.isValidArray[idx] = isValid;
   }
-
-  backToMap(){
-    this._modalController.dismiss({
-      dismissed: false,
-      save:false
-    });
-  }
-
-  backToSuccess(trackData){
-
-    this._modalController.dismiss({
-      trackData,
-      dismissed: false,
-      save:true
-    });
-  }
-
-  async addPhotos() {
-    const library = await this._photoService.getPhotos();
-    library.forEach(async (libraryItem) => {
-      const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
-      const photoData = await this._photoService.getPhotoData(
-          libraryItemCopy.photoURL
-        ),
-        md5 = Md5.hashStr(JSON.stringify(photoData));
-      let exists: boolean = false;
-      for (let p of this.photos) {
-        const pData = await this._photoService.getPhotoData(p.photoURL),
-          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
-        if (md5 === pictureMd5) {
-          exists = true;
-          break;
-        }
-      }
-      if (!exists) this.photos.push(libraryItemCopy);
-    });
-  }
-
-  remove(image: IPhotoItem) {
-    const i = this.photos.findIndex(
-      (x) =>
-        x.photoURL === image.photoURL ||
-        (!!x.key && !!image.key && x.key === image.key)
-    );
-    if (i > -1) {
-      this.photos.splice(i, 1);
-    }
-  }
-
-  setIsValid(idx:number,isValid:boolean){
-    this.isValidArray[idx]=isValid;
-  }
-  
-    isValid() {
-      this.validate = true;
-      const allValid = this.isValidArray.reduce((x,curr)=>{return curr && x},true);
-      return allValid;
-    }
 }
