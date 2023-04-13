@@ -7,6 +7,7 @@ import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-strin
 import {IGeolocationServiceState} from '../types/location';
 import {BackgroundGeolocationPlugin, Location} from '@capacitor-community/background-geolocation';
 import {registerPlugin} from '@capacitor/core';
+import {getDistance} from 'ol/sphere';
 
 const backgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('BackgroundGeolocation');
 @Injectable({
@@ -143,10 +144,21 @@ export class GeolocationService {
   private _addLocationToRecordedFeature(location: Location): void {
     this._recordedFeature.addCoordinates(location);
     const locations: Array<Location> = this._recordedFeature?.properties?.metadata?.locations ?? [];
-    location.time = location.time != null ? location.time : Date.now();
     locations.push(location);
     const metadata = {locations};
     this._recordedFeature.setProperty('metadata', metadata);
+  }
+
+  private _calculateSpeed(prevLocation: Location, currentLocation: Location): number {
+    if (prevLocation != null && currentLocation != null) {
+      const prevCoords = [prevLocation.longitude, prevLocation.latitude];
+      const currentCoords = [currentLocation.longitude, currentLocation.latitude];
+      const dist = getDistance(prevCoords, currentCoords);
+      const time = (currentLocation.time - prevLocation.time) / 1000;
+
+      return dist / 1000 / (time / 3600);
+    }
+    return 0;
   }
 
   private _cloneAsObject(obj) {
@@ -183,8 +195,13 @@ export class GeolocationService {
       if (!Number.isNaN(longitude)) rawLocation.latitude = longitude;
       else return;
     }
+    rawLocation.time = rawLocation.time != null ? rawLocation.time : Date.now();
+    rawLocation.speed =
+      rawLocation.speed != null
+        ? rawLocation.speed * 3.6
+        : this._calculateSpeed(this._currentLocation, rawLocation);
 
-    this._currentLocation = rawLocation;
+    this._currentLocation = {...rawLocation};
 
     if (this.onRecord$.value && !this.onPause$.value) {
       this._addLocationToRecordedFeature(this._currentLocation);
@@ -285,7 +302,9 @@ export class GeolocationService {
     this._watcher.next('navigator');
     navigator.geolocation.watchPosition(
       res => {
-        this._locationUpdate((res as any).coords as Location);
+        if (this.onStart$.value) {
+          this._locationUpdate((res as any).coords as Location);
+        }
       },
       function errorCallback(error) {
         // console.log(error);

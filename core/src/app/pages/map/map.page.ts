@@ -252,7 +252,6 @@ export class MapPage implements OnInit, OnDestroy {
     private _geolocationSvc: GeolocationService,
     _platform: Platform,
   ) {
-    this._geolocationSvc.start();
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -352,6 +351,7 @@ export class MapPage implements OnInit, OnDestroy {
   ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.onLine$.next(navigator.onLine);
+    this._geolocationSvc.start();
   }
 
   ionViewWillEnter(): void {

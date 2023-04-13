@@ -55,6 +55,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _modalCtrl: ModalController,
     private _saveSvc: SaveService,
     private _cdr: ChangeDetectorRef,
+    private _platform: Platform,
   ) {
     this.record$ = this._geolocationSvc.onRecord$;
   }
@@ -81,6 +82,10 @@ export class RegisterPage implements OnInit, OnDestroy {
         this.updateMap();
       }, 100);
     }
+  }
+
+  ionViewDidEnter(): void {
+    this._geolocationSvc.start();
   }
 
   ngOnDestroy() {
@@ -178,9 +183,13 @@ export class RegisterPage implements OnInit, OnDestroy {
       } catch (e) {}
       const geojson = await this._geolocationSvc.stopRecording();
       const trackData = res.data.trackData;
+      const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
+      const device = {
+        os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
+      };
       const metadata = {
         ...geojson.properties.metadata,
-        ...{date: trackData.date, activity: trackData.activity},
+        ...{date: trackData.date, activity: trackData.activity, distanceFilter, device},
       };
 
       const track: ITrack = Object.assign(

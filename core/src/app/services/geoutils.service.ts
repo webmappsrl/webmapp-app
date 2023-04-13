@@ -128,8 +128,12 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getSpeeds(track: CGeojsonLineStringFeature): number[] {
-    if (track.properties.locations && track.properties.locations.length > 1) {
-      return track.properties.locations.map(l => l.speed);
+    if (
+      track.properties.metadata &&
+      track.properties.metadata.locations &&
+      track.properties.metadata.locations.length > 1
+    ) {
+      return track.properties.metadata.locations.map(l => l.speed);
     }
     return [];
   }
@@ -141,10 +145,10 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties.locations && track.properties.locations.length > 1) {
+    if (track.properties.metadata && track.properties.metadata.locations.length > 1) {
       return this._calcTimeS(
-        track.properties.locations[0].time,
-        track.properties.locations[track.properties.locations.length - 1].time,
+        track.properties.metadata.locations[0].time,
+        track.properties.metadata.locations[track.properties.metadata.locations.length - 1].time,
       );
     }
     return 0;
