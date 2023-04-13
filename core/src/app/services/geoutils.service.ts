@@ -34,8 +34,8 @@ export class GeoutilsService {
    */
   getAverageSpeed(track: CGeojsonLineStringFeature): number {
     const speeds = this.getSpeeds(track);
-    const avgSpeed =speeds.reduce((a, curr) => a + curr, 0) / speeds.length
-    if(avgSpeed>0) {
+    const avgSpeed = speeds.reduce((a, curr) => a + curr, 0) / speeds.length;
+    if (avgSpeed > 0) {
       return avgSpeed;
     }
     const time = this.getTime(track) / 3600;
@@ -52,7 +52,7 @@ export class GeoutilsService {
   getCurrentSpeed(track: CGeojsonLineStringFeature): number {
     if (!track || !track.geometry) return 0;
     const lenPoints = track.geometry.coordinates.length;
-    const lenTimes = track.properties.timestamps.length;
+    const lenTimes = track.properties.metadata.locations.length;
     if (lenPoints >= 2 && lenTimes >= 2) {
       const maxIndex = Math.min(lenPoints, lenTimes, this._maxCurrentSpeedPoint);
       const dist = this._calcDistanceM(
@@ -60,8 +60,8 @@ export class GeoutilsService {
         track.geometry.coordinates[lenPoints - maxIndex] as IPoint,
       );
       const timeS = this._calcTimeS(
-        track.properties.timestamps[lenTimes - maxIndex],
-        track.properties.timestamps[lenTimes - 1],
+        track.properties.metadata.locations[lenTimes - maxIndex].time,
+        track.properties.metadata.locations[lenTimes - 1].time,
       );
       const speed = dist / 1000 / (timeS / 3600);
       return speed;
@@ -141,10 +141,10 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties.timestamps && track.properties.timestamps.length > 1) {
+    if (track.properties.locations && track.properties.locations.length > 1) {
       return this._calcTimeS(
-        track.properties.timestamps[0],
-        track.properties.timestamps[track.properties.timestamps.length - 1],
+        track.properties.locations[0].time,
+        track.properties.locations[track.properties.locations.length - 1].time,
       );
     }
     return 0;

@@ -21,6 +21,29 @@
       [langs]="(langs$|async)?.available"
       [defaultLang]="(langs$|async)?.default"
     ></wm-lang-selector>
+    <ion-item-group *ngIf="(confMap$|async).record_track_show">
+      <ion-item-divider>
+        <ion-label>GPS</ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-note>
+          {{'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore'}}</ion-note
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label> {{'Distance filter' | wmtrans}}</ion-label>
+        <ion-select
+          aria-label="distance filter"
+          placeholder="{{'Distance filters'|wmtrans}}"
+          [value]="currentDistanceFilter"
+          (ionChange)="changeDistanceFilter($event)"
+        >
+          <ion-select-option *ngFor="let df of distanceFilters" [value]="df"
+            >{{df}} {{'metri'|wmtrans}}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
   </ion-list>
   <div class="webmapp-profile-links">
     <ion-button

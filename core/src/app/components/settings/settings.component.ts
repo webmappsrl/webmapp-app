@@ -1,6 +1,6 @@
 import {AlertController, ModalController} from '@ionic/angular';
 import {Component, OnInit} from '@angular/core';
-import {confLANGUAGES} from 'src/app/store/conf/conf.selector';
+import {confLANGUAGES, confMAP} from 'src/app/store/conf/conf.selector';
 import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {CreditsPage} from 'src/app/pages/credits/credits.page';
@@ -8,6 +8,8 @@ import {DisclaimerPage} from 'src/app/pages/disclaimer/disclaimer.page';
 import {ProjectPage} from 'src/app/pages/project/project.page';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {GeolocationService} from 'src/app/services/geolocation.service';
 
 @Component({
   selector: 'webmapp-settings',
@@ -16,9 +18,12 @@ import {Store} from '@ngrx/store';
   providers: [LangService],
 })
 export class SettingsComponent implements OnInit {
+  distanceFilters = [5, 10, 20];
   isLoggedIn: boolean;
   langs$ = this._store.select(confLANGUAGES);
+  confMap$: Observable<any> = this._store.select(confMAP);
   public version = '0.0.0';
+  currentDistanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
 
   constructor(
     private _alertController: AlertController,
@@ -27,6 +32,7 @@ export class SettingsComponent implements OnInit {
     private _configService: ConfigService,
     private _langSvc: LangService,
     private _store: Store<any>,
+    private _geolocationSvc: GeolocationService,
   ) {}
 
   dismiss(): void {
@@ -76,5 +82,12 @@ export class SettingsComponent implements OnInit {
       mode: 'ios',
     });
     pmodal.present();
+  }
+
+  changeDistanceFilter(event) {
+    this.currentDistanceFilter = event.detail.value;
+    console.log('DISTANCE FILTER ', this.currentDistanceFilter);
+    localStorage.setItem('wm-distance-filter', `${this.currentDistanceFilter}`);
+    this._geolocationSvc.reset();
   }
 }

@@ -14,8 +14,6 @@ const backgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('Backg
 })
 export class GeolocationService {
   private _currentLocation: Location;
-  private _currentLocationSub: Subscription = Subscription.EMPTY;
-  private _distanceFilter: number = 0;
   private _recordStopwatch: CStopwatch;
   private _recordedFeature: CGeojsonLineStringFeature;
   private _state: IGeolocationServiceState = {
@@ -28,11 +26,6 @@ export class GeolocationService {
 
   get active(): boolean {
     return !!this?._state?.isActive;
-  }
-
-  set distanceFilter(value: number) {
-    this._distanceFilter = value;
-    this.stop();
   }
 
   get loading(): boolean {
@@ -69,88 +62,6 @@ export class GeolocationService {
 
   constructor(private _platform: Platform) {}
 
-  _nativeWatcher(): void {
-    backgroundGeolocation
-      .addWatcher(
-        {
-          // If the "backgroundMessage" option is defined, the watcher will
-          // provide location updates whether the app is in the background or the
-          // foreground. If it is not defined, location updates are only
-          // guaranteed in the foreground. This is true on both platforms.
-
-          // On Android, a notification must be shown to continue receiving
-          // location updates in the background. This option specifies the text of
-          // that notification.
-          backgroundMessage: 'Cancel to prevent battery drain.',
-
-          // The title of the notification mentioned above. Defaults to "Using
-          // your location".
-          backgroundTitle: 'Tracking You.',
-
-          // Whether permissions should be requested from the user automatically,
-          // if they are not already granted. Defaults to "true".
-          requestPermissions: true,
-
-          // If "true", stale locations may be delivered while the device
-          // obtains a GPS fix. You are responsible for checking the "time"
-          // property. If "false", locations are guaranteed to be up to date.
-          // Defaults to "false".
-          stale: false,
-
-          // The minimum number of metres between subsequent locations. Defaults
-          // to 0.
-          distanceFilter: this._distanceFilter,
-        },
-        (location, error) => {
-          if (error) {
-            if (error.code === 'NOT_AUTHORIZED') {
-              if (
-                window.confirm(
-                  'This app needs your location, ' +
-                    'but does not have permission.\n\n' +
-                    'Open settings now?',
-                )
-              ) {
-                // It can be useful to direct the user to their device's
-                // settings when location permissions have been denied. The
-                // plugin provides the 'openSettings' method to do exactly
-                // this.
-                backgroundGeolocation.openSettings();
-              }
-            }
-            return console.error(error);
-          }
-          console.log(
-            'backgroundGeolocation->GeolocationService location:',
-            JSON.stringify(location),
-          );
-          if (this.onStart$.value) {
-            this._locationUpdate(location);
-          }
-          return console.log(location);
-        },
-      )
-      .then(watcher_id => {
-        // When a watcher is no longer needed, it should be removed by calling
-        // 'removeWatcher' with an object containing its ID.
-        this._watcher.next(watcher_id);
-        console.log('backgroundGeolocation->GeolocationService watcher_id: ', watcher_id);
-      });
-  }
-
-  _webWatcher(): void {
-    this._watcher.next('navigator');
-    navigator.geolocation.watchPosition(
-      res => {
-        this._locationUpdate((res as any).coords as Location);
-      },
-      function errorCallback(error) {
-        // console.log(error);
-      },
-      {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
-    );
-  }
-
   /**
    * Pause the geolocation record if active
    */
@@ -163,6 +74,8 @@ export class GeolocationService {
     this.onStart$.next(true);
     this.onRecord$.next(false);
     this.onPause$.next(false);
+    this.stop();
+    this.start();
   }
 
   /**
@@ -210,11 +123,13 @@ export class GeolocationService {
     this.onStart$.next(false);
     this.onRecord$.next(false);
     this.onPause$.next(false);
-    backgroundGeolocation.removeWatcher({
-      id: this._watcher.value,
-    });
+    if (this._watcher.value != null) {
+      backgroundGeolocation.removeWatcher({
+        id: this._watcher.value,
+      });
+    }
     this._watcher.next(null);
-    this._currentLocationSub.unsubscribe();
+    console.log('backgroundGeolocation->GeolocationService stop desktop');
   }
 
   /**
@@ -227,12 +142,11 @@ export class GeolocationService {
 
   private _addLocationToRecordedFeature(location: Location): void {
     this._recordedFeature.addCoordinates(location);
-    const timestamps: Array<number> = this._recordedFeature?.properties?.timestamps ?? [];
-    const locations: Array<Location> = this._recordedFeature?.properties?.locations ?? [];
+    const locations: Array<Location> = this._recordedFeature?.properties?.metadata?.locations ?? [];
+    location.time = location.time != null ? location.time : Date.now();
     locations.push(location);
-    timestamps.push(location.time);
-    this._recordedFeature.setProperty('timestamps', timestamps);
-    this._recordedFeature.setProperty('locations', locations);
+    const metadata = {locations};
+    this._recordedFeature.setProperty('metadata', metadata);
   }
 
   private _cloneAsObject(obj) {
@@ -282,6 +196,80 @@ export class GeolocationService {
     this.onLocationChange.next(this._currentLocation);
   }
 
+  private _nativeWatcher(): void {
+    const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
+    console.log(
+      'backgroundGeolocation->GeolocationService->_nativeWatcher DISTANCE FILTER ',
+      distanceFilter,
+    );
+    backgroundGeolocation
+      .addWatcher(
+        {
+          // If the "backgroundMessage" option is defined, the watcher will
+          // provide location updates whether the app is in the background or the
+          // foreground. If it is not defined, location updates are only
+          // guaranteed in the foreground. This is true on both platforms.
+
+          // On Android, a notification must be shown to continue receiving
+          // location updates in the background. This option specifies the text of
+          // that notification.
+          backgroundMessage: 'Cancel to prevent battery drain.',
+
+          // The title of the notification mentioned above. Defaults to "Using
+          // your location".
+          backgroundTitle: 'Tracking You.',
+
+          // Whether permissions should be requested from the user automatically,
+          // if they are not already granted. Defaults to "true".
+          requestPermissions: true,
+
+          // If "true", stale locations may be delivered while the device
+          // obtains a GPS fix. You are responsible for checking the "time"
+          // property. If "false", locations are guaranteed to be up to date.
+          // Defaults to "false".
+          stale: false,
+
+          // The minimum number of metres between subsequent locations. Defaults
+          // to 0.
+          distanceFilter,
+        },
+        (location, error) => {
+          if (error) {
+            if (error.code === 'NOT_AUTHORIZED') {
+              if (
+                window.confirm(
+                  'This app needs your location, ' +
+                    'but does not have permission.\n\n' +
+                    'Open settings now?',
+                )
+              ) {
+                // It can be useful to direct the user to their device's
+                // settings when location permissions have been denied. The
+                // plugin provides the 'openSettings' method to do exactly
+                // this.
+                backgroundGeolocation.openSettings();
+              }
+            }
+            return console.error(error);
+          }
+          console.log(
+            'backgroundGeolocation->GeolocationService location:',
+            JSON.stringify(location),
+          );
+          if (this.onStart$.value) {
+            this._locationUpdate(location);
+          }
+          return console.log(location);
+        },
+      )
+      .then(watcher_id => {
+        // When a watcher is no longer needed, it should be removed by calling
+        // 'removeWatcher' with an object containing its ID.
+        this._watcher.next(watcher_id);
+        console.log('backgroundGeolocation->GeolocationService watcher_id: ', watcher_id);
+      });
+  }
+
   /**
    * Stop the location record
    */
@@ -291,5 +279,18 @@ export class GeolocationService {
     this.onPause$.next(false);
 
     return this._recordedFeature;
+  }
+
+  private _webWatcher(): void {
+    this._watcher.next('navigator');
+    navigator.geolocation.watchPosition(
+      res => {
+        this._locationUpdate((res as any).coords as Location);
+      },
+      function errorCallback(error) {
+        // console.log(error);
+      },
+      {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
+    );
   }
 }

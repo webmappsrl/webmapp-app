@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import {AlertController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, ModalController, NavController, Platform} from '@ionic/angular';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
@@ -19,7 +19,6 @@ import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 import {Observable} from 'rxjs';
-
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -178,12 +177,19 @@ export class RegisterPage implements OnInit, OnDestroy {
         clearInterval(this._timerInterval);
       } catch (e) {}
       const geojson = await this._geolocationSvc.stopRecording();
+      const trackData = res.data.trackData;
+      const metadata = {
+        ...geojson.properties.metadata,
+        ...{date: trackData.date, activity: trackData.activity},
+      };
+
       const track: ITrack = Object.assign(
         {
           geojson,
+          metadata,
         },
         res.data.trackData,
-        {rawData: JSON.stringify(geojson.properties)},
+        {metadata},
       );
       const saved = await this._saveSvc.saveTrack(track);
 

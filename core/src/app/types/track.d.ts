@@ -12,6 +12,7 @@ export interface ITrack extends IRegisterItem {
   description?: string;
   geojson?: CGeojsonLineStringFeature;
   id?: string;
+  metadata?: any;
   photoKeys: string[];
   photos: IPhotoItem[];
   rawData?: any;
