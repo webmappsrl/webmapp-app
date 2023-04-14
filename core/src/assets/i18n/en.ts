@@ -587,4 +587,14 @@ export const appEN = {
   'Azione irreversibile': 'Irreversible action',
   'Vuoi veramente eliminare il tuo account?': 'Do you really want to delete your account?',
   'Annulla': 'Cancel',
+  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria':
+    'maximum precision every 5 meters the position is detected, consistent battery consumption',
+  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria':
+    'medium precision every 10 meters the position is detected, average battery consumption',
+  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria':
+    'minimum precision every 20 meters the position is detected, lower battery consumption',
+  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.':
+    'the distance expressed in meters which indicates the cadence of position detection, the lower the distance filter, the higher the battery consumption will be.',
+  'PAGINE': 'PAGES',
+  'metri': 'meters',
 };

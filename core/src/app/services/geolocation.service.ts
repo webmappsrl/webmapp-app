@@ -71,11 +71,11 @@ export class GeolocationService {
     this.onPause$.next(true);
   }
 
-  reset(): void {
+  async reset(): Promise<void> {
     this.onStart$.next(true);
     this.onRecord$.next(false);
     this.onPause$.next(false);
-    this.stop();
+    await this.stop();
     this.start();
   }
 
@@ -120,12 +120,12 @@ export class GeolocationService {
   /**
    * Stop the geolocation service
    */
-  stop(): void {
+  async stop(): Promise<void> {
     this.onStart$.next(false);
     this.onRecord$.next(false);
     this.onPause$.next(false);
     if (this._watcher.value != null) {
-      backgroundGeolocation.removeWatcher({
+      await backgroundGeolocation.removeWatcher({
         id: this._watcher.value,
       });
     }

@@ -597,4 +597,14 @@ export const appFR = {
   'Il Progetto': 'Le projet',
   'Filtri': 'Filtrer',
   'Escursionismo': 'Randonnée',
+  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria':
+    'précision maximale tous les 5 mètres la position est détectée, consommation de batterie constante',
+  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria':
+    'précision moyenne tous les 10 mètres la position est détectée, consommation moyenne de la batterie',
+  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria':
+    'précision minimale tous les 20 mètres la position est détectée, consommation de batterie réduite',
+  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.':
+    'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
+  'PAGINE': 'PAGES',
+  'metri': 'mètres',
 };
