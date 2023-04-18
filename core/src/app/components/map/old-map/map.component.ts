@@ -64,6 +64,7 @@ import {ConfigService} from 'src/app/services/config.service';
 import {Location} from 'src/app/types/location';
 import layerVector from 'ol/layer/Vector';
 import sourceVector from 'ol/source/Vector';
+import {Platform} from '@ionic/angular';
 
 const SELECTEDPOIANIMATIONDURATION = 300;
 
@@ -300,6 +301,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     private _mapService: MapService,
     private _markerService: MarkerService,
     private _tilesService: TilesService,
+    private _platform: Platform,
   ) {
     this._locationIcon = {
       layer: null,
@@ -340,6 +342,10 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
     });
 
     this.isRecordEnabled = this._configService.isRecordEnabled();
+    this._platform.resume.subscribe(() => {
+      this._setLocation(this._location);
+      this._updateLocationLayer();
+    });
   }
 
   _distance(c1: Coordinate, c2: Coordinate) {
@@ -701,6 +707,7 @@ export class OldMapComponent implements AfterViewInit, OnDestroy {
   }
 
   recBtnUnlocked(val) {
+    console.log('recBtnUnlocked');
     this.showRecBtn = false;
     this.unlocked.emit(val);
   }

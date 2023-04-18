@@ -71,11 +71,11 @@ export class GeolocationService {
     this.onPause$.next(true);
   }
 
-  async reset(): Promise<void> {
+  reset(): void {
     this.onStart$.next(true);
     this.onRecord$.next(false);
     this.onPause$.next(false);
-    await this.stop();
+    this.stop();
     this.start();
   }
 
@@ -94,12 +94,16 @@ export class GeolocationService {
   start(): void {
     this.onStart$.next(true);
     if (this._watcher.value == null) {
-      if (this._platform.is('desktop')) {
-        console.log('backgroundGeolocation->GeolocationService start desktop');
-        this._webWatcher();
-      } else {
+      if (
+        this._platform.is('ios') ||
+        this._platform.is('android') ||
+        this._platform.is('capacitor')
+      ) {
         console.log('backgroundGeolocation->GeolocationService start native');
         this._nativeWatcher();
+      } else {
+        console.log('backgroundGeolocation->GeolocationService start desktop');
+        this._webWatcher();
       }
     }
   }
@@ -120,17 +124,17 @@ export class GeolocationService {
   /**
    * Stop the geolocation service
    */
-  async stop(): Promise<void> {
+  stop(): void {
     this.onStart$.next(false);
     this.onRecord$.next(false);
     this.onPause$.next(false);
     if (this._watcher.value != null) {
-      await backgroundGeolocation.removeWatcher({
+      backgroundGeolocation.removeWatcher({
         id: this._watcher.value,
       });
     }
     this._watcher.next(null);
-    console.log('backgroundGeolocation->GeolocationService stop desktop');
+    console.log('backgroundGeolocation->GeolocationService stop');
   }
 
   /**

@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit {
   }
 
   async dismiss(): Promise<void> {
-    await this._geolocationSvc.reset();
+    this._geolocationSvc.reset();
     this._modalCtrl.dismiss('webmapp-login-modal');
   }
 

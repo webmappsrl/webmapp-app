@@ -193,9 +193,7 @@ export class HomePage implements OnInit, OnDestroy {
     this._goToHomeSub.unsubscribe();
   }
 
-  async ngOnInit(): Promise<void> {
-    this._geoLocation.onLocationChange.pipe(first()).subscribe(async pos => {});
-  }
+  async ngOnInit(): Promise<void> {}
 
   openSlug(slug: string): void {
     if (slug === 'project') {

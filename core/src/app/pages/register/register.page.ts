@@ -129,7 +129,6 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   recordMove(ev) {
     this.opacity = ev;
-    this._geolocationSvc.onRecord$.next(true);
   }
 
   /**
@@ -141,7 +140,7 @@ export class RegisterPage implements OnInit, OnDestroy {
    */
   async recordStart(event: boolean) {
     this.isPaused = false;
-    await this._geolocationSvc.startRecording();
+    this._geolocationSvc.startRecording();
     this.checkRecording();
   }
 
