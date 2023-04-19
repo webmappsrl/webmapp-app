@@ -8,7 +8,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BackgroundGeolocation} from '@awesome-cordova-plugins/background-geolocation/ngx';
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
@@ -59,6 +58,7 @@ import {online} from 'src/app/store/network/network.selector';
 import {XYZ} from 'ol/source';
 import {TilesService} from 'src/app/services/tiles.service';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
+import {GeolocationService} from 'src/app/services/geolocation.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -70,7 +70,7 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
+export class MapPage implements OnInit, OnDestroy {
   private _bboxLayer = null;
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
@@ -92,6 +92,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
+  centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -138,6 +139,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
   currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
@@ -231,6 +233,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     },
   };
   public sliderOptions: any;
+  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -246,11 +249,9 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
     private _tilesSvc: TilesService,
     private _cdr: ChangeDetectorRef,
     private _storeNetwork: Store<INetworkRootState>,
-    _backgroundGeolocation: BackgroundGeolocation,
+    private _geolocationSvc: GeolocationService,
     _platform: Platform,
   ) {
-    super(_backgroundGeolocation, _platform);
-
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -272,6 +273,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
+    this.currentPosition$ = this._geolocationSvc.onLocationChange;
   }
 
   close(): void {
@@ -349,6 +351,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.onLine$.next(navigator.onLine);
+    this._geolocationSvc.start();
   }
 
   ionViewWillEnter(): void {
@@ -376,7 +379,7 @@ export class MapPage extends GeolocationPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    super.ngOnDestroy();
+    console.log('map.page -> ngOnDestroy');
     this._routerSub.unsubscribe();
   }
 

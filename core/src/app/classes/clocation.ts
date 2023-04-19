@@ -1,29 +1,26 @@
-import { ILocation } from '../types/location';
+import {Location} from 'src/app/types/location';
 
-export class CLocation implements ILocation {
-  public longitude: number;
-  public latitude: number;
-  public altitude?: number;
-  public accuracy?: number;
-  public speed?: number;
-  public bearing?: number;
-  public timestamp: number;
+export class CLocation implements Location {
+  accuracy?: number = null;
+  altitude?: number = null;
+  altitudeAccuracy?: number = null;
+  bearing?: number = null;
+  latitude: number = null;
+  longitude: number = null;
+  simulated?: boolean = null;
+  speed?: number = null;
+  time?: number = null;
 
-  constructor(
-    longitude: number,
-    latitude: number,
-    altitude?: number,
-    accuracy?: number,
-    speed?: number,
-    bearing?: number
-  ) {
-    this.longitude = Math.round(longitude * 100000) / 100000;
-    this.latitude = Math.round(latitude * 100000) / 100000;
-    this.altitude = Math.round(altitude) || undefined;
-    this.accuracy = Math.round(accuracy) || undefined;
-    this.speed = Math.round(speed * 100) / 100 || undefined;
-    this.bearing = Math.round(bearing) || undefined;
-    this.timestamp = Date.now();
+  constructor(location: Location) {
+    this.accuracy = location.accuracy;
+    this.altitude = location.altitude;
+    this.altitudeAccuracy = location.altitudeAccuracy;
+    this.bearing = location.bearing;
+    this.latitude = location.latitude;
+    this.longitude = location.longitude;
+    this.simulated = location.simulated;
+    this.speed = location.speed;
+    this.time = location.time;
   }
 
   getLatLng(): [number, number] {

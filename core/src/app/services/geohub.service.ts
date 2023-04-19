@@ -11,7 +11,6 @@ import {CommunicationService} from './base/communication.service';
 import {ConfigService} from './config.service';
 import {EGeojsonGeometryTypes} from '../types/egeojson-geometry-types.enum';
 import {HttpHeaders} from '@angular/common/http';
-import {ILocation} from '../types/location';
 import {IPhotoItem} from './photo.service';
 import {ITrack} from '../types/track';
 import {Injectable} from '@angular/core';
@@ -23,6 +22,7 @@ import {environment} from 'src/environments/environment';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {DownloadService} from './download.service';
+import {Location} from 'src/app/types/location';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
@@ -271,11 +271,11 @@ export class GeohubService {
   /**
    * Get an array with the closest ec tracks to the specified location
    *
-   * @param {ILocation} location the reference location
+   * @param {Location} location the reference location
    *
    * @returns {Array<IGeojsonFeature>}
    */
-  async getNearEcTracks(location: ILocation): Promise<Array<IGeojsonFeature>> {
+  async getNearEcTracks(location: Location): Promise<Array<IGeojsonFeature>> {
     const res = await this._communicationService
       .get(
         `${environment.api}/api/ec/track/nearest/${location.longitude}/${location.latitude}?app_id=${this._configService.appId}`,

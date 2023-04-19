@@ -33,7 +33,6 @@ import FillStyle from 'ol/style/Fill';
 import GeoJSON from 'ol/format/GeoJSON';
 import Geometry from 'ol/geom/Geometry';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {ILocation} from 'src/app/types/location';
 import {IMapRootState} from 'src/app/store/map/map';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
@@ -62,6 +61,7 @@ import {defaults as defaultInteractions} from 'ol/interaction.js';
 import {fromLonLat} from 'ol/proj';
 import {getDistance} from 'ol/sphere.js';
 import {stopPropagation} from 'ol/events/Event';
+import {Location} from 'src/app/types/location';
 declare enum TextPlacement {
   POINT = 'point',
   LINE = 'line',
@@ -430,7 +430,7 @@ export class MapComponent implements OnDestroy {
   }
 
   private _drawTemporaryLocationFeature(
-    location?: ILocation,
+    location?: Location,
     track?: CGeojsonLineStringFeature,
   ): void {
     if (location) {
@@ -530,7 +530,7 @@ export class MapComponent implements OnDestroy {
    * @param point1 the first location
    * @param point2 the second location
    */
-  private _getFixedDistance(point1: ILocation, point2: ILocation): number {
+  private _getFixedDistance(point1: Location, point2: Location): number {
     return (
       getDistance([point1.longitude, point1.latitude], [point2.longitude, point2.latitude]) /
       this._view.getResolution()

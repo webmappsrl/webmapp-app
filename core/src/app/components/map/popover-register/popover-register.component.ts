@@ -1,19 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  ModalController,
-  NavController,
-  PopoverController,
-} from '@ionic/angular';
-import { DEF_MAP_LOCATION_ZOOM } from 'src/app/constants/map';
-import { GeolocationService } from 'src/app/services/geolocation.service';
-import { PhotoService } from 'src/app/services/photo.service';
-import { ILocation } from 'src/app/types/location';
-import { EPopoverPhotoType, ESuccessType } from 'src/app/types/esuccess.enum';
+import {Component, OnInit} from '@angular/core';
+import {ModalController, NavController, PopoverController} from '@ionic/angular';
+import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
+import {GeolocationService} from 'src/app/services/geolocation.service';
+import {PhotoService} from 'src/app/services/photo.service';
+import {EPopoverPhotoType, ESuccessType} from 'src/app/types/esuccess.enum';
 // import { ModalphotosComponent } from '../../modalphotos/modalphotos.component';
-import { PopoverphotoComponent } from '../../modalphotos/popoverphoto/popoverphoto.component';
-import { ModalphotosaveComponent } from '../../modalphotos/modalphotosave/modalphotosave.component';
-import { SaveService } from 'src/app/services/save.service';
-import { ModalSuccessComponent } from '../../modal-success/modal-success.component';
+import {PopoverphotoComponent} from '../../modalphotos/popoverphoto/popoverphoto.component';
+import {ModalphotosaveComponent} from '../../modalphotos/modalphotosave/modalphotosave.component';
+import {SaveService} from 'src/app/services/save.service';
+import {ModalSuccessComponent} from '../../modal-success/modal-success.component';
+import {Location} from 'src/app/types/location';
 
 @Component({
   selector: 'webmapp-popover-register',
@@ -29,27 +25,25 @@ export class PopoverRegisterComponent implements OnInit {
     private _navCtrl: NavController,
     private _photoService: PhotoService,
     private _popoverController: PopoverController,
-    private _saveService: SaveService
-  ) { }
+    private _saveService: SaveService,
+  ) {}
 
-  ngOnInit() { }
+  dismiss() {
+    this._popoverController.dismiss();
+  }
 
-  track() {
-    const location: ILocation = this._geolocationService.location;
-    let state: any = {};
+  ngOnInit() {}
 
-    if (location && location.latitude && location.longitude) {
-      state = {
-        startView: [
-          location.longitude,
-          location.latitude,
-          DEF_MAP_LOCATION_ZOOM,
-        ],
-      };
-    }
-
-    this._navCtrl.navigateForward('register');
-    this.dismiss();
+  async openModalSuccess(photos) {
+    const modaSuccess = await this._modalController.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.PHOTOS,
+        photos,
+      },
+    });
+    await modaSuccess.present();
+    await modaSuccess.onDidDismiss();
   }
 
   async photo(ev) {
@@ -100,37 +94,33 @@ export class PopoverRegisterComponent implements OnInit {
       await this.openModalSuccess(res.data.photos);
     }
 
-
-
     // Can be set to the src of an image now
     // imageElement.src = imageUrl;
   }
 
-  waypoint() {
-    this._navCtrl.navigateForward('waypoint');
+  track() {
+    const location: Location = this._geolocationService.location;
+    let state: any = {};
+
+    if (location && location.latitude && location.longitude) {
+      state = {
+        startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
+      };
+    }
+
+    this._navCtrl.navigateForward('register');
     this.dismiss();
   }
 
   vocal() {
     console.log(
-      '---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal'
+      '---- ~ file: popover-register.component.ts ~ line 30 ~ PopoverRegisterComponent ~ vocal ~ vocal',
     );
     this.dismiss();
   }
 
-  dismiss() {
-    this._popoverController.dismiss();
-  }
-
-  async openModalSuccess(photos) {
-    const modaSuccess = await this._modalController.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.PHOTOS,
-        photos,
-      },
-    });
-    await modaSuccess.present();
-    await modaSuccess.onDidDismiss();
+  waypoint() {
+    this._navCtrl.navigateForward('waypoint');
+    this.dismiss();
   }
 }

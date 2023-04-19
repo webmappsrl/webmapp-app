@@ -12,7 +12,6 @@ import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {NavigationPage} from './navigation.page';
 import {TabDetailComponent} from './tab-detail/tab-detail.component';
 import {SlopeChartComponent} from './slope-chart/slope-chart.component';
-import {NavMapModule} from 'src/app/components/map/nav-map/nav-map.module';
 
 @NgModule({
   imports: [
@@ -23,7 +22,6 @@ import {NavMapModule} from 'src/app/components/map/nav-map/nav-map.module';
     MapModule,
     WmPipeModule,
     SharedModule,
-    NavMapModule,
   ],
   declarations: [NavigationPage, TabDetailComponent, SlopeChartComponent],
 })

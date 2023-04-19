@@ -8,7 +8,6 @@ import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {ItineraryMapComponent} from './itinerary-map/itinerary-map.component';
 import {MapComponent} from './map/map.component';
-import {NavMapModule} from './nav-map/nav-map.module';
 import {NgModule} from '@angular/core';
 import {OldMapComponent} from './old-map/map.component';
 import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
@@ -27,14 +26,13 @@ import {WmMapModule} from 'src/app/shared/map-core/map-core.module';
     OldMapComponent,
     ItineraryMapComponent,
   ],
-  imports: [CommonModule, IonicModule, NavMapModule, WmMapModule, WmPipeModule],
+  imports: [CommonModule, IonicModule, WmMapModule, WmPipeModule],
   exports: [
     BtnRegisterComponent,
     BtnOrientationComponent,
     MapComponent,
     OldMapComponent,
     ItineraryMapComponent,
-    NavMapModule,
   ],
 })
 export class MapModule {}

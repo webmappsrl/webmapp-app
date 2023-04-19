@@ -73,7 +73,7 @@
     </div>
   </ion-card>
 
-  <div class="webmapp-pageregister-backgroundbtn" *ngIf="isRecording && false">
+  <div class="webmapp-pageregister-backgroundbtn" *ngIf="(record$|async) && false">
     <ion-button
       color="dark"
       class="webmapp-pageregister-backgroundbtn-button"
@@ -87,7 +87,7 @@
     vertical="bottom"
     class="webmapp-pageregister-bottomfab"
     horizontal="center"
-    *ngIf="isRecording"
+    *ngIf="(record$|async)"
   >
     <ion-fab-button
       (click)="resume($event)"

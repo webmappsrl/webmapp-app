@@ -1,32 +1,21 @@
 import {Directive, OnDestroy} from '@angular/core';
-import {
-  BackgroundGeolocation,
-  BackgroundGeolocationConfig,
-  BackgroundGeolocationEvents,
-  BackgroundGeolocationLocationProvider,
-  BackgroundGeolocationResponse,
-} from '@awesome-cordova-plugins/background-geolocation/ngx';
+
 import {Platform} from '@ionic/angular';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
-import {from} from 'rxjs/internal/observable/from';
 import {Subscription} from 'rxjs/internal/Subscription';
-import {take} from 'rxjs/operators';
-
+import {BackgroundGeolocationPlugin} from '@capacitor-community/background-geolocation';
+import {registerPlugin} from '@capacitor/core';
+const backgroundGeolocation = registerPlugin<BackgroundGeolocationPlugin>('BackgroundGeolocation');
 @Directive()
 export abstract class GeolocationPage implements OnDestroy {
   private _bgLocSub: Subscription = Subscription.EMPTY;
 
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
 
-  constructor(private _backgroundGeolocation: BackgroundGeolocation, platform: Platform) {
-    platform.ready().then(() => {
-      this._initBackgroundGeolocation();
-    });
-    platform.resume.subscribe(() => {
-      this._backgroundGeolocation.start();
-    });
+  constructor(platform: Platform) {
+    this.start();
   }
 
   ngOnDestroy(): void {
@@ -37,66 +26,50 @@ export abstract class GeolocationPage implements OnDestroy {
     this.currentPosition$.next(event);
   }
 
-  private _initBackgroundGeolocation(): void {
-    const androidConfig: BackgroundGeolocationConfig = {
-      startOnBoot: false,
-      interval: 1500,
-      fastestInterval: 1500,
-      startForeground: false,
-    };
-    const commonConfig: BackgroundGeolocationConfig = {
-      desiredAccuracy: 0,
-      activityType: 'OtherNavigation',
-      stationaryRadius: 0,
-      locationProvider: BackgroundGeolocationLocationProvider.RAW_PROVIDER,
-      debug: false,
-      stopOnTerminate: true,
-    };
-    const config: BackgroundGeolocationConfig = {
-      ...commonConfig,
-      ...androidConfig,
-    };
-    from(
-      this._backgroundGeolocation.getCurrentLocation().catch((e: Error) => {
-        console.log('ERROR', e);
-        navigator.geolocation.watchPosition(
-          res => {
-            return res.coords;
+  start(): void {
+    if (this.startRecording$.value != null) {
+      backgroundGeolocation
+        .addWatcher(
+          {
+            backgroundMessage: 'Cancel to prevent battery drain.',
+            backgroundTitle: 'Tracking You.',
+            requestPermissions: true,
+            stale: false,
+            distanceFilter: 10,
           },
-          function errorCallback(error) {
-            // console.log(error);
+          (location, error) => {
+            console.log('backgroundGeolocation->location: ', location);
+            if (error) {
+              if (error.code === 'NOT_AUTHORIZED') {
+                if (
+                  window.confirm(
+                    'This app needs your location, ' +
+                      'but does not have permission.\n\n' +
+                      'Open settings now?',
+                  )
+                ) {
+                  backgroundGeolocation.openSettings();
+                }
+              }
+              console.log('backgroundGeolocation->error: ', error);
+              return console.error(error);
+            }
+            this.currentPosition$.next(location);
+
+            return console.log(location);
           },
-          {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
-        );
-      }),
-    )
-      .pipe(take(1))
-      .subscribe((loc: BackgroundGeolocationResponse) => {
-        if (loc != null) {
-          this.setCurrentLocation(loc);
-        }
-      });
-    this._backgroundGeolocation
-      .configure(config)
-      .then(() => {
-        this._bgLocSub = this._backgroundGeolocation
-          .on(BackgroundGeolocationEvents.location)
-          .subscribe((loc: BackgroundGeolocationResponse) => {
-            this.setCurrentLocation(loc);
-          });
-      })
-      .catch((e: Error) => {
-        console.log('ERROR', e);
-        navigator.geolocation.watchPosition(
-          res => {
-            this.setCurrentLocation(res.coords);
-          },
-          function errorCallback(error) {
-            // console.log(error);
-          },
-          {maximumAge: 60000, timeout: 100, enableHighAccuracy: true},
-        );
-      });
-    this._backgroundGeolocation.start();
+        )
+        .then(watcher_id => {
+          console.log('backgroundGeolocation->watcher_id: ', watcher_id);
+          this.startRecording$.next(watcher_id);
+        });
+    }
+  }
+
+  stop(): void {
+    backgroundGeolocation.removeWatcher({
+      id: this.startRecording$.value,
+    });
+    this.startRecording$.next(null);
   }
 }

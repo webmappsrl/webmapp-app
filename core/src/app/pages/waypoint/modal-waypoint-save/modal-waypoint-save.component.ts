@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@an
 import {ModalController, LoadingController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {SaveService} from 'src/app/services/save.service';
-import {ILocation} from 'src/app/types/location';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
@@ -12,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {confPOIFORMS} from 'src/app/store/conf/conf.selector';
 import {FormGroup} from '@angular/forms';
-
+import {Location} from 'src/app/types/location';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -23,17 +22,17 @@ import {FormGroup} from '@angular/forms';
 export class ModalWaypointSaveComponent implements OnInit {
   confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
   public description: string;
-  public displayPosition: ILocation;
+  public displayPosition: Location;
+  fg: FormGroup;
   public isValidArray: boolean[] = [false, false];
   nominatim: any;
   public photos: any[] = [];
-  public position: ILocation;
+  public position: Location;
   public positionCity: string = 'città';
   public positionString: string;
   public title: string;
   public validate = false;
   public waypointtype = 'waypoint';
-  fg: FormGroup;
 
   constructor(
     private _modalCtrl: ModalController,

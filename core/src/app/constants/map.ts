@@ -1,7 +1,7 @@
 // MAP
 export const DEF_MAP_MAX_BOUNDINGBOX: number[] = [-90, -180, 90, 180];
 export const DEF_MAP_MIN_ZOOM: number = 1;
-export const DEF_MAP_MAX_ZOOM: number = 16;
+export const DEF_MAP_MAX_ZOOM: number = 18;
 export const DEF_MAP_MAX_CENTER_ZOOM: number = 14;
 export const DEF_MAP_LOCATION_ZOOM: number = 15;
 export const DEF_MAP_ROTATION_DURATION: number = 400;

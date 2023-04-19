@@ -15,54 +15,55 @@ const initialConfState: ICONF = {
     welcome: 'pages.home.welcome',
   },
   OPTIONS: {
-    baseUrl: '-',
-    startUrl: '/main/map',
-    privacyUrl: 'webmapp.it/privacy',
-    passwordRecoveryUrl: '/wp-login.php?action=lostpassword',
-    hideGlobalMap: false,
-    addArrowsOverTracks: false,
-    showTrackRefLabel: false,
-    useCaiScaleStyle: false,
-    forceDefaultFeatureColor: false,
-    useFeatureClassicSelectionStyle: false,
-    downloadRoutesInWebapp: false,
-    showPoiListOffline: false,
-    showHelp: false,
-    hideDisclaimer: false,
-    showDifficultyLegend: false,
-    showEditLink: false,
-    hideSearch: false,
-    hideFilters: false,
-    resetFiltersAtStartup: false,
-    startFiltersDisabled: false,
-    showMapViewfinder: false,
-    highlightMapButton: false,
-    hideNewsletterInSignup: false,
-    forceWelcomePagePopup: false,
-    skipRouteIndexDownload: false,
-    downloadFullGemoetryRouteIndex: false,
-    enableTrackAdoption: false,
-    highlightReadMoreButton: false,
-    trackRefLabelZoom: 12,
-    caiScaleStyleZoom: 12,
-    poiSelectedRadius: 2.5,
-    poiIconZoom: 15,
-    poiIconRadius: 1.7,
-    poiMaxRadius: 1.7,
-    poiMinRadius: 0.2,
-    poiMinZoom: 1,
-    poiLabelMinZoom: 10,
-    minDynamicOverlayLayersZoom: 12,
+    baseUrl: '-', // deprecated
+    startUrl: '/main/map', // deprecated
+    privacyUrl: 'webmapp.it/privacy', // deprecated
+    passwordRecoveryUrl: '/wp-login.php?action=lostpassword', // deprecated
+    hideGlobalMap: false, // deprecated
+    addArrowsOverTracks: false, // deprecated
+    showTrackRefLabel: false, // deprecated
+    useCaiScaleStyle: false, // deprecated
+    forceDefaultFeatureColor: false, // deprecated
+    useFeatureClassicSelectionStyle: false, // deprecated
+    downloadRoutesInWebapp: false, // deprecated
+    showPoiListOffline: false, // deprecated
+    showHelp: false, // deprecated
+    hideDisclaimer: false, // deprecated
+    showDifficultyLegend: false, // deprecated
+    showEditLink: false, // deprecated
+    hideSearch: false, // deprecated
+    hideFilters: false, // deprecated
+    resetFiltersAtStartup: false, // deprecated
+    startFiltersDisabled: false, // deprecated
+    showMapViewfinder: false, // deprecated
+    highlightMapButton: false, // deprecated
+    hideNewsletterInSignup: false, // deprecated
+    forceWelcomePagePopup: false, // deprecated
+    skipRouteIndexDownload: false, // deprecated
+    downloadFullGemoetryRouteIndex: false, // deprecated
+    enableTrackAdoption: false, // deprecated
+    highlightReadMoreButton: false, // deprecated
+    trackRefLabelZoom: 12, // deprecated
+    caiScaleStyleZoom: 12, // deprecated
+    poiSelectedRadius: 2.5, // deprecated
+    poiIconZoom: 15, // deprecated
+    poiIconRadius: 1.7, // deprecated
+    poiMaxRadius: 1.7, // deprecated
+    poiMinRadius: 0.2, // deprecated
+    poiMinZoom: 1, // deprecated
+    poiLabelMinZoom: 10, // deprecated
+    minDynamicOverlayLayersZoom: 12, // deprecated
     clustering: {
-      enable: false,
-      radius: 70,
-      highZoomRadius: 70,
+      // deprecated
+      enable: false, // deprecated
+      radius: 70, // deprecated
+      highZoomRadius: 70, // deprecated
     },
     showAppDownloadButtons: {
-      track: false,
-      poi: false,
-      route: false,
-      all: false,
+      track: false, // deprecated
+      poi: false, // deprecated
+      route: false, // deprecated
+      all: false, // deprecated
     },
   },
   THEME: {

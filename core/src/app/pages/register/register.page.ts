@@ -7,7 +7,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import {AlertController, ModalController, NavController} from '@ionic/angular';
+import {AlertController, ModalController, NavController, Platform} from '@ionic/angular';
 import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
@@ -18,7 +18,7 @@ import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-
+import {Observable} from 'rxjs';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -35,11 +35,11 @@ export class RegisterPage implements OnInit, OnDestroy {
   public actualSpeed: number = 0;
   public averageSpeed: number = 0;
   public isPaused = false;
-  public isRecording = false;
   public isRegestering = true;
   public length: number = 0;
   public location: number[];
   public opacity: number = 0;
+  public record$: Observable<boolean>;
   public time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
     minutes: 0,
@@ -47,19 +47,23 @@ export class RegisterPage implements OnInit, OnDestroy {
   };
 
   constructor(
-    private _geolocationService: GeolocationService,
-    private _geoutilsService: GeoutilsService,
+    private _geolocationSvc: GeolocationService,
+    private _geoutilsSvc: GeoutilsService,
     private _navCtrl: NavController,
     private _translate: LangService,
     private _alertController: AlertController,
-    private _modalController: ModalController,
-    private _saveService: SaveService,
+    private _modalCtrl: ModalController,
+    private _saveSvc: SaveService,
     private _cdr: ChangeDetectorRef,
-  ) {}
+    private _platform: Platform,
+  ) {
+    this.record$ = this._geolocationSvc.onRecord$;
+  }
 
   backToMap() {
     this._navCtrl.navigateForward('map');
     this.reset();
+    this._geolocationSvc.stop();
   }
 
   background(ev) {
@@ -67,12 +71,11 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   checkRecording() {
-    if (this._geolocationService.recording) {
-      this.isRecording = true;
-      this.isPaused = this._geolocationService.paused;
+    if (this._geolocationSvc.onRecord$.value) {
+      this.isPaused = this._geolocationSvc.paused;
       this.opacity = 1;
       this._timerInterval = setInterval(() => {
-        this.time = GeoutilsService.formatTime(this._geolocationService.recordTime / 1000);
+        this.time = GeoutilsService.formatTime(this._geolocationSvc.recordTime / 1000);
         this._cdr.detectChanges();
       }, 1000);
       setTimeout(() => {
@@ -81,21 +84,26 @@ export class RegisterPage implements OnInit, OnDestroy {
     }
   }
 
+  ionViewDidEnter(): void {
+    this._geolocationSvc.start();
+  }
+
   ngOnDestroy() {
+    console.log('register.page -> ngOnDestroy');
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}
   }
 
   ngOnInit() {
-    if (this._geolocationService.location) {
+    if (this._geolocationSvc.location) {
       this.location = [
-        this._geolocationService.location.longitude,
-        this._geolocationService.location.latitude,
+        this._geolocationSvc.location.longitude,
+        this._geolocationSvc.location.latitude,
         DEF_MAP_LOCATION_ZOOM,
       ];
     }
-    this._geolocationService.onLocationChange.subscribe(() => {
+    this._geolocationSvc.onLocationChange.subscribe(() => {
       this.updateMap();
     });
 
@@ -103,7 +111,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async openModalSuccess(track) {
-    const modaSuccess = await this._modalController.create({
+    const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
       componentProps: {
         type: ESuccessType.TRACK,
@@ -115,7 +123,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   async pause(event: MouseEvent) {
-    await this._geolocationService.pauseRecording();
+    await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
   }
 
@@ -132,7 +140,7 @@ export class RegisterPage implements OnInit, OnDestroy {
    */
   async recordStart(event: boolean) {
     this.isPaused = false;
-    await this._geolocationService.startRecording();
+    this._geolocationSvc.startRecording();
     this.checkRecording();
   }
 
@@ -143,57 +151,26 @@ export class RegisterPage implements OnInit, OnDestroy {
     this.actualSpeed = 0;
     this.averageSpeed = 0;
     this.length = 0;
-    this.isRecording = false;
+    this._geolocationSvc.onRecord$.next(false);
+
     this.isPaused = false;
-    this._geolocationService.stopRecording();
+    this._geolocationSvc.stopRecording();
   }
 
   async resume(event: MouseEvent) {
-    await this._geolocationService.resumeRecording();
+    await this._geolocationSvc.resumeRecording();
     this.isPaused = false;
   }
 
   async stop(event: MouseEvent) {
     this.stopRecording();
-    return;
-    const translation = await this._translate
-      .get([
-        'pages.register.modalconfirm.title',
-        'pages.register.modalconfirm.text',
-        'pages.register.modalconfirm.confirm',
-        'pages.register.modalconfirm.cancel',
-      ])
-      .toPromise();
-
-    const alert = await this._alertController.create({
-      cssClass: 'my-custom-class',
-      header: translation['pages.register.modalconfirm.title'],
-      message: translation['pages.register.modalconfirm.text'],
-      buttons: [
-        {
-          text: translation['pages.register.modalconfirm.cancel'],
-          cssClass: 'webmapp-modalconfirm-btn',
-          role: 'cancel',
-          handler: () => {},
-        },
-        {
-          text: translation['pages.register.modalconfirm.confirm'],
-          cssClass: 'webmapp-modalconfirm-btn',
-          handler: () => {
-            this.stopRecording();
-          },
-        },
-      ],
-    });
-
-    await alert.present();
   }
 
   async stopRecording() {
-    await this._geolocationService.pauseRecording();
+    await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
 
-    const modal = await this._modalController.create({
+    const modal = await this._modalCtrl.create({
       component: ModalSaveComponent,
     });
     await modal.present();
@@ -203,36 +180,47 @@ export class RegisterPage implements OnInit, OnDestroy {
       try {
         clearInterval(this._timerInterval);
       } catch (e) {}
-      const geojson = await this._geolocationService.stopRecording();
+      const geojson = await this._geolocationSvc.stopRecording();
+      const trackData = res.data.trackData;
+      const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
+      const device = {
+        os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
+      };
+      const metadata = {
+        ...geojson.properties.metadata,
+        ...{date: trackData.date, activity: trackData.activity, distanceFilter, device},
+      };
+
       const track: ITrack = Object.assign(
         {
           geojson,
+          metadata,
         },
         res.data.trackData,
+        {metadata},
       );
-      const saved = await this._saveService.saveTrack(track);
+      const saved = await this._saveSvc.saveTrack(track);
+
       await this.openModalSuccess(saved);
       this.backToMap();
     } else if (!res.data.dismissed) {
-      await this._geolocationService.stopRecording();
+      await this._geolocationSvc.stopRecording();
       this.backToMap();
     }
   }
 
   updateMap() {
-    if (this.isRecording && this._geolocationService.recordedFeature) {
-      this.map.drawTrack(this._geolocationService.recordedFeature);
-      this.length = this._geoutilsService.getLength(this._geolocationService.recordedFeature);
-      // const timeSeconds = this._geoutilsService.getTime(
-      //   this._geolocationService.recordedFeature
+    if (this._geolocationSvc.onRecord$.value && this._geolocationSvc.recordedFeature) {
+      this.map.drawTrack(this._geolocationSvc.recordedFeature);
+      this.length = this._geoutilsSvc.getLength(this._geolocationSvc.recordedFeature);
+      // const timeSeconds = this._geoutilsSvc.getTime(
+      //   this._geolocationSvc.recordedFeature
       // );
       // this.time = this.formatTime(timeSeconds);
-      this.actualSpeed = this._geoutilsService.getCurrentSpeed(
-        this._geolocationService.recordedFeature,
-      );
-      this.averageSpeed = this._geoutilsService.getAverageSpeed(
-        this._geolocationService.recordedFeature,
-      );
+      this.actualSpeed =
+        this._geolocationSvc.location.speed ??
+        this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
+      this.averageSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
     }
   }
 }

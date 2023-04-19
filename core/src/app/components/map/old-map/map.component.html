@@ -39,7 +39,7 @@
   "
 >
   <webmapp-btn-rec
-    *ngIf="registering && showRecBtn && !isRecording"
+    *ngIf="showRecBtn"
     (move)="recBtnMove($event)"
     (unlocked)="recBtnUnlocked($event)"
   >

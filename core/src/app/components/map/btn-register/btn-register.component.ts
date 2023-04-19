@@ -9,12 +9,11 @@ import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {ILocation} from 'src/app/types/location';
 import {ModalSuccessComponent} from '../../modal-success/modal-success.component';
 import {ModalphotosaveComponent} from '../../modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
-
+import {Location} from 'src/app/types/location';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 // import { PopoverRegisterComponent } from '../popover-register/popover-register.component';
 
@@ -144,7 +143,7 @@ export class BtnRegisterComponent implements OnInit {
   }
 
   track() {
-    const location: ILocation = this._geolocationService.location;
+    const location: Location = this._geolocationService.location;
     let state: any = {};
 
     if (location && location.latitude && location.longitude) {

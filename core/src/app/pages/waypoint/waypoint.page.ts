@@ -6,9 +6,9 @@ import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {NominatimService} from 'src/app/services/nominatim.service';
-import {ILocation} from 'src/app/types/location';
 
 import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-save.component';
+import {Location} from 'src/app/types/location';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -18,7 +18,7 @@ import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-s
 export class WaypointPage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
-  location: ILocation;
+  location: Location;
   locationString: string;
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);
   position1: string = 'nome città';
@@ -47,7 +47,7 @@ export class WaypointPage implements OnInit, OnDestroy {
       });
   }
 
-  onChangeLocation(location: ILocation): void {
+  onChangeLocation(location: Location): void {
     this.locationString = `${location.latitude}, ${location.longitude}`;
     this.location = location;
     this._nominatimSvc

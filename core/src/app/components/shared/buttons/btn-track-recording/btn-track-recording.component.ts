@@ -11,12 +11,12 @@ import {
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {ILocation} from 'src/app/types/location';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
 import {LoginComponent} from '../../login/login.component';
+import {Location} from 'src/app/types/location';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -89,7 +89,7 @@ export class BtnTrackRecordingComponent {
 
   track(): void {
     if (this.isLogged) {
-      const location: ILocation = this._geolocationSvc.location;
+      const location: Location = this._geolocationSvc.location;
       let state: any = {};
 
       if (location && location.latitude && location.longitude) {
