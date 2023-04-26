@@ -7,40 +7,30 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
+import {NavigationExtras} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {ModalController, NavController} from '@ionic/angular';
 
 import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription, zip} from 'rxjs';
-import {
-  debounceTime,
-  filter,
-  first,
-  map,
-  startWith,
-  switchMap,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import {debounceTime, filter, map, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 
 import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
 
-import {NavigationExtras} from '@angular/router';
-import {Store} from '@ngrx/store';
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {fromHEXToColor} from 'src/app/shared/map-core/utils';
+import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {query} from 'src/app/shared/wm-core/api/api.actions';
 import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
 import {queryApi} from 'src/app/shared/wm-core/api/api.selector';
+import {loadConf} from 'src/app/store/conf/conf.actions';
 import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IMapRootState} from 'src/app/store/map/map';
 import {currentFilters, mapCurrentLayer, toggleHome} from 'src/app/store/map/map.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {pois} from 'src/app/store/pois/pois.selector';
-import {loadConf} from 'src/app/store/conf/conf.actions';
 
 @Component({
   selector: 'wm-page-home',

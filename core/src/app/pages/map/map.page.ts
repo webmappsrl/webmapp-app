@@ -8,22 +8,24 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
+
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, merge, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
 import {
+  catchError,
+  distinctUntilChanged,
   filter,
   map,
+  share,
   startWith,
   switchMap,
-  tap,
-  distinctUntilChanged,
-  catchError,
-  share,
   take,
+  tap,
 } from 'rxjs/operators';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
@@ -31,34 +33,33 @@ import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
-import {WmMapComponent} from 'src/app/shared/map-core/components';
-import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/directives/track.related-pois.directive';
-import {WmMapPoisDirective} from 'src/app/shared/map-core/directives';
-import {IGeojsonFeature} from 'src/app/shared/map-core/types/model';
-import {fromHEXToColor} from 'src/app/shared/map-core/utils';
+import {WmMapComponent} from 'src/app/shared/map-core/src/components';
+import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
+import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
+import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
+import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {
+  confAUTHEnable,
   confGeohubId,
+  confJIDOUPDATETIME,
   confMAP,
   confPOIS,
   confPOISFilter,
-  confJIDOUPDATETIME,
-  confAUTHEnable,
 } from 'src/app/store/conf/conf.selector';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
 import {loadPois} from 'src/app/store/pois/pois.actions';
 import {pois} from 'src/app/store/pois/pois.selector';
 
-import {GeolocationPage} from '../abstract/geolocation';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
-import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {online} from 'src/app/store/network/network.selector';
 import {XYZ} from 'ol/source';
-import {TilesService} from 'src/app/services/tiles.service';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
+import {TilesService} from 'src/app/services/tiles.service';
+import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
+import {online} from 'src/app/store/network/network.selector';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 export interface IDATALAYER {
   high: string;
   low: string;
