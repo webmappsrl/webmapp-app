@@ -35,7 +35,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/src/components';
 import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
-import {wmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
+import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {
@@ -89,8 +89,8 @@ export class MapPage implements OnInit, OnDestroy {
   @ViewChild('gallery') slider: IonSlides;
   @ViewChild('wmap') wmMapComponent: WmMapComponent;
   @ViewChild(WmMapPoisDirective) wmMapPoisDirective: WmMapPoisDirective;
-  @ViewChild(wmMapTrackRelatedPoisDirective)
-  wmMapTrackRelatedPoisDirective: wmMapTrackRelatedPoisDirective;
+  @ViewChild(WmMapTrackRelatedPoisDirective)
+  wmMapTrackRelatedPoisDirective: WmMapTrackRelatedPoisDirective;
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);

@@ -30,7 +30,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "src/app/shared/map-core/assets",
+                "input": "src/app/shared/map-core/src/assets",
                 "output": "map-core/assets"
               },
               {
