@@ -13,97 +13,41 @@
       </ion-label>
       <webmapp-search-bar
         #searchCmp
-        [initSearch]="title"
-        (isTypings)="isTyping$.next($event);checkTab($event)"
-        (words)="currentSearch$.next($event)"
+        [initSearch]=""
+        (isTypings)="isTyping$.next($event)"
+        (words)="setSearch($event)"
         [currentLayer]="currentLayer$|async"
       >
       </webmapp-search-bar>
-      <wm-btn-filter
-        #filterCmp
-        *ngIf="poiCards$|async"
-        [filters]="confPOISFilter$|async"
-        [initSelectedFilters]="selectedFilters$|async"
-        (selectedFilters)="setCurrentFilters($event)"
-      ></wm-btn-filter>
     </div>
-    <ng-container *ngIf="currentTab$|async as currentTab">
-      <ion-breadcrumbs>
-        <ion-breadcrumb (click)="goToHome()" *ngIf="currentTab != 'home'"
-          >{{'Home'|wmtrans}}</ion-breadcrumb
-        >
-        <ion-breadcrumb
-          *ngIf="currentLayer$|async as currentLayer"
-          (click)="currentTab$.next('tracks');searchCmp.reset()"
-        >
-          {{currentLayer.title|wmtrans}}</ion-breadcrumb
-        >
-        <ng-container *ngIf="(poiCards$|async) as poiCards">
-          <ion-breadcrumb
-            *ngIf="(selectedFilters$|async) as filters"
-            (click)="currentTab$.next('pois');searchCmp.reset()"
-          >
-            <ng-container *ngIf="(selectedFilters$|async) as filters;">
-              <ng-container *ngIf="filters.length ===1">
-                {{(currentSelectedFilter$|async)?.name|wmtrans}}
-              </ng-container>
-              <ng-container *ngIf="filters.length >1">POIS</ng-container>
-            </ng-container>
-          </ion-breadcrumb>
-        </ng-container>
-        <ion-breadcrumb *ngIf="currentTab.indexOf('search')>0">
-          {{'search'|wmtrans}}</ion-breadcrumb
-        >
-      </ion-breadcrumbs>
-      <ng-container *ngIf="currentLayer$|async as layer">
-        <div class="layer-details" *ngIf="layer.subtitle!=null || layer.description!= null">
-          <a *ngIf="layer.subtitle as subtitle">{{subtitle|wmtrans}}</a>
-          <p *ngIf="layer.description as description">{{description|wmtrans}}</p>
-        </div>
-      </ng-container>
-      <wm-home
-        *ngIf="currentTab === 'home'"
-        [conf]="confHOME$|async"
-        (openSlugEvt)="openSlug($event)"
-        (selectedLayerEvt)="setLayer($event)"
-        (selectedTrackEvt)="searchCard($event)"
-        (filterClickEvt)="toggleFilter($event)"
-      ></wm-home>
-      <wm-search-list
-        *ngIf="currentTab === 'tracks'"
-        [cards]="elasticSearch$|async"
-        [currentTab]="'tracks'"
-        (selectedTrackEvt)="searchCard($event)"
-      ></wm-search-list>
-      <wm-search-list
-        *ngIf="currentTab === 'pois'"
-        [pois]="poiCards$|async"
-        [currentTab]="'pois'"
-        (selectedPoiEvt)="setPoi(+$event)"
-      ></wm-search-list>
-      <ng-container *ngIf="currentTab === 'pois-search'">
-        <wm-search-list
-          [pois]="poiCards$|async"
-          [currentTab]="'pois'"
-          (selectedPoiEvt)="setPoi(+$event)"
-        ></wm-search-list>
-      </ng-container>
-      <ng-container *ngIf="currentTab === 'tracks-search'">
-        <wm-search-list
-          [cards]="elasticSearch$|async"
-          [currentTab]="'tracks'"
-          (selectedTrackEvt)="searchCard($event)"
-        ></wm-search-list>
-      </ng-container>
-      <ng-container *ngIf="currentTab === 'home-search'">
-        <wm-search-list
-          [pois]="poiCards$|async"
-          [cards]="elasticSearch$|async"
-          [currentTab]="'tracks'"
-          (selectedTrackEvt)="searchCard($event)"
-          (selectedPoiEvt)="setPoi(+$event)"
-        ></wm-search-list>
-      </ng-container>
-    </ng-container>
+    <wm-status-filter
+      *ngIf="showResult$|async"
+      [layer]="currentLayer$|async"
+      [trackFilters]="(trackFilters$|async)"
+      [poiFilters]=" (poiFilters$|async)"
+      (resetFiltersEVT)="goToHome()"
+      (removeLayerEVT)="removeLayer($event)"
+      (removeTrackFilterEVT)="removeFilter($event)"
+      (removePoiFilterEVT)="removePoiFilter($event)"
+    ></wm-status-filter>
+    <wm-home-result
+      *ngIf="showResult$|async;else home"
+      [tracks]="(tracks$|async)"
+      [loadingTracks]="trackLoading$|async"
+      [pois]="(pois$|async)"
+      (trackEVT)="setTrack($event)"
+      (poiEVT)="setPoi($event.id)"
+    ></wm-home-result>
   </ng-container>
 </ion-content>
+<ng-template #home>
+  <wm-home-page
+    [conf]="confHOME$|async"
+    (horizontalScrollBoxEVT)="setFilter($event)"
+    (poiTypeFilterBoxEVT)="setFilter($event[0])"
+    (slugBoxEVT)="openSlug($event[0])"
+    (externalUrlBoxEVT)="openExternalUrl($event)"
+    (tracksBoxEVT)="setTrack($event)"
+    (layerBoxEVT)="setLayer($event[0])"
+  ></wm-home-page>
+</ng-template>

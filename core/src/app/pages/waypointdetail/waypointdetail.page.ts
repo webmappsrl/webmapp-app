@@ -4,11 +4,9 @@ import {AlertController, MenuController, NavController, ToastController} from '@
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
-import {map, switchMap, take, tap} from 'rxjs/operators';
-import {IPhotoItem} from 'src/app/services/photo.service';
+import {switchMap, take, tap} from 'rxjs/operators';
 import {SaveService} from 'src/app/services/save.service';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {confPOIFORMS} from 'src/app/store/conf/conf.selector';
+import {confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 
 @Component({
@@ -19,12 +17,13 @@ import {WaypointSave} from 'src/app/types/waypoint';
   encapsulation: ViewEncapsulation.None,
 })
 export class WaypointdetailPage {
-  waypoint$: Observable<WaypointSave>;
+  confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
   currentWaypoint: WaypointSave;
   sliderOptions: any = {
     slidesPerView: 2.5,
   };
-  confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
+  waypoint$: Observable<WaypointSave>;
+
   constructor(
     private _route: ActivatedRoute,
     private _menuCtrl: MenuController,
@@ -33,7 +32,7 @@ export class WaypointdetailPage {
     private _saveSvc: SaveService,
     private _navCtlr: NavController,
     private _toastCtrl: ToastController,
-    private _storeConf: Store<IConfRootState>,
+    private _storeConf: Store<any>,
   ) {
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),
@@ -43,11 +42,6 @@ export class WaypointdetailPage {
 
   closeMenu(): void {
     this._menuCtrl.close('optionMenu');
-  }
-
-  menu(): void {
-    this._menuCtrl.enable(true, 'optionMenu');
-    this._menuCtrl.open('optionMenu');
   }
 
   delete(): void {
@@ -92,6 +86,11 @@ export class WaypointdetailPage {
       .subscribe(() => {
         this._navCtlr.navigateForward('waypointlist');
       });
+  }
+
+  menu(): void {
+    this._menuCtrl.enable(true, 'optionMenu');
+    this._menuCtrl.open('optionMenu');
   }
 
   presentToast(): Observable<void> {

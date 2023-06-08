@@ -11,7 +11,10 @@ import {IntroComponent} from './intro/intro.component';
 import {HomeModule} from 'src/app/components/home/home.module';
 import {BoxModule} from 'src/app/components/box/box.module';
 import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmCoreModule} from '../../shared/wm-core/wm-core.module';
 @NgModule({
+  declarations: [HomePage, IntroComponent],
+  entryComponents: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -23,8 +26,7 @@ import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
     HomeModule,
     BoxModule,
     WmPipeModule,
+    WmCoreModule,
   ],
-  declarations: [HomePage, IntroComponent],
-  entryComponents: [],
 })
 export class HomePageModule {}

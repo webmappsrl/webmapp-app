@@ -2,10 +2,9 @@ import {Subscription} from 'rxjs/internal/Subscription';
 import {Component, EventEmitter, Input, Output, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
-import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
 import {Store} from '@ngrx/store';
 import {debounceTime} from 'rxjs/operators';
-import {query} from 'src/app/shared/wm-core/api/api.actions';
+import {inputTyped} from 'src/app/shared/wm-core/store/api/api.actions';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',
@@ -30,7 +29,7 @@ export class SearchBarComponent implements OnDestroy {
 
   searchForm: FormGroup;
 
-  constructor(fb: FormBuilder, private _store: Store<IElasticSearchRootState>) {
+  constructor(fb: FormBuilder, private _store: Store<any>) {
     this.searchForm = fb.group({
       search: [''],
     });
@@ -45,13 +44,17 @@ export class SearchBarComponent implements OnDestroy {
      **/
     this._searchSub$ = this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe(words => {
       if (words && words.search != null && words.search !== '') {
-        this._query(words.search);
+        this._store.dispatch(inputTyped({inputTyped: words.search}));
         this.isTypingsEVT.emit(true);
         this.wordsEVT.emit(words.search);
       } else {
         this.isTypingsEVT.emit(false);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this._searchSub$.unsubscribe();
   }
 
   /**
@@ -62,19 +65,8 @@ export class SearchBarComponent implements OnDestroy {
    */
   reset(): void {
     this.searchForm.reset();
-    this._query();
+    this._store.dispatch(inputTyped({inputTyped: ''}));
     this.wordsEVT.emit('');
     this.isTypingsEVT.emit(false);
-  }
-  ngOnDestroy(): void {
-    this._searchSub$.unsubscribe();
-  }
-
-  private _query(inputTyped = ''): void {
-    if (this._currentLayer != null) {
-      this._store.dispatch(query({inputTyped, layer: this._currentLayer}));
-    } else {
-      this._store.dispatch(query({inputTyped}));
-    }
   }
 }

@@ -28,14 +28,10 @@ import {ModalphotosModule} from './components/modalphotos/modalphotos.module';
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import {ConfigService} from './services/config.service';
-import {ConfEffects} from './store/conf/conf.effects';
-import {confReducer} from './store/conf/conf.reducer';
 import {MapEffects} from './store/map/map.effects';
 import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
-import {PoisEffects} from './store/pois/pois.effects';
-import {poisReducer} from './store/pois/pois.reducer';
 
 // import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
@@ -66,14 +62,12 @@ class SQLiteMock {
     }),
     StoreModule.forRoot(
       {
-        conf: confReducer,
         map: UIReducer,
         network: networkReducer,
-        pois: poisReducer,
       },
       {},
     ),
-    EffectsModule.forRoot([ConfEffects, MapEffects, NetworkEffects, PoisEffects]),
+    EffectsModule.forRoot([MapEffects, NetworkEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production, // Restrict extension to log-only mode

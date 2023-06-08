@@ -5,13 +5,12 @@ import {switchMap, take, takeUntil} from 'rxjs/operators';
 
 import {AlertController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {Store} from '@ngrx/store';
-import {confAUTHEnable} from 'src/app/store/conf/conf.selector';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {confAUTHEnable} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -23,7 +22,7 @@ import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 export class ProfilePage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
-  authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   avatarUrl: string;
   email: string;
   isLoggedIn$: Observable<boolean>;
@@ -34,7 +33,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     private _authService: AuthService,
     private _modalController: ModalController,
     private _navController: NavController,
-    private _storeConf: Store<IConfRootState>,
+    private _store: Store<any>,
     private _alertCtrl: AlertController,
     private _translateService: LangService,
     private _router: Router,

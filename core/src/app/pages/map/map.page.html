@@ -4,19 +4,27 @@
       <wm-map
         #wmap
         [wmMapConf]="confMap$|async"
+        [wmMapFilters]="apiElasticState$|async"
+        [wmMapTranslationCallback]="translationCallback"
         wmMapLayer
         [jidoUpdateTime]="confJIDOUPDATETIME$|async"
         [wmMapLayerLayer]="currentLayer$|async"
         [wmMapLayerDataLayerUrls]="dataLayerUrls$|async"
+        [wmMapLayerRefresh]="refreshLayer$|async"
         [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0"
         [wmMapLayerOpacity]="layerOpacity$|async"
         (trackSelectedFromLayerEVT)="goToTrack($event)"
         (colorSelectedFromLayerEVT)="trackColor$.next($event)"
+        [wmMapFeatureCollection]="(wmMapFeatureCollectionUrl$|async)!= null"
+        [wmMapFeatureCollectionUrl]="wmMapFeatureCollectionUrl$|async"
+        (wmMapOverlayEVT$)="setWmMapFeatureCollectionUrl($event)"
+        (wmMapFeatureCollectionLayerSelected)="selectedLayer($event)"
         wmMapPois
+        [wmMapInputTyped]="apiSearchInputTyped$|async"
         [wmMapPoisPoi]="currentPoiID$|async"
         [wmMapPoisPois]="pois$|async"
-        [wmMapPoisFilters]="currentFilters$|async"
-        [WmMapPoisUnselectPoi]="this.resetSelectedPoi$|async"
+        [wmMapPoisFilters]="poiFilterIdentifiers$|async"
+        [WmMapPoisUnselectPoi]="resetSelectedPoi$|async"
         (currentPoiEvt)="setPoi($event)"
         wmMapPosition
         [wmMapPositioncurrentLocation]="currentPosition$|async"
@@ -33,16 +41,20 @@
         (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
         (related-poi)="setCurrentPoi($event)"
       >
-        <div top-right>
-          <ng-container *ngIf="confPOIS$|async as confPois">
-            <wm-btn-filter
-              *ngIf="confPois.apppoisApiLayer"
-              [filters]="confPOISFilter$|async"
-              [initSelectedFilters]="currentFilters$|async"
-              (selectedFilters)="setCurrentFilters($event)"
-            ></wm-btn-filter>
-          </ng-container>
-        </div>
+        <wm-filters
+          top-right
+          #filterCmp
+          [confFilters]="confFILTERS$|async"
+          [pois]="pois$|async"
+          [poisStats]="poisStats$|async"
+          [poiFilters]="poiFilters$|async"
+          [trackFilters]="selectedTrackFilters$|async"
+          (filterPoisEvt)="updatePoiFilter($event)"
+          (filterTracksEvt)="updateTrackFilter($event)"
+          (removefilterTracksEvt)="updateTrackFilter($event)"
+          (removefilterPoiEvt)="updatePoiFilter($event)"
+          (resetFiltersEvt)="resetFilters()"
+        ></wm-filters>
 
         <div bottom-right>
           <ng-container
@@ -104,7 +116,7 @@
             *ngIf="isTrackRecordingEnable$|async"
             (click)="fab2?.close();fab1?.close()"
           >
-            <ion-fab-button size="small" class="wm-btn-register-fab">
+            <ion-fab-button size="small" cπlass="wm-btn-register-fab">
               <i class="icon-outline-recording"></i>
             </ion-fab-button>
             <wm-btn-track-recording

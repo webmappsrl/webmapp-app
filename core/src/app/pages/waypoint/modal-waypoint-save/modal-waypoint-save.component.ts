@@ -6,12 +6,11 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {Md5} from 'ts-md5';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {confPOIFORMS} from 'src/app/store/conf/conf.selector';
 import {FormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
+import {confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -20,7 +19,7 @@ import {Location} from 'src/app/types/location';
   encapsulation: ViewEncapsulation.None,
 })
 export class ModalWaypointSaveComponent implements OnInit {
-  confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
+  confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   public description: string;
   public displayPosition: Location;
   fg: FormGroup;
@@ -39,7 +38,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     private _photoSvc: PhotoService,
     private _saveSvc: SaveService,
     private _loadingCtrl: LoadingController,
-    private _storeConf: Store<IConfRootState>,
+    private _store: Store<any>,
   ) {}
 
   async addPhotos() {

@@ -15,7 +15,7 @@ import {Store} from '@ngrx/store';
 
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, combineLatest, merge, of} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -38,18 +38,9 @@ import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
 import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-import {
-  confAUTHEnable,
-  confGeohubId,
-  confJIDOUPDATETIME,
-  confMAP,
-  confPOIS,
-  confPOISFilter,
-} from 'src/app/store/conf/conf.selector';
+
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
-import {loadPois} from 'src/app/store/pois/pois.actions';
-import {pois} from 'src/app/store/pois/pois.selector';
 
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
@@ -60,6 +51,37 @@ import {TilesService} from 'src/app/services/tiles.service';
 import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
+import {
+  confAUTHEnable,
+  confFILTERS,
+  confGeohubId,
+  confJIDOUPDATETIME,
+  confMAP,
+  confPOIS,
+  confPOISFilter,
+} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {
+  applyWhere,
+  loadPois,
+  resetActivities,
+  resetPoiFilters,
+  setLayer,
+  togglePoiFilter,
+  toggleTrackFilter,
+} from 'src/app/shared/wm-core/store/api/api.actions';
+import {
+  apiElasticState,
+  apiElasticStateLayer,
+  apiSearchInputTyped,
+  apiTrackFilter,
+  apiTrackFilters,
+  poiFilterIdentifiers,
+  poiFilters,
+  pois,
+  stats,
+} from 'src/app/shared/wm-core/store/api/api.selector';
+import {HomePage} from '../home/home.page';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -85,6 +107,7 @@ export class MapPage implements OnInit, OnDestroy {
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
+  @ViewChild(HomePage) homeCmp: HomePage;
   @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
   @ViewChild('wmap') wmMapComponent: WmMapComponent;
@@ -92,8 +115,11 @@ export class MapPage implements OnInit, OnDestroy {
   @ViewChild(WmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: WmMapTrackRelatedPoisDirective;
 
+  apiElasticState$: Observable<any> = this._store.select(apiElasticState);
+  apiSearchInputTyped$: Observable<string> = this._store.select(apiSearchInputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
+  confFILTERS$: Observable<any> = this._store.select(confFILTERS);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -134,7 +160,7 @@ export class MapPage implements OnInit, OnDestroy {
   );
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store
-    .select(mapCurrentLayer)
+    .select(apiElasticStateLayer)
     .pipe(tap(l => (this._bboxLayer = l?.bbox ?? null)));
   currentPoi$: BehaviorSubject<IGeojsonFeature> = new BehaviorSubject<IGeojsonFeature | null>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -189,6 +215,8 @@ export class MapPage implements OnInit, OnDestroy {
     .select(online)
     .pipe(tap(() => this._cdr.detectChanges()));
   padding$: Observable<number[]> = this._store.select(padding);
+  poiFilterIdentifiers$: Observable<string[]> = this._store.select(poiFilterIdentifiers);
+  poiFilters$: Observable<any> = this._store.select(poiFilters);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
   poiProperties$: Observable<any> = merge(
@@ -222,9 +250,14 @@ export class MapPage implements OnInit, OnDestroy {
     filter(p => p != null),
     take(1),
   );
+  poisStats$: Observable<{
+    [name: string]: {[identifier: string]: any};
+  }> = this._store.select(stats);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  refreshLayer$: Observable<any>;
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  selectedTrackFilters$: Observable<any> = this._store.select(apiTrackFilters);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   slideOptions = {
     on: {
@@ -238,6 +271,9 @@ export class MapPage implements OnInit, OnDestroy {
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  wmMapFeatureCollectionUrl$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
+    null,
+  );
 
   constructor(
     private _store: Store,
@@ -251,8 +287,13 @@ export class MapPage implements OnInit, OnDestroy {
     private _cdr: ChangeDetectorRef,
     private _storeNetwork: Store<INetworkRootState>,
     private _geolocationSvc: GeolocationService,
+    private _langSvc: LangService,
     _platform: Platform,
   ) {
+    this.refreshLayer$ = combineLatest(
+      this._store.select(apiTrackFilter),
+      this.poiFilterIdentifiers$,
+    );
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -276,7 +317,12 @@ export class MapPage implements OnInit, OnDestroy {
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
   }
-
+  setWmMapFeatureCollectionUrl(url: any): void {
+    this.wmMapFeatureCollectionUrl$.next(url);
+  }
+  selectedLayer(layer: any): void {
+    this._store.dispatch(setLayer({layer}));
+  }
   close(): void {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
@@ -327,7 +373,10 @@ export class MapPage implements OnInit, OnDestroy {
       ? orange
       : red;
   }
-
+  translationCallback: (any) => string = value => {
+    if (value == null) return '';
+    return this._langSvc.instant(value);
+  };
   goToPage(page: String): void {
     this.close();
     this._router.navigate([page]);
@@ -421,6 +470,13 @@ export class MapPage implements OnInit, OnDestroy {
     this.wmMapTrackRelatedPoisDirective.poiPrev();
   }
 
+  resetFilters(): void {
+    this._store.dispatch(resetPoiFilters());
+    this._store.dispatch(resetActivities());
+    this._store.dispatch(setLayer(null));
+    this._store.dispatch(applyWhere({where: null}));
+  }
+
   setCurrentFilters(filters: string[]): void {
     this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
@@ -470,6 +526,14 @@ export class MapPage implements OnInit, OnDestroy {
 
   toogleFullMap() {
     this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
+  }
+
+  updatePoiFilter(filterIdentifier: string): void {
+    this._store.dispatch(togglePoiFilter({filterIdentifier}));
+  }
+
+  updateTrackFilter(filterIdentifier: string): void {
+    this._store.dispatch(toggleTrackFilter({filterIdentifier}));
   }
 
   async url(url) {

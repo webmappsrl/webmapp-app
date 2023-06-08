@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -12,25 +11,32 @@ import {Store} from '@ngrx/store';
 
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription, zip} from 'rxjs';
-import {debounceTime, filter, map, startWith, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-
-import {confAPP, confHOME, confPOISFilter} from 'src/app/store/conf/conf.selector';
-import {setCurrentFilters, setCurrentLayer} from 'src/app/store/map/map.actions';
+import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
+import {debounceTime, filter, map, startWith, tap} from 'rxjs/operators';
 
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
-import {BtnFilterComponent} from 'src/app/components/shared/btn-filter/btn-filter.component';
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-import {query} from 'src/app/shared/wm-core/api/api.actions';
-import {IElasticSearchRootState} from 'src/app/shared/wm-core/api/api.reducer';
-import {queryApi} from 'src/app/shared/wm-core/api/api.selector';
-import {loadConf} from 'src/app/store/conf/conf.actions';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {IMapRootState} from 'src/app/store/map/map';
-import {currentFilters, mapCurrentLayer, toggleHome} from 'src/app/store/map/map.selector';
-import {pois} from 'src/app/store/pois/pois.selector';
+import {
+  inputTyped,
+  resetActivities,
+  resetPoiFilters,
+  setLayer,
+  togglePoiFilter,
+  toggleTrackFilter,
+} from 'src/app/shared/wm-core/store/api/api.actions';
+import {
+  apiElasticStateLayer,
+  apiElasticStateLoading,
+  apiTrackFilters,
+  featureCollection,
+  poiFilters,
+  queryApi,
+  showResult,
+} from 'src/app/shared/wm-core/store/api/api.selector';
+import {loadConf} from 'src/app/shared/wm-core/store/conf/conf.actions';
+import {confAPP, confHOME} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {toggleHome} from 'src/app/store/map/map.selector';
 
 @Component({
   selector: 'wm-page-home',
@@ -39,48 +45,16 @@ import {pois} from 'src/app/store/pois/pois.selector';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomePage implements OnInit, OnDestroy {
+export class HomePage implements OnDestroy {
   private _goToHomeSub: Subscription = Subscription.EMPTY;
 
-  @ViewChild('filterCmp') filterCmp: BtnFilterComponent;
   @ViewChild('searchCmp') searchCmp: SearchBarComponent;
 
-  confAPP$: Observable<IAPP> = this._storeConf.select(confAPP);
-  confHOME$: Observable<IHOME[]> = this._storeConf.select(confHOME);
-  confPOISFilter$: Observable<any> = this._storeConf.select(confPOISFilter).pipe(
-    map(p => {
-      if (p.poi_type != null) {
-        let poi_type = p.poi_type.map(p => {
-          if (p.icon != null && p.color != null) {
-            const namedPoiColor = fromHEXToColor[p.color] || 'darkorange';
-            return {...p, ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)}};
-          }
-          return p;
-        });
-        return {where: p.where, poi_type};
-      }
-      return p;
-    }),
-  );
-  currentLayer$ = this._storeMap.select(mapCurrentLayer);
-  currentSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  currentSelectedFilter$: Observable<any>;
-  currentSelectedIndentiFierFilter$: BehaviorSubject<string | null> = new BehaviorSubject<
-    string | null
-  >(null);
-  currentTab$: BehaviorSubject<string> = new BehaviorSubject<string>('home');
-  elasticSearch$: Observable<IHIT[]> = this._storeSearch.select(queryApi).pipe(
-    withLatestFrom(this.currentLayer$),
-    map(([all, currentLayer]) => {
-      if (currentLayer != null) {
-        return all.filter(l => l.layers.indexOf(+currentLayer.id) > -1);
-      }
-      return all;
-    }),
-  );
-  goToHome$: Observable<any> = this._storeMap.select(toggleHome);
+  confAPP$: Observable<IAPP> = this._store.select(confAPP);
+  confHOME$: Observable<IHOME[]> = this._store.select(confHOME);
+  currentLayer$ = this._store.select(apiElasticStateLayer);
+  goToHome$: Observable<any> = this._store.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  layerCards$: BehaviorSubject<IHIT[] | null> = new BehaviorSubject<IHIT[] | null>(null);
   online$: Observable<boolean> = merge(
     of(null),
     fromEvent(window, 'online'),
@@ -90,89 +64,35 @@ export class HomePage implements OnInit, OnDestroy {
     startWith(false),
     tap(online => {
       if (online) {
-        this._storeConf.dispatch(loadConf());
+        this._store.dispatch(loadConf());
       }
     }),
   );
-  poiCards$: Observable<any[]>;
-  selectedFilters$: Observable<string[]> = this._storeMap.select(currentFilters);
-  title: string;
+  poiFilters$: Observable<any> = this._store.select(poiFilters);
+  pois$: Observable<any[]> = this._store.select(featureCollection).pipe(
+    filter(p => p != null),
+    map(p => ((p as any).features || []).map(p => (p as any).properties || [])),
+  );
+  showResult$ = this._store.select(showResult);
+  trackFilters$: Observable<any> = this._store.select(apiTrackFilters);
+  trackLoading$: Observable<boolean> = this._store.select(apiElasticStateLoading);
+  tracks$: Observable<IHIT[]> = this._store.select(queryApi);
 
   constructor(
     private _geoLocation: GeolocationService,
-    private _storeSearch: Store<IElasticSearchRootState>,
-    private _storeConf: Store<IConfRootState>,
-    private _storeMap: Store<IMapRootState>,
+    private _store: Store<any>,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
     public sanitizer: DomSanitizer,
   ) {
-    const allPois: Observable<any[]> = this._storeMap.select(pois).pipe(
-      filter(p => p != null),
-      map(p => ((p as any).features || []).map(p => (p as any).properties || [])),
-    );
-    const selectedPois = zip(this.currentSearch$, allPois, this.selectedFilters$).pipe(
-      map(([search, features, filters]) => {
-        const isSearch = search.length > 0 || filters.length > 0;
-        const whereFilters = filters.filter(f => f.indexOf('where_') >= 0);
-        const poiTypeFilters = filters.filter(f => f.indexOf('poi_type_') >= 0);
-        let whereCondition = true;
-        let poiTypeCondition = true;
-        return features.filter(f => {
-          const nameCondition = JSON.stringify(f.name).toLowerCase().includes(search.toLowerCase());
-          if (filters.length > 0) {
-            whereCondition =
-              whereFilters.length > 0
-                ? f.taxonomyIdentifiers.filter(v => whereFilters.indexOf(v) >= 0).length > 0
-                : true;
-            poiTypeCondition =
-              poiTypeFilters.length > 0
-                ? f.taxonomyIdentifiers.filter(v => poiTypeFilters.indexOf(v) >= 0).length > 0
-                : true;
-          }
-          return nameCondition && whereCondition && poiTypeCondition && isSearch;
-        }) as any[];
-      }),
-    );
-    this.poiCards$ = merge(this.currentSearch$, this.selectedFilters$).pipe(
-      switchMap(_ => selectedPois),
-    );
-
-    this.currentSelectedFilter$ = this.currentSelectedIndentiFierFilter$.asObservable().pipe(
-      withLatestFrom(this.confPOISFilter$),
-      map(([identifier, filters]) => {
-        const filterKeys = Object.keys(filters);
-        for (let i = 0; i < filterKeys.length; i++) {
-          const filterKey = filterKeys[i];
-          if (filters[filterKey] != null) {
-            for (let j = 0; j < filters[filterKey].length; j++) {
-              const filter = filters[filterKey][j];
-              if (filter.identifier === identifier) {
-                return filter;
-              }
-            }
-          }
-        }
-        return null;
-      }),
-    );
-
     this._goToHomeSub = this.goToHome$.pipe(debounceTime(300)).subscribe(() => {
       this.goToHome();
     });
   }
 
-  checkTab(isTyping: boolean) {
-    if (isTyping) {
-      const currentTab = `${this.currentTab$.value.replace('-search', '')}-search`;
-      this.currentTab$.next(currentTab);
-    }
-  }
-
   goToHome(): void {
     this.setLayer(null);
-    this.currentTab$.next('home');
-    this.setCurrentFilters([]);
+    this._store.dispatch(resetPoiFilters());
     try {
       this.searchCmp.reset();
     } catch (_) {}
@@ -183,7 +103,9 @@ export class HomePage implements OnInit, OnDestroy {
     this._goToHomeSub.unsubscribe();
   }
 
-  async ngOnInit(): Promise<void> {}
+  openExternalUrl(url: string): void {
+    window.open(url);
+  }
 
   openSlug(slug: string): void {
     if (slug === 'project') {
@@ -202,43 +124,33 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  searchCard(id: string | number): void {
-    if (id != null) {
-      let navigationExtras: NavigationExtras = {
-        queryParams: {
-          track: id,
-        },
-        queryParamsHandling: 'merge',
-      };
-      this._navCtrl.navigateForward('map', navigationExtras);
+  removeFilter(filterIdentifier: string): void {
+    this._store.dispatch(toggleTrackFilter({filterIdentifier}));
+  }
+
+  removeLayer(layer: any): void {
+    this.setLayer(null);
+  }
+
+  removePoiFilter(filterIdentifier: string): void {
+    this._store.dispatch(togglePoiFilter({filterIdentifier}));
+  }
+
+  setFilter(filterIdentifier: string): void {
+    if (filterIdentifier == null) return;
+    if (filterIdentifier.indexOf('poi_') >= 0) {
+      this._store.dispatch(togglePoiFilter({filterIdentifier}));
+    } else {
+      this._store.dispatch(toggleTrackFilter({filterIdentifier}));
     }
   }
 
-  segmentChanged(ev: any): void {
-    if (ev != null && ev.detail != null && ev.detail.value != null) {
-      // this.currentTab$.next(ev.detail.value);
-    }
-  }
-
-  setCurrentFilters(filters: string[]): void {
-    if (filters != null) {
-      this._storeMap.dispatch(setCurrentFilters({currentFilters: filters}));
-      if (filters.length > 0) {
-        this.currentTab$.next('pois');
-      }
-      if (filters.length === 1) {
-        this.currentSelectedIndentiFierFilter$.next(filters[0]);
-      } else {
-        this.currentSelectedIndentiFierFilter$.next(null);
-      }
-    }
-  }
-
-  async setLayer(layer: ILAYER | null | any): Promise<void> {
-    this._storeMap.dispatch(setCurrentLayer({currentLayer: layer as ILAYER}));
+  setLayer(layer: ILAYER | null | any): void {
     if (layer != null && layer.id != null) {
-      this._storeMap.dispatch(query({layer: layer.id}));
-      this.currentTab$.next('tracks');
+      this._store.dispatch(setLayer({layer}));
+    } else {
+      this._store.dispatch(setLayer(null));
+      this._store.dispatch(resetActivities());
     }
   }
 
@@ -256,7 +168,19 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
 
-  toggleFilter(identifier: string): void {
-    this.filterCmp.addFilter(identifier);
+  setSearch(value: string): void {
+    this._store.dispatch(inputTyped({inputTyped: value}));
+  }
+
+  setTrack(id: string | number): void {
+    if (id != null) {
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          track: id,
+        },
+        queryParamsHandling: 'merge',
+      };
+      this._navCtrl.navigateForward('map', navigationExtras);
+    }
   }
 }

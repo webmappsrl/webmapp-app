@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {confPROJECT} from 'src/app/store/conf/conf.selector';
+import {confPROJECT} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'app-project',

@@ -29,8 +29,6 @@ import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
-import {confAUTHEnable, confMAP} from 'src/app/store/conf/conf.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
 import {mapCurrentTrack, mapCurrentTrackProperties, padding} from 'src/app/store/map/map.selector';
@@ -44,6 +42,7 @@ import {
 import {ISlopeChartHoverElements} from 'src/app/types/slope-chart';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {confAUTHEnable, confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-itinerary',
@@ -75,7 +74,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
   @ViewChild('mapcontainer') mapControl: ElementRef;
   @ViewChild('moredetails') moreDetails: ElementRef;
 
-  authEnable$: Observable<boolean> = this._storeConf.select(confAUTHEnable);
+  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   currentTrack$: Observable<CGeojsonLineStringFeature | IGeojsonFeatureDownloaded> =
     this._storeMap.select(mapCurrentTrack);
   currentTrackProperties$: Observable<IGeojsonProperties> = this._storeMap
@@ -97,7 +96,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
   isLoggedIn$: Observable<boolean>;
   public itinerary: IGeojsonFeature;
   public lastScroll = 0;
-  mapConf$: Observable<any> = this._storeConf.select(confMAP).pipe(
+  mapConf$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
       if (conf.flow_line_quote_show) {
         this._flowLine$.next({
@@ -150,7 +149,7 @@ export class ItineraryPage extends GeolocationPage implements AfterViewInit, OnD
     private _shareService: ShareService,
     private _geohubService: GeohubService,
     private _coinService: CoinService,
-    private _storeConf: Store<IConfRootState>,
+    private _store: Store<any>,
     private _authSvc: AuthService,
   ) {
     super(_platform);

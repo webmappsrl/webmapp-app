@@ -11,7 +11,7 @@ import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {confLANGUAGES, confMAP} from 'src/app/store/conf/conf.selector';
+import {confLANGUAGES, confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-settings',

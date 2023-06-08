@@ -13,14 +13,17 @@ import {DownloadService} from './services/download.service';
 import {SaveService} from './services/save.service';
 import {StatusService} from './services/status.service';
 import {LangService} from './shared/wm-core/localization/lang.service';
-import {loadConf} from './store/conf/conf.actions';
-import {IConfRootState} from './store/conf/conf.reducer';
-import {confLANGUAGES, confMAP, confTHEMEVariables} from './store/conf/conf.selector';
 import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
-import {loadPois} from './store/pois/pois.actions';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
+import {
+  confLANGUAGES,
+  confMAP,
+  confTHEMEVariables,
+} from './shared/wm-core/store/conf/conf.selector';
+import {loadConf} from './shared/wm-core/store/conf/conf.actions';
+import {loadPois} from './shared/wm-core/store/api/api.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -30,7 +33,7 @@ import {Observable} from 'rxjs';
   providers: [LangService],
 })
 export class AppComponent {
-  confTHEMEVariables$: Observable<any> = this._storeConf.select(confTHEMEVariables);
+  confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
   public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;
@@ -41,31 +44,31 @@ export class AppComponent {
     private router: Router,
     private status: StatusService,
     private saveService: SaveService,
-    private _storeConf: Store<IConfRootState>,
+    private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
-    this._storeConf.dispatch(loadConf());
+    this._store.dispatch(loadConf());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
-    this._storeConf
+    this._store
       .select(confMAP)
       .pipe(
         filter(p => p != null),
-        take(2),
+        take(1),
       )
       .subscribe(c => {
         if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
-          this._storeConf.dispatch(loadPois());
+          this._store.dispatch(loadPois());
         }
       });
-    this._storeConf
+    this._store
       .select(confLANGUAGES)
       .pipe(
         filter(p => p != null),
-        take(2),
+        take(1),
       )
       .subscribe(l => {
         this._langService.setTranslation('it', appIT, true);

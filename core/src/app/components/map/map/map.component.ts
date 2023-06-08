@@ -19,7 +19,6 @@ import Feature, {FeatureLike} from 'ol/Feature';
 import {IGeojsonFeature, ILineString} from 'src/app/types/model';
 import SelectInteraction, {SelectEvent} from 'ol/interaction/Select';
 import View, {FitOptions} from 'ol/View';
-import {confMAP, confTHEME} from 'src/app/store/conf/conf.selector';
 import {filter, switchMap, take, tap} from 'rxjs/operators';
 import {mapCurrentLayer, mapCurrentTrack} from 'src/app/store/map/map.selector';
 import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions';
@@ -27,12 +26,10 @@ import {setCurrentPoiId, setCurrentTrackId} from 'src/app/store/map/map.actions'
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import CircleStyle from 'ol/style/Circle';
 import {CommunicationService} from 'src/app/services/base/communication.service';
-import {ConfService} from 'src/app/store/conf/conf.service';
 import {Coordinate} from 'ol/coordinate';
 import FillStyle from 'ol/style/Fill';
 import GeoJSON from 'ol/format/GeoJSON';
 import Geometry from 'ol/geom/Geometry';
-import {IConfRootState} from 'src/app/store/conf/conf.reducer';
 import {IMapRootState} from 'src/app/store/map/map';
 import {IPoiMarker} from 'src/app/classes/features/cgeojson-feature';
 import {ITrackElevationChartHoverElements} from 'src/app/types/track-elevation-charts';
@@ -62,6 +59,8 @@ import {fromLonLat} from 'ol/proj';
 import {getDistance} from 'ol/sphere.js';
 import {stopPropagation} from 'ol/events/Event';
 import {Location} from 'src/app/types/location';
+import {confMAP, confTHEME} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {ConfService} from 'src/app/shared/wm-core/store/conf/conf.service';
 declare enum TextPlacement {
   POINT = 'point',
   LINE = 'line',
@@ -176,7 +175,7 @@ export class MapComponent implements OnDestroy {
     private _communicationService: CommunicationService,
     private _mapService: MapService,
     private _zone: NgZone,
-    private _store: Store<IConfRootState>,
+    private _store: Store<any>,
     private _storeMap: Store<IMapRootState>,
     private _confSvc: ConfService,
   ) {
