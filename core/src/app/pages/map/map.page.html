@@ -45,6 +45,7 @@
           top-right
           #filterCmp
           [confFilters]="confFILTERS$|async"
+          [wmFiltersClose]="wmap.wmMapCloseTopRightBtnsEVT$|async"
           [pois]="pois$|async"
           [poisStats]="poisStats$|async"
           [poiFilters]="poiFilters$|async"
@@ -54,6 +55,7 @@
           (removefilterTracksEvt)="updateTrackFilter($event)"
           (removefilterPoiEvt)="updatePoiFilter($event)"
           (resetFiltersEvt)="resetFilters()"
+          (click)="wmap.wmMapCloseTopRightBtns = 'wm-filters'"
         ></wm-filters>
 
         <div bottom-right>
