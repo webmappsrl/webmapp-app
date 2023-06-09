@@ -40,7 +40,7 @@ import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
-import {currentFilters, mapCurrentLayer, padding} from 'src/app/store/map/map.selector';
+import {currentFilters, padding} from 'src/app/store/map/map.selector';
 
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
@@ -77,7 +77,7 @@ import {
   apiTrackFilters,
   poiFilterIdentifiers,
   poiFilters,
-  pois,
+  poisInitFeatureCollection,
   stats,
 } from 'src/app/shared/wm-core/store/api/api.selector';
 import {HomePage} from '../home/home.page';
@@ -245,11 +245,7 @@ export class MapPage implements OnInit, OnDestroy {
     ),
   ).pipe(share());
   pois: any[];
-  pois$: Observable<any> = this._store.select(pois).pipe(
-    tap(p => (this.pois = (p && p.features) ?? null)),
-    filter(p => p != null),
-    take(1),
-  );
+  pois$: Observable<any> = this._store.select(poisInitFeatureCollection);
   poisStats$: Observable<{
     [name: string]: {[identifier: string]: any};
   }> = this._store.select(stats);
@@ -270,10 +266,14 @@ export class MapPage implements OnInit, OnDestroy {
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
-  wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  translationCallback: (any) => string = value => {
+    if (value == null) return '';
+    return this._langSvc.instant(value);
+  };
   wmMapFeatureCollectionUrl$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
     null,
   );
+  wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private _store: Store,
@@ -317,12 +317,7 @@ export class MapPage implements OnInit, OnDestroy {
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
   }
-  setWmMapFeatureCollectionUrl(url: any): void {
-    this.wmMapFeatureCollectionUrl$.next(url);
-  }
-  selectedLayer(layer: any): void {
-    this._store.dispatch(setLayer({layer}));
-  }
+
   close(): void {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
@@ -373,10 +368,7 @@ export class MapPage implements OnInit, OnDestroy {
       ? orange
       : red;
   }
-  translationCallback: (any) => string = value => {
-    if (value == null) return '';
-    return this._langSvc.instant(value);
-  };
+
   goToPage(page: String): void {
     this.close();
     this._router.navigate([page]);
@@ -477,6 +469,10 @@ export class MapPage implements OnInit, OnDestroy {
     this._store.dispatch(applyWhere({where: null}));
   }
 
+  selectedLayer(layer: any): void {
+    this._store.dispatch(setLayer({layer}));
+  }
+
   setCurrentFilters(filters: string[]): void {
     this._store.dispatch(setCurrentFilters({currentFilters: filters}));
   }
@@ -510,6 +506,10 @@ export class MapPage implements OnInit, OnDestroy {
         );
       }
     }
+  }
+
+  setWmMapFeatureCollectionUrl(url: any): void {
+    this.wmMapFeatureCollectionUrl$.next(url);
   }
 
   showPhoto(idx) {
