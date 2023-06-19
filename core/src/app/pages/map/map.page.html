@@ -15,10 +15,9 @@
         [wmMapLayerOpacity]="layerOpacity$|async"
         (trackSelectedFromLayerEVT)="goToTrack($event)"
         (colorSelectedFromLayerEVT)="trackColor$.next($event)"
-        [wmMapFeatureCollection]="(wmMapFeatureCollectionUrl$|async)!= null"
-        [wmMapFeatureCollectionUrl]="wmMapFeatureCollectionUrl$|async"
-        (wmMapOverlayEVT$)="setWmMapFeatureCollectionUrl($event)"
-        (wmMapFeatureCollectionLayerSelected)="selectedLayer($event)"
+        [wmMapFeatureCollection]="(wmMapFeatureCollectionOverlay$|async)!= null"
+        [wmMapFeatureCollectionOverlay]="wmMapFeatureCollectionOverlay$|async"
+        (wmMapFeatureCollectionLayerSelected)="selectedLayer($event);wmap.wmMapCloseTopRightBtnsEVT$.emit('')"
         wmMapPois
         [wmMapInputTyped]="apiSearchInputTyped$|async"
         [wmMapPoisPoi]="currentPoiID$|async"
@@ -45,9 +44,10 @@
           top-right
           #filterCmp
           [confFilters]="confFILTERS$|async"
-          [wmFiltersClose]="wmap.wmMapCloseTopRightBtnsEVT$|async"
           [pois]="pois$|async"
+          [wmFiltersClose]="wmap.wmMapCloseTopRightBtnsEVT$|async"
           [poisStats]="poisStats$|async"
+          [trackStats]="trackStats$|async"
           [poiFilters]="poiFilters$|async"
           [trackFilters]="selectedTrackFilters$|async"
           (filterPoisEvt)="updatePoiFilter($event)"

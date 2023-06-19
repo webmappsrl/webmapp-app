@@ -63,22 +63,23 @@ import {
 import {
   applyWhere,
   loadPois,
-  resetActivities,
   resetPoiFilters,
+  resetTrackFilters,
   setLayer,
   togglePoiFilter,
   toggleTrackFilter,
+  updateTrackFilter,
 } from 'src/app/shared/wm-core/store/api/api.actions';
 import {
   apiElasticState,
   apiElasticStateLayer,
+  apiFilterTracks,
   apiSearchInputTyped,
-  apiTrackFilter,
-  apiTrackFilters,
   poiFilterIdentifiers,
   poiFilters,
   poisInitFeatureCollection,
   stats,
+  trackStats,
 } from 'src/app/shared/wm-core/store/api/api.selector';
 import {HomePage} from '../home/home.page';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
@@ -253,7 +254,7 @@ export class MapPage implements OnInit, OnDestroy {
   refreshLayer$: Observable<any>;
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  selectedTrackFilters$: Observable<any> = this._store.select(apiTrackFilters);
+  selectedTrackFilters$: Observable<any> = this._store.select(apiFilterTracks);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   slideOptions = {
     on: {
@@ -266,11 +267,14 @@ export class MapPage implements OnInit, OnDestroy {
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
+  trackStats$: Observable<{
+    [name: string]: {[identifier: string]: any};
+  }> = this._store.select(trackStats);
   translationCallback: (any) => string = value => {
     if (value == null) return '';
     return this._langSvc.instant(value);
   };
-  wmMapFeatureCollectionUrl$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
+  wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
   );
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -291,7 +295,7 @@ export class MapPage implements OnInit, OnDestroy {
     _platform: Platform,
   ) {
     this.refreshLayer$ = combineLatest(
-      this._store.select(apiTrackFilter),
+      this._store.select(apiFilterTracks),
       this.poiFilterIdentifiers$,
     );
     this.dataLayerUrls$ = this.geohubId$.pipe(
@@ -464,7 +468,7 @@ export class MapPage implements OnInit, OnDestroy {
 
   resetFilters(): void {
     this._store.dispatch(resetPoiFilters());
-    this._store.dispatch(resetActivities());
+    this._store.dispatch(resetTrackFilters());
     this._store.dispatch(setLayer(null));
     this._store.dispatch(applyWhere({where: null}));
   }
@@ -508,8 +512,8 @@ export class MapPage implements OnInit, OnDestroy {
     }
   }
 
-  setWmMapFeatureCollectionUrl(url: any): void {
-    this.wmMapFeatureCollectionUrl$.next(url);
+  setWmMapFeatureCollection(overlay: any): void {
+    this.wmMapFeatureCollectionOverlay$.next(overlay);
   }
 
   showPhoto(idx) {
@@ -528,12 +532,17 @@ export class MapPage implements OnInit, OnDestroy {
     this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
   }
 
-  updatePoiFilter(filterIdentifier: string): void {
-    this._store.dispatch(togglePoiFilter({filterIdentifier}));
+  updatePoiFilter(filter: SelectFilterOption | SliderFilter | Filter): void {
+    this._store.dispatch(togglePoiFilter({filterIdentifier: filter.identifier}));
   }
 
-  updateTrackFilter(filterIdentifier: string): void {
-    this._store.dispatch(toggleTrackFilter({filterIdentifier}));
+  updateTrackFilter(filterGeneric: SelectFilterOption | SliderFilter | Filter): void {
+    let filter = filterGeneric as Filter;
+    if (filter.type === 'slider') {
+      this._store.dispatch(updateTrackFilter({filter}));
+    } else {
+      this._store.dispatch(toggleTrackFilter({filter}));
+    }
   }
 
   async url(url) {

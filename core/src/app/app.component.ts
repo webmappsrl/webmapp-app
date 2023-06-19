@@ -23,7 +23,7 @@ import {
   confTHEMEVariables,
 } from './shared/wm-core/store/conf/conf.selector';
 import {loadConf} from './shared/wm-core/store/conf/conf.actions';
-import {loadPois} from './shared/wm-core/store/api/api.actions';
+import {loadPois, query} from './shared/wm-core/store/api/api.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -50,6 +50,7 @@ export class AppComponent {
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadConf());
+    this._store.dispatch(query({init: true}));
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 

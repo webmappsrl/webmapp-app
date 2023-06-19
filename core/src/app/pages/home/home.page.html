@@ -44,7 +44,7 @@
   <wm-home-page
     [conf]="confHOME$|async"
     (horizontalScrollBoxEVT)="setFilter($event)"
-    (poiTypeFilterBoxEVT)="setFilter($event[0])"
+    (poiTypeFilterBoxEVT)="toggleFilter($event[0],$event[1])"
     (slugBoxEVT)="openSlug($event[0])"
     (externalUrlBoxEVT)="openExternalUrl($event)"
     (tracksBoxEVT)="setTrack($event)"

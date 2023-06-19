@@ -19,16 +19,17 @@ import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-ba
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {
   inputTyped,
-  resetActivities,
   resetPoiFilters,
+  resetTrackFilters,
   setLayer,
   togglePoiFilter,
   toggleTrackFilter,
+  toggleTrackFilterByIdentifier,
 } from 'src/app/shared/wm-core/store/api/api.actions';
 import {
   apiElasticStateLayer,
   apiElasticStateLoading,
-  apiTrackFilters,
+  apiFilterTracks,
   featureCollection,
   poiFilters,
   queryApi,
@@ -74,7 +75,7 @@ export class HomePage implements OnDestroy {
     map(p => ((p as any).features || []).map(p => (p as any).properties || [])),
   );
   showResult$ = this._store.select(showResult);
-  trackFilters$: Observable<any> = this._store.select(apiTrackFilters);
+  trackFilters$: Observable<any> = this._store.select(apiFilterTracks);
   trackLoading$: Observable<boolean> = this._store.select(apiElasticStateLoading);
   tracks$: Observable<IHIT[]> = this._store.select(queryApi);
 
@@ -124,8 +125,8 @@ export class HomePage implements OnDestroy {
     }
   }
 
-  removeFilter(filterIdentifier: string): void {
-    this._store.dispatch(toggleTrackFilter({filterIdentifier}));
+  removeFilter(filter: Filter): void {
+    this._store.dispatch(toggleTrackFilter({filter}));
   }
 
   removeLayer(layer: any): void {
@@ -136,21 +137,23 @@ export class HomePage implements OnDestroy {
     this._store.dispatch(togglePoiFilter({filterIdentifier}));
   }
 
-  setFilter(filterIdentifier: string): void {
-    if (filterIdentifier == null) return;
-    if (filterIdentifier.indexOf('poi_') >= 0) {
-      this._store.dispatch(togglePoiFilter({filterIdentifier}));
+  setFilter(filter: {identifier: string; taxonomy: string}): void {
+    if (filter == null) return;
+    if (filter.taxonomy === 'poi_types') {
+      this._store.dispatch(togglePoiFilter({filterIdentifier: filter.identifier}));
     } else {
-      this._store.dispatch(toggleTrackFilter({filterIdentifier}));
+      this._store.dispatch(
+        toggleTrackFilterByIdentifier({identifier: filter.identifier, taxonomy: filter.taxonomy}),
+      );
     }
   }
 
-  setLayer(layer: ILAYER | null | any): void {
+  setLayer(layer: ILAYER | null | any, idx?: number): void {
     if (layer != null && layer.id != null) {
       this._store.dispatch(setLayer({layer}));
     } else {
       this._store.dispatch(setLayer(null));
-      this._store.dispatch(resetActivities());
+      this._store.dispatch(resetTrackFilters());
     }
   }
 
@@ -182,5 +185,9 @@ export class HomePage implements OnDestroy {
       };
       this._navCtrl.navigateForward('map', navigationExtras);
     }
+  }
+
+  toggleFilter(filterIdentifier: string, idx?: number): void {
+    this.setFilter({identifier: filterIdentifier, taxonomy: 'activities'});
   }
 }
