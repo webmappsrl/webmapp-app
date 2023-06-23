@@ -24,7 +24,6 @@ import {
   share,
   startWith,
   switchMap,
-  take,
   tap,
 } from 'rxjs/operators';
 
@@ -53,7 +52,6 @@ import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {
   confAUTHEnable,
-  confFILTERS,
   confGeohubId,
   confJIDOUPDATETIME,
   confMAP,
@@ -73,13 +71,10 @@ import {
 import {
   apiElasticState,
   apiElasticStateLayer,
-  apiFilterTracks,
   apiSearchInputTyped,
+  countSelectedFilters,
   poiFilterIdentifiers,
-  poiFilters,
   poisInitFeatureCollection,
-  stats,
-  trackStats,
 } from 'src/app/shared/wm-core/store/api/api.selector';
 import {HomePage} from '../home/home.page';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
@@ -120,7 +115,6 @@ export class MapPage implements OnInit, OnDestroy {
   apiSearchInputTyped$: Observable<string> = this._store.select(apiSearchInputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
-  confFILTERS$: Observable<any> = this._store.select(confFILTERS);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -217,7 +211,6 @@ export class MapPage implements OnInit, OnDestroy {
     .pipe(tap(() => this._cdr.detectChanges()));
   padding$: Observable<number[]> = this._store.select(padding);
   poiFilterIdentifiers$: Observable<string[]> = this._store.select(poiFilterIdentifiers);
-  poiFilters$: Observable<any> = this._store.select(poiFilters);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
   poiProperties$: Observable<any> = merge(
@@ -247,14 +240,10 @@ export class MapPage implements OnInit, OnDestroy {
   ).pipe(share());
   pois: any[];
   pois$: Observable<any> = this._store.select(poisInitFeatureCollection);
-  poisStats$: Observable<{
-    [name: string]: {[identifier: string]: any};
-  }> = this._store.select(stats);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  refreshLayer$: Observable<any>;
+  refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  selectedTrackFilters$: Observable<any> = this._store.select(apiFilterTracks);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   slideOptions = {
     on: {
@@ -267,9 +256,6 @@ export class MapPage implements OnInit, OnDestroy {
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
-  trackStats$: Observable<{
-    [name: string]: {[identifier: string]: any};
-  }> = this._store.select(trackStats);
   translationCallback: (any) => string = value => {
     if (value == null) return '';
     return this._langSvc.instant(value);
@@ -294,10 +280,6 @@ export class MapPage implements OnInit, OnDestroy {
     private _langSvc: LangService,
     _platform: Platform,
   ) {
-    this.refreshLayer$ = combineLatest(
-      this._store.select(apiFilterTracks),
-      this.poiFilterIdentifiers$,
-    );
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {

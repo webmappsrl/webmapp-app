@@ -12,7 +12,7 @@ import {Store} from '@ngrx/store';
 import {ModalController, NavController} from '@ionic/angular';
 
 import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, filter, map, startWith, tap} from 'rxjs/operators';
+import {debounceTime, map, startWith, tap} from 'rxjs/operators';
 
 import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
@@ -26,17 +26,9 @@ import {
   toggleTrackFilter,
   toggleTrackFilterByIdentifier,
 } from 'src/app/shared/wm-core/store/api/api.actions';
-import {
-  apiElasticStateLayer,
-  apiElasticStateLoading,
-  apiFilterTracks,
-  featureCollection,
-  poiFilters,
-  queryApi,
-  showResult,
-} from 'src/app/shared/wm-core/store/api/api.selector';
+import {apiElasticStateLayer, showResult} from 'src/app/shared/wm-core/store/api/api.selector';
 import {loadConf} from 'src/app/shared/wm-core/store/conf/conf.actions';
-import {confAPP, confHOME} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confAPP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
 
 @Component({
@@ -52,7 +44,6 @@ export class HomePage implements OnDestroy {
   @ViewChild('searchCmp') searchCmp: SearchBarComponent;
 
   confAPP$: Observable<IAPP> = this._store.select(confAPP);
-  confHOME$: Observable<IHOME[]> = this._store.select(confHOME);
   currentLayer$ = this._store.select(apiElasticStateLayer);
   goToHome$: Observable<any> = this._store.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -69,15 +60,8 @@ export class HomePage implements OnDestroy {
       }
     }),
   );
-  poiFilters$: Observable<any> = this._store.select(poiFilters);
-  pois$: Observable<any[]> = this._store.select(featureCollection).pipe(
-    filter(p => p != null),
-    map(p => ((p as any).features || []).map(p => (p as any).properties || [])),
-  );
+
   showResult$ = this._store.select(showResult);
-  trackFilters$: Observable<any> = this._store.select(apiFilterTracks);
-  trackLoading$: Observable<boolean> = this._store.select(apiElasticStateLoading);
-  tracks$: Observable<IHIT[]> = this._store.select(queryApi);
 
   constructor(
     private _geoLocation: GeolocationService,

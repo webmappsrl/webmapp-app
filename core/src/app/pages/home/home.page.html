@@ -22,9 +22,6 @@
     </div>
     <wm-status-filter
       *ngIf="showResult$|async"
-      [layer]="currentLayer$|async"
-      [trackFilters]="(trackFilters$|async)"
-      [poiFilters]=" (poiFilters$|async)"
       (resetFiltersEVT)="goToHome()"
       (removeLayerEVT)="removeLayer($event)"
       (removeTrackFilterEVT)="removeFilter($event)"
@@ -32,9 +29,6 @@
     ></wm-status-filter>
     <wm-home-result
       *ngIf="showResult$|async;else home"
-      [tracks]="(tracks$|async)"
-      [loadingTracks]="trackLoading$|async"
-      [pois]="(pois$|async)"
       (trackEVT)="setTrack($event)"
       (poiEVT)="setPoi($event.id)"
     ></wm-home-result>
@@ -42,7 +36,6 @@
 </ion-content>
 <ng-template #home>
   <wm-home-page
-    [conf]="confHOME$|async"
     (horizontalScrollBoxEVT)="setFilter($event)"
     (poiTypeFilterBoxEVT)="toggleFilter($event[0],$event[1])"
     (slugBoxEVT)="openSlug($event[0])"
