@@ -14,6 +14,7 @@ import {LoadingController} from '@ionic/angular';
 import {StorageService} from './base/storage.service';
 import config from '../../../config.json';
 import {environment} from 'src/environments/environment';
+import {SaveService} from './save.service';
 
 @Injectable({
   providedIn: 'root',
@@ -52,6 +53,7 @@ export class AuthService {
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _loadingCtrl: LoadingController,
+    private _saveSvc: SaveService,
   ) {
     this._onStateChange = new ReplaySubject<IUser>(1);
 
@@ -225,6 +227,7 @@ export class AuthService {
 
     this._userData = user;
     this._onStateChange.next(this._userData);
+    this._saveSvc.syncUgc();
     this.isLoggedIn$.next(true);
     return this._storageService.setUser(user);
   }

@@ -23,7 +23,7 @@
   <ion-list class="webmapp-modalwaypoint-itemlist">
     <ion-item class="webmapp-formfield-item">
       <ion-label class="webmapp-formfield-label" position="stacked">
-        {{  nominatim.display_name  | wmtrans }}
+        {{  nominatim?.display_name  | wmtrans }}
       </ion-label>
     </ion-item>
     <wm-form [confPOIFORMS]="confPOIFORMS$|async" (formGroupEvt)="fg = $event"></wm-form>

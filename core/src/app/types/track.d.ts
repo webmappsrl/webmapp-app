@@ -4,6 +4,7 @@ import {IPhotoItem} from '../services/photo.service';
 
 export interface IRegisterItem {
   date: Date;
+  uuid?: any;
   key?: string;
 }
 

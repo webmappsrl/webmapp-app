@@ -177,7 +177,7 @@ export class GeohubService {
     if (cacheResult) {
       return cacheResult;
     }
-    if (id > -1) {
+    if (+id > -1) {
       const result = await this._communicationService
         .get(`${environment.api}/api/ec/track/${id}`)
         .pipe(
@@ -329,6 +329,17 @@ export class GeohubService {
     return res;
   }
 
+  async getUgcPois() {
+    return await this._communicationService
+      .get(
+        `${environment.api}/api/ugc/poi/index`,
+        new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      )
+      .toPromise();
+  }
+
   async getUgcTracks() {
     return await this._communicationService
       .get(
@@ -418,35 +429,46 @@ export class GeohubService {
    * @returns
    */
   async saveTrack(track: ITrack) {
-    const geometry = JSON.parse(JSON.stringify(track.geojson.geometry));
-    geometry.coordinates = geometry.coordinates.map((x: any) => {
-      return [x[0], x[1]];
-    });
-    const propeties = {...track};
-    delete propeties.geojson;
-    const data = {
-      type: 'Feature',
-      geometry: geometry,
-      properties: {
-        ...{
-          name: track.title,
-          description: track.description,
-          app_id: this._configService.appId,
-          image_gallery: track.photoKeys ? track.photoKeys : [],
+    if (navigator.onLine) {
+      let geometry = null;
+      if (track?.geojson?.geometry) {
+        geometry = track.geojson.geometry
+          ? JSON.parse(JSON.stringify(track.geojson.geometry))
+          : null;
+        geometry.coordinates = geometry.coordinates.map((x: any) => {
+          return [x[0], x[1]];
+        });
+      }
+
+      const propeties = {...track};
+      delete propeties.geojson;
+      const data = {
+        type: 'Feature',
+        geometry: geometry,
+        properties: {
+          ...{
+            name: track.title,
+            description: track.description,
+            app_id: this._configService.appId,
+            image_gallery: track.photoKeys ? track.photoKeys : [],
+          },
+          ...propeties,
         },
-        ...propeties,
-      },
-    };
-    const res = await this._communicationService
-      .post(
-        `${environment.api}/api/ugc/track/store`,
-        data,
-        new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      )
-      .toPromise();
-    return res;
+      };
+      const res = await this._communicationService
+        .post(
+          `${environment.api}/api/ugc/track/store`,
+          data,
+          new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+        )
+        .pipe(catchError(_ => null))
+        .toPromise();
+      return res;
+    } else {
+      return of(track);
+    }
   }
 
   /**
@@ -457,29 +479,36 @@ export class GeohubService {
    * @returns
    */
   async saveWaypoint(waypoint: WaypointSave) {
-    const data = {
-      type: 'Feature',
-      geometry: {
-        type: EGeojsonGeometryTypes.POINT,
-        coordinates: [waypoint.position.longitude, waypoint.position.latitude],
-      },
-      properties: {
-        name: waypoint.title,
-        description: waypoint.description,
-        app_id: this._configService.appId,
-        image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
-        waypoint_type: waypoint.waypointtype,
-        ...waypoint,
-      },
-    };
-    const res = await this._communicationService
-      .post(`${environment.api}/api/ugc/poi/store`, data, {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      })
-      .toPromise();
-    return res;
+    if (navigator.onLine) {
+      const data = {
+        type: 'Feature',
+        geometry: {
+          type: EGeojsonGeometryTypes.POINT,
+          coordinates: [waypoint.position.longitude, waypoint.position.latitude],
+        },
+        properties: {
+          ...{
+            name: waypoint.title,
+            description: waypoint.description,
+            app_id: this._configService.appId,
+            image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
+            waypoint_type: waypoint.waypointtype,
+          },
+          ...waypoint,
+        },
+      };
+      const res = await this._communicationService
+        .post(`${environment.api}/api/ugc/poi/store`, data, {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+          }),
+        })
+        .pipe(catchError(_ => null))
+        .toPromise();
+      return res;
+    } else {
+      return of(waypoint);
+    }
   }
 
   /**

@@ -8,7 +8,8 @@ import {WaypointSave} from '../types/waypoint';
 import {StorageService} from './base/storage.service';
 import {GeohubService} from './geohub.service';
 import {IPhotoItem, PhotoService} from './photo.service';
-
+import {FeatureCollection, Feature} from 'geojson';
+import {EGeojsonGeometryTypes} from '../types/egeojson-geometry-types.enum';
 @Injectable({
   providedIn: 'root',
 })
@@ -155,9 +156,9 @@ export class SaveService {
    *
    * @param track the track to be saved
    */
-  public async saveTrack(track: ITrack): Promise<ITrack> {
+  public async saveTrack(track: ITrack, skipUload = false): Promise<ITrack> {
     const trackCopy = Object.assign({}, track);
-    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK);
+    const key = await this._saveGeneric(trackCopy, ESaveObjType.TRACK, skipUload);
     trackCopy.key = key;
     return trackCopy;
   }
@@ -167,11 +168,50 @@ export class SaveService {
    *
    * @param waypoint the waypoint to be saved
    */
-  public async saveWaypoint(waypoint: WaypointSave): Promise<WaypointSave> {
+  public async saveWaypoint(waypoint: WaypointSave, skipUpload = false): Promise<WaypointSave> {
     const waypointCopy = Object.assign({}, waypoint);
-    const key = await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT);
+    const key = await this._saveGeneric(waypointCopy, ESaveObjType.WAYPOINT, skipUpload);
     waypointCopy.key = key;
     return waypointCopy;
+  }
+
+  async syncUgc(): Promise<void> {
+    const geohubUgcTracks: FeatureCollection = await this.geohub.getUgcTracks();
+    const geohubUgcPois: FeatureCollection = await this.geohub.getUgcPois();
+    const deviceUgcTracks = await this.getTracks();
+    const deviceUgcPois = await this.getWaypoints();
+    if (geohubUgcTracks?.features && geohubUgcTracks?.features.length > deviceUgcTracks.length) {
+      const deviceUgcTrackNames = deviceUgcTracks.map(f => f.title);
+      const deviceUgcTrackUUID = deviceUgcTracks.map(f => f.uuid);
+      geohubUgcTracks.features
+        .filter(f => {
+          const prop = f?.properties;
+          const name = prop?.name;
+          const uuid = prop?.uuid;
+          return (
+            deviceUgcTrackNames.indexOf(name) < 0 &&
+            ((uuid && deviceUgcTrackUUID.indexOf(uuid) < 0) || uuid == null)
+          );
+        })
+        .map(f => this._convertFeatureToITrack(f))
+        .forEach(track => this.saveTrack(track, true));
+    }
+    if (geohubUgcPois?.features && geohubUgcPois?.features.length > deviceUgcPois.length) {
+      const deviceUgcPoisNames = deviceUgcPois.map(f => f.title);
+      const deviceUgcPoisUUID = deviceUgcPois.map(f => f.uuid);
+      geohubUgcPois.features
+        .filter(f => {
+          const prop = f?.properties;
+          const name = prop?.name;
+          const uuid = prop?.uuid;
+          return (
+            deviceUgcPoisNames.indexOf(name) < 0 &&
+            ((uuid && deviceUgcPoisUUID.indexOf(uuid) < 0) || uuid == null)
+          );
+        })
+        .map(f => this._convertFeatureToWaypointSave(f))
+        .forEach(poi => this.saveWaypoint(poi, true));
+    }
   }
 
   public async updateTrack(newTrack: ITrack) {
@@ -223,7 +263,7 @@ export class SaveService {
           break;
 
         case ESaveObjType.WAYPOINT:
-          const waypoint: WaypointSave = await this._getGenericById(contents[i].key);
+          const waypoint: WaypointSave = await this.getWaypoint(contents[i].key);
 
           if (waypoint?.photos?.length) {
             let i: number = 0;
@@ -252,6 +292,22 @@ export class SaveService {
           }
 
           if (!waypoint?.photos?.length) {
+            let poiToGeohub = null;
+            try {
+              poiToGeohub = {
+                ...waypoint,
+                ...{
+                  geojson: {
+                    type: EGeojsonGeometryTypes.POINT,
+                    coordinates: [waypoint.position.longitude, waypoint.position.latitude],
+                  },
+                },
+              };
+            } catch (e) {
+              console.error(e);
+              indexObj.saved = true;
+              this._updateGeneric(contents[i].key, waypoint);
+            }
             const resW = await this.geohub.saveWaypoint(waypoint);
             if (resW && !resW.error && resW.id) {
               indexObj.saved = true;
@@ -291,7 +347,31 @@ export class SaveService {
           }
 
           if (!track?.photos?.length) {
-            const resT = await this.geohub.saveTrack(track);
+            let trackToGeohub = null;
+            try {
+              trackToGeohub = {
+                ...track,
+                ...{
+                  geojson: {
+                    geometry: {
+                      type:
+                        (track as any).geojson?.geometry?.type ||
+                        (track as any)?.geometry?.type ||
+                        null,
+                      coordinates:
+                        (track as any).geojson?.geometry?.coordinates ||
+                        (track as any).geometry.coordinates ||
+                        [],
+                    },
+                  },
+                },
+              };
+            } catch (e) {
+              console.error(e);
+              indexObj.saved = true;
+              this._updateGeneric(contents[i].key, track);
+            }
+            const resT = await this.geohub.saveTrack(trackToGeohub as any);
             if (resT && !resT.error && resT.id) {
               indexObj.saved = true;
               track.id = resT.id;
@@ -306,6 +386,46 @@ export class SaveService {
       }
       await this._updateIndex();
     }
+    this.syncUgc();
+  }
+
+  private _convertFeatureToITrack(feature: Feature): ITrack {
+    const prop = feature.properties;
+    const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
+    const geojson = Object.assign(new CGeojsonLineStringFeature(), feature.geometry) ?? null;
+    return {
+      activity: rawData.activity ?? null,
+      geojson,
+      description: prop.description ?? null,
+      id: prop.id ?? null,
+      metadata: prop.metadata ?? null,
+      photoKeys: prop.photoKeys ?? null,
+      photos: prop.photos ?? null,
+      rawData: prop.rawData ?? null,
+      storedPhotoKeys: prop.storedPhotoKeys ?? null,
+      title: prop.name ?? null,
+      date: prop.date,
+      uuid: prop.uuid,
+    } as ITrack;
+  }
+
+  private _convertFeatureToWaypointSave(feature: Feature): WaypointSave {
+    const prop = feature.properties;
+    const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
+    return {
+      city: rawData.city ?? null,
+      date: prop.date,
+      description: prop.description ?? null,
+      displayPosition: rawData.displayPosition ?? null,
+      id: prop.id ?? null,
+      nominatim: rawData.nominatim ?? null,
+      photos: rawData.photos ?? [],
+      position: {
+        longitude: (feature.geometry as any).coordinates[0],
+        latitude: (feature.geometry as any).coordinates[1],
+      },
+      title: prop.name ?? null,
+    } as WaypointSave;
   }
 
   private async _deleteGeneric(key): Promise<any> {
@@ -341,7 +461,10 @@ export class SaveService {
       photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
       track.photos.push(photo);
     }
-    console.log(track);
+  }
+
+  private async _initWaypoint(waypoint: Feature): Promise<WaypointSave> {
+    return waypoint as any;
   }
 
   private async _recoverIndex() {
@@ -354,13 +477,14 @@ export class SaveService {
   private async _saveGeneric(
     object: IRegisterItem,
     type: ESaveObjType,
-    skipUpload?: boolean,
+    skipUpload = false,
   ): Promise<string> {
+    object.uuid = object.uuid ? object.uuid : this._generateUUID();
     const key = type + this._getLastId();
     const insertObj: ISaveIndexObj = {
       key,
       type,
-      saved: false,
+      saved: skipUpload,
       edited: false,
     };
     this._index.objects.push(insertObj);
@@ -390,5 +514,13 @@ export class SaveService {
 
   private async _updateIndex() {
     await this._storage.setByKey(this._indexKey, this._index);
+  }
+
+  private _generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 }

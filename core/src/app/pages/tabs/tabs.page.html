@@ -4,11 +4,9 @@
       <i class="icon-outline-home webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.home' | wmtrans}} </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="map" [disabled]="!(online$|async)">
+    <ion-tab-button tab="map">
       <i class="icon-outline-map-outline webmapp-tabs-icon"></i>
-      <ion-label class="webmapp-tabs-label">
-        {{'tabs.map' | wmtrans}} {{!(online$|async)? 'offline': ''}}
-      </ion-label>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.map' | wmtrans}} </ion-label>
     </ion-tab-button>
     <ion-tab-button tab="favourites" *ngIf="(authEnable$|async) && (isLoggedIn$|async)">
       <i class="icon-outline-heart webmapp-tabs-icon"></i>

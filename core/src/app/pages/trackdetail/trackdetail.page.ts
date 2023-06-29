@@ -24,12 +24,12 @@ import {TranslateService} from '@ngx-translate/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class TrackdetailPage {
+  currentTrack: ITrack;
   public photos: IPhotoItem[] = [];
   public sliderOptions: any = {
     slidesPerView: 2.5,
   };
   track$: Observable<ITrack>;
-  currentTrack: ITrack;
   trackAvgSpeed$: Observable<number>;
   trackDistance$: Observable<number>;
   trackSlope$: Observable<number>;
@@ -70,22 +70,6 @@ export class TrackdetailPage {
     this._menuCtrl.close('optionMenu');
   }
 
-  async edit(): Promise<void> {
-    const modal = await this._modalCtrl.create({
-      component: ModalSaveComponent,
-      componentProps: {
-        track: this.currentTrack,
-        photos: this.photos,
-      },
-    });
-    await modal.present();
-    const res = await modal.onDidDismiss();
-    if (!res.data.dismissed) {
-      const track: ITrack = Object.assign(this.currentTrack, res.data.trackData);
-      await this._saveSvc.updateTrack(track);
-      // this.track$.next(track);
-    }
-  }
   delete(): void {
     from(
       this._alertCtrl.create({
@@ -118,11 +102,6 @@ export class TrackdetailPage {
       .subscribe(() => {});
   }
 
-  menu(): void {
-    this._menuCtrl.enable(true, 'optionMenu');
-    this._menuCtrl.open('optionMenu');
-  }
-
   deleteAction(): void {
     this._saveSvc
       .deleteTrack(this.currentTrack)
@@ -133,6 +112,28 @@ export class TrackdetailPage {
       .subscribe(() => {
         this._navCtlr.navigateForward('tracklist');
       });
+  }
+
+  async edit(): Promise<void> {
+    const modal = await this._modalCtrl.create({
+      component: ModalSaveComponent,
+      componentProps: {
+        track: this.currentTrack,
+        photos: this.photos,
+      },
+    });
+    await modal.present();
+    const res = await modal.onDidDismiss();
+    if (!res.data.dismissed) {
+      const track: ITrack = Object.assign(this.currentTrack, res.data.trackData);
+      await this._saveSvc.updateTrack(track);
+      // this.track$.next(track);
+    }
+  }
+
+  menu(): void {
+    this._menuCtrl.enable(true, 'optionMenu');
+    this._menuCtrl.open('optionMenu');
   }
 
   presentToast(): Observable<void> {

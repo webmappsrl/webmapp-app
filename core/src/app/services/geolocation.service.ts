@@ -93,6 +93,7 @@ export class GeolocationService {
    */
   start(): void {
     this.onStart$.next(true);
+    //const isLocalServer: boolean = window.location.href.indexOf('localhost') !== -1;
     if (this._watcher.value == null) {
       if (
         this._platform.is('ios') ||
