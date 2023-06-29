@@ -24,6 +24,7 @@ import {
 } from './shared/wm-core/store/conf/conf.selector';
 import {loadConf} from './shared/wm-core/store/conf/conf.actions';
 import {loadPois, query} from './shared/wm-core/store/api/api.actions';
+import {online} from './store/network/network.selector';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -88,6 +89,12 @@ export class AppComponent {
       },
     );
 
+    this._store
+      .select(online)
+      .pipe(filter(o => o))
+      .subscribe(_ => {
+        this.saveService.uploadUnsavedContents();
+      });
     this._downloadService.init();
 
     this.status.showPhotos.subscribe(x => {
