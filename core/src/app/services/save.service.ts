@@ -133,9 +133,9 @@ export class SaveService {
    *
    * @param photo the photo to be saved
    */
-  public async savePhoto(photo: IPhotoItem) {
+  public async savePhoto(photo: IPhotoItem, skipUpload = false) {
     await this._photoService.setPhotoData(photo);
-    await this._saveGeneric(photo, ESaveObjType.PHOTO);
+    await this._saveGeneric(photo, ESaveObjType.PHOTO, skipUpload);
   }
 
   /**
@@ -143,12 +143,10 @@ export class SaveService {
    *
    * @param photo the photo to be saved
    */
-  public async savePhotos(photos: Array<IPhotoItem>) {
+  public async savePhotos(photos: Array<IPhotoItem>, skipUpload = false) {
     for (let photo of photos) {
-      await this._photoService.setPhotoData(photo);
-      await this._saveGeneric(photo, ESaveObjType.PHOTO, true);
+      await this.savePhoto(photo, skipUpload);
     }
-    this.uploadUnsavedContents();
   }
 
   /**
@@ -178,6 +176,8 @@ export class SaveService {
   async syncUgc(): Promise<void> {
     const geohubUgcTracks: FeatureCollection = await this.geohub.getUgcTracks();
     const geohubUgcPois: FeatureCollection = await this.geohub.getUgcPois();
+    const geohubUgcMedias: FeatureCollection = await this.geohub.getUgcMedias();
+    const deviceUgcMedias: any[] = await this.getPhotos();
     const deviceUgcTracks = await this.getTracks();
     const deviceUgcPois = await this.getWaypoints();
     if (geohubUgcTracks?.features && geohubUgcTracks?.features.length > deviceUgcTracks.length) {
@@ -186,8 +186,9 @@ export class SaveService {
       geohubUgcTracks.features
         .filter(f => {
           const prop = f?.properties;
+          const rawData = JSON.parse(prop.raw_data) ?? undefined;
           const name = prop?.name;
-          const uuid = prop?.uuid;
+          const uuid = rawData?.uuid;
           return (
             deviceUgcTrackNames.indexOf(name) < 0 &&
             ((uuid && deviceUgcTrackUUID.indexOf(uuid) < 0) || uuid == null)
@@ -202,8 +203,9 @@ export class SaveService {
       geohubUgcPois.features
         .filter(f => {
           const prop = f?.properties;
+          const rawData = JSON.parse(prop.raw_data) ?? undefined;
           const name = prop?.name;
-          const uuid = prop?.uuid;
+          const uuid = rawData?.uuid;
           return (
             deviceUgcPoisNames.indexOf(name) < 0 &&
             ((uuid && deviceUgcPoisUUID.indexOf(uuid) < 0) || uuid == null)
@@ -211,6 +213,23 @@ export class SaveService {
         })
         .map(f => this._convertFeatureToWaypointSave(f))
         .forEach(poi => this.saveWaypoint(poi, true));
+    }
+    if (geohubUgcMedias?.features && geohubUgcMedias?.features.length > deviceUgcMedias.length) {
+      const deviceUgcMediasNames = deviceUgcMedias.map(f => f.title);
+      const deviceUgcMediasUUID = deviceUgcMedias.map(f => f.uuid);
+      geohubUgcMedias.features
+        .filter(f => {
+          const prop = f?.properties;
+          const rawData = JSON.parse(prop.raw_data) ?? undefined;
+          const name = prop?.name;
+          const uuid = rawData?.uuid;
+          return (
+            deviceUgcMediasNames.indexOf(name) < 0 &&
+            ((uuid && deviceUgcMediasUUID.indexOf(uuid) < 0) || uuid == null)
+          );
+        })
+        .map(f => this._convertFeatureToMedia(f))
+        .forEach(media => this.savePhoto(media, true));
     }
   }
 
@@ -409,6 +428,20 @@ export class SaveService {
     } as ITrack;
   }
 
+  //getPhotoData
+  private _convertFeatureToMedia(feature: Feature): IPhotoItem {
+    const prop = feature.properties;
+    // const url = `https://geohub.webmapp.it/storage/${prop.relative_url}`;
+    const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
+    return {
+      photoURL: prop.url,
+      position: rawData.position,
+      description: prop.description ?? '',
+      date: prop.updated_at,
+      uuid: rawData.uuid,
+    } as IPhotoItem;
+  }
+
   private _convertFeatureToWaypointSave(feature: Feature): WaypointSave {
     const prop = feature.properties;
     const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
@@ -425,6 +458,7 @@ export class SaveService {
         latitude: (feature.geometry as any).coordinates[1],
       },
       title: prop.name ?? null,
+      uuid: rawData.uuid,
     } as WaypointSave;
   }
 
@@ -433,6 +467,14 @@ export class SaveService {
     const indexObj = this._index.objects.find(x => x.key === key);
     indexObj.deleted = true;
     await this._updateIndex();
+  }
+
+  private _generateUUID(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 
   private async _getGenericById(key): Promise<any> {
@@ -461,10 +503,6 @@ export class SaveService {
       photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
       track.photos.push(photo);
     }
-  }
-
-  private async _initWaypoint(waypoint: Feature): Promise<WaypointSave> {
-    return waypoint as any;
   }
 
   private async _recoverIndex() {
@@ -514,13 +552,5 @@ export class SaveService {
 
   private async _updateIndex() {
     await this._storage.setByKey(this._indexKey, this._index);
-  }
-
-  private _generateUUID(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === 'x' ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
   }
 }

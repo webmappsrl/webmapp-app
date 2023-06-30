@@ -329,6 +329,17 @@ export class GeohubService {
     return res;
   }
 
+  async getUgcMedias() {
+    return await this._communicationService
+      .get(
+        `${environment.api}/api/ugc/media/index`,
+        new HttpHeaders({
+          'Content-Type': 'application/json',
+        }),
+      )
+      .toPromise();
+  }
+
   async getUgcPois() {
     return await this._communicationService
       .get(
@@ -390,35 +401,41 @@ export class GeohubService {
    * @returns
    */
   async savePhoto(photo: IPhotoItem) {
-    console.log('save photo to geohub', photo);
-    const geojson = {
-      type: 'Feature',
-      geometry: photo.position
-        ? {
-            type: EGeojsonGeometryTypes.POINT,
-            coordinates: [photo.position.longitude, photo.position.latitude],
-          }
-        : null,
-      properties: {
-        description: photo.description,
-        name: photo.description,
-        app_id: this._configService.appId,
-        position: photo?.position,
-      },
-    };
+    if (navigator.onLine) {
+      console.log('save photo to geohub', photo);
+      const geojson = {
+        type: 'Feature',
+        geometry: photo.position
+          ? {
+              type: EGeojsonGeometryTypes.POINT,
+              coordinates: [photo.position.longitude, photo.position.latitude],
+            }
+          : null,
+        properties: {
+          description: photo.description,
+          name: photo.description,
+          app_id: this._configService.appId,
+          position: photo?.position,
+          uuid: photo?.uuid,
+        },
+      };
 
-    const data = new FormData();
+      const data = new FormData();
 
-    if (photo.blob) data.append('image', photo.blob, 'image.jpg');
-    data.append('geojson', JSON.stringify(geojson));
-    console.log('------- ~ GeohubService ~ savePhoto ~ data', data);
+      if (photo.blob) data.append('image', photo.blob, 'image.jpg');
+      data.append('geojson', JSON.stringify(geojson));
+      console.log('------- ~ GeohubService ~ savePhoto ~ data', data);
 
-    // The content type multipart/form-data is not set because there could be problems
-    // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http
-    const res = await this._communicationService
-      .post(`${environment.api}/api/ugc/media/store`, data)
-      .toPromise();
-    return res;
+      // The content type multipart/form-data is not set because there could be problems
+      // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http
+      const res = await this._communicationService
+        .post(`${environment.api}/api/ugc/media/store`, data)
+        .pipe(catchError(_ => of(null)))
+        .toPromise();
+      return res;
+    } else {
+      return of(photo);
+    }
   }
 
   /**
@@ -451,6 +468,7 @@ export class GeohubService {
             description: track.description,
             app_id: this._configService.appId,
             image_gallery: track.photoKeys ? track.photoKeys : [],
+            uuid: track.uuid,
           },
           ...propeties,
         },
@@ -493,6 +511,7 @@ export class GeohubService {
             app_id: this._configService.appId,
             image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
             waypoint_type: waypoint.waypointtype,
+            uuid: waypoint.uuid,
           },
           ...waypoint,
         },

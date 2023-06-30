@@ -1,6 +1,6 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
-import {filter, take} from 'rxjs/operators';
+import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
 
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
@@ -25,6 +25,7 @@ import {
 import {loadConf} from './shared/wm-core/store/conf/conf.actions';
 import {loadPois, query} from './shared/wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
+import {AuthService} from './services/auth.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -49,6 +50,7 @@ export class AppComponent {
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
+    private _authSvc: AuthService,
   ) {
     this._store.dispatch(loadConf());
     this._store.dispatch(query({init: true}));
@@ -91,7 +93,12 @@ export class AppComponent {
 
     this._store
       .select(online)
-      .pipe(filter(o => o))
+      .pipe(
+        filter(o => o),
+        switchMap(_ => this._authSvc.isLoggedIn$),
+        filter(l => l),
+        debounceTime(2000),
+      )
       .subscribe(_ => {
         this.saveService.uploadUnsavedContents();
       });
@@ -151,9 +158,6 @@ export class AppComponent {
     setInterval(() => {
       this.saveService.uploadUnsavedContents();
     }, GEOHUB_SAVING_TRY_INTERVAL);
-    setTimeout(() => {
-      this.saveService.uploadUnsavedContents();
-    }, 2000);
   }
 
   private _setGlobalCSS(css: {[name: string]: string | number}) {
