@@ -38,15 +38,7 @@ const CONSOLE_COLORS = {
   BgCyan: '\x1b[46m',
   BgWhite: '\x1b[47m',
 };
-const wrongInstanceVersion = [
-  'fumaiolosentieri',
-  'pec',
-  'parcomaremma',
-  'cammini',
-  'ucvs',
-  'gavorrano',
-  'sicai',
-];
+const wrongInstanceVersion = ['fumaiolosentieri', 'pec', 'cammini', 'ucvs', 'gavorrano', 'sicai'];
 
 function debug(message) {
   console.debug(CONSOLE_COLORS.Dim + '[DEBUG]   ' + CONSOLE_COLORS.Reset + ' ' + message);
