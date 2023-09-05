@@ -36,7 +36,6 @@
 </ion-content>
 <ng-template #home>
   <wm-home-page
-    (horizontalScrollBoxEVT)="setFilter($event)"
     (poiTypeFilterBoxEVT)="toggleFilter($event[0],$event[1])"
     (slugBoxEVT)="openSlug($event[0])"
     (externalUrlBoxEVT)="openExternalUrl($event)"
