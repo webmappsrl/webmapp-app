@@ -12,9 +12,10 @@
     "@types/cordova": "0.0.34"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^12.1.0",
+    "@angular-devkit/build-angular": "^12.2.18",
     "@angular/compiler": "^12.1.0",
-    "@angular/compiler-cli": "^12.1.0",
+    "@angular/compiler-cli": "12.1.0",
+    "color": "^4.2.0",
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.5",
     "gulp-replace": "^1.1.2",
@@ -23,8 +24,7 @@
     "request": "^2.88.2",
     "shelljs": "^0.8.4",
     "vinyl-source-stream": "^2.0.0",
-    "yargs": "^16.2.0",
-    "color": "^4.2.0"
+    "yargs": "^16.2.0"
   },
   "name": "webmapp-app",
   "version": "0.0.1",
