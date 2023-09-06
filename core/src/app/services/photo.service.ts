@@ -1,7 +1,6 @@
 /* eslint-disable max-len */
 import {Injectable} from '@angular/core';
 import {DeviceService} from './base/device.service';
-import {ImagePicker} from '@ionic-native/image-picker/ngx';
 // import { File } from '@ionic-native/file/ngx';
 // import { FilePath } from '@ionic-native/file-path/ngx';
 import {Capacitor} from '@capacitor/core';
@@ -16,7 +15,6 @@ import {HttpClient} from '@angular/common/http';
 import {IRegisterItem} from '../types/track';
 import {Filesystem, Directory, GetUriResult} from '@capacitor/filesystem';
 import {GeolocationService} from './geolocation.service';
-import {TranslateService} from '@ngx-translate/core';
 import {ActionSheetController} from '@ionic/angular';
 import {LangService} from '../shared/wm-core/localization/lang.service';
 import {Location} from 'src/app/types/location';
@@ -64,7 +62,6 @@ export class PhotoService {
   private translations = [];
 
   constructor(
-    private _imagePicker: ImagePicker,
     private _deviceService: DeviceService,
     private _http: HttpClient, // private file: File, // private filePath: FilePath,
     private geoLocationService: GeolocationService,
@@ -168,9 +165,9 @@ export class PhotoService {
     const res: IPhotoItem[] = [];
     let filePath = null;
     if (!this._deviceService.isBrowser) {
-      if (!(await this._imagePicker.hasReadPermission())) {
-        await this._imagePicker.requestReadPermission();
-        if (!(await this._imagePicker.hasReadPermission())) return res;
+      if (!(await Camera.checkPermissions())) {
+        await Camera.requestPermissions();
+        if (!(await Camera.checkPermissions())) return res;
       }
       const options: GalleryImageOptions = {
         quality: 100, //	number	The quality of image to return as JPEG, from 0-100		1.2.0
@@ -193,50 +190,6 @@ export class PhotoService {
           date: new Date(),
           position: this.geoLocationService.location,
           exif: gallery.photos[i].exif,
-        });
-      }
-      return res;
-    } else {
-      const max = 1 + Math.random() * 8;
-      for (let i = 0; i < max; i++) {
-        res.push({
-          id: '' + i + 1,
-          photoURL: `https://picsum.photos/50${i}/75${i}`,
-          datasrc: `https://picsum.photos/50${i}/75${i}`,
-          description: '',
-          date: new Date(),
-          position: this.geoLocationService.location,
-        });
-      }
-      return res;
-    }
-  }
-
-  async getPhotosOld(dateLimit: Date = null): Promise<IPhotoItem[]> {
-    const res: IPhotoItem[] = [];
-    let filePath = null;
-    if (!this._deviceService.isBrowser) {
-      if (!(await this._imagePicker.hasReadPermission())) {
-        await this._imagePicker.requestReadPermission();
-        if (!(await this._imagePicker.hasReadPermission())) return res;
-      }
-
-      const images = await this._imagePicker.getPictures(this._options);
-      for (let i = 0; i < images.length; i++) {
-        let data = null;
-        if (this._isBase64) {
-          data = `data:image/jpeg;base64,${images[i]}`;
-        } else {
-          data = Capacitor.convertFileSrc(images[i]); //TODO check source of file
-          filePath = images[i];
-        }
-        res.push({
-          id: i + '',
-          photoURL: filePath,
-          datasrc: data,
-          description: '',
-          date: new Date(),
-          position: this.geoLocationService.location,
         });
       }
       return res;

@@ -80,6 +80,7 @@ export class TilesService {
   }
 
   async getBase64fromMBtile(tileId: string, mbTileFileName): Promise<string> {
+    alert('getBase64fromMBtile');
     if (!this.platform.is('mobile')) {
       return null;
     }

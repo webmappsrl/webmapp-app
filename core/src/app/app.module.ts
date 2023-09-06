@@ -11,7 +11,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {RouteReuseStrategy} from '@angular/router';
 import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
-import {ImagePicker} from '@ionic-native/image-picker/ngx';
 import {IonicStorageModule} from '@ionic/storage-angular';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
@@ -93,7 +92,6 @@ class SQLiteMock {
       multi: true,
     },
     Diagnostic,
-    ImagePicker,
     GoogleAnalytics,
     SQLite,
   ],
