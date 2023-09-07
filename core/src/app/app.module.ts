@@ -9,7 +9,6 @@ import localeIt from '@angular/common/locales/it';
 import {LOCALE_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouteReuseStrategy} from '@angular/router';
-import {Diagnostic} from '@ionic-native/diagnostic/ngx';
 import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {IonicStorageModule} from '@ionic/storage-angular';
 import {EffectsModule} from '@ngrx/effects';
@@ -32,22 +31,10 @@ import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
 
-// import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeIt);
 
-class SQLiteMock {
-  public create(config: SQLiteDatabaseConfig): Promise<SQLiteObject> {
-    return new Promise((resolve, reject) => {
-      resolve(new SQLiteObject(new Object()));
-    });
-  }
-}
-
 @NgModule({
-  declarations: [
-    AppComponent,
-    // CDVPhotoLibraryPipe
-  ],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
@@ -91,7 +78,6 @@ class SQLiteMock {
       deps: [ConfigService],
       multi: true,
     },
-    Diagnostic,
     GoogleAnalytics,
     SQLite,
   ],
