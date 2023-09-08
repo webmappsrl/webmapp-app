@@ -18,17 +18,17 @@
     </ion-toolbar>
   </ion-header>
 
-  <old-webmapp-map
+  <wm-map
     class="webmapp-pageregister-map-container"
-    [registering]="true"
-    #map
-    [btnposition]="'middle'"
-    (moveBtn)="recordMove($event)"
-    (unlocked)="recordStart($event)"
-    [start-view]="location"
-    [hideEndMarker]="true"
-  ></old-webmapp-map>
-
+    [wmMapConf]="confMap$|async"
+    [wmMapGeojson]="geojson$|async"
+    wmMapPosition
+    [wmMapPositioncurrentLocation]="currentPosition$|async"
+    [wmMapPositionfocus]="focusPosition$|async"
+  >
+    <wm-btn-rec bottom-center (move)="recordMove($event)" (unlocked)="recordStart($event)">
+    </wm-btn-rec>
+  </wm-map>
   <ion-card
     class="webmapp-pageregister-infopanel"
     [ngStyle]="{

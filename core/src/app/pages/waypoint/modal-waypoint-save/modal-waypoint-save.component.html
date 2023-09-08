@@ -14,12 +14,12 @@
 </ion-header>
 
 <ion-content scrollY="true">
-  <old-webmapp-map
-    class="webmapp-modalwaypoint-map"
-    #map
-    [static]="true"
-    [position]="displayPosition"
-  ></old-webmapp-map>
+  <wm-map
+    class="webmapp-pagewaypoint-map-container"
+    [wmMapConf]="confMap$|async"
+    [wmMapGeojson]="position"
+  ></wm-map>
+
   <ion-list class="webmapp-modalwaypoint-itemlist">
     <ion-item class="webmapp-formfield-item">
       <ion-label class="webmapp-formfield-label" position="stacked">

@@ -13,14 +13,11 @@
 </ion-header>
 
 <ion-content scrollY="false">
-  <old-webmapp-map
+  <wm-map
     class="webmapp-pagewaypoint-map-container"
-    #map
-    [btnposition]="'middle'"
-    [showLayer]="true"
-    [hideRegister]="true"
-    [position]="location"
-  ></old-webmapp-map>
+    [wmMapConf]="confMap$|async"
+    [wmMapGeojson]="location"
+  ></wm-map>
 
   <ion-card class="webmapp-pagewaypoint-infopanel">
     <div class="webmapp-pagewaypoint-infopanel-top">

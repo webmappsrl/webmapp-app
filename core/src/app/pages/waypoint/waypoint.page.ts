@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 
 import {GeolocationService} from 'src/app/services/geolocation.service';
@@ -9,6 +9,8 @@ import {NominatimService} from 'src/app/services/nominatim.service';
 
 import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-save.component';
 import {Location} from 'src/app/types/location';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -17,7 +19,7 @@ import {Location} from 'src/app/types/location';
 })
 export class WaypointPage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
-
+  confMap$: Observable<any> = this._store.select(confMAP);
   location: Location;
   locationString: string;
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -29,6 +31,7 @@ export class WaypointPage implements OnInit, OnDestroy {
     private _nominatimSvc: NominatimService,
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
+    private _store: Store,
   ) {}
 
   ngOnDestroy(): void {

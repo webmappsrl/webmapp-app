@@ -19,13 +19,11 @@
   </ion-header>
 
   <ion-content id="main">
-    <old-webmapp-map
+    <wm-map
       class="wm-waypointdetail-map"
-      #map
-      [static]="true"
-      [position]="waypoint.displayPosition"
-      [zoomEnabled]="true"
-    ></old-webmapp-map>
+      [wmMapConf]="confMap$|async"
+      [wmMapGeojson]="waypoint.displayPosition"
+    ></wm-map>
 
     <ion-list class="wm-waypointdetail-itemlist" lines="none">
       <wm-form [confPOIFORMS]="confPOIFORMS$|async" [init]="waypoint$|async" [disabled]="true">

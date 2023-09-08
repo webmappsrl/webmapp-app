@@ -18,11 +18,12 @@
       <ng-container *ngIf="waypoints.length>0;else noWaypoints"></ng-container>
       <ion-item *ngFor="let waypoint of waypoints" button detail (click)="open(waypoint)">
         <div start class="wm-waypointlist-item-map">
-          <old-webmapp-map
-            [static]="true"
-            [animation]="false"
-            [position]="waypoint.displayPosition"
-          ></old-webmapp-map>
+          <wm-map
+            class="wm-trackdetail-map"
+            [wmMapConf]="confMap$|async"
+            [wmMapOnly]="true"
+            [wmMapGeojson]="waypoint.displayPosition"
+          ></wm-map>
         </div>
         <div>
           <div class="wm-waypointlist-item-title">{{waypoint.title}}</div>

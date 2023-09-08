@@ -6,6 +6,9 @@ import {ESuccessType} from '../../types/esuccess.enum';
 import {ITrack} from 'src/app/types/track';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
+import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',
@@ -24,15 +27,16 @@ export class ModalSuccessComponent implements OnInit {
   @Input() waypoint: WaypointSave;
   @ViewChild('slider') slider: IonSlides;
 
-  public displayPosition;
-  public isPhotos = false;
-  public isTrack = false;
-  public isWaypoint = false;
-  public sliderOptions: any = {
+  confMap$: Observable<any> = this._store.select(confMAP);
+  displayPosition;
+  isPhotos = false;
+  isTrack = false;
+  isWaypoint = false;
+  sliderOptions: any = {
     slidesPerView: 2.5,
   };
-  public today = new Date();
-  public topValues = [];
+  today = new Date();
+  topValues = [];
   trackAvgSpeed: number = 0;
   trackDate;
   trackSlope: number = 0;
@@ -44,6 +48,7 @@ export class ModalSuccessComponent implements OnInit {
     private _modalController: ModalController,
     private _geoUtils: GeoutilsService,
     private _navController: NavController,
+    private _store: Store,
   ) {}
 
   async close() {

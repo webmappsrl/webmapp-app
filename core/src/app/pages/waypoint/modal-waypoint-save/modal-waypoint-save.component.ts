@@ -10,7 +10,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {FormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
-import {confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confMAP, confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -19,19 +19,20 @@ import {confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
   encapsulation: ViewEncapsulation.None,
 })
 export class ModalWaypointSaveComponent implements OnInit {
+  confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
-  public description: string;
-  public displayPosition: Location;
+  description: string;
+  displayPosition: Location;
   fg: FormGroup;
-  public isValidArray: boolean[] = [false, false];
+  isValidArray: boolean[] = [false, false];
   nominatim: any;
-  public photos: any[] = [];
-  public position: Location;
-  public positionCity: string = 'città';
-  public positionString: string;
-  public title: string;
-  public validate = false;
-  public waypointtype = 'waypoint';
+  photos: any[] = [];
+  position: Location;
+  positionCity: string = 'città';
+  positionString: string;
+  title: string;
+  validate = false;
+  waypointtype = 'waypoint';
 
   constructor(
     private _modalCtrl: ModalController,

@@ -1,6 +1,6 @@
 import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {SQLite, SQLiteDatabaseConfig, SQLiteObject} from '@ionic-native/sqlite/ngx';
+import {SQLite} from '@ionic-native/sqlite/ngx';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {WmCoreModule} from './shared/wm-core/wm-core.module';
 
@@ -17,7 +17,6 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from 'src/environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {MapModule} from './components/map/map.module';
 import {ModalCoinsModule} from './components/modal-coins/modal-coins.module';
 import {ModalGiftCoinsModule} from './components/modal-gift-coins/modal-gift-coin.module';
 import {ModalStoreSuccessModule} from './components/modal-store-success/modal-store-success.module';
@@ -66,7 +65,6 @@ registerLocaleData(localeIt);
     ModalCoinsModule,
     ModalStoreSuccessModule,
     ModalGiftCoinsModule,
-    MapModule,
     WmCoreModule,
   ],
   providers: [

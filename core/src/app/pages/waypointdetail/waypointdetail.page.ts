@@ -6,7 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {SaveService} from 'src/app/services/save.service';
-import {confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confMAP, confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 
 @Component({
@@ -17,7 +17,8 @@ import {WaypointSave} from 'src/app/types/waypoint';
   encapsulation: ViewEncapsulation.None,
 })
 export class WaypointdetailPage {
-  confPOIFORMS$: Observable<any[]> = this._storeConf.select(confPOIFORMS);
+  confMap$: Observable<any> = this._store.select(confMAP);
+  confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   currentWaypoint: WaypointSave;
   sliderOptions: any = {
     slidesPerView: 2.5,
@@ -32,7 +33,7 @@ export class WaypointdetailPage {
     private _saveSvc: SaveService,
     private _navCtlr: NavController,
     private _toastCtrl: ToastController,
-    private _storeConf: Store<any>,
+    private _store: Store<any>,
   ) {
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),

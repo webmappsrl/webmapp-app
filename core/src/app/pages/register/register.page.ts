@@ -2,13 +2,11 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
-import {AlertController, ModalController, NavController, Platform} from '@ionic/angular';
-import {OldMapComponent} from 'src/app/components/map/old-map/map.component';
+import {ModalController, NavController, Platform} from '@ionic/angular';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
@@ -18,7 +16,15 @@ import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {Location} from '@capacitor-community/background-geolocation';
+import {Collection, Feature} from 'ol';
+import {LineString, Point} from 'ol/geom';
+import GeoJSON from 'ol/format/GeoJSON.js';
+import {fromLonLat} from 'ol/proj';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -30,17 +36,22 @@ import {Observable} from 'rxjs';
 export class RegisterPage implements OnInit, OnDestroy {
   private _timerInterval: any;
 
-  @ViewChild('map') map: OldMapComponent;
-
-  public actualSpeed: number = 0;
-  public averageSpeed: number = 0;
-  public isPaused = false;
-  public isRegestering = true;
-  public length: number = 0;
-  public location: number[];
-  public opacity: number = 0;
-  public record$: Observable<boolean>;
-  public time: {hours: number; minutes: number; seconds: number} = {
+  actualSpeed: number = 0;
+  averageSpeed: number = 0;
+  confMap$: Observable<any> = this._store.select(confMAP);
+  currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
+  focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  geojson: CGeojsonLineStringFeature = new CGeojsonLineStringFeature();
+  geojson$: BehaviorSubject<any> = new BehaviorSubject(null);
+  isPaused = false;
+  isRegestering = true;
+  length: number = 0;
+  linestring = new LineString([]);
+  location: number[];
+  opacity: number = 0;
+  point = new Point([]);
+  record$: Observable<boolean>;
+  time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
     minutes: 0,
     seconds: 0,
@@ -50,13 +61,25 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _geolocationSvc: GeolocationService,
     private _geoutilsSvc: GeoutilsService,
     private _navCtrl: NavController,
-    private _translate: LangService,
-    private _alertController: AlertController,
     private _modalCtrl: ModalController,
     private _saveSvc: SaveService,
     private _cdr: ChangeDetectorRef,
     private _platform: Platform,
+    private _store: Store,
   ) {
+    this.currentPosition$.subscribe(loc => {
+      if (this.focusPosition$.value || this.geojson$.value == null) {
+        const coordinate = fromLonLat([loc.longitude, loc.latitude]);
+        this.linestring.appendCoordinate(coordinate);
+
+        this.point.setCoordinates(coordinate);
+        const featureCollection = new Collection([new Feature({geometry: this.linestring})]);
+        const geojson = new GeoJSON({featureProjection: 'EPSG:3857'}).writeFeaturesObject(
+          featureCollection.getArray(),
+        );
+        this.geojson$.next(geojson);
+      }
+    });
     this.record$ = this._geolocationSvc.onRecord$;
   }
 
@@ -140,6 +163,7 @@ export class RegisterPage implements OnInit, OnDestroy {
    */
   async recordStart(event: boolean) {
     this.isPaused = false;
+    this.focusPosition$.next(true);
     this._geolocationSvc.startRecording();
     this.checkRecording();
   }
@@ -152,6 +176,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     this.averageSpeed = 0;
     this.length = 0;
     this._geolocationSvc.onRecord$.next(false);
+    this.focusPosition$.next(false);
 
     this.isPaused = false;
     this._geolocationSvc.stopRecording();
@@ -159,11 +184,13 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   async resume(event: MouseEvent) {
     await this._geolocationSvc.resumeRecording();
+    this.focusPosition$.next(true);
     this.isPaused = false;
   }
 
   async stop(event: MouseEvent) {
     this.stopRecording();
+    this.focusPosition$.next(false);
   }
 
   async stopRecording() {
@@ -211,7 +238,6 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   updateMap() {
     if (this._geolocationSvc.onRecord$.value && this._geolocationSvc.recordedFeature) {
-      this.map.drawTrack(this._geolocationSvc.recordedFeature);
       this.length = this._geoutilsSvc.getLength(this._geolocationSvc.recordedFeature);
       // const timeSeconds = this._geoutilsSvc.getTime(
       //   this._geolocationSvc.recordedFeature

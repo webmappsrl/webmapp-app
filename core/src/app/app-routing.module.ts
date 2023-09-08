@@ -43,15 +43,6 @@ const routes: Routes = [
       import('./pages/trackdetail/trackdetail.module').then(m => m.TrackdetailPageModule),
   },
   {
-    path: 'route',
-    loadChildren: () => import('./pages/route/route.module').then(m => m.RoutePageModule),
-  },
-  {
-    path: 'itinerary',
-    loadChildren: () =>
-      import('./pages/itinerary/itinerary.module').then(m => m.ItineraryPageModule),
-  },
-  {
     path: 'favourites',
     loadChildren: () =>
       import('./pages/favourites/favourites.module').then(m => m.FavouritesPageModule),
@@ -59,11 +50,6 @@ const routes: Routes = [
   {
     path: 'poi',
     loadChildren: () => import('./pages/poi/poi.module').then(m => m.PoiPageModule),
-  },
-  {
-    path: 'navigation',
-    loadChildren: () =>
-      import('./pages/navigation/navigation.module').then(m => m.NavigationPageModule),
   },
   {
     path: 'downloadlist',
@@ -82,19 +68,20 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule),
-  },  {
+  },
+  {
     path: 'project',
-    loadChildren: () => import('./pages/project/project.module').then( m => m.ProjectPageModule)
+    loadChildren: () => import('./pages/project/project.module').then(m => m.ProjectPageModule),
   },
   {
     path: 'credits',
-    loadChildren: () => import('./pages/credits/credits.module').then( m => m.CreditsPageModule)
+    loadChildren: () => import('./pages/credits/credits.module').then(m => m.CreditsPageModule),
   },
   {
     path: 'disclaimer',
-    loadChildren: () => import('./pages/disclaimer/disclaimer.module').then( m => m.DisclaimerPageModule)
+    loadChildren: () =>
+      import('./pages/disclaimer/disclaimer.module').then(m => m.DisclaimerPageModule),
   },
-
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})],

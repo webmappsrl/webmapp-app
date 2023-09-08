@@ -1,7 +1,7 @@
-<ion-list lines="none">
+<ion-list lines="none" *ngIf="showBtn$|async">
   <ion-item-sliding (ionDrag)="sliding($event)" (touchend)="touchEnd()">
     <div class="webmapp-map-btnrec-backdrop">
-      <div class="webmapp-map-btnrec-backdrop-message" style="opacity:{{1-sliderPercentual}}">
+      <div class="webmapp-map-btnrec-backdrop-message" [style.opacity]="1-sliderPercentual">
         {{'components.map.btnrec.slide' | wmtrans}}
       </div>
     </div>

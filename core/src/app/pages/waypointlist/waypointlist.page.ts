@@ -6,8 +6,10 @@ import {
 } from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
+import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {SaveService} from 'src/app/services/save.service';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 
 @Component({
@@ -19,11 +21,13 @@ import {WaypointSave} from 'src/app/types/waypoint';
 })
 export class WaypointlistPage {
   waypoints$: Observable<WaypointSave[]>;
+  confMap$: Observable<any> = this._store.select(confMAP);
 
   constructor(
     private _saveSvc: SaveService,
     private _navCtrl: NavController,
     private _cdr: ChangeDetectorRef,
+    private _store: Store,
   ) {}
 
   open(waypoint): void {
