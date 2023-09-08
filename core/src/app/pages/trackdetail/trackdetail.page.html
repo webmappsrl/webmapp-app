@@ -33,14 +33,11 @@
   </ion-header>
 
   <ion-content id="main">
-    <old-webmapp-map
+    <wm-map
       class="wm-trackdetail-map"
-      #map
-      [static]="true"
-      [track]="track"
-      [animation]="false"
-      [zoomEnabled]="true"
-    ></old-webmapp-map>
+      [wmMapConf]="confMap$|async"
+      [wmMapGeojson]="track.geojson"
+    ></wm-map>
 
     <div class="wm-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
 

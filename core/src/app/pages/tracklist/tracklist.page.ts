@@ -6,8 +6,10 @@ import {
 } from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
+import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {SaveService} from 'src/app/services/save.service';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {ITrack} from 'src/app/types/track';
 
 @Component({
@@ -18,12 +20,13 @@ import {ITrack} from 'src/app/types/track';
   encapsulation: ViewEncapsulation.None,
 })
 export class TracklistPage {
-  public tracks$: Observable<ITrack[]>;
-
+  tracks$: Observable<ITrack[]>;
+  confMap$: Observable<any> = this._store.select(confMAP);
   constructor(
     private _saveSvc: SaveService,
     private _navCtrl: NavController,
     private _cdr: ChangeDetectorRef,
+    private _store: Store,
   ) {}
 
   open(track): void {

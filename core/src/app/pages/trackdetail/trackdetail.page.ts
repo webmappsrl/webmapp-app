@@ -15,6 +15,8 @@ import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
+import {Store} from '@ngrx/store';
+import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-trackdetail',
@@ -24,6 +26,7 @@ import {TranslateService} from '@ngx-translate/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class TrackdetailPage {
+  confMap$: Observable<any> = this._store.select(confMAP);
   currentTrack: ITrack;
   public photos: IPhotoItem[] = [];
   public sliderOptions: any = {
@@ -50,6 +53,7 @@ export class TrackdetailPage {
     private _translateSvc: TranslateService,
     private _navCtlr: NavController,
     private _toastCtrl: ToastController,
+    private _store: Store,
   ) {
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),

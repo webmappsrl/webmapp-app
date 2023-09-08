@@ -300,50 +300,7 @@
       [hidden]="opacity < 0.5"
     >
     </webmapp-btn-orientation>
-    <!--
-    <webmapp-btn-register
-      class="webmapp-pageroute-btnbottomregister webmapp-pageroute-btnbottom"
-    ></webmapp-btn-register>
-
-    <ion-fab-button
-      (click)="download()"
-      size="small"
-      class="webmapp-pageroute-btnbottom"
-    >
-      <i class="webmapp-icon-donwload-outline"></i>
-    </ion-fab-button>
-    <webmapp-fav-btn
-      (click)="favourite()"
-      [isFavourite]="isFavourite"
-    ></webmapp-fav-btn>
-    <ion-fab-button
-      (click)="share()"
-      size="small"
-      class="webmapp-pageroute-btnbottom"
-    >
-      <i class="webmapp-icon-share-outline"></i>
-    </ion-fab-button>
-    <ion-fab-button
-      (click)="navigate()"
-      size="small"
-      class="webmapp-pageroute-btnnavigate"
-      *ngIf="opacity <1"
-      [ngStyle]="{      'opacity': 1-opacity    }"
-    >
-      <i class="webmapp-icon-nav-outline"></i>
-    </ion-fab-button>-->
   </ion-fab>
-  <!-- <ion-button
-    (click)="navigate()"
-    class="webmapp-pageroute-btnnavigate webmapp-pageroute-btnnavbottom"
-    *ngIf="opacity > 0"
-    [ngStyle]="{      'opacity': opacity    }"
-  >
-    <i class="webmapp-icon-nav-outline"></i>
-    <ion-label class="webmapp-pageroute-navigatelbl"
-      >{{'pages.route.navigate' | wmtrans}}
-    </ion-label>
-  </ion-button>  -->
 
   <ion-fab vertical="top" horizontal="end" [ngStyle]="{      'opacity': opacity    }" *ngIf="false">
     <ion-fab-button (click)="menu()" size="small" class="webmapp-pageroute-btntop">
