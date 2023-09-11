@@ -109,6 +109,12 @@ export class DownloadService {
   }
 
   public async downloadImages(urlList: string[], referenceTrack): Promise<number> {
+    if (urlList == null || urlList.length === 0) {
+      this.updateStatus({
+        finish: false,
+        media: 1,
+      });
+    }
     let totalSize = 0;
     for (let i = 0; i < urlList.length; i++) {
       const url = urlList[i];

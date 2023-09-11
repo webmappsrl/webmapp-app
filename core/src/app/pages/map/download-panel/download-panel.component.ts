@@ -46,7 +46,6 @@ export class WmDownloadPanelComponent implements OnChanges {
     }
   }
   start() {
-    // console.log("------- ~ DownloadPanelComponent ~ start ~ start");
     this.isInit = false;
     this.isDownloading = true;
     this.isDownloaded = false;
@@ -59,7 +58,6 @@ export class WmDownloadPanelComponent implements OnChanges {
     });
 
     this._downloadSvc.startDownload(this.track);
-    // this.updateStatus(null);
   }
 
   updateStatus(status: DownloadStatus) {
