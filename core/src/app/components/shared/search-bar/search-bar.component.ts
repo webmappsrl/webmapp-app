@@ -1,6 +1,6 @@
 import {Subscription} from 'rxjs/internal/Subscription';
 import {Component, EventEmitter, Input, Output, OnDestroy} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 
 import {Store} from '@ngrx/store';
 import {debounceTime} from 'rxjs/operators';
@@ -27,9 +27,9 @@ export class SearchBarComponent implements OnDestroy {
   @Output('isTypings') isTypingsEVT: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   @Output('words') wordsEVT: EventEmitter<string> = new EventEmitter<string>(false);
 
-  searchForm: FormGroup;
+  searchForm: UntypedFormGroup;
 
-  constructor(fb: FormBuilder, private _store: Store<any>) {
+  constructor(fb: UntypedFormBuilder, private _store: Store<any>) {
     this.searchForm = fb.group({
       search: [''],
     });

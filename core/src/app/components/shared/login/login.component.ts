@@ -1,6 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {AlertController, IonInput, ModalController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
@@ -21,13 +21,13 @@ export class LoginComponent implements OnInit {
 
   public isSubmitted: boolean = false;
   public logging: boolean = false;
-  public loginForm: FormGroup;
+  public loginForm: UntypedFormGroup;
   public showPassword: boolean = false;
 
   constructor(
     private _alertController: AlertController,
     private _authService: AuthService,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private _languagesService: LangService,
     private _modalController: ModalController,
   ) {

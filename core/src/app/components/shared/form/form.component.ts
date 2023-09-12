@@ -6,7 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -37,11 +37,11 @@ export class WmFormComponent {
   }
 
   currentForm$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  @Output() formGroupEvt: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
-  formGroup: FormGroup;
+  @Output() formGroupEvt: EventEmitter<UntypedFormGroup> = new EventEmitter<UntypedFormGroup>();
+  formGroup: UntypedFormGroup;
   forms$: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
   private _currentFormId = 0;
-  constructor(private _fb: FormBuilder) {}
+  constructor(private _fb: UntypedFormBuilder) {}
 
   setForm(idx = 0, values?: any): void {
     this._currentFormId = idx;

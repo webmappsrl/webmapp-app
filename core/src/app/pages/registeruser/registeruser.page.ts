@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {
   AbstractControl,
-  FormBuilder,
-  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
   ValidationErrors,
   ValidatorFn,
   Validators,
@@ -34,13 +34,13 @@ export class RegisteruserPage implements OnInit {
   };
   public isSubmitted = false;
   public loadingString = '';
-  public registerForm: FormGroup;
+  public registerForm: UntypedFormGroup;
   public showError = false;
 
   constructor(
     private coinService: CoinService,
     private _navController: NavController,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private _authservice: AuthService,
     public popoverController: PopoverController,
     public loadingController: LoadingController,

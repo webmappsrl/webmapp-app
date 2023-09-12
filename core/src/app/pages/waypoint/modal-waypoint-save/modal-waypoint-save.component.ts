@@ -8,7 +8,7 @@ import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP, confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 @Component({
@@ -23,7 +23,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   description: string;
   displayPosition: Location;
-  fg: FormGroup;
+  fg: UntypedFormGroup;
   isValidArray: boolean[] = [false, false];
   nominatim: any;
   photos: any[] = [];
