@@ -96,14 +96,17 @@ export class GeoutilsService {
    * @param track a track feature
    * @returns total length
    */
-  getLength(track: CGeojsonLineStringFeature): number {
-    if (track?.geometry && track?.geometry?.coordinates.length >= 2) {
+  getLength(track: CGeojsonLineStringFeature | any): number {
+    const coordinates =
+      track?.geometry && track?.geometry?.coordinates
+        ? track?.geometry?.coordinates
+        : track.coordinates
+        ? track.coordinates
+        : [];
+    if (coordinates.length >= 2) {
       let res = 0;
-      for (let i = 1; i < track.geometry.coordinates.length; i++) {
-        res += this._calcDistanceM(
-          track.geometry.coordinates[i] as IPoint,
-          track.geometry.coordinates[i - 1] as IPoint,
-        );
+      for (let i = 1; i < coordinates.length; i++) {
+        res += this._calcDistanceM(coordinates[i] as IPoint, coordinates[i - 1] as IPoint);
       }
       return res / 1000;
     }
