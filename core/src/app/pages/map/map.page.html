@@ -116,6 +116,7 @@
               <i class="icon-outline-recording"></i>
             </ion-fab-button>
             <wm-btn-track-recording
+              [currentTrack]="currentTrack$|async"
               [isLogged]="isLoggedIn$|async"
               (start-recording)="startRecording$.next($event)"
             ></wm-btn-track-recording>
