@@ -126,7 +126,6 @@
     <ng-template #offline>
       <wm-map
         #wmap
-        [initBaseSource]="initializeBaseSource"
         [wmMapConf]="confMap$|async"
         wmMapPosition
         [wmMapPositioncurrentLocation]="currentPosition$|async"

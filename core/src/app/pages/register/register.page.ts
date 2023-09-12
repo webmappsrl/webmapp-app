@@ -25,6 +25,7 @@ import {Collection, Feature} from 'ol';
 import {LineString, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
+import {ActivatedRoute, Router} from '@angular/router';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -40,6 +41,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   averageSpeed: number = 0;
   confMap$: Observable<any> = this._store.select(confMAP);
   currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
+  currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> = new BehaviorSubject(null);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   geojson: CGeojsonLineStringFeature = new CGeojsonLineStringFeature();
   geojson$: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -56,6 +58,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     minutes: 0,
     seconds: 0,
   };
+  trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
 
   constructor(
     private _geolocationSvc: GeolocationService,
@@ -66,7 +69,17 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _cdr: ChangeDetectorRef,
     private _platform: Platform,
     private _store: Store,
+    private _route: ActivatedRoute,
+    private _router: Router,
   ) {
+    this._route.queryParams.subscribe(params => {
+      if (this._router.getCurrentNavigation().extras.state) {
+        const state = this._router.getCurrentNavigation().extras.state;
+        if (state.currentTrack) {
+          this.currentTrack$.next(state.currentTrack);
+        }
+      }
+    });
     this.currentPosition$.subscribe(loc => {
       if (this.focusPosition$.value || this.geojson$.value == null) {
         const coordinate = fromLonLat([loc.longitude, loc.latitude]);

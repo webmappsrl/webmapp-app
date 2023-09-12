@@ -11,6 +11,8 @@ import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-s
 import {Location} from 'src/app/types/location';
 import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {Store} from '@ngrx/store';
+import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -19,7 +21,9 @@ import {Store} from '@ngrx/store';
 })
 export class WaypointPage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
+
   confMap$: Observable<any> = this._store.select(confMAP);
+  currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> = new BehaviorSubject(null);
   location: Location;
   locationString: string;
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -32,7 +36,18 @@ export class WaypointPage implements OnInit, OnDestroy {
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
     private _store: Store,
-  ) {}
+    private _route: ActivatedRoute,
+    private _router: Router,
+  ) {
+    this._route.queryParams.subscribe(params => {
+      if (this._router.getCurrentNavigation().extras.state) {
+        const state = this._router.getCurrentNavigation().extras.state;
+        if (state.currentTrack) {
+          this.currentTrack$.next(state.currentTrack);
+        }
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     this._destroyer.next(true);

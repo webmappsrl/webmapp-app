@@ -25,6 +25,9 @@
     wmMapPosition
     [wmMapPositioncurrentLocation]="currentPosition$|async"
     [wmMapPositionfocus]="focusPosition$|async"
+    wmMapTrack
+    [track]="currentTrack$|async"
+    [wmMapTrackColor]="trackColor$|async"
   >
     <wm-btn-rec bottom-center (move)="recordMove($event)" (unlocked)="recordStart($event)">
     </wm-btn-rec>

@@ -17,6 +17,8 @@
     class="webmapp-pagewaypoint-map-container"
     [wmMapConf]="confMap$|async"
     [wmMapGeojson]="location"
+    wmMapTrack
+    [track]="currentTrack$|async"
   ></wm-map>
 
   <ion-card class="webmapp-pagewaypoint-infopanel">

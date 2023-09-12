@@ -8,15 +8,13 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {GeolocationService} from 'src/app/services/geolocation.service';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
 import {LoginComponent} from '../../login/login.component';
-import {Location} from 'src/app/types/location';
+import {NavigationExtras} from '@angular/router';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -26,12 +24,12 @@ import {Location} from 'src/app/types/location';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BtnTrackRecordingComponent {
+  @Input() currentTrack: any;
   @Input() isLogged = false;
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private _navCtrl: NavController,
-    private _geolocationSvc: GeolocationService,
     private _modalController: ModalController,
     private _photoService: PhotoService,
     private _saveService: SaveService,
@@ -89,16 +87,8 @@ export class BtnTrackRecordingComponent {
 
   track(): void {
     if (this.isLogged) {
-      const location: Location = this._geolocationSvc.location;
-      let state: any = {};
-
-      if (location && location.latitude && location.longitude) {
-        state = {
-          startView: [location.longitude, location.latitude, DEF_MAP_LOCATION_ZOOM],
-        };
-      }
-
-      this._navCtrl.navigateForward('register');
+      let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
+      this._navCtrl.navigateForward('register', navigationExtras);
     } else {
       this.openModalLogin();
     }
@@ -106,7 +96,8 @@ export class BtnTrackRecordingComponent {
 
   waypoint() {
     if (this.isLogged) {
-      this._navCtrl.navigateForward('waypoint');
+      let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
+      this._navCtrl.navigateForward('waypoint', navigationExtras);
     } else {
       this.openModalLogin();
     }

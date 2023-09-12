@@ -15,7 +15,7 @@ import {Store} from '@ngrx/store';
 
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, Observable, Subscription, combineLatest, merge, of} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
 import {
   catchError,
   distinctUntilChanged,
@@ -43,10 +43,8 @@ import {currentFilters, padding} from 'src/app/store/map/map.selector';
 
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
-import {XYZ} from 'ol/source';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {TilesService} from 'src/app/services/tiles.service';
 import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
@@ -174,29 +172,6 @@ export class MapPage implements OnInit, OnDestroy {
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  initializeBaseSource = () => {
-    return new XYZ({
-      maxZoom: 16,
-      minZoom: 1,
-      tileLoadFunction: (tile: any, url: string) => {
-        const coords = this._tilesSvc.getCoordsFromUr(url);
-
-        this._tilesSvc
-          .getTile(coords, true)
-          .then((tileString: string) => {
-            tile.getImage().src = tileString;
-          })
-          .catch(() => {
-            tile.getImage().src = url;
-          });
-      },
-      tileUrlFunction: c => {
-        return this._tilesSvc.getTileFromWeb(c);
-      },
-      projection: 'EPSG:3857',
-      tileSize: [256, 256],
-    });
-  };
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLoggedIn$: Observable<boolean>;
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -206,9 +181,11 @@ export class MapPage implements OnInit, OnDestroy {
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
   onLine$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  online$: Observable<boolean> = this._storeNetwork
-    .select(online)
-    .pipe(tap(() => this._cdr.detectChanges()));
+  online$: Observable<boolean> = this._storeNetwork.select(online).pipe(
+    tap(() => {
+      this._cdr.detectChanges();
+    }),
+  );
   padding$: Observable<number[]> = this._store.select(padding);
   poiFilterIdentifiers$: Observable<string[]> = this._store.select(poiFilterIdentifiers);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -273,7 +250,6 @@ export class MapPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
     private _shareSvc: ShareService,
-    private _tilesSvc: TilesService,
     private _cdr: ChangeDetectorRef,
     private _storeNetwork: Store<INetworkRootState>,
     private _geolocationSvc: GeolocationService,
@@ -380,6 +356,8 @@ export class MapPage implements OnInit, OnDestroy {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.onLine$.next(navigator.onLine);
     this._geolocationSvc.start();
+    this._cdr.detectChanges();
+    this.wmMapComponent.map.updateSize();
   }
 
   ionViewWillEnter(): void {
@@ -407,7 +385,6 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('map.page -> ngOnDestroy');
     this._routerSub.unsubscribe();
   }
 
