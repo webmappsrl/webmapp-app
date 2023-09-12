@@ -72,7 +72,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
   ) {
-    this._route.queryParams.subscribe(params => {
+    this._route.queryParams.subscribe(_ => {
       if (this._router.getCurrentNavigation().extras.state) {
         const state = this._router.getCurrentNavigation().extras.state;
         if (state.currentTrack) {
@@ -125,7 +125,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('register.page -> ngOnDestroy');
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}

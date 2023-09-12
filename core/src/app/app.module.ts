@@ -1,6 +1,5 @@
 import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {SQLite} from '@ionic-native/sqlite/ngx';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {WmCoreModule} from './shared/wm-core/wm-core.module';
 
@@ -43,7 +42,7 @@ registerLocaleData(localeIt);
     HttpClientModule,
     IonicStorageModule.forRoot({
       name: 'webmapp_app_storage',
-      driverOrder: ['indexeddb', 'sqlite', 'websql', 'localstorage'],
+      driverOrder: ['indexeddb', 'websql', 'localstorage'],
     }),
     StoreModule.forRoot(
       {
@@ -77,7 +76,6 @@ registerLocaleData(localeIt);
       multi: true,
     },
     GoogleAnalytics,
-    SQLite,
   ],
   bootstrap: [AppComponent],
 })
