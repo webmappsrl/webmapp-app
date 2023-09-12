@@ -33,7 +33,6 @@ registerLocaleData(localeIt);
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot({
@@ -53,7 +52,7 @@ registerLocaleData(localeIt);
     ),
     EffectsModule.forRoot([MapEffects, NetworkEffects]),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
+      maxAge: 25,
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
     AppRoutingModule,

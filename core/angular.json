@@ -100,7 +100,6 @@
               "browserTarget": "app:build:stelvio"
             },
             "ci": {
-              "progress": false
             }
           }
         },
