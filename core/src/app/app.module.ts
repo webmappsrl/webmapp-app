@@ -8,7 +8,6 @@ import localeIt from '@angular/common/locales/it';
 import {LOCALE_ID} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouteReuseStrategy} from '@angular/router';
-import {GoogleAnalytics} from '@ionic-native/google-analytics/ngx';
 import {IonicStorageModule} from '@ionic/storage-angular';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
@@ -74,7 +73,6 @@ registerLocaleData(localeIt);
       deps: [ConfigService],
       multi: true,
     },
-    GoogleAnalytics,
   ],
   bootstrap: [AppComponent],
 })

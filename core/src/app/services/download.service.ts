@@ -20,7 +20,7 @@ export class DownloadService {
   private _relatedPoi$: Observable<any[]> = this._storeMap.select(mapCurrentRelatedPoi);
   private _status: DownloadStatus;
   private downloadIndex: DownloadedTrackComponents[];
-  private imgCache: Array<{key: string; value: string | ArrayBuffer}> = [];
+  private imgCache: Array<{key: string; value: string | ArrayBuffer | Blob}> = [];
 
   public onChangeStatus: ReplaySubject<DownloadStatus> = new ReplaySubject<DownloadStatus>(1);
 
@@ -172,7 +172,7 @@ export class DownloadService {
     return totalSize;
   }
 
-  public async getB64img(url: string): Promise<string | ArrayBuffer> {
+  public async getB64img(url: string): Promise<string | ArrayBuffer | Blob> {
     if (!url) {
       return defaultImage.image;
     }
