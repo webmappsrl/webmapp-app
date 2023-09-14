@@ -72,6 +72,7 @@ import {
   apiSearchInputTyped,
   countSelectedFilters,
   poiFilterIdentifiers,
+  pois,
   poisInitFeatureCollection,
 } from 'src/app/shared/wm-core/store/api/api.selector';
 import {HomePage} from '../home/home.page';
@@ -216,7 +217,7 @@ export class MapPage implements OnInit, OnDestroy {
     ),
   ).pipe(share());
   pois: any[];
-  pois$: Observable<any> = this._store.select(poisInitFeatureCollection);
+  pois$: Observable<any> = this._store.select(pois);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
