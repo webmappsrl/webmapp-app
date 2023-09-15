@@ -77,7 +77,8 @@ wm-map-track-details {
     ion-card-content {
       height: 100%;
       top: 55px;
-      overflow: scroll;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 0 !important;
       margin: 0 !important;
     }
