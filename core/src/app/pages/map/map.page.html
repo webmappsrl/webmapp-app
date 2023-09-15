@@ -36,6 +36,7 @@
         [wmMapTrackColor]="trackColor$|async"
         [trackElevationChartElements]="trackElevationChartHoverElements$|async"
         wmMapTrackRelatedPois
+        [wmTrackRelatedPoiIcons]="confPoiIcons$|async"
         (related-poi-next)="currentPoiNextID$.next(+$event)"
         (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
         (related-poi)="setCurrentPoi($event)"

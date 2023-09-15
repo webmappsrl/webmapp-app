@@ -55,6 +55,7 @@ import {
   confMAP,
   confPOIS,
   confPOISFilter,
+  confPoisIcons,
 } from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {
   applyWhere,
@@ -152,6 +153,7 @@ export class MapPage implements OnInit, OnDestroy {
       return p;
     }),
   );
+  confPoiIcons$: Observable<{[identifier:string]:any}|null> =this._store.select(confPoisIcons);
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store
     .select(apiElasticStateLayer)
