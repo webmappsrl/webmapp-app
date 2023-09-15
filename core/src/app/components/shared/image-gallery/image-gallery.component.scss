@@ -13,5 +13,8 @@ wm-image-gallery {
         border-radius: 15px;
       }
     }
+    div {
+      overflow-x: scroll;
+    }
   }
 }
