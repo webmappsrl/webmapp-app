@@ -345,6 +345,9 @@ function update(instanceName, geohubInstanceId) {
               promises = [
                 getUrlFile('config.json', config, dir + '/'),
                 getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/'),
+                getUrlFile('icon-only.png', resources + 'icon.png', dir + '/resources/'),
+                getUrlFile('icon-foreground.png', resources + 'icon.png', dir + '/resources/'),
+                getUrlFile('icon-background.png', resources + 'icon.png', dir + '/resources/'),
                 getUrlFile('icon.png', resources + 'icon.png', dir + '/src/assets/icon/'),
                 getUrlFile(
                   'homepage-logo.svg',
@@ -373,6 +376,7 @@ function update(instanceName, geohubInstanceId) {
                   );
                 }),
                 getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/'),
+                getUrlFile('splash-dark.png', resources + 'splash.png', dir + '/resources/'),
                 updateCapacitorConfigJson(instanceName, configJson.APP.id, configJson.APP.name),
                 updateIndex(instanceName, configJson.APP.name),
               ];
@@ -570,8 +574,8 @@ function updateAndroidPlatform(instanceName, appId, appName) {
       new Promise((resolve, reject) => {
         gulp
           .src(instancesDir + instanceName + '/android/variables.gradle')
-          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 31'))
-          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 31'))
+          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 34'))
+          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 34'))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/'))
           .on('end', () => {
             if (verbose) debug('variables.gradle updated successfully');

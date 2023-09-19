@@ -5,13 +5,13 @@
   },
   "license": "Check the license in the LICENSE.md",
   "private": true,
-  "dependencies": {
-  },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.1",
     "@angular-devkit/schematics": "16.2.1",
     "@angular/compiler": "16.0.0",
     "@angular/compiler-cli": "16.0.0",
+    "@capacitor/cli": "^5.3.0",
+    "@capacitor/assets": "^2.0.4",
     "color": "^4.2.0",
     "gulp": "^4.0.2",
     "gulp-json-editor": "^2.5.5",
