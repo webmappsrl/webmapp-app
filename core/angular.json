@@ -46,7 +46,20 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "allowedCommonJsDependencies": [
+              "localforage",
+              "color",
+              "graphhopper-js-api-client/src/GraphHopperRouting",
+              "rxjs/internal/BehaviorSubject",
+              "rxjs/internal/Subscription",
+              "ts-md5/dist/md5",
+              "rbush",
+              "web-worker",
+              "lru-cache",
+              "xml-utils/get-attribute.js",
+              "xml-utils/find-tags-by-name.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -98,8 +111,7 @@
             "stelvio": {
               "browserTarget": "app:build:stelvio"
             },
-            "ci": {
-            }
+            "ci": {}
           }
         },
         "extract-i18n": {
@@ -199,9 +211,10 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ]
+    "schematicCollections": ["@ionic/angular-toolkit"],
+    "cache": {
+      "enabled": true
+    }
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
