@@ -452,11 +452,22 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   setLoader(event: string): void {
-    if (event === 'rendering:start') {
-      this._loadingSvc.show('rendering');
-    }
-    if (event === 'rendering:done') {
-      this._loadingSvc.close();
+    console.log(event);
+    switch (event) {
+      case 'rendering:layer_start':
+        this._loadingSvc.show('Rendering Layer');
+        break;
+      case 'rendering:layer_done':
+        this._loadingSvc.close('Rendering Layer');
+        break;
+      case 'rendering:pois_start':
+        this._loadingSvc.show('Rendering Pois');
+        break;
+      case 'rendering:pois_done':
+        this._loadingSvc.close('Rendering Pois');
+        break;
+      default:
+        this._loadingSvc.close();
     }
   }
 

@@ -25,16 +25,6 @@ export class GeolocationService {
   };
   private _watcher: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
 
-  onGeolocationStateChange: ReplaySubject<IGeolocationServiceState> =
-    new ReplaySubject<IGeolocationServiceState>(1);
-  // External events
-  onLocationChange: ReplaySubject<Location> = new ReplaySubject<Location>(1);
-  onPause$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  onRecord$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  onStart$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
-  constructor(private _platform: Platform) {}
-
   get active(): boolean {
     return !!this?._state?.isActive;
   }
@@ -62,6 +52,16 @@ export class GeolocationService {
   get recording(): boolean {
     return !!this?._state?.isRecording;
   }
+
+  onGeolocationStateChange: ReplaySubject<IGeolocationServiceState> =
+    new ReplaySubject<IGeolocationServiceState>(1);
+  // External events
+  onLocationChange: ReplaySubject<Location> = new ReplaySubject<Location>(1);
+  onPause$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  onRecord$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  onStart$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  constructor(private _platform: Platform) {}
 
   /**
    * Pause the geolocation record if active
@@ -100,10 +100,10 @@ export class GeolocationService {
         this._platform.is('android') ||
         this._platform.is('capacitor')
       ) {
-        console.log('backgroundGeolocation->GeolocationService start native');
+        //    console.log('backgroundGeolocation->GeolocationService start native');
         this._nativeWatcher();
       } else {
-        console.log('backgroundGeolocation->GeolocationService start desktop');
+        //  console.log('backgroundGeolocation->GeolocationService start desktop');
         this._webWatcher();
       }
     }

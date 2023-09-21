@@ -65,7 +65,7 @@ export class AppComponent {
         filter(f => f),
         take(1),
       )
-      .subscribe(() => this._loadingSvc.close());
+      .subscribe(() => this._loadingSvc.close('Loading pois...'));
     this._store
       .select(confMAP)
       .pipe(
