@@ -25,6 +25,7 @@
         [wmMapPoisFilters]="poiFilterIdentifiers$|async"
         [WmMapPoisUnselectPoi]="resetSelectedPoi$|async"
         (currentPoiEvt)="setPoi($event)"
+        (wmMapPoiStateEvt)="setLoader($event)"
         wmMapPosition
         [wmMapPositioncurrentLocation]="currentPosition$|async"
         [wmMapPositionCenter]="centerPositionEvt$|async"

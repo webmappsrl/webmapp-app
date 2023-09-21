@@ -78,6 +78,7 @@ import {
 } from 'src/app/shared/wm-core/store/api/api.selector';
 import {HomePage} from '../home/home.page';
 import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {WmLoadingService} from 'src/app/shared/wm-core/services/loading.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -153,7 +154,7 @@ export class MapPage implements OnInit, OnDestroy {
       return p;
     }),
   );
-  confPoiIcons$: Observable<{[identifier:string]:any}|null> =this._store.select(confPoisIcons);
+  confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
   currentFilters$: Observable<string[]> = this._store.select(currentFilters);
   currentLayer$ = this._store
     .select(apiElasticStateLayer)
@@ -219,7 +220,7 @@ export class MapPage implements OnInit, OnDestroy {
     ),
   ).pipe(share());
   pois: any[];
-  pois$: Observable<any> = this._store.select(pois);
+  pois$: Observable<any> = this._store.select(pois).pipe(distinctUntilChanged());
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
@@ -257,6 +258,7 @@ export class MapPage implements OnInit, OnDestroy {
     private _storeNetwork: Store<INetworkRootState>,
     private _geolocationSvc: GeolocationService,
     private _langSvc: LangService,
+    private _loadingSvc: WmLoadingService,
     _platform: Platform,
   ) {
     this.dataLayerUrls$ = this.geohubId$.pipe(
@@ -281,6 +283,26 @@ export class MapPage implements OnInit, OnDestroy {
     };
     this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
+  }
+
+  ngOnInit(): void {
+    this._routerSub = this._route.queryParams.subscribe(queryParams => {
+      setTimeout(() => {
+        const trackId = queryParams['track'];
+        const poiId = queryParams['poi'];
+        if (trackId != null) {
+          this.goToTrack(trackId);
+        }
+        if (poiId != null) {
+          this.wmMapPoisDirective.setPoi(+poiId);
+        }
+        this._route.snapshot.queryParams = {};
+      }, 300);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._routerSub.unsubscribe();
   }
 
   close(): void {
@@ -387,26 +409,6 @@ export class MapPage implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this._routerSub.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this._routerSub = this._route.queryParams.subscribe(queryParams => {
-      setTimeout(() => {
-        const trackId = queryParams['track'];
-        const poiId = queryParams['poi'];
-        if (trackId != null) {
-          this.goToTrack(trackId);
-        }
-        if (poiId != null) {
-          this.wmMapPoisDirective.setPoi(+poiId);
-        }
-        this._route.snapshot.queryParams = {};
-      }, 300);
-    });
-  }
-
   openTrackDownload(): void {
     this.mapTrackDetailsCmp.background();
     setTimeout(() => {
@@ -446,6 +448,15 @@ export class MapPage implements OnInit, OnDestroy {
   setCurrentPoi(poi: IGeojsonFeature | null) {
     if (poi != null) {
       this.currentRelatedPoi$.next(poi);
+    }
+  }
+
+  setLoader(event: string): void {
+    if (event === 'rendering:start') {
+      this._loadingSvc.show('rendering');
+    }
+    if (event === 'rendering:done') {
+      this._loadingSvc.close();
     }
   }
 

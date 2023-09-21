@@ -26,6 +26,8 @@ import {loadConf} from './shared/wm-core/store/conf/conf.actions';
 import {loadPois, query} from './shared/wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
 import {AuthService} from './services/auth.service';
+import {poisInitFeatureCollection} from './shared/wm-core/store/api/api.selector';
+import {WmLoadingService} from './shared/wm-core/services/loading.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -51,12 +53,19 @@ export class AppComponent {
     private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
     private _authSvc: AuthService,
+    private _loadingSvc: WmLoadingService,
   ) {
     this._store.dispatch(loadConf());
     this._store.dispatch(query({init: true}));
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-
+    this._store
+      .select(poisInitFeatureCollection)
+      .pipe(
+        filter(f => f),
+        take(1),
+      )
+      .subscribe(() => this._loadingSvc.close());
     this._store
       .select(confMAP)
       .pipe(
