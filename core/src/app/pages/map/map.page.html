@@ -234,6 +234,11 @@
         </ion-content>
       </ng-container>
       <ng-container *ngIf="!(poiProperties$|async);">
+        <wm-track-edges
+          *ngIf="currentTrack$|async as currentTrack"
+          [properties]="currentTrack.properties"
+          [conf]="currentLayer$|async"
+        ></wm-track-edges>
         <ng-container *ngIf="(previewTrack$|async)">
           <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
             <wm-search-box
@@ -257,6 +262,7 @@
                   (click)="setNearestPoi(nearestPoi)"
                 ></wm-tab-nearest-poi>
               </ng-container>
+
               <wm-slope-chart
                 [currentTrack]="currentTrack"
                 (hover)="setTrackElevationChartHoverElements($event)"
