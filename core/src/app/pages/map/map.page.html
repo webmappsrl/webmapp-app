@@ -234,13 +234,17 @@
         </ion-content>
       </ng-container>
       <ng-container *ngIf="!(poiProperties$|async);">
-        <wm-track-edges
-          *ngIf="currentTrack$|async as currentTrack"
-          [properties]="currentTrack.properties"
-          [conf]="currentLayer$|async"
-        ></wm-track-edges>
-        <ng-container *ngIf="(previewTrack$|async)">
-          <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
+        <ng-container *ngIf="currentLayer$|async as currentLayer">
+          <ng-container *ngIf="currentLayer.edges != null">
+            <wm-track-edges
+            *ngIf="currentTrack$|async as currentTrack"
+            [properties]="currentTrack.properties"
+            [conf]="currentLayer"
+            ></wm-track-edges>
+          </ng-container>
+        </ng-container>
+          <ng-container *ngIf="(previewTrack$|async)">
+            <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
             <wm-search-box
               class="track-preview"
               [data]="currentTrack|wmgetdata"
