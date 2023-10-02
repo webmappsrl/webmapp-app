@@ -197,7 +197,6 @@ export class AuthService {
         )
         .toPromise();
       this._saveUser(response);
-      console.log('------- ~ AuthService ~ register ~ response', response);
       return true;
     } catch (err) {
       console.warn(err);

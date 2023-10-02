@@ -100,10 +100,8 @@ export class GeolocationService {
         this._platform.is('android') ||
         this._platform.is('capacitor')
       ) {
-        //    console.log('backgroundGeolocation->GeolocationService start native');
         this._nativeWatcher();
       } else {
-        //  console.log('backgroundGeolocation->GeolocationService start desktop');
         this._webWatcher();
       }
     }
@@ -135,7 +133,6 @@ export class GeolocationService {
       });
     }
     this._watcher.next(null);
-    console.log('backgroundGeolocation->GeolocationService stop');
   }
 
   /**
@@ -211,19 +208,13 @@ export class GeolocationService {
     if (this.onRecord$.value && !this.onPause$.value) {
       this._addLocationToRecordedFeature(this._currentLocation);
     }
-    console.log(
-      'backgroundGeolocation->GeolocationService location update: ',
-      JSON.stringify(this._currentLocation),
-    );
+
     this.onLocationChange.next(this._currentLocation);
   }
 
   private _nativeWatcher(): void {
     const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
-    console.log(
-      'backgroundGeolocation->GeolocationService->_nativeWatcher DISTANCE FILTER ',
-      distanceFilter,
-    );
+
     backgroundGeolocation
       .addWatcher(
         {
@@ -288,7 +279,6 @@ export class GeolocationService {
         // When a watcher is no longer needed, it should be removed by calling
         // 'removeWatcher' with an object containing its ID.
         this._watcher.next(watcher_id);
-        console.log('backgroundGeolocation->GeolocationService watcher_id: ', watcher_id);
       });
   }
 

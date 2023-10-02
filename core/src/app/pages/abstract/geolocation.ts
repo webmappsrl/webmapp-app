@@ -38,7 +38,6 @@ export abstract class GeolocationPage implements OnDestroy {
             distanceFilter: 10,
           },
           (location, error) => {
-            console.log('backgroundGeolocation->location: ', location);
             if (error) {
               if (error.code === 'NOT_AUTHORIZED') {
                 if (
@@ -51,7 +50,6 @@ export abstract class GeolocationPage implements OnDestroy {
                   backgroundGeolocation.openSettings();
                 }
               }
-              console.log('backgroundGeolocation->error: ', error);
               return console.error(error);
             }
             this.currentPosition$.next(location);
@@ -60,7 +58,6 @@ export abstract class GeolocationPage implements OnDestroy {
           },
         )
         .then(watcher_id => {
-          console.log('backgroundGeolocation->watcher_id: ', watcher_id);
           this.startRecording$.next(watcher_id);
         });
     }

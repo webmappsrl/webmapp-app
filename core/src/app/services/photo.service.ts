@@ -261,7 +261,6 @@ export class PhotoService {
 
   public async setPhotoData(photo: IPhotoItem): Promise<void> {
     if (photo == null) return;
-    console.log('------- ~ PhotoService ~ setPhotoData ~ photo', photo);
     const photoURL = photo.photoURL;
     if (photoURL && photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1) {
       photo.photoURL = await this.savePhotoToDataDirectory(photo);
@@ -298,7 +297,6 @@ export class PhotoService {
       promptLabelPhoto: this.translations['modals.photo.popover.library'], //string
       promptLabelPicture: this.translations['modals.photo.popover.shot'], //string
     });
-    console.log('------- ~ PhotoService ~ shotPhoto ~ photo', photo);
     const res: IPhotoItem = {
       id: '1',
       photoURL: photo.path,

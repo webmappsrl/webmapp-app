@@ -42,6 +42,16 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
   ) {}
 
+  ngAfterViewInit(): void {
+    this.setAnimations();
+    this._setGesture();
+  }
+
+  background(): void {
+    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
+    this.isOpen$.next(false);
+  }
+
   full(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
     this.isOpen$.next(true);
@@ -52,19 +62,9 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     this.endAnimation(shouldComplete, this.stepStatus ? 0 : 1);
   }
 
-  ngAfterViewInit(): void {
-    this.setAnimations();
-    this._setGesture();
-  }
-
   none(): void {
     this.background();
     this.closeEVT.emit();
-  }
-
-  background(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
-    this.isOpen$.next(false);
   }
 
   onlyTitle(): void {
@@ -141,7 +141,6 @@ export class MapTrackDetailsComponent implements AfterViewInit {
   }
 
   private endAnimation(shouldComplete: boolean, step: number) {
-    console.log(step);
     this._animationSwipe.progressEnd(shouldComplete ? 1 : 0, step);
     this._animationSwipe.onFinish(() => {
       this._gesture.enable(true);
@@ -161,7 +160,6 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     this._gesture.enable(false);
     const step = this.getStep(ev);
     const shouldComplete = step > 0.5;
-    console.log(step);
     this.endAnimation(shouldComplete, step);
   }
 
@@ -171,7 +169,6 @@ export class MapTrackDetailsComponent implements AfterViewInit {
       this._started = true;
     }
     const step = this.getStep(ev);
-    console.log(step);
     this._animationSwipe.progressStep(step);
   }
 }

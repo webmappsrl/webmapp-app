@@ -402,7 +402,6 @@ export class GeohubService {
    */
   async savePhoto(photo: IPhotoItem) {
     if (navigator.onLine) {
-      console.log('save photo to geohub', photo);
       const geojson = {
         type: 'Feature',
         geometry: photo.position
