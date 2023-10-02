@@ -12,7 +12,7 @@ gulp build -i portable -g 22
 gulp build -i stelvio -g 23
 gulp build -i gasca -g 24
 gulp build -i valsabbia -g 25
-gulp build -i osm2cai -g 26
+gulp build -i osm2cai -g 26 (app del sentierista)
 gulp build -i viadinaricakosovo -g 27
 gulp build -i ir -g 28
 gulp build -i fie -g 29
