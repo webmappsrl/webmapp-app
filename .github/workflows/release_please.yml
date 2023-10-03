@@ -40,4 +40,4 @@ jobs:
             # Update the PR.
             git commit --amend --no-edit
             git push -f
-          if: ${{ ! steps.release.outputs.release_created }}
+        if: ${{ ! steps.release.outputs.release_created }}
