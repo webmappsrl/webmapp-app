@@ -10,8 +10,11 @@ const gulp = require('gulp'),
   sh = require('shelljs'),
   yargs = require('yargs/yargs'),
   {hideBin} = require('yargs/helpers'),
-  version = require('./core/version.json');
-
+  packageNPM = require('./package.json');
+let version = {
+  version: packageNPM.version,
+  code: versionToBundleCode(packageNPM.version),
+};
 const CONSOLE_COLORS = {
   Reset: '\x1b[0m',
   Bright: '\x1b[1m',
@@ -1137,7 +1140,7 @@ function buildIos(instanceName, geohubInstanceId) {
             resolve(result);
           },
           err => {
-            rejext(err);
+            reject(err);
           },
         );
       },
@@ -1644,3 +1647,9 @@ gulp.task('release', function (done) {
     },
   );
 });
+function versionToBundleCode(versionString) {
+  // Rimuovi i punti dalla stringa di versione e converte il risultato in un numero
+  const bundleCode = parseInt(versionString.replace(/\./g, ''), 10);
+
+  return bundleCode;
+}
