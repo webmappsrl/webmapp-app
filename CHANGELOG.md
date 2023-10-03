@@ -1,4 +1,37 @@
-# changelog webmapp APP
+# Changelog
+
+## [2.2.0](https://github.com/webmappsrl/webmapp-app/compare/v2.1.50...v2.2.0) (2023-10-03)
+
+
+### Features
+
+* Add release automation workflow ([004bc16](https://github.com/webmappsrl/webmapp-app/commit/004bc16781f50387128c0308fb1fd8df30dec87e))
+
+
+### Bug Fixes
+
+* **conf:** auth ([c164e1c](https://github.com/webmappsrl/webmapp-app/commit/c164e1c38b8c3501d629aa4dae2b5d2191cdd338))
+* **details:** close ([84c088d](https://github.com/webmappsrl/webmapp-app/commit/84c088dcb5d5001a79b1a848181117b9d3ea5969))
+* **downloadoffline_has_some_problem:** story 1641 ([89b0c6e](https://github.com/webmappsrl/webmapp-app/commit/89b0c6e97c371004e2d3ef48c0242559dfc95322))
+* **geolocation:** fix background geolocation ([52ebf01](https://github.com/webmappsrl/webmapp-app/commit/52ebf0144d3bd8e0a132ba20eafb75bed4b81c86))
+* **itinerary:** remove option menu ([e9f20bc](https://github.com/webmappsrl/webmapp-app/commit/e9f20bc29d57ad2fe828f33b02ee22d237532333))
+* **langs:** now set default langs ([d2cf1c9](https://github.com/webmappsrl/webmapp-app/commit/d2cf1c95575e8fde82c535a993417fa539eafdf8))
+* **map:** add current track to record ([fc431f0](https://github.com/webmappsrl/webmapp-app/commit/fc431f0066ad8fa53b848242ed0c7b4d8f38f685))
+* **map:** missed icons ([424c59a](https://github.com/webmappsrl/webmapp-app/commit/424c59a6a09ae712cc55f638dc30d86c694b5749))
+* **modal-success:** navigate forward by key ([4ffb840](https://github.com/webmappsrl/webmapp-app/commit/4ffb8409c81d243ce9972cadd43b3d03b152c927))
+* **page/home:** remove handling set filter ([cf4a1dc](https://github.com/webmappsrl/webmapp-app/commit/cf4a1dce372c1a38212d779125bd7f4f8b45c8a2))
+* **profile_shift:** implements ([#1](https://github.com/webmappsrl/webmapp-app/issues/1)) ([7d55c66](https://github.com/webmappsrl/webmapp-app/commit/7d55c6664d48ab12a4e734aa787b1aa7e5095217))
+* **profile:** fix page ([568d759](https://github.com/webmappsrl/webmapp-app/commit/568d7597258e408257cadbfb4286088e503e9c1a))
+* **profile:** visualizzazione i miei downloads ([93b26ce](https://github.com/webmappsrl/webmapp-app/commit/93b26ceb3881bd090153992440ff5d322b788e54))
+* **sunc/offline:** fix media sync ([bdc9c40](https://github.com/webmappsrl/webmapp-app/commit/bdc9c40a73df0b984a92bab48713947b8c268cca))
+* **sync/offline:** fix tracks&pois sync ([f651b49](https://github.com/webmappsrl/webmapp-app/commit/f651b4970f8b42fe8d46f7e976ade0381010d8b2))
+
+
+### Miscellaneous
+
+* Update package version to 2.1.51 ([c2f8753](https://github.com/webmappsrl/webmapp-app/commit/c2f8753f1a4073d4e7f18e9582fe94ea097cff65))
+
+## changelog webmapp APP
 
 **APP VERSION:**
 
