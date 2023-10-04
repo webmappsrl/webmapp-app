@@ -1,0 +1,27 @@
+2.1.42
+migliorate le prestazioni generali,
+introdotto un nuovo sistema di gestione della geolocalizzazione, adesso è configurabile il  livello di dettaglio.
+fixato il bug presente su alcuni dispositivi durante l'acquisizione della posizione con la app in background.
+
+2.1.47
+miglioramenti alla visualizzazione delle tappe,
+miglioramenti vari all' interfaccia utente
+
+2.1.48
+aumento delle performance nella visualizzazione delle tracce salvate
+possibilità di registrare una traccia partendo da una traccia selezionata
+miglioramento delle performances generali
+
+2.1.49
+migliorato il caricamento dei dati  con relativo aumento delle prestazioni.
+nuova app, nuova veste grafica nuove features!
+
+2.1.50
+fix: risolto il bug in registrazione  ora durante la registrazione il focus è sulla posizione
+
+2.1.51
+aumentate le prestazione nel rendering dei layers, fixato problema grafico in fase di registrazione traccia
+
+2.2.0
+migliorate le prestazioni generali,
+migliorata la visualizzazione del grafico elevazione

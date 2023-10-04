@@ -1647,9 +1647,15 @@ gulp.task('release', function (done) {
     },
   );
 });
+
 function versionToBundleCode(versionString) {
   // Rimuovi i punti dalla stringa di versione e converte il risultato in un numero
-  const bundleCode = parseInt(versionString.replace(/\./g, ''), 10);
-
-  return bundleCode;
+  const parts = versionString.split('.');
+  if (parts.length !== 3) {
+    throw new Error('La stringa non ha il formato corretto.');
+  }
+  const major = parts[0].padStart(2, ‘0’);
+  const minor = parts[1].padStart(2, ‘0’);
+  const patch = parts[2].padStart(2, ‘0’);
+  return parseInt(major + minor + patch, 10);
 }
