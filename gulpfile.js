@@ -1654,8 +1654,8 @@ function versionToBundleCode(versionString) {
   if (parts.length !== 3) {
     throw new Error('La stringa non ha il formato corretto.');
   }
-  const major = parts[0].padStart(2, ‘0’);
-  const minor = parts[1].padStart(2, ‘0’);
-  const patch = parts[2].padStart(2, ‘0’);
+  const major = parts[0].padStart(2, '0');
+  const minor = parts[1].padStart(2, '0');
+  const patch = parts[2].padStart(2, '0');
   return parseInt(major + minor + patch, 10);
 }
