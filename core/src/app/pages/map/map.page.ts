@@ -24,6 +24,7 @@ import {
   share,
   startWith,
   switchMap,
+  take,
   tap,
 } from 'rxjs/operators';
 
@@ -369,8 +370,14 @@ export class MapPage implements OnInit, OnDestroy {
     const isFav = await this._geohubSvc.isFavouriteTrack(id);
     this.isFavourite$.next(isFav);
     if (id != null && id !== -1) {
-      this.layerOpacity$.next(true);
-      this.mapTrackDetailsCmp.open();
+      this.currentLayer$.pipe(take(1)).subscribe(l => {
+        if (l != null && l.edges != null) {
+          this.layerOpacity$.next(false);
+        } else {
+          this.layerOpacity$.next(true);
+        }
+        this.mapTrackDetailsCmp.open();
+      });
     } else {
       this.layerOpacity$.next(false);
       this.mapTrackDetailsCmp.none();
