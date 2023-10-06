@@ -25,3 +25,7 @@ aumentate le prestazione nel rendering dei layers, fixato problema grafico in fa
 2.2.0
 migliorate le prestazioni generali,
 migliorata la visualizzazione del grafico elevazione
+
+2.2.2
+migliorata la visualizzazione dei layers.
+risolti bug minori.
