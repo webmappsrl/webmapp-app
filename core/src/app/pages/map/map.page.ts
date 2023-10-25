@@ -46,23 +46,14 @@ import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
-import {online} from 'src/app/store/network/network.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {
-  confAUTHEnable,
-  confGeohubId,
-  confJIDOUPDATETIME,
-  confMAP,
-  confPOIS,
-  confPOISFilter,
-  confPoisIcons,
-} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {WmLoadingService} from 'src/app/shared/wm-core/services/loading.service';
 import {
   applyWhere,
   loadPois,
   resetPoiFilters,
   resetTrackFilters,
+  setLastFilterType,
   setLayer,
   togglePoiFilter,
   toggleTrackFilter,
@@ -75,11 +66,20 @@ import {
   countSelectedFilters,
   poiFilterIdentifiers,
   pois,
-  poisInitFeatureCollection,
 } from 'src/app/shared/wm-core/store/api/api.selector';
+import {
+  confAUTHEnable,
+  confGeohubId,
+  confJIDOUPDATETIME,
+  confMAP,
+  confPOIS,
+  confPOISFilter,
+  confPoisIcons,
+} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
+import {online} from 'src/app/store/network/network.selector';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {WmLoadingService} from 'src/app/shared/wm-core/services/loading.service';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -397,6 +397,10 @@ export class MapPage implements OnInit, OnDestroy {
       startWith(false),
       catchError(() => of(false)),
     );
+  }
+
+  updateLastFilterType(filter: 'tracks' | 'pois') {
+    this._store.dispatch(setLastFilterType({filter}));
   }
 
   ionViewWillLeave(): void {
