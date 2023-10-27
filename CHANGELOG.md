@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.4](https://github.com/webmappsrl/webmapp-app/compare/v2.2.3...v2.2.4) (2023-10-27)
+
+
+### Miscellaneous
+
+* Update map page HTML and TypeScript files oc:1932,1925 ([5f6716b](https://github.com/webmappsrl/webmapp-app/commit/5f6716bc35f5a6ab919af9cbe5107733537bf79a))
+
 ## [2.2.3](https://github.com/webmappsrl/webmapp-app/compare/v2.2.2...v2.2.3) (2023-10-06)
 
 
