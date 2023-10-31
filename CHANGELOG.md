@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/webmappsrl/webmapp-app/compare/v2.2.4...v2.3.0) (2023-10-31)
+
+
+### Features
+
+* update ([6d55ba5](https://github.com/webmappsrl/webmapp-app/commit/6d55ba58244485a1bf59b1d12a7f6f20b89fe76f))
+
 ## [2.2.4](https://github.com/webmappsrl/webmapp-app/compare/v2.2.3...v2.2.4) (2023-10-27)
 
 
