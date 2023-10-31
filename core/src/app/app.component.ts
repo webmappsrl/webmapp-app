@@ -12,22 +12,18 @@ import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
 import {DownloadService} from './services/download.service';
 import {SaveService} from './services/save.service';
 import {StatusService} from './services/status.service';
-import {LangService} from './shared/wm-core/localization/lang.service';
+import {LangService} from 'wm-core/localization/lang.service';
 import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
-import {
-  confLANGUAGES,
-  confMAP,
-  confTHEMEVariables,
-} from './shared/wm-core/store/conf/conf.selector';
-import {loadConf} from './shared/wm-core/store/conf/conf.actions';
-import {loadPois, query} from './shared/wm-core/store/api/api.actions';
+import {confLANGUAGES, confMAP, confTHEMEVariables} from 'wm-core/store/conf/conf.selector';
+import {loadConf} from 'wm-core/store/conf/conf.actions';
+import {loadPois, query} from 'wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
 import {AuthService} from './services/auth.service';
-import {poisInitFeatureCollection} from './shared/wm-core/store/api/api.selector';
-import {WmLoadingService} from './shared/wm-core/services/loading.service';
+import {poisInitFeatureCollection} from 'wm-core/store/api/api.selector';
+import {WmLoadingService} from 'wm-core/services/loading.service';
 
 @Component({
   selector: 'webmapp-app-root',

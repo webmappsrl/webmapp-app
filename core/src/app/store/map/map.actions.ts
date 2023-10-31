@@ -1,6 +1,7 @@
 import {createAction, props} from '@ngrx/store';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import {ILAYER} from 'wm-core/types/config';
 
 export const setCurrentLayer = createAction(
   '[map] Set current layer',

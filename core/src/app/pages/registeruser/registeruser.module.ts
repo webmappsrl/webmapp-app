@@ -7,8 +7,8 @@ import {IonicModule} from '@ionic/angular';
 import {RegisteruserPageRoutingModule} from './registeruser-routing.module';
 
 import {RegisteruserPage} from './registeruser.page';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [

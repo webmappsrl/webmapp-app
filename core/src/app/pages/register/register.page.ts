@@ -15,10 +15,8 @@ import {ModalSuccessComponent} from '../../components/modal-success/modal-succes
 import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {Location} from '@capacitor-community/background-geolocation';
 import {Collection, Feature} from 'ol';
@@ -26,6 +24,8 @@ import {LineString, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, Router} from '@angular/router';
+import {LangService} from 'wm-core/localization/lang.service';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -96,6 +96,27 @@ export class RegisterPage implements OnInit, OnDestroy {
     this.record$ = this._geolocationSvc.onRecord$;
   }
 
+  ngOnInit() {
+    if (this._geolocationSvc.location) {
+      this.location = [
+        this._geolocationSvc.location.longitude,
+        this._geolocationSvc.location.latitude,
+        DEF_MAP_LOCATION_ZOOM,
+      ];
+    }
+    this._geolocationSvc.onLocationChange.subscribe(() => {
+      this.updateMap();
+    });
+
+    this.checkRecording();
+  }
+
+  ngOnDestroy() {
+    try {
+      clearInterval(this._timerInterval);
+    } catch (e) {}
+  }
+
   backToMap() {
     this._navCtrl.navigateForward('map');
     this.reset();
@@ -122,27 +143,6 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   ionViewDidEnter(): void {
     this._geolocationSvc.start();
-  }
-
-  ngOnDestroy() {
-    try {
-      clearInterval(this._timerInterval);
-    } catch (e) {}
-  }
-
-  ngOnInit() {
-    if (this._geolocationSvc.location) {
-      this.location = [
-        this._geolocationSvc.location.longitude,
-        this._geolocationSvc.location.latitude,
-        DEF_MAP_LOCATION_ZOOM,
-      ];
-    }
-    this._geolocationSvc.onLocationChange.subscribe(() => {
-      this.updateMap();
-    });
-
-    this.checkRecording();
   }
 
   async openModalSuccess(track) {

@@ -6,8 +6,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {SaveService} from 'src/app/services/save.service';
-import {confMAP, confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
+import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-waypointdetail',

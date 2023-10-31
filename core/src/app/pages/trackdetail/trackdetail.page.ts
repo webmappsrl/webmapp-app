@@ -16,7 +16,7 @@ import {ITrack} from 'src/app/types/track';
 import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-trackdetail',

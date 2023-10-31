@@ -9,10 +9,10 @@ import {NominatimService} from 'src/app/services/nominatim.service';
 
 import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-save.component';
 import {Location} from 'src/app/types/location';
-import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {Store} from '@ngrx/store';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {ActivatedRoute, Router} from '@angular/router';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -49,10 +49,6 @@ export class WaypointPage implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this._destroyer.next(true);
-  }
-
   ngOnInit(): void {
     this._geolocationSvc.start();
     this._geolocationSvc.onLocationChange
@@ -63,6 +59,10 @@ export class WaypointPage implements OnInit, OnDestroy {
       .subscribe(x => {
         this.onChangeLocation(x);
       });
+  }
+
+  ngOnDestroy(): void {
+    this._destroyer.next(true);
   }
 
   onChangeLocation(location: Location): void {

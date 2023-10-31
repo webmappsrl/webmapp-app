@@ -2,8 +2,8 @@ import {IGeojsonFeature} from '../types/model';
 import {Injectable} from '@angular/core';
 import {Share} from '@capacitor/share';
 import {environment} from 'src/environments/environment';
-import {LangService} from '../shared/wm-core/localization/lang.service';
-import {ConfService} from '../shared/wm-core/store/conf/conf.service';
+import {LangService} from 'wm-core/localization/lang.service';
+import {ConfService} from 'wm-core/store/conf/conf.service';
 const DEFAULT_ROUTE_LINK_BASEURL = `${environment.api}/track/`;
 
 export interface ShareObject {

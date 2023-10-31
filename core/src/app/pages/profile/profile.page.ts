@@ -9,8 +9,8 @@ import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {Store} from '@ngrx/store';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {confAUTHEnable} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {LangService} from 'wm-core/localization/lang.service';
+import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -46,6 +46,18 @@ export class ProfilePage implements OnInit, OnDestroy {
       slidesOffsetBefore: 0,
       slidesPerView: 1,
     };
+  }
+
+  ngOnInit() {
+    this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
+      this.isLoggedIn$ = this._authService.isLoggedIn$;
+      this.name = this._authService.name;
+      this.email = this._authService.email;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._destroyer.next(true);
   }
 
   deleteUserAlert(): void {
@@ -111,18 +123,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       .then(modal => {
         modal.present();
       });
-  }
-
-  ngOnDestroy(): void {
-    this._destroyer.next(true);
-  }
-
-  ngOnInit() {
-    this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
-      this.isLoggedIn$ = this._authService.isLoggedIn$;
-      this.name = this._authService.name;
-      this.email = this._authService.email;
-    });
   }
 
   openSettings(): void {

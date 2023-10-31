@@ -7,7 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {DownloadlistPageRoutingModule} from './downloadlist-routing.module';
 
 import {DownloadlistPage} from './downloadlist.page';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 import {CardsModule} from 'src/app/components/cards/cards.module';
 
 @NgModule({

@@ -8,7 +8,7 @@ import {WaypointSave} from 'src/app/types/waypoint';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',

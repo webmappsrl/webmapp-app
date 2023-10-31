@@ -4,8 +4,8 @@ import {IonicModule} from '@ionic/angular';
 import {CardBigComponent} from './card-big/card-big.component';
 import {CardSliderComponent} from './card-slider/card-slider.component';
 import {CardTrackComponent} from './card-track/card-track.component';
-import {WmPipeModule} from '../../shared/wm-core/pipes/pipe.module';
-import {WmSharedModule} from '../../shared/wm-core/shared/shared.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import {WmSharedModule} from 'wm-core/shared/shared.module';
 
 const cardComponents = [CardBigComponent, CardSliderComponent, CardTrackComponent];
 @NgModule({

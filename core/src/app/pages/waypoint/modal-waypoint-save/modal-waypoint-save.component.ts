@@ -10,7 +10,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
-import {confMAP, confPOIFORMS} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -41,6 +41,13 @@ export class ModalWaypointSaveComponent implements OnInit {
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
   ) {}
+
+  ngOnInit() {
+    this.positionString = `${this.position.latitude}, ${this.position.longitude}`;
+    setTimeout(() => {
+      this.displayPosition = this.position;
+    }, 2000);
+  }
 
   async addPhotos() {
     let library = [];
@@ -81,13 +88,6 @@ export class ModalWaypointSaveComponent implements OnInit {
       return curr && x;
     }, true);
     return allValid;
-  }
-
-  ngOnInit() {
-    this.positionString = `${this.position.latitude}, ${this.position.longitude}`;
-    setTimeout(() => {
-      this.displayPosition = this.position;
-    }, 2000);
   }
 
   async openModalSuccess(waypoint) {

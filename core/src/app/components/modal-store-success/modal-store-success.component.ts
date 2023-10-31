@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 
 import {ModalController} from '@ionic/angular';
 import {StatusService} from 'src/app/services/status.service';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {LangService} from 'wm-core/localization/lang.service';
 
 @Component({
   selector: 'app-modal-store-success',

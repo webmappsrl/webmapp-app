@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormBuilder,
@@ -11,7 +11,7 @@ import {LoadingController, NavController, PopoverController} from '@ionic/angula
 import {GenericPopoverComponent} from 'src/app/components/shared/generic-popover/generic-popover.component';
 import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {LangService} from 'wm-core/localization/lang.service';
 
 @Component({
   selector: 'app-registeruser',
@@ -58,12 +58,12 @@ export class RegisteruserPage implements OnInit {
     );
   }
 
-  back() {
-    this._navController.back();
-  }
-
   ngOnInit() {
     this.translate.get('pages.registeruser.loading').subscribe(t => (this.loadingString = t));
+  }
+
+  back() {
+    this._navController.back();
   }
 
   async register() {

@@ -14,20 +14,13 @@ import {StorageService} from './base/storage.service';
 import {environment} from 'src/environments/environment';
 import pkg from 'package.json';
 import {timeout} from 'rxjs/operators';
+import { IConfig } from 'wm-core/types/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
   private _config: IConfig;
-
-  constructor(
-    private _communicationService: CommunicationService,
-    private _deviceService: DeviceService,
-    private _storageService: StorageService,
-  ) {
-    console.log('Core v' + this.version);
-  }
 
   get appId(): string {
     return this._config.APP.id ? this._config.APP.id : 'it.webmapp.webmapp';
@@ -53,6 +46,14 @@ export class ConfigService {
 
   get version(): string {
     return pkg.version;
+  }
+
+  constructor(
+    private _communicationService: CommunicationService,
+    private _deviceService: DeviceService,
+    private _storageService: StorageService,
+  ) {
+    console.log('Core v' + this.version);
   }
 
   /**

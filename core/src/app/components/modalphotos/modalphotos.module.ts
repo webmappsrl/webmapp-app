@@ -6,7 +6,7 @@ import {ModalSuccessModule} from '../modal-success/modal-success.module';
 import {ModalphotosComponent} from './modalphotos.component';
 import {ModalphotosaveComponent} from './modalphotosave/modalphotosave.component';
 import {NgModule} from '@angular/core';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 import {PopoverphotoComponent} from './popoverphoto/popoverphoto.component';
 import {SharedModule} from '../shared/shared.module';
 

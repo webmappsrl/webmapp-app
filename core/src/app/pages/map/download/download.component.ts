@@ -8,8 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import {AlertController} from '@ionic/angular';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {downloadPanelStatus} from '../../../shared/wm-core/types/downloadpanel.enum';
+import {LangService} from 'wm-core/localization/lang.service';
+import {downloadPanelStatus} from 'wm-core/types/downloadpanel.enum';
 
 @Component({
   selector: 'wm-download',
@@ -27,6 +27,8 @@ export class WmDownloadComponent implements OnInit {
   @Output() goToEvt: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private _alertCtrl: AlertController, private _translate: LangService) {}
+
+  ngOnInit(): void {}
 
   public downloadStatus(status: downloadPanelStatus) {
     this._actualDownloadStatus = status;
@@ -70,6 +72,4 @@ export class WmDownloadComponent implements OnInit {
       this.goToEvt.emit('downloadlist');
     }
   }
-
-  ngOnInit(): void {}
 }

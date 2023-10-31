@@ -9,8 +9,8 @@ import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {SaveService} from 'src/app/services/save.service';
-import {confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-waypointlist',
@@ -20,8 +20,8 @@ import {WaypointSave} from 'src/app/types/waypoint';
   encapsulation: ViewEncapsulation.None,
 })
 export class WaypointlistPage {
-  waypoints$: Observable<WaypointSave[]>;
   confMap$: Observable<any> = this._store.select(confMAP);
+  waypoints$: Observable<WaypointSave[]>;
 
   constructor(
     private _saveSvc: SaveService,
@@ -30,6 +30,11 @@ export class WaypointlistPage {
     private _store: Store,
   ) {}
 
+  ionViewWillEnter(): void {
+    this.waypoints$ = from(this._saveSvc.getWaypoints());
+    this._cdr.detectChanges();
+  }
+
   open(waypoint): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
@@ -37,10 +42,5 @@ export class WaypointlistPage {
       },
     };
     this._navCtrl.navigateForward('waypointdetail', navigationExtras);
-  }
-
-  ionViewWillEnter(): void {
-    this.waypoints$ = from(this._saveSvc.getWaypoints());
-    this._cdr.detectChanges();
   }
 }

@@ -8,7 +8,7 @@ import {ProfilePage} from './profile.page';
 import {ProfilePageRoutingModule} from './profile-routing.module';
 import {ProfileRecordsComponent} from './profile-records/profile-records.component';
 import {SettingsModule} from 'src/app/components/settings/settings.module';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [

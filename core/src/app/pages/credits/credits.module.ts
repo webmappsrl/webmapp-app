@@ -7,7 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {CreditsPageRoutingModule} from './credits-routing.module';
 
 import {CreditsPage} from './credits.page';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, CreditsPageRoutingModule, WmPipeModule],

@@ -3,11 +3,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 import {RouterModule} from '@angular/router';
 import {SettingsComponent} from './settings.component';
 import {SharedModule} from '../shared/shared.module';
-import {WmLocalizationModule} from 'src/app/shared/wm-core/localization/localization.module';
+import {WmLocalizationModule} from 'wm-core/localization/localization.module';
 
 @NgModule({
   declarations: [SettingsComponent],

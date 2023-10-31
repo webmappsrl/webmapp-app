@@ -3,7 +3,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {AlertController, IonInput, ModalController} from '@ionic/angular';
 import {AuthService} from 'src/app/services/auth.service';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import {LangService} from 'wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-login-component',

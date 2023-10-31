@@ -46,8 +46,8 @@ import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {WmLoadingService} from 'src/app/shared/wm-core/services/loading.service';
+import {LangService} from 'wm-core/localization/lang.service';
+import {WmLoadingService} from 'wm-core/services/loading.service';
 import {
   applyWhere,
   loadPois,
@@ -58,7 +58,7 @@ import {
   togglePoiFilter,
   toggleTrackFilter,
   updateTrackFilter,
-} from 'src/app/shared/wm-core/store/api/api.actions';
+} from 'wm-core/store/api/api.actions';
 import {
   apiElasticState,
   apiElasticStateLayer,
@@ -66,7 +66,7 @@ import {
   countSelectedFilters,
   poiFilterIdentifiers,
   pois,
-} from 'src/app/shared/wm-core/store/api/api.selector';
+} from 'wm-core/store/api/api.selector';
 import {
   confAUTHEnable,
   confGeohubId,
@@ -75,11 +75,12 @@ import {
   confPOIS,
   confPOISFilter,
   confPoisIcons,
-} from 'src/app/shared/wm-core/store/conf/conf.selector';
-import {ISlopeChartHoverElements} from 'src/app/shared/wm-core/types/slope-chart';
+} from 'wm-core/store/conf/conf.selector';
+import {ISlopeChartHoverElements} from 'wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
+import {SelectFilterOption, SliderFilter, Filter} from 'wm-core/types/config';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -399,10 +400,6 @@ export class MapPage implements OnInit, OnDestroy {
     );
   }
 
-  updateLastFilterType(filter: 'tracks' | 'pois') {
-    this._store.dispatch(setLastFilterType({filter}));
-  }
-
   ionViewWillLeave(): void {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
@@ -525,6 +522,10 @@ export class MapPage implements OnInit, OnDestroy {
 
   toogleFullMap() {
     this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
+  }
+
+  updateLastFilterType(filter: 'tracks' | 'pois') {
+    this._store.dispatch(setLastFilterType({filter}));
   }
 
   updatePoiFilter(filter: SelectFilterOption | SliderFilter | Filter): void {

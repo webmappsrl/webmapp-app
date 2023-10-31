@@ -16,8 +16,8 @@ import {IRegisterItem} from '../types/track';
 import {Filesystem, Directory, GetUriResult} from '@capacitor/filesystem';
 import {GeolocationService} from './geolocation.service';
 import {ActionSheetController} from '@ionic/angular';
-import {LangService} from '../shared/wm-core/localization/lang.service';
 import {Location} from 'src/app/types/location';
+import {LangService} from 'wm-core/localization/lang.service';
 
 export interface IPhotoItem extends IRegisterItem {
   blob?: Blob;

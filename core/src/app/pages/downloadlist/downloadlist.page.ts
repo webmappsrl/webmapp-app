@@ -4,7 +4,7 @@ import {IGeojsonFeature, IGeojsonFeatureDownloaded} from 'src/app/types/model';
 
 import {DownloadService} from 'src/app/services/download.service';
 import {NavigationExtras, Router} from '@angular/router';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
+import { LangService } from 'wm-core/localization/lang.service';
 
 @Component({
   selector: 'app-downloadlist',
@@ -23,6 +23,10 @@ export class DownloadlistPage implements OnInit {
     private _alertCtrl: AlertController,
     private _langSvc: LangService,
   ) {}
+
+  async ngOnInit() {
+    this.tracks = await this._downloadSvc.getDownloadedTracks();
+  }
 
   async deleteSelected() {
     const alert = await this._alertCtrl.create({
@@ -46,10 +50,6 @@ export class DownloadlistPage implements OnInit {
 
   gotoMap(): void {
     this._navCtrl.navigateRoot('/map', {replaceUrl: true});
-  }
-
-  async ngOnInit() {
-    this.tracks = await this._downloadSvc.getDownloadedTracks();
   }
 
   open(track: IGeojsonFeature): void {

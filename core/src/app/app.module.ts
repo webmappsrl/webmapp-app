@@ -1,8 +1,7 @@
 import {HttpClientModule} from '@angular/common/http';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
-import {WmCoreModule} from './shared/wm-core/wm-core.module';
-
+import {WmCoreModule} from 'wm-core/wm-core.module';
 import {registerLocaleData} from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import {LOCALE_ID} from '@angular/core';
@@ -27,6 +26,7 @@ import {MapEffects} from './store/map/map.effects';
 import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
+import {ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
 
 registerLocaleData(localeIt);
 
@@ -65,6 +65,7 @@ registerLocaleData(localeIt);
     WmCoreModule,
   ],
   providers: [
+    {provide: ENVIRONMENT_CONFIG, useValue: environment},
     {provide: LOCALE_ID, useValue: 'it'},
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     {

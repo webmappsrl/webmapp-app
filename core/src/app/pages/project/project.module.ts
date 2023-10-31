@@ -7,7 +7,7 @@ import {IonicModule} from '@ionic/angular';
 import {ProjectPageRoutingModule} from './project-routing.module';
 
 import {ProjectPage} from './project.page';
-import {WmPipeModule} from 'src/app/shared/wm-core/pipes/pipe.module';
+import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, ProjectPageRoutingModule, WmPipeModule],

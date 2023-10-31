@@ -25,11 +25,12 @@ import {
   togglePoiFilter,
   toggleTrackFilter,
   toggleTrackFilterByIdentifier,
-} from 'src/app/shared/wm-core/store/api/api.actions';
-import {apiElasticStateLayer, showResult} from 'src/app/shared/wm-core/store/api/api.selector';
-import {loadConf} from 'src/app/shared/wm-core/store/conf/conf.actions';
-import {confAPP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+} from 'wm-core/store/api/api.actions';
+import {apiElasticStateLayer, showResult} from 'wm-core/store/api/api.selector';
+import {loadConf} from 'wm-core/store/conf/conf.actions';
+import {confAPP} from 'wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
+import {IAPP, Filter, ILAYER} from 'wm-core/types/config';
 
 @Component({
   selector: 'wm-page-home',
@@ -60,7 +61,6 @@ export class HomePage implements OnDestroy {
       }
     }),
   );
-
   showResult$ = this._store.select(showResult);
 
   constructor(
@@ -75,6 +75,10 @@ export class HomePage implements OnDestroy {
     });
   }
 
+  ngOnDestroy(): void {
+    this._goToHomeSub.unsubscribe();
+  }
+
   goToHome(): void {
     this.setLayer(null);
     this._store.dispatch(resetPoiFilters());
@@ -82,10 +86,6 @@ export class HomePage implements OnDestroy {
       this.searchCmp.reset();
     } catch (_) {}
     this._navCtrl.navigateForward('home');
-  }
-
-  ngOnDestroy(): void {
-    this._goToHomeSub.unsubscribe();
   }
 
   openExternalUrl(url: string): void {

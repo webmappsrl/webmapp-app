@@ -8,7 +8,7 @@ import {online} from 'src/app/store/network/network.selector';
 import {IMapRootState} from 'src/app/store/map/map';
 import {goToHome} from 'src/app/store/map/map.actions';
 import {IonTabs} from '@ionic/angular';
-import {confAUTHEnable} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-page-tabs',

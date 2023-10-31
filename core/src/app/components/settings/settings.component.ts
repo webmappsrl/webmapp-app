@@ -10,8 +10,8 @@ import {ProjectPage} from 'src/app/pages/project/project.page';
 import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
-import {LangService} from 'src/app/shared/wm-core/localization/lang.service';
-import {confLANGUAGES, confMAP} from 'src/app/shared/wm-core/store/conf/conf.selector';
+import {LangService} from 'wm-core/localization/lang.service';
+import {confLANGUAGES, confMAP} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-settings',
@@ -40,6 +40,11 @@ export class SettingsComponent implements OnInit {
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
   ) {}
+
+  ngOnInit(): void {
+    this.version = this._configSvc.version;
+    this.isLoggedIn = this._authSvc.isLoggedIn;
+  }
 
   changeDistanceFilter(event): void {
     this.currentDistanceFilter = event.detail.value;
@@ -78,11 +83,6 @@ export class SettingsComponent implements OnInit {
           console.warn(alertError);
         },
       );
-  }
-
-  ngOnInit(): void {
-    this.version = this._configSvc.version;
-    this.isLoggedIn = this._authSvc.isLoggedIn;
   }
 
   async openCmp(nameCmp: string) {
