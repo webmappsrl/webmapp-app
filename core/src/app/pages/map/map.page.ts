@@ -237,6 +237,8 @@ export class MapPage implements OnInit, OnDestroy {
   };
   public sliderOptions: any;
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
+  toggleLayerDirective$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  togglePoisDirective$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
     new BehaviorSubject<ISlopeChartHoverElements | null>(null);
   translationCallback: (any) => string = value => {
@@ -513,6 +515,18 @@ export class MapPage implements OnInit, OnDestroy {
     setTimeout(() => {
       this.slider.slideTo(idx);
     }, 300);
+  }
+
+  toggleDirective(data: {type: 'layers' | 'pois'; toggle: boolean}): void {
+    switch (data.type) {
+      case 'layers':
+        this.toggleLayerDirective$.next(data.toggle);
+        break;
+      case 'pois':
+        this.togglePoisDirective$.next(data.toggle);
+        break;
+    }
+    console.log(data);
   }
 
   togglePreviewTrack(): void {

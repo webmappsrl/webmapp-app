@@ -17,6 +17,7 @@
         (colorSelectedFromLayerEVT)="trackColor$.next($event)"
         [wmMapFeatureCollection]="(wmMapFeatureCollectionOverlay$|async)!= null"
         [wmMapFeatureCollectionOverlay]="wmMapFeatureCollectionOverlay$|async"
+        [wmMapLayerDisableLayers]="(!(toggleLayerDirective$|async) && (currentLayer$|async)==null)"
         (wmMapFeatureCollectionLayerSelected)="selectedLayer($event);wmap.wmMapCloseTopRightBtnsEVT$.emit('')"
         wmMapPois
         [wmMapInputTyped]="apiSearchInputTyped$|async"
@@ -24,6 +25,7 @@
         [wmMapPoisPois]="pois$|async"
         [wmMapPoisFilters]="poiFilterIdentifiers$|async"
         [WmMapPoisUnselectPoi]="resetSelectedPoi$|async"
+        [wmMapPoisDisableClusterLayer]="(!(togglePoisDirective$|async) && (currentLayer$|async)==null)"
         (currentPoiEvt)="setPoi($event)"
         (wmMapStateEvt)="setLoader($event)"
         wmMapPosition
@@ -33,6 +35,7 @@
         [wmMapOverlay]="enableOverLay$|async"
         [wmMapOverlayUrl]="'https://geohub.webmapp.it/api/taxonomy/where/geojson/13'"
         (wmMapOverlayEVT$)="setWmMapFeatureCollection($event)"
+        (wmMapToggleDataEVT$)="toggleDirective($event)"
         wmMapTrack
         [track]="currentTrack$|async"
         [wmMapTrackColor]="trackColor$|async"
