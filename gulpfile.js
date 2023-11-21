@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 const gulp = require('gulp'),
   fs = require('graceful-fs'),
   jeditor = require('gulp-json-editor'),
@@ -10,11 +9,13 @@ const gulp = require('gulp'),
   sh = require('shelljs'),
   yargs = require('yargs/yargs'),
   {hideBin} = require('yargs/helpers'),
+  dotenv = require('dotenv'),
   packageNPM = require('./package.json');
 let version = {
   version: packageNPM.version,
   code: versionToBundleCode(packageNPM.version),
 };
+dotenv.config();
 const CONSOLE_COLORS = {
   Reset: '\x1b[0m',
   Bright: '\x1b[1m',
@@ -793,6 +794,7 @@ function signAndroidApk(instanceName, alias) {
   if (!fs.existsSync('builds/' + instanceName + '/android'))
     sh.exec('mkdir builds/' + instanceName + '/android');
   if (verbose) debug('Signing the release apk');
+  const password = process.env['PASS'] || '';
   sh.exec(
     'apksigner sign --in builds/tmp/app-release-unsigned.apk --out builds/' +
       instanceName +
@@ -804,7 +806,9 @@ function signAndroidApk(instanceName, alias) {
       alias +
       '.keystore --ks-key-alias ' +
       alias +
-      ' --ks-pass pass:T1tup4awmA! --v4-signing-enabled false' +
+      ' --ks-pass pass:' +
+      password +
+      ' --v4-signing-enabled false' +
       (verbose ? ' --verbose' : '') +
       outputRedirect,
   );
