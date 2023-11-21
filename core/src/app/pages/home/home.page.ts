@@ -12,9 +12,8 @@ import {Store} from '@ngrx/store';
 import {ModalController, NavController} from '@ionic/angular';
 
 import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, map, startWith, tap} from 'rxjs/operators';
+import {debounceTime, map, startWith, take, tap} from 'rxjs/operators';
 
-import {InnerHtmlComponent} from 'src/app/components/modal-inner-html/modal-inner-html.component';
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {
@@ -28,9 +27,10 @@ import {
 } from 'wm-core/store/api/api.actions';
 import {apiElasticStateLayer, showResult} from 'wm-core/store/api/api.selector';
 import {loadConf} from 'wm-core/store/conf/conf.actions';
-import {confAPP} from 'wm-core/store/conf/conf.selector';
+import {confAPP, confPROJECT} from 'wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
 import {IAPP, Filter, ILAYER} from 'wm-core/types/config';
+import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 
 @Component({
   selector: 'wm-page-home',
@@ -94,15 +94,23 @@ export class HomePage implements OnDestroy {
 
   openSlug(slug: string): void {
     if (slug === 'project') {
-      this._modalCtrl
-        .create({
-          component: InnerHtmlComponent,
-          cssClass: 'wm-modal',
-          backdropDismiss: true,
-          keyboardClose: true,
-        })
-        .then(modal => {
-          modal.present();
+      this._store
+        .select(confPROJECT)
+        .pipe(take(1))
+        .subscribe(conf => {
+          this._modalCtrl
+            .create({
+              component: WmInnerHtmlComponent,
+              componentProps: {
+                html: conf.HTML,
+              },
+              cssClass: 'wm-modal',
+              backdropDismiss: true,
+              keyboardClose: true,
+            })
+            .then(modal => {
+              modal.present();
+            });
         });
     } else {
       this._navCtrl.navigateForward(slug);
@@ -133,8 +141,14 @@ export class HomePage implements OnDestroy {
   }
 
   setLayer(layer: ILAYER | null | any, idx?: number): void {
-    if (layer != null && layer.id != null) {
-      this._store.dispatch(setLayer({layer}));
+    if (layer != null) {
+      if (layer.id != null) {
+        this._store.dispatch(setLayer({layer}));
+      }
+      if (typeof layer === 'number') {
+        layer = {id: layer};
+        this._store.dispatch(setLayer({layer}));
+      }
     } else {
       this._store.dispatch(setLayer(null));
       this._store.dispatch(resetTrackFilters());

@@ -72,6 +72,7 @@ import {
   confGeohubId,
   confJIDOUPDATETIME,
   confMAP,
+  confMAPLAYERS,
   confPOIS,
   confPOISFilter,
   confPoisIcons,
@@ -80,7 +81,7 @@ import {ISlopeChartHoverElements} from 'wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
-import {SelectFilterOption, SliderFilter, Filter} from 'wm-core/types/config';
+import {SelectFilterOption, SliderFilter, Filter, ILAYER} from 'wm-core/types/config';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -94,6 +95,7 @@ export interface IDATALAYER {
 })
 export class MapPage implements OnInit, OnDestroy {
   private _bboxLayer = null;
+  private _confMAPLAYERS$: Observable<ILAYER[]> = this._store.select(confMAPLAYERS);
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -449,6 +451,20 @@ export class MapPage implements OnInit, OnDestroy {
 
   selectedLayer(layer: any): void {
     this._store.dispatch(setLayer({layer}));
+  }
+
+  selectedLayerById(id: number): void {
+    this._confMAPLAYERS$
+      .pipe(
+        take(1),
+        map(layers => {
+          const layer = layers.filter(l => +l.id === id);
+          return layer.length === 1 ? layer[0] : null;
+        }),
+      )
+      .subscribe(layer => {
+        this.selectedLayer(layer);
+      });
   }
 
   setCurrentFilters(filters: string[]): void {

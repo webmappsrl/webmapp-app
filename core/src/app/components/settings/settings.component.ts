@@ -2,16 +2,22 @@ import {KeyValue} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, forkJoin, zip} from 'rxjs';
+import {switchMap, take} from 'rxjs/operators';
 
-import {CreditsPage} from 'src/app/pages/credits/credits.page';
-import {DisclaimerPage} from 'src/app/pages/disclaimer/disclaimer.page';
-import {ProjectPage} from 'src/app/pages/project/project.page';
 import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
+import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 import {LangService} from 'wm-core/localization/lang.service';
-import {confLANGUAGES, confMAP} from 'wm-core/store/conf/conf.selector';
+import {
+  confCREDITS,
+  confDISCLAIMER,
+  confLANGUAGES,
+  confMAP,
+  confPAGES,
+  confPROJECT,
+} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'wm-settings',
@@ -20,7 +26,11 @@ import {confLANGUAGES, confMAP} from 'wm-core/store/conf/conf.selector';
   providers: [LangService],
 })
 export class SettingsComponent implements OnInit {
+  confCredits$: Observable<any> = this._store.select(confCREDITS);
+  confDisclaimer$: Observable<any> = this._store.select(confDISCLAIMER);
   confMap$: Observable<any> = this._store.select(confMAP);
+  confPages$: Observable<any> = this._store.select(confPAGES);
+  confProject$: Observable<any> = this._store.select(confPROJECT);
   currentDistanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
   gpsAccuracy = {
     5: 'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria',
@@ -85,15 +95,30 @@ export class SettingsComponent implements OnInit {
       );
   }
 
-  async openCmp(nameCmp: string) {
-    const cmp =
-      nameCmp === 'project' ? ProjectPage : nameCmp === 'disclaimer' ? DisclaimerPage : CreditsPage;
-    const pmodal = await this._modalCtrl.create({
-      component: cmp,
-      swipeToClose: true,
-      mode: 'ios',
-    });
-    pmodal.present();
+  openCmp(nameCmp: string) {
+    this.confPages$
+      .pipe(
+        take(1),
+        switchMap(pages => {
+          const conf =
+            nameCmp === 'project'
+              ? pages.PROJECT
+              : nameCmp === 'disclaimer'
+              ? pages.DISCLAIMER
+              : pages.CREDITS;
+          return this._modalCtrl.create({
+            component: WmInnerHtmlComponent,
+            componentProps: {
+              html: conf.html,
+            },
+            swipeToClose: true,
+            mode: 'ios',
+          });
+        }),
+      )
+      .subscribe(modal => {
+        modal.present();
+      });
   }
 
   orderOriginal(a: KeyValue<string, string>, b: KeyValue<string, string>): number {

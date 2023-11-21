@@ -73,15 +73,6 @@ const routes: Routes = [
     path: 'project',
     loadChildren: () => import('./pages/project/project.module').then(m => m.ProjectPageModule),
   },
-  {
-    path: 'credits',
-    loadChildren: () => import('./pages/credits/credits.module').then(m => m.CreditsPageModule),
-  },
-  {
-    path: 'disclaimer',
-    loadChildren: () =>
-      import('./pages/disclaimer/disclaimer.module').then(m => m.DisclaimerPageModule),
-  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules})],

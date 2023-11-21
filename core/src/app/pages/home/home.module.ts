@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {HomePage} from './home.page';
 import {HomePageRoutingModule} from './home-routing.module';
-import {InnerHtmlModule} from 'src/app/components/modal-inner-html/modal-inner-html.module';
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {SharedModule} from 'src/app/components/shared/shared.module';
@@ -21,7 +20,6 @@ import {WmCoreModule} from 'wm-core/wm-core.module';
     CardsModule,
     HomePageRoutingModule,
     SharedModule,
-    InnerHtmlModule,
     HomeModule,
     BoxModule,
     WmPipeModule,
