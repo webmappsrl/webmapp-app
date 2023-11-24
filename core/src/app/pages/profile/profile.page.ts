@@ -11,7 +11,7 @@ import {SettingsComponent} from 'src/app/components/settings/settings.component'
 import {Store} from '@ngrx/store';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
-import appPackage from '../../../../../package.json';
+
 @Component({
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
@@ -22,7 +22,6 @@ import appPackage from '../../../../../package.json';
 export class ProfilePage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
-  appVersion = appPackage.version;
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   avatarUrl: string;
   email: string;
