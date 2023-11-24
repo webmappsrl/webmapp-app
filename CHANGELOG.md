@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.4.0](https://github.com/webmappsrl/webmapp-app/compare/v2.3.0...v2.4.0) (2023-11-24)
+
+
+### Features
+
+* **social-share:** add configurable text ([7544147](https://github.com/webmappsrl/webmapp-app/commit/75441472c46df96cca8536352b5aa81d2b290054))
+
+
+### Miscellaneous
+
+* **dotenv:** add dotenv ([abba2d1](https://github.com/webmappsrl/webmapp-app/commit/abba2d1661f7f1bc1f999011e4045a0950798e07))
+* **inner-component:** add wm core inner components remove useless code ([cacb6e9](https://github.com/webmappsrl/webmapp-app/commit/cacb6e96493554af9f987b33ddd776cae3dffcb9))
+* update deploy commands ([7858417](https://github.com/webmappsrl/webmapp-app/commit/78584174c9545cc3e399522cf430147f78684589))
+* update min sdk ([84de014](https://github.com/webmappsrl/webmapp-app/commit/84de0147c564e0acb38e048f11146efe9088f07b))
+
 ## [2.3.0](https://github.com/webmappsrl/webmapp-app/compare/v2.2.4...v2.3.0) (2023-10-31)
 
 
