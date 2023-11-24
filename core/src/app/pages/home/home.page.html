@@ -27,6 +27,7 @@
       (removeTrackFilterEVT)="removeFilter($event)"
       (removePoiFilterEVT)="removePoiFilter($event)"
     ></wm-status-filter>
+    <wm-home-layer></wm-home-layer>
     <wm-home-result
       *ngIf="showResult$|async;else home"
       (trackEVT)="setTrack($event)"
