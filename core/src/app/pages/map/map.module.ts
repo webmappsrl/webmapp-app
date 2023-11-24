@@ -17,6 +17,7 @@ import {MapTrackDetailsComponent} from './map-track-details/map-track-details.co
 import {MapPage} from './map.page';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 import {WmCoreModule} from 'wm-core/wm-core.module';
+import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
 
 @NgModule({
   imports: [
@@ -40,5 +41,6 @@ import {WmCoreModule} from 'wm-core/wm-core.module';
     WmDownloadComponent,
     WmDownloadPanelComponent,
   ],
+  providers: [WmTransPipe],
 })
 export class MapPageModule {}

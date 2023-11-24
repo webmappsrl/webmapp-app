@@ -68,6 +68,7 @@ import {
   pois,
 } from 'wm-core/store/api/api.selector';
 import {
+  confAPP,
   confAUTHEnable,
   confGeohubId,
   confJIDOUPDATETIME,
@@ -81,7 +82,8 @@ import {ISlopeChartHoverElements} from 'wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
-import {SelectFilterOption, SliderFilter, Filter, ILAYER} from 'wm-core/types/config';
+import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
+import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -120,6 +122,7 @@ export class MapPage implements OnInit, OnDestroy {
   apiSearchInputTyped$: Observable<string> = this._store.select(apiSearchInputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
+  confAPP$: Observable<IAPP> = this._store.select(confAPP);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
@@ -265,6 +268,7 @@ export class MapPage implements OnInit, OnDestroy {
     private _geolocationSvc: GeolocationService,
     private _langSvc: LangService,
     private _loadingSvc: WmLoadingService,
+    private _wmTrans: WmTransPipe,
     _platform: Platform,
   ) {
     this.dataLayerUrls$ = this.geohubId$.pipe(
@@ -429,7 +433,12 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   openTrackShare(trackId: number): void {
-    this._shareSvc.shareTrackByID(trackId);
+    this.confAPP$.pipe(take(1)).subscribe(conf => {
+      this._shareSvc.shareTrackByID({
+        id: trackId,
+        text: this._wmTrans.transform(conf.socialShareText),
+      });
+    });
   }
 
   phone(_): void {}

@@ -8,6 +8,7 @@ const DEFAULT_ROUTE_LINK_BASEURL = `${environment.api}/track/`;
 
 export interface ShareObject {
   dialogTitle?: string;
+  id?: number;
   text?: string;
   title?: string;
   url?: string;
@@ -60,9 +61,11 @@ export class ShareService {
     });
   }
 
-  public async shareTrackByID(id: number) {
-    return this.share({
-      url: `${DEFAULT_ROUTE_LINK_BASEURL}${id}?app_id=${this._confSvc.geohubAppId}`,
-    });
+  public async shareTrackByID(shareObj: ShareObject) {
+    shareObj = {
+      ...shareObj,
+      ...{url: `${DEFAULT_ROUTE_LINK_BASEURL}${shareObj.id}?app_id=${this._confSvc.geohubAppId}`},
+    };
+    return this.share(shareObj);
   }
 }
