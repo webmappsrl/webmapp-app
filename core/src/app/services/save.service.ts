@@ -236,10 +236,7 @@ export class SaveService {
   public async updateTrack(newTrack: ITrack) {
     const trackToSave = JSON.parse(JSON.stringify(newTrack));
     const originalTrack = await this.getTrack(trackToSave.key);
-    console.log(
-      '------- ~ file: save.service.ts ~ line 82 ~ SaveService ~ updateTrack ~ originalTrack',
-      originalTrack,
-    );
+
     const photoKeys: string[] = [];
     trackToSave.photoKeys = [];
     for (const photoTrack of trackToSave.photos) {
@@ -248,10 +245,7 @@ export class SaveService {
     }
     trackToSave.photos = null;
     const deletedPhotos = originalTrack.photoKeys.filter(x => photoKeys.find(y => x !== y));
-    console.log(
-      '------- ~ file: save.service.ts ~ line 87 ~ SaveService ~ updateTrack ~ deletedPhotos',
-      deletedPhotos,
-    );
+
     for (const photokey of deletedPhotos) {
       //this.deleteGeneric(photokey);
     }
