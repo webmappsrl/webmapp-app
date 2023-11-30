@@ -578,7 +578,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
       new Promise((resolve, reject) => {
         gulp
           .src(instancesDir + instanceName + '/android/variables.gradle')
-          .pipe(replace(/minSdkVersion = ([0-9]{2})/g, 'minSdkVersion = 31'))
+          .pipe(replace(/minSdkVersion = ([0-9]{2})/g, 'minSdkVersion = 28'))
           .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 34'))
           .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 34'))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/'))
