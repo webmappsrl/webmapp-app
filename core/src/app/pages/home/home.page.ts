@@ -15,7 +15,6 @@ import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'r
 import {debounceTime, map, startWith, take, tap} from 'rxjs/operators';
 
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
-import {GeolocationService} from 'src/app/services/geolocation.service';
 import {
   inputTyped,
   resetPoiFilters,
@@ -25,7 +24,7 @@ import {
   toggleTrackFilter,
   toggleTrackFilterByIdentifier,
 } from 'wm-core/store/api/api.actions';
-import {apiElasticStateLayer, showResult} from 'wm-core/store/api/api.selector';
+import {showResult} from 'wm-core/store/api/api.selector';
 import {loadConf} from 'wm-core/store/conf/conf.actions';
 import {confAPP, confPROJECT} from 'wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
@@ -45,7 +44,6 @@ export class HomePage implements OnDestroy {
   @ViewChild('searchCmp') searchCmp: SearchBarComponent;
 
   confAPP$: Observable<IAPP> = this._store.select(confAPP);
-  currentLayer$ = this._store.select(apiElasticStateLayer);
   goToHome$: Observable<any> = this._store.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   online$: Observable<boolean> = merge(
@@ -64,7 +62,6 @@ export class HomePage implements OnDestroy {
   showResult$ = this._store.select(showResult);
 
   constructor(
-    private _geoLocation: GeolocationService,
     private _store: Store<any>,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,

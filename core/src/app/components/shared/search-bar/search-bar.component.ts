@@ -12,14 +12,7 @@ import {ILAYER} from 'wm-core/types/config';
   styleUrls: ['./search-bar.component.scss'],
 })
 export class SearchBarComponent implements OnDestroy {
-  private _currentLayer: number;
   private _searchSub$: Subscription = Subscription.EMPTY;
-
-  @Input('currentLayer') set setCurrentLayer(layer: ILAYER) {
-    if (layer != null && layer.id != null) {
-      this._currentLayer = +layer.id;
-    }
-  }
 
   @Input('initSearch') set setSearch(init: string) {
     this.searchForm.controls.search.setValue(init);
