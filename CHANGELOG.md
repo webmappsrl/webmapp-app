@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.5.0](https://github.com/webmappsrl/webmapp-app/compare/v2.4.0...v2.5.0) (2023-11-30)
+
+
+### Features
+
+* **home:** add home layer ([5e485df](https://github.com/webmappsrl/webmapp-app/commit/5e485df7bb6082d84dbb4676e47a25893913324e))
+
+
+### Miscellaneous
+
+* **profile:** add app version ([5f6eea1](https://github.com/webmappsrl/webmapp-app/commit/5f6eea1144821494266eba1c7d767ff62bcb39ed))
+* Remove home module and component ([c06592b](https://github.com/webmappsrl/webmapp-app/commit/c06592be228463a113f6eddb91a4b801522d20e3))
+* Remove unnecessary import in home.module.ts ([f92e770](https://github.com/webmappsrl/webmapp-app/commit/f92e7706b8a7565cb4a24846e9cdb67fd37658c4))
+* Remove unused code and dependencies in search-bar and home.page components ([c3a2bed](https://github.com/webmappsrl/webmapp-app/commit/c3a2beda6a33089ac1b2bb3d4ca981aa42b085f4))
+* Update minSdkVersion in Android platform ([59ab2b5](https://github.com/webmappsrl/webmapp-app/commit/59ab2b5ee8f1127ab1e28f411e0483ad75fc7b6d))
+
 ## [2.4.0](https://github.com/webmappsrl/webmapp-app/compare/v2.3.0...v2.4.0) (2023-11-24)
 
 
