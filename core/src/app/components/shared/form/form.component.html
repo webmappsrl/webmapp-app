@@ -1,7 +1,7 @@
 <ng-container *ngIf="disabled === false && (forms$|async) as forms">
   <ng-container *ngIf="forms.length> 1">
     <ion-list>
-      <ion-item>
+      <ion-item lines="none">
         <ion-select class="wm-form-field-select" [(ngModel)]="formId">
           <ion-select-option
             *ngFor="let form of forms; let idx=index"
@@ -9,6 +9,9 @@
             >{{form.label|wmtrans}}</ion-select-option
           >
         </ion-select>
+      </ion-item>
+      <ion-item lines="none" *ngIf="(currentForm$|async).helper as helper">
+        <ion-note>{{helper|wmtrans}}</ion-note>
       </ion-item>
     </ion-list>
   </ng-container>
@@ -45,7 +48,6 @@
     <ng-container *ngFor="let field of (currentForm$|async).fields">
       <ion-item class="wm-form-field">
         <i class="{{field.type|getFormFieldIcn}} wm-form-field-icon secondary"></i>
-
         <ion-label class="wm-form-field-label" position="stacked">
           {{ field.label | wmtrans }}
 
