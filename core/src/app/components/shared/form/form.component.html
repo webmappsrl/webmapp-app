@@ -50,7 +50,6 @@
         <i class="{{field.type|getFormFieldIcn}} wm-form-field-icon secondary"></i>
         <ion-label class="wm-form-field-label" position="stacked">
           {{ field.label | wmtrans }}
-
           <span *ngIf="field.required" class="wm-form-field-label-required"> * </span>
         </ion-label>
         <container-element [ngSwitch]="field.type">
@@ -89,6 +88,11 @@
           >{{'questo campo è obbligatorio'|wmtrans}}</ng-container
         >
       </div>
+      <ion-note
+        class="wm-form-field-helper"
+        *ngIf="field.helper as helper"
+        >{{helper|wmtrans}}</ion-note
+      >
     </ng-container>
   </ng-template>
 </form>
