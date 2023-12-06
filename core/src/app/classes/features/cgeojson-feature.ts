@@ -1,11 +1,7 @@
-import { EGeojsonGeometryTypes } from 'src/app/types/egeojson-geometry-types.enum';
+import {EGeojsonGeometryTypes} from 'src/app/types/egeojson-geometry-types.enum';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {
-  IGeojsonFeature,
-  IGeojsonGeometry,
-  IGeojsonProperties,
-} from 'src/app/types/model';
+import {IGeojsonFeature, IGeojsonGeometry, IGeojsonProperties} from 'src/app/types/model';
 
 export abstract class CGeojsonFeature implements IGeojsonFeature {
   protected _geometry: IGeojsonGeometry;
@@ -41,6 +37,10 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
     this._properties = {
       id: null,
     };
+  }
+
+  addProperties(properties: any): void {
+    this._properties = {...this._properties, ...properties};
   }
 
   setProperty(property: string, value: any): void {

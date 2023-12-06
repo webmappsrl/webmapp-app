@@ -23,8 +23,22 @@
           class="webmapp-backbutton webmapp-backbutton-dark"
         ></ion-back-button>
       </ion-buttons>
-      <ion-title>{{'pages.trackdetail.title'|wmtrans}}</ion-title>
       <ion-buttons slot="end">
+        <wm-export-to-btn
+          [to]="'geojson'"
+          [track]="track"
+          [saveFileFn]="saveFileCallback"
+        ></wm-export-to-btn>
+        <wm-export-to-btn
+          [to]="'kml'"
+          [track]="track"
+          [saveFileFn]="saveFileCallback"
+        ></wm-export-to-btn>
+        <wm-export-to-btn
+          [to]="'gpx'"
+          [track]="track"
+          [saveFileFn]="saveFileCallback"
+        ></wm-export-to-btn>
         <ion-button (click)="delete()">
           <ion-icon name="trash-outline" start></ion-icon>
         </ion-button>

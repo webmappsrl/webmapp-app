@@ -405,7 +405,10 @@ export class SaveService {
   private _convertFeatureToITrack(feature: Feature): ITrack {
     const prop = feature.properties;
     const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
-    const geojson = Object.assign(new CGeojsonLineStringFeature(), feature.geometry) ?? null;
+    let geojson: CGeojsonLineStringFeature =
+      Object.assign(new CGeojsonLineStringFeature(), feature.geometry) ?? null;
+    geojson.addProperties(prop.raw_data);
+
     return {
       activity: rawData.activity ?? null,
       geojson,

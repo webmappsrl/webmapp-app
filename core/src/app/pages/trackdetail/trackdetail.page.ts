@@ -17,7 +17,9 @@ import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
+import {Share} from '@capacitor/share';
 
+import {Filesystem, Directory, Encoding, FilesystemEncoding} from '@capacitor/filesystem';
 @Component({
   selector: 'wm-trackdetail',
   templateUrl: './trackdetail.page.html',
@@ -131,7 +133,6 @@ export class TrackdetailPage {
     if (!res.data.dismissed) {
       const track: ITrack = Object.assign(this.currentTrack, res.data.trackData);
       await this._saveSvc.updateTrack(track);
-      // this.track$.next(track);
     }
   }
 
@@ -148,5 +149,31 @@ export class TrackdetailPage {
         position: 'bottom',
       }),
     ).pipe(switchMap(t => t.present()));
+  }
+
+  async saveFileCallback(data, format, track) {
+    const name = (track != null && track.title) ?? 'export';
+    const fileName = `${name}.${format}`;
+    try {
+      // Scrivi il file nel filesystem
+      const writeResult = await Filesystem.writeFile({
+        path: fileName,
+        data,
+        directory: Directory.Documents,
+        encoding: Encoding.UTF8,
+      });
+
+      // Prepara il file per la condivisione
+      const fileUrl = writeResult.uri;
+
+      // Apri il menu di condivisione
+      await Share.share({
+        title: `Condividi il file ${fileName}`,
+        url: fileUrl,
+        dialogTitle: `Condividi il tuo file ${fileName}`,
+      });
+    } catch (e) {
+      console.error("Errore durante l'esportazione e la condivisione:", e);
+    }
   }
 }
