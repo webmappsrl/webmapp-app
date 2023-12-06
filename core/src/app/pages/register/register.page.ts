@@ -23,7 +23,7 @@ import {Collection, Feature} from 'ol';
 import {LineString, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 @Component({
@@ -260,5 +260,12 @@ export class RegisterPage implements OnInit, OnDestroy {
         this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
       this.averageSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
     }
+  }
+
+  waypoint(): void {
+    let navigationExtras: NavigationExtras = {
+      state: {currentTrack: this._geolocationSvc.recordedFeature},
+    };
+    this._navCtrl.navigateForward('waypoint', navigationExtras);
   }
 }
