@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.6.0](https://github.com/webmappsrl/webmapp-app/compare/v2.5.0...v2.6.0) (2023-12-07)
+
+
+### Features
+
+* Add popup functionality to map page ([38b999e](https://github.com/webmappsrl/webmapp-app/commit/38b999efed09cd3e0cf1005e48564b5880491e8e))
+* Add support for exporting tracks to GeoJSON, KML, and GPX formats id:2214 ([04bf899](https://github.com/webmappsrl/webmapp-app/commit/04bf899d8bf060b049bd8ba17801a414181387fb))
+* **register:** add waypoint button  id:2226 ([34dfade](https://github.com/webmappsrl/webmapp-app/commit/34dfade5d58398ff854d2da061b1c0eb455879b9))
+
+
+### Miscellaneous
+
+* Remove unnecessary ngIf condition in map.page.html id: 2227 ([7251398](https://github.com/webmappsrl/webmapp-app/commit/725139820fbcdda1e74c7daa46c87f30c024f9b7))
+* Update form component and waypoint detail page styles id: 2213 ([c6985b6](https://github.com/webmappsrl/webmapp-app/commit/c6985b674bd8d63820e60a660ae59cb2166a7421))
+* Update form component template and styles id:2141 ([33fd91b](https://github.com/webmappsrl/webmapp-app/commit/33fd91bc12339b8171e9ff8beae12c726b974949))
+* Update form.component.html id: 2142 ([627b820](https://github.com/webmappsrl/webmapp-app/commit/627b820cc4601f34dfbee9bd34f2c55af286d923))
+
 ## [2.5.0](https://github.com/webmappsrl/webmapp-app/compare/v2.4.0...v2.5.0) (2023-11-30)
 
 
