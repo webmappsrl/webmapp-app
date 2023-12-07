@@ -228,6 +228,7 @@ export class MapPage implements OnInit, OnDestroy {
   ).pipe(share());
   pois: any[];
   pois$: Observable<any> = this._store.select(pois).pipe(distinctUntilChanged());
+  popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
@@ -423,6 +424,11 @@ export class MapPage implements OnInit, OnDestroy {
     if (isFocused) {
       this.mapTrackDetailsCmp.onlyTitle();
     }
+  }
+
+  openPopup(popup): void {
+    this.popup$.next(popup);
+    this.mapTrackDetailsCmp.open();
   }
 
   openTrackDownload(): void {

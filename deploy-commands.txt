@@ -22,7 +22,7 @@ gulp build -i montepisano -g 41
 gulp build -i metallifere -g 44
 gulp build -i blubell -g 48
 gulp build -i pnfc -g 49
-p
+gulp build -i carg -g 55
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio

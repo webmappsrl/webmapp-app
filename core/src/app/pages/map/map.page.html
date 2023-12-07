@@ -19,6 +19,7 @@
         [wmMapFeatureCollectionOverlay]="wmMapFeatureCollectionOverlay$|async"
         [wmMapLayerDisableLayers]="(!(toggleLayerDirective$|async) && (currentLayer$|async)==null)"
         (wmMapFeatureCollectionLayerSelected)="selectedLayerById($event);wmap.wmMapCloseTopRightBtnsEVT$.emit('')"
+        (wmMapFeatureCollectionPopup)="openPopup($event)"
         wmMapPois
         [wmMapInputTyped]="apiSearchInputTyped$|async"
         [wmMapPoisPoi]="currentPoiID$|async"
@@ -232,53 +233,60 @@
           </ion-title>
         </div>
       </div>
-      <ng-container *ngIf="poiProperties$|async as properties;">
-        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
-          <wm-poi-properties [properties]="properties"></wm-poi-properties>
-        </ion-content>
-      </ng-container>
-      <ng-container *ngIf="!(poiProperties$|async);">
-        <ng-container *ngIf="currentLayer$|async as currentLayer">
-          <ng-container *ngIf="currentLayer.edges != null">
-            <wm-track-edges
-              *ngIf="currentTrack$|async as currentTrack"
-              [properties]="currentTrack.properties"
-              [conf]="currentLayer"
-            ></wm-track-edges>
-          </ng-container>
+      <wm-inner-component-html
+        *ngIf="popup$|async as popup;else noPopup"
+        [html]="popup.html"
+        [enableDismiss]="false"
+      ></wm-inner-component-html>
+      <ng-template #noPopup>
+        <ng-container *ngIf="poiProperties$|async as properties;">
+          <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+            <wm-poi-properties [properties]="properties"></wm-poi-properties>
+          </ion-content>
         </ng-container>
-        <ng-container *ngIf="(previewTrack$|async)">
-          <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
-            <wm-search-box
-              class="track-preview"
-              [data]="currentTrack|wmgetdata"
-              (clickEVT)="togglePreviewTrack()"
-            >
-            </wm-search-box>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="!(previewTrack$|async) &&currentTrack$|async as currentTrack">
-          <wm-track-properties [track]="currentTrack">
-            <ng-container *ngIf="currentTrack.properties as prop">
-              <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-                <div [innerHTML]="flowPopoverText"></div>
-              </ion-label>
-              <ng-container *ngIf="(confMap$|async).alert_poi_show">
-                <wm-tab-nearest-poi
-                  *ngIf="nearestPoi$|async as nearestPoi"
-                  [nearestPoi]="nearestPoi"
-                  (click)="setNearestPoi(nearestPoi)"
-                ></wm-tab-nearest-poi>
-              </ng-container>
-
-              <wm-slope-chart
-                [currentTrack]="currentTrack"
-                (hover)="setTrackElevationChartHoverElements($event)"
-              ></wm-slope-chart>
+        <ng-container *ngIf="!(poiProperties$|async);">
+          <ng-container *ngIf="currentLayer$|async as currentLayer">
+            <ng-container *ngIf="currentLayer.edges != null">
+              <wm-track-edges
+                *ngIf="currentTrack$|async as currentTrack"
+                [properties]="currentTrack.properties"
+                [conf]="currentLayer"
+              ></wm-track-edges>
             </ng-container>
-          </wm-track-properties>
+          </ng-container>
+          <ng-container *ngIf="(previewTrack$|async)">
+            <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
+              <wm-search-box
+                class="track-preview"
+                [data]="currentTrack|wmgetdata"
+                (clickEVT)="togglePreviewTrack()"
+              >
+              </wm-search-box>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!(previewTrack$|async) &&currentTrack$|async as currentTrack">
+            <wm-track-properties [track]="currentTrack">
+              <ng-container *ngIf="currentTrack.properties as prop">
+                <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
+                  <div [innerHTML]="flowPopoverText"></div>
+                </ion-label>
+                <ng-container *ngIf="(confMap$|async).alert_poi_show">
+                  <wm-tab-nearest-poi
+                    *ngIf="nearestPoi$|async as nearestPoi"
+                    [nearestPoi]="nearestPoi"
+                    (click)="setNearestPoi(nearestPoi)"
+                  ></wm-tab-nearest-poi>
+                </ng-container>
+
+                <wm-slope-chart
+                  [currentTrack]="currentTrack"
+                  (hover)="setTrackElevationChartHoverElements($event)"
+                ></wm-slope-chart>
+              </ng-container>
+            </wm-track-properties>
+          </ng-container>
         </ng-container>
-      </ng-container>
+      </ng-template>
 
       <ng-template #skeleton>
         <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
