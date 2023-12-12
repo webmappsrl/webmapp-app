@@ -1,9 +1,7 @@
 <div class="wm-homeintro-container">
   <ion-icon class="wm-homeintro-btnmenu" name="menu-outline" (click)="menuOpen()"></ion-icon>
 
-  <ion-label class="wm-homeintro-title">
-    {{title}}
-  </ion-label>
+  <wm-inner-component-html class="wm-homeintro-title" [html]="title"> </wm-inner-component-html>
 </div>
 
 <ion-menu side="start" menuId="appMenu" class="wm-sidemenu" contentId="main">

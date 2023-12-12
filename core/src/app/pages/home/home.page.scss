@@ -38,15 +38,13 @@ wm-page-home {
       }
     }
     .wm-home-header-container {
-      padding-top: 36px;
-      padding-bottom: 45px;
+      padding-top: 10px;
       display: block;
       ion-label {
         color: var(--wm-color-dark);
         display: block;
         font-size: var(--wm-font-xxxlg);
         font-weight: var(--wm-font-weight-bold);
-        padding: 30px 20px;
       }
 
       webmapp-search-bar {
