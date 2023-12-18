@@ -1,9 +1,9 @@
 @import 'src/theme/mixins.scss';
 downloaded-tracks-box {
-  margin-top: calc(126px + constant(safe-area-inset-top));
-  margin-top: calc(126px + env(safe-area-inset-top));
-  top: calc(126px + constant(safe-area-inset-top));
-  top: calc(126px + env(safe-area-inset-top));
+  margin-top: calc(146px + constant(safe-area-inset-top));
+  margin-top: calc(146px + env(safe-area-inset-top));
+  top: calc(146px + constant(safe-area-inset-top));
+  top: calc(146px + env(safe-area-inset-top));
   height: 100%;
 
   ion-text {
@@ -34,7 +34,7 @@ downloaded-tracks-box {
     }
   }
   .downloaded-tracks-box-content {
-    margin-top: calc(26px + env(safe-area-inset-top));
+    margin-top: calc(86px + env(safe-area-inset-top));
     box-sizing: border-box;
   }
 }

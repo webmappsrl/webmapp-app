@@ -6,7 +6,7 @@ export interface INetworkRootState {
   online: boolean;
 }
 const initialNetworkState: INetworkRootState = {
-  online: navigator.onLine,
+  online: true,
 };
 export const networkReducer = createReducer(
   initialNetworkState,

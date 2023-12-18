@@ -8,10 +8,10 @@ import {
 import {DomSanitizer} from '@angular/platform-browser';
 import {NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
-
+import {Network} from '@capacitor/network';
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, fromEvent, merge, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, from, merge, Observable, of, Subscription} from 'rxjs';
 import {debounceTime, map, startWith, take, tap} from 'rxjs/operators';
 
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
@@ -30,6 +30,8 @@ import {confAPP, confPROJECT} from 'wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
 import {IAPP, Filter, ILAYER} from 'wm-core/types/config';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
+import {NetworkService} from 'src/app/store/network/network.service';
+import {online} from 'src/app/store/network/network.selector';
 
 @Component({
   selector: 'wm-page-home',
@@ -46,12 +48,7 @@ export class HomePage implements OnDestroy {
   confAPP$: Observable<IAPP> = this._store.select(confAPP);
   goToHome$: Observable<any> = this._store.select(toggleHome);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  online$: Observable<boolean> = merge(
-    of(null),
-    fromEvent(window, 'online'),
-    fromEvent(window, 'offline'),
-  ).pipe(
-    map(() => navigator.onLine),
+  online$: Observable<boolean> = this._store.select(online).pipe(
     startWith(false),
     tap(online => {
       if (online) {
