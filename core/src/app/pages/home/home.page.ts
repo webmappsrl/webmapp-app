@@ -8,11 +8,10 @@ import {
 import {DomSanitizer} from '@angular/platform-browser';
 import {NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Network} from '@capacitor/network';
 import {ModalController, NavController} from '@ionic/angular';
 
-import {BehaviorSubject, from, merge, Observable, of, Subscription} from 'rxjs';
-import {debounceTime, map, startWith, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {debounceTime, startWith, take, tap} from 'rxjs/operators';
 
 import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
 import {
@@ -21,16 +20,14 @@ import {
   resetTrackFilters,
   setLayer,
   togglePoiFilter,
-  toggleTrackFilter,
   toggleTrackFilterByIdentifier,
 } from 'wm-core/store/api/api.actions';
 import {showResult} from 'wm-core/store/api/api.selector';
 import {loadConf} from 'wm-core/store/conf/conf.actions';
 import {confAPP, confPROJECT} from 'wm-core/store/conf/conf.selector';
 import {toggleHome} from 'src/app/store/map/map.selector';
-import {IAPP, Filter, ILAYER} from 'wm-core/types/config';
+import {IAPP, ILAYER} from 'wm-core/types/config';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
-import {NetworkService} from 'src/app/store/network/network.service';
 import {online} from 'src/app/store/network/network.selector';
 
 @Component({
@@ -111,16 +108,8 @@ export class HomePage implements OnDestroy {
     }
   }
 
-  removeFilter(filter: Filter): void {
-    this._store.dispatch(toggleTrackFilter({filter}));
-  }
-
   removeLayer(layer: any): void {
     this.setLayer(null);
-  }
-
-  removePoiFilter(filterIdentifier: string): void {
-    this._store.dispatch(togglePoiFilter({filterIdentifier}));
   }
 
   setFilter(filter: {identifier: string; taxonomy: string}): void {

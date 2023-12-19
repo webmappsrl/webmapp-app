@@ -23,8 +23,6 @@
       *ngIf="showResult$|async"
       (resetFiltersEVT)="goToHome()"
       (removeLayerEVT)="removeLayer($event)"
-      (removeTrackFilterEVT)="removeFilter($event)"
-      (removePoiFilterEVT)="removePoiFilter($event)"
     ></wm-status-filter>
     <wm-home-layer></wm-home-layer>
     <wm-home-result
