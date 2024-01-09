@@ -1,6 +1,10 @@
 wm-page-home {
   top: calc(56px + constant(safe-area-inset-top));
   top: calc(56px + env(safe-area-inset-top));
+  ion-content {
+    --padding-top: env(safe-area-inset-top);
+    --padding-bottom: env(safe-area-inset-bottom);
+  }
   ion-breadcrumbs,
   .layer-details {
     width: 90%;

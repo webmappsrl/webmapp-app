@@ -47,10 +47,6 @@
 @import url('https://fonts.googleapis.com/css?family=Manrope:500,700');
 @import url('https://fonts.googleapis.com/css?family=Sora:500,700');
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:500,700');
-ion-content {
-  --padding-top: env(safe-area-inset-top);
-  --padding-bottom: env(safe-area-inset-bottom);
-}
 
 * {
   font-family: var(--wm-font-family-content, inherit);

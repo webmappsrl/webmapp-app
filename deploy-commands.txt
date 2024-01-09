@@ -24,6 +24,7 @@ gulp build -i blubell -g 48
 gulp build -i pnfc -g 49
 gulp build -i motomappa -g 53
 gulp build -i carg -g 55
+gulp build -i oman -g 56
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio
