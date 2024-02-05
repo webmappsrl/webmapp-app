@@ -20,7 +20,7 @@ gulp build -i sardegna -g 32
 gulp build -i logos -g 34
 gulp build -i montepisano -g 41
 gulp build -i metallifere -g 44
-gulp build -i sic -g 45
+gulp build -i sit -g 45
 gulp build -i blubell -g 48
 gulp build -i pnfc -g 49
 gulp build -i motomappa -g 53
