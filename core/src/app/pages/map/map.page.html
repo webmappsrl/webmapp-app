@@ -17,6 +17,7 @@
         (colorSelectedFromLayerEVT)="trackColor$.next($event)"
         [wmMapFeatureCollection]="(wmMapFeatureCollectionOverlay$|async)!= null"
         [wmMapFeatureCollectionOverlay]="wmMapFeatureCollectionOverlay$|async"
+        [wmMapFeatureCollectionOverlayUnselect]="(resetSelectedPopup$|async)"
         [wmMapLayerDisableLayers]="(!(toggleLayerDirective$|async) && (currentLayer$|async)==null)"
         (wmMapFeatureCollectionLayerSelected)="selectedLayerById($event);wmap.wmMapCloseTopRightBtnsEVT$.emit('')"
         (wmMapFeatureCollectionPopup)="openPopup($event)"

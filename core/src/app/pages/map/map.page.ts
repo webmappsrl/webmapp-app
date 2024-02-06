@@ -8,11 +8,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
@@ -27,7 +25,6 @@ import {
   take,
   tap,
 } from 'rxjs/operators';
-
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
@@ -38,12 +35,9 @@ import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
 import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, padding} from 'src/app/store/map/map.selector';
-
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {LangService} from 'wm-core/localization/lang.service';
@@ -84,10 +78,12 @@ import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
 import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
 import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
+
 export interface IDATALAYER {
   high: string;
   low: string;
 }
+
 @Component({
   selector: 'webmapp-map-page',
   templateUrl: './map.page.html',
@@ -233,6 +229,7 @@ export class MapPage implements OnInit, OnDestroy {
   refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   slideOptions = {
     on: {
@@ -319,6 +316,7 @@ export class MapPage implements OnInit, OnDestroy {
   close(): void {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
+    this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
     const isCurrentPoi = this.currentRelatedPoi$.value != null || this.currentPoi$.value != null;
     if (isCurrentPoi) {
       this.currentRelatedPoi$.next(null);
@@ -428,7 +426,9 @@ export class MapPage implements OnInit, OnDestroy {
 
   openPopup(popup): void {
     this.popup$.next(popup);
-    this.mapTrackDetailsCmp.open();
+    if (popup != null) {
+      this.mapTrackDetailsCmp.open();
+    }
   }
 
   openTrackDownload(): void {
