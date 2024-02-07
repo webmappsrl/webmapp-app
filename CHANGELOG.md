@@ -1,5 +1,71 @@
 # Changelog
 
+## [2.7.0](https://github.com/webmappsrl/webmapp-app/compare/v2.6.1...v2.7.0) (2024-02-07)
+
+
+### Features
+
+* Add popup functionality to map page ([38b999e](https://github.com/webmappsrl/webmapp-app/commit/38b999efed09cd3e0cf1005e48564b5880491e8e))
+* Add release automation workflow ([004bc16](https://github.com/webmappsrl/webmapp-app/commit/004bc16781f50387128c0308fb1fd8df30dec87e))
+* Add support for exporting tracks to GeoJSON, KML, and GPX formats id:2214 ([04bf899](https://github.com/webmappsrl/webmapp-app/commit/04bf899d8bf060b049bd8ba17801a414181387fb))
+* Enable fullscreen mode for maps in track and waypoint detail pages ([a3a61a3](https://github.com/webmappsrl/webmapp-app/commit/a3a61a3c29bf13d07a4dcbacad0a213f970d996f))
+* **home:** add home layer ([5e485df](https://github.com/webmappsrl/webmapp-app/commit/5e485df7bb6082d84dbb4676e47a25893913324e))
+* **overlay:** ui deadline:82 ([9251930](https://github.com/webmappsrl/webmapp-app/commit/9251930e99040be43af23f72d2b10174e72e216b))
+* **register:** add waypoint button  id:2226 ([34dfade](https://github.com/webmappsrl/webmapp-app/commit/34dfade5d58398ff854d2da061b1c0eb455879b9))
+* **social-share:** add configurable text ([7544147](https://github.com/webmappsrl/webmapp-app/commit/75441472c46df96cca8536352b5aa81d2b290054))
+* update ([6d55ba5](https://github.com/webmappsrl/webmapp-app/commit/6d55ba58244485a1bf59b1d12a7f6f20b89fe76f))
+
+
+### Bug Fixes
+
+* **details:** close ([84c088d](https://github.com/webmappsrl/webmapp-app/commit/84c088dcb5d5001a79b1a848181117b9d3ea5969))
+* **downloadoffline_has_some_problem:** story 1641 ([89b0c6e](https://github.com/webmappsrl/webmapp-app/commit/89b0c6e97c371004e2d3ef48c0242559dfc95322))
+* **geolocation:** fix background geolocation ([52ebf01](https://github.com/webmappsrl/webmapp-app/commit/52ebf0144d3bd8e0a132ba20eafb75bed4b81c86))
+* **langs:** now set default langs ([d2cf1c9](https://github.com/webmappsrl/webmapp-app/commit/d2cf1c95575e8fde82c535a993417fa539eafdf8))
+* **map:** add current track to record ([fc431f0](https://github.com/webmappsrl/webmapp-app/commit/fc431f0066ad8fa53b848242ed0c7b4d8f38f685))
+* **map:** add logic to control layer opacity and open track details ([d33f275](https://github.com/webmappsrl/webmapp-app/commit/d33f275e98aee01a1f650de08460e4e07ed2495f))
+* **map:** missed icons ([424c59a](https://github.com/webmappsrl/webmapp-app/commit/424c59a6a09ae712cc55f638dc30d86c694b5749))
+* **modal-success:** navigate forward by key ([4ffb840](https://github.com/webmappsrl/webmapp-app/commit/4ffb8409c81d243ce9972cadd43b3d03b152c927))
+* **page/home:** remove handling set filter ([cf4a1dc](https://github.com/webmappsrl/webmapp-app/commit/cf4a1dce372c1a38212d779125bd7f4f8b45c8a2))
+* **profile_shift:** implements ([#1](https://github.com/webmappsrl/webmapp-app/issues/1)) ([7d55c66](https://github.com/webmappsrl/webmapp-app/commit/7d55c6664d48ab12a4e734aa787b1aa7e5095217))
+* **sunc/offline:** fix media sync ([bdc9c40](https://github.com/webmappsrl/webmapp-app/commit/bdc9c40a73df0b984a92bab48713947b8c268cca))
+* **sync/offline:** fix tracks&pois sync ([f651b49](https://github.com/webmappsrl/webmapp-app/commit/f651b4970f8b42fe8d46f7e976ade0381010d8b2))
+* waypoint button ([c8b19f6](https://github.com/webmappsrl/webmapp-app/commit/c8b19f603e9c040e66e8cf82ee2edb5fb0e9ec6d))
+
+
+### Miscellaneous
+
+* Add deploy command for motomappa ([0475fc2](https://github.com/webmappsrl/webmapp-app/commit/0475fc20986c1e634d6132daea9e99e639748a9a))
+* Add release-please configuration file ([8cf2be7](https://github.com/webmappsrl/webmapp-app/commit/8cf2be7edd248735ff1947c1f988a06848432788))
+* **dotenv:** add dotenv ([abba2d1](https://github.com/webmappsrl/webmapp-app/commit/abba2d1661f7f1bc1f999011e4045a0950798e07))
+* **inner-component:** add wm core inner components remove useless code ([cacb6e9](https://github.com/webmappsrl/webmapp-app/commit/cacb6e96493554af9f987b33ddd776cae3dffcb9))
+* **profile:** add app version ([5f6eea1](https://github.com/webmappsrl/webmapp-app/commit/5f6eea1144821494266eba1c7d767ff62bcb39ed))
+* Remove home module and component ([c06592b](https://github.com/webmappsrl/webmapp-app/commit/c06592be228463a113f6eddb91a4b801522d20e3))
+* Remove unnecessary code in release_please.yml ([aff70fc](https://github.com/webmappsrl/webmapp-app/commit/aff70fc4b7a92208092fc06b6e8d1c452b82ad7b))
+* Remove unnecessary import in home.module.ts ([f92e770](https://github.com/webmappsrl/webmapp-app/commit/f92e7706b8a7565cb4a24846e9cdb67fd37658c4))
+* Remove unnecessary ngIf condition in map.page.html id: 2227 ([7251398](https://github.com/webmappsrl/webmapp-app/commit/725139820fbcdda1e74c7daa46c87f30c024f9b7))
+* Remove unused code and dependencies in search-bar and home.page components ([c3a2bed](https://github.com/webmappsrl/webmapp-app/commit/c3a2beda6a33089ac1b2bb3d4ca981aa42b085f4))
+* Remove unused code in home page ([94834da](https://github.com/webmappsrl/webmapp-app/commit/94834daf3a2c52b2519ceb9ef6466d3bc7fb9292))
+* remove useless file ([d74087e](https://github.com/webmappsrl/webmapp-app/commit/d74087e2ba27c6e97217c46da841a8db9dafdb7d))
+* Update @dwayneparton/geojson-to-gpx version to ^0.0.30 in package-lock.json ([6c29832](https://github.com/webmappsrl/webmapp-app/commit/6c29832834a9d2146f92a565eac479a73669b8d9))
+* Update dependencies and Android platform versions ([6c29832](https://github.com/webmappsrl/webmapp-app/commit/6c29832834a9d2146f92a565eac479a73669b8d9))
+* update deploy commands ([7858417](https://github.com/webmappsrl/webmapp-app/commit/78584174c9545cc3e399522cf430147f78684589))
+* Update deploy-messages.txt ([1f39225](https://github.com/webmappsrl/webmapp-app/commit/1f392255ecd82065970c35eab8ccca131be14e3f))
+* Update deploy-messages.txt and gulpfile.js ([c858d6c](https://github.com/webmappsrl/webmapp-app/commit/c858d6c494125930b38df407f6879c7414763b20))
+* Update downloaded-tracks-box.component.scss, home.page.ts, network.service.ts, and netwotk.reducer.ts ([99261d9](https://github.com/webmappsrl/webmapp-app/commit/99261d911f521dc4f784bd5379f676ba945b8726))
+* Update form component and waypoint detail page styles id: 2213 ([c6985b6](https://github.com/webmappsrl/webmapp-app/commit/c6985b674bd8d63820e60a660ae59cb2166a7421))
+* Update form component template and styles id:2141 ([33fd91b](https://github.com/webmappsrl/webmapp-app/commit/33fd91bc12339b8171e9ff8beae12c726b974949))
+* Update form.component.html id: 2142 ([627b820](https://github.com/webmappsrl/webmapp-app/commit/627b820cc4601f34dfbee9bd34f2c55af286d923))
+* Update global.scss ([d52a5c2](https://github.com/webmappsrl/webmapp-app/commit/d52a5c2762e9f0e192be9b7f2db0477eb0da92a4))
+* Update home page styling and deployment commands ([7c925ae](https://github.com/webmappsrl/webmapp-app/commit/7c925aeae05c42bf3c2c39bff890dffa3be5c61f))
+* Update home page styling st:2242 ([c5c2129](https://github.com/webmappsrl/webmapp-app/commit/c5c21291f077eab1903be3b9aeb2b27e65ceaaa2))
+* Update map page HTML and TypeScript files oc:1932,1925 ([5f6716b](https://github.com/webmappsrl/webmapp-app/commit/5f6716bc35f5a6ab919af9cbe5107733537bf79a))
+* update min sdk ([84de014](https://github.com/webmappsrl/webmapp-app/commit/84de0147c564e0acb38e048f11146efe9088f07b))
+* Update minSdkVersion in Android platform ([59ab2b5](https://github.com/webmappsrl/webmapp-app/commit/59ab2b5ee8f1127ab1e28f411e0483ad75fc7b6d))
+* Update package version to 2.1.51 ([c2f8753](https://github.com/webmappsrl/webmapp-app/commit/c2f8753f1a4073d4e7f18e9582fe94ea097cff65))
+* Update subproject commit reference ([e8fee34](https://github.com/webmappsrl/webmapp-app/commit/e8fee34a17816d326531734c4f0d2fe66ec0828c))
+* Update version object in gulpfile.js ([d865f5d](https://github.com/webmappsrl/webmapp-app/commit/d865f5d6b10697e698268b50f212d4d70f2ead3a))
+
 ## [2.6.1](https://github.com/webmappsrl/webmapp-app/compare/v2.6.0...v2.6.1) (2024-02-05)
 
 
