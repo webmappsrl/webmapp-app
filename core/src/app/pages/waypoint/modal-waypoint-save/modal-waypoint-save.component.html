@@ -26,7 +26,7 @@
         {{  nominatim?.display_name  | wmtrans }}
       </ion-label>
     </ion-item>
-    <wm-form [confPOIFORMS]="confPOIFORMS$|async" (formGroupEvt)="fg = $event"></wm-form>
+    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event"></wm-form>
     <webmapp-form-field
       [icon]="'webmapp-icon-camera'"
       [iconColor]="'secondary'"

@@ -12,7 +12,7 @@ import {Location} from 'src/app/types/location';
 import {Store} from '@ngrx/store';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {ActivatedRoute, Router} from '@angular/router';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
+import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -23,6 +23,7 @@ export class WaypointPage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   confMap$: Observable<any> = this._store.select(confMAP);
+  confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> = new BehaviorSubject(null);
   location: Location;
   locationString: string;
@@ -80,6 +81,7 @@ export class WaypointPage implements OnInit, OnDestroy {
       componentProps: {
         position: this.location,
         nominatim: this.nominatimObj$.value,
+        acquisitionFORM$: this.confPOIFORMS$,
       },
     });
 

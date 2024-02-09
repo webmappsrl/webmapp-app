@@ -19,8 +19,8 @@ import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
   encapsulation: ViewEncapsulation.None,
 })
 export class ModalWaypointSaveComponent implements OnInit {
+  acquisitionFORM$: Observable<any[]>;
   confMap$: Observable<any> = this._store.select(confMAP);
-  confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   description: string;
   displayPosition: Location;
   fg: UntypedFormGroup;
