@@ -1,7 +1,7 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
-
+import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {Store} from '@ngrx/store';
@@ -17,13 +17,19 @@ import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
-import {confLANGUAGES, confMAP, confTHEMEVariables} from 'wm-core/store/conf/conf.selector';
+import {
+  confGEOLOCATION,
+  confLANGUAGES,
+  confMAP,
+  confTHEMEVariables,
+} from 'wm-core/store/conf/conf.selector';
 import {loadConf} from 'wm-core/store/conf/conf.actions';
 import {loadPois, query} from 'wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
 import {AuthService} from './services/auth.service';
 import {poisInitFeatureCollection} from 'wm-core/store/api/api.selector';
 import {WmLoadingService} from 'wm-core/services/loading.service';
+import {IGEOLOCATION} from 'wm-core/types/config';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -33,6 +39,7 @@ import {WmLoadingService} from 'wm-core/services/loading.service';
   providers: [LangService],
 })
 export class AppComponent {
+  confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
   public image_gallery: any[];
   public photoIndex: number = 0;
@@ -90,6 +97,15 @@ export class AppComponent {
         this.saveGeneratedContentsNowAndInterval();
         this.router.navigate(['home']);
         SplashScreen.hide();
+        const keepAwake =
+          (localStorage.getItem('wm-keep-awake') != 'false' &&
+            localStorage.getItem('wm-keep-awake') != null) ||
+          false;
+        if (keepAwake) {
+          KeepAwake.keepAwake();
+        } else {
+          KeepAwake.allowSleep();
+        }
       },
       err => {
         SplashScreen.hide();
@@ -114,6 +130,17 @@ export class AppComponent {
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
     });
+    const currentDistanceFilter = +localStorage.getItem('wm-distance-filter');
+    if (currentDistanceFilter === 0) {
+      this.confGEOLOCATION$
+        .pipe(
+          filter(v => v != null),
+          take(1),
+        )
+        .subscribe(conf => {
+          localStorage.setItem('wm-distance-filter', `${conf.gps_accuracy_default}`);
+        });
+    }
   }
 
   closePhoto() {

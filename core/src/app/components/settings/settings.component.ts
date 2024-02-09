@@ -2,9 +2,9 @@ import {KeyValue} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {Observable, forkJoin, zip} from 'rxjs';
+import {Observable} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
-
+import {KeepAwake} from '@capacitor-community/keep-awake';
 import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
@@ -31,13 +31,18 @@ export class SettingsComponent implements OnInit {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPages$: Observable<any> = this._store.select(confPAGES);
   confProject$: Observable<any> = this._store.select(confPROJECT);
-  currentDistanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
+  currentDistanceFilter = +(localStorage.getItem('wm-distance-filter') || 10);
   gpsAccuracy = {
     5: 'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria',
     10: 'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria',
     20: 'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria',
+    100: 'precisione su mezzi di locomozione, consumo minimo della batteria',
   };
   isLoggedIn: boolean;
+  keepAwake =
+    (localStorage.getItem('wm-keep-awake') != 'false' &&
+      localStorage.getItem('wm-keep-awake') != null) ||
+    false;
   langs$ = this._store.select(confLANGUAGES);
   public version = '0.0.0';
 
@@ -59,6 +64,16 @@ export class SettingsComponent implements OnInit {
   changeDistanceFilter(event): void {
     this.currentDistanceFilter = event.detail.value;
     localStorage.setItem('wm-distance-filter', `${this.currentDistanceFilter}`);
+  }
+
+  changeKeepAwake(event): void {
+    this.keepAwake = event.detail.checked;
+    if (this.keepAwake) {
+      KeepAwake.keepAwake();
+    } else {
+      KeepAwake.allowSleep();
+    }
+    localStorage.setItem('wm-keep-awake', `${this.keepAwake}`);
   }
 
   async dismiss(): Promise<void> {

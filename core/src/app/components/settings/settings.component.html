@@ -46,6 +46,15 @@
       </ion-item>
       <br />
     </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>{{'rimani acceso'|wmtrans}}</ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-label>{{'forza il dispositivo a non spegnersi'}}</ion-label>
+        <ion-toggle [checked]="keepAwake" (ionChange)="changeKeepAwake($event)"></ion-toggle>
+      </ion-item>
+    </ion-item-group>
   </ion-list>
   <ion-item-divider>
     <ion-label>{{'PAGINE'|wmtrans}}</ion-label>

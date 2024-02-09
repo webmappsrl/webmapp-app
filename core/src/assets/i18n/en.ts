@@ -597,4 +597,8 @@ export const appEN = {
     'the distance expressed in meters which indicates the cadence of position detection, the lower the distance filter, the higher the battery consumption will be.',
   'PAGINE': 'PAGES',
   'metri': 'meters',
+  'precisione su mezzi di locomozione, consumo minimo della batteria':
+    'precision on means of transport, minimum battery consumption',
+  'rimani acceso': 'stay lit',
+  'forza il dispositivo a non spegnersi': 'forces the device not to turn off',
 };
