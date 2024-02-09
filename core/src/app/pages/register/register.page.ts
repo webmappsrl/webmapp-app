@@ -25,7 +25,7 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
+import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -40,6 +40,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   actualSpeed: number = 0;
   averageSpeed: number = 0;
   confMap$: Observable<any> = this._store.select(confMAP);
+  confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
   currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> = new BehaviorSubject(null);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -72,6 +73,9 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
   ) {
+    this._platform.backButton.subscribeWithPriority(5, () => {
+      this.backToMap();
+    });
     this._route.queryParams.subscribe(_ => {
       if (this._router.getCurrentNavigation().extras.state) {
         const state = this._router.getCurrentNavigation().extras.state;
@@ -211,6 +215,9 @@ export class RegisterPage implements OnInit, OnDestroy {
 
     const modal = await this._modalCtrl.create({
       component: ModalSaveComponent,
+      componentProps: {
+        acquisitionFORM$: this.confTRACKFORMS$,
+      },
     });
     await modal.present();
     const res = await modal.onDidDismiss();

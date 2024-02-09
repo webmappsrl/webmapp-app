@@ -5,6 +5,8 @@ import {ITrack} from 'src/app/types/track';
 import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
+import {Observable} from 'rxjs';
+import {UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -12,9 +14,11 @@ import {activities} from 'src/app/constants/activities';
   styleUrls: ['./modal-save.component.scss'],
 })
 export class ModalSaveComponent implements OnInit {
+  acquisitionFORM$: Observable<any[]>;
   public activities = activities;
   public activity: string;
   public description: string;
+  fg: UntypedFormGroup;
   public isValidArray: boolean[] = [false, false];
   public photos: any[] = [];
   public title: string;
@@ -28,6 +32,14 @@ export class ModalSaveComponent implements OnInit {
     private _photoService: PhotoService,
     private actionSheetController: ActionSheetController,
   ) {}
+
+  ngOnInit() {
+    if (this.track) {
+      this.title = this.track.title;
+      this.description = this.track.description;
+      this.activity = this.track.activity;
+    }
+  }
 
   async addPhotos() {
     const library = await this._photoService.getPhotos();
@@ -151,14 +163,6 @@ export class ModalSaveComponent implements OnInit {
     return allValid;
   }
 
-  ngOnInit() {
-    if (this.track) {
-      this.title = this.track.title;
-      this.description = this.track.description;
-      this.activity = this.track.activity;
-    }
-  }
-
   remove(image: IPhotoItem) {
     const i = this.photos.findIndex(
       x => x.photoURL === image.photoURL || (!!x.key && !!image.key && x.key === image.key),
@@ -169,16 +173,14 @@ export class ModalSaveComponent implements OnInit {
   }
 
   save() {
-    if (!this.isValid()) {
+    if (this.fg.invalid) {
       return;
     }
     const trackData: ITrack = {
       photos: this.photos,
       photoKeys: null,
-      title: this.title,
-      description: this.description,
-      activity: this.activity,
       date: new Date(),
+      ...this.fg.value,
     };
     this.backToSuccess(trackData);
   }

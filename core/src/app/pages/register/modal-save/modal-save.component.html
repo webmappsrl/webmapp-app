@@ -22,49 +22,7 @@
 
 <ion-content>
   <ion-list>
-    <webmapp-form-field
-      [required]="true"
-      [(value)]="title"
-      [icon]="'icon-outline-list'"
-      [iconColor]="'secondary'"
-      [label]="'pages.register.modalsave.formtitle'"
-      [placeholder]="'pages.register.modalsave.formtitleplaceholder'"
-      [error]="'pages.register.modalsave.formtitleerror'"
-      [validate]="validate"
-      (validChange)="setIsValid(0,$event)"
-    ></webmapp-form-field>
-
-    <webmapp-form-field
-      [required]="true"
-      [(value)]="activity"
-      [icon]="'icon-outline-activities'"
-      [iconColor]="'primary'"
-      [label]="'pages.register.modalsave.formactivity'"
-      [error]="'pages.register.modalsave.formactivityerror'"
-      [validate]="validate"
-      (validChange)="setIsValid(1,$event)"
-    >
-      <ion-select
-        class="webmapp-register-modalsave-select"
-        [(ngModel)]="activity"
-        placeholder="{{'pages.register.modalsave.formactivityplaceholder'|wmtrans}}"
-      >
-        <ion-select-option
-          *ngFor="let activity of activities"
-          [value]="activity"
-          >{{'activities.'+ activity | wmtrans}}</ion-select-option
-        >
-      </ion-select>
-    </webmapp-form-field>
-
-    <webmapp-form-field
-      [(value)]="description"
-      [icon]="'webmapp-icon-document'"
-      [iconColor]="'tertiary'"
-      [label]="'pages.register.modalsave.formdescription'"
-      [placeholder]="'pages.register.modalsave.formdescriptionplaceholder'"
-      [textArea]="true"
-    ></webmapp-form-field>
+    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event"></wm-form>
 
     <webmapp-form-field
       [icon]="'webmapp-icon-camera'"
