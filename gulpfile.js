@@ -1021,7 +1021,7 @@ function updateIosPlatform(instanceName, appId, appName) {
       NSLocationAlwaysAndWhenInUseUsageDescription:
         'The app require access to your location even when the screen is off to let you record a new path in the most precise way possible',
       NSLocationWhenInUseUsageDescription:
-        'The app require access to your location when the screen is on and the app is open to locate you in the map',
+        'Our app uses your location to provide you with accurate navigation directions and personalized suggestions based on your current location when the app is open. This helps us enhance your experience by offering content and services relevant to your location',
       NSMicrophoneUsageDescription:
         'The app require access to your microphone to use the camera properly',
       NSMotionUsageDescription:
