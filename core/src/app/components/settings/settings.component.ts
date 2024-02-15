@@ -23,7 +23,6 @@ import {
   selector: 'wm-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
-  providers: [LangService],
 })
 export class SettingsComponent implements OnInit {
   confCredits$: Observable<any> = this._store.select(confCREDITS);

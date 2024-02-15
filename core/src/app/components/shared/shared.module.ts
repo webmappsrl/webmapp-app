@@ -49,7 +49,6 @@ const components = [
     WmPipeModule,
     ButtonsModule,
     WmSharedModule,
-    WmCoreModule,
   ],
   exports: [...components, ButtonsModule],
 })

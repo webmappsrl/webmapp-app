@@ -16,7 +16,6 @@ import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
-  providers: [LangService],
   encapsulation: ViewEncapsulation.None,
 })
 export class ProfilePage implements OnInit, OnDestroy {
