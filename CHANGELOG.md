@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.8.1](https://github.com/webmappsrl/webmapp-app/compare/v2.8.0...v2.8.1) (2024-02-20)
+
+
+### Miscellaneous
+
+* **deploy-commands:** updated ([6278031](https://github.com/webmappsrl/webmapp-app/commit/627803168adc54acb2132c1fe25d7008f4b57831))
+* enable save to gallery ([a946677](https://github.com/webmappsrl/webmapp-app/commit/a94667780865bc8e6a4f6f8b3ad996785611fab9))
+* **gulpfile:** updated ([5388bab](https://github.com/webmappsrl/webmapp-app/commit/5388babd4ef55ea31c4167408a8c8db5b265f92f))
+* Refactor cgeojson-feature.ts ([46f48d4](https://github.com/webmappsrl/webmapp-app/commit/46f48d41434f9bb3556d5a13d4e4bdad9c749486))
+* Remove LangService provider from settings and profile components ([1b4b278](https://github.com/webmappsrl/webmapp-app/commit/1b4b278f5d20cb649d183f0de64b0f3e71af1bf2))
+
 ## [2.8.0](https://github.com/webmappsrl/webmapp-app/compare/v2.7.0...v2.8.0) (2024-02-12)
 
 
