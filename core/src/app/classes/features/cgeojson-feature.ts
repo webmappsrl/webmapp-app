@@ -3,6 +3,15 @@ import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import {IGeojsonFeature, IGeojsonGeometry, IGeojsonProperties} from 'src/app/types/model';
 
+export interface IMarker {
+  icon: Feature<Geometry>;
+  id: string;
+}
+
+export interface IPoiMarker extends IMarker {
+  poi: IGeojsonFeature;
+}
+
 export abstract class CGeojsonFeature implements IGeojsonFeature {
   protected _geometry: IGeojsonGeometry;
   protected _properties: IGeojsonProperties;
@@ -40,6 +49,9 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
   }
 
   addProperties(properties: any): void {
+    if (typeof properties === 'string') {
+      properties = JSON.parse(properties);
+    }
     this._properties = {...this._properties, ...properties};
   }
 
@@ -48,13 +60,4 @@ export abstract class CGeojsonFeature implements IGeojsonFeature {
   }
 
   abstract setGeometry(geometry: IGeojsonGeometry): void;
-}
-
-export interface IMarker {
-  icon: Feature<Geometry>;
-  id: string;
-}
-
-export interface IPoiMarker extends IMarker {
-  poi: IGeojsonFeature;
 }
