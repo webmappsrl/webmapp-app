@@ -30,8 +30,6 @@ export interface IPhotoItem extends IRegisterItem {
   rawData?: string;
 }
 
-export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -283,7 +281,7 @@ export class PhotoService {
       quality: 90,
       // allowEditing: true,
       resultType: CameraResultType.Uri,
-      // saveToGallery: true, //boolean	Whether to save the photo to the gallery. If the photo was picked from the gallery, it will only be saved if edited. Default: false
+      saveToGallery: true, //boolean	Whether to save the photo to the gallery. If the photo was picked from the gallery, it will only be saved if edited. Default: false
       // width: 10000,//	number	The width of the saved image
       // height: 10000,//	number	The height of the saved image
       // preserveAspectRatio: true, //	boolean	Whether to preserve the aspect ratio of the image.If this flag is true, the width and height will be used as max values and the aspect ratio will be preserved.This is only relevant when both a width and height are passed.When only width or height is provided the aspect ratio is always preserved(and this option is a no- op).A future major version will change this behavior to be default, and may also remove this option altogether.Default: false
@@ -309,3 +307,5 @@ export class PhotoService {
     return res;
   }
 }
+
+export const UGC_MEDIA_DIRECTORY: string = 'ugc_media';
