@@ -15,7 +15,7 @@ import {ModalSuccessComponent} from '../../components/modal-success/modal-succes
 import {SaveService} from 'src/app/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
 import {Location} from '@capacitor-community/background-geolocation';
@@ -35,6 +35,7 @@ import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPage implements OnInit, OnDestroy {
+  private _backBtnSub$: Subscription = Subscription.EMPTY;
   private _timerInterval: any;
 
   actualSpeed: number = 0;
@@ -73,9 +74,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
   ) {
-    this._platform.backButton.subscribeWithPriority(5, () => {
-      this.backToMap();
-    });
     this._route.queryParams.subscribe(_ => {
       if (this._router.getCurrentNavigation().extras.state) {
         const state = this._router.getCurrentNavigation().extras.state;
@@ -111,7 +109,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     this._geolocationSvc.onLocationChange.subscribe(() => {
       this.updateMap();
     });
-
     this.checkRecording();
   }
 
@@ -147,6 +144,11 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   ionViewDidEnter(): void {
     this._geolocationSvc.start();
+    this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {});
+  }
+
+  ionViewWillLeave(): void {
+    this._backBtnSub$.unsubscribe();
   }
 
   async openModalSuccess(track) {
