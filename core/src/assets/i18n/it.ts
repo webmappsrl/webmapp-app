@@ -499,7 +499,7 @@ export const appIT = {
       'title': 'Tracce registrate',
     },
     'waypoint': {
-      'here': 'Ti trovi qui:',
+      'here': 'Ti trovi qui',
       'modalsave': {
         'formdescription': 'Descrizione',
         'formdescriptionplaceholder': 'Se vuoi puoi aggiungere una descrizione',

@@ -21,18 +21,14 @@
     [track]="currentTrack$|async"
   ></wm-map>
 
-  <ion-card class="webmapp-pagewaypoint-infopanel">
+  <ion-card class="webmapp-pagewaypoint-infopanel" *ngIf="this.nominatimObj$|async as nominatimObj">
     <div class="webmapp-pagewaypoint-infopanel-top">
-      <div class="webmapp-pagewaypoint-infopanel-top-title">
+      <div class="webmapp-pagewaypoint-infopanel-top-title center">
         {{'pages.waypoint.here' | wmtrans}}
       </div>
     </div>
-    <div
-      class="webmapp-pagewaypoint-infopanel-bottom"
-      *ngIf="this.nominatimObj$|async as nominatimObj"
-    >
+    <div class="webmapp-pagewaypoint-infopanel-bottom">
       <div class="webmapp-pagewaypoint-infopanel-bottom-title">{{nominatimObj.display_name}}</div>
-      <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{position2}}</div>
       <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{locationString}}</div>
     </div>
   </ion-card>

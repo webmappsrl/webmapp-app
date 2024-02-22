@@ -20,10 +20,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event"></wm-form>
-
+<ion-list>
+  <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event">
     <webmapp-form-field
       [icon]="'webmapp-icon-camera'"
       [iconColor]="'secondary'"
@@ -31,68 +29,70 @@
       [noline]="true"
       ><span></span
     ></webmapp-form-field>
-  </ion-list>
+    <ion-grid>
+      <ion-row *ngIf="!photos?.length && !track">
+        <ion-col size="12">
+          <div class="webmapp-register-modalsave-loadphoto-wrapper">
+            <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
+              <div class="webmapp-register-modalsave-loadphoto-text">
+                <div class="webmapp-register-modalsave-loadphoto-action">
+                  {{ "pages.register.modalsave.photoaction" | wmtrans }}
+                </div>
+                {{ "pages.register.modalsave.phototext" | wmtrans }}
+              </div>
+              <div class="webmapp-register-modalsave-loadphoto-advice">
+                {{ "pages.register.modalsave.photoadvice" | wmtrans }}
+              </div>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
 
-  <ion-grid>
-    <ion-row *ngIf="!photos?.length && !track">
-      <ion-col size="12">
-        <div class="webmapp-register-modalsave-loadphoto-wrapper">
-          <div class="webmapp-register-modalsave-loadphoto" (click)="addPhotos()">
+      <ion-row>
+        <ion-col size="4" *ngIf="photos?.length && !track">
+          <div
+            class="webmapp-register-modalsave-imagecontainer
+                webmapp-register-modalsave-addimagecontainer
+                webmapp-register-modalsave-loadphoto"
+            (click)="addPhotos()"
+          >
             <div class="webmapp-register-modalsave-loadphoto-text">
               <div class="webmapp-register-modalsave-loadphoto-action">
-                {{ "pages.register.modalsave.photoaction" | wmtrans }}
+                {{ "pages.register.modalsave.photoactionshort" | wmtrans }}
               </div>
-              {{ "pages.register.modalsave.phototext" | wmtrans }}
+              {{ "pages.register.modalsave.phototextshort" | wmtrans }}
             </div>
             <div class="webmapp-register-modalsave-loadphoto-advice">
-              {{ "pages.register.modalsave.photoadvice" | wmtrans }}
+              {{ "pages.register.modalsave.photoadviceshort" | wmtrans }}
             </div>
           </div>
-        </div>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="4" *ngIf="photos?.length && !track">
-        <div
-          class="            webmapp-register-modalsave-imagecontainer
-            webmapp-register-modalsave-addimagecontainer
-            webmapp-register-modalsave-loadphoto
-          "
-          (click)="addPhotos()"
-        >
-          <div class="webmapp-register-modalsave-loadphoto-text">
-            <div class="webmapp-register-modalsave-loadphoto-action">
-              {{ "pages.register.modalsave.photoactionshort" | wmtrans }}
-            </div>
-            {{ "pages.register.modalsave.phototextshort" | wmtrans }}
+        </ion-col>
+        <ion-col size="4" *ngFor="let image of photos">
+          <div class="webmapp-register-modalsave-imagecontainer">
+            <ion-icon
+              name="close-outline"
+              class="webmapp-register-modalsave-remove"
+              (click)="remove(image)"
+            >
+            </ion-icon>
+            <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
+            <ion-img
+              class="webmapp-register-modalsave-image"
+              [src]="image?.rawData ? image?.rawData : image?.datasrc"
+            ></ion-img>
           </div>
-          <div class="webmapp-register-modalsave-loadphoto-advice">
-            {{ "pages.register.modalsave.photoadviceshort" | wmtrans }}
-          </div>
-        </div>
-      </ion-col>
-      <ion-col size="4" *ngFor="let image of photos">
-        <div class="webmapp-register-modalsave-imagecontainer">
-          <ion-icon
-            name="close-outline"
-            class="webmapp-register-modalsave-remove"
-            (click)="remove(image)"
-          >
-          </ion-icon>
-          <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-          <ion-img
-            class="webmapp-register-modalsave-image"
-            [src]="image?.rawData ? image?.rawData : image?.datasrc"
-          ></ion-img>
-        </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </wm-form>
+</ion-list>
 
 <ion-footer class="webmapp-register-modalsave-footer">
-  <ion-button class="webmapp-register-modalsave-savebtn" (click)="save()">
+  <ion-button
+    class="webmapp-register-modalsave-savebtn"
+    (click)="save()"
+    [disabled]="fg ==null || (fg!=null &&fg.invalid)"
+  >
     {{ "pages.register.modalsave.savebtn" | wmtrans }}</ion-button
   >
 

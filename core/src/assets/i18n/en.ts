@@ -500,7 +500,7 @@ export const appEN = {
       'title': 'Tracks recorded',
     },
     'waypoint': {
-      'here': 'You are here:',
+      'here': 'You are here',
       'modalsave': {
         'formdescription': 'Description',
         'formdescriptionplaceholder': 'If you want you can add a description',

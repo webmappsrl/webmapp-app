@@ -8,7 +8,6 @@
   border-radius: 15px;
   .webmapp-pagewaypoint-infopanel-top {
     border-bottom: 1px solid var(--wm-color-lightgray);
-    // text-align: center;
     padding: 17px;
     .webmapp-pagewaypoint-infopanel-top-title {
       font-weight: var(--wm-font-weight-bold);
@@ -28,7 +27,9 @@
     }
   }
 }
-
+.center {
+  text-align: center;
+}
 .webmapp-pagewaypoint-savebtn {
   z-index: 1;
   position: absolute;

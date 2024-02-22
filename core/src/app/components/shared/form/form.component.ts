@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {BehaviorSubject} from 'rxjs';
+import {distinctUntilChanged, filter} from 'rxjs/operators';
 
 @Component({
   selector: 'wm-form',
@@ -17,36 +18,62 @@ import {BehaviorSubject} from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class WmFormComponent {
+  private _currentFormId = 0;
+
   @Input() set confPOIFORMS(forms: any[]) {
     this.forms$.next(forms);
-    this.setForm();
+    if (forms.length === 1) {
+      this.formIdGroup.controls['id'].setValue(0);
+    }
   }
-  @Input() disabled = false;
+
+  @Input() set formId(id: any) {
+    this.setForm(id, this.forms$.value[id]);
+  }
 
   @Input() set init(values) {
     if (values != null) {
       this.setForm(values.index, values);
     }
   }
-  @Input() set formId(id: any) {
-    this.setForm(id, this.forms$.value[id]);
-  }
 
   get formId() {
     return this._currentFormId;
   }
 
-  currentForm$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  @Input() disabled = false;
   @Output() formGroupEvt: EventEmitter<UntypedFormGroup> = new EventEmitter<UntypedFormGroup>();
+
+  currentForm$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  enableForm$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   formGroup: UntypedFormGroup;
+  formIdGroup: UntypedFormGroup;
   forms$: BehaviorSubject<any[]> = new BehaviorSubject<any>([]);
-  private _currentFormId = 0;
-  constructor(private _fb: UntypedFormBuilder) {}
+
+  constructor(private _fb: UntypedFormBuilder) {
+    this.formIdGroup = this._fb.group({
+      id: [null, [Validators.required]],
+    });
+    this.formIdGroup.valueChanges
+      .pipe(
+        filter(form => form != null && form.id != null),
+        distinctUntilChanged((prev, curr) => prev.id === curr.id),
+      )
+      .subscribe(form => {
+        this.enableForm$.next(false);
+        if (form.id != null) {
+          this.setForm(form.id);
+          this.enableForm$.next(true);
+        }
+      });
+  }
 
   setForm(idx = 0, values?: any): void {
     this._currentFormId = idx;
+    this.formIdGroup.controls['id'].setValue(idx);
     this.currentForm$.next(this.forms$.value[idx]);
     let formObj = {};
+
     this.currentForm$.value.fields.forEach(field => {
       const validators = [];
       if (field.required) {

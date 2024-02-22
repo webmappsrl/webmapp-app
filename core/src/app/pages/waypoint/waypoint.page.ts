@@ -28,8 +28,6 @@ export class WaypointPage implements OnInit, OnDestroy {
   location: Location;
   locationString: string;
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);
-  position1: string = 'nome città';
-  position2: string = 'indirizzo';
 
   constructor(
     private _geolocationSvc: GeolocationService,
