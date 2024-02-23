@@ -8,8 +8,8 @@ import {
 import {DomSanitizer} from '@angular/platform-browser';
 import {NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {ModalController, NavController} from '@ionic/angular';
-
+import {ModalController, NavController, Platform} from '@ionic/angular';
+import {App} from '@capacitor/app';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, startWith, take, tap} from 'rxjs/operators';
 
@@ -38,6 +38,7 @@ import {online} from 'src/app/store/network/network.selector';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage implements OnDestroy {
+  private _backBtnSub$: Subscription = Subscription.EMPTY;
   private _goToHomeSub: Subscription = Subscription.EMPTY;
 
   @ViewChild('searchCmp') searchCmp: SearchBarComponent;
@@ -59,6 +60,7 @@ export class HomePage implements OnDestroy {
     private _store: Store<any>,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
+    private _platform: Platform,
     public sanitizer: DomSanitizer,
   ) {
     this._goToHomeSub = this.goToHome$.pipe(debounceTime(300)).subscribe(() => {
@@ -77,6 +79,16 @@ export class HomePage implements OnDestroy {
       this.searchCmp.reset();
     } catch (_) {}
     this._navCtrl.navigateForward('home');
+  }
+
+  ionViewDidEnter(): void {
+    this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {
+      App.exitApp();
+    });
+  }
+
+  ionViewWillLeave(): void {
+    this._backBtnSub$.unsubscribe();
   }
 
   openExternalUrl(url: string): void {
