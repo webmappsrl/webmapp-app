@@ -202,12 +202,19 @@
         <div class="webmapp-info-header-container">
           <ng-container *ngIf="poiProperties$|async as properties">
             <div class="webmapp-pagepoi-info-header">
-              <div
-                class="webmapp-pagepoi-info-header-pre-title"
-                *ngIf="properties?.taxonomy.poi_type as poiType"
-              >
-                {{ poiType.name|wmtrans}}
-              </div>
+              <ng-container *ngIf="properties?.taxonomy.poi_types as poiTypes;else poiTypeTemplate">
+                <ng-container *ngFor="let poiType of poiTypes">
+                  <div class="webmapp-pagepoi-info-header-pre-title">{{ poiType.name|wmtrans}}</div>
+                </ng-container>
+              </ng-container>
+              <ng-template #poiTypeTemplate>
+                <div
+                  class="webmapp-pagepoi-info-header-pre-title"
+                  *ngIf="properties?.taxonomy.poi_type as poiType"
+                >
+                  {{ poiType.name|wmtrans}}
+                </div>
+              </ng-template>
               <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
                 {{name|wmtrans}}
               </div>
