@@ -606,4 +606,5 @@ export const appIT = {
   'share_ugcpoi': 'Vuoi proporre il tuo waypoint a motomappa?',
   'no': 'No',
   'yes': 'Si',
+  'duration': 'Durata',
 };

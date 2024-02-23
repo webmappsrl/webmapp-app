@@ -5,11 +5,10 @@ import {
   EventEmitter,
   OnDestroy,
   OnInit,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
-import {IonSlides, NavController} from '@ionic/angular';
+import {NavController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from './utils';
 import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {

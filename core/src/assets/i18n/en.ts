@@ -615,4 +615,5 @@ export const appEN = {
   'share_ugcpoi': 'Do you want to propose your waypoint on the motomappa?',
   'no': 'No',
   'yes': 'Yes',
+  'duration': 'Duration',
 };
