@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.9.0](https://github.com/webmappsrl/webmapp-app/compare/v2.8.1...v2.9.0) (2024-02-27)
+
+
+### Features
+
+* **i18n:** Add translations for new points of interest ([d3a9b09](https://github.com/webmappsrl/webmapp-app/commit/d3a9b09cdbd7c1eb492824070ef0dff6449958eb))
+* **map:** add support for multiple POI types in info header oc:2583 ([4b2a95b](https://github.com/webmappsrl/webmapp-app/commit/4b2a95b57391f21e52932016d88b5b40a980db4d))
+
+
+### Miscellaneous
+
+* Update form component template ([7f08637](https://github.com/webmappsrl/webmapp-app/commit/7f086370a2a1acc24bf6a72dd0efcfd2c4e90529))
+* Update form.component.ts and save.service.ts ([e6c803c](https://github.com/webmappsrl/webmapp-app/commit/e6c803cc60d2d3270799799666c8f0226bc62428))
+* Update home.page.ts oc:2579 ([a3f36bb](https://github.com/webmappsrl/webmapp-app/commit/a3f36bbd4c6b294b45bbf42c559e621f7ce55051))
+* Update RegisterPage component ([5adfee4](https://github.com/webmappsrl/webmapp-app/commit/5adfee40f3844088841c6a066c2d0479c1a5454f))
+
 ## [2.8.1](https://github.com/webmappsrl/webmapp-app/compare/v2.8.0...v2.8.1) (2024-02-20)
 
 
