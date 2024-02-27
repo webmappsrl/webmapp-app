@@ -447,7 +447,7 @@ export class SaveService {
       date: prop.date,
       description: prop.description ?? null,
       displayPosition: rawData.displayPosition ?? null,
-      id: prop.id ?? null,
+      id: rawData.id ?? prop.id ?? null,
       nominatim: rawData.nominatim ?? null,
       photos: rawData.photos ?? [],
       position: {

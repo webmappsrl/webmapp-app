@@ -33,7 +33,7 @@ export class WmFormComponent {
 
   @Input() set init(values) {
     if (values != null) {
-      this.setForm(values.index, values);
+      this.setForm(values.index ?? values.id, values);
     }
   }
 
@@ -69,6 +69,9 @@ export class WmFormComponent {
   }
 
   setForm(idx = 0, values?: any): void {
+    if (typeof idx != 'number') {
+      idx = this.forms$.value.findIndex(elem => elem.id === idx);
+    }
     this._currentFormId = idx;
     this.formIdGroup.controls['id'].setValue(idx);
     this.currentForm$.next(this.forms$.value[idx]);
