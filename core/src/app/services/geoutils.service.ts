@@ -120,8 +120,35 @@ export class GeoutilsService {
    *
    * @returns {number} total height difference
    */
-  getSlope(track: CGeojsonLineStringFeature): number {
-    return 0;
+  getSlope(track: {[key: string]: any}): number {
+    if (
+      track == null ||
+      track.properties == null ||
+      track.properties.locations == null ||
+      track.properties.locations.length < 2
+    ) {
+      return 0;
+    }
+
+    let totalClimb = 0;
+    let locations = track.properties.locations;
+
+    for (let i = 1; i < locations.length; i++) {
+      const prev = locations[i - 1];
+      const current = locations[i];
+
+      // Calcola l'incertezza combinata considerando l'accuracy di entrambi i punti
+      const combinedAccuracy =
+        Math.max(prev.altitudeAccuracy || 0, current.altitudeAccuracy || 0) / 6;
+
+      const altitudeDifference = current.altitude - prev.altitude;
+      // Considera significative solo le variazioni di altitudine che superano l'incertezza combinata
+      if (altitudeDifference > combinedAccuracy) {
+        totalClimb += altitudeDifference;
+      }
+    }
+
+    return totalClimb;
   }
 
   /**
@@ -131,12 +158,8 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getSpeeds(track: CGeojsonLineStringFeature): number[] {
-    if (
-      track.properties.metadata &&
-      track.properties.metadata.locations &&
-      track.properties.metadata.locations.length > 1
-    ) {
-      return track.properties.metadata.locations.map(l => l.speed);
+    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
+      return track.properties.locations.map(l => l.speed);
     }
     return [];
   }
@@ -148,10 +171,10 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties.metadata && track.properties.metadata.locations.length > 1) {
+    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
       return this._calcTimeS(
-        track.properties.metadata.locations[0].time,
-        track.properties.metadata.locations[track.properties.metadata.locations.length - 1].time,
+        track.properties.locations[0].time,
+        track.properties.locations[track.properties.locations.length - 1].time,
       );
     }
     return 0;
@@ -165,7 +188,7 @@ export class GeoutilsService {
    * @returns {number} top speed
    */
   getTopSpeed(track: CGeojsonLineStringFeature): number {
-    if (!track || !track.geometry) return 0;
+    if (!track) return 0;
     const speeds = this.getSpeeds(track);
     return this._getMaxValue(speeds);
   }
@@ -182,12 +205,10 @@ export class GeoutilsService {
   }
 
   private _getMaxValue(numbers: number[]): number {
-    if (!Array.isArray(numbers)) {
-      throw new Error('Input non valido: non è un array');
+    if (!Array.isArray(numbers) || numbers.length === 0) {
+      return 0;
     }
-    if (numbers.length === 0) {
-      throw new Error('Input non valido: array vuoto');
-    }
+
     let max = numbers[0];
     for (let i = 1; i < numbers.length; i++) {
       if (numbers[i] > max) {
@@ -195,5 +216,14 @@ export class GeoutilsService {
       }
     }
     return max;
+  }
+
+  /**
+   * Converte gradi in radianti.
+   * @param deg Gradi.
+   * @returns Radianti.
+   */
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI / 180);
   }
 }

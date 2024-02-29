@@ -145,10 +145,9 @@ export class GeolocationService {
 
   private _addLocationToRecordedFeature(location: Location): void {
     this._recordedFeature.addCoordinates(location);
-    const locations: Array<Location> = this._recordedFeature?.properties?.metadata?.locations ?? [];
+    const locations: Array<Location> = this._recordedFeature?.properties?.locations ?? [];
     locations.push(location);
-    const metadata = {locations};
-    this._recordedFeature.setProperty('metadata', metadata);
+    this._recordedFeature.setProperty('locations', locations);
   }
 
   private _calculateSpeed(prevLocation: Location, currentLocation: Location): number {
