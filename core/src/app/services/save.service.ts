@@ -405,19 +405,21 @@ export class SaveService {
   private _convertFeatureToITrack(feature: Feature): ITrack {
     const prop = feature.properties;
     const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
+    const metaData = prop.metadata ? JSON.parse(prop.metadata) : null;
     let geojson: CGeojsonLineStringFeature =
       Object.assign(new CGeojsonLineStringFeature(), feature.geometry) ?? null;
-    geojson.addProperties(prop.raw_data);
+    geojson.addProperties(rawData);
+    geojson.addProperties(metaData);
 
     return {
       activity: rawData.activity ?? null,
       geojson,
       description: prop.description ?? null,
       id: prop.id ?? null,
-      metadata: prop.metadata ?? null,
+      metadata: metaData ?? null,
       photoKeys: prop.photoKeys ?? null,
       photos: prop.photos ?? null,
-      rawData: prop.rawData ?? null,
+      rawData: rawData ?? null,
       storedPhotoKeys: prop.storedPhotoKeys ?? null,
       title: prop.name ?? null,
       date: prop.date,
@@ -489,7 +491,6 @@ export class SaveService {
   }
 
   private async _initTrack(track: ITrack) {
-    // console.log("------- ~ SaveService ~ _initTrack ~ track", track);
     const gj = track.geojson;
     try {
       track.geojson = Object.assign(new CGeojsonLineStringFeature(), gj);
@@ -498,7 +499,14 @@ export class SaveService {
       const element = track.storedPhotoKeys[i];
       const photo = await this._getGenericById(element);
       photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
+
       track.photos.push(photo);
+    }
+    if (track.metadata && typeof track.metadata === 'string') {
+      let metadata = JSON.parse(track.metadata);
+      if (metadata && metadata.locations) {
+        track.geojson.setProperty('locations', metadata.locations);
+      }
     }
   }
 

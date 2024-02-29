@@ -235,7 +235,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
       };
       const metadata = {
-        ...geojson.properties.metadata,
+        ...geojson.properties,
         ...{date: trackData.date, activity: trackData.activity, distanceFilter, device},
       };
 
