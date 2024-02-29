@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.9.1](https://github.com/webmappsrl/webmapp-app/compare/v2.9.0...v2.9.1) (2024-02-29)
+
+
+### Miscellaneous
+
+* Remove unnecessary code and fix formatting in modal-success component ([546a2b2](https://github.com/webmappsrl/webmapp-app/commit/546a2b20a6b94835a5765aff9584125bb0984122))
+* Update geolocation and geoutils services ([044745a](https://github.com/webmappsrl/webmapp-app/commit/044745add6f104e3cb18050a8750b553caca66b7))
+* Update register page and save service ([2f4b180](https://github.com/webmappsrl/webmapp-app/commit/2f4b180000a382ecab1e6613331849c4febdee97))
+* Update trackdetail page template and component ([4ff483f](https://github.com/webmappsrl/webmapp-app/commit/4ff483ff526874813bc3c7a4851b70a0b82996fe))
+
 ## [2.9.0](https://github.com/webmappsrl/webmapp-app/compare/v2.8.1...v2.9.0) (2024-02-27)
 
 
