@@ -1,6 +1,5 @@
 <ion-content class="webmapp-modalsuccess">
   <div class="ios-filling"></div>
-
   <div class="webmapp-modalsuccess-header">
     <ion-icon
       name="close-outline"
@@ -8,7 +7,6 @@
       (click)="close()"
     ></ion-icon>
   </div>
-
   <div class="webmapp-modalsuccess-body">
     <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" *ngIf="isTrack" />
     <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos" />
@@ -35,7 +33,6 @@
     <div class="webmapp-modalsuccess-text" *ngIf="isWaypoint">
       {{'modals.success.waypoint.text' | wmtrans}}
     </div>
-
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack" (click)="openTrack(track)">
       <div class="webmapp-modalsuccess-infopanel-top">
         <div class="webmapp-modalsuccess-infopanel-top-map">
@@ -62,6 +59,8 @@
 
 
 
+
+
         }}:{{trackTime?.seconds| number : '2.0-0'}}
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
@@ -70,27 +69,8 @@
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
         <i class="webmapp-icon-downhill-outline webmapp-modalsuccess-infopanel-icon"></i>
-        {{trackSlope | number:'1.0-0'}}m
+        {{trackSlope | number:'1.0-00'}}m
       </div>
-
-      <!-- <div class="webmapp-modalsuccess-infopanel-middle">
-        <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.time' | wmtrans}}
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-data">
-          {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
-          '2.0-0'}}:{{trackTime?.seconds| number : '2.0-0'}}
-        </div>
-      </div>
-      <div class="webmapp-modalsuccess-infopanel-middle">
-        <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.odo' | wmtrans}}
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-data">
-          {{trackodo | number : '1.1-1'}}
-        </div>
-      </div> -->
-
       <div
         class="webmapp-modalsuccess-infopanel-photobottom"
         *ngIf="track.photos && track.photos.length"
@@ -110,31 +90,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="webmapp-modalsuccess-infopanel-bottom">
-        <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.slope' | wmtrans}}
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-data">
-          {{trackSlope | number:'1.0-0'}}m
-        </div>
-      </div>
-      <div class="webmapp-modalsuccess-infopanel-bottom">
-        <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.avgspeed' | wmtrans}}
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-data">
-          {{trackAvgSpeed | number:'1.1-1'}} km/h
-        </div>
-      </div>
-      <div class="webmapp-modalsuccess-infopanel-bottom">
-        <div class="webmapp-modalsuccess-infopanel-title">
-          {{'modals.success.track.topspeed' | wmtrans}}
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-data">
-          {{trackTopSpeed | number:'1.1-1'}} km/h
-        </div>
-      </div> -->
     </ion-card>
 
     <div class="webmapp-modalsuccess-photogallery" *ngIf="isPhotos" (click)="gotoPhotos()">
@@ -150,17 +105,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <ion-slides pager="false" *ngIf="isPhotos" [options]="sliderOptions" class="webmapp-modalsuccess-photoslider"
-      #slider>
-      <ion-slide *ngFor="let photo of photos;let idx = index">
-        <div class="webmapp-modalsuccess-photocontainer" style="padding-top: {{topValues[idx]}}px;">
-          <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-photo"></ion-img>
-          <div class="webmapp-modalsuccess-photodescription">{{photo.description}}</div>
-        </div>
-      </ion-slide>
-    </ion-slides> -->
-
     <ion-card
       class="webmapp-modalsuccess-infopanel"
       *ngIf="isWaypoint"
@@ -184,17 +128,6 @@
             >
               <div class="webmapp-modalsuccess-infopanel-top-name">{{waypoint.title}}</div>
               <div class="webmapp-modalsuccess-infopanel-top-date">{{today | date }}</div>
-
-              <!-- <div class="webmapp-modalsuccess-infopanel-section">
-                <i class="icon-outline-list secondary webmapp-modalsuccess-infopanel-sectionicon"></i>
-              </div> -->
-
-              <!-- <div class="webmapp-modalsuccess-infopanel-section">
-                <i class="icon-outline-activities primary webmapp-modalsuccess-infopanel-sectionicon"></i>
-                <div class="webmapp-modalsuccess-infopanel-top-text"> {{waypoint.waypointtype}}
-                </div>
-              </div> -->
-
               <div class="webmapp-modalsuccess-infopanel-section">
                 <i class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"></i>
                 <div class="webmapp-modalsuccess-infopanel-top-text">
@@ -225,52 +158,9 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="webmapp-modalsuccess-infopanel-content">
-
-        <div class="webmapp-modalsuccess-infopanel-section">
-          <i class="webmapp-icon-pin-outline secondary webmapp-modalsuccess-infopanel-sectionicon"></i>
-          <div class="webmapp-modalsuccess-infopanel-text">
-            {{waypoint.city}}
-            <div>
-              {{waypoint.position.longitude}}
-              {{waypoint.position.latitude}}
-            </div>
-          </div>
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-section">
-          <i class="webmapp-icon-document tertiary webmapp-modalsuccess-infopanel-sectionicon"></i>
-          <div class="webmapp-modalsuccess-infopanel-text">
-            {{waypoint.description}}
-          </div>
-        </div>
-
-
-      </div> -->
     </ion-card>
   </div>
-
   <div class="webmapp-modalsuccess-footer" (click)="close()">
     {{'modals.success.return' | wmtrans}}
   </div>
 </ion-content>
-
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="register" text="" class="webmapp-backbutton webmapp-backbutton-dark" (click)="close()">
-      </ion-back-button>
-    </ion-buttons>
-    <ion-title>{{'modals.photos.title' | wmtrans}}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-
-
-</ion-content>
-
-<ion-footer class="webmapp-register-modalphotos-footer">
-  <ion-button class="webmapp-register-modalphotos-savebtn" (click)="save()" [disabled]="!isValid()">
-    {{'modals.photos.savebtn' | wmtrans}}</ion-button>
-</ion-footer> -->

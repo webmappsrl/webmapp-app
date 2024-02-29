@@ -51,17 +51,6 @@ export class ModalSuccessComponent implements OnInit {
     private _store: Store,
   ) {}
 
-  async close() {
-    return this._modalController.dismiss({
-      dismissed: true,
-    });
-  }
-
-  async gotoPhotos() {
-    await this.close();
-    this._navController.navigateForward('photolist');
-  }
-
   ngOnInit() {
     switch (this.type) {
       case ESuccessType.TRACK:
@@ -100,6 +89,17 @@ export class ModalSuccessComponent implements OnInit {
         this.displayPosition = this.waypoint.displayPosition;
         break;
     }
+  }
+
+  async close() {
+    return this._modalController.dismiss({
+      dismissed: true,
+    });
+  }
+
+  async gotoPhotos() {
+    await this.close();
+    this._navController.navigateForward('photolist');
   }
 
   async openTrack(track: ITrack) {
