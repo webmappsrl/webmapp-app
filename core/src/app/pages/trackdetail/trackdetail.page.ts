@@ -62,7 +62,10 @@ export class TrackdetailPage {
       tap(t => (this.currentTrack = t)),
     );
     this.trackDistance$ = this.track$.pipe(map(track => this._geoUtils.getLength(track.geojson)));
-    this.trackSlope$ = this.track$.pipe(map(track => this._geoUtils.getSlope(track.geojson)));
+    this.trackSlope$ = this.track$.pipe(
+      map(track => this._geoUtils.getSlope(track.geojson ?? null)),
+    );
+
     this.trackAvgSpeed$ = this.track$.pipe(
       map(track => this._geoUtils.getAverageSpeed(track.geojson)),
     );

@@ -52,6 +52,7 @@
       [wmMapConf]="confMap$|async"
       [wmMapFullscreen]="true"
       [wmMapGeojson]="track.geojson"
+      [wmMapGeojsonFit]="true"
     ></wm-map>
 
     <div class="wm-trackdetail-date">{{track?.date | date : "dd MMMM YYYY"}}</div>
@@ -117,7 +118,7 @@
           {{'pages.trackdetail.distance' | wmtrans}}
         </ion-label>
         <ion-label slot="end" class="wm-trackdetail-detail-value">
-          {{trackDistance$| async | number:'1.0-0'}}
+          {{trackDistance$| async | number:'1.0-1'}}
         </ion-label>
       </ion-item>
       <ion-item class="wm-trackdetail-detail">
@@ -125,7 +126,7 @@
           {{'pages.trackdetail.slope' | wmtrans}}
         </ion-label>
         <ion-label slot="end" class="wm-trackdetail-detail-value">
-          {{trackSlope$ | async | number:'1.0-0'}}m
+          {{trackSlope$ | async | number:'1.0-1'}}m
         </ion-label>
       </ion-item>
       <ion-item class="wm-trackdetail-detail">
