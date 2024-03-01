@@ -3,6 +3,7 @@ const gulp = require('gulp'),
   fs = require('graceful-fs'),
   jeditor = require('gulp-json-editor'),
   replace = require('gulp-replace'),
+  through = require('through2'),
   request = require('request'),
   source = require('vinyl-source-stream'),
   streamify = require('gulp-streamify'),
@@ -604,6 +605,7 @@ function updateAndroidPlatform(instanceName, appId, appName) {
               'android:name="' + appId + '.MainActivity"',
             ),
           )
+          .pipe(addPermissionsIfNotPresent())
           .pipe(gulp.dest(instancesDir + instanceName + '/android/app/src/main/'))
           .on('end', () => {
             if (verbose) debug('AndroidManifest.xml updated successfully');
@@ -1663,4 +1665,28 @@ function versionToBundleCode(versionString) {
   const minor = parts[1].padStart(2, '0');
   const patch = parts[2].padStart(2, '0');
   return parseInt(major + minor + patch, 10);
+}
+
+function addPermissionsIfNotPresent() {
+  const permissions = [
+    'android.permission.READ_MEDIA_IMAGES',
+    'android.permission.READ_EXTERNAL_STORAGE',
+    'android.permission.WRITE_EXTERNAL_STORAGE',
+  ];
+
+  return through.obj(function (file, encoding, callback) {
+    let content = file.contents.toString();
+    const permissionsToAdd = permissions
+      .filter(permission => !content.includes(permission))
+      .map(permission => `<uses-permission android:name="${permission}"/>`)
+      .join('\n    ');
+    if (permissionsToAdd) {
+      // Aggiunge i permessi prima del tag di chiusura </manifest>
+      content = content.replace(/<\/manifest>/, `    ${permissionsToAdd}\n</manifest>`);
+    }
+
+    file.contents = Buffer.from(content, encoding);
+    this.push(file);
+    callback();
+  });
 }
