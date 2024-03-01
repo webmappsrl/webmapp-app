@@ -1,4 +1,10 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import {ModalController, LoadingController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {SaveService} from 'src/app/services/save.service';
@@ -40,6 +46,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     private _saveSvc: SaveService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
+    private _cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
@@ -73,6 +80,7 @@ export class ModalWaypointSaveComponent implements OnInit {
         }
       }
       if (!exists) this.photos.push(libraryItemCopy);
+      this._cdr.detectChanges();
     });
   }
 
@@ -109,6 +117,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     if (i > -1) {
       this.photos.splice(i, 1);
     }
+    this._cdr.detectChanges();
   }
 
   async save() {

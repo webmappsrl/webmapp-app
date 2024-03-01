@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ITrack} from 'src/app/types/track';
@@ -30,7 +30,8 @@ export class ModalSaveComponent implements OnInit {
     private _translate: TranslateService,
     private _alertController: AlertController,
     private _photoService: PhotoService,
-    private actionSheetController: ActionSheetController,
+    private _cdr: ChangeDetectorRef,
+    private _actionSheetCtrl: ActionSheetController,
   ) {}
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class ModalSaveComponent implements OnInit {
         }
       }
       if (!exists) this.photos.push(libraryItemCopy);
+      this._cdr.detectChanges();
     });
   }
 
@@ -91,7 +93,7 @@ export class ModalSaveComponent implements OnInit {
       ])
       .toPromise();
 
-    this.actionSheetController
+    this._actionSheetCtrl
       .create({
         // header: translation['pages.register.modalsave.closemodal.title'],
         buttons: [
@@ -170,6 +172,7 @@ export class ModalSaveComponent implements OnInit {
     if (i > -1) {
       this.photos.splice(i, 1);
     }
+    this._cdr.detectChanges();
   }
 
   save() {
