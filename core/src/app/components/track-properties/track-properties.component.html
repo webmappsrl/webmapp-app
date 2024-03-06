@@ -2,7 +2,7 @@
 <ng-container *ngIf="track!= null">
   <ng-container *ngIf="track.properties  as prop">
     <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
-    <wm-tab-howto [properties]="prop"></wm-tab-howto>
+    <wm-tab-howto *ngIf="prop.taxonomy.activity" [properties]="prop"></wm-tab-howto>
     <div
       *ngIf="prop.related_url as relatedUrl"
       class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
