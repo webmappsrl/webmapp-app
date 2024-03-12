@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.9.2](https://github.com/webmappsrl/webmapp-app/compare/v2.9.1...v2.9.2) (2024-03-12)
+
+
+### Bug Fixes
+
+* Add gulp-through2 package ([a971689](https://github.com/webmappsrl/webmapp-app/commit/a9716894c7179a731b363bb4fab4d72bb5c241c0))
+* Add permissions to AndroidManifest.xml ([e961164](https://github.com/webmappsrl/webmapp-app/commit/e961164108ccd0a8b2963a9978eb5b75d550e17d))
+* **image-gallery.component:** scrolling fixed ([ae46a2d](https://github.com/webmappsrl/webmapp-app/commit/ae46a2d9f9efc7c6471dfebd3d62c94c98508493))
+* **track-properties.component:** activity tab fixed ([ae46a2d](https://github.com/webmappsrl/webmapp-app/commit/ae46a2d9f9efc7c6471dfebd3d62c94c98508493))
+
+
+### Miscellaneous
+
+* Update map.page.html ([3444622](https://github.com/webmappsrl/webmapp-app/commit/3444622d2c97920938314555826aa32ed70a7746))
+* Update subproject ([90f54ea](https://github.com/webmappsrl/webmapp-app/commit/90f54ea75312b3766cbc6bd320f4b3ce40f4c2d8))
+
 ## [2.9.1](https://github.com/webmappsrl/webmapp-app/compare/v2.9.0...v2.9.1) (2024-02-29)
 
 
