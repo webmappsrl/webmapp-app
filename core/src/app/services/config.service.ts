@@ -14,13 +14,14 @@ import {StorageService} from './base/storage.service';
 import {environment} from 'src/environments/environment';
 import pkg from 'package.json';
 import {timeout} from 'rxjs/operators';
-import { IConfig } from 'wm-core/types/config';
+import {IConfig} from 'wm-core/types/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConfigService {
   private _config: IConfig;
+  private _geohubAppId: number = environment.geohubId;
 
   get appId(): string {
     return this._config.APP.id ? this._config.APP.id : 'it.webmapp.webmapp';
@@ -109,9 +110,20 @@ export class ConfigService {
         let url = '/config.json';
         if (this._deviceService.isBrowser) {
           const hostname: string = window.location.hostname;
-          const geohubId = parseInt(hostname.split('.')[0], 10) || 4;
-          environment.geohubId = geohubId;
-          url = `${environment.api}/api/app/webmapp/${environment.geohubId}/config.json`;
+          this._geohubAppId = parseInt(hostname.split('.')[0], 10) || 4;
+          if (hostname.indexOf('sentieri.caiparma') > -1) {
+            this._geohubAppId = 33;
+          } else if (hostname.indexOf('motomappa.motoabbigliament') > -1) {
+            this._geohubAppId = 53;
+          } else if (hostname.indexOf('maps.parcoforestecasentinesi') > -1) {
+            this._geohubAppId = 49;
+          } else {
+            const newGeohubId = parseInt(hostname.split('.')[0], 10);
+            if (!Number.isNaN(newGeohubId)) {
+              this._geohubAppId = newGeohubId;
+            }
+          }
+          url = `${environment.api}/api/app/webmapp/${this._geohubAppId}/config.json`;
         }
         this._communicationService.get(url + '?t=' + Date.now()).subscribe(
           response => {
