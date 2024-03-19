@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/webmappsrl/webmapp-app/compare/v2.9.2...v3.0.0) (2024-03-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** The private variable _geohubAppId has been added to store the selected geohubAppId value.
+
+### Features
+
+* **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
+
 ## [2.9.2](https://github.com/webmappsrl/webmapp-app/compare/v2.9.1...v2.9.2) (2024-03-12)
 
 
