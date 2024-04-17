@@ -573,5 +573,8 @@
   "cycling": "In bicicletta",
   "poi_type": "punti di interesse",
   "where": "luoghi",
-  "I tuoi dati": "I tuoi dati"
+  "I tuoi dati": "I tuoi dati",
+  "Scarica il tracciato GPX": "Scarica il tracciato GPX",
+  "Scarica il tracciato KML": "Scarica il tracciato KML",
+  "Scarica il tracciato GEOJSON": "Scarica il tracciato GEOJSON"
 }

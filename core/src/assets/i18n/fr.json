@@ -581,5 +581,8 @@
   "Come arrivare": "Comment aller là",
   "Il Progetto": "Le projet",
   "Filtri": "Filtrer",
-  "Escursionismo": "Randonnée"
+  "Escursionismo": "Randonnée",
+  "Scarica il tracciato GPX": "Télécharger la trace GPX",
+  "Scarica il tracciato KML": "Télécharger la trace KML",
+  "Scarica il tracciato GEOJSON": "Télécharger la trace GEOJSON"
 }
