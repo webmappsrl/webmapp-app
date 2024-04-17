@@ -68,6 +68,7 @@ import {
   confJIDOUPDATETIME,
   confMAP,
   confMAPLAYERS,
+  confOPTIONS,
   confPOIS,
   confPOISFilter,
   confPoisIcons,
@@ -138,6 +139,7 @@ export class MapPage implements OnInit, OnDestroy {
       }
     }),
   );
+  confOPTIONS$: Observable<any> = this._store.select(confOPTIONS)
   confPOIS$: Observable<any> = this._store.select(confPOIS);
   confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
     map(p => {

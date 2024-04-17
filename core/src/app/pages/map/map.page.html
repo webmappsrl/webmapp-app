@@ -290,6 +290,21 @@
                   (hover)="setTrackElevationChartHoverElements($event)"
                 ></wm-slope-chart>
               </ng-container>
+              <div bottom>
+                <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
+                  <ng-container *ngIf="confOPTIONS$|async as confOPTIONS">
+                    <ng-container *ngIf="confOPTIONS.download_track_enable === true">
+                      <div class="webmapp-title">{{'Downloads'|wmtrans}}</div>
+                      <wm-track-download-urls
+                        class="wm-track-details-download-urls"
+                        [properties]="currentTrack.properties"
+                        id="webmapp-track-details-download-urls"
+                      >
+                      </wm-track-download-urls>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>
             </wm-track-properties>
           </ng-container>
         </ng-container>
