@@ -29,6 +29,11 @@ const routes: Routes = [
         redirectTo: 'map',
         pathMatch: 'full',
       },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
     ],
   },
 ];

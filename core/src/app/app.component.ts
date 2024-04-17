@@ -95,7 +95,7 @@ export class AppComponent {
     this._platform.ready().then(
       () => {
         this.saveGeneratedContentsNowAndInterval();
-        this.router.navigate(['home']);
+        // this.router.navigate(['home']);
         SplashScreen.hide();
         const keepAwake =
           (localStorage.getItem('wm-keep-awake') != 'false' &&
