@@ -372,7 +372,9 @@ export class MapPage implements OnInit, OnDestroy {
 
   async goToTrack(id: number): Promise<void> {
     this._poiReset();
-    this.wmMapComponent.resetRotation();
+    if (this.wmMapComponent != null) {
+      this.wmMapComponent.resetRotation();
+    }
     this.previewTrack$.next(true);
     this.trackid$.next(id);
     const isFav = await this._geohubSvc.isFavouriteTrack(id);
