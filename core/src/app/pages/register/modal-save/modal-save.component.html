@@ -19,7 +19,7 @@
     }}</ion-title>
   </ion-toolbar>
 </ion-header>
-
+<ion-content>
 <ion-list>
   <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event">
     <webmapp-form-field
@@ -86,6 +86,7 @@
     </ion-grid>
   </wm-form>
 </ion-list>
+</ion-content>
 
 <ion-footer class="webmapp-register-modalsave-footer">
   <ion-button
