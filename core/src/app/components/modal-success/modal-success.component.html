@@ -31,7 +31,7 @@
       {{'modals.success.photos.text' | wmtrans}}
     </div>
     <div class="webmapp-modalsuccess-text" *ngIf="isWaypoint">
-      {{'modals.success.waypoint.text' | wmtrans}}
+      {{'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.' | wmtrans}}
     </div>
     <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack" (click)="openTrack(track)">
       <div class="webmapp-modalsuccess-infopanel-top">
@@ -52,6 +52,7 @@
         <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
         {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
         '2.0-0'
+
 
 
 
