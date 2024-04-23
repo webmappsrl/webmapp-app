@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.10.0](https://github.com/webmappsrl/webmapp-app/compare/v2.9.2...v3.0.0) (2024-04-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **config:** The private variable _geohubAppId has been added to store the selected geohubAppId value.
+
+### Features
+
+* **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
+* **i18n:** Add download options for GPX, KML, and GEOJSON tracks ([8484473](https://github.com/webmappsrl/webmapp-app/commit/848447346d807d80f5c9bc48200c42470b2749fa))
+
+
+### Miscellaneous
+
+* Add null check before resetting rotation in goToTrack method ([b0350f8](https://github.com/webmappsrl/webmapp-app/commit/b0350f8293ad13538a00f22a1ee26a5ee314fcd7))
+* **modal-success:** Update waypoint success message ([13d68ba](https://github.com/webmappsrl/webmapp-app/commit/13d68bae1667a26aff3b52b93f56520a7f966261))
+* Update app.component.ts and tabs-routing.module.ts ([d97e02a](https://github.com/webmappsrl/webmapp-app/commit/d97e02a1500fd761f3e1e284c52fca338c99e465))
+* Update track-properties and map.page.html ([97dc1d6](https://github.com/webmappsrl/webmapp-app/commit/97dc1d6542f7c91d32e9e0a87188492843ea0283))
+
 ## [2.9.2](https://github.com/webmappsrl/webmapp-app/compare/v2.9.1...v2.9.2) (2024-03-12)
 
 
