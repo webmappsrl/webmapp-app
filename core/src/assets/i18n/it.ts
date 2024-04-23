@@ -607,4 +607,5 @@ export const appIT = {
   'no': 'No',
   'yes': 'Si',
   'duration': 'Durata',
+  'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.':'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.'
 };
