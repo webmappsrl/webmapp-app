@@ -372,8 +372,8 @@ export class SaveService {
                         (track as any)?.geometry?.type ||
                         null,
                       coordinates:
-                        (track as any).geojson?.geometry?.coordinates ||
-                        (track as any).geometry.coordinates ||
+                        ((track as any).geojson?.geometry?.coordinates ||
+                          (track as any).geometry.coordinates) ??
                         [],
                     },
                   },
@@ -416,6 +416,7 @@ export class SaveService {
       geojson,
       description: prop.description ?? null,
       id: prop.id ?? null,
+      formId: rawData.id ?? null,
       metadata: metaData ?? null,
       photoKeys: prop.photoKeys ?? null,
       photos: prop.photos ?? null,
@@ -438,6 +439,7 @@ export class SaveService {
       description: prop.description ?? '',
       date: prop.updated_at,
       uuid: rawData.uuid,
+      id: prop.id,
     } as IPhotoItem;
   }
 
@@ -449,7 +451,8 @@ export class SaveService {
       date: prop.date,
       description: prop.description ?? null,
       displayPosition: rawData.displayPosition ?? null,
-      id: rawData.id ?? prop.id ?? null,
+      id: prop.id ?? null,
+      formId: rawData.id ?? null,
       nominatim: rawData.nominatim ?? null,
       photos: rawData.photos ?? [],
       position: {

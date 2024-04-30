@@ -8,6 +8,7 @@ export interface WaypointSave extends IRegisterItem {
   date: Date;
   description: string;
   displayPosition: Location;
+  formId?:string
   id?: string;
   nominatim?: Nominatim;
   photoKeys?: Array<string>;
