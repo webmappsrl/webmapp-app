@@ -373,7 +373,7 @@ export class SaveService {
                         null,
                       coordinates:
                         ((track as any).geojson?.geometry?.coordinates ||
-                          (track as any).geometry.coordinates) ??
+                          (track as any).geometry?.coordinates) ??
                         [],
                     },
                   },
