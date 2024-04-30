@@ -39,7 +39,7 @@
           [track]="track"
           [saveFileFn]="saveFileCallback"
         ></wm-export-to-btn>
-        <ion-button (click)="delete()">
+        <ion-button (click)="delete()" *ngIf="online$|async">
           <ion-icon name="trash-outline" start></ion-icon>
         </ion-button>
       </ion-buttons>

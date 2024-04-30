@@ -20,6 +20,7 @@ import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {Share} from '@capacitor/share';
 
 import {Filesystem, Directory, Encoding, FilesystemEncoding} from '@capacitor/filesystem';
+import {online} from 'src/app/store/network/network.selector';
 @Component({
   selector: 'wm-trackdetail',
   templateUrl: './trackdetail.page.html',
@@ -30,6 +31,7 @@ import {Filesystem, Directory, Encoding, FilesystemEncoding} from '@capacitor/fi
 export class TrackdetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   currentTrack: ITrack;
+  online$ = this._store.select(online);
   public photos: IPhotoItem[] = [];
   public sliderOptions: any = {
     slidesPerView: 2.5,

@@ -6,6 +6,8 @@ import {SaveService} from 'src/app/services/save.service';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {from, Observable} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
+import {Store} from '@ngrx/store';
+import {online} from 'src/app/store/network/network.selector';
 
 @Component({
   selector: 'webmapp-photodetail',
@@ -13,8 +15,9 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./photodetail.page.scss'],
 })
 export class PhotodetailPage {
-  photo$: Observable<IPhotoItem>;
   currentPhoto: IPhotoItem;
+  online$ = this._store.select(online);
+  photo$: Observable<IPhotoItem>;
 
   constructor(
     private _route: ActivatedRoute,
@@ -24,6 +27,7 @@ export class PhotodetailPage {
     private _translateSvc: TranslateService,
     private _navCtlr: NavController,
     private _toastCtrl: ToastController,
+    private _store: Store,
   ) {
     this.photo$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getPhoto(param.photo))),
@@ -33,11 +37,6 @@ export class PhotodetailPage {
 
   closeMenu(): void {
     this._menuController.close('optionMenu');
-  }
-
-  menu(): void {
-    this._menuController.enable(true, 'optionMenu');
-    this._menuController.open('optionMenu');
   }
 
   delete(): void {
@@ -82,6 +81,11 @@ export class PhotodetailPage {
       .subscribe(() => {
         this._navCtlr.navigateForward('photolist');
       });
+  }
+
+  menu(): void {
+    this._menuController.enable(true, 'optionMenu');
+    this._menuController.open('optionMenu');
   }
 
   presentToast(): Observable<void> {

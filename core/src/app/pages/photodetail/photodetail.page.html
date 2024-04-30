@@ -24,7 +24,7 @@
     </ion-buttons>
     <ion-title>{{'pages.photodetail.title'|wmtrans}}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="delete()">
+      <ion-button (click)="delete()" *ngIf="online$|async">
         <ion-icon name="trash-outline" start></ion-icon>
       </ion-button>
     </ion-buttons>

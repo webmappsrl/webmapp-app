@@ -6,6 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {SaveService} from 'src/app/services/save.service';
+import {online} from 'src/app/store/network/network.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 
@@ -20,6 +21,7 @@ export class WaypointdetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   currentWaypoint: WaypointSave;
+  online$ = this._store.select(online);
   sliderOptions: any = {
     slidesPerView: 2.5,
   };
