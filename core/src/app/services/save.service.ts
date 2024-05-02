@@ -394,7 +394,6 @@ export class SaveService {
           break;
 
         case ESaveObjType.PHOTOTRACK:
-          console.log('aaa');
           break;
       }
       await this._updateIndex();
