@@ -119,6 +119,7 @@ export class AppComponent {
         switchMap(_ => this._authSvc.isLoggedIn$),
         filter(l => l),
         debounceTime(2000),
+        take(1),
       )
       .subscribe(_ => {
         this.saveService.uploadUnsavedContents();

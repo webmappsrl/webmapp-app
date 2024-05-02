@@ -266,11 +266,16 @@ export class SaveService {
       switch (contents[i].type) {
         case ESaveObjType.PHOTO:
           const photo: IPhotoItem = await this._getGenericById(contents[i].key);
+          indexObj.saved = true;
+          this._updateGeneric(contents[i].key, photo);
           await this._photoService.setPhotoData(photo);
           const resP = await this.geohub.savePhoto(photo);
           if (resP && !resP.error && resP.id) {
             indexObj.saved = true;
             photo.id = resP.id;
+            this._updateGeneric(contents[i].key, photo);
+          } else {
+            indexObj.saved = false;
             this._updateGeneric(contents[i].key, photo);
           }
           break;
