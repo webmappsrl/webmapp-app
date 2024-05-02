@@ -259,11 +259,6 @@ export class PhotoService {
 
   public async setPhotoData(photo: IPhotoItem): Promise<void> {
     if (photo == null) return;
-    const photoURL = photo.photoURL;
-    if (photoURL && photoURL.indexOf(UGC_MEDIA_DIRECTORY) === -1) {
-      photo.photoURL = await this.savePhotoToDataDirectory(photo);
-    }
-
     if (!photo.rawData) photo.rawData = JSON.stringify({});
     try {
       let rawData = JSON.parse(photo.rawData);
