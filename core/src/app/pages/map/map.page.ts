@@ -123,7 +123,7 @@ export class MapPage implements OnInit, OnDestroy {
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP).pipe(
     tap(conf => {
-      if (conf.flow_line_quote_show) {
+      if (conf && conf.flow_line_quote_show) {
         this._flowLine$.next({
           flow_line_quote_orange: conf.flow_line_quote_orange,
           flow_line_quote_red: conf.flow_line_quote_red,
