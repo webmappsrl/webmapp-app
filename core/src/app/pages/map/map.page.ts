@@ -139,7 +139,7 @@ export class MapPage implements OnInit, OnDestroy {
       }
     }),
   );
-  confOPTIONS$: Observable<any> = this._store.select(confOPTIONS)
+  confOPTIONS$: Observable<any> = this._store.select(confOPTIONS);
   confPOIS$: Observable<any> = this._store.select(confPOIS);
   confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
     map(p => {
@@ -278,8 +278,8 @@ export class MapPage implements OnInit, OnDestroy {
           this.enableOverLay$.next(true);
         }
         return {
-          low: `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_low_${geohubId}`,
-          high: `https://jidotile.webmapp.it/?x={x}&y={y}&z={z}&index=geohub_app_high_${geohubId}`,
+          low: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
+          high: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
         } as IDATALAYER;
       }),
     );
