@@ -1,5 +1,29 @@
 # Changelog
 
+## [2.11.0](https://github.com/webmappsrl/webmapp-app/compare/v2.10.0...v2.11.0) (2024-05-06)
+
+
+### Features
+
+* **i18n:** Add Italian translation for new waypoint message ([afc9e6d](https://github.com/webmappsrl/webmapp-app/commit/afc9e6d44301f78abf05f40469f01222ac762516))
+* **save.service:** remove console.log statement ([43a29c7](https://github.com/webmappsrl/webmapp-app/commit/43a29c74d2a31c0866ef8e0ba5c1bd59d2030099))
+* Update  to new geoserver ([396ccc2](https://github.com/webmappsrl/webmapp-app/commit/396ccc2f4f0d699e665c8b6fa77c56ead9febe7f))
+
+
+### Bug Fixes
+
+* Add take(1) operator to app.component.ts oc:3023 ([a30d3ab](https://github.com/webmappsrl/webmapp-app/commit/a30d3abe28ec95a81186eedcb54d1da36e1ca052))
+* check if conf exists before accessing flow_line_quote_show property ([3c25dd3](https://github.com/webmappsrl/webmapp-app/commit/3c25dd322382df35fd089668b82a9db62846925a))
+* **save.service:** fix null check for track coordinates ([10b4f68](https://github.com/webmappsrl/webmapp-app/commit/10b4f68567ad12258a03308641dc1c5ddd2d2cd7))
+
+
+### Miscellaneous
+
+* Remove unnecessary code in setPhotoData method ([95be7fa](https://github.com/webmappsrl/webmapp-app/commit/95be7fa3514c2a59cec046c76b1602cf5a88f833))
+* Update form component and save service oc: 3025 ([8b10d36](https://github.com/webmappsrl/webmapp-app/commit/8b10d368098f6f91bff4e31f94013d5cf01cb0d7))
+* Update modal-save.component.html oc: 3043 ([fc1d0cc](https://github.com/webmappsrl/webmapp-app/commit/fc1d0cc334e641b2a4cb15e9c974228e8ae12342))
+* Update subproject ([24e4ce6](https://github.com/webmappsrl/webmapp-app/commit/24e4ce67785dbc9935394d3e410d4c484e2c9ec0))
+
 ## [2.10.0](https://github.com/webmappsrl/webmapp-app/compare/v2.9.2...v3.0.0) (2024-04-23)
 
 
