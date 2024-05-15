@@ -5,6 +5,11 @@ export const appIT = {
     'running': 'Corsa',
     'skitouring': 'Scialpinismo',
     'walking': 'Passeggiata',
+    'asphalt': 'Asfalto',
+    'bitumenduro': 'Bitumenduro',
+    'onoff': 'Onoff',
+    'real_dirt': 'Sterrato vero',
+    'bar': 'Bar',
   },
   'sidemenu': {
     'project': 'Il Progetto',
@@ -581,6 +586,11 @@ export const appIT = {
   'skitouring': 'Scialpinismo',
   'walking': 'Passeggiata',
   'running': 'Corsa',
+  'asphalt': 'Asfalto',
+  'bitumenduro': 'Bitumenduro',
+  'onoff': 'Onoff',
+  'real_dirt': 'Sterrato vero',
+  'bar': 'Bar',
   'cycling': 'In bicicletta',
   'poi_type': 'punti di interesse',
   'where': 'luoghi',
@@ -592,10 +602,6 @@ export const appIT = {
   'fallen-tree': 'Albero caduto',
   'interrupted-passage': 'Passaggio interrotto',
   'missing-signage': 'Segnaletica mancante',
-  'ASPHALT': 'Asfalto',
-  'bitumenduro': 'Bitumenduro®',
-  'real_dirt': 'Sterrato vero',
-  'bar': 'Bar',
   'mountain_passes': 'Passi di montagna',
   'roads_to_drive': 'Strade da guidare (BLU)',
   'points_of_interest': 'Punti di interesse (VERDE)',
@@ -607,5 +613,6 @@ export const appIT = {
   'no': 'No',
   'yes': 'Si',
   'duration': 'Durata',
-  'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.':'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.'
+  'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.':
+    'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.',
 };

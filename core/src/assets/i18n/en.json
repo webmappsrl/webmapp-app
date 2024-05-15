@@ -4,7 +4,12 @@
     "hiking": "Hiking",
     "running": "Running",
     "skitouring": "Skitouring",
-    "walking": "Salking"
+    "walking": "Salking",
+    "asphalt": "Asphalt",
+    "bitumenduro": "Bitumenduro",
+    "onoff": "Onoff",
+    "real-dirt": "Real dirt",
+    "bar": "Bar"
   },
   "sidemenu": {
     "project": "The project",
@@ -591,5 +596,10 @@
   "PAGINE": "PAGES",
   "Scarica il tracciato GPX": "Download the GPX track",
   "Scarica il tracciato KML": "Download the KML track",
-  "Scarica il tracciato GEOJSON": "Download the GEOJSON track"
+  "Scarica il tracciato GEOJSON": "Download the GEOJSON track",
+  "asphalt": "Asphalt",
+  "bitumenduro": "Bitumenduro",
+  "onoff": "Onoff",
+  "real-dirt": "Real dirt",
+  "bar": "Bar"
 }

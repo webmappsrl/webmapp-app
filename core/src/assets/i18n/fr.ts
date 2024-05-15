@@ -5,6 +5,11 @@ export const appFR = {
     'running': 'Course',
     'skitouring': 'Ski de randonnée',
     'walking': 'Marche',
+    'asphalt': 'Asphalte',
+    'bitumenduro': 'Bitumendure',
+    'onoff': 'Onoff',
+    'real_dirt': 'Chemin de terre',
+    'bar': 'Bar',
   },
   'sidemenu': {
     'project': 'Le projet',
@@ -607,4 +612,9 @@ export const appFR = {
     'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
   'PAGINE': 'PAGES',
   'metri': 'mètres',
+  'asphalt': 'Asphalte',
+  'bitumenduro': 'Bitumendure',
+  'onoff': 'Onoff',
+  'real_dirt': 'Chemin de terre',
+  'bar': 'Bar',
 };
