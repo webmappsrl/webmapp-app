@@ -4,7 +4,12 @@
     "hiking": "Randonnée",
     "running": "Course",
     "skitouring": "Ski de randonnée",
-    "walking": "Marche"
+    "walking": "Marche",
+    "asphalt": "Asphalte",
+    "bitumenduro": "Bitume dur",
+    "onoff": "Onoff",
+    "real-dirt": "Chemin de terre",
+    "bar": "Bar"
   },
   "sidemenu": {
     "project": "Le projet",
@@ -584,5 +589,10 @@
   "Escursionismo": "Randonnée",
   "Scarica il tracciato GPX": "Télécharger la trace GPX",
   "Scarica il tracciato KML": "Télécharger la trace KML",
-  "Scarica il tracciato GEOJSON": "Télécharger la trace GEOJSON"
+  "Scarica il tracciato GEOJSON": "Télécharger la trace GEOJSON",
+  "asphalt": "Asphalte",
+  "bitumenduro": "Bitume dur",
+  "onoff": "Onoff",
+  "real-dirt": "Chemin de terre",
+  "bar": "Bar"
 }
