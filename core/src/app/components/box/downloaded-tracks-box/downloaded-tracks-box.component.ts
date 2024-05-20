@@ -1,11 +1,8 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {Store} from '@ngrx/store';
-import {from, Observable, of} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {DownloadService} from 'src/app/services/download.service';
-import {offline} from 'src/app/store/network/network.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
-import {startWith, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {StorageService} from 'src/app/services/base/storage.service';
 @Component({
@@ -19,13 +16,9 @@ export class DownloadedTracksBoxComponent {
   getStorageImage = (url: string) => {
     return this._storageSvc.getImage(url) as Promise<any>;
   };
-  offline$: Observable<boolean> = this._storeNetwork
-    .select(offline)
-    .pipe(startWith(!navigator.onLine));
   tracks$: Observable<IHIT[]>;
 
   constructor(
-    private _storeNetwork: Store<INetworkRootState>,
     private _navCtrl: NavController,
     private _downloadSvc: DownloadService,
     private _storageSvc: StorageService,
