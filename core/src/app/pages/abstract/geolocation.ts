@@ -1,6 +1,6 @@
 import {Directive, OnDestroy} from '@angular/core';
 
-import {Platform} from '@ionic/angular';
+import {AlertController, Platform} from '@ionic/angular';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {BackgroundGeolocationPlugin} from '@capacitor-community/background-geolocation';
@@ -14,7 +14,7 @@ export abstract class GeolocationPage implements OnDestroy {
   currentPosition$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
 
-  constructor(platform: Platform) {
+  constructor(private alertController: AlertController) {
     this.start();
   }
 
@@ -24,6 +24,31 @@ export abstract class GeolocationPage implements OnDestroy {
 
   setCurrentLocation(event): void {
     this.currentPosition$.next(event);
+  }
+
+  async showPermissionExplanation() {
+    const alert = await this.alertController.create({
+      header: 'Location Permission Needed',
+      message:
+        'This app needs access to your location to provide the best experience. Please grant location permission.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Permission request canceled');
+          },
+        },
+        {
+          text: 'Allow',
+          handler: () => {
+            backgroundGeolocation.openSettings();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   start(): void {
@@ -40,15 +65,7 @@ export abstract class GeolocationPage implements OnDestroy {
           (location, error) => {
             if (error) {
               if (error.code === 'NOT_AUTHORIZED') {
-                if (
-                  window.confirm(
-                    'This app needs your location, ' +
-                      'but does not have permission.\n\n' +
-                      'Open settings now?',
-                  )
-                ) {
-                  backgroundGeolocation.openSettings();
-                }
+                this.showPermissionExplanation();
               }
               return console.error(error);
             }
