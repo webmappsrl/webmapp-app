@@ -325,6 +325,7 @@ export const appFR = {
       'projectlink': 'Projet',
       'disclaimerlink': 'Clause de non-responsabilité',
       'creditslink': 'Crédits',
+      'privacylink': 'Privacy',
     },
     'register': {
       'averagespeed': 'Vitesse moyenne',

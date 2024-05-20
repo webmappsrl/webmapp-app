@@ -300,6 +300,7 @@ export const appEN = {
       'projectlink': 'Project',
       'disclaimerlink': 'Disclaimer',
       'creditslink': 'Credits',
+      'privacylink': 'Privacy',
       'data': {
         'data': 'Data usage',
         'downloads': 'Downloads',
