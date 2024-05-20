@@ -17,6 +17,7 @@ import {
   confMAP,
   confPAGES,
   confPROJECT,
+  confPRIVACY,
 } from 'wm-core/store/conf/conf.selector';
 
 @Component({
@@ -54,11 +55,6 @@ export class SettingsComponent implements OnInit {
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
   ) {}
-
-  ngOnInit(): void {
-    this.version = this._configSvc.version;
-    this.isLoggedIn = this._authSvc.isLoggedIn;
-  }
 
   changeDistanceFilter(event): void {
     this.currentDistanceFilter = event.detail.value;
@@ -109,6 +105,11 @@ export class SettingsComponent implements OnInit {
       );
   }
 
+  ngOnInit(): void {
+    this.version = this._configSvc.version;
+    this.isLoggedIn = this._authSvc.isLoggedIn;
+  }
+
   openCmp(nameCmp: string) {
     this.confPages$
       .pipe(
@@ -119,7 +120,9 @@ export class SettingsComponent implements OnInit {
               ? pages.PROJECT
               : nameCmp === 'disclaimer'
               ? pages.DISCLAIMER
-              : pages.CREDITS;
+              : nameCmp === 'credits'
+              ? pages.CREDITS
+              : pages.PRIVACY;
           return this._modalCtrl.create({
             component: WmInnerHtmlComponent,
             componentProps: {

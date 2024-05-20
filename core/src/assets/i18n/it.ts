@@ -319,6 +319,7 @@ export const appIT = {
       'projectlink': 'Progetto',
       'disclaimerlink': 'Disclaimer',
       'creditslink': 'Credits',
+      'privacylink': 'Privacy',
     },
     'register': {
       'averagespeed': 'Velocità media',

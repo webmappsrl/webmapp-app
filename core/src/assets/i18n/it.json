@@ -313,7 +313,8 @@
       "langPlaceholder": "seleziona",
       "projectlink": "Progetto",
       "disclaimerlink": "Disclaimer",
-      "creditslink": "Credits"
+      "creditslink": "Credits",
+      "privacylink": "Privacy"
     },
     "register": {
       "averagespeed": "Velocità media",

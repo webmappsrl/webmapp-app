@@ -315,7 +315,8 @@
       "langPlaceholder": "select",
       "projectlink": "Project",
       "disclaimerlink": "Disclaimer",
-      "creditslink": "Credits"
+      "creditslink": "Credits",
+      "privacylink": "Privacy"
     },
     "register": {
       "averagespeed": "Average speed",
