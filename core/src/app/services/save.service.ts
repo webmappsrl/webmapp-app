@@ -430,7 +430,7 @@ export class SaveService {
       date: prop.date,
       uuid: prop.uuid,
     } as ITrack;
-    return {ret, ...rawData};
+    return {...ret, ...rawData};
   }
 
   //getPhotoData
@@ -467,7 +467,7 @@ export class SaveService {
       title: prop.name ?? null,
       uuid: rawData.uuid,
     } as WaypointSave;
-    return {ret, ...rawData};
+    return {...ret, ...rawData};
   }
 
   private async _deleteGeneric(key): Promise<any> {
