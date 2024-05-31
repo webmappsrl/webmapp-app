@@ -415,7 +415,7 @@ export class SaveService {
     geojson.addProperties(rawData);
     geojson.addProperties(metaData);
 
-    return {
+    const ret = {
       activity: rawData.activity ?? null,
       geojson,
       description: prop.description ?? null,
@@ -430,6 +430,7 @@ export class SaveService {
       date: prop.date,
       uuid: prop.uuid,
     } as ITrack;
+    return {ret, ...rawData};
   }
 
   //getPhotoData
@@ -450,7 +451,7 @@ export class SaveService {
   private _convertFeatureToWaypointSave(feature: Feature): WaypointSave {
     const prop = feature.properties;
     const rawData = prop.raw_data ? JSON.parse(prop.raw_data) : null;
-    return {
+    const ret = {
       city: rawData.city ?? null,
       date: prop.date,
       description: prop.description ?? null,
@@ -466,6 +467,7 @@ export class SaveService {
       title: prop.name ?? null,
       uuid: rawData.uuid,
     } as WaypointSave;
+    return {ret, ...rawData};
   }
 
   private async _deleteGeneric(key): Promise<any> {
