@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.11.2](https://github.com/webmappsrl/webmapp-app/compare/v2.11.1...v2.11.2) (2024-05-31)
+
+
+### Miscellaneous
+
+* add privacy link to settings component ([#24](https://github.com/webmappsrl/webmapp-app/issues/24)) ([d6f4d00](https://github.com/webmappsrl/webmapp-app/commit/d6f4d00a7860e7556e1cab2a41dde3e21eff57c7))
+* Refactor SaveService to improve code readability oc: 3418 ([8a37315](https://github.com/webmappsrl/webmapp-app/commit/8a37315cf68d6b56e3d3dd7a6547b93e3ea239ed))
+* Remove unused imports and variables in downloaded-tracks-box.component.ts ([2ce5a7d](https://github.com/webmappsrl/webmapp-app/commit/2ce5a7d4fe0813a16567580cea3ff0a1878e3443))
+* Update geolocation.ts ([ae181cf](https://github.com/webmappsrl/webmapp-app/commit/ae181cfae5a8e1b95eb42478d62c865cce96b09a))
+* Update map.page.html oc:2835 ([c7de296](https://github.com/webmappsrl/webmapp-app/commit/c7de2968dcad27fe32ceb36f392738debc7dc521))
+
 ## [2.11.1](https://github.com/webmappsrl/webmapp-app/compare/v2.11.0...v2.11.1) (2024-05-15)
 
 
