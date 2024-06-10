@@ -16,7 +16,7 @@
       [wmMapFeatureCollection]="(wmMapFeatureCollectionOverlay$|async)!= null"
       [wmMapFeatureCollectionOverlay]="wmMapFeatureCollectionOverlay$|async"
       [wmMapFeatureCollectionOverlayUnselect]="(resetSelectedPopup$|async)"
-      [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0 &&(!(toggleLayerDirective$|async) && (currentLayer$|async)==null)"
+      [wmMapLayerDisableLayers]="(currentFilters$|async).length > 0 || (!(toggleLayerDirective$|async) && (currentLayer$|async)==null)"
       (wmMapFeatureCollectionLayerSelected)="selectedLayerById($event);wmap.wmMapCloseTopRightBtnsEVT$.emit('')"
       (wmMapFeatureCollectionPopup)="openPopup($event)"
       wmMapPois

@@ -27,6 +27,10 @@ gulp build -i pnfc -g 49
 gulp build -i motomappa -g 53
 gulp build -i carg -g 55
 gulp build -i oman -g 56
+gulp build -i acquasorgente -g 58
+gulp build -i parcopan -g 63
+gulp build -i vdc -g 64
+gulp build -i pnab -g 65
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio
