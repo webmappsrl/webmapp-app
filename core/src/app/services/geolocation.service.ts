@@ -247,21 +247,6 @@ export class GeolocationService {
         },
         (location, error) => {
           if (error) {
-            if (error.code === 'NOT_AUTHORIZED') {
-              if (
-                window.confirm(
-                  'This app needs your location, ' +
-                    'but does not have permission.\n\n' +
-                    'Open settings now?',
-                )
-              ) {
-                // It can be useful to direct the user to their device's
-                // settings when location permissions have been denied. The
-                // plugin provides the 'openSettings' method to do exactly
-                // this.
-                backgroundGeolocation.openSettings();
-              }
-            }
             return console.error(error);
           }
           console.log(
