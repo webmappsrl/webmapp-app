@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.11.3](https://github.com/webmappsrl/webmapp-app/compare/v2.11.2...v2.11.3) (2024-06-17)
+
+
+### Bug Fixes
+
+* Change directory for writing file in TrackdetailPage oc:3422 ([63b6b22](https://github.com/webmappsrl/webmapp-app/commit/63b6b228ca33d338898baf39dd710dfe6dcfb579))
+* Refactor object merging in SaveService oc:3418 ([79b3e73](https://github.com/webmappsrl/webmapp-app/commit/79b3e7300ee0950ad03073d4a7ced6285a4db3de))
+
+
+### Miscellaneous
+
+* Remove unnecessary code for handling location permission denial ([479d5a5](https://github.com/webmappsrl/webmapp-app/commit/479d5a50953903333106b167a06e02499dca8a1b))
+
 ## [2.11.2](https://github.com/webmappsrl/webmapp-app/compare/v2.11.1...v2.11.2) (2024-05-31)
 
 
