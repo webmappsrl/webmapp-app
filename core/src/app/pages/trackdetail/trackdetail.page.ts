@@ -164,7 +164,7 @@ export class TrackdetailPage {
       const writeResult = await Filesystem.writeFile({
         path: fileName,
         data,
-        directory: Directory.Documents,
+        directory: Directory.External,
         encoding: Encoding.UTF8,
       });
 
