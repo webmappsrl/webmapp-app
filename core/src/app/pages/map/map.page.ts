@@ -414,6 +414,7 @@ export class MapPage implements OnInit, OnDestroy {
   ionViewWillLeave(): void {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
+    this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
     this.goToTrack(null);
     this.mapTrackDetailsCmp.none();
     this.showDownload$.next(false);
@@ -430,8 +431,10 @@ export class MapPage implements OnInit, OnDestroy {
 
   openPopup(popup): void {
     this.popup$.next(popup);
-    if (popup != null) {
+    if (popup != null && popup != '') {
       this.mapTrackDetailsCmp.open();
+    } else {
+      this.mapTrackDetailsCmp.none();
     }
   }
 
@@ -476,6 +479,7 @@ export class MapPage implements OnInit, OnDestroy {
     this._confMAPLAYERS$
       .pipe(
         take(1),
+        filter(layers => layers != null),
         map(layers => {
           const layer = layers.filter(l => +l.id === id);
           return layer.length === 1 ? layer[0] : null;
