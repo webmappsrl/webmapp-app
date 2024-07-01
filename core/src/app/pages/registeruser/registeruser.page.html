@@ -161,17 +161,14 @@
     </div>
 
     <ion-label class="webmapp-registeruser-policy">
-      {{ "pages.registeruser.privacy1" | wmtrans }}
-      <ng-container *ngIf="(confPrivacy$ | async) as privacy; else wmPrivacy">
-        <a
-          class="webmapp-registeruser-policylink"
-          (click)="openCmp('privacy')"
-          href="javascript:void(0);"
-        >
-          {{ "pages.registeruser.privacylink1" | wmtrans }}
-        </a>
+      <ng-container *ngIf="(confPrivacy$ | async) as privacy; else wmDefaultPrivacy">
+        <ng-container *ngIf="privacy!= null && privacy.html != null; else wmDefaultPrivacy">
+          <a class="webmapp-registeruser-policylink" (click)="openCmp(privacy)">
+            {{ "pages.registeruser.privacylink1" | wmtrans }}
+          </a>
+        </ng-container>
       </ng-container>
-      <ng-template #wmPrivacy>
+      <ng-template #wmDefaultPrivacy>
         <a
           class="webmapp-registeruser-policylink"
           target="_blank"

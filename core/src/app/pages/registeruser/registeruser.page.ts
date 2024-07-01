@@ -14,8 +14,8 @@ import {CoinService} from 'src/app/services/coin.service';
 import {LangService} from 'wm-core/localization/lang.service';
 import {Store} from '@ngrx/store';
 import {confPRIVACY, confPAGES} from 'wm-core/store/conf/conf.selector';
-import {Observable} from 'rxjs';
-import {switchMap, take} from 'rxjs/operators';
+import {Observable, from} from 'rxjs';
+import {take} from 'rxjs/operators';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 
 @Component({
@@ -69,33 +69,27 @@ export class RegisteruserPage implements OnInit {
     this.confPages$ = this._store.select(confPAGES);
   }
 
-  back() {
-    this._navController.back();
-  }
-
   ngOnInit() {
     this.translate.get('pages.registeruser.loading').subscribe(t => (this.loadingString = t));
   }
 
-  openCmp(nameCmp: string) {
-    this.confPages$
-      .pipe(
-        take(1),
-        switchMap(pages => {
-          const conf = nameCmp === 'privacy' ? pages.PRIVACY : null;
-          return this._modalCtrl.create({
-            component: WmInnerHtmlComponent,
-            componentProps: {
-              html: conf.html,
-            },
-            swipeToClose: true,
-            mode: 'ios',
-          });
-        }),
-      )
-      .subscribe(modal => {
-        modal.present();
-      });
+  back() {
+    this._navController.back();
+  }
+
+  openCmp(privacy: any): void {
+    from(
+      this._modalCtrl.create({
+        component: WmInnerHtmlComponent,
+        componentProps: {
+          html: privacy.html,
+        },
+        swipeToClose: true,
+        mode: 'ios',
+      }),
+    )
+      .pipe(take(1))
+      .subscribe(modal => modal.present());
   }
 
   async register() {
