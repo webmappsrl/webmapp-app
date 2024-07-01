@@ -7,11 +7,16 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {LoadingController, NavController, PopoverController} from '@ionic/angular';
+import {LoadingController, ModalController, NavController, PopoverController} from '@ionic/angular';
 import {GenericPopoverComponent} from 'src/app/components/shared/generic-popover/generic-popover.component';
 import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
 import {LangService} from 'wm-core/localization/lang.service';
+import {Store} from '@ngrx/store';
+import {confPRIVACY, confPAGES} from 'wm-core/store/conf/conf.selector';
+import {Observable} from 'rxjs';
+import {switchMap, take} from 'rxjs/operators';
+import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 
 @Component({
   selector: 'app-registeruser',
@@ -32,6 +37,8 @@ export class RegisteruserPage implements OnInit {
     let confirmPass = group.get('confirmPassword').value;
     return pass === confirmPass ? null : {notSame: true};
   };
+  public confPages$: Observable<any>;
+  public confPrivacy$: Observable<any>;
   public isSubmitted = false;
   public loadingString = '';
   public registerForm: UntypedFormGroup;
@@ -45,6 +52,8 @@ export class RegisteruserPage implements OnInit {
     public popoverController: PopoverController,
     public loadingController: LoadingController,
     private translate: LangService,
+    private _store: Store<any>,
+    private _modalCtrl: ModalController,
   ) {
     this.registerForm = this._formBuilder.group(
       {
@@ -56,14 +65,37 @@ export class RegisteruserPage implements OnInit {
       },
       {validators: this.checkPasswords},
     );
+    this.confPrivacy$ = this._store.select(confPRIVACY);
+    this.confPages$ = this._store.select(confPAGES);
+  }
+
+  back() {
+    this._navController.back();
   }
 
   ngOnInit() {
     this.translate.get('pages.registeruser.loading').subscribe(t => (this.loadingString = t));
   }
 
-  back() {
-    this._navController.back();
+  openCmp(nameCmp: string) {
+    this.confPages$
+      .pipe(
+        take(1),
+        switchMap(pages => {
+          const conf = nameCmp === 'privacy' ? pages.PRIVACY : null;
+          return this._modalCtrl.create({
+            component: WmInnerHtmlComponent,
+            componentProps: {
+              html: conf.html,
+            },
+            swipeToClose: true,
+            mode: 'ios',
+          });
+        }),
+      )
+      .subscribe(modal => {
+        modal.present();
+      });
   }
 
   async register() {
