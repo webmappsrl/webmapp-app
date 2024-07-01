@@ -27,7 +27,7 @@
     "yargs": "^16.2.0"
   },
   "name": "webmapp-app",
-  "version": "2.11.4",
+  "version": "2.11.5",
   "author": "Webmapp S.r.l.",
   "homepage": "https://webmapp.it/",
   "scripts": {
