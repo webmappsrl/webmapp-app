@@ -28,6 +28,8 @@ gulp build -i motomappa -g 53
 gulp build -i carg -g 55
 gulp build -i oman -g 56
 gulp build -i acquasorgente -g 58
+gulp build -i bagnolo -g 61
+gulp build -i apuane -g 62
 gulp build -i parcopan -g 63
 gulp build -i vdc -g 64
 gulp build -i pnab -g 65
