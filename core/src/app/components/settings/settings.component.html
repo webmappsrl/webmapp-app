@@ -55,34 +55,50 @@
         <ion-toggle [checked]="keepAwake" (ionChange)="changeKeepAwake($event)"></ion-toggle>
       </ion-item>
     </ion-item-group>
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>{{'PAGINE'|wmtrans}}</ion-label>
+      </ion-item-divider>
+      <div class="webmapp-profile-links">
+        <ion-button
+          (click)="openCmp('project')"
+          size="small"
+          fill="outline"
+          >{{'pages.profile.projectlink'|wmtrans}}</ion-button
+        >
+        <ion-button
+          (click)="openCmp('disclaimer')"
+          size="small"
+          fill="outline"
+          >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
+        >
+        <ion-button
+          (click)="openCmp('credits')"
+          size="small"
+          fill="outline"
+          >{{'pages.profile.creditslink'|wmtrans}}</ion-button
+        >
+        <ion-button
+          (click)="openCmp('privacy')"
+          size="small"
+          fill="outline"
+          >{{'pages.profile.privacylink'|wmtrans}}</ion-button
+        >
+      </div>
+    </ion-item-group>
+
+    <ion-item-group>
+      <ion-item-divider>
+        <ion-label>{{'MEMORIA'|wmtrans}}</ion-label>
+      </ion-item-divider>
+      <ion-item>
+        <ion-button
+          (click)="clear()"
+          size="small"
+          fill="outline"
+          >{{'resetta la memoria'|wmtrans}}</ion-button
+        >
+      </ion-item>
+    </ion-item-group>
   </ion-list>
-  <ion-item-divider>
-    <ion-label>{{'PAGINE'|wmtrans}}</ion-label>
-  </ion-item-divider>
-  <div class="webmapp-profile-links">
-    <ion-button
-      (click)="openCmp('project')"
-      size="small"
-      fill="outline"
-      >{{'pages.profile.projectlink'|wmtrans}}</ion-button
-    >
-    <ion-button
-      (click)="openCmp('disclaimer')"
-      size="small"
-      fill="outline"
-      >{{'pages.profile.disclaimerlink'|wmtrans}}</ion-button
-    >
-    <ion-button
-      (click)="openCmp('credits')"
-      size="small"
-      fill="outline"
-      >{{'pages.profile.creditslink'|wmtrans}}</ion-button
-    >
-    <ion-button
-      (click)="openCmp('privacy')"
-      size="small"
-      fill="outline"
-      >{{'pages.profile.privacylink'|wmtrans}}</ion-button
-    >
-  </div>
 </ion-content>

@@ -623,4 +623,8 @@ export const appEN = {
   'no': 'No',
   'yes': 'Yes',
   'duration': 'Duration',
+  'MEMORIA': 'MEMORY',
+  'resetta la memoria': 'reset memory',
+  'sei sicuro di voler cancellare cache e dati  salvati?':
+    'are you sure you want to delete saved cache and data?',
 };

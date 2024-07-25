@@ -56,6 +56,11 @@ export class SettingsComponent implements OnInit {
     private _geolocationSvc: GeolocationService,
   ) {}
 
+  ngOnInit(): void {
+    this.version = this._configSvc.version;
+    this.isLoggedIn = this._authSvc.isLoggedIn;
+  }
+
   changeDistanceFilter(event): void {
     this.currentDistanceFilter = event.detail.value;
     localStorage.setItem('wm-distance-filter', `${this.currentDistanceFilter}`);
@@ -69,6 +74,76 @@ export class SettingsComponent implements OnInit {
       KeepAwake.allowSleep();
     }
     localStorage.setItem('wm-keep-awake', `${this.keepAwake}`);
+  }
+
+  async clear() {
+    this._alertCtrl
+      .create({
+        mode: 'ios',
+        header: this._langSvc.instant('generic.warning'),
+        message: this._langSvc.instant('sei sicuro di voler cancellare cache e dati  salvati?'),
+        buttons: [
+          {
+            text: this._langSvc.instant('generic.cancel'),
+          },
+          {
+            text: this._langSvc.instant('generic.confirm'),
+            handler: async () => {
+              await this.clearWebViewData();
+            },
+          },
+        ],
+      })
+      .then(
+        alert => {
+          alert.present();
+        },
+        alertError => {
+          console.warn(alertError);
+        },
+      );
+  }
+
+  async clearWebViewData(): Promise<void> {
+    try {
+      // Cancella Local Storage
+      localStorage.clear();
+      console.log('Local storage cleared');
+
+      // Cancella Session Storage
+      sessionStorage.clear();
+      console.log('Session storage cleared');
+
+      // Cancella IndexedDB
+      const dbs = await window.indexedDB.databases();
+      for (const db of dbs) {
+        if (db.name) {
+          window.indexedDB.deleteDatabase(db.name);
+          console.log(`IndexedDB ${db.name} deleted`);
+        }
+      }
+
+      // Cancella Cache Storage
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        for (const key of keys) {
+          await caches.delete(key);
+          console.log(`Cache ${key} deleted`);
+        }
+      }
+
+      // Cancella i Cookie
+      document.cookie.split(';').forEach(cookie => {
+        const eqPos = cookie.indexOf('=');
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        console.log(`Cookie ${name} deleted`);
+      });
+
+      console.log('WebView data cleared');
+    } catch (error) {
+      console.error('Error clearing WebView data', error);
+    }
   }
 
   async dismiss(): Promise<void> {
@@ -103,11 +178,6 @@ export class SettingsComponent implements OnInit {
           console.warn(alertError);
         },
       );
-  }
-
-  ngOnInit(): void {
-    this.version = this._configSvc.version;
-    this.isLoggedIn = this._authSvc.isLoggedIn;
   }
 
   openCmp(nameCmp: string) {

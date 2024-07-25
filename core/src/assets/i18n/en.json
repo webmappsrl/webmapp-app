@@ -602,5 +602,8 @@
   "bitumenduro": "Bitumenduro",
   "onoff": "Onoff",
   "real-dirt": "Real dirt",
-  "bar": "Bar"
+  "bar": "Bar",
+  "MEMORIA": "MEMORY",
+  "resetta la memoria": "reset memory",
+  "sei sicuro di voler cancellare cache e dati  salvati?": "are you sure you want to delete saved cache and data?"
 }
