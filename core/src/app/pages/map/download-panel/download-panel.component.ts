@@ -23,28 +23,43 @@ import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WmDownloadPanelComponent implements OnChanges {
-  public isInit = true;
-  public isDownloading = false;
-  public isDownloaded = false;
-
-  public downloadElements;
-
-  private myEventSubscription;
+  private _myEventSubscription;
 
   @Input() track: CGeojsonLineStringFeature;
-
-  @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
+  @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
+
+  downloadElements;
+  isDownloaded = false;
+  isDownloading = false;
+  isInit = true;
 
   constructor(private _downloadSvc: DownloadService, private _cdr: ChangeDetectorRef) {
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.track != null && changes.track.currentValue != null) {
       this.start();
     }
   }
+
+  completeDownloads(): void {
+    if (this._myEventSubscription) {
+      this._myEventSubscription.unsubscribe();
+    }
+    this.changeStatus.emit(downloadPanelStatus.FINISH);
+
+    this.isInit = false;
+    this.isDownloading = false;
+    this.isDownloaded = true;
+  }
+
+  gotoDownloads(): void {
+    this.exit.emit(null);
+  }
+
   start() {
     this.isInit = false;
     this.isDownloading = true;
@@ -53,14 +68,14 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.changeStatus.emit(downloadPanelStatus.DOWNLOADING);
 
     this.updateStatus(null);
-    this.myEventSubscription = this._downloadSvc.onChangeStatus.subscribe(x => {
+    this._myEventSubscription = this._downloadSvc.onChangeStatus.subscribe(x => {
       this.updateStatus(x);
     });
 
     this._downloadSvc.startDownload(this.track);
   }
 
-  updateStatus(status: DownloadStatus) {
+  updateStatus(status: DownloadStatus): void {
     this.downloadElements = [
       {
         name: 'downsetup',
@@ -87,19 +102,5 @@ export class WmDownloadPanelComponent implements OnChanges {
       this.completeDownloads();
     }
     this._cdr.detectChanges();
-  }
-  gotoDownloads() {
-    this.exit.emit(null);
-  }
-
-  completeDownloads() {
-    if (this.myEventSubscription) {
-      this.myEventSubscription.unsubscribe();
-    }
-    this.changeStatus.emit(downloadPanelStatus.FINISH);
-
-    this.isInit = false;
-    this.isDownloading = false;
-    this.isDownloaded = true;
   }
 }

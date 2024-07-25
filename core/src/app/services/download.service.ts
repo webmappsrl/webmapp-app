@@ -3,7 +3,6 @@ import {IGeojsonFeature, IGeojsonFeatureDownloaded} from '../types/model';
 import {Observable, ReplaySubject} from 'rxjs';
 
 import {DOWNLOAD_INDEX_KEY} from '../constants/storage';
-import {GEOHUB_TILES_DOMAIN} from '../constants/geohub';
 import {IMapRootState} from '../store/map/map';
 import {Injectable} from '@angular/core';
 import {StorageService} from './base/storage.service';
@@ -11,18 +10,18 @@ import {Store} from '@ngrx/store';
 import defaultImage from '../../assets/images/defaultImageB64.json';
 import {mapCurrentRelatedPoi} from '../store/map/map.selector';
 import {HttpClient} from '@angular/common/http';
-
+import {downloadTiles, getTilesByGeometry, removeTiles} from '../shared/map-core/src/utils';
 @Injectable({
   providedIn: 'root',
 })
 export class DownloadService {
   private _relatedPoi: any[] = [];
   private _relatedPoi$: Observable<any[]> = this._storeMap.select(mapCurrentRelatedPoi);
-  private _status: DownloadStatus;
   private downloadIndex: DownloadedTrackComponents[];
   private imgCache: Array<{key: string; value: string | ArrayBuffer | Blob}> = [];
 
-  public onChangeStatus: ReplaySubject<DownloadStatus> = new ReplaySubject<DownloadStatus>(1);
+  onChangeStatus: ReplaySubject<DownloadStatus> = new ReplaySubject<DownloadStatus>(1);
+  status: DownloadStatus;
 
   constructor(
     private storage: StorageService,
@@ -43,35 +42,28 @@ export class DownloadService {
     });
   }
 
-  public static async downloadFile(url): Promise<ArrayBuffer> {
-    // console.log("------- ~ DownloadService ~ downloadFile ~ url", url);
-    const data = await fetch(url, {mode: 'no-cors'});
+  static async downloadFile(url: string): Promise<ArrayBuffer> {
+    try {
+      const response = await fetch(url, {mode: 'cors'});
 
-    return data.arrayBuffer();
+      if (!response.ok) {
+        throw new Error(`Failed to download file: ${response.statusText}`);
+      }
 
-    //   const blob = await data.blob();
-    //   return new Promise((resolve) => {
-    //     const reader = new FileReader();
-    //     reader.readAsDataURL(blob);
-    //     try {
-    //       reader.onloadend = () => {
-    //         const base64data = reader.result;
-    //         resolve(base64data);
-    //       }
-    //     } catch (error) {
-    //       console.log("------- ~ UtilsService ~ downloadFile ~ error", error);
-    //       resolve('');
-    //     }
-    //   });
+      return response.arrayBuffer();
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      throw error;
+    }
   }
 
-  public addToIndex(obj: DownloadedTrackComponents) {
+  addToIndex(obj: DownloadedTrackComponents): void {
     this.downloadIndex.push(obj);
     this.saveIndex();
   }
 
-  public createNewStatus() {
-    this._status = {
+  createNewStatus(): void {
+    this.status = {
       finish: false,
       setup: 0,
       map: 0,
@@ -81,7 +73,7 @@ export class DownloadService {
     };
   }
 
-  public async downloadBase64Img(url): Promise<string | ArrayBuffer> {
+  async downloadBase64Img(url): Promise<string | ArrayBuffer> {
     try {
       let opt: RequestInit = {};
       // if (this.platform.is('mobile')) {
@@ -108,7 +100,7 @@ export class DownloadService {
     }
   }
 
-  public async downloadImages(urlList: string[], referenceTrack): Promise<number> {
+  async downloadImages(urlList: string[], referenceTrack): Promise<number> {
     if (urlList == null || urlList.length === 0) {
       this.updateStatus({
         finish: false,
@@ -133,40 +125,6 @@ export class DownloadService {
       this.updateStatus({
         finish: false,
         media: 1 / urlList.length,
-      });
-    }
-    return totalSize;
-  }
-
-  public async downloadMBtiles(tilesIDs: string[]): Promise<number> {
-    if (!tilesIDs) {
-      this.updateStatus({
-        finish: false,
-        map: 1,
-      });
-      return 0;
-    }
-
-    let totalSize = 0;
-    for (let i = 0; i < tilesIDs.length; i++) {
-      const tilesId = tilesIDs[i];
-
-      const existingFileName = await this.storage.getMBTileFilename(tilesId);
-      if (!existingFileName) {
-        try {
-          const tileData = await DownloadService.downloadFile(
-            `${GEOHUB_TILES_DOMAIN}/raster/${tilesId}.mbtiles`,
-          ); // TODO can do in async way
-          totalSize += tileData.byteLength;
-          await this.storage.setMBTiles(tilesId, tileData);
-        } catch (err) {
-          console.log('------- ~ DownloadService ~ downloadMBtiles ~ err', err);
-        }
-      }
-
-      this.updateStatus({
-        finish: false,
-        map: 1 / tilesIDs.length,
       });
     }
     return totalSize;
@@ -228,11 +186,7 @@ export class DownloadService {
       this.removeFromIndex(trackId);
 
       if (trackindex.tiles) {
-        trackindex.tiles.forEach(tile => {
-          if (!this.downloadIndex.find(x => x.tiles && x.tiles.includes(tile))) {
-            this.storage.removeMBTiles(tile);
-          }
-        });
+        removeTiles(trackindex.tiles, trackId);
       }
 
       if (trackindex.pois) {
@@ -307,8 +261,8 @@ export class DownloadService {
 
     // downaload mbtiles (MAP)
     // const mbtiles = ['2/2/1', '7/67/47', '11/1086/755', '11/1087/755'];
-    const mbtiles = track.properties.mbtiles;
-    sizeMb += await this.downloadMBtiles(mbtiles); // TODO async
+    const mbtiles = getTilesByGeometry(track.geometry);
+    sizeMb += await downloadTiles(mbtiles, track.properties.id, this.updateStatus.bind(this)); // TODO async
 
     const imageUrlList: string[] = [];
 
@@ -379,27 +333,26 @@ export class DownloadService {
       return Math.min(1, old + (sum ? sum : 0));
     };
 
-    this._status.setup = update(this._status.setup, statusUpdate.setup);
-    this._status.map = update(this._status.map, statusUpdate.map);
-    this._status.data = update(this._status.data, statusUpdate.data);
-    this._status.media = update(this._status.media, statusUpdate.media);
-    this._status.install = update(this._status.install, statusUpdate.install);
+    this.status.setup = update(this.status.setup, statusUpdate.setup);
+    this.status.map = update(this.status.map, statusUpdate.map);
+    this.status.data = update(this.status.data, statusUpdate.data);
+    this.status.media = update(this.status.media, statusUpdate.media);
+    this.status.install = update(this.status.install, statusUpdate.install);
 
     if (
-      this._status.setup > 0.99 &&
-      this._status.map > 0.99 &&
-      this._status.data > 0.99 &&
-      this._status.media > 0.99 &&
-      this._status.install > 0.99
+      this.status.setup > 0.99 &&
+      this.status.map > 0.99 &&
+      this.status.data > 0.99 &&
+      this.status.media > 0.99 &&
+      this.status.install > 0.99
     ) {
-      this._status.finish = true;
+      this.status.finish = true;
     }
+    this.onChangeStatus.next(this.status);
 
-    this.onChangeStatus.next(this._status);
-
-    if (this._status.finish) {
+    if (this.status.finish) {
       this.createNewStatus();
-      this.onChangeStatus.next(this._status);
+      this.onChangeStatus.next(this.status);
     }
   }
 
