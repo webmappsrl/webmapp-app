@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.0](https://github.com/webmappsrl/webmapp-app/compare/v2.11.5...v2.12.0) (2024-07-25)
+
+
+### Features
+
+* Enhance settings component with memory reset functionality ([694aa22](https://github.com/webmappsrl/webmapp-app/commit/694aa22185b667244addf47a9c147c60f4595636))
+* Refactored download service and map components.  oc: 3685 ([f576e33](https://github.com/webmappsrl/webmapp-app/commit/f576e33bdd428a2765260f12dca0f549697a7cc2))
+
 ## [2.11.5](https://github.com/webmappsrl/webmapp-app/compare/v2.11.4...v2.11.5) (2024-07-01)
 
 
