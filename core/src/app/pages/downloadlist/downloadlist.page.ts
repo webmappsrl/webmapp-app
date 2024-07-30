@@ -1,10 +1,10 @@
 import {AlertController, NavController} from '@ionic/angular';
 import {Component, OnInit} from '@angular/core';
-import {IGeojsonFeature, IGeojsonFeatureDownloaded} from 'src/app/types/model';
 
-import {DownloadService} from 'src/app/services/download.service';
 import {NavigationExtras, Router} from '@angular/router';
-import { LangService } from 'wm-core/localization/lang.service';
+import {LangService} from 'wm-core/localization/lang.service';
+import {getTracks, removeTrack} from 'src/app/shared/map-core/src/utils';
+import {GeoJSONFeature} from 'ol/format/GeoJSON';
 
 @Component({
   selector: 'app-downloadlist',
@@ -13,11 +13,10 @@ import { LangService } from 'wm-core/localization/lang.service';
 })
 export class DownloadlistPage implements OnInit {
   public isSelectedActive = false;
-  public selected: IGeojsonFeatureDownloaded[] = [];
-  public tracks: IGeojsonFeatureDownloaded[] = [];
+  public selected: GeoJSONFeature[] = [];
+  public tracks: GeoJSONFeature[] = [];
 
   constructor(
-    private _downloadSvc: DownloadService,
     private _navCtrl: NavController,
     private _router: Router,
     private _alertCtrl: AlertController,
@@ -25,7 +24,7 @@ export class DownloadlistPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.tracks = await this._downloadSvc.getDownloadedTracks();
+    this.tracks = await getTracks();
   }
 
   async deleteSelected() {
@@ -38,7 +37,7 @@ export class DownloadlistPage implements OnInit {
           text: this._langSvc.instant('Elimina'),
           handler: () => {
             this.selected.forEach(track => {
-              this._remove(track);
+              removeTrack(`${track.properties.id}`);
             });
             this.isSelectedActive = false;
           },
@@ -52,7 +51,7 @@ export class DownloadlistPage implements OnInit {
     this._navCtrl.navigateRoot('/map', {replaceUrl: true});
   }
 
-  open(track: IGeojsonFeature): void {
+  open(track: GeoJSONFeature): void {
     const clickedFeatureId = track.properties.id;
     if (clickedFeatureId != null) {
       let navigationExtras: NavigationExtras = {
@@ -64,7 +63,7 @@ export class DownloadlistPage implements OnInit {
     }
   }
 
-  async remove(track: IGeojsonFeature) {
+  async remove(track: GeoJSONFeature) {
     const alert = await this._alertCtrl.create({
       header: this._langSvc.instant('Attenzione'),
       message: this._langSvc.instant('Sei sicuro di voler eliminare la traccia?'),
@@ -73,7 +72,7 @@ export class DownloadlistPage implements OnInit {
         {
           text: this._langSvc.instant('Elimina'),
           handler: () => {
-            this._remove(track as IGeojsonFeatureDownloaded);
+            this._remove(track);
           },
         },
       ],
@@ -89,8 +88,8 @@ export class DownloadlistPage implements OnInit {
     }
   }
 
-  private async _remove(track: IGeojsonFeatureDownloaded) {
-    await this._downloadSvc.removeDownload(track.properties.id);
+  private async _remove(track: GeoJSONFeature) {
+    await removeTrack(`${track.properties.id}`);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
   }

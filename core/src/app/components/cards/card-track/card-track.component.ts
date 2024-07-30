@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {StorageService} from 'src/app/services/base/storage.service';
-import {IGeojsonFeature} from 'src/app/types/model';
+import {WmFeatureCollection} from 'src/app/shared/map-core/src/directives';
 
 @Component({
   selector: 'webmapp-card-track',
@@ -9,16 +8,11 @@ import {IGeojsonFeature} from 'src/app/types/model';
 })
 export class CardTrackComponent {
   @Input('isDownload') isDownload: boolean = false;
-  @Input('track') track: IGeojsonFeature;
-  @Output('open') openClick: EventEmitter<IGeojsonFeature> = new EventEmitter<IGeojsonFeature>();
-  @Output('remove') removeClick: EventEmitter<IGeojsonFeature> =
-    new EventEmitter<IGeojsonFeature>();
-
-  getStorageImage = (url: string) => {
-    return this._storageSvc.getImage(url) as Promise<any>;
-  };
-
-  constructor(private _storageSvc: StorageService) {}
+  @Input('track') track: WmFeatureCollection;
+  @Output('open') openClick: EventEmitter<WmFeatureCollection> =
+    new EventEmitter<WmFeatureCollection>();
+  @Output('remove') removeClick: EventEmitter<WmFeatureCollection> =
+    new EventEmitter<WmFeatureCollection>();
 
   open(): void {
     this.openClick.emit(this.track);

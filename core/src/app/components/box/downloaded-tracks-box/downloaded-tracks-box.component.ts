@@ -4,7 +4,7 @@ import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {StorageService} from 'src/app/services/base/storage.service';
-import {getImgTrack, getTracks} from 'src/app/shared/map-core/src/utils';
+import {getTracks} from 'src/app/shared/map-core/src/utils';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -13,9 +13,6 @@ import {getImgTrack, getTracks} from 'src/app/shared/map-core/src/utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
-  getStorageImage = (url: string) => {
-    return getImgTrack(url) as Promise<any>;
-  };
   tracks$: Observable<IHIT[]>;
 
   constructor(private _navCtrl: NavController, private _storageSvc: StorageService) {

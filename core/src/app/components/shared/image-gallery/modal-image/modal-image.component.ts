@@ -27,9 +27,6 @@ export class ModalImageComponent implements AfterViewInit {
   @ViewChild('gallery') slider: IonSlides;
 
   getActiveIndex$: Promise<number>;
-  getStorageImage = (url: string) => {
-    return this._storageSvc.getImage(url) as Promise<any>;
-  };
   idx$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   slideOptions = {
     on: {
@@ -41,6 +38,12 @@ export class ModalImageComponent implements AfterViewInit {
 
   constructor(private _modalCtrl: ModalController, private _storageSvc: StorageService) {}
 
+  ngAfterViewInit(): void {
+    this.slider.slideTo(this.idx$.value);
+    this.getActiveIndex$ = Promise.resolve(this.slider.getActiveIndex());
+    this.slider.ionSlideDidChange;
+  }
+
   closeModal(): void {
     this._modalCtrl.dismiss();
   }
@@ -49,12 +52,6 @@ export class ModalImageComponent implements AfterViewInit {
     let currentIdx = this.idx$.value;
     this.idx$.next(currentIdx + 1);
     this.slider.slideTo(currentIdx + 1);
-  }
-
-  ngAfterViewInit(): void {
-    this.slider.slideTo(this.idx$.value);
-    this.getActiveIndex$ = Promise.resolve(this.slider.getActiveIndex());
-    this.slider.ionSlideDidChange;
   }
 
   prev(): void {

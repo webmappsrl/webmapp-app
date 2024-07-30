@@ -1,90 +1,14 @@
 import {Injectable} from '@angular/core';
-import {IGeojsonCluster, IGeojsonFeature, IGeojsonPoi} from '../types/model';
-import {DownloadService} from './download.service';
+import {IGeojsonCluster, IGeojsonPoi} from '../types/model';
 import defaultImage from '../../assets/images/defaultImageB64.json';
+import { getImgTrack } from '../shared/map-core/src/utils';
 @Injectable({
   providedIn: 'root',
 })
 export class MarkerService {
-  constructor(private download: DownloadService) {}
-
-  public trackMarkerSize = 32;
-  public async createStartTrackMarkerHtmlForCanvas(value: IGeojsonPoi): Promise<string> {
-    let html = ` <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">`;
-    html += `<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 74"><path d="M32,63.5a6.42,6.42,0,0,1-3.47-1.11,64.93,64.93,0,0,1-16.7-15.51,32.63,32.63,0,0,1-7-19.76C4.88,12.44,17,.5,32,.5S59.12,12.44,59.12,27.12a32.65,32.65,0,0,1-7,19.77A66.08,66.08,0,0,1,35.47,62.38,6.25,6.25,0,0,1,32,63.5Z" style="fill:#fff"/><path d="M32,5.5A21.89,21.89,0,0,0,9.88,27.12a27.61,27.61,0,0,0,5.95,16.74h0A60,60,0,0,0,31.24,58.18c.7.45.91.4,1.5,0A61,61,0,0,0,48.17,43.86a27.61,27.61,0,0,0,5.95-16.74C54.12,15.2,44.19,5.5,32,5.5Z" style="fill:#2f9e44"/><path d="M32,42.05A14.25,14.25,0,1,1,46.32,27.87,14.25,14.25,0,0,1,32,42.05Zm0-23.49a9.25,9.25,0,1,0,9.34,9.31A9.32,9.32,0,0,0,32,18.56Z" style="fill:#fff"/></svg>`;
-    html += `</div>`;
-
-    return html;
-  }
-
-  public async createEndTrackMarkerHtmlForCanvas(value: IGeojsonPoi): Promise<string> {
-    let html = ` <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">`;
-    html += `<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 74"><path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64A33.47,33.47,0,0,0,32.21,8.8,35.64,35.64,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3.49,3,44,44,0,0,0-16,.41A44.59,44.59,0,0,1,22.21,39a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46A2.94,2.94,0,0,1,14.82,4.51Z" style="fill:#2f9e44;fill-rule:evenodd"/><path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64a36.08,36.08,0,0,0,5.45.42,31.41,31.41,0,0,0,9-1.26,33.4,33.4,0,0,1,9.55-1.34A35.38,35.38,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3,3l-.48,0a43.21,43.21,0,0,0-6.74-.54,47,47,0,0,0-9.21.95A44.47,44.47,0,0,1,24.1,39c-.64,0-1.28,0-1.89,0a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46a2.94,2.94,0,0,1,2.94-2.95m0-2.87A5.83,5.83,0,0,0,9,7.46V56.54a5.82,5.82,0,0,0,11.64,0V41.77l1.44.08c.67,0,1.34,0,2,0A47.48,47.48,0,0,0,33.25,41a43.75,43.75,0,0,1,8.64-.9,40.11,40.11,0,0,1,6.3.51,7,7,0,0,0,.92.07A5.88,5.88,0,0,0,55,34.83V11.16a5.68,5.68,0,0,0-4.29-5.55,37.89,37.89,0,0,0-9-1A35.82,35.82,0,0,0,31.38,6.05a28.53,28.53,0,0,1-8.16,1.13c-.87,0-1.73,0-2.59-.1a5.84,5.84,0,0,0-5.81-5.44Z" style="fill:#fff"/></svg>`;
-    html += `</div>`;
-
-    return html;
-  }
-
-  public poiMarkerSize = 46;
-
-  public async createPoiMarkerHtmlForCanvas(value: any, selected = false): Promise<string> {
-    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
-      value.properties?.feature_image?.sizes['108x137'],
-    );
-    let html = `
-    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
-
-    if (!value.isSmall) {
-      html += `
-        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
-          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="#2F9E44"/>
-          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
-          <defs>
-            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
-              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
-              </image>
-            </pattern>
-          </defs>
-        </svg>`;
-    } else {
-      html += `
-
-      <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle opacity="${
-        selected ? 1 : 0.2
-      }" cx="23.3187" cy="23.319" r="13.0967" transform="rotate(0.981294 13.3187 13.319)" fill="#2F9E44"/>
-<rect x="17.32812" y="17.11877" width="12" height="12" rx="6" transform="rotate(0.981294 7.32812 7.11877)" fill="#2F9E44" stroke="white" stroke-width="2"/>
-</svg>
-      `;
-    }
-
-    html += ` </div>`;
-
-    return html;
-  }
-
-  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
-    if (url == null) {
-      return defaultImage.image;
-    }
-    const opt = {};
-    const data = await fetch(url, opt);
-    const blob = await data.blob();
-    return new Promise(resolve => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      try {
-        reader.onloadend = () => {
-          const base64data = reader.result;
-          resolve(base64data);
-        };
-      } catch (error) {
-        resolve('');
-      }
-    });
-  }
-
   public clusterMarkerSize = 100;
+  public poiMarkerSize = 46;
+  public trackMarkerSize = 32;
 
   public async createClusterMarkerHtmlForCanvas(
     value: IGeojsonCluster,
@@ -93,12 +17,12 @@ export class MarkerService {
     let img2b64: string | ArrayBuffer = null;
     let img3b64: string | ArrayBuffer = null;
 
-    let img1b64: string | ArrayBuffer = await this.download.getB64img(value.properties.images[0]);
+    let img1b64: string | ArrayBuffer = await getImgTrack(value.properties.images[0]);
     if (value.properties.images.length > 1) {
-      img2b64 = await this.download.getB64img(value.properties.images[1]);
+      img2b64 = await getImgTrack(value.properties.images[1]);
     }
     if (value.properties.images.length > 2) {
-      img3b64 = await this.download.getB64img(value.properties.images[2]);
+      img3b64 = await getImgTrack(value.properties.images[2]);
     }
     const clusterCount = value.properties.ids.length;
 
@@ -168,7 +92,6 @@ export class MarkerService {
         font-weight: bold;
         font-size: 12px;">${clusterCount}</div>
 
-
       `;
     }
 
@@ -184,5 +107,78 @@ export class MarkerService {
     html += ` </div>`;
 
     return html;
+  }
+
+  public async createEndTrackMarkerHtmlForCanvas(value: IGeojsonPoi): Promise<string> {
+    let html = ` <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">`;
+    html += `<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 74"><path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64A33.47,33.47,0,0,0,32.21,8.8,35.64,35.64,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3.49,3,44,44,0,0,0-16,.41A44.59,44.59,0,0,1,22.21,39a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46A2.94,2.94,0,0,1,14.82,4.51Z" style="fill:#2f9e44;fill-rule:evenodd"/><path d="M14.82,4.51a3,3,0,0,1,2.95,3V9.64a36.08,36.08,0,0,0,5.45.42,31.41,31.41,0,0,0,9-1.26,33.4,33.4,0,0,1,9.55-1.34A35.38,35.38,0,0,1,50,8.4a2.8,2.8,0,0,1,2.1,2.76V34.83a3,3,0,0,1-3,3l-.48,0a43.21,43.21,0,0,0-6.74-.54,47,47,0,0,0-9.21.95A44.47,44.47,0,0,1,24.1,39c-.64,0-1.28,0-1.89,0a35.1,35.1,0,0,1-4.44-.46v18a2.95,2.95,0,1,1-5.89,0V7.46a2.94,2.94,0,0,1,2.94-2.95m0-2.87A5.83,5.83,0,0,0,9,7.46V56.54a5.82,5.82,0,0,0,11.64,0V41.77l1.44.08c.67,0,1.34,0,2,0A47.48,47.48,0,0,0,33.25,41a43.75,43.75,0,0,1,8.64-.9,40.11,40.11,0,0,1,6.3.51,7,7,0,0,0,.92.07A5.88,5.88,0,0,0,55,34.83V11.16a5.68,5.68,0,0,0-4.29-5.55,37.89,37.89,0,0,0-9-1A35.82,35.82,0,0,0,31.38,6.05a28.53,28.53,0,0,1-8.16,1.13c-.87,0-1.73,0-2.59-.1a5.84,5.84,0,0,0-5.81-5.44Z" style="fill:#fff"/></svg>`;
+    html += `</div>`;
+
+    return html;
+  }
+
+  public async createPoiMarkerHtmlForCanvas(value: any, selected = false): Promise<string> {
+    const img1b64: string | ArrayBuffer = await this._downloadBase64Img(
+      value.properties?.feature_image?.sizes['108x137'],
+    );
+    let html = `
+    <div class="webmapp-map-poimarker-container" style="position: relative;width: 30px;height: 60px;">`;
+
+    if (!value.isSmall) {
+      html += `
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style=" position: absolute;  width: 46px;  height: 46px;  left: 0px;  top: 0px;">
+          <circle opacity="${selected ? 1 : 0.2}" cx="23" cy="23" r="23" fill="#2F9E44"/>
+          <rect x="5" y="5" width="36" height="36" rx="18" fill="url(#img)" stroke="white" stroke-width="2"/>
+          <defs>
+            <pattern height="100%" width="100%" patternContentUnits="objectBoundingBox" id="img">
+              <image height="1" width="1" preserveAspectRatio="xMidYMid slice" xlink:href="${img1b64}">
+              </image>
+            </pattern>
+          </defs>
+        </svg>`;
+    } else {
+      html += `
+
+      <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle opacity="${
+        selected ? 1 : 0.2
+      }" cx="23.3187" cy="23.319" r="13.0967" transform="rotate(0.981294 13.3187 13.319)" fill="#2F9E44"/>
+<rect x="17.32812" y="17.11877" width="12" height="12" rx="6" transform="rotate(0.981294 7.32812 7.11877)" fill="#2F9E44" stroke="white" stroke-width="2"/>
+</svg>
+      `;
+    }
+
+    html += ` </div>`;
+
+    return html;
+  }
+
+  public async createStartTrackMarkerHtmlForCanvas(value: IGeojsonPoi): Promise<string> {
+    let html = ` <div class="webmapp-map-clustermarker-container" style="position: relative;width: 32px;height: 32px; ">`;
+    html += `<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 74"><path d="M32,63.5a6.42,6.42,0,0,1-3.47-1.11,64.93,64.93,0,0,1-16.7-15.51,32.63,32.63,0,0,1-7-19.76C4.88,12.44,17,.5,32,.5S59.12,12.44,59.12,27.12a32.65,32.65,0,0,1-7,19.77A66.08,66.08,0,0,1,35.47,62.38,6.25,6.25,0,0,1,32,63.5Z" style="fill:#fff"/><path d="M32,5.5A21.89,21.89,0,0,0,9.88,27.12a27.61,27.61,0,0,0,5.95,16.74h0A60,60,0,0,0,31.24,58.18c.7.45.91.4,1.5,0A61,61,0,0,0,48.17,43.86a27.61,27.61,0,0,0,5.95-16.74C54.12,15.2,44.19,5.5,32,5.5Z" style="fill:#2f9e44"/><path d="M32,42.05A14.25,14.25,0,1,1,46.32,27.87,14.25,14.25,0,0,1,32,42.05Zm0-23.49a9.25,9.25,0,1,0,9.34,9.31A9.32,9.32,0,0,0,32,18.56Z" style="fill:#fff"/></svg>`;
+    html += `</div>`;
+
+    return html;
+  }
+
+  private async _downloadBase64Img(url): Promise<string | ArrayBuffer> {
+    if (url == null) {
+      return defaultImage.image;
+    }
+    const opt = {};
+    const data = await fetch(url, opt);
+    const blob = await data.blob();
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      try {
+        reader.onloadend = () => {
+          const base64data = reader.result;
+          resolve(base64data);
+        };
+      } catch (error) {
+        resolve('');
+      }
+    });
   }
 }

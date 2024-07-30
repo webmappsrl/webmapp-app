@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {DownloadService} from 'src/app/services/download.service';
+import {downloadTrack} from 'src/app/shared/map-core/src/utils';
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 
@@ -34,8 +34,9 @@ export class WmDownloadPanelComponent implements OnChanges {
   isDownloaded = false;
   isDownloading = false;
   isInit = true;
+  status: DownloadStatus = {finish: false, map: 0, data: 0, media: 0, install: 0};
 
-  constructor(private _downloadSvc: DownloadService, private _cdr: ChangeDetectorRef) {
+  constructor(private _cdr: ChangeDetectorRef) {
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
   }
 
@@ -60,45 +61,28 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.exit.emit(null);
   }
 
-  start() {
+  async start() {
     this.isInit = false;
     this.isDownloading = true;
     this.isDownloaded = false;
 
-    this.changeStatus.emit(downloadPanelStatus.DOWNLOADING);
-
-    this.updateStatus(null);
-    this._myEventSubscription = this._downloadSvc.onChangeStatus.subscribe(x => {
-      this.updateStatus(x);
-    });
-
-    this._downloadSvc.startDownload(this.track);
+    this.status = {finish: false, map: 0, data: 0, media: 0, install: 0};
+    downloadTrack(`${this.track.properties.id}`, this.track as any, this.updateStatus.bind(this));
   }
 
   updateStatus(status: DownloadStatus): void {
+    this.status = {...this.status, ...status};
     this.downloadElements = [
       {
-        name: 'downsetup',
-        value: status ? status.setup : 0,
-      },
-      {
         name: 'downmap',
-        value: status ? status.map : 0,
-      },
-      {
-        name: 'downdata',
-        value: status ? status.data : 0,
+        value: this.status ? this.status.map : 0,
       },
       {
         name: 'downmedia',
-        value: status ? status.media : 0,
-      },
-      {
-        name: 'install',
-        value: status ? status.install : 0,
+        value: this.status ? this.status.media : 0,
       },
     ];
-    if (status && status.finish) {
+    if (this.status && this.status.media === 1 && this.status.map === 1) {
       this.completeDownloads();
     }
     this._cdr.detectChanges();

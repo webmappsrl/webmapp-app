@@ -34,7 +34,7 @@ import {WmMapComponent} from 'src/app/shared/map-core/src/components';
 import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
 import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
-import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
+import {fromHEXToColor, getImgTrack} from 'src/app/shared/map-core/src/utils';
 import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, padding} from 'src/app/store/map/map.selector';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';

@@ -21,8 +21,8 @@ import {WaypointSave} from '../types/waypoint';
 import {environment} from 'src/environments/environment';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {DownloadService} from './download.service';
 import {Location} from 'src/app/types/location';
+import {getTrack} from '../shared/map-core/src/utils';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
@@ -36,7 +36,6 @@ export class GeohubService {
     private _communicationService: CommunicationService,
     private _storageService: StorageService,
     private _configService: ConfigService,
-    private _downloadSvc: DownloadService,
   ) {
     this._ecTracks = [];
   }
@@ -183,12 +182,9 @@ export class GeohubService {
         .pipe(
           catchError(e => {
             if (!navigator.onLine) {
-              return this._downloadSvc.getDownloadedTrack(+id);
+              return getTrack(`${id}`);
             }
             return of(null);
-          }),
-          map((apiResult: CGeojsonLineStringFeature) => {
-            return apiResult;
           }),
         )
         .toPromise();

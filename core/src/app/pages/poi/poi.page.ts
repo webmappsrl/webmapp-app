@@ -21,10 +21,10 @@ import {
 
 import {Browser} from '@capacitor/browser';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {DownloadService} from 'src/app/services/download.service';
 import {IMapRootState} from 'src/app/store/map/map';
 import {Store} from '@ngrx/store';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';
+import {getTrack} from 'src/app/shared/map-core/src/utils';
 
 @Component({
   selector: 'app-poi',
@@ -60,16 +60,34 @@ export class PoiPage implements OnInit, OnDestroy {
   useAnimation = false;
   useCache = false;
 
-  constructor(
-    private _navController: NavController,
-    private _downloadService: DownloadService,
-    private _storeMap: Store<IMapRootState>,
-  ) {
+  constructor(private _navController: NavController, private _storeMap: Store<IMapRootState>) {
     this._changePoiSub = this._changePoiEVT$
       .pipe(withLatestFrom(this.prevPoiID$, this.nextPoiID$))
       .subscribe(([evt, prev, next]) => {
         this._storeMap.dispatch(setCurrentPoiId({currentPoiId: evt === 'prev' ? prev : next}));
       });
+  }
+
+  ngOnInit() {
+    this.currentTrack$
+      .pipe(
+        take(1),
+        tap(t => (this.route = t)),
+        filter(g => g != null),
+        switchMap(f => getTrack(`${f.properties.id}`)),
+      )
+      .subscribe(d => {
+        this.useCache = d != null;
+      });
+    this.relatedPoi$.pipe(take(1)).subscribe(r => (this.pois = r));
+
+    setTimeout(() => {
+      this.useAnimation = true;
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    this._changePoiSub.unsubscribe();
   }
 
   back() {
@@ -87,28 +105,6 @@ export class PoiPage implements OnInit, OnDestroy {
 
   nextPoi() {
     this._changePoiEVT$.emit('next');
-  }
-
-  ngOnDestroy(): void {
-    this._changePoiSub.unsubscribe();
-  }
-
-  ngOnInit() {
-    this.currentTrack$
-      .pipe(
-        take(1),
-        tap(t => (this.route = t)),
-        filter(g => g != null),
-        switchMap(f => this._downloadService.isDownloadedTrack(f.properties.id)),
-      )
-      .subscribe(d => {
-        this.useCache = d;
-      });
-    this.relatedPoi$.pipe(take(1)).subscribe(r => (this.pois = r));
-
-    setTimeout(() => {
-      this.useAnimation = true;
-    }, 1000);
   }
 
   phone(_): void {}
