@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {NavController} from '@ionic/angular';
 import {from, Observable} from 'rxjs';
-import {DownloadService} from 'src/app/services/download.service';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {StorageService} from 'src/app/services/base/storage.service';
+import {getImgTrack, getTracks} from 'src/app/shared/map-core/src/utils';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -14,16 +14,12 @@ import {StorageService} from 'src/app/services/base/storage.service';
 })
 export class DownloadedTracksBoxComponent {
   getStorageImage = (url: string) => {
-    return this._storageSvc.getImage(url) as Promise<any>;
+    return getImgTrack(url) as Promise<any>;
   };
   tracks$: Observable<IHIT[]>;
 
-  constructor(
-    private _navCtrl: NavController,
-    private _downloadSvc: DownloadService,
-    private _storageSvc: StorageService,
-  ) {
-    this.tracks$ = from(this._downloadSvc.getDownloadedTracks()).pipe(
+  constructor(private _navCtrl: NavController, private _storageSvc: StorageService) {
+    this.tracks$ = from(getTracks()).pipe(
       map(t => t.map(track => track.properties as unknown as IHIT)),
     );
   }

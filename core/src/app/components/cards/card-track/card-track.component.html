@@ -1,8 +1,7 @@
 <ion-item button lines="none" class="webmapp-cardtrack-card">
   <wm-img
-    [src]="track.properties?.feature_image"
+    [src]="track?.properties?.feature_image"
     size="118x138"
-    [offlineFn]="getStorageImage"
     (click)="open()"
     class="webmapp-cardtrack-image"
   >

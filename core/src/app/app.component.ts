@@ -9,7 +9,6 @@ import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
-import {DownloadService} from './services/download.service';
 import {SaveService} from './services/save.service';
 import {StatusService} from './services/status.service';
 import {LangService} from 'wm-core/localization/lang.service';
@@ -30,6 +29,8 @@ import {AuthService} from './services/auth.service';
 import {poisInitFeatureCollection} from 'wm-core/store/api/api.selector';
 import {WmLoadingService} from 'wm-core/services/loading.service';
 import {IGEOLOCATION} from 'wm-core/types/config';
+import {getImgTrack} from './shared/map-core/src/utils';
+import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -47,7 +48,6 @@ export class AppComponent {
 
   constructor(
     private _platform: Platform,
-    private _downloadService: DownloadService,
     private router: Router,
     private status: StatusService,
     private saveService: SaveService,
@@ -124,7 +124,6 @@ export class AppComponent {
       .subscribe(_ => {
         this.saveService.uploadUnsavedContents();
       });
-    this._downloadService.init();
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
@@ -142,6 +141,7 @@ export class AppComponent {
           localStorage.setItem('wm-distance-filter', `${conf.gps_accuracy_default}`);
         });
     }
+    OfflineCallbackManager.setOfflineCallback(getImgTrack);
   }
 
   closePhoto() {
