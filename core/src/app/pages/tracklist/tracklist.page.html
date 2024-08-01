@@ -25,6 +25,9 @@
         <div>
           <div class="wm-tracklist-item-title">{{track.title}}</div>
           <div class="wm-tracklist-item-date">{{track.date | date : "d MMMM YYYY - HH:mm"}}</div>
+          <div class="wm-tracklist-item-date" *ngIf="track.sync_id">
+            {{'sync id'|wmtrans}}: {{track.sync_id}}
+          </div>
         </div>
       </ion-item>
     </ng-container>

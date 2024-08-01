@@ -4,8 +4,9 @@ import {IPhotoItem} from '../services/photo.service';
 
 export interface IRegisterItem {
   date: Date;
-  uuid?: any;
   key?: string;
+  sync_id?:any;
+  uuid?: any;
 }
 
 export interface ITrack extends IRegisterItem {

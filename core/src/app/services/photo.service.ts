@@ -143,7 +143,7 @@ export class PhotoService {
    */
   public async getPhotoFile(photo: IPhotoItem): Promise<Blob> {
     let blob: Blob, arrayBuffer: ArrayBuffer, blobType: string;
-
+    if (photo === null) return null;
     if (photo.rawData) {
       let rawData = JSON.parse(photo.rawData);
       if (rawData.arrayBuffer) arrayBuffer = new Uint8Array(rawData.arrayBuffer).buffer;

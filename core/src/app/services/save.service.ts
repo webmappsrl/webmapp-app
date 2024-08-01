@@ -36,17 +36,27 @@ export class SaveService {
   }
 
   deleteTrack(track: ITrack): Observable<any> {
-    return forkJoin({
-      deleteFromAPI: this.geohub.deleteTrack(+track.id),
-      deleteFromSTORAGE: from(this._deleteGeneric(track.key)),
-    });
+    const operations: {[key: string]: Observable<any>} = {};
+
+    if (track.sync_id) {
+      operations.deleteFromAPI = this.geohub.deleteTrack(+track.sync_id);
+    }
+    if (track.key) {
+      operations.deleteFromSTORAGE = from(this._deleteGeneric(track.key));
+    }
+    return forkJoin(operations);
   }
 
   deleteWaypoint(waypoint: WaypointSave): Observable<any> {
-    return forkJoin({
-      deleteFromAPI: this.geohub.deleteWaypoint(+waypoint.id),
-      deleteFromSTORAGE: from(this._deleteGeneric(waypoint.key)),
-    });
+    const operations: {[key: string]: Observable<any>} = {};
+
+    if (waypoint.sync_id) {
+      operations.deleteFromAPI = this.geohub.deleteWaypoint(+waypoint.sync_id);
+    }
+    if (waypoint.key) {
+      operations.deleteFromSTORAGE = from(this._deleteGeneric(waypoint.key));
+    }
+    return forkJoin(operations);
   }
 
   public async getGenerics(type: ESaveObjType): Promise<any[]> {
@@ -106,8 +116,10 @@ export class SaveService {
     for (let i = 0; i < (wp.storedPhotoKeys || []).length; i++) {
       const element = wp.storedPhotoKeys[i];
       const photo = await this._getGenericById(element);
-      photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
-      wp.photos.push(photo);
+      if (photo != null) {
+        photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
+        wp.photos.push(photo);
+      }
     }
     return wp;
   }
@@ -206,6 +218,7 @@ export class SaveService {
           const rawData = JSON.parse(prop.raw_data) ?? undefined;
           const name = prop?.name;
           const uuid = rawData?.uuid;
+          console.log(f);
           return (
             deviceUgcPoisNames.indexOf(name) < 0 &&
             ((uuid && deviceUgcPoisUUID.indexOf(uuid) < 0) || uuid == null)
@@ -231,6 +244,45 @@ export class SaveService {
         .map(f => this._convertFeatureToMedia(f))
         .forEach(media => this.savePhoto(media, true));
     }
+
+    const geohubUgcPoisMap = new Map();
+    geohubUgcPois.features.forEach(f => {
+      const prop = f?.properties;
+      const rawData = JSON.parse(prop.raw_data) ?? undefined;
+      const uuid = rawData?.uuid;
+      if (uuid) {
+        geohubUgcPoisMap.set(uuid, f?.properties?.id);
+      }
+    });
+    deviceUgcPois.forEach(async poi => {
+      const syncId = geohubUgcPoisMap.get(poi.uuid);
+      if (syncId) {
+        poi.sync_id = syncId;
+      } else if (poi.id) {
+        console.log(poi.id);
+      }
+      await this.updateWaypoint(poi);
+      await this._updateGeneric(poi.key, poi);
+    });
+
+    const geohubUgcTracksMap = new Map();
+    geohubUgcTracks.features.forEach(async f => {
+      const prop = f?.properties;
+      const rawData = JSON.parse(prop.raw_data) ?? undefined;
+      const uuid = rawData?.uuid;
+      if (uuid) {
+        geohubUgcTracksMap.set(uuid, f?.properties?.id);
+      }
+    });
+    deviceUgcTracks.forEach(async track => {
+      const syncId = geohubUgcTracksMap.get(track.uuid);
+      if (syncId) {
+        track.sync_id = syncId;
+      } else if (track.id) {
+        track.sync_id = track.id;
+      }
+      await this._updateGeneric(track.key, track);
+    });
   }
 
   public async updateTrack(newTrack: ITrack) {
@@ -253,6 +305,11 @@ export class SaveService {
     this._updateGeneric(trackToSave.key, trackToSave);
   }
 
+  public async updateWaypoint(newWaypoint: WaypointSave) {
+    const waypointToSave = JSON.parse(JSON.stringify(newWaypoint));
+    this._updateGeneric(waypointToSave.key, waypointToSave);
+  }
+
   public async uploadUnsavedContents() {
     //TODO what for edited or deleted contents?
 
@@ -273,6 +330,7 @@ export class SaveService {
           if (resP && !resP.error && resP.id) {
             indexObj.saved = true;
             photo.id = resP.id;
+            photo.sync_id = resP.id;
             this._updateGeneric(contents[i].key, photo);
           } else {
             indexObj.saved = false;
@@ -330,6 +388,7 @@ export class SaveService {
             if (resW && !resW.error && resW.id) {
               indexObj.saved = true;
               waypoint.id = resW.id;
+              waypoint.sync_id = resW.id;
               this._updateGeneric(contents[i].key, waypoint);
             } else this._updateGeneric(contents[i].key, waypoint);
           } else this._updateGeneric(contents[i].key, waypoint);
@@ -393,6 +452,7 @@ export class SaveService {
             if (resT && !resT.error && resT.id) {
               indexObj.saved = true;
               track.id = resT.id;
+              track.sync_id = resT.id;
               this._updateGeneric(contents[i].key, track);
             } else this._updateGeneric(contents[i].key, track);
           } else this._updateGeneric(contents[i].key, track);
@@ -507,9 +567,10 @@ export class SaveService {
     for (let i = 0; i < (track.storedPhotoKeys || []).length; i++) {
       const element = track.storedPhotoKeys[i];
       const photo = await this._getGenericById(element);
-      photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
-
-      track.photos.push(photo);
+      if (photo != null) {
+        photo.rawData = window.URL.createObjectURL(await this._photoService.getPhotoFile(photo));
+        track.photos.push(photo);
+      }
     }
     if (track.metadata && typeof track.metadata === 'string') {
       let metadata = JSON.parse(track.metadata);

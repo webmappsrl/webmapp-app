@@ -8,6 +8,7 @@ import {WaypointdetailPageRoutingModule} from './waypointdetail-routing.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import {WmCoreModule} from 'wm-core/wm-core.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import {WmPipeModule} from 'wm-core/pipes/pipe.module';
     WmMapModule,
     AppPipeModule,
     SharedModule,
+    WmCoreModule,
   ],
   declarations: [WaypointdetailPage],
 })

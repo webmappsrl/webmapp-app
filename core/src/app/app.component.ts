@@ -122,6 +122,7 @@ export class AppComponent {
         take(1),
       )
       .subscribe(_ => {
+        this.saveService.syncUgc();
         this.saveService.uploadUnsavedContents();
       });
 

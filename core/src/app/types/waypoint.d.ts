@@ -15,6 +15,7 @@ export interface WaypointSave extends IRegisterItem {
   photos?: Array<IPhotoItem>;
   position: Location;
   storedPhotoKeys?: string[];
+  sync_id?: any;
   title: string;
   waypointtype: string;
 }
