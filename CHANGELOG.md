@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.13.0](https://github.com/webmappsrl/webmapp-app/compare/v2.12.0...v2.13.0) (2024-08-01)
+
+
+### Features
+
+* add 'parcapuane' map to ConfigService ([62748c4](https://github.com/webmappsrl/webmapp-app/commit/62748c402de29e677767777447343f9531c59425))
+
+
+### Bug Fixes
+
+* gestion sync ugc OC: 3717 ([3e2bda7](https://github.com/webmappsrl/webmapp-app/commit/3e2bda799f34d218a789ddbbe8d777f5a65839f0))
+
+
+### Miscellaneous
+
+* **offline:** OFFLINE TRACK oc:2698 ([4b6062d](https://github.com/webmappsrl/webmapp-app/commit/4b6062d8e475cf9526427202212c6045824201c8))
+
 ## [2.12.0](https://github.com/webmappsrl/webmapp-app/compare/v2.11.5...v2.12.0) (2024-07-25)
 
 
