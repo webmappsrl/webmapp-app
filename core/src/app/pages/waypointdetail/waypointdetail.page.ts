@@ -9,7 +9,7 @@ import {SaveService} from 'src/app/services/save.service';
 import {online} from 'src/app/store/network/network.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
-
+import {DetailPage} from '../abstract/detail.page';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',
@@ -17,7 +17,7 @@ import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class WaypointdetailPage {
+export class WaypointdetailPage extends DetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   currentWaypoint: WaypointSave;
@@ -29,54 +29,26 @@ export class WaypointdetailPage {
 
   constructor(
     private _route: ActivatedRoute,
-    private _menuCtrl: MenuController,
-    private _alertCtrl: AlertController,
-    private _translateSvc: TranslateService,
     private _saveSvc: SaveService,
     private _navCtlr: NavController,
-    private _toastCtrl: ToastController,
     private _store: Store<any>,
+    toastCtrl: ToastController,
+    translateSvc: TranslateService,
+    menuCtrl: MenuController,
+    alertCtrl: AlertController,
   ) {
+    super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),
       tap(w => (this.currentWaypoint = w)),
     );
-  }
-
-  closeMenu(): void {
-    this._menuCtrl.close('optionMenu');
+    this.waypoint$.subscribe(w => console.log(w));
   }
 
   delete(): void {
-    from(
-      this._alertCtrl.create({
-        cssClass: 'my-custom-class',
-        header: this._translateSvc.instant('ATTENZIONE'),
-        message: this._translateSvc.instant('Sei sicuro di voler cancellare questo waypoint?'),
-        buttons: [
-          {
-            text: this._translateSvc.instant('cancella'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'destructive',
-            handler: () => this.deleteAction(),
-          },
-          {
-            text: this._translateSvc.instant('annulla'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'cancel',
-            handler: () => {},
-          },
-        ],
-      }),
-    )
-      .pipe(
-        switchMap(alert => {
-          alert.present();
-          return from(alert.onWillDismiss());
-        }),
-        take(1),
-      )
-      .subscribe(() => {});
+    super.delete('ATTENZIONE', 'Sei sicuro di voler cancellare questo waypoint?', () =>
+      this.deleteAction(),
+    );
   }
 
   deleteAction(): void {
@@ -91,18 +63,7 @@ export class WaypointdetailPage {
       });
   }
 
-  menu(): void {
-    this._menuCtrl.enable(true, 'optionMenu');
-    this._menuCtrl.open('optionMenu');
-  }
-
   presentToast(): Observable<void> {
-    return from(
-      this._toastCtrl.create({
-        message: this._translateSvc.instant('Waypoint correttamente cancellato'),
-        duration: 1500,
-        position: 'bottom',
-      }),
-    ).pipe(switchMap(t => t.present()));
+    return super.presentToast('Waypoint correttamente cancellato');
   }
 }

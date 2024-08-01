@@ -8,67 +8,39 @@ import {from, Observable} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {online} from 'src/app/store/network/network.selector';
+import {DetailPage} from '../abstract/detail.page';
 
 @Component({
   selector: 'webmapp-photodetail',
   templateUrl: './photodetail.page.html',
   styleUrls: ['./photodetail.page.scss'],
 })
-export class PhotodetailPage {
+export class PhotodetailPage extends DetailPage {
   currentPhoto: IPhotoItem;
   online$ = this._store.select(online);
   photo$: Observable<IPhotoItem>;
 
   constructor(
     private _route: ActivatedRoute,
-    private _menuController: MenuController,
     private _saveSvc: SaveService,
-    private _alertCtrl: AlertController,
-    private _translateSvc: TranslateService,
     private _navCtlr: NavController,
-    private _toastCtrl: ToastController,
     private _store: Store,
+    toastCtrl: ToastController,
+    translateSvc: TranslateService,
+    menuCtrl: MenuController,
+    alertCtrl: AlertController,
   ) {
+    super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.photo$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getPhoto(param.photo))),
       tap(p => (this.currentPhoto = p)),
     );
   }
 
-  closeMenu(): void {
-    this._menuController.close('optionMenu');
-  }
-
   delete(): void {
-    from(
-      this._alertCtrl.create({
-        cssClass: 'my-custom-class',
-        header: this._translateSvc.instant('ATTENZIONE'),
-        message: this._translateSvc.instant('Sei sicuro di voler cancellare questa foto?'),
-        buttons: [
-          {
-            text: this._translateSvc.instant('cancella'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'destructive',
-            handler: () => this.deleteAction(),
-          },
-          {
-            text: this._translateSvc.instant('Annulla'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'cancel',
-            handler: () => {},
-          },
-        ],
-      }),
-    )
-      .pipe(
-        switchMap(alert => {
-          alert.present();
-          return from(alert.onWillDismiss());
-        }),
-        take(1),
-      )
-      .subscribe(() => {});
+    super.delete('ATTENZIONE', 'Sei sicuro di voler cancellare questa foto?', () =>
+      this.deleteAction(),
+    );
   }
 
   deleteAction(): void {
@@ -83,18 +55,7 @@ export class PhotodetailPage {
       });
   }
 
-  menu(): void {
-    this._menuController.enable(true, 'optionMenu');
-    this._menuController.open('optionMenu');
-  }
-
   presentToast(): Observable<void> {
-    return from(
-      this._toastCtrl.create({
-        message: this._translateSvc.instant('Foto correttamente cancellata'),
-        duration: 1500,
-        position: 'bottom',
-      }),
-    ).pipe(switchMap(t => t.present()));
+    return super.presentToast('Foto correttamente cancellata');
   }
 }

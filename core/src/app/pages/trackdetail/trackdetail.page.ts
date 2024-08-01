@@ -17,10 +17,8 @@ import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import {Share} from '@capacitor/share';
-
-import {Filesystem, Directory, Encoding, FilesystemEncoding} from '@capacitor/filesystem';
 import {online} from 'src/app/store/network/network.selector';
+import {DetailPage} from '../abstract/detail.page';
 @Component({
   selector: 'wm-trackdetail',
   templateUrl: './trackdetail.page.html',
@@ -28,7 +26,7 @@ import {online} from 'src/app/store/network/network.selector';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class TrackdetailPage {
+export class TrackdetailPage extends DetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   currentTrack: ITrack;
   online$ = this._store.select(online);
@@ -53,16 +51,19 @@ export class TrackdetailPage {
     private _saveSvc: SaveService,
     private _menuCtrl: MenuController,
     private _modalCtrl: ModalController,
-    private _alertCtrl: AlertController,
-    private _translateSvc: TranslateService,
     private _navCtlr: NavController,
-    private _toastCtrl: ToastController,
     private _store: Store,
+    toastCtrl: ToastController,
+    translateSvc: TranslateService,
+    menuCtrl: MenuController,
+    alertCtrl: AlertController,
   ) {
+    super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),
       tap(t => (this.currentTrack = t)),
     );
+    this.track$.subscribe(track => console.log(track));
     this.trackDistance$ = this.track$.pipe(map(track => this._geoUtils.getLength(track.geojson)));
     this.trackSlope$ = this.track$.pipe(
       map(track => this._geoUtils.getSlope(track.geojson ?? null)),
@@ -77,40 +78,10 @@ export class TrackdetailPage {
     );
   }
 
-  closeMenu(): void {
-    this._menuCtrl.close('optionMenu');
-  }
-
   delete(): void {
-    from(
-      this._alertCtrl.create({
-        cssClass: 'my-custom-class',
-        header: this._translateSvc.instant('ATTENZIONE'),
-        message: this._translateSvc.instant('Sei sicuro di voler cancellare questa traccia?'),
-        buttons: [
-          {
-            text: this._translateSvc.instant('cancella'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'destructive',
-            handler: () => this.deleteAction(),
-          },
-          {
-            text: this._translateSvc.instant('annulla'),
-            cssClass: 'webmapp-modalconfirm-btn',
-            role: 'cancel',
-            handler: () => {},
-          },
-        ],
-      }),
-    )
-      .pipe(
-        switchMap(alert => {
-          alert.present();
-          return from(alert.onWillDismiss());
-        }),
-        take(1),
-      )
-      .subscribe(() => {});
+    super.delete('ATTENZIONE', 'Sei sicuro di voler cancellare questa traccia?', () =>
+      this.deleteAction(),
+    );
   }
 
   deleteAction(): void {
@@ -147,38 +118,6 @@ export class TrackdetailPage {
   }
 
   presentToast(): Observable<void> {
-    return from(
-      this._toastCtrl.create({
-        message: this._translateSvc.instant('Foto correttamente cancellata'),
-        duration: 1500,
-        position: 'bottom',
-      }),
-    ).pipe(switchMap(t => t.present()));
-  }
-
-  async saveFileCallback(data, format, track) {
-    const name = (track != null && track.title) ?? 'export';
-    const fileName = `${name}.${format}`;
-    try {
-      // Scrivi il file nel filesystem
-      const writeResult = await Filesystem.writeFile({
-        path: fileName,
-        data,
-        directory: Directory.External,
-        encoding: Encoding.UTF8,
-      });
-
-      // Prepara il file per la condivisione
-      const fileUrl = writeResult.uri;
-
-      // Apri il menu di condivisione
-      await Share.share({
-        title: `Condividi il file ${fileName}`,
-        url: fileUrl,
-        dialogTitle: `Condividi il tuo file ${fileName}`,
-      });
-    } catch (e) {
-      console.error("Errore durante l'esportazione e la condivisione:", e);
-    }
+    return super.presentToast('Foto correttamente cancellata');
   }
 }

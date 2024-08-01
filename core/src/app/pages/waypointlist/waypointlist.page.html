@@ -30,6 +30,9 @@
           <div class="wm-waypointlist-item-date">
             {{waypoint.date | date : "d MMMM YYYY - HH:mm"}}
           </div>
+          <div class="wm-waypointlist-item-date" *ngIf="waypoint.sync_id">
+            {{'sync id'|wmtrans}}: {{waypoint.sync_id}}
+          </div>
         </div>
       </ion-item>
     </ng-container>
