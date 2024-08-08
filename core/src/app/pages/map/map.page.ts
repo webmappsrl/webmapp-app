@@ -79,6 +79,7 @@ import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
 import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
 import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
+import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
 
 export interface IDATALAYER {
   high: string;
@@ -195,6 +196,7 @@ export class MapPage implements OnInit, OnDestroy {
       this._cdr.detectChanges();
     }),
   );
+  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   padding$: Observable<number[]> = this._store.select(padding);
   poiFilterIdentifiers$: Observable<string[]> = this._store.select(poiFilterIdentifiers);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -253,6 +255,7 @@ export class MapPage implements OnInit, OnDestroy {
   wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
   );
+  wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
@@ -283,6 +286,7 @@ export class MapPage implements OnInit, OnDestroy {
         } as IDATALAYER;
       }),
     );
+
     this.sliderOptions = {
       initialSlide: 0,
       speed: 400,
@@ -549,6 +553,14 @@ export class MapPage implements OnInit, OnDestroy {
 
   setWmMapFeatureCollection(overlay: any): void {
     this.wmMapFeatureCollectionOverlay$.next(overlay);
+    this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
+      if(feature[overlay['featureType']]!= null) {
+        this.wmMapFeatureCollectionOverlay$.next({
+          ...overlay,
+          ...{url: feature[overlay['featureType']]},
+        });
+      }
+    });
   }
 
   showPhoto(idx) {

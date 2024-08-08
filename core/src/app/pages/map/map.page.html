@@ -45,6 +45,8 @@
       (related-poi-next)="currentPoiNextID$.next(+$event)"
       (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
       (related-poi)="setCurrentPoi($event)"
+      wmMapHitMapCollection
+      [wmMapHitMapUrl]="wmMapHitMapUrl$|async"
     >
       <wm-filters
         top-right
