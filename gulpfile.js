@@ -43,6 +43,9 @@ const CONSOLE_COLORS = {
   BgCyan: '\x1b[46m',
   BgWhite: '\x1b[47m',
 };
+const APIGEOHUB = 'https://geohub.webmapp.it';
+const APICARG = 'https://carg.maphub.it';
+let API = APIGEOHUB;
 const wrongInstanceVersion = ['fumaiolosentieri', 'pec', 'cammini', 'ucvs', 'gavorrano', 'sicai'];
 
 function debug(message) {
@@ -315,7 +318,8 @@ function update(instanceName, geohubInstanceId) {
 
     if (argv.url) url = argv.url;
     else {
-      url = 'https://geohub.webmapp.it/api/app/webmapp/' + geohubInstanceId;
+      url = API + '/api/app/webmapp/' + geohubInstanceId;
+      console.log(config);
       if (verbose) debug('Using default url: ' + url);
     }
 
@@ -403,14 +407,14 @@ function update(instanceName, geohubInstanceId) {
     } else {
       reject('Missing instance. See gulp help for more');
     }
-
+    console.log(config);
     // enviroment.ts
     const env = `
 export const environment = {
   production: false,
   geohubId: ${geohubInstanceId},
   analyticsId:'285809815',
-  api: 'https://geohub.webmapp.it',
+  api: '${API}',
 };
 `;
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
@@ -652,6 +656,9 @@ function updateAndroidPlatform(instanceName, appId, appName) {
 }
 
 function build(instanceName, geohubInstanceId) {
+  if (instanceName === 'carg') {
+    API = APICARG;
+  }
   return new Promise((resolve, reject) => {
     if (!instanceName) {
       reject('Instance name requred. See gulp help');
@@ -696,6 +703,7 @@ function build(instanceName, geohubInstanceId) {
 }
 
 function buildAndroid(instanceName, geohubInstanceId) {
+  setAPI(instanceName);
   return new Promise((resolve, reject) => {
     build(instanceName, geohubInstanceId).then(
       result => {
@@ -726,6 +734,12 @@ function buildAndroid(instanceName, geohubInstanceId) {
   });
 }
 
+function setAPI(instanceName) {
+  if (instanceName === 'carg') {
+    API = APICARG;
+  }
+}
+
 function buildAndroidApk(instanceName, geohubInstanceId, type) {
   return new Promise((resolve, reject) => {
     if (type !== 'Debug' && type !== 'Release') {
@@ -735,6 +749,7 @@ function buildAndroidApk(instanceName, geohubInstanceId, type) {
 
     buildAndroid(instanceName, geohubInstanceId).then(
       () => {
+        setAPI(instanceName);
         if (verbose) debug('Assembling the ' + type + ' apk');
         var gradlecom = './gradlew tasks app:assemble';
         if (process.platform === 'win32') gradlecom = 'gradlew tasks app:assemble';
@@ -1130,6 +1145,7 @@ function updateIosPlatform(instanceName, appId, appName) {
 
 function buildIos(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
+    setAPI(instanceName);
     build(instanceName, geohubInstanceId).then(
       result => {
         if (!result.id) {
@@ -1308,7 +1324,8 @@ gulp.task('set', function (done) {
   if (instanceName) {
     if (instanceName.substring(0, 4) === 'http') config = instanceName;
     else if (geohubInstanceId) {
-      config = 'https://geohub.webmapp.it/api/app/webmapp/' + geohubInstanceId;
+      config = API + '/api/app/webmapp/' + geohubInstanceId;
+      console.log(config);
       if (verbose) debug('Using default url: ' + config);
     } else {
       abort('Missing geohub instance id. See gulp help');
