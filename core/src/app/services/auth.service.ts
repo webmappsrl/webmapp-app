@@ -126,6 +126,7 @@ export class AuthService {
           {
             email,
             password,
+            referrer: config.APP.id,
           },
           {
             headers: new HttpHeaders({
