@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.13.0](https://github.com/webmappsrl/webmapp-app/compare/v2.12.1...v2.13.0) (2024-08-09)
+
+
+### Features
+
+* Add referrer field to login request ([e9a213a](https://github.com/webmappsrl/webmapp-app/commit/e9a213a65ea8956395f0157aa78acd12012d1fd0))
+
+
+### Miscellaneous
+
+* Update geohubId and apiCarg in environment.ts ([227e24d](https://github.com/webmappsrl/webmapp-app/commit/227e24d1958250bf29f116137e59b4d061169782))
+* Update map page template and component oc:3636 ([ec64917](https://github.com/webmappsrl/webmapp-app/commit/ec64917012fa5cdc33fc7ab845f8c6c76675dfff))
+
 ## [2.12.1](https://github.com/webmappsrl/webmapp-app/compare/v2.12.0...v2.12.1) (2024-08-01)
 
 
