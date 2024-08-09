@@ -15,7 +15,7 @@
       slot="end"
       class="webmapp-profile-header-toolbar-button"
       [ngClass]="{
-        'webmapp-profile-header-toolbar-button-disabled': !(isLoggedIn$|async)
+        'webmapp-profile-header-toolbar-button-disabled': !(isLogged$|async)
       }"
       (click)="openSettings()"
     >
@@ -23,7 +23,7 @@
     </ion-fab-button>
     <ion-fab-button
       slot="end"
-      *ngIf="(isLoggedIn$|async)"
+      *ngIf="(isLogged$|async)"
       class="
         webmapp-profile-header-toolbar-button
         webmapp-profile-header-toolbar-button-disabled
@@ -35,7 +35,7 @@
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
-  <ng-container *ngIf="(isLoggedIn$|async)">
+  <ng-container *ngIf="(isLogged$|async)">
     <div class="webmapp-profile-user-container">
       <ion-avatar
         class="webmapp-profile-user-avatar"
@@ -46,8 +46,8 @@
         <i class="webmapp-icon-user-outline"></i>
       </ion-avatar>
       <div class="webmapp-profile-user-header-container">
-        <h4 class="webmapp-profile-user-name">{{name}}</h4>
-        <div class="webmapp-profile-user-email">{{email}}</div>
+        <h4 class="webmapp-profile-user-name">{{(user$|async)?.name}}</h4>
+        <div class="webmapp-profile-user-email">{{(user$|async)?.email}}</div>
         <ion-button
           (click)="deleteUserAlert()"
           size="small"
@@ -62,7 +62,7 @@
 
   <ion-tabs
     class="webmapp-profile-tabs"
-    [ngStyle]="{'height':(isLoggedIn$|async) ? '100%' : '25%' }"
+    [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }"
   >
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
@@ -75,7 +75,7 @@
         <div class="webmapp-profile-tabs-tab-button-border"></div>
       </ion-tab-button>
       <ion-tab-button
-        *ngIf="(authEnable$|async) && (isLoggedIn$|async)"
+        *ngIf="(authEnable$|async) && (isLogged$|async)"
         (click)="tabClick($event, '/profile/profile-records')"
         tab="profile-records"
         [routerLink]="['profile-records']"
@@ -89,7 +89,7 @@
     </ion-tab-bar>
   </ion-tabs>
   <ng-container *ngIf="(authEnable$|async) === true">
-    <ng-container *ngIf="(isLoggedIn$|async) === false">
+    <ng-container *ngIf="(isLogged$|async) === false">
       <div class="webmapp-profile-logged-out-slider-container">
         <ion-slides
           class="webmapp-profile-logged-out-slider"

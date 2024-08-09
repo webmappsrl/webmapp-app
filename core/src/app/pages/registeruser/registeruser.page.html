@@ -12,14 +12,14 @@
 </ion-header>
 
 <ion-content>
-  <form class="webmapp-registeruser-form" (ngSubmit)="register()" [formGroup]="registerForm">
+  <form class="webmapp-registeruser-form"  [formGroup]="registerForm">
     <div class="webmapp-registeruser-field-container">
       <ion-label class="webmapp-registeruser-label">
         {{ "pages.registeruser.name" | wmtrans }}
       </ion-label>
       <ion-item
         class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.name.errors}"
+        [ngClass]="{'webmapp-registeruser-field-has-error': !!errorControl.name.errors && (errorControl.name.dirty || errorControl.name.touched)}"
       >
         <ion-input
           type="text"
@@ -31,7 +31,7 @@
         >
         </ion-input>
       </ion-item>
-      <ng-container *ngIf="isSubmitted && !!errorControl.name.errors">
+      <ng-container *ngIf="!!errorControl.name.errors && (errorControl.name.dirty || errorControl.name.touched)">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.name.errors?.required">
           {{ "pages.registeruser.errors.form.nameRequired" | wmtrans }}
         </span>
@@ -44,7 +44,7 @@
       </ion-label>
       <ion-item
         class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.email.errors}"
+        [ngClass]="{'webmapp-registeruser-field-has-error': !!errorControl.email.errors && (errorControl.email.dirty || errorControl.email.touched)}"
       >
         <ion-input
           type="text"
@@ -57,7 +57,7 @@
         >
         </ion-input>
       </ion-item>
-      <ng-container *ngIf="isSubmitted && !!errorControl.email.errors">
+      <ng-container *ngIf="!!errorControl.email.errors && (errorControl.email.dirty || errorControl.email.touched)">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.email.errors?.required">
           {{ "pages.registeruser.errors.form.emailRequired" | wmtrans }}
         </span>
@@ -79,7 +79,7 @@
 
       <ion-item
         class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.cf.errors}"
+        [ngClass]="{'webmapp-registeruser-field-has-error':!!errorControl.cf.errors && (errorControl.cf.dirty || errorControl.cf.touched)}"
       >
         <ion-input
           type="text"
@@ -90,7 +90,7 @@
         >
         </ion-input>
       </ion-item>
-      <ng-container *ngIf="isSubmitted && !!errorControl.cf.errors">
+      <ng-container *ngIf="!!errorControl.cf.errors && (errorControl.cf.dirty || errorControl.cf.touched)">
         <span class="webmapp-registeruser-field-error" *ngIf="errorControl.cf.errors?.pattern">
           {{ "pages.registeruser.errors.form.cfInvalid" | wmtrans }}
         </span>
@@ -103,7 +103,7 @@
       </ion-label>
       <ion-item
         class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.password.errors}"
+        [ngClass]="{'webmapp-registeruser-field-has-error': !!errorControl.password.errors && (errorControl.password.dirty || errorControl.password.touched)}"
       >
         <ion-input
           type="text"
@@ -116,7 +116,7 @@
         >
         </ion-input>
       </ion-item>
-      <ng-container *ngIf="isSubmitted && !!errorControl.password.errors">
+      <ng-container *ngIf="!!errorControl.password.errors && (errorControl.password.dirty || errorControl.password.touched)">
         <span
           class="webmapp-registeruser-field-error"
           *ngIf="errorControl.password.errors?.required"
@@ -132,7 +132,7 @@
       </ion-label>
       <ion-item
         class="webmapp-registeruser-field"
-        [ngClass]="{'webmapp-registeruser-field-has-error': isSubmitted && !!errorControl.confirmPassword.errors}"
+        [ngClass]="{'webmapp-registeruser-field-has-error': !!errorControl.confirmPassword.errors && (errorControl.confirmPassword.dirty || errorControl.confirmPassword.touched)}"
       >
         <ion-input
           type="text"
@@ -145,7 +145,7 @@
         >
         </ion-input>
       </ion-item>
-      <ng-container *ngIf="isSubmitted && !!errorControl.confirmPassword.errors">
+      <ng-container *ngIf="!!errorControl.confirmPassword.errors && (errorControl.confirmPassword.dirty || errorControl.confirmPassword.touched)">
         <span
           class="webmapp-registeruser-field-error"
           *ngIf="errorControl.confirmPassword.errors?.required"
@@ -153,7 +153,7 @@
           {{ "pages.registeruser.errors.form.confirmPasswordRequired" | wmtrans }}
         </span>
       </ng-container>
-      <ng-container *ngIf="isSubmitted && !! registerForm.hasError('notSame')">
+      <ng-container *ngIf="!! registerForm.hasError('notSame')">
         <span class="webmapp-registeruser-field-error">
           {{ "pages.registeruser.errors.form.confirmPasswordInvalid" | wmtrans }}
         </span>
@@ -188,7 +188,7 @@
     </ion-label>
 
     <div class="webmapp-registeruser-buttoncontainer">
-      <ion-button (click)="register()" class="webmapp-registeruser-button">
+      <ion-button [disabled]="!(isValid$|async)" (click)="register()" class="webmapp-registeruser-button">
         {{ "pages.registeruser.registerbutton" | wmtrans }}
       </ion-button>
     </div>

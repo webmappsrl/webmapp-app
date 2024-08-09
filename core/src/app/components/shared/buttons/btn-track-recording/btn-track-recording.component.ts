@@ -13,8 +13,8 @@ import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-succ
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {PhotoService} from 'src/app/services/photo.service';
 import {SaveService} from 'src/app/services/save.service';
-import {LoginComponent} from '../../login/login.component';
 import {NavigationExtras} from '@angular/router';
+import { LoginComponent } from 'wm-core/login/login.component';
 
 @Component({
   selector: 'wm-btn-track-recording',

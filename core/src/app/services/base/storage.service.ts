@@ -23,6 +23,7 @@ import {Md5} from 'ts-md5/dist/md5';
 
 import {Filesystem, Directory, Encoding} from '@capacitor/filesystem';
 import {IConfig} from 'wm-core/types/config';
+import { IUser } from 'wm-core/store/auth/auth.model';
 
 @Injectable({
   providedIn: 'root',

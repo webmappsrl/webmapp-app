@@ -1,10 +1,10 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
-import {Platform} from '@ionic/angular';
+import {AlertController, Platform} from '@ionic/angular';
 import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
@@ -25,12 +25,14 @@ import {
 import {loadConf} from 'wm-core/store/conf/conf.actions';
 import {loadPois, query} from 'wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
-import {AuthService} from './services/auth.service';
 import {poisInitFeatureCollection} from 'wm-core/store/api/api.selector';
 import {WmLoadingService} from 'wm-core/services/loading.service';
 import {IGEOLOCATION} from 'wm-core/types/config';
 import {getImgTrack} from './shared/map-core/src/utils';
 import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager';
+import { error, isLogged } from 'wm-core/store/auth/auth.selectors';
+import { loadAuths } from 'wm-core/store/auth/auth.actions';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -42,6 +44,8 @@ import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager'
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  authError$: Observable<HttpErrorResponse> = this._store.pipe(select(error));
   public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;
@@ -54,14 +58,15 @@ export class AppComponent {
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
+    private _alertController: AlertController,
     @Inject(DOCUMENT) private _document: Document,
-    private _authSvc: AuthService,
     private _loadingSvc: WmLoadingService,
   ) {
     this._store.dispatch(loadConf());
     this._store.dispatch(query({init: true}));
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
+    this._store.dispatch(loadAuths());
     this._store
       .select(poisInitFeatureCollection)
       .pipe(
@@ -116,15 +121,46 @@ export class AppComponent {
       .select(online)
       .pipe(
         filter(o => o),
-        switchMap(_ => this._authSvc.isLoggedIn$),
+        switchMap(_ => this.isLogged$),
         filter(l => l),
         debounceTime(2000),
         take(1),
       )
       .subscribe(_ => {
+        console.log('app.component isLogged')
         this.saveService.syncUgc();
         this.saveService.uploadUnsavedContents();
       });
+
+      this.authError$.pipe(
+        filter(f => f != null && f.error != 'Unauthenticated.'),
+        switchMap(error => {
+          let errorMessage: string = 'modals.login.errors.generic';
+          //TODO: gestione dei vari errori signIn/signUp/deleteUser
+          switch (error.status + '') {
+            case '401':
+              errorMessage = 'modals.login.errors.401';
+              break;
+            default:
+              break;
+          }
+          return this._alertController
+            .create({
+              mode: 'ios',
+              header: this._langService.instant('generic.warning'),
+              message: this._langService.instant(errorMessage),
+              buttons: [
+                {
+                  text: this._langService.instant('generic.ok'),
+                },
+              ],
+            })
+        }),
+        switchMap(alert => {
+          alert.present();
+          return alert.onWillDismiss();
+        }),
+      ).subscribe();
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;

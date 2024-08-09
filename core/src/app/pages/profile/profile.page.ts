@@ -4,13 +4,16 @@ import {Observable, Subject, from} from 'rxjs';
 import {switchMap, take, takeUntil} from 'rxjs/operators';
 
 import {AlertController} from '@ionic/angular';
-import {AuthService} from 'src/app/services/auth.service';
-import {LoginComponent} from 'src/app/components/shared/login/login.component';
 import {Router} from '@angular/router';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
+import { isLogged, user } from 'wm-core/store/auth/auth.selectors';
+import { LoginComponent } from 'wm-core/login/login.component';
+import { IUser } from 'wm-core/store/auth/auth.model';
+import { deleteUser } from 'wm-core/store/auth/auth.actions';
+
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -18,18 +21,16 @@ import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
   styleUrls: ['./profile.page.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProfilePage implements OnInit, OnDestroy {
+export class ProfilePage implements OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   avatarUrl: string;
-  email: string;
-  isLoggedIn$: Observable<boolean>;
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  user$: Observable<IUser> = this._store.pipe(select(user));
   loggedOutSliderOptions: any;
-  name: string;
 
   constructor(
-    private _authService: AuthService,
     private _modalController: ModalController,
     private _navController: NavController,
     private _store: Store<any>,
@@ -45,14 +46,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       slidesOffsetBefore: 0,
       slidesPerView: 1,
     };
-  }
-
-  ngOnInit() {
-    this._authService.onStateChange.pipe(takeUntil(this._destroyer)).subscribe((user: IUser) => {
-      this.isLoggedIn$ = this._authService.isLoggedIn$;
-      this.name = this._authService.name;
-      this.email = this._authService.email;
-    });
   }
 
   ngOnDestroy(): void {
@@ -77,29 +70,7 @@ export class ProfilePage implements OnInit, OnDestroy {
             text: this._translateService.instant('elimina'),
             role: 'confirm',
             handler: () => {
-              this._authService
-                .delete$()
-                .pipe(
-                  switchMap(res => {
-                    return from(
-                      this._alertCtrl.create({
-                        message: this._translateService.instant(res.error || res.success),
-                        buttons: [
-                          {
-                            text: this._translateService.instant('ok'),
-                            role: 'ok',
-                            handler: () => {
-                              if (res.success != null) {
-                                this._authService.logout();
-                              }
-                            },
-                          },
-                        ],
-                      }),
-                    );
-                  }),
-                )
-                .subscribe(val => val.present());
+              this._store.dispatch(deleteUser());
             },
           },
         ],

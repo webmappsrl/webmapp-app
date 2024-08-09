@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll} from '@ionic/angular';
 
-import {AuthService} from 'src/app/services/auth.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {IGeojsonFeature} from 'src/app/types/model';
 import {NavigationExtras, Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { isLogged } from 'wm-core/store/auth/auth.selectors';
 
 @Component({
   selector: 'webmapp-favourites',
@@ -17,13 +18,13 @@ export class FavouritesPage implements OnInit {
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
-  isLoggedIn$ = this._authService.isLoggedIn$;
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   tracks$: BehaviorSubject<IGeojsonFeature[]> = new BehaviorSubject<IGeojsonFeature[]>(null);
 
   constructor(
     private _geoHubService: GeohubService,
-    private _authService: AuthService,
     private _router: Router,
+    private _store: Store
   ) {}
 
   async doRefresh(event) {

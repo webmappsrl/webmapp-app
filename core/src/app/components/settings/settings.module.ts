@@ -8,6 +8,7 @@ import {RouterModule} from '@angular/router';
 import {SettingsComponent} from './settings.component';
 import {SharedModule} from '../shared/shared.module';
 import {WmLocalizationModule} from 'wm-core/localization/localization.module';
+import { WmCoreModule } from 'wm-core/wm-core.module';
 
 @NgModule({
   declarations: [SettingsComponent],
@@ -20,6 +21,7 @@ import {WmLocalizationModule} from 'wm-core/localization/localization.module';
     FormsModule,
     ReactiveFormsModule,
     WmLocalizationModule,
+    WmCoreModule
   ],
   exports: [SettingsComponent],
 })

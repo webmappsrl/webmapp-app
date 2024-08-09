@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {
   AbstractControl,
+  FormControlStatus,
   UntypedFormBuilder,
   UntypedFormGroup,
   ValidationErrors,
@@ -9,14 +10,16 @@ import {
 } from '@angular/forms';
 import {LoadingController, ModalController, NavController, PopoverController} from '@ionic/angular';
 import {GenericPopoverComponent} from 'src/app/components/shared/generic-popover/generic-popover.component';
-import {AuthService} from 'src/app/services/auth.service';
 import {CoinService} from 'src/app/services/coin.service';
 import {LangService} from 'wm-core/localization/lang.service';
-import {Store} from '@ngrx/store';
-import {confPRIVACY, confPAGES} from 'wm-core/store/conf/conf.selector';
-import {Observable, from} from 'rxjs';
-import {take} from 'rxjs/operators';
+import {select, Store} from '@ngrx/store';
+import {confPRIVACY, confPAGES, confAPP} from 'wm-core/store/conf/conf.selector';
+import {BehaviorSubject, Observable, from, of, scheduled} from 'rxjs';
+import {filter, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
+import {loadSignUps} from 'wm-core/store/auth/auth.actions';
+import config from '../../../../config.json';
+import {selectAuthState} from 'wm-core/store/auth/auth.selectors';
 
 @Component({
   selector: 'app-registeruser',
@@ -39,18 +42,18 @@ export class RegisteruserPage implements OnInit {
   };
   public confPages$: Observable<any>;
   public confPrivacy$: Observable<any>;
-  public isSubmitted = false;
+  submitted$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   public loadingString = '';
   public registerForm: UntypedFormGroup;
   public showError = false;
+  isValid$: Observable<boolean> = of(false);
 
   constructor(
     private coinService: CoinService,
     private _navController: NavController,
     private _formBuilder: UntypedFormBuilder,
-    private _authservice: AuthService,
     public popoverController: PopoverController,
-    public loadingController: LoadingController,
+    private _loadingCtrl: LoadingController,
     private translate: LangService,
     private _store: Store<any>,
     private _modalCtrl: ModalController,
@@ -65,6 +68,7 @@ export class RegisteruserPage implements OnInit {
       },
       {validators: this.checkPasswords},
     );
+    this.isValid$ = this.registerForm.statusChanges.pipe(map(status => status === 'VALID'));
     this.confPrivacy$ = this._store.select(confPRIVACY);
     this.confPages$ = this._store.select(confPAGES);
   }
@@ -92,33 +96,30 @@ export class RegisteruserPage implements OnInit {
       .subscribe(modal => modal.present());
   }
 
-  async register() {
-    this.isSubmitted = true;
-    this.showError = false;
-
-    if (this.registerForm.valid) {
-      const loading = await this.loadingController.create({
+  register() {
+    const loader$ = from(
+      this._loadingCtrl.create({
         message: this.loadingString,
-      });
-      await loading.present();
-
-      const registered = await this._authservice.register(
-        this.registerForm.get('name').value,
-        this.registerForm.get('email').value,
-        this.registerForm.get('password').value,
-        //this.registerForm.get('cf').value,
-      );
-
-      loading.dismiss();
-
-      console.log('------- ~ RegisteruserPage ~ register ~ registered', registered);
-      if (registered) {
-        //this.coinService.openGiftModal();
-        this._navController.navigateForward('home');
-      } else {
-        this.showError = true;
-      }
-    }
+      }),
+    );
+    const present$ = loader$.pipe(switchMap(l => from(l.present())));
+    const dismiss$ = loader$.pipe(switchMap(l => from(l.dismiss())));
+    present$
+      .pipe(
+        switchMap(() => this._store.pipe(select(selectAuthState))),
+        filter(state => state !== null),
+        take(1),
+        switchMap(() => dismiss$),
+      )
+      .subscribe(() => {});
+    this._store.dispatch(
+      loadSignUps({
+        name: this.registerForm.get('name').value,
+        email: this.registerForm.get('email').value,
+        password: this.registerForm.get('password').value,
+        referrer: config.APP.id,
+      }),
+    );
   }
 
   async showCfInfo(ev) {
