@@ -80,6 +80,7 @@ import {HomePage} from '../home/home.page';
 import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
 import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
+import { Location } from '@angular/common';
 
 export interface IDATALAYER {
   high: string;
@@ -264,6 +265,7 @@ export class MapPage implements OnInit, OnDestroy {
     private _authSvc: AuthService,
     private _geohubSvc: GeohubService,
     private _route: ActivatedRoute,
+    private _location: Location,
     private _router: Router,
     private _shareSvc: ShareService,
     private _cdr: ChangeDetectorRef,
@@ -377,6 +379,9 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   async goToTrack(id: number): Promise<void> {
+    const queryParams = { ...this._route.snapshot.queryParams, track: id };
+    const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams }).toString();
+    this._location.replaceState(url);
     this._poiReset();
     if (this.wmMapComponent != null) {
       this.wmMapComponent.resetRotation();
@@ -532,6 +537,9 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   setPoi(poi: IGeojsonFeature): void {
+    const queryParams = { ...this._route.snapshot.queryParams, poi: poi.properties.id };
+    const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams }).toString();
+    this._location.replaceState(url);
     this.currentPoi$.next(poi);
     this.mapTrackDetailsCmp.open();
   }
