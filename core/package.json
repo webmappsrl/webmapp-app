@@ -11,9 +11,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "postinstall": "npx jetifier",
-    "deploy-to-web": "ionic build && rsync -av --exclude 'assets' ~/Documents/apps/webmapp-app/core/www/* server:/var/www/html/mobile.webmapp.it/",
-    "deploy-to-web-verbose": "ionic build && scp -r ~/Documents/apps/webmapp-app/core/www/* server:/var/www/html/mobile.webmapp.it/",
-    "deploy-to-web-assets": "ionic build &&  scp -r ~/Documents/apps/webmapp-app/core/www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
+    "deploy-to-web": "ionic build && rsync -av --exclude 'assets' ./www/* server:/var/www/html/mobile.webmapp.it/",
+    "deploy-to-web-verbose": "ionic build && scp -r ./www/* server:/var/www/html/mobile.webmapp.it/",
+    "deploy-to-web-assets": "ionic build &&  scp -r ./www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
     "surge-sardegna-dev": "ionic build && surge --project ./www --domain http://32.dev-mobile-webmapp.surge.sh/"
   },
   "private": true,
