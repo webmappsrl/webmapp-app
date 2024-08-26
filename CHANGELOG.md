@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.12.3](https://github.com/webmappsrl/webmapp-app/compare/v2.12.2...v2.12.3) (2024-08-26)
+
+
+### Bug Fixes
+
+* Add share button for points of interest oc: 3789 ([8b11848](https://github.com/webmappsrl/webmapp-app/commit/8b11848967926cf66c5f5b83a71e059c014692a1))
+* Update map.page.ts ([b631756](https://github.com/webmappsrl/webmapp-app/commit/b6317563234041bbf7ee4c5a111796af173cc883))
+
+
+### Miscellaneous
+
+* Update deploy-to-web paths in package.json ([ec49915](https://github.com/webmappsrl/webmapp-app/commit/ec49915a15da0f110c32e0686d286779cf309be7))
+* Update subproject commit reference ([b631756](https://github.com/webmappsrl/webmapp-app/commit/b6317563234041bbf7ee4c5a111796af173cc883))
+
 ## [2.12.2](https://github.com/webmappsrl/webmapp-app/compare/v2.12.1...v2.12.2) (2024-08-09)
 
 
