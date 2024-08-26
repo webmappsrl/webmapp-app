@@ -22,14 +22,14 @@ import {IConfig} from 'wm-core/types/config';
 export class ConfigService {
   private _config: IConfig;
   private _geohubAppId: number = environment.geohubId;
-  private _hostToGeohubAppId: {[key: string]: number} = {
-    'sentieri.caiparma': 33,
-    'motomappa.motoabbigliament': 53,
-    'maps.parcoforestecasentinesi': 49,
-    'maps.parcopan': 63,
-    'maps.acquasorgente.cai': 58,
-    'maps.caipontedera': 59,
-    'maps.parcapuane': 62,
+  private _hostToGeohubAppId: { [key: string]: number } = {
+    'sentieri.caiparma.it': 33,
+    'motomappa.motoabbigliamento.it': 53,
+    'maps.parcoforestecasentinesi.it': 49,
+    'maps.parcopan.org': 63,
+    'maps.acquasorgente.cai.it': 58,
+    'maps.caipontedera.it': 59,
+    'maps.parcapuane.it': 62,
   };
 
   get appId(): string {

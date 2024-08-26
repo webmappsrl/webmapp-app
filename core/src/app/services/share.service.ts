@@ -68,4 +68,13 @@ export class ShareService {
     };
     return this.share(shareObj);
   }
+
+  public async sharePoiByID(poiId: number){
+    const host = this._confSvc.getHost();
+    const base_link = (host) ? host : `${this._confSvc.geohubAppId}.app.webmapp.it`;
+    this.share({
+      text: '',
+      url: `https://${base_link}/map?poi=${poiId}`,
+    })
+  }
 }

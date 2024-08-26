@@ -465,6 +465,10 @@ export class MapPage implements OnInit, OnDestroy {
     });
   }
 
+  openPoiShare(poiId: number): void {
+    this._shareSvc.sharePoiByID(poiId);
+  }
+
   phone(_): void {}
 
   poiNext(): void {

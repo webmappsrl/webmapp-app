@@ -85,6 +85,13 @@
             </ion-fab-button>
           </ion-fab>
         </ng-container>
+        <ng-container *ngIf="currentPoi$|async as poi">
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="openPoiShare(poi.properties.id)">
+              <ion-icon name="share-social-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </ng-container>
         <ion-fab
           #fab2
           slot="fixed"
