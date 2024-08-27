@@ -457,12 +457,7 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   openTrackShare(trackId: number): void {
-    this.confAPP$.pipe(take(1)).subscribe(conf => {
-      this._shareSvc.shareTrackByID({
-        id: trackId,
-        text: this._wmTrans.transform(conf.socialShareText),
-      });
-    });
+    this._shareSvc.shareTrackByID(trackId);
   }
 
   openPoiShare(poiId: number): void {

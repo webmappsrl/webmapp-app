@@ -15,6 +15,7 @@ import {environment} from 'src/environments/environment';
 import pkg from 'package.json';
 import {timeout} from 'rxjs/operators';
 import {IConfig} from 'wm-core/types/config';
+import { hostToGeohubAppId } from 'wm-core/store/api/api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,15 +23,6 @@ import {IConfig} from 'wm-core/types/config';
 export class ConfigService {
   private _config: IConfig;
   private _geohubAppId: number = environment.geohubId;
-  private _hostToGeohubAppId: { [key: string]: number } = {
-    'sentieri.caiparma.it': 33,
-    'motomappa.motoabbigliamento.it': 53,
-    'maps.parcoforestecasentinesi.it': 49,
-    'maps.parcopan.org': 63,
-    'maps.acquasorgente.cai.it': 58,
-    'maps.caipontedera.it': 59,
-    'maps.parcapuane.it': 62,
-  };
 
   get appId(): string {
     return this._config.APP.id ? this._config.APP.id : 'it.webmapp.webmapp';
@@ -121,11 +113,11 @@ export class ConfigService {
           const hostname: string = window.location.hostname;
           this._geohubAppId = parseInt(hostname.split('.')[0], 10) || 4;
           if (hostname.indexOf('localhost') < 0) {
-            const matchedHost = Object.keys(this._hostToGeohubAppId).find(host =>
+            const matchedHost = Object.keys(hostToGeohubAppId).find(host =>
               hostname.includes(host),
             );
             if (matchedHost) {
-              this._geohubAppId = this._hostToGeohubAppId[matchedHost];
+              this._geohubAppId = hostToGeohubAppId[matchedHost];
             } else {
               const newGeohubId = parseInt(hostname.split('.')[0], 10);
               if (!Number.isNaN(newGeohubId)) {
