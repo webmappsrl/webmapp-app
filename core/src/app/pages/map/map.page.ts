@@ -10,7 +10,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides, Platform} from '@ionic/angular';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
@@ -26,7 +26,6 @@ import {
   tap,
 } from 'rxjs/operators';
 import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {AuthService} from 'src/app/services/auth.service';
 import {DeviceService} from 'src/app/services/base/device.service';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
@@ -79,6 +78,7 @@ import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
 import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
 import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
+import { isLogged } from 'wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
 import { Location } from '@angular/common';
 
@@ -184,7 +184,7 @@ export class MapPage implements OnInit, OnDestroy {
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLoggedIn$: Observable<boolean>;
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   lang = localStorage.getItem('wm-lang') || 'it';
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -262,7 +262,6 @@ export class MapPage implements OnInit, OnDestroy {
   constructor(
     private _store: Store,
     private _deviceSvc: DeviceService,
-    private _authSvc: AuthService,
     private _geohubSvc: GeohubService,
     private _route: ActivatedRoute,
     private _location: Location,
@@ -297,7 +296,6 @@ export class MapPage implements OnInit, OnDestroy {
       slidesOffsetBefore: 15,
       slidesPerView: this._deviceSvc.width / 235,
     };
-    this.isLoggedIn$ = this._authSvc.isLoggedIn$;
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
   }
 

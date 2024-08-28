@@ -1,11 +1,10 @@
 import {KeyValue} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
-import {AuthService} from 'src/app/services/auth.service';
 import {ConfigService} from 'src/app/services/config.service';
 import {GeolocationService} from 'src/app/services/geolocation.service';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
@@ -19,6 +18,8 @@ import {
   confPROJECT,
   confPRIVACY,
 } from 'wm-core/store/conf/conf.selector';
+import { isLogged } from 'wm-core/store/auth/auth.selectors';
+import { loadSignOuts } from 'wm-core/store/auth/auth.actions';
 
 @Component({
   selector: 'wm-settings',
@@ -31,6 +32,7 @@ export class SettingsComponent implements OnInit {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPages$: Observable<any> = this._store.select(confPAGES);
   confProject$: Observable<any> = this._store.select(confPROJECT);
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   currentDistanceFilter = +(localStorage.getItem('wm-distance-filter') || 10);
   gpsAccuracy = {
     5: 'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria',
@@ -38,7 +40,6 @@ export class SettingsComponent implements OnInit {
     20: 'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria',
     100: 'precisione su mezzi di locomozione, consumo minimo della batteria',
   };
-  isLoggedIn: boolean;
   keepAwake =
     (localStorage.getItem('wm-keep-awake') != 'false' &&
       localStorage.getItem('wm-keep-awake') != null) ||
@@ -48,7 +49,6 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private _alertCtrl: AlertController,
-    private _authSvc: AuthService,
     private _modalCtrl: ModalController,
     private _configSvc: ConfigService,
     private _langSvc: LangService,
@@ -58,7 +58,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.version = this._configSvc.version;
-    this.isLoggedIn = this._authSvc.isLoggedIn;
   }
 
   changeDistanceFilter(event): void {
@@ -164,7 +163,7 @@ export class SettingsComponent implements OnInit {
           {
             text: this._langSvc.instant('generic.confirm'),
             handler: () => {
-              this._authSvc.logout();
+              this._store.dispatch(loadSignOuts())
               this.dismiss();
             },
           },

@@ -1,11 +1,11 @@
-<webmapp-modal-header
+<wm-modal-header
   [title]="'modals.settings.title' | wmtrans"
   (dismiss)="dismiss()"
-></webmapp-modal-header>
+></wm-modal-header>
 <ion-content>
   <ion-list class="webmapp-settings-list">
     <ion-item
-      *ngIf="isLoggedIn"
+      *ngIf="isLogged$|async"
       class="webmapp-settings-button"
       button
       (click)="logout()"

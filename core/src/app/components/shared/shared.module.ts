@@ -7,8 +7,6 @@ import {GalleryComponent} from './gallery/gallery.component';
 import {GenericPopoverComponent} from './generic-popover/generic-popover.component';
 import {ImageGalleryComponent} from './image-gallery/image-gallery.component';
 import {IonicModule} from '@ionic/angular';
-import {LoginComponent} from './login/login.component';
-import {ModalHeaderComponent} from './partials/modal-header/modal-header.component';
 import {ModalImageComponent} from './image-gallery/modal-image/modal-image.component';
 import {NgModule} from '@angular/core';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
@@ -23,8 +21,6 @@ import {TabImageGalleryComponent} from './tab-image-gallery/tab-image-gallery.co
 import {SearchListComponent} from './search-list/search-list.component';
 import {WmCoreModule} from 'wm-core/wm-core.module';
 const components = [
-  LoginComponent,
-  ModalHeaderComponent,
   GenericPopoverComponent,
   RecordingBtnComponent,
   GalleryComponent,

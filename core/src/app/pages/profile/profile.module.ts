@@ -3,12 +3,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
-import {ProfileDataComponent} from './profile-data/profile-data.component';
 import {ProfilePage} from './profile.page';
 import {ProfilePageRoutingModule} from './profile-routing.module';
-import {ProfileRecordsComponent} from './profile-records/profile-records.component';
 import {SettingsModule} from 'src/app/components/settings/settings.module';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import { WmCoreModule } from 'wm-core/wm-core.module';
 
 @NgModule({
   imports: [
@@ -19,7 +18,8 @@ import {WmPipeModule} from 'wm-core/pipes/pipe.module';
     ProfilePageRoutingModule,
     SettingsModule,
     WmPipeModule,
+    WmCoreModule
   ],
-  declarations: [ProfilePage, ProfileDataComponent, ProfileRecordsComponent],
+  declarations: [ProfilePage],
 })
 export class ProfilePageModule {}
