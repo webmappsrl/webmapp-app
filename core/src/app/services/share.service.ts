@@ -39,7 +39,6 @@ export class ShareService {
       ])
       .subscribe(t => {
         this.defaultShareObj.title = t['services.share.title'];
-        this.defaultShareObj.text = '';
         this.defaultShareObj.url = t['services.share.url'];
         this.defaultShareObj.dialogTitle = t['services.share.dialogTitle'];
       });
