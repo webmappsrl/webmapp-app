@@ -4,7 +4,6 @@ import {BtnFilterComponent} from './btn-filter/btn-filter.component';
 import {CommonModule} from '@angular/common';
 import {FormFieldComponent} from './form-field/form-field.component';
 import {GalleryComponent} from './gallery/gallery.component';
-import {GenericPopoverComponent} from './generic-popover/generic-popover.component';
 import {ImageGalleryComponent} from './image-gallery/image-gallery.component';
 import {IonicModule} from '@ionic/angular';
 import {ModalImageComponent} from './image-gallery/modal-image/modal-image.component';
@@ -21,7 +20,6 @@ import {TabImageGalleryComponent} from './tab-image-gallery/tab-image-gallery.co
 import {SearchListComponent} from './search-list/search-list.component';
 import {WmCoreModule} from 'wm-core/wm-core.module';
 const components = [
-  GenericPopoverComponent,
   RecordingBtnComponent,
   GalleryComponent,
   FormFieldComponent,
