@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProfileDataComponent } from './profile-data/profile-data.component';
-import { ProfileRecordsComponent } from './profile-records/profile-records.component';
+import { ProfileDataComponent } from '../../shared/wm-core/projects/wm-core/src/profile/profile-data/profile-data.component';
+import { ProfileRecordsComponent } from '../../shared/wm-core/projects/wm-core/src/profile/profile-records/profile-records.component';
 
 import { ProfilePage } from './profile.page';
 

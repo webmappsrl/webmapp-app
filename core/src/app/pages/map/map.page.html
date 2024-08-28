@@ -63,7 +63,7 @@
 
       <div bottom-right>
         <ng-container
-          *ngIf="(authEnable$|async) && (isLoggedIn$|async) && (trackid$|async) as trackId"
+          *ngIf="(authEnable$|async) && (isLogged$|async) && (trackid$|async) as trackId"
         >
           <ion-fab slot="fixed" vertical="top" horizontal="start">
             <ion-fab-button (click)="favourite(trackId)">
@@ -132,7 +132,7 @@
           </ion-fab-button>
           <wm-btn-track-recording
             [currentTrack]="currentTrack$|async"
-            [isLogged]="isLoggedIn$|async"
+            [isLogged]="isLogged$|async"
             (start-recording)="startRecording$.next($event)"
           ></wm-btn-track-recording>
         </ion-fab>
@@ -196,7 +196,7 @@
               <i class="icon-outline-recording"></i>
             </ion-fab-button>
             <wm-btn-track-recording
-              [isLogged]="isLoggedIn$|async"
+              [isLogged]="isLogged$|async"
               (start-recording)="startRecording$.next($event)"
             ></wm-btn-track-recording>
           </ion-fab>

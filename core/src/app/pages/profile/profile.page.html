@@ -15,7 +15,7 @@
       slot="end"
       class="webmapp-profile-header-toolbar-button"
       [ngClass]="{
-        'webmapp-profile-header-toolbar-button-disabled': !(isLoggedIn$|async)
+        'webmapp-profile-header-toolbar-button-disabled': !(isLogged$|async)
       }"
       (click)="openSettings()"
     >
@@ -23,7 +23,7 @@
     </ion-fab-button>
     <ion-fab-button
       slot="end"
-      *ngIf="(isLoggedIn$|async)"
+      *ngIf="(isLogged$|async)"
       class="
         webmapp-profile-header-toolbar-button
         webmapp-profile-header-toolbar-button-disabled
@@ -35,50 +35,25 @@
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
-  <ng-container *ngIf="(isLoggedIn$|async)">
-    <div class="webmapp-profile-user-container">
-      <ion-avatar
-        class="webmapp-profile-user-avatar"
-        [ngClass]="{
-        'webmapp-profile-user-avatar-icon': !avatarUrl
-      }"
-      >
-        <i class="webmapp-icon-user-outline"></i>
-      </ion-avatar>
-      <div class="webmapp-profile-user-header-container">
-        <h4 class="webmapp-profile-user-name">{{name}}</h4>
-        <div class="webmapp-profile-user-email">{{email}}</div>
-        <ion-button
-          (click)="deleteUserAlert()"
-          size="small"
-          expand="block"
-          fill="outline"
-          color="danger"
-          ><ion-icon name="close-outline"></ion-icon>{{'elimina'|wmtrans}}</ion-button
-        >
-      </div>
-    </div>
-  </ng-container>
-
+  <wm-profile-user
+  ></wm-profile-user>
   <ion-tabs
     class="webmapp-profile-tabs"
-    [ngStyle]="{'height':(isLoggedIn$|async) ? '100%' : '25%' }"
+    [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }"
   >
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
         (click)="tabClick($event, '/profile/profile-data')"
         tab="profile-data"
-        [routerLink]="['profile-data']"
         class="webmapp-profile-tabs-tab-button"
       >
         <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
         <div class="webmapp-profile-tabs-tab-button-border"></div>
       </ion-tab-button>
       <ion-tab-button
-        *ngIf="(authEnable$|async) && (isLoggedIn$|async)"
+        *ngIf="(authEnable$|async) && (isLogged$|async)"
         (click)="tabClick($event, '/profile/profile-records')"
         tab="profile-records"
-        [routerLink]="['profile-records']"
         class="webmapp-profile-tabs-tab-button"
       >
         <ion-label class="webmapp-profile-tabs-tab-label">
@@ -89,45 +64,9 @@
     </ion-tab-bar>
   </ion-tabs>
   <ng-container *ngIf="(authEnable$|async) === true">
-    <ng-container *ngIf="(isLoggedIn$|async) === false">
-      <div class="webmapp-profile-logged-out-slider-container">
-        <ion-slides
-          class="webmapp-profile-logged-out-slider"
-          [options]="loggedOutSliderOptions"
-          pager="true"
-        >
-          <ion-slide class="webmapp-profile-logged-out-slide">
-            <div class="webmapp-profile-logged-out-slide-content">
-              <img
-                class="webmapp-profile-logged-out-slide-image"
-                src="assets/images/profile/logged_out_slide_1.svg"
-              />
-              <div class="webmapp-profile-logged-out-slide-text">
-                {{'pages.profile.loggedOut.slides.0' | wmtrans}}
-              </div>
-            </div>
-          </ion-slide>
-          <ion-slide class="webmapp-profile-logged-out-slide">
-            <div class="webmapp-profile-logged-out-slide-content">
-              <img
-                class="webmapp-profile-logged-out-slide-image"
-                src="assets/images/profile/logged_out_slide_2.svg"
-              />
-              <div class="webmapp-profile-logged-out-slide-text">
-                {{'pages.profile.loggedOut.slides.1' | wmtrans}}
-              </div>
-            </div>
-          </ion-slide>
-        </ion-slides>
-      </div>
-      <div class="webmapp-profile-logged-out-login-buttons-container">
-        <button class="webmapp-profile-logged-out-login-button" (click)="login()">
-          {{'pages.profile.loggedOut.login' | wmtrans}}
-        </button>
-        <button class="webmapp-profile-logged-out-signup-button" (click)="signup()">
-          {{'pages.profile.loggedOut.signup' | wmtrans}}
-        </button>
-      </div>
-    </ng-container>
+    <wm-profile-auth
+      [slide1]="'assets/images/profile/logged_out_slide_1.svg'"
+      [slide2]="'assets/images/profile/logged_out_slide_1.svg'"
+    ></wm-profile-auth>
   </ng-container>
 </ion-content>
