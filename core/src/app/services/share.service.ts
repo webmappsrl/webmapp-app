@@ -20,7 +20,7 @@ export interface ShareObject {
 export class ShareService {
   private defaultShareObj: ShareObject = {
     title: 'See cool stuff',
-    text: 'Really awesome thing you need to see right meow',
+    text: '',
     url: 'www.webmapp.it',
     dialogTitle: 'Share with buddies',
   };
@@ -34,13 +34,12 @@ export class ShareService {
     this._translate
       .get([
         'services.share.title',
-        'services.share.text',
         'services.share.url',
         'services.share.dialogTitle',
       ])
       .subscribe(t => {
         this.defaultShareObj.title = t['services.share.title'];
-        this.defaultShareObj.text = t['services.share.text'];
+        this.defaultShareObj.text = '';
         this.defaultShareObj.url = t['services.share.url'];
         this.defaultShareObj.dialogTitle = t['services.share.dialogTitle'];
       });
@@ -68,14 +67,12 @@ export class ShareService {
 
   public shareTrackByID(trackId: number): void {
     this.share({
-      text: '',
       url: `https://${this._baseLink}/map?track=${trackId}`,
     });
   }
 
   public sharePoiByID(poiId: number): void{
     this.share({
-      text: '',
       url: `https://${this._baseLink}/map?poi=${poiId}`,
     })
   }
