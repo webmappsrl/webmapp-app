@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.4](https://github.com/webmappsrl/webmapp-app/compare/v2.12.3...v2.12.4) (2024-08-28)
+
+
+### Miscellaneous
+
+* Refactor shareTrackByID method in ShareService oc: 3850 ([#36](https://github.com/webmappsrl/webmapp-app/issues/36)) ([6a060df](https://github.com/webmappsrl/webmapp-app/commit/6a060df97401f53b9ee63cd261af0da3733a4aa7))
+
 ## [2.12.3](https://github.com/webmappsrl/webmapp-app/compare/v2.12.2...v2.12.3) (2024-08-26)
 
 
