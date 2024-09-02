@@ -26,7 +26,7 @@ import {MapEffects} from './store/map/map.effects';
 import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
-import {ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
+import {APP_ID_TOKEN, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
 
 registerLocaleData(localeIt);
 
@@ -67,6 +67,11 @@ registerLocaleData(localeIt);
   providers: [
     {provide: ENVIRONMENT_CONFIG, useValue: environment},
     {provide: LOCALE_ID, useValue: 'it'},
+    {
+      provide: APP_ID_TOKEN,
+      useFactory: (configService: ConfigService) => configService.appId,
+      deps: [ConfigService]
+    },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     {
       provide: APP_INITIALIZER,
