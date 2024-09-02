@@ -6,7 +6,6 @@ import {Observable} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {ConfigService} from 'src/app/services/config.service';
-import {GeolocationService} from 'src/app/services/geolocation.service';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 import {LangService} from 'wm-core/localization/lang.service';
 import {
@@ -18,6 +17,7 @@ import {
   confPROJECT,
   confPRIVACY,
 } from 'wm-core/store/conf/conf.selector';
+import { GeolocationService } from 'wm-core/services/geolocation.service';
 import { isLogged } from 'wm-core/store/auth/auth.selectors';
 import { loadSignOuts } from 'wm-core/store/auth/auth.actions';
 

@@ -1,5 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {Animation, AnimationController, Platform} from '@ionic/angular';
 

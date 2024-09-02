@@ -1,6 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {IPhotoItem} from '../services/photo.service';
-
+import { IPhotoItem } from 'wm-core/services/photo.service';
 @Pipe({
   name: 'wmCreateBlob',
   pure: false,

@@ -10,15 +10,15 @@ import {
 import {from, Observable, of} from 'rxjs';
 import {map, switchMap, take, tap} from 'rxjs/operators';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
-import {IPhotoItem} from 'src/app/services/photo.service';
-import {SaveService} from 'src/app/services/save.service';
-import {ITrack} from 'src/app/types/track';
 import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
+import { SaveService } from 'wm-core/services/save.service';
+import { IPhotoItem } from 'wm-core/services/photo.service';
+import { ITrack } from 'wm-core/types/track';
 @Component({
   selector: 'wm-trackdetail',
   templateUrl: './trackdetail.page.html',

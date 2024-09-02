@@ -8,9 +8,9 @@
 import * as CONFIG from '../../../config.json';
 
 import {CommunicationService} from './base/communication.service';
-import {DeviceService} from './base/device.service';
+import { DeviceService } from 'wm-core/services/device.service';
 import {Injectable} from '@angular/core';
-import {StorageService} from './base/storage.service';
+import { StorageService } from 'wm-core/services/storage.service';
 import {environment} from 'src/environments/environment';
 import pkg from 'package.json';
 import {timeout} from 'rxjs/operators';

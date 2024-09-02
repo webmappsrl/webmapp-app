@@ -10,7 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {downloadTrack} from 'src/app/shared/map-core/src/utils';
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';

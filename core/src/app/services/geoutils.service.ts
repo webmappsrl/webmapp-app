@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {getDistance} from 'ol/sphere';
 import {Coordinate} from 'ol/coordinate';
 import {ILineString, IMultiLineString, IMultiPolygon, IPoint, IPolygon} from '../types/model';

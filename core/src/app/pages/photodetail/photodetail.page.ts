@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {IPhotoItem} from 'src/app/services/photo.service';
 import {AlertController, MenuController, NavController, ToastController} from '@ionic/angular';
-import {SaveService} from 'src/app/services/save.service';
 import {switchMap, take, tap} from 'rxjs/operators';
 import {from, Observable} from 'rxjs';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
+import { IPhotoItem } from 'wm-core/services/photo.service';
+import { SaveService } from 'wm-core/services/save.service';
 
 @Component({
   selector: 'webmapp-photodetail',

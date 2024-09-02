@@ -8,7 +8,7 @@ import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {SaveService} from 'src/app/services/save.service';
+import { SaveService } from 'wm-core/services/save.service';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 

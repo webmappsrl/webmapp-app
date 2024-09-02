@@ -6,6 +6,7 @@ import {select, Store} from '@ngrx/store';
 import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
 import { isLogged } from 'wm-core/store/auth/auth.selectors';
 import { Router } from '@angular/router';
+import { IUser } from 'wm-core/store/auth/auth.model';
 
 
 @Component({

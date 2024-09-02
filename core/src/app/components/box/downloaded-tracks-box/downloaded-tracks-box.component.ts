@@ -3,8 +3,8 @@ import {NavController} from '@ionic/angular';
 import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
-import {StorageService} from 'src/app/services/base/storage.service';
 import {getTracks} from 'src/app/shared/map-core/src/utils';
+import { StorageService } from 'wm-core/services/storage.service';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',

@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
+import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modalphotosave',

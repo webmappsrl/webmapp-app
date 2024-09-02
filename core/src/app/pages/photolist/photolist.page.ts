@@ -7,8 +7,8 @@ import {
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
-import {IPhotoItem} from 'src/app/services/photo.service';
-import {SaveService} from 'src/app/services/save.service';
+import { IPhotoItem } from 'wm-core/services/photo.service';
+import { SaveService } from 'wm-core/services/save.service';
 
 @Component({
   selector: 'webmapp-photolist',

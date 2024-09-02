@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {switchMap, take, tap} from 'rxjs/operators';
-import {SaveService} from 'src/app/services/save.service';
+import { SaveService } from 'wm-core/services/save.service';
 import {online} from 'src/app/store/network/network.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { IPhotoItem } from 'src/app/services/photo.service';
+import { IPhotoItem } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'app-modal-photo-single',
@@ -17,7 +17,7 @@ export class ModalPhotoSingleComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+
   }
 
   done(){

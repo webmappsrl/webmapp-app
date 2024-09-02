@@ -25,8 +25,7 @@ import {
   take,
   tap,
 } from 'rxjs/operators';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
-import {DeviceService} from 'src/app/services/base/device.service';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/src/components';
@@ -38,7 +37,6 @@ import {setCurrentFilters} from 'src/app/store/map/map.actions';
 import {currentFilters, padding} from 'src/app/store/map/map.selector';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
-import {GeolocationService} from 'src/app/services/geolocation.service';
 import {LangService} from 'wm-core/localization/lang.service';
 import {WmLoadingService} from 'wm-core/services/loading.service';
 import {
@@ -81,6 +79,8 @@ import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
 import { isLogged } from 'wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
 import { Location } from '@angular/common';
+import { DeviceService } from 'wm-core/services/device.service';
+import { GeolocationService } from 'wm-core/services/geolocation.service';
 
 export interface IDATALAYER {
   high: string;

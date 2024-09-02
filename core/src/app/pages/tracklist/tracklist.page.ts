@@ -8,9 +8,9 @@ import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {SaveService} from 'src/app/services/save.service';
-import {ITrack} from 'src/app/types/track';
+import { SaveService } from 'wm-core/services/save.service';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
+import { ITrack } from 'wm-core/types/track';
 
 @Component({
   selector: 'wm-tracklist',

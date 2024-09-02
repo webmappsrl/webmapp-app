@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, ModalController, PopoverController } from '@ionic/angular';
-import { IPhotoItem, PhotoService } from 'src/app/services/photo.service';
 import { EPopoverPhotoType, ESuccessType } from '../../types/esuccess.enum';
 import { ModalSuccessComponent } from '../modal-success/modal-success.component';
 import { PopoverphotoComponent } from './popoverphoto/popoverphoto.component';
 import { Md5 } from 'ts-md5/dist/md5';
+import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modalphotos',
@@ -32,7 +32,7 @@ export class ModalphotosComponent implements OnInit {
     if (this.photoCollection && this.photoCollection.length) {
       this.selectedPhoto =
         this.photoCollection[this.photoCollection.length - 1];
-      
+
     }
     // this.sliderUpdate();
   }
@@ -75,7 +75,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addFromLibrary() {
-    const photos = await this._photoService.getPhotos(); 
+    const photos = await this._photoService.getPhotos();
     if (photos && photos.length) {
       photos.forEach(async (photo) => {
         const photoData = await this._photoService.getPhotoData(photo.photoURL);
@@ -120,8 +120,8 @@ export class ModalphotosComponent implements OnInit {
     this._modalController.dismiss(
       {photos:this.photoCollection}
     );
-    
+
   }
 
-  
+
 }

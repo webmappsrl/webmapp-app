@@ -7,17 +7,17 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
-import {GeolocationService} from 'src/app/services/geolocation.service';
+import { GeolocationService } from 'wm-core/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {ModalSaveComponent} from './modal-save/modal-save.component';
 import {ModalSuccessComponent} from '../../components/modal-success/modal-success.component';
-import {SaveService} from 'src/app/services/save.service';
+import { SaveService } from 'wm-core/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {Location} from '@capacitor-community/background-geolocation';
 import {Collection, Feature} from 'ol';
 import {LineString, Point} from 'ol/geom';

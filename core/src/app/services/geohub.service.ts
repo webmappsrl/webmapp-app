@@ -6,21 +6,17 @@ import {
   WhereTaxonomy,
 } from '../types/model';
 
-import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {CommunicationService} from './base/communication.service';
 import {ConfigService} from './config.service';
-import {EGeojsonGeometryTypes} from '../types/egeojson-geometry-types.enum';
 import {HttpHeaders} from '@angular/common/http';
-import {IPhotoItem} from './photo.service';
-import {ITrack} from '../types/track';
 import {Injectable} from '@angular/core';
 import {SearchStringResult} from '../types/map';
-import {StorageService} from './base/storage.service';
+import { StorageService } from 'wm-core/services/storage.service';
 import {TAXONOMYWHERE_STORAGE_KEY} from '../constants/storage';
-import {WaypointSave} from '../types/waypoint';
 import {environment} from 'src/environments/environment';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {of} from 'rxjs';
 import {Location} from 'src/app/types/location';
 import {getTrack} from '../shared/map-core/src/utils';
 const FAVOURITE_PAGESIZE = 3;
@@ -38,33 +34,6 @@ export class GeohubService {
     private _configService: ConfigService,
   ) {
     this._ecTracks = [];
-  }
-
-  deletePhoto(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/media/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
-  }
-
-  deleteTrack(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/track/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
-  }
-
-  deleteWaypoint(id: number): Observable<any> {
-    return this._communicationService.get(
-      `${environment.api}/api/ugc/poi/delete/${id}`,
-      new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-    );
   }
 
   async favourites(): Promise<number[]> {
@@ -325,39 +294,6 @@ export class GeohubService {
     return res;
   }
 
-  async getUgcMedias() {
-    return await this._communicationService
-      .get(
-        `${environment.api}/api/ugc/media/index`,
-        new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      )
-      .toPromise();
-  }
-
-  async getUgcPois() {
-    return await this._communicationService
-      .get(
-        `${environment.api}/api/ugc/poi/index`,
-        new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      )
-      .toPromise();
-  }
-
-  async getUgcTracks() {
-    return await this._communicationService
-      .get(
-        `${environment.api}/api/ugc/track/index`,
-        new HttpHeaders({
-          'Content-Type': 'application/json',
-        }),
-      )
-      .toPromise();
-  }
-
   /**
    * Get a where taxonomy (form cache if available)
    *
@@ -387,142 +323,6 @@ export class GeohubService {
       return !!favourites.find(x => x == trackId);
     }
     return false;
-  }
-
-  /**
-   * Save a photo as a EC MEDIA to the Geohub
-   *
-   * @param photo the photo to save
-   *
-   * @returns
-   */
-  async savePhoto(photo: IPhotoItem) {
-    if (navigator.onLine) {
-      const geojson = {
-        type: 'Feature',
-        geometry: photo.position
-          ? {
-              type: EGeojsonGeometryTypes.POINT,
-              coordinates: [photo.position.longitude, photo.position.latitude],
-            }
-          : null,
-        properties: {
-          description: photo.description,
-          name: photo.description,
-          app_id: this._configService.appId,
-          position: photo?.position,
-          uuid: photo?.uuid,
-        },
-      };
-
-      const data = new FormData();
-
-      if (photo.blob) data.append('image', photo.blob, 'image.jpg');
-      data.append('geojson', JSON.stringify(geojson));
-      console.log('------- ~ GeohubService ~ savePhoto ~ data', data);
-
-      // The content type multipart/form-data is not set because there could be problems
-      // Read this https://stackoverflow.com/questions/35722093/send-multipart-form-data-files-with-angular-using-http
-      const res = await this._communicationService
-        .post(`${environment.api}/api/ugc/media/store`, data)
-        .pipe(catchError(_ => of(null)))
-        .toPromise();
-      return res;
-    } else {
-      return of(photo);
-    }
-  }
-
-  /**
-   * Save a track as a EC TRACK to the Geohub
-   *
-   * @param track the track to save
-   *
-   * @returns
-   */
-  async saveTrack(track: ITrack) {
-    if (navigator.onLine) {
-      let geometry = null;
-      if (track?.geojson?.geometry) {
-        geometry = track.geojson.geometry
-          ? JSON.parse(JSON.stringify(track.geojson.geometry))
-          : null;
-        geometry.coordinates = geometry.coordinates.map((x: any) => {
-          return [x[0], x[1]];
-        });
-      }
-
-      const propeties = {...track};
-      delete propeties.geojson;
-      const data = {
-        type: 'Feature',
-        geometry: geometry,
-        properties: {
-          ...{
-            name: track.title,
-            description: track.description,
-            app_id: this._configService.appId,
-            image_gallery: track.photoKeys ? track.photoKeys : [],
-            uuid: track.uuid,
-          },
-          ...propeties,
-        },
-      };
-      const res = await this._communicationService
-        .post(
-          `${environment.api}/api/ugc/track/store`,
-          data,
-          new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
-        )
-        .pipe(catchError(_ => null))
-        .toPromise();
-      return res;
-    } else {
-      return of(track);
-    }
-  }
-
-  /**
-   * Save a waypoint as a EC POI to the Geohub
-   *
-   * @param waypoint the waypoint to save
-   *
-   * @returns
-   */
-  async saveWaypoint(waypoint: WaypointSave) {
-    if (navigator.onLine) {
-      const data = {
-        type: 'Feature',
-        geometry: {
-          type: EGeojsonGeometryTypes.POINT,
-          coordinates: [waypoint.position.longitude, waypoint.position.latitude],
-        },
-        properties: {
-          ...{
-            name: waypoint.title,
-            description: waypoint.description,
-            app_id: this._configService.appId,
-            image_gallery: waypoint.photoKeys ? waypoint.photoKeys : [],
-            waypoint_type: waypoint.waypointtype,
-            uuid: waypoint.uuid,
-          },
-          ...waypoint,
-        },
-      };
-      const res = await this._communicationService
-        .post(`${environment.api}/api/ugc/poi/store`, data, {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-          }),
-        })
-        .pipe(catchError(_ => null))
-        .toPromise();
-      return res;
-    } else {
-      return of(waypoint);
-    }
   }
 
   /**

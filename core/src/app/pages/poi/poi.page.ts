@@ -20,7 +20,7 @@ import {
 } from 'src/app/store/map/map.selector';
 
 import {Browser} from '@capacitor/browser';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {IMapRootState} from 'src/app/store/map/map';
 import {Store} from '@ngrx/store';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';

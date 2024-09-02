@@ -7,16 +7,16 @@ import {
 } from '@angular/core';
 import {ModalController, LoadingController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
-import {SaveService} from 'src/app/services/save.service';
+import { SaveService } from 'wm-core/services/save.service';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {WaypointSave} from 'src/app/types/waypoint';
-import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
-import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
+import {confMAP} from 'wm-core/store/conf/conf.selector';
+import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',

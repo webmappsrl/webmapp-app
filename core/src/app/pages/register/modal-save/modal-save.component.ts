@@ -2,11 +2,11 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ITrack} from 'src/app/types/track';
-import {IPhotoItem, PhotoService} from 'src/app/services/photo.service';
 import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
+import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-save',

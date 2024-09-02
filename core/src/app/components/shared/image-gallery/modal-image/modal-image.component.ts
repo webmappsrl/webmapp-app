@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {IonSlides, ModalController} from '@ionic/angular';
-import {StorageService} from 'src/app/services/base/storage.service';
 import {beforeInit, setTransition, setTranslate} from '../utils';
+import { StorageService } from 'wm-core/services/storage.service';
 
 @Component({
   selector: 'wm-modal-image',

@@ -4,13 +4,13 @@ import {ModalController, NavController} from '@ionic/angular';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 
-import {GeolocationService} from 'src/app/services/geolocation.service';
+import { GeolocationService } from 'wm-core/services/geolocation.service';
 import {NominatimService} from 'src/app/services/nominatim.service';
 
 import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-save.component';
 import {Location} from 'src/app/types/location';
 import {Store} from '@ngrx/store';
-import {CGeojsonLineStringFeature} from 'src/app/classes/features/cgeojson-line-string-feature';
+import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {ActivatedRoute, Router} from '@angular/router';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 

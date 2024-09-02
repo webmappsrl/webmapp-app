@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { GeolocationService } from 'src/app/services/geolocation.service';
 import { GeoutilsService } from 'src/app/services/geoutils.service';
+import { GeolocationService } from 'wm-core/services/geolocation.service';
 
 @Component({
   selector: 'webmapp-recording-btn',

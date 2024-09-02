@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PhotoService } from 'src/app/services/photo.service';
+import { PhotoService } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-selectphotos',

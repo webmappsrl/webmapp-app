@@ -1,7 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
-import {IPhotoItem} from 'src/app/services/photo.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {ITrack} from 'src/app/types/track';
 import {WaypointSave} from 'src/app/types/waypoint';
@@ -9,6 +8,7 @@ import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
+import { IPhotoItem } from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-registersuccess',
