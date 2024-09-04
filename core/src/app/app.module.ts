@@ -26,7 +26,7 @@ import {MapEffects} from './store/map/map.effects';
 import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
-import {APP_ID_TOKEN, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
+import {APP_ID, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
 
 registerLocaleData(localeIt);
 
@@ -68,7 +68,7 @@ registerLocaleData(localeIt);
     {provide: ENVIRONMENT_CONFIG, useValue: environment},
     {provide: LOCALE_ID, useValue: 'it'},
     {
-      provide: APP_ID_TOKEN,
+      provide: APP_ID,
       useFactory: (configService: ConfigService) => configService.appId,
       deps: [ConfigService]
     },
