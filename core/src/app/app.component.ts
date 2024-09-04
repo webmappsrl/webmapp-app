@@ -1,5 +1,5 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
-import {AlertController, Platform} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
@@ -29,10 +29,9 @@ import {WmLoadingService} from 'wm-core/services/loading.service';
 import {IGEOLOCATION} from 'wm-core/types/config';
 import {getImgTrack} from './shared/map-core/src/utils';
 import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager';
-import { SaveService } from 'wm-core/services/save.service';
-import { error, isLogged } from 'wm-core/store/auth/auth.selectors';
-import { loadAuths } from 'wm-core/store/auth/auth.actions';
-import { HttpErrorResponse } from '@angular/common/http';
+import {SaveService} from 'wm-core/services/save.service';
+import {isLogged} from 'wm-core/store/auth/auth.selectors';
+import {loadAuths} from 'wm-core/store/auth/auth.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -44,9 +43,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
-  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
-  authError$: Observable<HttpErrorResponse> = this._store.pipe(select(error));
   public image_gallery: any[];
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   public photoIndex: number = 0;
   public showingPhotos = false;
 
@@ -58,7 +56,6 @@ export class AppComponent {
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
-    private _alertController: AlertController,
     @Inject(DOCUMENT) private _document: Document,
     private _loadingSvc: WmLoadingService,
   ) {
@@ -127,40 +124,9 @@ export class AppComponent {
         take(1),
       )
       .subscribe(_ => {
-        console.log('app.component isLogged')
         this.saveService.syncUgc();
         this.saveService.uploadUnsavedContents();
       });
-
-      this.authError$.pipe(
-        filter(f => f != null && f.error.error != 'Unauthorized'),
-        switchMap(error => {
-          let errorMessage: string = 'modals.login.errors.generic';
-          //TODO: gestione dei vari errori signIn/signUp/deleteUser
-          switch (error.status + '') {
-            case '401':
-              errorMessage = 'modals.login.errors.401';
-              break;
-            default:
-              break;
-          }
-          return this._alertController
-            .create({
-              mode: 'ios',
-              header: this._langService.instant('generic.warning'),
-              message: this._langService.instant(errorMessage),
-              buttons: [
-                {
-                  text: this._langService.instant('generic.ok'),
-                },
-              ],
-            })
-        }),
-        switchMap(alert => {
-          alert.present();
-          return alert.onWillDismiss();
-        }),
-      ).subscribe();
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
