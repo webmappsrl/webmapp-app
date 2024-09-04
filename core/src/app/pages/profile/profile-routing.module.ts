@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProfileDataComponent } from '../../shared/wm-core/projects/wm-core/src/profile/profile-data/profile-data.component';
-import { ProfileRecordsComponent } from '../../shared/wm-core/projects/wm-core/src/profile/profile-records/profile-records.component';
 
 import { ProfilePage } from './profile.page';
+import { ProfileDataTabComponent } from './tabs/profile-data-tab/profile-data-tab.component';
+import { ProfileRecordsTabComponent } from './tabs/profile-record-tab/profile-records-tab.component';
 
 const routes: Routes = [
   {
@@ -12,11 +12,11 @@ const routes: Routes = [
     children: [
       {
         path: 'profile-data',
-        component: ProfileDataComponent,
+        component: ProfileDataTabComponent,
       },
       {
         path: 'profile-records',
-        component: ProfileRecordsComponent,
+        component: ProfileRecordsTabComponent,
       },
       {
         path: '',
