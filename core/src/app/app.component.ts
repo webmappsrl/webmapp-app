@@ -133,7 +133,7 @@ export class AppComponent {
       });
 
       this.authError$.pipe(
-        filter(f => f != null && f.error != 'Unauthenticated.'),
+        filter(f => f != null && f.error.error != 'Unauthorized'),
         switchMap(error => {
           let errorMessage: string = 'modals.login.errors.generic';
           //TODO: gestione dei vari errori signIn/signUp/deleteUser
