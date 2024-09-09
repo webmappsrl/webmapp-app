@@ -1,5 +1,30 @@
 # Changelog
 
+## [2.12.5](https://github.com/webmappsrl/webmapp-app/compare/v2.12.4...v2.12.5) (2024-09-09)
+
+
+### Bug Fixes
+
+* Fix error handling in app.component.ts ([99d2e90](https://github.com/webmappsrl/webmapp-app/commit/99d2e90fc976f2b292d7574b81eddac2ff226d5a))
+* Remove duplicate elasticApi URL ([013cd07](https://github.com/webmappsrl/webmapp-app/commit/013cd07999cf871d72c8bae95732cc49e3efac1d))
+
+
+### Miscellaneous
+
+* Remove login component ([6b13542](https://github.com/webmappsrl/webmapp-app/commit/6b13542ed1e18fbbcf6652ae1a6172be8d1df44f))
+* Remove registeruser page and related components ([0171acf](https://github.com/webmappsrl/webmapp-app/commit/0171acfd1d8c8fb687c793373050d7a3bdd69d0c))
+* Remove unnecessary imports and code ([977de12](https://github.com/webmappsrl/webmapp-app/commit/977de12967921df96119b984013c46f50276a3ac))
+* remove unused code files (move to wm-core) oc: 3864 ([d1b5710](https://github.com/webmappsrl/webmapp-app/commit/d1b5710e5c48da8d17bc8772d87f0822fb7e3235))
+* Remove unused code in GeohubService ([ea9fc65](https://github.com/webmappsrl/webmapp-app/commit/ea9fc655f6d02d53ed477560b637e5b9d7972350))
+* Update app.module.ts ([dfa20a3](https://github.com/webmappsrl/webmapp-app/commit/dfa20a3f91afe54d1c5bf8769b51a1b65b054efa))
+* Update app.module.ts ([2aae140](https://github.com/webmappsrl/webmapp-app/commit/2aae1400043b3eb7e72fb85df12db8ca03ae5f12))
+* Update environment configuration ([d0caed0](https://github.com/webmappsrl/webmapp-app/commit/d0caed00aee781d84d05dc87e06ae9597d0afb38))
+* Update environment configuration ([b49a8dc](https://github.com/webmappsrl/webmapp-app/commit/b49a8dc00e0dbf189fcc6490b49a9698de1e2151))
+* Update imports in ConfigService ([525d4d3](https://github.com/webmappsrl/webmapp-app/commit/525d4d3c32fddad647bb6efaffb34a30682822d2))
+* Update profile page ([086ec4a](https://github.com/webmappsrl/webmapp-app/commit/086ec4adc23f484c537a0a98c5254c950c34856f))
+* Update profile routing and module ([9a17ccc](https://github.com/webmappsrl/webmapp-app/commit/9a17cccfaad17606c794b8d3f777d0cc78b0a624))
+* Update subproject ([74b7a5a](https://github.com/webmappsrl/webmapp-app/commit/74b7a5a89acd495d2f1071d1c9eb69643ec60044))
+
 ## [2.12.4](https://github.com/webmappsrl/webmapp-app/compare/v2.12.3...v2.12.4) (2024-08-28)
 
 
