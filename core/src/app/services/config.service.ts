@@ -8,14 +8,14 @@
 import * as CONFIG from '../../../config.json';
 
 import {CommunicationService} from './base/communication.service';
-import { DeviceService } from 'wm-core/services/device.service';
+import {DeviceService} from 'wm-core/services/device.service';
 import {Injectable} from '@angular/core';
-import { StorageService } from 'wm-core/services/storage.service';
+import {StorageService} from 'wm-core/services/storage.service';
 import {environment} from 'src/environments/environment';
 import pkg from 'package.json';
 import {timeout} from 'rxjs/operators';
 import {IConfig} from 'wm-core/types/config';
-import { hostToGeohubAppId } from 'wm-core/store/api/api.service';
+import {hostToGeohubAppId} from 'wm-core/store/api/api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class ConfigService {
   private _geohubAppId: number = environment.geohubId;
 
   get appId(): string {
-    return this._config.APP.id ? this._config.APP.id : 'it.webmapp.webmapp';
+    return this._config?.APP?.id ? this._config.APP.id : 'it.webmapp.webmapp';
   }
 
   get appName(): string {
