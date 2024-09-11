@@ -70,7 +70,7 @@ registerLocaleData(localeIt);
     {provide: LOCALE_ID, useValue: 'it'},
     {
       provide: APP_ID,
-      useFactory: (configService: ConfService) => configService.geohubAppId,
+      useFactory: (confSvc: ConfService) => confSvc.geohubAppId,
       deps: [ConfService],
     },
     {

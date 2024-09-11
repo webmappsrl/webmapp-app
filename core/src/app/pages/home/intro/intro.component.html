@@ -1,7 +1,8 @@
 <div class="wm-homeintro-container">
   <ion-icon class="wm-homeintro-btnmenu" name="menu-outline" (click)="menuOpen()"></ion-icon>
 
-  <wm-inner-component-html class="wm-homeintro-title" [html]="title"> </wm-inner-component-html>
+  <wm-inner-component-html class="wm-homeintro-title" [html]="(confAPP$|async).name">
+  </wm-inner-component-html>
 </div>
 
 <ion-menu side="start" menuId="appMenu" class="wm-sidemenu" contentId="main">

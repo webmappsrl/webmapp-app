@@ -5,7 +5,6 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
-import {ConfigService} from 'src/app/services/config.service';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 import {LangService} from 'wm-core/localization/lang.service';
 import {
@@ -49,7 +48,6 @@ export class SettingsComponent {
   constructor(
     private _alertCtrl: AlertController,
     private _modalCtrl: ModalController,
-    private _configSvc: ConfigService,
     private _langSvc: LangService,
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,

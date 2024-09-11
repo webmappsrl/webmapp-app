@@ -1,33 +1,32 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MenuController, NavController} from '@ionic/angular';
-import {ConfigService} from 'src/app/services/config.service';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {confAPP} from 'wm-core/store/conf/conf.selector';
+import {IAPP} from 'wm-core/types/config';
 
 @Component({
   selector: 'webmapp-home-intro',
   templateUrl: './intro.component.html',
   styleUrls: ['./intro.component.scss'],
 })
-export class IntroComponent implements OnInit {
-  public title = 'webmapp';
+export class IntroComponent {
+  confAPP$: Observable<IAPP> = this._store.select(confAPP);
 
   constructor(
     private menu: MenuController,
-    private configService: ConfigService,
     private navCtrl: NavController,
+    private _store: Store<any>,
   ) {}
-
-  ngOnInit() {
-    this.title = this.configService.appName;
-  }
-
-  menuOpen() {
-    this.menu.enable(true, 'appMenu');
-    this.menu.open('appMenu');
-  }
 
   goTo(pageName: string) {
     console.log('------- ~ IntroComponent ~ goTo ~ pageName', pageName);
     this.navCtrl.navigateForward(pageName);
     this.menu.close('appMenu');
+  }
+
+  menuOpen() {
+    this.menu.enable(true, 'appMenu');
+    this.menu.open('appMenu');
   }
 }
