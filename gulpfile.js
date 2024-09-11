@@ -282,7 +282,6 @@ function create(instanceName, force) {
       if (verbose) debug('Creating `' + instancesDir + instanceName + '` folder');
       sh.exec('mkdir ' + instancesDir + instanceName);
     }
-
     var skip = [];
 
     if (fs.existsSync(instancesDir + instanceName + '/resources'))
@@ -298,6 +297,8 @@ function create(instanceName, force) {
         reject(err);
       },
     );
+    debug('cp ./package.json ' + instancesDir + instanceName + '/package.json');
+    sh.exec('cp ./package.json ' + instancesDir + instanceName + '/package.json');
   });
 }
 

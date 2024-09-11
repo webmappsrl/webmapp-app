@@ -27,7 +27,7 @@ import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
 import {APP_ID, APP_VERSION, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
 import {ConfService} from 'wm-core/store/conf/conf.service';
-import packageJson from './../../../package.json';
+import packageJson from 'package.json';
 
 registerLocaleData(localeIt);
 
