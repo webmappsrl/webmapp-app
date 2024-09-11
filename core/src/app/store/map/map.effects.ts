@@ -16,7 +16,7 @@ export class MapEffects {
         action.currentTrackId
           ? action.track
             ? of(action.track)
-            : from(this._apiSvc.getEctrack(action.currentTrackId))
+            : from(this._apiSvc.getEcTrack(action.currentTrackId))
           : of(null),
       ),
       map(currentTrack => loadTrackSuccess({currentTrack})),

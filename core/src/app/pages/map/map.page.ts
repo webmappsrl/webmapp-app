@@ -25,7 +25,7 @@ import {
   take,
   tap,
 } from 'rxjs/operators';
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
+import {CGeojsonLineStringFeature} from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/src/components';
@@ -38,6 +38,7 @@ import {currentFilters, padding} from 'src/app/store/map/map.selector';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
 import {LangService} from 'wm-core/localization/lang.service';
+import {FeatureCollection} from 'geojson';
 import {WmLoadingService} from 'wm-core/services/loading.service';
 import {
   applyWhere,
@@ -75,12 +76,12 @@ import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
 import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
-import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
-import { isLogged } from 'wm-core/store/auth/auth.selectors';
+import {isLogged} from 'wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
-import { Location } from '@angular/common';
-import { DeviceService } from 'wm-core/services/device.service';
-import { GeolocationService } from 'wm-core/services/geolocation.service';
+import {Location} from '@angular/common';
+import {DeviceService} from 'wm-core/services/device.service';
+import {GeolocationService} from 'wm-core/services/geolocation.service';
+import {ApiService} from 'wm-core/store/api/api.service';
 
 export interface IDATALAYER {
   high: string;
@@ -173,8 +174,8 @@ export class MapPage implements OnInit, OnDestroy {
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
-  currentTrack$: Observable<CGeojsonLineStringFeature | null> = this.trackid$.pipe(
-    switchMap(id => this._geohubSvc.getEcTrack(id)),
+  currentTrack$: Observable<FeatureCollection | null> = this.trackid$.pipe(
+    switchMap(id => this._apiSvc.getEcTrack(id)),
     startWith(null),
   );
   dataLayerUrls$: Observable<IDATALAYER>;
@@ -272,7 +273,7 @@ export class MapPage implements OnInit, OnDestroy {
     private _geolocationSvc: GeolocationService,
     private _langSvc: LangService,
     private _loadingSvc: WmLoadingService,
-    private _wmTrans: WmTransPipe,
+    private _apiSvc: ApiService,
     _platform: Platform,
   ) {
     this.dataLayerUrls$ = this.geohubId$.pipe(
@@ -377,8 +378,8 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   async goToTrack(id: number): Promise<void> {
-    const queryParams = { ...this._route.snapshot.queryParams, track: id };
-    const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams }).toString();
+    const queryParams = {...this._route.snapshot.queryParams, track: id};
+    const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
     this._location.replaceState(url);
     this._poiReset();
     if (this.wmMapComponent != null) {
@@ -438,6 +439,10 @@ export class MapPage implements OnInit, OnDestroy {
     }
   }
 
+  openPoiShare(poiId: number): void {
+    this._shareSvc.sharePoiByID(poiId);
+  }
+
   openPopup(popup): void {
     this.popup$.next(popup);
     if (popup != null && popup != '') {
@@ -456,10 +461,6 @@ export class MapPage implements OnInit, OnDestroy {
 
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
-  }
-
-  openPoiShare(poiId: number): void {
-    this._shareSvc.sharePoiByID(poiId);
   }
 
   phone(_): void {}
@@ -534,8 +535,8 @@ export class MapPage implements OnInit, OnDestroy {
   }
 
   setPoi(poi: IGeojsonFeature): void {
-    const queryParams = { ...this._route.snapshot.queryParams, poi: poi.properties.id };
-    const url = this._router.createUrlTree([], { relativeTo: this._route, queryParams }).toString();
+    const queryParams = {...this._route.snapshot.queryParams, poi: poi.properties.id};
+    const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
     this._location.replaceState(url);
     this.currentPoi$.next(poi);
     this.mapTrackDetailsCmp.open();
@@ -559,7 +560,7 @@ export class MapPage implements OnInit, OnDestroy {
   setWmMapFeatureCollection(overlay: any): void {
     this.wmMapFeatureCollectionOverlay$.next(overlay);
     this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
-      if(feature[overlay['featureType']]!= null) {
+      if (feature[overlay['featureType']] != null) {
         this.wmMapFeatureCollectionOverlay$.next({
           ...overlay,
           ...{url: feature[overlay['featureType']]},
