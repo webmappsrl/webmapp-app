@@ -416,6 +416,8 @@ export const environment = {
   geohubId: ${geohubInstanceId},
   analyticsId:'285809815',
   api: '${API}',
+  awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+  elasticApi: 'https://elastic-json.webmapp.it/v2/search',
 };
 `;
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
