@@ -14,8 +14,8 @@
       <ion-label> {{ "modals.settings.logout" | wmtrans }} </ion-label>
       <i class="icon-outline-chevron-right-outline" slot="end"></i>
     </ion-item>
-    <ion-item class="webmapp-settings-version" mode="md" *ngIf="false">
-      <ion-label> {{ "modals.settings.version" | wmtrans }} {{ version }}</ion-label>
+    <ion-item class="webmapp-settings-version" mode="md">
+      <ion-label> {{ "modals.settings.version" | wmtrans }} {{ APP_VERSION }}</ion-label>
     </ion-item>
     <wm-lang-selector
       [langs]="(langs$|async)?.available"

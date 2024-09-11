@@ -1,5 +1,5 @@
 import {KeyValue} from '@angular/common';
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -15,24 +15,23 @@ import {
   confMAP,
   confPAGES,
   confPROJECT,
-  confPRIVACY,
 } from 'wm-core/store/conf/conf.selector';
-import { GeolocationService } from 'wm-core/services/geolocation.service';
-import { isLogged } from 'wm-core/store/auth/auth.selectors';
-import { loadSignOuts } from 'wm-core/store/auth/auth.actions';
+import {GeolocationService} from 'wm-core/services/geolocation.service';
+import {isLogged} from 'wm-core/store/auth/auth.selectors';
+import {loadSignOuts} from 'wm-core/store/auth/auth.actions';
+import {APP_VERSION} from 'wm-core/store/conf/conf.token';
 
 @Component({
   selector: 'wm-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   confCredits$: Observable<any> = this._store.select(confCREDITS);
   confDisclaimer$: Observable<any> = this._store.select(confDISCLAIMER);
   confMap$: Observable<any> = this._store.select(confMAP);
   confPages$: Observable<any> = this._store.select(confPAGES);
   confProject$: Observable<any> = this._store.select(confPROJECT);
-  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   currentDistanceFilter = +(localStorage.getItem('wm-distance-filter') || 10);
   gpsAccuracy = {
     5: 'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria',
@@ -40,12 +39,12 @@ export class SettingsComponent implements OnInit {
     20: 'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria',
     100: 'precisione su mezzi di locomozione, consumo minimo della batteria',
   };
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   keepAwake =
     (localStorage.getItem('wm-keep-awake') != 'false' &&
       localStorage.getItem('wm-keep-awake') != null) ||
     false;
   langs$ = this._store.select(confLANGUAGES);
-  public version = '0.0.0';
 
   constructor(
     private _alertCtrl: AlertController,
@@ -54,11 +53,8 @@ export class SettingsComponent implements OnInit {
     private _langSvc: LangService,
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
+    @Inject(APP_VERSION) public APP_VERSION: string,
   ) {}
-
-  ngOnInit(): void {
-    this.version = this._configSvc.version;
-  }
 
   changeDistanceFilter(event): void {
     this.currentDistanceFilter = event.detail.value;
@@ -163,7 +159,7 @@ export class SettingsComponent implements OnInit {
           {
             text: this._langSvc.instant('generic.confirm'),
             handler: () => {
-              this._store.dispatch(loadSignOuts())
+              this._store.dispatch(loadSignOuts());
               this.dismiss();
             },
           },

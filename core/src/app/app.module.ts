@@ -1,5 +1,5 @@
 import {HttpClientModule} from '@angular/common/http';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {WmCoreModule} from 'wm-core/wm-core.module';
 import {registerLocaleData} from '@angular/common';
@@ -21,12 +21,13 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {ModalphotosModule} from './components/modalphotos/modalphotos.module';
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
-import {ConfigService} from './services/config.service';
 import {MapEffects} from './store/map/map.effects';
 import {UIReducer} from './store/map/map.reducer';
 import {NetworkEffects} from './store/network/network.effects';
 import {networkReducer} from './store/network/netwotk.reducer';
-import {APP_ID, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
+import {APP_ID, APP_VERSION, ENVIRONMENT_CONFIG} from 'wm-core/store/conf/conf.token';
+import {ConfService} from 'wm-core/store/conf/conf.service';
+import packageJson from './../../../package.json';
 
 registerLocaleData(localeIt);
 
@@ -69,16 +70,14 @@ registerLocaleData(localeIt);
     {provide: LOCALE_ID, useValue: 'it'},
     {
       provide: APP_ID,
-      useFactory: (configService: ConfigService) => configService.appId,
-      deps: [ConfigService]
+      useFactory: (configService: ConfService) => configService.geohubAppId,
+      deps: [ConfService],
+    },
+    {
+      provide: APP_VERSION,
+      useValue: packageJson.version,
     },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    {
-      provide: APP_INITIALIZER,
-      useFactory: (configService: ConfigService) => () => configService.initialize(),
-      deps: [ConfigService],
-      multi: true,
-    },
   ],
   bootstrap: [AppComponent],
 })
