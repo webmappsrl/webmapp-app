@@ -290,6 +290,15 @@ function create(instanceName, force) {
     copy('core', instancesDir + instanceName, skip, force).then(
       function () {
         if (verbose) debug('Copy completed');
+        gulp
+          .src(instancesDir + instanceName + '/package.json') // Seleziona il package.json dell'istanza
+          .pipe(
+            jeditor(function (json) {
+              json.version = packageNPM.version; // Imposta la nuova versione
+              return json; // Ritorna l'oggetto json modificato
+            }),
+          )
+          .pipe(gulp.dest(instancesDir + instanceName)); // Salva il file modificato
         resolve();
       },
       function (err) {
@@ -297,8 +306,6 @@ function create(instanceName, force) {
         reject(err);
       },
     );
-    debug('cp ./package.json ' + instancesDir + instanceName + '/package.json');
-    sh.exec('cp ./package.json ' + instancesDir + instanceName + '/package.json');
   });
 }
 
@@ -689,6 +696,7 @@ function build(instanceName, geohubInstanceId) {
           result => {
             if (verbose) debug('`build()` - update completed');
             if (verbose) debug('`build()` completed');
+
             resolve(result);
           },
           err => {
