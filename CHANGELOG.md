@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.12.6](https://github.com/webmappsrl/webmapp-app/compare/v2.12.5...v2.12.6) (2024-09-12)
+
+
+### Miscellaneous
+
+* Update app.module.ts and settings.component.html/ts ([00614b5](https://github.com/webmappsrl/webmapp-app/commit/00614b59331dd548b52d71987900b5f9bea2962b))
+* Update environment configuration ([d281e89](https://github.com/webmappsrl/webmapp-app/commit/d281e89afd6f1434654cd94242d8bdaa6d484bbb))
+* Update environment variables in gulpfile.js ([aaf7884](https://github.com/webmappsrl/webmapp-app/commit/aaf7884ad73674644d4154f282d1bfe28be48a1a))
+* Update geohubId in environment.ts ([884e8bf](https://github.com/webmappsrl/webmapp-app/commit/884e8bfba7607463103d580afa8c31a34328ee82))
+* Update map.effects.ts ([51f5b9d](https://github.com/webmappsrl/webmapp-app/commit/51f5b9d6927138b423aaed346bb082c34ac90682))
+* Update package version during instance creation and build ([9d32a37](https://github.com/webmappsrl/webmapp-app/commit/9d32a3727b4881c8b1d5d8a778acb5761c4a4dad))
+* Update subproject dependencies ([4a40266](https://github.com/webmappsrl/webmapp-app/commit/4a402660745b47f4405f0c058f39e606cf6ec68e))
+
 ## [2.12.5](https://github.com/webmappsrl/webmapp-app/compare/v2.12.4...v2.12.5) (2024-09-09)
 
 
