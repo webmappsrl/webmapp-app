@@ -18,6 +18,7 @@ gulp build -i ir -g 28
 gulp build -i fie -g 29
 gulp build -i sardegna -g 32
 gulp build -i logos -g 34
+gulp build -i caiparma -g 33
 gulp build -i montepisano -g 41
 gulp build -i metallifere -g 44
 gulp build -i sit -g 45
