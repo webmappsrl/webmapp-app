@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.12.7](https://github.com/webmappsrl/webmapp-app/compare/v2.12.6...v2.12.7) (2024-09-13)
+
+
+### Miscellaneous
+
+* Add file saving functionality and permission handling ([b3ba923](https://github.com/webmappsrl/webmapp-app/commit/b3ba923a609e6c900954e427aebacb431df21452))
+* Add new deployment command for caiparma project ([73728cc](https://github.com/webmappsrl/webmapp-app/commit/73728cc4db10656206c49a549e05fa3b8b69527b))
+* Add surge-osm2cai script to deploy the project to OSM2CAI domain ([ea9c699](https://github.com/webmappsrl/webmapp-app/commit/ea9c69953b8dad3258d32011567de0249ff7863d))
+* **map:** add track property to wm-track-download-urls component ([be32e9d](https://github.com/webmappsrl/webmapp-app/commit/be32e9d8fb01bd7c71cdcbd535f6fb4a69ea84ed))
+
 ## [2.12.6](https://github.com/webmappsrl/webmapp-app/compare/v2.12.5...v2.12.6) (2024-09-12)
 
 
