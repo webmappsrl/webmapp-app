@@ -24,21 +24,9 @@
         ></ion-back-button>
       </ion-buttons>
       <ion-buttons slot="end">
-        <wm-export-to-btn
-          [to]="'geojson'"
-          [input]="track"
-          [saveFileFn]="saveFileCallback"
-        ></wm-export-to-btn>
-        <wm-export-to-btn
-          [to]="'kml'"
-          [input]="track"
-          [saveFileFn]="saveFileCallback"
-        ></wm-export-to-btn>
-        <wm-export-to-btn
-          [to]="'gpx'"
-          [input]="track"
-          [saveFileFn]="saveFileCallback"
-        ></wm-export-to-btn>
+        <wm-export-to-btn [to]="'geojson'" [input]="track"></wm-export-to-btn>
+        <wm-export-to-btn [to]="'kml'" [input]="track"></wm-export-to-btn>
+        <wm-export-to-btn [to]="'gpx'" [input]="track"></wm-export-to-btn>
         <ion-button (click)="delete()" *ngIf="online$|async">
           <ion-icon name="trash-outline" start></ion-icon>
         </ion-button>

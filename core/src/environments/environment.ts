@@ -5,9 +5,10 @@
 export const environment = {
   production: false,
   analyticsId: '285809815',
-  geohubId: 33,
+  geohubId: 26,
   apiCarg: 'https://carg.maphub.it',
   elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+  osm2caiApi: 'https://osm2cai.cai.it',
   api: 'https://geohub.webmapp.it',
   awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
   //api: 'http://127.0.0.1:8000',

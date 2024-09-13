@@ -67,24 +67,46 @@ export abstract class DetailPage {
   async saveFileCallback(data, format, input): Promise<void> {
     const name = (input != null && input.title) ?? 'export';
     const fileName = `${name}.${format}`;
+    const showSuccessPopup = async (fileName: string, fileUrl: string): Promise<void> => {
+      const alert = await this.alertCtrl.create({
+        header: 'File salvato',
+        message: `File correttamente salvato in Documenti come ${fileName}. Vuoi condividerlo?`,
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              console.log('Condivisione annullata');
+            },
+          },
+          {
+            text: 'Sì',
+            handler: async () => {
+              await Share.share({
+                title: `Condividi il file ${fileName}`,
+                url: fileUrl,
+                dialogTitle: `Condividi il tuo file ${fileName}`,
+              });
+            },
+          },
+        ],
+      });
+
+      await alert.present();
+    };
     try {
       // Scrivi il file nel filesystem
       const writeResult = await Filesystem.writeFile({
         path: fileName,
         data,
-        directory: Directory.External,
+        directory: Directory.Documents,
         encoding: Encoding.UTF8,
       });
 
       // Prepara il file per la condivisione
       const fileUrl = writeResult.uri;
-
-      // Apri il menu di condivisione
-      await Share.share({
-        title: `Condividi il file ${fileName}`,
-        url: fileUrl,
-        dialogTitle: `Condividi il tuo file ${fileName}`,
-      });
+      // Mostra il popup con il messaggio e la richiesta di condivisione
+      await showSuccessPopup(fileName, fileUrl);
     } catch (e) {
       console.error("Errore durante l'esportazione e la condivisione:", e);
     }
