@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.8](https://github.com/webmappsrl/webmapp-app/compare/v2.12.7...v2.12.8) (2024-09-13)
+
+
+### Miscellaneous
+
+* Add API endpoint for OSM2CAI ([f3579b2](https://github.com/webmappsrl/webmapp-app/commit/f3579b21db0f2fc8bb65b0fcb5934803792a056c))
+* Remove unused saveFileCallback method ([2683dd3](https://github.com/webmappsrl/webmapp-app/commit/2683dd38097b41809216e936ee8faa3cb973b94b))
+
 ## [2.12.7](https://github.com/webmappsrl/webmapp-app/compare/v2.12.6...v2.12.7) (2024-09-13)
 
 
