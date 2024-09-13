@@ -44,6 +44,7 @@ const CONSOLE_COLORS = {
   BgWhite: '\x1b[47m',
 };
 const APIGEOHUB = 'https://geohub.webmapp.it';
+const APIOSM2CAI = 'https://osm2cai.cai.it';
 const APICARG = 'https://carg.maphub.it';
 let API = APIGEOHUB;
 const wrongInstanceVersion = ['fumaiolosentieri', 'pec', 'cammini', 'ucvs', 'gavorrano', 'sicai'];
