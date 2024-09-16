@@ -19,8 +19,7 @@ import {DetailPage} from '../abstract/detail.page';
 import {SaveService} from 'wm-core/services/save.service';
 import {IPhotoItem} from 'wm-core/services/photo.service';
 import {ITrack} from 'wm-core/types/track';
-import {Plugins} from '@capacitor/core';
-const {Permissions} = Plugins;
+
 @Component({
   selector: 'wm-trackdetail',
   templateUrl: './trackdetail.page.html',
@@ -61,7 +60,6 @@ export class TrackdetailPage extends DetailPage {
     alertCtrl: AlertController,
   ) {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
-    this.requestStoragePermission();
 
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),
@@ -123,16 +121,5 @@ export class TrackdetailPage extends DetailPage {
 
   presentToast(): Observable<void> {
     return super.presentToast('Foto correttamente cancellata');
-  }
-
-  async requestStoragePermission() {
-    const permission = await Permissions.query({name: 'storage'});
-
-    if (permission.state !== 'granted') {
-      const result = await Permissions.request({name: 'storage'});
-      if (result.state !== 'granted') {
-        throw new Error('Permesso di archiviazione non concesso');
-      }
-    }
   }
 }
