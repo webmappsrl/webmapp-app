@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.12.10](https://github.com/webmappsrl/webmapp-app/compare/v2.12.9...v2.12.10) (2024-09-17)
+
+
+### Miscellaneous
+
+* Update Android platform and remove storage permission request oc:3969 ([7e3845f](https://github.com/webmappsrl/webmapp-app/commit/7e3845f4f7824ff2759f119e9be368368a82b0f8))
+* Update dependencies and build configuration ([1292745](https://github.com/webmappsrl/webmapp-app/commit/12927457694258da5d887f49506c6169dd67b19d))
+
 ## [2.12.9](https://github.com/webmappsrl/webmapp-app/compare/v2.12.8...v2.12.9) (2024-09-13)
 
 
