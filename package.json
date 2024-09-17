@@ -24,7 +24,8 @@
     "request": "^2.88.2",
     "shelljs": "^0.8.4",
     "vinyl-source-stream": "^2.0.0",
-    "yargs": "^16.2.0"
+    "yargs": "^16.2.0",
+    "cordova-res": "0.15.4"
   },
   "name": "webmapp-app",
   "version": "2.12.9",

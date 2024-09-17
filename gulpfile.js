@@ -595,8 +595,8 @@ function updateAndroidPlatform(instanceName, appId, appName) {
         gulp
           .src(instancesDir + instanceName + '/android/variables.gradle')
           .pipe(replace(/minSdkVersion = ([0-9]{2})/g, 'minSdkVersion = 28'))
-          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 33'))
-          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 33'))
+          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 34'))
+          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 34'))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/'))
           .on('end', () => {
             if (verbose) debug('variables.gradle updated successfully');
@@ -665,6 +665,32 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     );
   });
 }
+function updateGradleVersion(instanceName, newVersion) {
+  return new Promise((resolve, reject) => {
+    const buildGradlePath = `${instancesDir}${instanceName}/android/build.gradle`;
+
+    if (fs.existsSync(buildGradlePath)) {
+      gulp
+        .src(buildGradlePath)
+        .pipe(
+          replace(
+            /classpath\s+['"]com\.android\.tools\.build:gradle:[^'"]+['"]/g,
+            `classpath 'com.android.tools.build:gradle:${newVersion}'`,
+          ),
+        )
+        .pipe(gulp.dest(`${instancesDir}${instanceName}/android/`))
+        .on('end', () => {
+          if (verbose) debug(`build.gradle updated successfully to version ${newVersion}`);
+          resolve();
+        })
+        .on('error', err => {
+          reject(`Error updating build.gradle: ${err}`);
+        });
+    } else {
+      reject(`build.gradle not found for instance ${instanceName}`);
+    }
+  });
+}
 
 function build(instanceName, geohubInstanceId) {
   if (instanceName === 'carg') {
@@ -731,7 +757,14 @@ function buildAndroid(instanceName, geohubInstanceId) {
         updateAndroidPlatform(instanceName, result.id, result.name).then(
           () => {
             updateResources(instanceName, 'android');
-            resolve();
+            updateGradleVersion(instanceName, '8.1.1')
+              .then(() => {
+                resolve();
+              })
+              .catch(err => {
+                abort(err);
+                done();
+              });
           },
           err => {
             reject(err);
