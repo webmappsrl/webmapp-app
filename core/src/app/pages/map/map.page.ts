@@ -560,7 +560,7 @@ export class MapPage implements OnInit, OnDestroy {
   setWmMapFeatureCollection(overlay: any): void {
     this.wmMapFeatureCollectionOverlay$.next(overlay);
     this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
-      if (feature[overlay['featureType']] != null) {
+      if (overlay['featureType'] != null && feature[overlay['featureType']] != null) {
         this.wmMapFeatureCollectionOverlay$.next({
           ...overlay,
           ...{url: feature[overlay['featureType']]},

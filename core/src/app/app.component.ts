@@ -65,13 +65,6 @@ export class AppComponent {
     this._storeNetwork.dispatch(startNetworkMonitoring());
     this._store.dispatch(loadAuths());
     this._store
-      .select(poisInitFeatureCollection)
-      .pipe(
-        filter(f => f),
-        take(1),
-      )
-      .subscribe(() => this._loadingSvc.close('Loading pois...'));
-    this._store
       .select(confMAP)
       .pipe(
         filter(p => p != null),
