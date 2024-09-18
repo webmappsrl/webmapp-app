@@ -206,6 +206,7 @@ function copy(src, dest, options, force) {
 }
 
 function getUrlFile(file, src, dest) {
+  // console.log(file, src, dest);
   return new Promise((resolve, reject) => {
     if (verbose) debug('Downloading ' + src + ' to ' + dest + file);
     request({
@@ -693,9 +694,7 @@ function updateGradleVersion(instanceName, newVersion) {
 }
 
 function build(instanceName, geohubInstanceId) {
-  if (instanceName === 'carg') {
-    API = APICARG;
-  }
+  // setAPI(instanceName);
   return new Promise((resolve, reject) => {
     if (!instanceName) {
       reject('Instance name requred. See gulp help');
@@ -741,7 +740,7 @@ function build(instanceName, geohubInstanceId) {
 }
 
 function buildAndroid(instanceName, geohubInstanceId) {
-  setAPI(instanceName);
+  //setAPI(instanceName);
   return new Promise((resolve, reject) => {
     build(instanceName, geohubInstanceId).then(
       result => {
@@ -794,7 +793,7 @@ function buildAndroidApk(instanceName, geohubInstanceId, type) {
 
     buildAndroid(instanceName, geohubInstanceId).then(
       () => {
-        setAPI(instanceName);
+        //setAPI(instanceName);
         if (verbose) debug('Assembling the ' + type + ' apk');
         var gradlecom = './gradlew tasks app:assemble';
         if (process.platform === 'win32') gradlecom = 'gradlew tasks app:assemble';
@@ -1190,7 +1189,7 @@ function updateIosPlatform(instanceName, appId, appName) {
 
 function buildIos(instanceName, geohubInstanceId) {
   return new Promise((resolve, reject) => {
-    setAPI(instanceName);
+    //setAPI(instanceName);
     build(instanceName, geohubInstanceId).then(
       result => {
         if (!result.id) {
