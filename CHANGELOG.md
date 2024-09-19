@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.12.11](https://github.com/webmappsrl/webmapp-app/compare/v2.12.10...v2.12.11) (2024-09-19)
+
+
+### Miscellaneous
+
+* Comment out console.log statements and unused code ([88c6830](https://github.com/webmappsrl/webmapp-app/commit/88c683017ac3076fb1419c0271084f297f29e25d))
+* Remove android.permission.MANAGE_EXTERNAL_STORAGE from permissions array ([786cfec](https://github.com/webmappsrl/webmapp-app/commit/786cfec343d07a51ac123b647e91359ff995a5ea))
+* Remove unnecessary code and fix condition in MapPage ([db89915](https://github.com/webmappsrl/webmapp-app/commit/db899154bf3c0e1a67b753d3da9cf8242079b599))
+
 ## [2.12.10](https://github.com/webmappsrl/webmapp-app/compare/v2.12.9...v2.12.10) (2024-09-17)
 
 
