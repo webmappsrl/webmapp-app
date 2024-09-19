@@ -1733,7 +1733,6 @@ function addPermissionsIfNotPresent() {
     'android.permission.READ_MEDIA_IMAGES',
     'android.permission.READ_EXTERNAL_STORAGE',
     'android.permission.WRITE_EXTERNAL_STORAGE',
-    'android.permission.MANAGE_EXTERNAL_STORAGE',
   ];
 
   return through.obj(function (file, encoding, callback) {
