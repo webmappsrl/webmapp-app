@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   analyticsId: '285809815',
-  geohubId: 26,
+  geohubId: 17,
   apiCarg: 'https://carg.maphub.it',
   elasticApi: 'https://elastic-json.webmapp.it/v2/search',
   osm2caiApi: 'https://osm2cai.cai.it',
