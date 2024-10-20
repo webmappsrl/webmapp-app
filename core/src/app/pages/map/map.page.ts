@@ -279,9 +279,6 @@ export class MapPage implements OnInit, OnDestroy {
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
-        if (geohubId == 13) {
-          this.enableOverLay$.next(true);
-        }
         return {
           low: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
           high: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
@@ -298,26 +295,6 @@ export class MapPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
-  }
-
-  ngOnInit(): void {
-    this._routerSub = this._route.queryParams.subscribe(queryParams => {
-      setTimeout(() => {
-        const trackId = queryParams['track'];
-        const poiId = queryParams['poi'];
-        if (trackId != null) {
-          this.goToTrack(trackId);
-        }
-        if (poiId != null) {
-          this.wmMapPoisDirective.setPoi(+poiId);
-        }
-        this._route.snapshot.queryParams = {};
-      }, 300);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this._routerSub.unsubscribe();
   }
 
   close(): void {
@@ -437,6 +414,26 @@ export class MapPage implements OnInit, OnDestroy {
     if (isFocused) {
       this.mapTrackDetailsCmp.onlyTitle();
     }
+  }
+
+  ngOnDestroy(): void {
+    this._routerSub.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this._routerSub = this._route.queryParams.subscribe(queryParams => {
+      setTimeout(() => {
+        const trackId = queryParams['track'];
+        const poiId = queryParams['poi'];
+        if (trackId != null) {
+          this.goToTrack(trackId);
+        }
+        if (poiId != null) {
+          this.wmMapPoisDirective.setPoi(+poiId);
+        }
+        this._route.snapshot.queryParams = {};
+      }, 300);
+    });
   }
 
   openPoiShare(poiId: number): void {
