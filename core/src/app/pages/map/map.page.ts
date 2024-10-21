@@ -25,7 +25,6 @@ import {
   take,
   tap,
 } from 'rxjs/operators';
-import {CGeojsonLineStringFeature} from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/src/components';

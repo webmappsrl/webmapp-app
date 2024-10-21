@@ -10,11 +10,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {downloadTrack} from 'src/app/shared/map-core/src/utils';
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
-
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'wm-download-panel',
   templateUrl: './download-panel.component.html',
@@ -25,7 +24,7 @@ import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 export class WmDownloadPanelComponent implements OnChanges {
   private _myEventSubscription;
 
-  @Input() track: CGeojsonLineStringFeature;
+  @Input() track: Feature<LineString>;
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
   @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
@@ -67,7 +66,7 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.isDownloaded = false;
 
     this.status = {finish: false, map: 0, data: 0, media: 0, install: 0};
-    downloadTrack(`${this.track.properties.id}`, this.track as any, this.updateStatus.bind(this));
+    downloadTrack(`${this.track.properties.id}`, this.track, this.updateStatus.bind(this));
   }
 
   updateStatus(status: DownloadStatus): void {

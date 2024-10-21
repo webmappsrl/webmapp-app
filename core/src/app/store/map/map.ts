@@ -1,8 +1,6 @@
-import {IGeojsonPoiDetailed, IGeojsonProperties} from 'src/app/types/model';
-
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
+import {IGeojsonPoiDetailed} from 'src/app/types/model';
 import {ILAYER} from 'wm-core/types/config';
-
+import {Feature, LineString, GeoJsonProperties} from 'geojson';
 export interface IMapRootState {
   currentFilters?: any;
   currentLayer?: ILAYER;
@@ -11,8 +9,8 @@ export interface IMapRootState {
   currentPoiIds?: number[];
   currentPoiIndex?: number;
   currentRelatedPoi?: IGeojsonPoiDetailed[];
-  currentTrack?: CGeojsonLineStringFeature;
-  currentTrackProperties?: IGeojsonProperties;
+  currentTrack?: Feature<LineString>;
+  currentTrackProperties?: GeoJsonProperties;
   goToHome?: boolean;
   nextPoiIndex?: number;
   padding: number[];

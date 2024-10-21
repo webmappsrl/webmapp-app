@@ -1,11 +1,11 @@
-import {CGeojsonLineStringFeature} from '../classes/features/cgeojson-line-string-feature';
 import {Location} from './location';
-
-export interface ITrackElevationChartStyle {
-  backgroundColor: string;
-}
+import {Feature, LineString} from 'geojson';
 
 export interface ITrackElevationChartHoverElements {
   location: Location;
-  track?: CGeojsonLineStringFeature;
+  track?: Feature<LineString>;
+}
+
+export interface ITrackElevationChartStyle {
+  backgroundColor: string;
 }

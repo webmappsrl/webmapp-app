@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {BehaviorSubject} from 'rxjs';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {StatusService} from 'src/app/services/status.service';
-import {IGeojsonFeature, iLocalString} from 'src/app/types/model';
-
+import {iLocalString} from 'src/app/types/model';
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-card-big',
   templateUrl: './card-big.component.html',
@@ -15,24 +14,9 @@ import {IGeojsonFeature, iLocalString} from 'src/app/types/model';
   encapsulation: ViewEncapsulation.None,
 })
 export class CardBigComponent implements OnInit {
-  private _item: IGeojsonFeature;
+  private _item: Feature<LineString>;
 
-  public distance: number = 0;
-  public feature_image;
-  @Input('showDistance') public showDistance: boolean;
-  public title$: BehaviorSubject<iLocalString | null> = new BehaviorSubject<iLocalString | null>(
-    null,
-  );
-  public where: any;
-
-  constructor(
-    private navCtrl: NavController,
-    private _statusService: StatusService,
-    private _geoHubService: GeohubService,
-    private geolocationUtils: GeoutilsService,
-  ) {}
-
-  @Input('item') public set item(value: IGeojsonFeature) {
+  @Input('item') public set item(value: Feature<LineString>) {
     this._item = value;
     if (value != null && value.properties != null && value.properties.name != null) {
       this.title$.next(value.properties.name);
@@ -50,6 +34,22 @@ export class CardBigComponent implements OnInit {
     }
   }
 
+  @Input('showDistance') public showDistance: boolean;
+
+  public distance: number = 0;
+  public feature_image;
+  public title$: BehaviorSubject<iLocalString | null> = new BehaviorSubject<iLocalString | null>(
+    null,
+  );
+  public where: any;
+
+  constructor(
+    private navCtrl: NavController,
+    private _statusService: StatusService,
+    private _geoHubService: GeohubService,
+    private geolocationUtils: GeoutilsService,
+  ) {}
+
   public async ngOnInit() {}
 
   public open() {
@@ -63,7 +63,7 @@ export class CardBigComponent implements OnInit {
     this.navCtrl.navigateForward('route');
   }
 
-  private async _setTaxonomy(value: IGeojsonFeature) {
+  private async _setTaxonomy(value: Feature) {
     if (value.properties?.taxonomy?.where && value.properties.taxonomy.where.length) {
       let id = value.properties.taxonomy.where[0];
       const taxonomy = await this._geoHubService.getWhereTaxonomy(id);

@@ -1,6 +1,4 @@
-import {IGeojsonFeature, WhereTaxonomy} from '../types/model';
-
-import {CGeojsonLineStringFeature} from 'wm-core/classes/features/cgeojson-line-string-feature';
+import {WhereTaxonomy} from '../types/model';
 import {CommunicationService} from './base/communication.service';
 import {HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -10,13 +8,14 @@ import {environment} from 'src/environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {getTrack} from '../shared/map-core/src/utils';
+import {Feature, LineString} from 'geojson';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeohubService {
-  private _ecTracks: Array<CGeojsonLineStringFeature>;
+  private _ecTracks: Array<Feature<LineString>>;
   private _favourites: Array<number> = null;
 
   constructor(
@@ -47,10 +46,10 @@ export class GeohubService {
    *
    * @returns
    */
-  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+  async getEcTrack(id: string | number): Promise<Feature<LineString>> {
     if (id == null) return null;
-    const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
-      (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
+    const cacheResult: Feature<LineString> = this._ecTracks.find(
+      (ecTrack: Feature<LineString>) => ecTrack?.properties?.id === id,
     );
     if (cacheResult) {
       return cacheResult;
@@ -77,7 +76,7 @@ export class GeohubService {
     }
   }
 
-  async getFavouriteTracks(page: number = 0): Promise<Array<IGeojsonFeature>> {
+  async getFavouriteTracks(page: number = 0): Promise<Array<Feature<LineString>>> {
     const favourites = await this.favourites();
 
     let ids: number[] = [];
@@ -88,7 +87,7 @@ export class GeohubService {
     return this.getTracks(ids);
   }
 
-  async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
+  async getTracks(ids: number[]): Promise<Array<Feature<LineString>>> {
     const res = await this._communicationService
       .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
       .pipe(map(x => x.features))

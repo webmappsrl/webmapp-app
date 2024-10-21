@@ -1,8 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {Animation, AnimationController, Platform} from '@ionic/angular';
-
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-map-track-card',
   templateUrl: './map-track-card.component.html',
@@ -11,7 +10,7 @@ import {Animation, AnimationController, Platform} from '@ionic/angular';
 export class MapTrackCardComponent implements OnInit {
   private animation?: Animation;
 
-  @Input('track') track: CGeojsonLineStringFeature;
+  @Input('track') track: Feature<LineString>;
   @Output() close = new EventEmitter();
   @Output() openClick = new EventEmitter();
   @ViewChild('favouriteanimation') favouriteanimation: ElementRef;
@@ -28,7 +27,6 @@ export class MapTrackCardComponent implements OnInit {
     this.isFavourite = await this._geohubService.isFavouriteTrack(this.track.properties.id);
 
     await this._platform.ready();
-    // console.log('------- ~ file: map-track-card.component.ts ~ line 29 ~ MapTrackCardComponent ~ ngOnInit ~ this.favouriteanimation', this.favouriteanimation);
 
     this.animation = this.animationCtrl
       .create()

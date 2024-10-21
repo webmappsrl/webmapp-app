@@ -1,6 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
+import {Feature, LineString} from 'geojson';
 import {ILAYER} from 'wm-core/types/config';
 
 export const setCurrentLayer = createAction(
@@ -25,7 +24,7 @@ export const setCurrentFilters = createAction(
 export const openDetails = createAction('[map] Set detail open', props<{openDetails: boolean}>());
 export const loadTrackSuccess = createAction(
   '[map] Success load track',
-  props<{currentTrack: CGeojsonLineStringFeature | null}>(),
+  props<{currentTrack: Feature<LineString> | null}>(),
 );
 
 export const goToHome = createAction('[map] go to home');

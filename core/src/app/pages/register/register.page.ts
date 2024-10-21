@@ -7,25 +7,25 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
-import { GeolocationService } from 'wm-core/services/geolocation.service';
+import {GeolocationService} from 'wm-core/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {ModalSaveComponent} from './modal-save/modal-save.component';
 import {ModalSuccessComponent} from '../../components/modal-success/modal-success.component';
-import { SaveService } from 'wm-core/services/save.service';
+import {SaveService} from 'wm-core/services/save.service';
 import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {Location} from '@capacitor-community/background-geolocation';
-import {Collection, Feature} from 'ol';
-import {LineString, Point} from 'ol/geom';
+import {Collection, Feature as OlFeature} from 'ol';
+import {LineString as olLinestring, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -43,14 +43,14 @@ export class RegisterPage implements OnInit, OnDestroy {
   confMap$: Observable<any> = this._store.select(confMAP);
   confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
-  currentTrack$: BehaviorSubject<CGeojsonLineStringFeature | null> = new BehaviorSubject(null);
+  currentTrack$: BehaviorSubject<Feature<LineString> | null> = new BehaviorSubject(null);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  geojson: CGeojsonLineStringFeature = new CGeojsonLineStringFeature();
+  geojson: Feature<LineString>;
   geojson$: BehaviorSubject<any> = new BehaviorSubject(null);
   isPaused = false;
   isRegestering = true;
   length: number = 0;
-  linestring = new LineString([]);
+  linestring = new olLinestring([]);
   location: number[];
   opacity: number = 0;
   point = new Point([]);
@@ -88,7 +88,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         this.linestring.appendCoordinate(coordinate);
 
         this.point.setCoordinates(coordinate);
-        const featureCollection = new Collection([new Feature({geometry: this.linestring})]);
+        const featureCollection = new Collection([new OlFeature({geometry: this.linestring})]);
         const geojson = new GeoJSON({featureProjection: 'EPSG:3857'}).writeFeaturesObject(
           featureCollection.getArray(),
         );
