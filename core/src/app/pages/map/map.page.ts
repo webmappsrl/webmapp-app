@@ -180,7 +180,6 @@ export class MapPage implements OnInit, OnDestroy {
   );
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
-  enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -295,6 +294,26 @@ export class MapPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
+  }
+
+  ngOnInit(): void {
+    this._routerSub = this._route.queryParams.subscribe(queryParams => {
+      setTimeout(() => {
+        const trackId = queryParams['track'];
+        const poiId = queryParams['poi'];
+        if (trackId != null) {
+          this.goToTrack(trackId);
+        }
+        if (poiId != null) {
+          this.wmMapPoisDirective.setPoi(+poiId);
+        }
+        this._route.snapshot.queryParams = {};
+      }, 300);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this._routerSub.unsubscribe();
   }
 
   close(): void {
@@ -414,26 +433,6 @@ export class MapPage implements OnInit, OnDestroy {
     if (isFocused) {
       this.mapTrackDetailsCmp.onlyTitle();
     }
-  }
-
-  ngOnDestroy(): void {
-    this._routerSub.unsubscribe();
-  }
-
-  ngOnInit(): void {
-    this._routerSub = this._route.queryParams.subscribe(queryParams => {
-      setTimeout(() => {
-        const trackId = queryParams['track'];
-        const poiId = queryParams['poi'];
-        if (trackId != null) {
-          this.goToTrack(trackId);
-        }
-        if (poiId != null) {
-          this.wmMapPoisDirective.setPoi(+poiId);
-        }
-        this._route.snapshot.queryParams = {};
-      }, 300);
-    });
   }
 
   openPoiShare(poiId: number): void {
