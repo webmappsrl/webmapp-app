@@ -352,7 +352,7 @@ function update(instanceName, geohubInstanceId) {
 
               if (verbose) debug('Config file downloaded');
 
-              if (!configJson.APP.id) {
+              if (!configJson.APP.sku) {
                 reject('Missing app id at ' + config);
                 return;
               }
@@ -396,13 +396,13 @@ function update(instanceName, geohubInstanceId) {
                 }),
                 getUrlFile('splash.png', resources + 'splash.png', dir + '/resources/'),
                 getUrlFile('splash-dark.png', resources + 'splash.png', dir + '/resources/'),
-                updateCapacitorConfigJson(instanceName, configJson.APP.id, configJson.APP.name),
+                updateCapacitorConfigJson(instanceName, configJson.APP.sku, configJson.APP.name),
                 updateIndex(instanceName, configJson.APP.name),
               ];
 
               Promise.all(promises).then(() => {
                 resolve({
-                  id: configJson.APP.id,
+                  id: configJson.APP.sku,
                   name: configJson.APP.name,
                 });
               }, reject);
