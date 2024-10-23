@@ -403,7 +403,6 @@ export class MapPage implements OnInit, OnDestroy {
   ionViewDidEnter(): void {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.onLine$.next(navigator.onLine);
-    this._geolocationSvc.start();
     this._cdr.detectChanges();
     if (this.wmMapComponent.map) {
       this.wmMapComponent.map.updateSize();

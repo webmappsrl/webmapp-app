@@ -29,6 +29,7 @@ import {toggleHome} from 'src/app/store/map/map.selector';
 import {IAPP, ILAYER} from 'wm-core/types/config';
 import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
 import {online} from 'src/app/store/network/network.selector';
+import {GeolocationService} from 'wm-core/services/geolocation.service';
 
 @Component({
   selector: 'wm-page-home',
@@ -61,6 +62,7 @@ export class HomePage implements OnDestroy {
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
     private _platform: Platform,
+    private _geolocationSvc: GeolocationService,
     public sanitizer: DomSanitizer,
   ) {
     this._goToHomeSub = this.goToHome$.pipe(debounceTime(300)).subscribe(() => {
@@ -85,6 +87,7 @@ export class HomePage implements OnDestroy {
     this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {
       App.exitApp();
     });
+    this._geolocationSvc.start();
   }
 
   ionViewWillLeave(): void {
