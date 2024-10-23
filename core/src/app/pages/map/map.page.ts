@@ -180,7 +180,6 @@ export class MapPage implements OnInit, OnDestroy {
   );
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
-  enableOverLay$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -279,9 +278,6 @@ export class MapPage implements OnInit, OnDestroy {
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
-        if (geohubId == 13) {
-          this.enableOverLay$.next(true);
-        }
         return {
           low: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
           high: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
