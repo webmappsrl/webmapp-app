@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.14](https://github.com/webmappsrl/webmapp-app/compare/v2.12.13...v2.12.14) (2024-10-25)
+
+
+### Miscellaneous
+
+* Add geolocation service to home and map pages oc: 4113 ([37903a7](https://github.com/webmappsrl/webmapp-app/commit/37903a78f46f1a95f9ddccc1d370615609f11ab7))
+
 ## [2.12.13](https://github.com/webmappsrl/webmapp-app/compare/v2.12.12...v2.12.13) (2024-10-25)
 
 
