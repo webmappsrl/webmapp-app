@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.12.13](https://github.com/webmappsrl/webmapp-app/compare/v2.12.12...v2.12.13) (2024-10-25)
+
+
+### Miscellaneous
+
+* Add 'cai_scale' translation to Italian language file oc: 4097 ([221acd9](https://github.com/webmappsrl/webmapp-app/commit/221acd97ab02b14c8bd2e85363fdc1c0056d3ea5))
+* **i18n:** Remove unused translation key "cai_scale" ([127ba20](https://github.com/webmappsrl/webmapp-app/commit/127ba20c21da694c651506d16e907333cbb9116c))
+* Remove unnecessary code for overlay URL and reorganize lifecyc… ([#49](https://github.com/webmappsrl/webmapp-app/issues/49)) ([c9d25f5](https://github.com/webmappsrl/webmapp-app/commit/c9d25f54c1cfa5216ca8687e11a7bbcdd798dbe8))
+* Update subproject with changes to use SKU instead of ID in app configuration. Fix issues related to missing app ID oc: 4170 ([#51](https://github.com/webmappsrl/webmapp-app/issues/51)) ([c03b4c5](https://github.com/webmappsrl/webmapp-app/commit/c03b4c5f98ffa0c3b866376bc28acb3e0a461625))
+
 ## [2.12.12](https://github.com/webmappsrl/webmapp-app/compare/v2.12.11...v2.12.12) (2024-09-27)
 
 
