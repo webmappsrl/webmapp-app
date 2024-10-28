@@ -70,3 +70,18 @@
     ></wm-profile-auth>
   </ng-container>
 </ion-content>
+
+<ng-container *ngIf="isLogged$|async">
+  <ion-button
+      *ngIf="isLogged$ | async"
+      (click)="deleteUserAlert()"
+      size="small"
+      expand="block"
+      fill="outline"
+      color="danger"
+      class="wm-profile-delete-button"
+    >
+      <ion-icon name="close-outline"></ion-icon>
+      {{'deleteAccount'|wmtrans}}
+    </ion-button>
+</ng-container>

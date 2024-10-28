@@ -6,9 +6,12 @@ import {select, Store} from '@ngrx/store';
 import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
 import {isLogged} from 'wm-core/store/auth/auth.selectors';
 import {Router} from '@angular/router';
-import {IUser} from 'wm-core/store/auth/auth.model';
 import {filter, skip} from 'rxjs/operators';
-
+import {AlertController} from '@ionic/angular';
+import {TranslateService} from '@ngx-translate/core';
+import {from} from 'rxjs';
+import {take} from 'rxjs/operators';
+import {deleteUser} from 'wm-core/store/auth/auth.actions';
 @Component({
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
@@ -26,6 +29,8 @@ export class ProfilePage implements OnDestroy {
     private _modalController: ModalController,
     private _store: Store<any>,
     private _router: Router,
+    private _alertCtrl: AlertController,
+    private _tranlateSvc: TranslateService
   ) {
     this._isLoggedSub = this.isLogged$
       .pipe(
@@ -56,5 +61,48 @@ export class ProfilePage implements OnDestroy {
   tabClick(event: Event, tab: string): void {
     event.stopImmediatePropagation();
     this._router.navigate([tab]);
+  }
+
+  deleteUserAlert(): void {
+    from(
+      this._alertCtrl.create({
+        header: this._tranlateSvc.instant('attention'),
+        subHeader: this._tranlateSvc.instant('deleteAccountIrreversibleAction'),
+        message: this._tranlateSvc.instant('deleteAccountConfirmMessage'),
+        inputs: [
+          {
+            name: 'confirmationInput',
+            type: 'text',
+            placeholder: this._tranlateSvc.instant('deleteAccountInputPlaceholder')
+          }
+        ],
+        buttons: [
+          {
+            text: this._tranlateSvc.instant('cancel'),
+            role: 'cancel',
+          },
+          {
+            text: this._tranlateSvc.instant('confirm'),
+            role: 'confirm',
+            handler: async (alertData) => {
+              if (alertData.confirmationInput === 'elimina account') {
+                this._store.dispatch(deleteUser());
+              } else {
+                  const errorAlert = await this._alertCtrl.create({
+                  header: this._tranlateSvc.instant('attention'),
+                  message: this._tranlateSvc.instant('deleteAccountError'),
+                  buttons: [this._tranlateSvc.instant('generic.ok')]
+                });
+                await errorAlert.present();
+              }
+            },
+          },
+        ],
+      }),
+    )
+      .pipe(take(1))
+      .subscribe(l => {
+        l.present();
+      });
   }
 }
