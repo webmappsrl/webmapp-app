@@ -146,10 +146,15 @@
   bottom: 30px;
 }
 
-
-
 .webmapp-pageregister-btnbottomleft {
   position: absolute;
   bottom: 20px;
   left: 10px;
+}
+
+.wm-fab-container{
+  bottom: 33px;
+  ion-fab-button{
+    --background: var(--wm-color-light);
+  }
 }
