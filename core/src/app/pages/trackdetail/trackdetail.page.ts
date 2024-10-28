@@ -16,9 +16,11 @@ import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
-import {SaveService} from 'wm-core/services/save.service';
 import {IPhotoItem} from 'wm-core/services/photo.service';
-import {ITrack} from 'wm-core/types/track';
+import {LineString} from 'geojson';
+import {getUgcTrack} from 'wm-core/utils/localForage';
+import {UgcService} from 'wm-core/services/ugc.service';
+import {WmFeature} from '@wm-types/feature';
 
 @Component({
   selector: 'wm-trackdetail',
@@ -29,13 +31,13 @@ import {ITrack} from 'wm-core/types/track';
 })
 export class TrackdetailPage extends DetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
-  currentTrack: ITrack;
+  currentTrack: WmFeature<LineString>;
   online$ = this._store.select(online);
   public photos: IPhotoItem[] = [];
   public sliderOptions: any = {
     slidesPerView: 2.5,
   };
-  track$: Observable<ITrack>;
+  track$: Observable<WmFeature<LineString>>;
   trackAvgSpeed$: Observable<number>;
   trackDistance$: Observable<number>;
   trackSlope$: Observable<number>;
@@ -49,7 +51,7 @@ export class TrackdetailPage extends DetailPage {
   constructor(
     private _route: ActivatedRoute,
     private _geoUtils: GeoutilsService,
-    private _saveSvc: SaveService,
+    private _ugcSvc: UgcService,
     private _menuCtrl: MenuController,
     private _modalCtrl: ModalController,
     private _navCtlr: NavController,
@@ -62,21 +64,17 @@ export class TrackdetailPage extends DetailPage {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
 
     this.track$ = this._route.queryParams.pipe(
-      switchMap(param => from(this._saveSvc.getTrack(param.track))),
+      switchMap(param => from(getUgcTrack(param.track))),
       tap(t => (this.currentTrack = t)),
     );
     this.track$.subscribe(track => console.log(track));
-    this.trackDistance$ = this.track$.pipe(map(track => this._geoUtils.getLength(track.geojson)));
-    this.trackSlope$ = this.track$.pipe(
-      map(track => this._geoUtils.getSlope(track.geojson ?? null)),
-    );
+    this.trackDistance$ = this.track$.pipe(map(track => this._geoUtils.getLength(track)));
+    this.trackSlope$ = this.track$.pipe(map(track => this._geoUtils.getSlope(track ?? null)));
 
-    this.trackAvgSpeed$ = this.track$.pipe(
-      map(track => this._geoUtils.getAverageSpeed(track.geojson)),
-    );
-    this.trackTopSpeed$ = this.track$.pipe(map(track => this._geoUtils.getTopSpeed(track.geojson)));
+    this.trackAvgSpeed$ = this.track$.pipe(map(track => this._geoUtils.getAverageSpeed(track)));
+    this.trackTopSpeed$ = this.track$.pipe(map(track => this._geoUtils.getTopSpeed(track)));
     this.trackTime$ = this.track$.pipe(
-      map(track => GeoutilsService.formatTime(this._geoUtils.getTime(track.geojson))),
+      map(track => GeoutilsService.formatTime(this._geoUtils.getTime(track))),
     );
   }
 
@@ -87,7 +85,7 @@ export class TrackdetailPage extends DetailPage {
   }
 
   deleteAction(): void {
-    this._saveSvc
+    this._ugcSvc
       .deleteTrack(this.currentTrack)
       .pipe(
         take(1),
@@ -109,8 +107,11 @@ export class TrackdetailPage extends DetailPage {
     await modal.present();
     const res = await modal.onDidDismiss();
     if (!res.data.dismissed) {
-      const track: ITrack = Object.assign(this.currentTrack, res.data.trackData);
-      await this._saveSvc.updateTrack(track);
+      this.currentTrack.properties = {
+        ...this.currentTrack.properties,
+        ...res.data.trackData,
+      };
+      await this._ugcSvc.saveTrack(this.currentTrack);
     }
   }
 

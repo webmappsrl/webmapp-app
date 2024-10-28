@@ -23,8 +23,8 @@ import {Browser} from '@capacitor/browser';
 import {IMapRootState} from 'src/app/store/map/map';
 import {Store} from '@ngrx/store';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';
-import {getTrack} from 'src/app/shared/map-core/src/utils';
 import {Feature, LineString} from 'geojson';
+import {getEcTrack} from 'wm-core/utils/localForage';
 @Component({
   selector: 'app-poi',
   templateUrl: './poi.page.html',
@@ -73,7 +73,7 @@ export class PoiPage implements OnInit, OnDestroy {
         take(1),
         tap(t => (this.route = t)),
         filter(g => g != null),
-        switchMap(f => getTrack(`${f.properties.id}`)),
+        switchMap(f => getEcTrack(`${f.properties.id}`)),
       )
       .subscribe(d => {
         this.useCache = d != null;

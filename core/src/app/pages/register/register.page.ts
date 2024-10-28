@@ -12,8 +12,6 @@ import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {ModalSaveComponent} from './modal-save/modal-save.component';
 import {ModalSuccessComponent} from '../../components/modal-success/modal-success.component';
-import {SaveService} from 'wm-core/services/save.service';
-import {ITrack} from 'src/app/types/track';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -26,6 +24,7 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
+import {UgcService} from 'wm-core/services/ugc.service';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -67,7 +66,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _geoutilsSvc: GeoutilsService,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
-    private _saveSvc: SaveService,
+    private _ugcSvc: UgcService,
     private _cdr: ChangeDetectorRef,
     private _platform: Platform,
     private _store: Store,
@@ -228,26 +227,23 @@ export class RegisterPage implements OnInit, OnDestroy {
       try {
         clearInterval(this._timerInterval);
       } catch (e) {}
-      const geojson = await this._geolocationSvc.stopRecording();
+      const feature = await this._geolocationSvc.stopRecording();
       const trackData = res.data.trackData;
       const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
       const device = {
         os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
       };
       const metadata = {
-        ...geojson.properties,
+        ...feature.properties,
         ...{date: trackData.date, activity: trackData.activity, distanceFilter, device},
       };
 
-      const track: ITrack = Object.assign(
-        {
-          geojson,
-          metadata,
-        },
-        res.data.trackData,
-        {metadata},
-      );
-      const saved = await this._saveSvc.saveTrack(track);
+      feature.properties = {
+        ...feature.properties,
+        ...{metadata},
+        ...trackData,
+      };
+      const saved = await this._ugcSvc.saveTrack(feature);
 
       await this.openModalSuccess(saved);
       this.backToMap();

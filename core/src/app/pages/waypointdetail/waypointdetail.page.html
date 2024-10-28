@@ -28,54 +28,62 @@
       class="wm-waypointdetail-map"
       [wmMapConf]="confMap$|async"
       [wmMapFullscreen]="true"
-      [wmMapGeojson]="waypoint.displayPosition"
+      [wmMapGeojson]="waypoint"
+      [wmMapGeojsonFit]="true"
     ></wm-map>
 
-    <ion-list class="wm-waypointdetail-itemlist" lines="none">
-      <wm-form [confPOIFORMS]="confPOIFORMS$|async" [init]="waypoint$|async" [disabled]="true">
-        <div header class="wm-waypointdetail-date">{{waypoint.date | date : "dd MMMM YYYY"}}</div>
-        <ion-item
-          class="wm-waypointdetail-item"
-          lines="none"
-          *ngIf="waypoint.nominatim as nominatim"
-          header
-        >
-          <i class="webmapp-icon-pin-outline wm-waypointdetail-icon secondary" start></i>
-          <div>
-            <div class="wm-waypointdetail-item-city" *ngIf="nominatim.display_name as displayName">
-              {{displayName}}
+    <ng-container *ngIf="waypoint.properties as prop">
+      <ng-container *ngIf="prop.rawData as rawData">
+        <ion-list class="wm-waypointdetail-itemlist" lines="none">
+          <wm-form [confPOIFORMS]="confPOIFORMS$|async" [init]="waypoint" [disabled]="true">
+            <div header class="wm-waypointdetail-date">
+              {{prop.created_at | date : "dd MMMM YYYY"}}
             </div>
-            <div class="wm-waypointdetail-item-position" *ngIf="waypoint.position as position">
-              lat: {{position.latitude}}, lon: {{ position.longitude }}
-            </div>
-          </div>
-        </ion-item>
-        <ion-item
-          class="wm-waypointdetail-item"
-          lines="none"
-          *ngIf="waypoint.photos != null && waypoint.photos.length > 0"
-        >
-          <i class="webmapp-icon-camera wm-trackdetail-icon secondary" start></i>
-          {{'pages.trackdetail.photos'|wmtrans}}
-        </ion-item>
-
-        <ng-container
-          *ngIf="waypoint!= null &&waypoint.photos != null && waypoint.photos.length >0"
-        >
-          <ion-slides
-            pager="false"
-            [options]="sliderOptions"
-            class="wm-waypointdetail-photoslider"
-            #slider
-          >
-            <ion-slide *ngFor="let photo of waypoint.photos;let idx = index">
-              <div class="wm-waypointdetail-photocontainer">
-                <ion-img [src]="photo|wmCreateBlob" class="wm-waypointdetail-photo"></ion-img>
+            <ion-item
+              class="wm-waypointdetail-item"
+              lines="none"
+              *ngIf="rawData.nominatim as nominatim"
+              header
+            >
+              <i class="webmapp-icon-pin-outline wm-waypointdetail-icon secondary" start></i>
+              <div>
+                <div
+                  class="wm-waypointdetail-item-city"
+                  *ngIf="nominatim.display_name as displayName"
+                >
+                  {{displayName}}
+                </div>
+                <div class="wm-waypointdetail-item-position" *ngIf="waypoint.geometry as geometry">
+                  lat: {{geometry.coordinates[0]}}, lon: {{ geometry.coordinates[1] }}
+                </div>
               </div>
-            </ion-slide>
-          </ion-slides>
-        </ng-container>
-      </wm-form>
-    </ion-list>
+            </ion-item>
+            <ion-item
+              class="wm-waypointdetail-item"
+              lines="none"
+              *ngIf="rawData.photos != null && rawData.photos.length > 0"
+            >
+              <i class="webmapp-icon-camera wm-trackdetail-icon secondary" start></i>
+              {{'pages.trackdetail.photos'|wmtrans}}
+            </ion-item>
+
+            <ng-container *ngIf="rawData.photos != null && rawData.photos.length >0">
+              <ion-slides
+                pager="false"
+                [options]="sliderOptions"
+                class="wm-waypointdetail-photoslider"
+                #slider
+              >
+                <ion-slide *ngFor="let photo of rawData.photos;let idx = index">
+                  <div class="wm-waypointdetail-photocontainer">
+                    <ion-img [src]="photo|wmCreateBlob" class="wm-waypointdetail-photo"></ion-img>
+                  </div>
+                </ion-slide>
+              </ion-slides>
+            </ng-container>
+          </wm-form>
+        </ion-list>
+      </ng-container>
+    </ng-container>
   </ion-content>
 </ng-container>

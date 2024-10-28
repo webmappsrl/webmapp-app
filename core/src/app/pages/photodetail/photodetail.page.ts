@@ -7,22 +7,22 @@ import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
-import { IPhotoItem } from 'wm-core/services/photo.service';
-import { SaveService } from 'wm-core/services/save.service';
-
+import {getUgcMedia} from 'wm-core/utils/localForage';
+import {UgcService} from 'wm-core/services/ugc.service';
+import {Media, WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'webmapp-photodetail',
   templateUrl: './photodetail.page.html',
   styleUrls: ['./photodetail.page.scss'],
 })
 export class PhotodetailPage extends DetailPage {
-  currentPhoto: IPhotoItem;
+  currentPhoto: WmFeature<Media>;
   online$ = this._store.select(online);
-  photo$: Observable<IPhotoItem>;
+  photo$: Observable<WmFeature<Media>>;
 
   constructor(
     private _route: ActivatedRoute,
-    private _saveSvc: SaveService,
+    private _ugcSvc: UgcService,
     private _navCtlr: NavController,
     private _store: Store,
     toastCtrl: ToastController,
@@ -32,7 +32,7 @@ export class PhotodetailPage extends DetailPage {
   ) {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.photo$ = this._route.queryParams.pipe(
-      switchMap(param => from(this._saveSvc.getPhoto(param.photo))),
+      switchMap(param => from(getUgcMedia(param.photo))),
       tap(p => (this.currentPhoto = p)),
     );
   }
@@ -44,8 +44,8 @@ export class PhotodetailPage extends DetailPage {
   }
 
   deleteAction(): void {
-    this._saveSvc
-      .deletePhoto(this.currentPhoto)
+    this._ugcSvc
+      .deleteMedia(this.currentPhoto)
       .pipe(
         take(1),
         switchMap(_ => from(this.presentToast())),

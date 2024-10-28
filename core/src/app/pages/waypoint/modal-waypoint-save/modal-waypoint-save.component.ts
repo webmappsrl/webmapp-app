@@ -7,16 +7,15 @@ import {
 } from '@angular/core';
 import {ModalController, LoadingController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
-import { SaveService } from 'wm-core/services/save.service';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {WaypointSave} from 'src/app/types/waypoint';
 import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
+import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {UgcService} from 'wm-core/services/ugc.service';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -43,7 +42,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   constructor(
     private _modalCtrl: ModalController,
     private _photoSvc: PhotoService,
-    private _saveSvc: SaveService,
+    private _ugcSvc: UgcService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
@@ -124,7 +123,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     if (this.fg.invalid) {
       return;
     }
-    const waypoint: WaypointSave = await this._saveSvc.saveWaypoint({
+    const waypoint: any = await this._ugcSvc.saveApiPoi({
       position: this.position,
       displayPosition: this.displayPosition,
       city: this.positionCity,

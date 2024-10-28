@@ -3,8 +3,7 @@ import {NavController} from '@ionic/angular';
 import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
-import {getTracks} from 'src/app/shared/map-core/src/utils';
-import { StorageService } from 'wm-core/services/storage.service';
+import {getEcTracks} from 'wm-core/utils/localForage';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
@@ -15,8 +14,8 @@ import { StorageService } from 'wm-core/services/storage.service';
 export class DownloadedTracksBoxComponent {
   tracks$: Observable<IHIT[]>;
 
-  constructor(private _navCtrl: NavController, private _storageSvc: StorageService) {
-    this.tracks$ = from(getTracks()).pipe(
+  constructor(private _navCtrl: NavController) {
+    this.tracks$ = from(getEcTracks()).pipe(
       map(t => t.map(track => track.properties as unknown as IHIT)),
     );
   }

@@ -1,4 +1,5 @@
 import {createAction, props} from '@ngrx/store';
+
 import {Feature, LineString} from 'geojson';
 import {ILAYER} from 'wm-core/types/config';
 

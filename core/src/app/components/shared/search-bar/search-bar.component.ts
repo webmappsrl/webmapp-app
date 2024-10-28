@@ -5,7 +5,6 @@ import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Store} from '@ngrx/store';
 import {debounceTime} from 'rxjs/operators';
 import {inputTyped} from 'wm-core/store/api/api.actions';
-import {ILAYER} from 'wm-core/types/config';
 @Component({
   selector: 'webmapp-search-bar',
   templateUrl: './search-bar.component.html',

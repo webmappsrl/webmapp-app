@@ -10,10 +10,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {downloadTrack} from 'src/app/shared/map-core/src/utils';
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
-import {Feature, LineString} from 'geojson';
+import {LineString} from 'geojson';
+import {downloadTrack} from 'wm-core/utils/localForage';
+import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-download-panel',
   templateUrl: './download-panel.component.html',
@@ -24,7 +25,7 @@ import {Feature, LineString} from 'geojson';
 export class WmDownloadPanelComponent implements OnChanges {
   private _myEventSubscription;
 
-  @Input() track: Feature<LineString>;
+  @Input() track: WmFeature<LineString>;
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
   @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();

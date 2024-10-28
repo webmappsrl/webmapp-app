@@ -3,8 +3,8 @@ import {Component, OnInit} from '@angular/core';
 
 import {NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
-import {getTracks, removeTrack} from 'src/app/shared/map-core/src/utils';
 import {GeoJSONFeature} from 'ol/format/GeoJSON';
+import {getEcTracks, removeTrack} from 'wm-core/utils/localForage';
 
 @Component({
   selector: 'app-downloadlist',
@@ -24,7 +24,7 @@ export class DownloadlistPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.tracks = await getTracks();
+    this.tracks = await getEcTracks();
   }
 
   async deleteSelected() {

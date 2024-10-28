@@ -12,7 +12,8 @@ import {Location} from 'src/app/types/location';
 import {Store} from '@ngrx/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
-import {Feature, LineString} from 'geojson';
+import {LineString} from 'geojson';
+import {WmFeature} from '@wm-types/feature';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -24,7 +25,7 @@ export class WaypointPage implements OnInit, OnDestroy {
 
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
-  currentTrack$: BehaviorSubject<Feature<LineString> | null> = new BehaviorSubject(null);
+  currentTrack$: BehaviorSubject<WmFeature<LineString> | null> = new BehaviorSubject(null);
   location: Location;
   locationString: string;
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);

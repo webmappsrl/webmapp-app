@@ -9,7 +9,6 @@ import {
 import {BehaviorSubject} from 'rxjs';
 import {IonSlides, ModalController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from '../utils';
-import { StorageService } from 'wm-core/services/storage.service';
 
 @Component({
   selector: 'wm-modal-image',
@@ -36,7 +35,7 @@ export class ModalImageComponent implements AfterViewInit {
     },
   };
 
-  constructor(private _modalCtrl: ModalController, private _storageSvc: StorageService) {}
+  constructor(private _modalCtrl: ModalController) {}
 
   ngAfterViewInit(): void {
     this.slider.slideTo(this.idx$.value);

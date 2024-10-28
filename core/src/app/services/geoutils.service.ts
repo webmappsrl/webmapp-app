@@ -112,6 +112,13 @@ export class GeoutilsService {
     return 0;
   }
 
+  getLocations(track: Feature<LineString>): any[] {
+    const properties = track.properties;
+    const metadata = properties.metadata ?? null;
+    const locations = metadata?.locations ?? null;
+    return locations ?? [];
+  }
+
   /**
    * Get the difference in height of a track
    *
@@ -120,17 +127,12 @@ export class GeoutilsService {
    * @returns {number} total height difference
    */
   getSlope(track: Feature<LineString>): number {
-    if (
-      track == null ||
-      track.properties == null ||
-      track.properties.locations == null ||
-      track.properties.locations.length < 2
-    ) {
+    const locations = this.getLocations(track);
+    if (locations == null || locations.length < 2) {
       return 0;
     }
 
     let totalClimb = 0;
-    let locations = track.properties.locations;
 
     for (let i = 1; i < locations.length; i++) {
       const prev = locations[i - 1];
@@ -157,8 +159,9 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getSpeeds(track: Feature<LineString>): number[] {
-    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
-      return track.properties.locations.map(l => l.speed);
+    const locations = this.getLocations(track);
+    if (locations && locations.length > 1) {
+      return locations.map(l => l.speed);
     }
     return [];
   }
@@ -170,11 +173,9 @@ export class GeoutilsService {
    * @returns the time in seconds
    */
   getTime(track: Feature<LineString>): number {
-    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
-      return this._calcTimeS(
-        track.properties.locations[0].time,
-        track.properties.locations[track.properties.locations.length - 1].time,
-      );
+    const locations = this.getLocations(track);
+    if (locations && locations.length > 1) {
+      return this._calcTimeS(locations[0].time, locations[locations.length - 1].time);
     }
     return 0;
   }

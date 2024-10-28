@@ -8,10 +8,9 @@ import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import { SaveService } from 'wm-core/services/save.service';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import { ITrack } from 'wm-core/types/track';
-
+import {getUgcTracks} from 'wm-core/utils/localForage';
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'wm-tracklist',
   templateUrl: './tracklist.page.html',
@@ -21,24 +20,23 @@ import { ITrack } from 'wm-core/types/track';
 })
 export class TracklistPage {
   confMap$: Observable<any> = this._store.select(confMAP);
-  tracks$: Observable<ITrack[]>;
+  tracks$: Observable<Feature<LineString>[]>;
 
   constructor(
-    private _saveSvc: SaveService,
     private _navCtrl: NavController,
     private _cdr: ChangeDetectorRef,
     private _store: Store,
   ) {}
 
   ionViewWillEnter(): void {
-    this.tracks$ = from(this._saveSvc.getTracks());
+    this.tracks$ = from(getUgcTracks());
     this._cdr.detectChanges();
   }
 
-  open(track): void {
+  open(track: Feature<LineString>): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        track: track.key,
+        track: track.properties.id,
       },
     };
     this._navCtrl.navigateForward('trackdetail', navigationExtras);

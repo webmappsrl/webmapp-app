@@ -6,7 +6,7 @@ import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
-import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
+import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -46,7 +46,7 @@ export class ModalSaveComponent implements OnInit {
     const library = await this._photoService.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoService.getPhotoData(libraryItemCopy.photoURL),
+      const photoData = await this._photoService.getPhotoData(libraryItemCopy.properties.photoURL),
         md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {

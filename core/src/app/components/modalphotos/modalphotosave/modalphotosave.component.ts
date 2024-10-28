@@ -2,15 +2,15 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
-import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
-
+import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {Feature, Point} from 'geojson';
 @Component({
   selector: 'webmapp-modalphotosave',
   templateUrl: './modalphotosave.component.html',
   styleUrls: ['./modalphotosave.component.scss'],
 })
 export class ModalphotosaveComponent implements OnInit {
-  public photos: IPhotoItem[];
+  public photos: Feature<Point>[];
   public showList = false;
 
   constructor(
@@ -37,21 +37,6 @@ export class ModalphotosaveComponent implements OnInit {
     });
   }
 
-  // async addPhotos() {
-  //   const modalPhotos = await this.modalController.create({
-  //     component: ModalphotosComponent,
-  //     componentProps: {
-  //       photoCollection: this.photos,
-  //     },
-  //   });
-  //   await modalPhotos.present();
-  //   const resPhoto = await modalPhotos.onDidDismiss();
-  //   if (!resPhoto.data.dismissed && resPhoto.data.photos) {
-  //     this.photos = resPhoto.data.photos;
-  //   }
-  //   // const photoCollection = resPhoto.data.photos;
-  //   // this.photos = [...this.photos,...photoCollection]
-  // }
   async edit(photo) {
     const modalSinglePhoto = await this.modalController.create({
       component: ModalPhotoSingleComponent,
@@ -120,6 +105,6 @@ export class ModalphotosaveComponent implements OnInit {
   }
 
   valChange(value, idx) {
-    this.photos[idx].description = value;
+    this.photos[idx].properties.description = value;
   }
 }

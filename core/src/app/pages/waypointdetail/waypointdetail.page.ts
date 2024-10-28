@@ -5,11 +5,12 @@ import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {switchMap, take, tap} from 'rxjs/operators';
-import { SaveService } from 'wm-core/services/save.service';
 import {online} from 'src/app/store/network/network.selector';
-import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 import {DetailPage} from '../abstract/detail.page';
+import {Point} from 'geojson';
+import {UgcService} from 'wm-core/services/ugc.service';
+import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',
@@ -20,16 +21,16 @@ import {DetailPage} from '../abstract/detail.page';
 export class WaypointdetailPage extends DetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
-  currentWaypoint: WaypointSave;
+  currentPoi: WmFeature<Point>;
   online$ = this._store.select(online);
   sliderOptions: any = {
     slidesPerView: 2.5,
   };
-  waypoint$: Observable<WaypointSave>;
+  waypoint$: Observable<WmFeature<Point>>;
 
   constructor(
     private _route: ActivatedRoute,
-    private _saveSvc: SaveService,
+    private _ugcSvc: UgcService,
     private _navCtlr: NavController,
     private _store: Store<any>,
     toastCtrl: ToastController,
@@ -39,8 +40,8 @@ export class WaypointdetailPage extends DetailPage {
   ) {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.waypoint$ = this._route.queryParams.pipe(
-      switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),
-      tap(w => (this.currentWaypoint = w)),
+      switchMap(param => this._ugcSvc.getPoi(param.waypoint)),
+      tap(w => (this.currentPoi = w)),
     );
     this.waypoint$.subscribe(w => console.log(w));
   }
@@ -52,8 +53,8 @@ export class WaypointdetailPage extends DetailPage {
   }
 
   deleteAction(): void {
-    this._saveSvc
-      .deleteWaypoint(this.currentWaypoint)
+    this._ugcSvc
+      .deletePoi(this.currentPoi)
       .pipe(
         take(1),
         switchMap(_ => from(this.presentToast())),

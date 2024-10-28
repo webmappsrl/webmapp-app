@@ -13,17 +13,20 @@
 </ion-header>
 
 <ion-content>
-  <ng-container *ngIf="photos$|async as photos">
-    <div class="webmapp-photolist-noitem" *ngIf="!photos?.length">
+  <ng-container *ngIf="medias$|async as medias">
+    <div class="webmapp-photolist-noitem" *ngIf="!medias?.length">
       {{'pages.photolist.noitem'|wmtrans}}
     </div>
     <ion-list>
-      <ion-item *ngFor="let photo of photos" button detail (click)="open(photo)">
-        <ion-img [src]="photo|wmCreateBlob" start class="webmapp-photolist-item-image"></ion-img>
-        <div>
-          <div class="webmapp-photolist-item-title">{{photo.description|wmtrans}}</div>
+      <ion-item *ngFor="let media of medias" button detail (click)="open(media)">
+        <wm-img [src]="media|wmCreateBlob" start class="webmapp-photolist-item-image"></wm-img>
+        <div *ngIf="media.properties as prop">
+          <div class="webmapp-photolist-item-title">{{prop.name|wmtrans}}</div>
           <div class="webmapp-photolist-item-date">
-            {{photo.date | date : "d MMMM YYYY - HH:mm"}}
+            {{prop.date??prop.updated_at | date : "d MMMM YYYY - HH:mm"}}
+          </div>
+          <div class="webmapp-photolist-item-date" *ngIf="prop.id">
+            {{'sync id'|wmtrans}}: {{prop.id}}
           </div>
         </div>
       </ion-item>

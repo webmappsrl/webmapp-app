@@ -1,6 +1,6 @@
 import {IGeojsonPoiDetailed} from 'src/app/types/model';
-import {ILAYER} from 'wm-core/types/config';
 import {Feature, LineString, GeoJsonProperties} from 'geojson';
+import {ILAYER} from 'wm-core/types/config';
 export interface IMapRootState {
   currentFilters?: any;
   currentLayer?: ILAYER;

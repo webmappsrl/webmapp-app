@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {WmFeatureCollection} from 'src/app/shared/map-core/src/directives';
+import {WmFeatureCollection} from '@wm-types/feature';
 
 @Component({
   selector: 'webmapp-card-track',
