@@ -16,7 +16,12 @@
       <ng-container *ngIf="tracks.length>0;else noTracks"></ng-container>
       <ion-item *ngFor="let track of tracks" button detail (click)="open(track)">
         <div start class="wm-tracklist-item-map">
-          <wm-map [wmMapConf]="confMap$|async" [wmMapOnly]="true" [wmMapGeojson]="track"></wm-map>
+          <wm-map
+            [wmMapConf]="confMap$|async"
+            [wmMapOnly]="true"
+            [wmMapGeojson]="track"
+            [wmMapGeojsonFit]="true"
+          ></wm-map>
         </div>
         <ng-container *ngIf="track.properties as prop">
           <div>

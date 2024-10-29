@@ -10,7 +10,8 @@ import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {getUgcTracks} from 'wm-core/utils/localForage';
-import {Feature, LineString} from 'geojson';
+import {LineString} from 'geojson';
+import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-tracklist',
   templateUrl: './tracklist.page.html',
@@ -20,7 +21,7 @@ import {Feature, LineString} from 'geojson';
 })
 export class TracklistPage {
   confMap$: Observable<any> = this._store.select(confMAP);
-  tracks$: Observable<Feature<LineString>[]>;
+  tracks$: Observable<WmFeature<LineString>[]>;
 
   constructor(
     private _navCtrl: NavController,
@@ -33,7 +34,7 @@ export class TracklistPage {
     this._cdr.detectChanges();
   }
 
-  open(track: Feature<LineString>): void {
+  open(track: WmFeature<LineString>): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
         track: track.properties.id,

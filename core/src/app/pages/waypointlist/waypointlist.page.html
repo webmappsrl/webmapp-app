@@ -23,6 +23,7 @@
             [wmMapConf]="confMap$|async"
             [wmMapOnly]="true"
             [wmMapGeojson]="waypoint"
+            [wmMapGeojsonFit]="true"
           ></wm-map>
         </div>
         <div *ngIf="waypoint.properties as prop">
@@ -31,7 +32,7 @@
             {{prop.updated_at | date : "d MMMM YYYY - HH:mm"}}
           </div>
           <div class="wm-waypointlist-item-date" *ngIf="prop.id">
-            {{'sync id'|wmtrans}}: {{prop.id}} {{prop.sku}}
+            {{'sync id'|wmtrans}}: {{prop.id}}
           </div>
         </div>
       </ion-item>
