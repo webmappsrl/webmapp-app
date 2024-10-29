@@ -1,13 +1,12 @@
 <ion-header class="webmapp-modalwaypoint-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button
-        mode="ios"
-        defaultHref="waypoint"
+      <ion-button
+        color="dark"
         (click)="close()"
-        text=""
-        class="webmapp-backbutton webmapp-backbutton-dark"
-      ></ion-back-button>
+      >
+        <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>{{ "pages.waypoint.modalsave.title" | wmtrans }}</ion-title>
   </ion-toolbar>
