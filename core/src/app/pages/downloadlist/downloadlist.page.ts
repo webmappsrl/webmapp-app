@@ -4,7 +4,7 @@ import {Component, OnInit} from '@angular/core';
 import {NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
 import {GeoJSONFeature} from 'ol/format/GeoJSON';
-import {getEcTracks, removeTrack} from 'wm-core/utils/localForage';
+import {getEcTracks, removeEcTrack} from 'wm-core/utils/localForage';
 
 @Component({
   selector: 'app-downloadlist',
@@ -37,7 +37,7 @@ export class DownloadlistPage implements OnInit {
           text: this._langSvc.instant('Elimina'),
           handler: () => {
             this.selected.forEach(track => {
-              removeTrack(`${track.properties.id}`);
+              removeEcTrack(`${track.properties.id}`);
             });
             this.isSelectedActive = false;
           },
@@ -89,7 +89,7 @@ export class DownloadlistPage implements OnInit {
   }
 
   private async _remove(track: GeoJSONFeature) {
-    await removeTrack(`${track.properties.id}`);
+    await removeEcTrack(`${track.properties.id}`);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
   }

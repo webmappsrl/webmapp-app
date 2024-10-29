@@ -11,11 +11,7 @@
       </ion-buttons>
       <ion-title>{{'pages.waypointdetail.title'|wmtrans}}</ion-title>
       <ion-buttons slot="end">
-        <wm-export-to-btn
-          [to]="'json'"
-          [input]="waypoint"
-          [saveFileFn]="saveFileCallback"
-        ></wm-export-to-btn>
+        <wm-export-to-btn [to]="'json'" [input]="waypoint"></wm-export-to-btn>
         <ion-button (click)="delete()" *ngIf="online$|async">
           <ion-icon name="trash-outline" start></ion-icon>
         </ion-button>
@@ -28,8 +24,7 @@
       class="wm-waypointdetail-map"
       [wmMapConf]="confMap$|async"
       [wmMapFullscreen]="true"
-      [wmMapGeojson]="waypoint"
-      [wmMapGeojsonFit]="true"
+      [wmMapGeojson]="waypoint.properties.rawData.displayPosition"
     ></wm-map>
 
     <ng-container *ngIf="waypoint.properties as prop">

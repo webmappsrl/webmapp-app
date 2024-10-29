@@ -13,7 +13,7 @@ import {
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {LineString} from 'geojson';
-import {downloadTrack} from 'wm-core/utils/localForage';
+import {downloadEcTrack} from 'wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-download-panel',
@@ -67,7 +67,7 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.isDownloaded = false;
 
     this.status = {finish: false, map: 0, data: 0, media: 0, install: 0};
-    downloadTrack(`${this.track.properties.id}`, this.track, this.updateStatus.bind(this));
+    downloadEcTrack(`${this.track.properties.id}`, this.track, this.updateStatus.bind(this));
   }
 
   updateStatus(status: DownloadStatus): void {

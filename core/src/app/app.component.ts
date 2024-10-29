@@ -116,7 +116,7 @@ export class AppComponent {
         take(1),
       )
       .subscribe(_ => {
-        this._ugcSvc.syncUgcFromCloud();
+        this._ugcSvc.syncUgc();
       });
 
     this.status.showPhotos.subscribe(x => {
@@ -183,7 +183,7 @@ export class AppComponent {
    */
   saveGeneratedContentsNowAndInterval() {
     setInterval(() => {
-      this._ugcSvc.syncUgcFromCloud();
+      this._ugcSvc.syncUgc();
     }, GEOHUB_SAVING_TRY_INTERVAL);
   }
 
