@@ -19,6 +19,7 @@
   </ion-header>
 
   <wm-map
+    #wmapregister
     class="webmapp-pageregister-map-container"
     [wmMapConf]="confMap$|async"
     [wmMapGeojson]="geojson$|async"
@@ -86,48 +87,61 @@
     </ion-button>
   </div>
 
-  <ion-fab
-    vertical="bottom"
-    class="webmapp-pageregister-bottomfab"
-    horizontal="center"
-    *ngIf="(record$|async)"
-  >
-  <ion-fab-button size="small" (click)="waypoint()">
-    <ion-icon name="pin-outline"></ion-icon>
-  </ion-fab-button>
-    <ion-fab-button
-      (click)="resume($event)"
-      size="big"
-      class="
-        webmapp-pageregister-btnbottomcenter webmapp-pageregister-resumebtn
-      "
-      *ngIf="isPaused"
+  <ng-container *ngIf="(record$|async)">
+    <ion-fab
+      vertical="bottom"
+      class="webmapp-pageregister-bottomfab"
+      horizontal="center"
     >
-      <div class="webmapp-pageregister-btncontent">
-        <i class="webmapp-icon-play webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | wmtrans}}</div>
-      </div>
+    <ion-fab-button size="small" (click)="waypoint()">
+      <ion-icon name="pin-outline"></ion-icon>
     </ion-fab-button>
-    <ion-fab-button
-      *ngIf="!isPaused"
-      (click)="pause($event)"
-      class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-pausebtn"
-    >
-      <div class="webmapp-pageregister-btncontent">
-        <i class="webmapp-icon-pause-outline webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.pausebtn' | wmtrans}}</div>
-      </div>
-    </ion-fab-button>
+      <ion-fab-button
+        (click)="resume($event)"
+        size="big"
+        class="
+          webmapp-pageregister-btnbottomcenter webmapp-pageregister-resumebtn
+        "
+        *ngIf="isPaused"
+      >
+        <div class="webmapp-pageregister-btncontent">
+          <i class="webmapp-icon-play webmapp-pageregister-btnicon"></i>
+          <div class="webmapp-pageregister-btntext">{{'pages.register.resumebtn' | wmtrans}}</div>
+        </div>
+      </ion-fab-button>
+      <ion-fab-button
+        *ngIf="!isPaused"
+        (click)="pause($event)"
+        class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-pausebtn"
+      >
+        <div class="webmapp-pageregister-btncontent">
+          <i class="webmapp-icon-pause-outline webmapp-pageregister-btnicon"></i>
+          <div class="webmapp-pageregister-btntext">{{'pages.register.pausebtn' | wmtrans}}</div>
+        </div>
+      </ion-fab-button>
 
-    <ion-fab-button
-      (click)="stop($event)"
-      size="big"
-      class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-stopbtn"
+      <ion-fab-button
+        (click)="stop($event)"
+        size="big"
+        class="webmapp-pageregister-btnbottomcenter webmapp-pageregister-stopbtn"
+      >
+        <div class="webmapp-pageregister-btncontent">
+          <i class="webmapp-icon-stop webmapp-pageregister-btnicon"></i>
+          <div class="webmapp-pageregister-btntext">{{'pages.register.stopbtn' | wmtrans}}</div>
+        </div>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab
+      class="wm-fab-container"
+      slot="fixed"
+      vertical="bottom"
+      horizontal="end"
     >
-      <div class="webmapp-pageregister-btncontent">
-        <i class="webmapp-icon-stop webmapp-pageregister-btnicon"></i>
-        <div class="webmapp-pageregister-btntext">{{'pages.register.stopbtn' | wmtrans}}</div>
-      </div>
-    </ion-fab-button>
-  </ion-fab>
+      <wm-btn-orientation
+        [degrees]="wmapregister.mapDegrees"
+        (click)="wmapregister.orientNorth()"
+      >
+      </wm-btn-orientation>
+    </ion-fab>
+  </ng-container>
 </ion-content>
