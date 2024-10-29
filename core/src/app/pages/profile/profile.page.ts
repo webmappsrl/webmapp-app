@@ -66,31 +66,31 @@ export class ProfilePage implements OnDestroy {
   deleteUserAlert(): void {
     from(
       this._alertCtrl.create({
-        header: this._tranlateSvc.instant('attention'),
-        subHeader: this._tranlateSvc.instant('deleteAccountIrreversibleAction'),
-        message: this._tranlateSvc.instant('deleteAccountConfirmMessage'),
+        header: this._tranlateSvc.instant('Attenzione'),
+        subHeader: this._tranlateSvc.instant('Azione irreversibile'),
+        message: this._tranlateSvc.instant('Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.'),
         inputs: [
           {
             name: 'confirmationInput',
             type: 'text',
-            placeholder: this._tranlateSvc.instant('deleteAccountInputPlaceholder')
+            placeholder: this._tranlateSvc.instant('Digita "elimina account"')
           }
         ],
         buttons: [
           {
-            text: this._tranlateSvc.instant('cancel'),
+            text: this._tranlateSvc.instant('Annulla'),
             role: 'cancel',
           },
           {
-            text: this._tranlateSvc.instant('confirm'),
+            text: this._tranlateSvc.instant('Conferma'),
             role: 'confirm',
             handler: async (alertData) => {
               if (alertData.confirmationInput === 'elimina account') {
                 this._store.dispatch(deleteUser());
               } else {
                   const errorAlert = await this._alertCtrl.create({
-                  header: this._tranlateSvc.instant('attention'),
-                  message: this._tranlateSvc.instant('deleteAccountError'),
+                  header: this._tranlateSvc.instant('Attenzione'),
+                  message: this._tranlateSvc.instant('La conferma non corrisponde. Digita "elimina account" per procedere.'),
                   buttons: [this._tranlateSvc.instant('generic.ok')]
                 });
                 await errorAlert.present();

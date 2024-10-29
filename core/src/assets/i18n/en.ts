@@ -582,14 +582,6 @@ export const appEN = {
     'map': 'map',
     'profile': 'profile',
   },
-  'deleteAccount': 'Delete account',
-  'deleteAccountConfirmMessage': "Are you sure you want to delete your account? You must type 'delete account' to proceed.",
-  'deleteAccountInputPlaceholder': "Type 'delete account'",
-  'deleteAccountError': "The confirmation does not match. You must type 'delete account' to proceed.",
-  'deleteAccountIrreversibleAction': 'Irreversible action',
-  'attention': 'Attention',
-  'cancel': 'Cancel',
-  'confirm': 'Confirm',
   'Percorribilità': 'Viability',
   'no-tracks': "You haven't downloaded any tracks yet",
   'I tuoi dati': 'Your data',
@@ -634,5 +626,10 @@ export const appEN = {
   'MEMORIA': 'MEMORY',
   'resetta la memoria': 'reset memory',
   'sei sicuro di voler cancellare cache e dati  salvati?':
-    'are you sure you want to delete saved cache and data?',
+  'are you sure you want to delete saved cache and data?',
+  'Elimina account': 'Delete account',
+  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.': 'Are you sure you want to delete your account? You must type "delete account" to proceed.',
+  'Digita "elimina account"': 'Type "delete account"',
+  'La conferma non corrisponde. Digita "elimina account" per procedere.': 'The confirmation does not match. Type "delete account" to proceed.',
+  'Conferma': 'Confirm'
 };

@@ -583,14 +583,6 @@ export const appIT = {
     'map': 'mappa',
     'profile': 'profilo',
   },
-  'deleteAccount': 'Elimina account',
-  'deleteAccountConfirmMessage': "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.",
-  'deleteAccountInputPlaceholder': 'Digita "elimina account"',
-  'deleteAccountError': 'La conferma non corrisponde. Digita \'elimina account\' per procedere.',
-  'deleteAccountIrreversibleAction': 'Azione irreversibile',
-  'attention': 'Attenzione',
-  'cancel': 'Annulla',
-  'confirm': 'Conferma',
   'no-tracks': 'Non hai ancora scaricato nessuna traccia',
   'hiking': 'Trekking',
   'skitouring': 'Scialpinismo',
@@ -625,4 +617,12 @@ export const appIT = {
   'duration': 'Durata',
   'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.':
     'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.',
+  'Elimina account': 'Elimina account',
+  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.': 'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.',
+  'Digita "elimina account"': 'Digita "elimina account"',
+  'La conferma non corrisponde. Digita "elimina account" per procedere.': 'La conferma non corrisponde. Digita "elimina account" per procedere.',
+  'Azione irreversibile': 'Azione irreversibile',
+  'Attenzione': 'Attenzione',
+  'Annulla': 'Annulla',
+  'Conferma': 'Conferma'  
 };

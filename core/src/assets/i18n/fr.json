@@ -573,14 +573,6 @@
     "map": "carte",
     "profile": "profil"
   },
-  "deleteAccount": "Supprimer le compte",
-  "deleteAccountConfirmMessage": "Voulez-vous vraiment supprimer votre compte ? Vous devez taper 'supprimer le compte' pour continuer.",
-  "deleteAccountInputPlaceholder": "Tapez 'supprimer le compte'",
-  "deleteAccountError": "La confirmation ne correspond pas. Vous devez taper 'supprimer le compte' pour continuer.",
-  "deleteAccountIrreversibleAction": "Action irréversible",
-  "attention": "Attention",
-  "cancel": "Annuler",
-  "confirm": "Confirmer",
   "Percorribilità": "Viabilité",
   "no-tracks": "Vous n'avez pas encore téléchargé de trace",
   "I tuoi dati": "Vos données",
@@ -603,5 +595,10 @@
   "bitumenduro": "Bitume dur",
   "onoff": "Onoff",
   "real-dirt": "Chemin de terre",
-  "bar": "Bar"
+  "bar": "Bar",
+  "Elimina account": "Supprimer le compte",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.": "Êtes-vous sûr de vouloir supprimer votre compte? Vous devez taper 'supprimer le compte' pour continuer.",
+  "Digita 'elimina account'": "Tapez 'supprimer le compte'",
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "La confirmation ne correspond pas. Tapez 'supprimer le compte' pour continuer.",
+  "Conferma": "Confirmer"
 }

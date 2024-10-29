@@ -21,26 +21,12 @@
     >
       <i class="icon-outline-settings-outline"></i>
     </ion-fab-button>
-    <ion-fab-button
-      slot="end"
-      *ngIf="(isLogged$|async)"
-      class="
-        webmapp-profile-header-toolbar-button
-        webmapp-profile-header-toolbar-button-disabled
-      "
-    >
-      <i class="icon-outline-bell-outline"></i>
-    </ion-fab-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content scrollY="false" class="webmapp-profile-container">
-  <wm-profile-user
-  ></wm-profile-user>
-  <ion-tabs
-    class="webmapp-profile-tabs"
-    [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }"
-  >
+  <wm-profile-user></wm-profile-user>
+  <ion-tabs class="webmapp-profile-tabs" [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }">
     <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
       <ion-tab-button
         (click)="tabClick($event, '/profile/profile-data')"
@@ -71,17 +57,15 @@
   </ng-container>
 </ion-content>
 
-<ng-container *ngIf="isLogged$|async">
-  <ion-button
-      *ngIf="isLogged$ | async"
-      (click)="deleteUserAlert()"
-      size="small"
-      expand="block"
-      fill="outline"
-      color="danger"
-      class="wm-profile-delete-button"
-    >
-      <ion-icon name="close-outline"></ion-icon>
-      {{'deleteAccount'|wmtrans}}
-    </ion-button>
-</ng-container>
+<ion-button
+  *ngIf="isLogged$|async"
+  (click)="deleteUserAlert()"
+  size="small"
+  expand="block"
+  fill="outline"
+  color="danger"
+  class="wm-profile-delete-button"
+>
+  <ion-icon name="close-outline"></ion-icon>
+  {{'Elimina account'|wmtrans}}
+</ion-button>
