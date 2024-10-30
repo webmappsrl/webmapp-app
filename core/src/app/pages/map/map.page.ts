@@ -428,8 +428,9 @@ export class MapPage implements OnInit, OnDestroy {
   navigation(): void {
     const isFocused = !this.wmMapPositionfocus$.value;
     this.wmMapPositionfocus$.next(isFocused);
+    const isOpen = this.mapTrackDetailsCmp.isOpen$.value;
     this.previewTrack$.next(false);
-    if (isFocused) {
+    if (isFocused && isOpen) {
       this.mapTrackDetailsCmp.onlyTitle();
     }
   }
