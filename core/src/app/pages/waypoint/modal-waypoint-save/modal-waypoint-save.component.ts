@@ -16,6 +16,11 @@ import {Location} from 'src/app/types/location';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
 import {UgcService} from 'wm-core/services/ugc.service';
+import {WmFeature} from '@wm-types/feature';
+import {Point} from 'geojson';
+import {generateUUID} from 'wm-core/utils/localForage';
+import {ConfService} from 'wm-core/store/conf/conf.service';
+import packageJson from 'package.json';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -46,6 +51,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
+    private _configSvc: ConfService,
   ) {}
 
   ngOnInit() {
@@ -123,15 +129,26 @@ export class ModalWaypointSaveComponent implements OnInit {
     if (this.fg.invalid) {
       return;
     }
-    const waypoint: any = await this._ugcSvc.saveApiPoi({
-      position: this.position,
-      displayPosition: this.displayPosition,
-      city: this.positionCity,
-      date: new Date(),
-      photos: this.photos,
-      nominatim: this.nominatim,
-      ...this.fg.value,
-    });
+    const ugcPoi: WmFeature<Point> = {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [this.position.longitude, this.position.latitude],
+      },
+      properties: {
+        name: this.fg.value.title,
+        description: this.fg.value.description,
+        type: 'waypoint',
+        date: new Date().toString(),
+        photos: this.photos,
+        nominatim: this.nominatim,
+        uuid: generateUUID(),
+        app_id: `${this._configSvc.geohubAppId}`,
+        appVersion: packageJson.version,
+        form: this.fg.value,
+      },
+    };
+    const waypoint: any = await this._ugcSvc.savePoi(ugcPoi);
 
     this._modalCtrl.dismiss();
 

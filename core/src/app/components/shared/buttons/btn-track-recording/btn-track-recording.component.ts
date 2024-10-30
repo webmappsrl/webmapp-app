@@ -77,7 +77,7 @@ export class BtnTrackRecordingComponent {
       const res = await modal.onDidDismiss();
 
       if (!res.data.dismissed) {
-        await this._ugcSvc.savePhotos(res.data.photos);
+        await this._ugcSvc.saveMedias(res.data.photos);
         await this.openModalSuccess(res.data.photos);
       }
     } else {

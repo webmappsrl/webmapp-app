@@ -5,6 +5,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  APP_ID,
+  Inject,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
 import {GeolocationService} from 'wm-core/services/geolocation.service';
@@ -25,6 +27,8 @@ import {LangService} from 'wm-core/localization/lang.service';
 import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
 import {UgcService} from 'wm-core/services/ugc.service';
+import {generateUUID} from 'wm-core/utils/localForage';
+import {APP_VERSION} from 'wm-core/store/conf/conf.token';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -72,6 +76,8 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _store: Store,
     private _route: ActivatedRoute,
     private _router: Router,
+    @Inject(APP_ID) public appId: string,
+    @Inject(APP_VERSION) public appVersion: string,
   ) {
     this._route.queryParams.subscribe(_ => {
       if (this._router.getCurrentNavigation().extras.state) {
@@ -242,6 +248,9 @@ export class RegisterPage implements OnInit, OnDestroy {
         ...feature.properties,
         ...{metadata},
         ...trackData,
+        uuid: generateUUID(),
+        appId: this.appId,
+        appVersion: this.appVersion,
       };
       const saved = await this._ugcSvc.saveTrack(feature);
 
