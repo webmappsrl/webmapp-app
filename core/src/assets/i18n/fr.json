@@ -595,5 +595,10 @@
   "bitumenduro": "Bitume dur",
   "onoff": "Onoff",
   "real-dirt": "Chemin de terre",
-  "bar": "Bar"
+  "bar": "Bar",
+  "Elimina account": "Supprimer le compte",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.": "Êtes-vous sûr de vouloir supprimer votre compte? Vous devez taper 'supprimer le compte' pour continuer.",
+  "Digita 'elimina account'": "Tapez 'supprimer le compte'",
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "La confirmation ne correspond pas. Tapez 'supprimer le compte' pour continuer.",
+  "Conferma": "Confirmer"
 }

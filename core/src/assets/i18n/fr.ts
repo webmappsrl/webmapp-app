@@ -604,13 +604,13 @@ export const appFR = {
   'Filtri': 'Filtrer',
   'Escursionismo': 'Randonnée',
   'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria':
-    'précision maximale tous les 5 mètres la position est détectée, consommation de batterie constante',
+  'précision maximale tous les 5 mètres la position est détectée, consommation de batterie constante',
   'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria':
-    'précision moyenne tous les 10 mètres la position est détectée, consommation moyenne de la batterie',
+  'précision moyenne tous les 10 mètres la position est détectée, consommation moyenne de la batterie',
   'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria':
-    'précision minimale tous les 20 mètres la position est détectée, consommation de batterie réduite',
+  'précision minimale tous les 20 mètres la position est détectée, consommation de batterie réduite',
   'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.':
-    'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
+  'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
   'PAGINE': 'PAGES',
   'metri': 'mètres',
   'asphalt': 'Asphalte',
@@ -618,4 +618,9 @@ export const appFR = {
   'onoff': 'Onoff',
   'real_dirt': 'Chemin de terre',
   'bar': 'Bar',
+  'Elimina account': 'Supprimer le compte',
+  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.': 'Êtes-vous sûr de vouloir supprimer votre compte? Vous devez taper "supprimer le compte" pour continuer.',
+  'Digita "elimina account"': 'Tapez "supprimer le compte"',
+  'La conferma non corrisponde. Digita "elimina account" per procedere.': 'La confirmation ne correspond pas. Tapez "supprimer le compte" pour continuer.',
+  'Conferma': 'Confirmer'
 };

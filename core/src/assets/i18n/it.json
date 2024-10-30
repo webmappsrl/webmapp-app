@@ -587,5 +587,13 @@
   "I tuoi dati": "I tuoi dati",
   "Scarica il tracciato GPX": "Scarica il tracciato GPX",
   "Scarica il tracciato KML": "Scarica il tracciato KML",
-  "Scarica il tracciato GEOJSON": "Scarica il tracciato GEOJSON"
+  "Scarica il tracciato GEOJSON": "Scarica il tracciato GEOJSON",
+  "Elimina account": "Elimina account",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.": "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.",
+  "Digita 'elimina account'": "Digita 'elimina account'",
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.",
+  "Azione irreversibile": "Azione irreversibile",
+  "Attenzione": "Attenzione",
+  "Annulla": "Annulla",
+  "Conferma": "Conferma"
 }
