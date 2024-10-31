@@ -9,6 +9,7 @@ import {NgModule} from '@angular/core';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
 import {PopoverphotoComponent} from './popoverphoto/popoverphoto.component';
 import {SharedModule} from '../shared/shared.module';
+import {WmSharedModule} from 'wm-core/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,15 @@ import {SharedModule} from '../shared/shared.module';
     ModalphotosaveComponent,
     ModalPhotoSingleComponent,
   ],
-  imports: [CommonModule, IonicModule, WmPipeModule, SharedModule, ModalSuccessModule, FormsModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    WmPipeModule,
+    SharedModule,
+    ModalSuccessModule,
+    FormsModule,
+    WmSharedModule,
+  ],
   exports: [ModalphotosComponent],
 })
 export class ModalphotosModule {}

@@ -14,7 +14,7 @@ import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
 import {UgcService} from 'wm-core/services/ugc.service';
 import {WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
@@ -46,7 +46,7 @@ export class ModalWaypointSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _photoSvc: PhotoService,
+    private _photoSvc: CameraService,
     private _ugcSvc: UgcService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,

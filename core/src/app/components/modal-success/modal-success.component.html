@@ -76,6 +76,14 @@
 
 
 
+
+
+
+
+
+
+
+
         }}:{{trackTime?.seconds| number : '2.0-0'}}
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
@@ -113,7 +121,10 @@
         *ngFor="let photo of photos | slice:0:3;let idx = index;"
       >
         <div *ngIf="idx<3">
-          <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-photo"></ion-img>
+          <wm-img
+            [src]="photo.properties.photo.webPath"
+            class="webmapp-modalsuccess-photo"
+          ></wm-img>
           <div class="webmapp-modalsuccess-photoextra" *ngIf="idx===2 && photos.length>3">
             +{{photos.length-3}}
           </div>
@@ -171,12 +182,12 @@
             *ngFor="let photo of properties.photos | slice:0:3;let idx = index"
           >
             <div *ngIf="idx<3">
-              <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
+              <ion-img [src]="photo.webPath" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
               <div
                 class="webmapp-modalsuccess-infopanel-photoextra"
-                *ngIf="idx===2 && waypoint.properties.photos.length>3"
+                *ngIf="idx===2 && properties.photos.length>3"
               >
-                +{{waypoint.properties.photos.length-3}}
+                +{{properties.photos.length-3}}
               </div>
             </div>
           </div>

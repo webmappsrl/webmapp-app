@@ -4,7 +4,7 @@ import {EPopoverPhotoType, ESuccessType} from '../../types/esuccess.enum';
 import {ModalSuccessComponent} from '../modal-success/modal-success.component';
 import {PopoverphotoComponent} from './popoverphoto/popoverphoto.component';
 import {Md5} from 'ts-md5/dist/md5';
-import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
 import {Feature, Point} from 'geojson';
 @Component({
   selector: 'webmapp-modalphotos',
@@ -23,7 +23,7 @@ export class ModalphotosComponent implements OnInit {
   };
 
   constructor(
-    private _photoService: PhotoService,
+    private _cameraSvc: CameraService,
     private _modalController: ModalController,
     private _popoverController: PopoverController,
   ) {}
@@ -52,16 +52,16 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addFromLibrary() {
-    const photos = await this._photoService.getPhotos();
+    const photos = await this._cameraSvc.getPhotos();
     if (photos && photos.length) {
       photos.forEach(async photo => {
-        const photoData = await this._photoService.getPhotoData(photo.properties.photoURL);
+        const photoData = await this._cameraSvc.getPhotoData(photo.properties.photoURL);
         const md5 = Md5.hashStr(JSON.stringify(photoData));
         let exists: boolean = false;
         for (let p of this.photoCollection) {
           const pData = p.properties.datasrc
-            ? await this._photoService.getPhotoData(p.properties.datasrc)
-            : await this._photoService.getPhotoData(p.properties.photoURL);
+            ? await this._cameraSvc.getPhotoData(p.properties.datasrc)
+            : await this._cameraSvc.getPhotoData(p.properties.photoURL);
           const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
           if (md5 === pictureMd5) {
             exists = true;
@@ -78,7 +78,7 @@ export class ModalphotosComponent implements OnInit {
   }
 
   async addPhoto() {
-    const nextPhoto = await this._photoService.shotPhoto();
+    const nextPhoto = await this._cameraSvc.shotPhoto();
     if (nextPhoto) {
       this.photoCollection.push(nextPhoto);
       this.select(nextPhoto);

@@ -12,7 +12,7 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {NavigationExtras} from '@angular/router';
-import {PhotoService} from 'wm-core/services/photo.service';
+import {CameraService} from 'wm-core/services/camera.service';
 import {LoginComponent} from 'wm-core/login/login.component';
 import {UgcService} from 'wm-core/services/ugc.service';
 
@@ -31,7 +31,7 @@ export class BtnTrackRecordingComponent {
   constructor(
     private _navCtrl: NavController,
     private _modalController: ModalController,
-    private _photoService: PhotoService,
+    private _cameraSvc: CameraService,
     private _ugcSvc: UgcService,
   ) {}
 
@@ -65,7 +65,7 @@ export class BtnTrackRecordingComponent {
 
   async photo() {
     if (this.isLogged) {
-      let photoCollection = await this._photoService.addPhotos();
+      let photoCollection = await this._cameraSvc.addPhotos();
 
       const modal = await this._modalController.create({
         component: ModalphotosaveComponent,

@@ -2,22 +2,24 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
-import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
 import {Feature, Point} from 'geojson';
+import {Media, MediaProperties} from '@wm-types/feature';
+import {removeImg} from 'wm-core/utils/localForage';
 @Component({
   selector: 'webmapp-modalphotosave',
   templateUrl: './modalphotosave.component.html',
   styleUrls: ['./modalphotosave.component.scss'],
 })
 export class ModalphotosaveComponent implements OnInit {
-  public photos: Feature<Point>[];
+  public photos: Feature<Media>[];
   public showList = false;
 
   constructor(
     private modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    private _photoService: PhotoService,
+    private _cameraSvc: CameraService,
     private _cdr: ChangeDetectorRef,
   ) {}
 
@@ -25,7 +27,7 @@ export class ModalphotosaveComponent implements OnInit {
 
   async addPhotos() {
     try {
-      const photos = await this._photoService.addPhotos();
+      const photos = await this._cameraSvc.addPhotos();
       this.photos = [...this.photos, ...photos];
     } catch {}
     this._cdr.detectChanges;
@@ -81,6 +83,7 @@ export class ModalphotosaveComponent implements OnInit {
             const idx = this.photos.findIndex(x => x.id == photo.id);
             if (idx >= 0) {
               this.photos.splice(idx, 1);
+              removeImg(photo.properties.photo.webPath);
             }
           },
         },

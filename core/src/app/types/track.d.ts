@@ -1,5 +1,5 @@
 import {StringMap} from '@angular/compiler/src/compiler_facade_interface';
-import {IPhotoItem} from '../services/photo.service';
+import {IPhotoItem} from '../services/camera.service';
 import {Feature, LineString} from 'geojson';
 
 export interface IRegisterItem {

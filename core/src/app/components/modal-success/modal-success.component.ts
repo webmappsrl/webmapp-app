@@ -7,8 +7,13 @@ import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import {IPhotoItem} from 'wm-core/services/photo.service';
-import {WmFeature} from '@wm-types/feature';
+import {
+  LineStringProperties,
+  Media,
+  MediaProperties,
+  PointProperties,
+  WmFeature,
+} from '@wm-types/feature';
 import {Point, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-modal-registersuccess',
@@ -21,10 +26,10 @@ export class ModalSuccessComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private PHOTOSCATTER = 100;
 
-  @Input() photos: IPhotoItem[];
-  @Input() track: WmFeature<LineString>;
+  @Input() photos: WmFeature<Media, MediaProperties>[];
+  @Input() track: WmFeature<LineString, LineStringProperties>;
   @Input() type: ESuccessType;
-  @Input() waypoint: WmFeature<Point>;
+  @Input() waypoint: WmFeature<Point, PointProperties>;
   @ViewChild('slider') slider: IonSlides;
 
   confMap$: Observable<any> = this._store.select(confMAP);

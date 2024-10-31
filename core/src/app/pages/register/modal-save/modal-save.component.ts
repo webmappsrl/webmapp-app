@@ -6,7 +6,7 @@ import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
-import {IPhotoItem, PhotoService} from 'wm-core/services/photo.service';
+import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -29,7 +29,7 @@ export class ModalSaveComponent implements OnInit {
     private _modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    private _photoService: PhotoService,
+    private _cameraSvc: CameraService,
     private _cdr: ChangeDetectorRef,
     private _actionSheetCtrl: ActionSheetController,
   ) {}
@@ -43,14 +43,14 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async addPhotos() {
-    const library = await this._photoService.getPhotos();
+    const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoService.getPhotoData(libraryItemCopy.properties.photoURL),
+      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.properties.photoURL),
         md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._photoService.getPhotoData(p.photoURL),
+        const pData = await this._cameraSvc.getPhotoData(p.photoURL),
           pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;

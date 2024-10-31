@@ -16,7 +16,7 @@ import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
-import {IPhotoItem} from 'wm-core/services/photo.service';
+import {IPhotoItem} from 'wm-core/services/camera.service';
 import {LineString} from 'geojson';
 import {getUgcTrack} from 'wm-core/utils/localForage';
 import {UgcService} from 'wm-core/services/ugc.service';

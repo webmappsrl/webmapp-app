@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { IPhotoItem } from 'wm-core/services/photo.service';
+import {Component, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
+import {IPhotoItem} from 'wm-core/services/camera.service';
 
 @Component({
   selector: 'app-modal-photo-single',
@@ -8,22 +8,16 @@ import { IPhotoItem } from 'wm-core/services/photo.service';
   styleUrls: ['./modal-photo-single.component.scss'],
 })
 export class ModalPhotoSingleComponent implements OnInit {
+  public photo: IPhotoItem;
+  public photos: IPhotoItem[];
 
-  public photo:IPhotoItem;
-  public photos:IPhotoItem[];
+  constructor(private modalController: ModalController) {}
 
-  constructor(
-    private modalController: ModalController
-  ) { }
+  ngOnInit() {}
 
-  ngOnInit() {
-
-  }
-
-  done(){
+  done() {
     this.modalController.dismiss({
       dismissed: true,
     });
   }
-
 }

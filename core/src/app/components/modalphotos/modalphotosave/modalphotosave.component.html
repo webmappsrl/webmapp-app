@@ -51,7 +51,10 @@
       <ion-row>
         <ion-col size="6" *ngFor="let photo of photos">
           <div class="webmapp-modalphotosave-itembox">
-            <ion-img class="webmapp-modalphotosave-itembox-image" [src]="photo?.datasrc"> </ion-img>
+            <wm-img
+              class="webmapp-modalphotosave-itembox-image"
+              [src]="photo.properties.photo.webPath"
+            ></wm-img>
             <div class="webmapp-modalphotosave-itembox-imagedrop"></div>
             <ion-icon
               name="close-outline"
@@ -64,7 +67,7 @@
               (click)="edit(photo)"
             ></i>
             <div class="webmapp-modalphotosave-itembox-imagetitle" (click)="edit(photo)">
-              {{photo?.description| wmtrans}}
+              {{photo.properties.description| wmtrans}}
             </div>
           </div>
         </ion-col>
