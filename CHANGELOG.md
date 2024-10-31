@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.12.15](https://github.com/webmappsrl/webmapp-app/compare/v2.12.14...v2.12.15) (2024-10-31)
+
+
+### Bug Fixes
+
+* add condition to onlyTitle method in navigation oc: 4211 ([37ddb19](https://github.com/webmappsrl/webmapp-app/commit/37ddb19f1ebe69cbf0ba46194df6fd6dcbc98e0c))
+
+
+### Miscellaneous
+
+* Update modal-waypoint-save.component.html oc: 3938 ([#54](https://github.com/webmappsrl/webmapp-app/issues/54)) ([df305e5](https://github.com/webmappsrl/webmapp-app/commit/df305e5494dae42e4e169431d13c2c0c7f1c4720))
+* Update profile page with delete account functionality oc: 4117 ([#55](https://github.com/webmappsrl/webmapp-app/issues/55)) ([2e04e76](https://github.com/webmappsrl/webmapp-app/commit/2e04e767964e14ad331c32814aa1b2bcd054a74d))
+* Update register page UI oc: 4103 ([#53](https://github.com/webmappsrl/webmapp-app/issues/53)) ([72f16d8](https://github.com/webmappsrl/webmapp-app/commit/72f16d847d63bb77618483188972c3d6832d4e57))
+
 ## [2.12.14](https://github.com/webmappsrl/webmapp-app/compare/v2.12.13...v2.12.14) (2024-10-25)
 
 
