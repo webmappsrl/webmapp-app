@@ -183,7 +183,7 @@ export class AppComponent {
    * The setTimeout() method is used to call the uploadUnsavedContents() method after 2000 milliseconds (2 seconds).
    * @memberof AppComponent
    */
-  saveGeneratedContentsNowAndInterval() {
+  saveGeneratedContentsNowAndInterval(): void {
     setInterval(() => {
       this.saveService.uploadUnsavedContents();
     }, GEOHUB_SAVING_TRY_INTERVAL);
