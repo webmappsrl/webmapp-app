@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.16](https://github.com/webmappsrl/webmapp-app/compare/v2.12.15...v2.12.16) (2024-11-01)
+
+
+### Miscellaneous
+
+* make release ([808ee25](https://github.com/webmappsrl/webmapp-app/commit/808ee257c904af326fb38dc69a532fcbd8fb5527))
+
 ## [2.12.15](https://github.com/webmappsrl/webmapp-app/compare/v2.12.14...v2.12.15) (2024-10-31)
 
 
