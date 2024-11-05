@@ -4,13 +4,14 @@ import {AlertController, MenuController, NavController, ToastController} from '@
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
-import {switchMap, take, tap} from 'rxjs/operators';
+import {filter, switchMap, take, tap} from 'rxjs/operators';
 import {online} from 'src/app/store/network/network.selector';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 import {DetailPage} from '../abstract/detail.page';
 import {Point} from 'geojson';
 import {UgcService} from 'wm-core/services/ugc.service';
-import {WmFeature} from '@wm-types/feature';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
+import {getUgcMedias, getUgcMediasByIds} from 'wm-core/utils/localForage';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',
@@ -22,6 +23,7 @@ export class WaypointdetailPage extends DetailPage {
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
   currentPoi: WmFeature<Point>;
+  medias$: Observable<WmFeature<Media, MediaProperties>[]>;
   online$ = this._store.select(online);
   sliderOptions: any = {
     slidesPerView: 2.5,
@@ -43,7 +45,9 @@ export class WaypointdetailPage extends DetailPage {
       switchMap(param => this._ugcSvc.getPoi(param.waypoint)),
       tap(w => (this.currentPoi = w)),
     );
-    this.waypoint$.subscribe(w => console.log(w));
+    this.medias$ = this.waypoint$.pipe(
+      switchMap(poi => from(getUgcMediasByIds(poi.properties.photoKeys))),
+    );
   }
 
   delete(): void {

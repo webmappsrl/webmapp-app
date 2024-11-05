@@ -33,7 +33,7 @@
 
 <ion-content id="main" *ngIf="photo$|async as photo">
   <ng-container *ngIf="photo.properties as prop">
-    <ion-img [src]="prop.url|wmCreateBlob" class="webmapp-photodetail-image"></ion-img>
+    <ion-img [src]="photo|wmCreateBlob" class="webmapp-photodetail-image"></ion-img>
 
     <div class="webmapp-photodetail-date">{{prop.updated_at| date : "dd MMMM YYYY"}}</div>
 

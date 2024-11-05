@@ -6,10 +6,13 @@ import {Feature} from 'geojson';
   pure: false,
 })
 export class AppCreateBlobPipe implements PipeTransform {
-  transform(photo: Feature): string {
-    const properties = photo.properties;
+  transform(feature: Feature): string {
+    const properties = feature.properties;
     const rawData = properties.rawData;
-    if (rawData) {
+    const photo = properties.photo;
+    if (photo) {
+      return photo.webPath;
+    } else if (rawData) {
       if (typeof properties.rawData === 'string' && properties.rawData.includes('blob:')) {
         return properties.rawData;
       }

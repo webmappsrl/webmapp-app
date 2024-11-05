@@ -33,7 +33,7 @@ export class WmFormComponent {
 
   @Input() set init(values) {
     if (values != null) {
-      this.setForm(values.index ?? values.formId, values);
+      this.setForm(values.index, values);
     }
   }
 
