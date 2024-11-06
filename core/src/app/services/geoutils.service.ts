@@ -114,8 +114,7 @@ export class GeoutilsService {
 
   getLocations(track: Feature<LineString>): any[] {
     const properties = track.properties;
-    const metadata = properties.metadata ?? null;
-    const locations = metadata?.locations ?? null;
+    const locations = properties?.locations ?? null;
     return locations ?? [];
   }
 

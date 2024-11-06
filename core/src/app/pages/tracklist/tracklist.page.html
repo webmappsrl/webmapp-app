@@ -23,17 +23,15 @@
             [wmMapGeojsonFit]="true"
           ></wm-map>
         </div>
-        <ng-container *ngIf="track.properties as prop">
-          <div>
-            <div class="wm-tracklist-item-title">{{prop.name}}</div>
-            <div class="wm-tracklist-item-date">
-              {{prop.updated_at | date : "d MMMM YYYY - HH:mm"}}
-            </div>
-            <div class="wm-tracklist-item-date" *ngIf="prop.id">
-              {{'sync id'|wmtrans}}: {{prop.id}}
-            </div>
+        <div *ngIf="track.properties as prop">
+          <div class="wm-tracklist-item-title">{{prop.name}}</div>
+          <div class="wm-tracklist-item-date">
+            {{prop.date??prop.updated_at?? prop.position.time| date : "d MMMM YYYY - HH:mm"}}
           </div>
-        </ng-container>
+          <div class="wm-tracklist-item-date" *ngIf="prop.id">
+            {{'sync id'|wmtrans}}: {{prop.id}}
+          </div>
+        </div>
       </ion-item>
     </ng-container>
     <ng-template #noTracks>
