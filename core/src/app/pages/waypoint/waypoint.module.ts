@@ -9,6 +9,7 @@ import {WaypointPage} from './waypoint.page';
 import {WaypointPageRoutingModule} from './waypoint-routing.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import {WmCoreModule} from 'wm-core/wm-core.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {WmPipeModule} from 'wm-core/pipes/pipe.module';
     WaypointPageRoutingModule,
     WmPipeModule,
     WmMapModule,
+    WmCoreModule,
     SharedModule,
   ],
   declarations: [WaypointPage, ModalWaypointSaveComponent, ModalWaypointSelectphotosComponent],

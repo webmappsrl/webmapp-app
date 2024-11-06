@@ -84,11 +84,10 @@
               >
               </ion-icon>
               <!-- <img class="webmapp-waypoint-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-              <ion-img
+              <wm-img
                 class="webmapp-waypoint-modalsave-image"
-                [src]="image?.rawData ? image?.rawData : image?.datasrc"
-              >
-              </ion-img>
+                [src]="image.properties.photo.webPath"
+              ></wm-img>
             </div>
           </ion-col>
         </ion-row>

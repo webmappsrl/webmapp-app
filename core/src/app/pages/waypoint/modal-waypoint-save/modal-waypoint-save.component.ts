@@ -73,12 +73,12 @@ export class ModalWaypointSaveComponent implements OnInit {
     loading.dismiss();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.photoURL),
-        md5 = Md5.hashStr(JSON.stringify(photoData));
+      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.properties.photo.webPath);
+      const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._photoSvc.getPhotoData(p.photoURL),
-          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        const pData = await this._photoSvc.getPhotoData(p.properties.photo.webPath);
+        const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
           break;
