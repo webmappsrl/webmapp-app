@@ -2,6 +2,10 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -16,8 +20,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          submodules: true # Clona anche i submodules
-      - name: Release Please Action
+          submodules: true  # Clona anche i submodules
+
+      # Esegui Release Please per generare la PR di rilascio
+      - name: Run Release Please
+        id: release_please
         uses: google-github-actions/release-please-action@v3
         with:
           release-type: node
@@ -25,3 +32,12 @@ jobs:
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
           pull-request-title-pattern: 'release ${component} ${version}'
           pull-request-header: ':robot: I have created a release. Changelog updated with this data:'
+
+      # Esegui lo script per aggiungere i changelog dei submodules solo all'interno della PR
+      - name: Aggregate Submodule Changelog
+        if: github.event_name == 'pull_request'
+        run: |
+          bash ./aggregate_submodule_changelog.sh
+          git add CHANGELOG.md
+          git commit -m "chore: update CHANGELOG with submodule changes"
+          git push origin "refs/pull/${{ github.event.pull_request.number }}/head"
