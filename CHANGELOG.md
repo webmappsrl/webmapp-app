@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.12.17](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v2.12.17) (2024-11-08)
+
+
+### Miscellaneous
+
+* Add subproject commit 493779ecb1d24800a5ba0016a89d20ea5b9c82aa to wm-types ([dab110f](https://github.com/webmappsrl/webmapp-app/commit/dab110fa603444112fb7f11199b0956604239b4a))
+* Update release_please.yml workflow ([6a872af](https://github.com/webmappsrl/webmapp-app/commit/6a872af15abe01c38077537f0764de3d35d65174))
+* Update release_please.yml workflow ([9bd19d4](https://github.com/webmappsrl/webmapp-app/commit/9bd19d4e55ced1a719072c8867ace15296a5d7ed))
+* Update submodules in .gitmodules file ([131eceb](https://github.com/webmappsrl/webmapp-app/commit/131eceba08f37518ca0d3a001f445e556f2984d9))
+
 ## [2.12.16](https://github.com/webmappsrl/webmapp-app/compare/v2.12.15...v2.12.16) (2024-11-01)
 
 
