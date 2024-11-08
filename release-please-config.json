@@ -1,0 +1,14 @@
+{
+  "packages": {
+    ".": {"package_name": "webmapp-app"},
+    "core/src/shared/map-core": {"package_name": "map-core"},
+    "core/src/shared/wm-core": {"package_name": "wm-core"},
+    "core/src/shared/wm-types": {"package_name": "wm-types"}
+  },
+  "release-type": "node",
+  "changelog-types": [
+    {"type": "feat", "section": "Features", "hidden": false},
+    {"type": "fix", "section": "Bug Fixes", "hidden": false},
+    {"type": "chore", "section": "Miscellaneous", "hidden": false}
+  ]
+}
