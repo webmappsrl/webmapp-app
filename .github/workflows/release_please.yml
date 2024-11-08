@@ -21,7 +21,6 @@ jobs:
         uses: google-github-actions/release-please-action@v3
         with:
           release-type: node
-          monorepo-tags: true
           package-name: webmapp-app
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
           pull-request-title-pattern: 'release ${component} ${version}'
