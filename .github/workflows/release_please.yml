@@ -35,7 +35,6 @@ jobs:
 
       # Esegui lo script per aggiungere i changelog dei submodules solo all'interno della PR
       - name: Aggregate Submodule Changelog
-        if: github.event_name == 'pull_request'
         run: |
           bash ./aggregate_submodule_changelog.sh
           git add CHANGELOG.md
