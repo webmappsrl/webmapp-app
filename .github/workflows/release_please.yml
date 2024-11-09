@@ -7,33 +7,82 @@ permissions:
   contents: write
   pull-requests: write
 
-name: Make a release
+name: Make a release with submodules
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      # Checkout the repository, including submodules
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
-          submodules: true # Clona anche i submodules
+          submodules: true # Include submodules in the checkout
 
-      # Esegui Release Please per generare la PR di rilascio
-      - name: Run Release Please
-        id: release_please
+      # Run release-please for the main repository
+      - name: Release for main repository
+        id: release_main
         uses: google-github-actions/release-please-action@v3
         with:
           release-type: node
-          package-name: webmapp-app
+          package-name: release-please-action
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
           pull-request-title-pattern: 'release ${component} ${version}'
           pull-request-header: ':robot: I have created a release. Changelog updated with this data:'
 
-      # Esegui lo script per aggiungere i changelog dei submodules solo se una PR è stata generata
-      - name: Aggregate Submodule Changelog
-        if: steps.release_please.outputs.pull_request_number
+      # Run release-please for each submodule
+      - name: Release for map-core submodule
+        id: release_map_core
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: map-core
+          path: core/src/app/shared/map-core
+          pull-request-title-pattern: 'release map-core ${version}'
+          pull-request-header: ':robot: Updated release for map-core submodule'
+
+      - name: Release for wm-core submodule
+        id: release_wm_core
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: wm-core
+          path: core/src/app/shared/wm-core
+          pull-request-title-pattern: 'release wm-core ${version}'
+          pull-request-header: ':robot: Updated release for wm-core submodule'
+
+      - name: Release for wm-types submodule
+        id: release_wm_types
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: wm-types
+          path: core/src/app/shared/wm-types
+          pull-request-title-pattern: 'release wm-types ${version}'
+          pull-request-header: ':robot: Updated release for wm-types submodule'
+
+      # Append submodule changelogs to main changelog
+      - name: Consolidate changelogs
         run: |
-          bash ./aggregate_submodule_changelog.sh
-          git add CHANGELOG.md
-          git commit -m "chore: update CHANGELOG with submodule changes"
-          git push origin "refs/pull/${{ steps.release_please.outputs.pull_request_number }}/head"
+          echo "## Consolidated Changelog" > COMBINED_CHANGELOG.md
+          echo "" >> COMBINED_CHANGELOG.md
+          echo "### Main Repository" >> COMBINED_CHANGELOG.md
+          cat CHANGELOG.md >> COMBINED_CHANGELOG.md
+          echo "" >> COMBINED_CHANGELOG.md
+          echo "### Changes in map-core" >> COMBINED_CHANGELOG.md
+          cat core/src/app/shared/map-core/CHANGELOG.md >> COMBINED_CHANGELOG.md
+          echo "" >> COMBINED_CHANGELOG.md
+          echo "### Changes in wm-core" >> COMBINED_CHANGELOG.md
+          cat core/src/app/shared/wm-core/CHANGELOG.md >> COMBINED_CHANGELOG.md
+          echo "" >> COMBINED_CHANGELOG.md
+          echo "### Changes in wm-types" >> COMBINED_CHANGELOG.md
+          cat core/src/app/shared/wm-types/CHANGELOG.md >> COMBINED_CHANGELOG.md
+
+      # Commit and push the consolidated changelog back to the repository
+      - name: Commit and push consolidated changelog
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add COMBINED_CHANGELOG.md
+          git commit -m "Update consolidated changelog"
+          git push origin main
