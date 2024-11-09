@@ -1,5 +1,34 @@
 # Changelog
 
+## [3.0.0](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v3.0.0) (2024-11-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* Nessun cambiamento significativo o breaking change è stato introdotto in questo commit.
+
+### Features
+
+* aggiungi script per aggregare il changelog dei submodules ([391d1ce](https://github.com/webmappsrl/webmapp-app/commit/391d1ce8a948ec5fe414234a49b99899da35bf1d))
+
+
+### Miscellaneous
+
+* Add subproject commit 493779ecb1d24800a5ba0016a89d20ea5b9c82aa to wm-types ([dab110f](https://github.com/webmappsrl/webmapp-app/commit/dab110fa603444112fb7f11199b0956604239b4a))
+* Rename aggregate_submodules_changelog.sh to aggregate_submodule_changelog.sh ([475d6c1](https://github.com/webmappsrl/webmapp-app/commit/475d6c1d13d57b7e2fa0d15518c2b231f65877c1))
+* Update aggregate_submodule_changelog.sh ([326df9d](https://github.com/webmappsrl/webmapp-app/commit/326df9d36c9227ab44730caa59050a00d5f12116))
+* Update aggregate_submodule_changelog.sh ([ec317a5](https://github.com/webmappsrl/webmapp-app/commit/ec317a5dc1f861f92cd7161c5a45ab9182281954))
+* Update release_please workflow and submodule changelog script ([345ae84](https://github.com/webmappsrl/webmapp-app/commit/345ae844d44e05fdd6efd7b0873866f2f651f96d))
+* Update release_please.yml ([33c7856](https://github.com/webmappsrl/webmapp-app/commit/33c7856f85e3b5fe51d06b6f25024fd37e39b5fa))
+* Update release_please.yml and add aggregate_submodules_changelog.sh ([de52224](https://github.com/webmappsrl/webmapp-app/commit/de522243eb69e291c263760b88a0f2dcbb619f5b))
+* Update release_please.yml to include submodules ([eae4f0c](https://github.com/webmappsrl/webmapp-app/commit/eae4f0c34e4853001254e98f358c5bb80a6638ef))
+* Update release_please.yml workflow ([2a928f8](https://github.com/webmappsrl/webmapp-app/commit/2a928f872757cf21303ae6f082be0f2eed1db862))
+* Update release_please.yml workflow ([6a872af](https://github.com/webmappsrl/webmapp-app/commit/6a872af15abe01c38077537f0764de3d35d65174))
+* Update release_please.yml workflow ([9bd19d4](https://github.com/webmappsrl/webmapp-app/commit/9bd19d4e55ced1a719072c8867ace15296a5d7ed))
+* Update submodule changelog script ([811940b](https://github.com/webmappsrl/webmapp-app/commit/811940bd58a094e453a3be49e576a09f8dfc3e4f))
+* Update submodules in .gitmodules file ([131eceb](https://github.com/webmappsrl/webmapp-app/commit/131eceba08f37518ca0d3a001f445e556f2984d9))
+* Update subproject commit reference ([7778b01](https://github.com/webmappsrl/webmapp-app/commit/7778b01efed70ccfaba69052bacb4e8be98667a4))
+
 ## [2.12.16](https://github.com/webmappsrl/webmapp-app/compare/v2.12.15...v2.12.16) (2024-11-01)
 
 
