@@ -2,10 +2,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize]
-    branches:
-      - main
 
 permissions:
   contents: write
@@ -33,11 +29,11 @@ jobs:
           pull-request-title-pattern: 'release ${component} ${version}'
           pull-request-header: ':robot: I have created a release. Changelog updated with this data:'
 
-      # Esegui lo script per aggiungere i changelog dei submodules solo all'interno della PR
+      # Esegui lo script per aggiungere i changelog dei submodules solo se una PR è stata generata
       - name: Aggregate Submodule Changelog
-        if: ${{ github.event_name == 'pull_request' }} # Esegui solo in contesto PR
+        if: steps.release_please.outputs.pull_request_number
         run: |
           bash ./aggregate_submodule_changelog.sh
           git add CHANGELOG.md
           git commit -m "chore: update CHANGELOG with submodule changes"
-          git push origin "refs/pull/${{ github.event.pull_request.number }}/head"
+          git push origin "refs/pull/${{ steps.release_please.outputs.pull_request_number }}/head"
