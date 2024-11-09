@@ -89,7 +89,7 @@ if [ -n "$changelog_update" ]; then
     echo "$line" >> "$temp_file"
     # Trova l'ultimo tag e aggiungi i nuovi aggiornamenti subito dopo
     if [[ $line == "## [$last_tag]"* ]]; then
-      printf "%b\n" "$changelog_update" >> "$temp_file"
+      echo -e "$changelog_update" >> "$temp_file"
     fi
   done < CHANGELOG.md
 
