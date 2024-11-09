@@ -20,7 +20,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          submodules: true  # Clona anche i submodules
+          submodules: true # Clona anche i submodules
 
       # Esegui Release Please per generare la PR di rilascio
       - name: Run Release Please
@@ -35,6 +35,7 @@ jobs:
 
       # Esegui lo script per aggiungere i changelog dei submodules solo all'interno della PR
       - name: Aggregate Submodule Changelog
+        if: ${{ github.event_name == 'pull_request' }} # Esegui solo in contesto PR
         run: |
           bash ./aggregate_submodule_changelog.sh
           git add CHANGELOG.md
