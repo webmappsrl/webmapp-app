@@ -1,12 +1,13 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
-import {ITrack} from 'src/app/types/track';
 import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
+import {WmFeature} from '@wm-types/feature';
+import {LineString} from 'geojson';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -22,7 +23,7 @@ export class ModalSaveComponent implements OnInit {
   public isValidArray: boolean[] = [false, false];
   public photos: any[] = [];
   public title: string;
-  public track: ITrack;
+  public track: WmFeature<LineString>;
   public validate = false;
 
   constructor(
@@ -36,9 +37,9 @@ export class ModalSaveComponent implements OnInit {
 
   ngOnInit() {
     if (this.track) {
-      this.title = this.track.title;
-      this.description = this.track.description;
-      this.activity = this.track.activity;
+      this.title = this.track.properties.name;
+      this.description = this.track.properties.form.description;
+      this.activity = this.track.properties.form.activity;
     }
   }
 
@@ -179,11 +180,19 @@ export class ModalSaveComponent implements OnInit {
     if (this.fg.invalid) {
       return;
     }
-    const trackData: ITrack = {
-      photos: this.photos,
-      photoKeys: null,
-      date: new Date(),
-      ...this.fg.value,
+    const trackData: WmFeature<LineString> = {
+      type: 'Feature',
+      geometry:{
+        type: 'LineString',
+        coordinates: []
+      },
+      properties: {
+        name: this.fg.value.title,
+        photos: this.photos,
+        photoKeys: null,
+        date: new Date(),
+        form: this.fg.value,
+      },
     };
     this.backToSuccess(trackData);
   }

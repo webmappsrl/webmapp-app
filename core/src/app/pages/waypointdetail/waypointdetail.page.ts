@@ -11,7 +11,7 @@ import {DetailPage} from '../abstract/detail.page';
 import {Point} from 'geojson';
 import {UgcService} from 'wm-core/services/ugc.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
-import {getUgcMedias, getUgcMediasByIds} from 'wm-core/utils/localForage';
+import {getUgcMediasByIds, getUgcPoi} from 'wm-core/utils/localForage';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',
@@ -42,7 +42,7 @@ export class WaypointdetailPage extends DetailPage {
   ) {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.waypoint$ = this._route.queryParams.pipe(
-      switchMap(param => this._ugcSvc.getPoi(param.waypoint)),
+      switchMap(param => from(getUgcPoi(param.waypoint))),
       tap(w => (this.currentPoi = w)),
     );
     this.medias$ = this.waypoint$.pipe(

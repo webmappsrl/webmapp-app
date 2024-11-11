@@ -5,7 +5,6 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  APP_ID,
   Inject,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
@@ -29,6 +28,8 @@ import {Feature, LineString} from 'geojson';
 import {UgcService} from 'wm-core/services/ugc.service';
 import {generateUUID} from 'wm-core/utils/localForage';
 import {APP_VERSION} from 'wm-core/store/conf/conf.token';
+import {WmFeature} from '@wm-types/feature';
+import {ConfService} from 'wm-core/store/conf/conf.service';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -76,7 +77,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _store: Store,
     private _route: ActivatedRoute,
     private _router: Router,
-    @Inject(APP_ID) public appId: string,
+    private _configSvc: ConfService,
     @Inject(APP_VERSION) public appVersion: string,
   ) {
     this._route.queryParams.subscribe(_ => {
@@ -233,26 +234,26 @@ export class RegisterPage implements OnInit, OnDestroy {
       try {
         clearInterval(this._timerInterval);
       } catch (e) {}
-      const feature = await this._geolocationSvc.stopRecording();
-      const trackData = res.data.trackData;
+      const recordFeature = await this._geolocationSvc.stopRecording();
+      const formFeature: WmFeature<LineString> = res.data.trackData;
+      const mergedFeature: WmFeature<LineString> = {
+        ...recordFeature,
+        ...formFeature
+      };
       const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
       const device = {
         os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
       };
-      const metadata = {
-        ...feature.properties,
-        ...{date: trackData.date, activity: trackData.activity, distanceFilter, device},
-      };
 
-      feature.properties = {
-        ...feature.properties,
-        ...{metadata},
-        ...trackData,
+      mergedFeature.properties = {
+        ...mergedFeature.properties,
+        device,
+        distanceFilter,
         uuid: generateUUID(),
-        appId: this.appId,
+        app_id: `${this._configSvc.geohubAppId}`,
         appVersion: this.appVersion,
       };
-      const saved = await this._ugcSvc.saveTrack(feature);
+      const saved = await this._ugcSvc.saveTrack(mergedFeature);
 
       await this.openModalSuccess(saved);
       this.backToMap();

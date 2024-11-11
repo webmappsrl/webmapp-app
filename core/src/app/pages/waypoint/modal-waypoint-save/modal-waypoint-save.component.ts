@@ -137,7 +137,6 @@ export class ModalWaypointSaveComponent implements OnInit {
       },
       properties: {
         name: this.fg.value.title,
-        description: this.fg.value.description,
         type: 'waypoint',
         date: new Date().toString(),
         photos: this.photos,
