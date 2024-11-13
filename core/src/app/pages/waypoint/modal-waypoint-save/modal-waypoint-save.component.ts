@@ -138,7 +138,6 @@ export class ModalWaypointSaveComponent implements OnInit {
       properties: {
         name: this.fg.value.title,
         type: 'waypoint',
-        date: new Date().toString(),
         photos: this.photos,
         nominatim: this.nominatim,
         uuid: generateUUID(),
@@ -147,11 +146,9 @@ export class ModalWaypointSaveComponent implements OnInit {
         form: this.fg.value,
       },
     };
-    const waypoint: any = await this._ugcSvc.savePoi(ugcPoi);
-
+    await this._ugcSvc.savePoi(ugcPoi);
     this._modalCtrl.dismiss();
-
-    await this.openModalSuccess(waypoint);
+    await this.openModalSuccess(ugcPoi);
   }
 
   setIsValid(idx: number, isValid: boolean) {

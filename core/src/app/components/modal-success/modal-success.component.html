@@ -39,52 +39,16 @@
           <wm-map [wmMapConf]="confMap$|async" [wmMapOnly]="true" [wmMapGeojson]="track"></wm-map>
         </div>
         <div class="webmapp-modalsuccess-infopanel-top-info">
-          <div class="webmapp-modalsuccess-infopanel-top-name">{{track.title}}</div>
+          <div class="webmapp-modalsuccess-infopanel-top-name">{{track.properties.name}}</div>
           <div class="webmapp-modalsuccess-infopanel-top-date">{{trackDate | date}}</div>
         </div>
       </div>
 
       <div class="webmapp-modalsuccess-infopanel-middle">
         <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
-        {{trackTime?.hours | number : '2.0-0'}}:{{trackTime?.minutes| number :
-        '2.0-0'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }}:{{trackTime?.seconds| number : '2.0-0'}}
+        {{trackTime?.hours | number : '2.0-0'}}:
+        {{trackTime?.minutes| number : '2.0-0'}}:
+        {{trackTime?.seconds| number : '2.0-0'}}
       </div>
       <div class="webmapp-modalsuccess-infopanel-middle">
         <i class="webmapp-icon-distance webmapp-modalsuccess-infopanel-icon"></i>
@@ -96,19 +60,19 @@
       </div>
       <div
         class="webmapp-modalsuccess-infopanel-photobottom"
-        *ngIf="track.photos && track.photos.length"
+        *ngIf="track.properties.photos && track.properties.photos.length"
       >
         <div
           class="webmapp-modalsuccess-infopanel-photocontainer"
-          *ngFor="let photo of track.photos  | slice:0:3;let idx = index"
+          *ngFor="let photo of track.properties.photos  | slice:0:3;let idx = index"
         >
           <div *ngIf="idx<3">
-            <ion-img [src]="photo.datasrc" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
+            <wm-img [src]="photo.properties.photo.webPath " class="webmapp-modalsuccess-infopanel-photo"></wm-img>
             <div
               class="webmapp-modalsuccess-infopanel-photoextra"
-              *ngIf="idx===2 && track.photos.length>3"
+              *ngIf="idx===2 && track.properties.photos.length>3"
             >
-              +{{track.photos.length-3}}
+              +{{track.properties.photos.length-3}}
             </div>
           </div>
         </div>
@@ -165,7 +129,7 @@
               >
                 <i class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"></i>
                 <div class="webmapp-modalsuccess-infopanel-top-text">
-                  {{geometry[0]}} , {{geometry[1]}}
+                  {{geometry[0]??geometry.coordinates[0]}} , {{geometry[1]??geometry.coordinates[1]}}
                 </div>
               </div>
             </ion-col>
@@ -182,7 +146,7 @@
             *ngFor="let photo of properties.photos | slice:0:3;let idx = index"
           >
             <div *ngIf="idx<3">
-              <ion-img [src]="photo.webPath" class="webmapp-modalsuccess-infopanel-photo"></ion-img>
+              <wm-img [src]="photo.properties.photo.webPath" class="webmapp-modalsuccess-infopanel-photo"></wm-img>
               <div
                 class="webmapp-modalsuccess-infopanel-photoextra"
                 *ngIf="idx===2 && properties.photos.length>3"

@@ -11,7 +11,7 @@ import {SharedModule} from 'src/app/components/shared/shared.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
 import {ControlsMdule} from 'src/app/components/controls/controls.module';
 import {WmPipeModule} from 'wm-core/pipes/pipe.module';
-
+import {WmCoreModule} from 'wm-core/wm-core.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,6 +22,7 @@ import {WmPipeModule} from 'wm-core/pipes/pipe.module';
     ControlsMdule,
     WmMapModule,
     ModalSuccessModule,
+    WmCoreModule,
     SharedModule,
   ],
   declarations: [RegisterPage, ModalSaveComponent, ModalSelectphotosComponent],

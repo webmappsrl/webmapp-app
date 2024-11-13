@@ -2,7 +2,6 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
-import {ITrack} from 'src/app/types/track';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -105,12 +104,12 @@ export class ModalSuccessComponent implements OnInit {
     this._navController.navigateForward('photolist');
   }
 
-  async openTrack(track: ITrack) {
+  async openTrack(track: WmFeature<LineString>) {
     await this.close();
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        track: track.key,
+        track: track.properties.uuid,
       },
     };
     this._navController.navigateForward('trackdetail', navigationExtras);
@@ -121,7 +120,7 @@ export class ModalSuccessComponent implements OnInit {
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        waypoint: waypoint.properties.id,
+        waypoint: waypoint.properties.uuid,
       },
     };
     this._navController.navigateForward('waypointdetail', navigationExtras);

@@ -5,14 +5,11 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Inject,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
 import {GeolocationService} from 'wm-core/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
-import {ESuccessType} from '../../types/esuccess.enum';
 import {ModalSaveComponent} from './modal-save/modal-save.component';
-import {ModalSuccessComponent} from '../../components/modal-success/modal-success.component';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
@@ -25,11 +22,6 @@ import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
 import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
-import {UgcService} from 'wm-core/services/ugc.service';
-import {generateUUID} from 'wm-core/utils/localForage';
-import {APP_VERSION} from 'wm-core/store/conf/conf.token';
-import {WmFeature} from '@wm-types/feature';
-import {ConfService} from 'wm-core/store/conf/conf.service';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -71,14 +63,11 @@ export class RegisterPage implements OnInit, OnDestroy {
     private _geoutilsSvc: GeoutilsService,
     private _navCtrl: NavController,
     private _modalCtrl: ModalController,
-    private _ugcSvc: UgcService,
     private _cdr: ChangeDetectorRef,
     private _platform: Platform,
     private _store: Store,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _configSvc: ConfService,
-    @Inject(APP_VERSION) public appVersion: string,
   ) {
     this._route.queryParams.subscribe(_ => {
       if (this._router.getCurrentNavigation().extras.state) {
@@ -157,18 +146,6 @@ export class RegisterPage implements OnInit, OnDestroy {
     this._backBtnSub$.unsubscribe();
   }
 
-  async openModalSuccess(track) {
-    const modaSuccess = await this._modalCtrl.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.TRACK,
-        track,
-      },
-    });
-    await modaSuccess.present();
-    // await modaSuccess.onDidDismiss();
-  }
-
   async pause(event: MouseEvent) {
     await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
@@ -221,41 +198,21 @@ export class RegisterPage implements OnInit, OnDestroy {
     await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
 
+      // TODO: show dialog no coordinates recorded
+
+    const recordedFeature = await this._geolocationSvc.stopRecording();
     const modal = await this._modalCtrl.create({
       component: ModalSaveComponent,
       componentProps: {
         acquisitionFORM$: this.confTRACKFORMS$,
+        recordedFeature,
       },
     });
     await modal.present();
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed && res.data.save) {
-      try {
-        clearInterval(this._timerInterval);
-      } catch (e) {}
-      const recordFeature = await this._geolocationSvc.stopRecording();
-      const formFeature: WmFeature<LineString> = res.data.trackData;
-      const mergedFeature: WmFeature<LineString> = {
-        ...recordFeature,
-        ...formFeature
-      };
-      const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
-      const device = {
-        os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
-      };
-
-      mergedFeature.properties = {
-        ...mergedFeature.properties,
-        device,
-        distanceFilter,
-        uuid: generateUUID(),
-        app_id: `${this._configSvc.geohubAppId}`,
-        appVersion: this.appVersion,
-      };
-      const saved = await this._ugcSvc.saveTrack(mergedFeature);
-
-      await this.openModalSuccess(saved);
+      clearInterval(this._timerInterval);
       this.backToMap();
     } else if (!res.data.dismissed) {
       await this._geolocationSvc.stopRecording();
