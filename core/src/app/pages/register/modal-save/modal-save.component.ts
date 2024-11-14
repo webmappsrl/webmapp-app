@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
+import {ActionSheetController, AlertController, ModalController, Platform} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
@@ -8,7 +8,12 @@ import {UntypedFormGroup} from '@angular/forms';
 import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
 import {WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
-
+import { generateUUID } from 'wm-core/utils/localForage';
+import { UgcService } from 'wm-core/services/ugc.service';
+import {ConfService} from 'wm-core/store/conf/conf.service';
+import packageJson from 'package.json';
+import { ModalSuccessComponent } from 'src/app/components/modal-success/modal-success.component';
+import { ESuccessType } from 'src/app/types/esuccess.enum';
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
@@ -22,12 +27,16 @@ export class ModalSaveComponent implements OnInit {
   fg: UntypedFormGroup;
   public isValidArray: boolean[] = [false, false];
   public photos: any[] = [];
+  recordedFeature: WmFeature<LineString>;
   public title: string;
-  public track: WmFeature<LineString>;
+  track: WmFeature<LineString>;
   public validate = false;
 
   constructor(
-    private _modalController: ModalController,
+    private _modalCtrl: ModalController,
+    private _ugcSvc: UgcService,
+    private _configSvc: ConfService,
+    private _platform: Platform,
     private _translate: TranslateService,
     private _alertController: AlertController,
     private _cameraSvc: CameraService,
@@ -47,11 +56,11 @@ export class ModalSaveComponent implements OnInit {
     const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.properties.photoURL),
-        md5 = Md5.hashStr(JSON.stringify(photoData));
+      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.properties.photo.webPath);
+      const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._cameraSvc.getPhotoData(p.photoURL),
+        const pData = await this._cameraSvc.getPhotoData(p.properties.photo.webPath),
           pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
@@ -64,21 +73,20 @@ export class ModalSaveComponent implements OnInit {
   }
 
   backToMap() {
-    this._modalController.dismiss({
+    this._modalCtrl.dismiss({
       dismissed: false,
       save: false,
     });
   }
 
   backToRecording() {
-    this._modalController.dismiss({
+    this._modalCtrl.dismiss({
       dismissed: true,
     });
   }
 
-  backToSuccess(trackData) {
-    this._modalController.dismiss({
-      trackData,
+  backToSuccess() {
+    this._modalCtrl.dismiss({
       dismissed: false,
       save: true,
     });
@@ -166,6 +174,17 @@ export class ModalSaveComponent implements OnInit {
     return allValid;
   }
 
+  async openModalSuccess(track: WmFeature<LineString>) {
+    const modaSuccess = await this._modalCtrl.create({
+      component: ModalSuccessComponent,
+      componentProps: {
+        type: ESuccessType.TRACK,
+        track,
+      },
+    });
+    await modaSuccess.present();
+  }
+
   remove(image: IPhotoItem) {
     const i = this.photos.findIndex(
       x => x.photoURL === image.photoURL || (!!x.key && !!image.key && x.key === image.key),
@@ -176,25 +195,32 @@ export class ModalSaveComponent implements OnInit {
     this._cdr.detectChanges();
   }
 
-  save() {
+  async save() {
     if (this.fg.invalid) {
       return;
     }
-    const trackData: WmFeature<LineString> = {
-      type: 'Feature',
-      geometry:{
-        type: 'LineString',
-        coordinates: []
-      },
-      properties: {
-        name: this.fg.value.title,
-        photos: this.photos,
-        photoKeys: null,
-        date: new Date(),
-        form: this.fg.value,
-      },
+
+    const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
+    const device = {
+      os: this._platform.is('android') ? 'android' : this._platform.is('ios') ? 'ios' : 'other',
     };
-    this.backToSuccess(trackData);
+
+    this.recordedFeature.properties = {
+      ...this.recordedFeature.properties,
+      name: this.fg.value.title,
+      form: this.fg.value,
+      photos: this.photos,
+      uuid: generateUUID(),
+      distanceFilter,
+      device,
+      app_id: `${this._configSvc.geohubAppId}`,
+      appVersion: packageJson.version,
+    };
+    console.log('recordedFeature:', this.recordedFeature);
+
+    await this._ugcSvc.saveTrack(this.recordedFeature);
+    this.backToSuccess();
+    await this.openModalSuccess(this.recordedFeature);
   }
 
   setIsValid(idx: number, isValid: boolean) {
