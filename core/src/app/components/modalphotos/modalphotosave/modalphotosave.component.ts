@@ -24,7 +24,7 @@ export class ModalphotosaveComponent implements OnInit {
 
   ngOnInit() {}
 
-  async addPhotos() {
+  async addPhotos(): Promise<void> {
     try {
       const photos = await this._cameraSvc.addPhotos();
       this.photos = [...this.photos, ...photos];
@@ -32,13 +32,13 @@ export class ModalphotosaveComponent implements OnInit {
     this._cdr.detectChanges;
   }
 
-  close() {
+  close(): void  {
     this.modalController.dismiss({
       dismissed: true,
     });
   }
 
-  async edit(photo) {
+  async edit(photo: WmFeature<Media, MediaProperties>): Promise<void> {
     const modalSinglePhoto = await this.modalController.create({
       component: ModalPhotoSingleComponent,
       componentProps: {
@@ -50,11 +50,11 @@ export class ModalphotosaveComponent implements OnInit {
     // const resPhoto = await modalSinglePhoto.onDidDismiss()
   }
 
-  isValid() {
+  isValid(): boolean {
     return true;
   }
 
-  async remove(photo) {
+  async remove(photo: WmFeature<Media, MediaProperties>): Promise<void> {
     const translation = await this._translate
       .get([
         'modals.photo.save.modalconfirm.title',
@@ -92,7 +92,7 @@ export class ModalphotosaveComponent implements OnInit {
     await alert.present();
   }
 
-  save() {
+  save(): void {
     if (!this.isValid()) {
       return;
     }
@@ -106,7 +106,7 @@ export class ModalphotosaveComponent implements OnInit {
     this.showList = isList;
   }
 
-  valChange(value, idx) {
+  valChange(value: string, idx: number): void {
     this.photos[idx].properties.description = value;
   }
 }
