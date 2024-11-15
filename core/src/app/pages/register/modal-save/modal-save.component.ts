@@ -5,8 +5,8 @@ import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
-import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
-import {WmFeature} from '@wm-types/feature';
+import {CameraService} from 'wm-core/services/camera.service';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
 import { generateUUID } from 'wm-core/utils/localForage';
 import { UgcService } from 'wm-core/services/ugc.service';
@@ -26,7 +26,7 @@ export class ModalSaveComponent implements OnInit {
   public description: string;
   fg: UntypedFormGroup;
   public isValidArray: boolean[] = [false, false];
-  public photos: any[] = [];
+  public photos: WmFeature<Media, MediaProperties>[] = [];
   recordedFeature: WmFeature<LineString>;
   public title: string;
   track: WmFeature<LineString>;
@@ -52,7 +52,7 @@ export class ModalSaveComponent implements OnInit {
     }
   }
 
-  async addPhotos() {
+  async addPhotos(): Promise<void> {
     const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
@@ -72,27 +72,27 @@ export class ModalSaveComponent implements OnInit {
     });
   }
 
-  backToMap() {
+  backToMap(): void {
     this._modalCtrl.dismiss({
       dismissed: false,
       save: false,
     });
   }
 
-  backToRecording() {
+  backToRecording(): void {
     this._modalCtrl.dismiss({
       dismissed: true,
     });
   }
 
-  backToSuccess() {
+  backToSuccess(): void {
     this._modalCtrl.dismiss({
       dismissed: false,
       save: true,
     });
   }
 
-  async close() {
+  async close(): Promise<void> {
     const translation = await this._translate
       .get([
         'pages.register.modalsave.closemodal.title',
@@ -131,7 +131,7 @@ export class ModalSaveComponent implements OnInit {
       });
   }
 
-  async exit() {
+  async exit(): Promise<void> {
     const translation = await this._translate
       .get([
         'pages.register.modalexit.title',
@@ -166,7 +166,7 @@ export class ModalSaveComponent implements OnInit {
     await alert.present();
   }
 
-  isValid() {
+  isValid(): boolean {
     this.validate = true;
     const allValid = this.isValidArray.reduce((x, curr) => {
       return curr && x;
@@ -174,7 +174,7 @@ export class ModalSaveComponent implements OnInit {
     return allValid;
   }
 
-  async openModalSuccess(track: WmFeature<LineString>) {
+  async openModalSuccess(track: WmFeature<LineString>): Promise<void> {
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
       componentProps: {
@@ -185,9 +185,9 @@ export class ModalSaveComponent implements OnInit {
     await modaSuccess.present();
   }
 
-  remove(image: IPhotoItem) {
+  remove(image: WmFeature<Media, MediaProperties>): void {
     const i = this.photos.findIndex(
-      x => x.photoURL === image.photoURL || (!!x.key && !!image.key && x.key === image.key),
+      x => x.properties.uuid === image.properties.uuid
     );
     if (i > -1) {
       this.photos.splice(i, 1);
@@ -195,7 +195,7 @@ export class ModalSaveComponent implements OnInit {
     this._cdr.detectChanges();
   }
 
-  async save() {
+  async save(): Promise<void> {
     if (this.fg.invalid) {
       return;
     }
@@ -223,7 +223,7 @@ export class ModalSaveComponent implements OnInit {
     await this.openModalSuccess(this.recordedFeature);
   }
 
-  setIsValid(idx: number, isValid: boolean) {
+  setIsValid(idx: number, isValid: boolean): void {
     this.isValidArray[idx] = isValid;
   }
 }

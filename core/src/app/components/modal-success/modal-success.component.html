@@ -58,25 +58,29 @@
         <i class="webmapp-icon-downhill-outline webmapp-modalsuccess-infopanel-icon"></i>
         {{trackSlope | number:'1.0-00'}}m
       </div>
-      <div
-        class="webmapp-modalsuccess-infopanel-photobottom"
-        *ngIf="track.properties.photos && track.properties.photos.length"
-      >
+      <ng-container *ngIf="track.properties as properties">
         <div
-          class="webmapp-modalsuccess-infopanel-photocontainer"
-          *ngFor="let photo of track.properties.photos  | slice:0:3;let idx = index"
+          class="webmapp-modalsuccess-infopanel-photobottom"
+          *ngIf="properties.photos && properties.photos.length"
         >
-          <div *ngIf="idx<3">
-            <wm-img [src]="photo.properties.photo.webPath " class="webmapp-modalsuccess-infopanel-photo"></wm-img>
-            <div
-              class="webmapp-modalsuccess-infopanel-photoextra"
-              *ngIf="idx===2 && track.properties.photos.length>3"
-            >
-              +{{track.properties.photos.length-3}}
-            </div>
+          <div
+            class="webmapp-modalsuccess-infopanel-photocontainer"
+            *ngFor="let photo of properties.photos  | slice:0:3;let idx = index"
+          >
+            <ng-container *ngIf="photo.properties as photoProp">
+              <div *ngIf="idx<3">
+                <wm-img [src]="photoProp?.photo?.webPath " class="webmapp-modalsuccess-infopanel-photo"></wm-img>
+                <div
+                  class="webmapp-modalsuccess-infopanel-photoextra"
+                  *ngIf="idx===2 && photoProp?.photos?.length>3"
+                >
+                  +{{properties.photos.length-3}}
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-      </div>
+      </ng-container>
     </ion-card>
 
     <div class="webmapp-modalsuccess-photogallery" *ngIf="isPhotos" (click)="gotoPhotos()">
@@ -85,13 +89,18 @@
         *ngFor="let photo of photos | slice:0:3;let idx = index;"
       >
         <div *ngIf="idx<3">
-          <wm-img
-            [src]="photo.properties.photo.webPath"
-            class="webmapp-modalsuccess-photo"
-          ></wm-img>
-          <div class="webmapp-modalsuccess-photoextra" *ngIf="idx===2 && photos.length>3">
-            +{{photos.length-3}}
-          </div>
+          <ng-container *ngIf="photo.properties as photoProp">
+            <wm-img
+              [src]="photoProp?.photo?.webPath"
+              class="webmapp-modalsuccess-photo"
+            ></wm-img>
+            <div
+              class="webmapp-modalsuccess-photoextra"
+              *ngIf="idx===2 && photoProp?.photos?.length>3"
+            >
+              +{{photoProp?.photos?.length-3}}
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -129,7 +138,7 @@
               >
                 <i class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"></i>
                 <div class="webmapp-modalsuccess-infopanel-top-text">
-                  {{geometry[0]??geometry.coordinates[0]}} , {{geometry[1]??geometry.coordinates[1]}}
+                  {{geometry[0]??geometry?.coordinates[0]}} , {{geometry[1]??geometry?.coordinates[1]}}
                 </div>
               </div>
             </ion-col>
@@ -146,13 +155,18 @@
             *ngFor="let photo of properties.photos | slice:0:3;let idx = index"
           >
             <div *ngIf="idx<3">
-              <wm-img [src]="photo.properties.photo.webPath" class="webmapp-modalsuccess-infopanel-photo"></wm-img>
-              <div
-                class="webmapp-modalsuccess-infopanel-photoextra"
-                *ngIf="idx===2 && properties.photos.length>3"
-              >
-                +{{properties.photos.length-3}}
-              </div>
+              <ng-container *ngIf="photo.properties as photoProp">
+                <wm-img
+                  [src]="photoProp?.photo?.webPath"
+                  class="webmapp-modalsuccess-infopanel-photo"
+                ></wm-img>
+                <div
+                  class="webmapp-modalsuccess-infopanel-photoextra"
+                  *ngIf="idx===2 && photoProp?.photos?.length>3"
+                >
+                  +{{photoProp?.photos?.length-3}}
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>

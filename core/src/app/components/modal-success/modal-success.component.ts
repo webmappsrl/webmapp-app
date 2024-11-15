@@ -3,7 +3,7 @@ import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
-import {Observable} from 'rxjs';
+import {async, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {
@@ -93,18 +93,18 @@ export class ModalSuccessComponent implements OnInit {
     }
   }
 
-  async close() {
+  async close(): Promise<boolean> {
     return this._modalController.dismiss({
       dismissed: true,
     });
   }
 
-  async gotoPhotos() {
+  async gotoPhotos(): Promise<void> {
     await this.close();
     this._navController.navigateForward('photolist');
   }
 
-  async openTrack(track: WmFeature<LineString>) {
+  async openTrack(track: WmFeature<LineString>): Promise<void> {
     await this.close();
 
     const navigationExtras: NavigationOptions = {
@@ -115,7 +115,7 @@ export class ModalSuccessComponent implements OnInit {
     this._navController.navigateForward('trackdetail', navigationExtras);
   }
 
-  async openWaypoint(waypoint: WmFeature<Point>) {
+  async openWaypoint(waypoint: WmFeature<Point>): Promise<void> {
     await this.close();
 
     const navigationExtras: NavigationOptions = {

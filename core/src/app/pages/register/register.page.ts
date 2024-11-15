@@ -107,23 +107,23 @@ export class RegisterPage implements OnInit, OnDestroy {
     this.checkRecording();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}
   }
 
-  backToMap() {
+  backToMap(): void {
     this._navCtrl.navigateForward('map');
     this.reset();
     this._geolocationSvc.stop();
   }
 
-  background(ev) {
+  background(ev: MouseEvent): void {
     this.backToMap();
   }
 
-  checkRecording() {
+  checkRecording(): void {
     if (this._geolocationSvc.onRecord$.value) {
       this.isPaused = this._geolocationSvc.paused;
       this.opacity = 1;
@@ -146,12 +146,12 @@ export class RegisterPage implements OnInit, OnDestroy {
     this._backBtnSub$.unsubscribe();
   }
 
-  async pause(event: MouseEvent) {
+  async pause(event: MouseEvent): Promise<void> {
     await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
   }
 
-  recordMove(ev) {
+  recordMove(ev: number): void {
     this.opacity = ev;
   }
 
@@ -162,14 +162,14 @@ export class RegisterPage implements OnInit, OnDestroy {
    *
    * @returns
    */
-  async recordStart(event: boolean) {
+  async recordStart(event: boolean): Promise<void> {
     this.isPaused = false;
     this.focusPosition$.next(true);
     this._geolocationSvc.startRecording();
     this.checkRecording();
   }
 
-  reset() {
+  reset(): void {
     this.isRegestering = true;
     this.opacity = 0;
     this.time = {hours: 0, minutes: 0, seconds: 0};
@@ -183,24 +183,24 @@ export class RegisterPage implements OnInit, OnDestroy {
     this._geolocationSvc.stopRecording();
   }
 
-  async resume(event: MouseEvent) {
+  async resume(event: MouseEvent): Promise<void> {
     await this._geolocationSvc.resumeRecording();
     this.focusPosition$.next(true);
     this.isPaused = false;
   }
 
-  async stop(event: MouseEvent) {
+  async stop(event: MouseEvent): Promise<void> {
     this.stopRecording();
     this.focusPosition$.next(false);
   }
 
-  async stopRecording() {
+  async stopRecording(): Promise<void> {
     await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
 
       // TODO: show dialog no coordinates recorded
 
-    const recordedFeature = await this._geolocationSvc.stopRecording();
+    const recordedFeature = this._geolocationSvc.recordedFeature;
     const modal = await this._modalCtrl.create({
       component: ModalSaveComponent,
       componentProps: {
@@ -212,6 +212,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     const res = await modal.onDidDismiss();
 
     if (!res.data.dismissed && res.data.save) {
+      this._geolocationSvc.stopRecording();
       clearInterval(this._timerInterval);
       this.backToMap();
     } else if (!res.data.dismissed) {
@@ -220,7 +221,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     }
   }
 
-  updateMap() {
+  updateMap(): void {
     if (this._geolocationSvc.onRecord$.value && this._geolocationSvc.recordedFeature) {
       this.length = this._geoutilsSvc.getLength(this._geolocationSvc.recordedFeature);
       // const timeSeconds = this._geoutilsSvc.getTime(

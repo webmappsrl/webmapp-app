@@ -1,10 +1,9 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
+import {AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
-import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
-import {Feature, Point} from 'geojson';
-import {Media, MediaProperties} from '@wm-types/feature';
+import {CameraService} from 'wm-core/services/camera.service';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {removeImg} from 'wm-core/utils/localForage';
 @Component({
   selector: 'webmapp-modalphotosave',
@@ -12,7 +11,7 @@ import {removeImg} from 'wm-core/utils/localForage';
   styleUrls: ['./modalphotosave.component.scss'],
 })
 export class ModalphotosaveComponent implements OnInit {
-  public photos: Feature<Media>[];
+  public photos: WmFeature<Media, MediaProperties>[];
   public showList = false;
 
   constructor(
@@ -80,7 +79,7 @@ export class ModalphotosaveComponent implements OnInit {
           text: translation['modals.photo.save.modalconfirm.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
-            const idx = this.photos.findIndex(x => x.id == photo.id);
+            const idx = this.photos.findIndex(x => x.properties.uuid == photo.properties.uuid);
             if (idx >= 0) {
               this.photos.splice(idx, 1);
               removeImg(photo.properties.photo.webPath);

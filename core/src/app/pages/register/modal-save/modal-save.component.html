@@ -76,10 +76,12 @@
             >
             </ion-icon>
             <!-- <img class="webmapp-register-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-            <wm-img
-              class="webmapp-register-modalsave-image"
-              [src]="image.properties.photo.webPath"
-            ></wm-img>
+            <ng-container *ngIf="image.properties as photoProp">
+              <wm-img
+                class="webmapp-register-modalsave-image"
+                [src]="photoProp?.photo?.webPath"
+              ></wm-img>
+            </ng-container>
           </div>
         </ion-col>
       </ion-row>
