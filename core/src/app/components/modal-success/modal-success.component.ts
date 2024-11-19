@@ -3,7 +3,7 @@ import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
-import {async, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
 import {
@@ -109,7 +109,7 @@ export class ModalSuccessComponent implements OnInit {
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        track: track.properties.uuid,
+        track: track.properties.uuid ?? -1,
       },
     };
     this._navController.navigateForward('trackdetail', navigationExtras);
@@ -120,7 +120,7 @@ export class ModalSuccessComponent implements OnInit {
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        waypoint: waypoint.properties.uuid,
+        waypoint: waypoint.properties.uuid ?? -1,
       },
     };
     this._navController.navigateForward('waypointdetail', navigationExtras);

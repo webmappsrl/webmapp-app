@@ -45,10 +45,11 @@ export class ModalSaveComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.track) {
-      this.title = this.track.properties.name;
-      this.description = this.track.properties.form.description;
-      this.activity = this.track.properties.form.activity;
+    if (this.track && this.track.properties) {
+      const properties = this.track.properties;
+      this.title = properties.name ?? '';
+      this.description = properties.form?.description ?? '';
+      this.activity = properties.form?.activity ?? '';
     }
   }
 
