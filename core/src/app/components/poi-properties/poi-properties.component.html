@@ -1,5 +1,6 @@
 <ng-container *ngIf="properties!= null">
   <div class="webmapp-pagepoi-info-body">
+    <wm-excerpt *ngIf="properties?.excerpt as excerpt" [excerpt]="excerpt"></wm-excerpt>
     <wm-image-gallery
       *ngIf="properties?.image_gallery?.length"
       [imageGallery]="properties?.image_gallery"
