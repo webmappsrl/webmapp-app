@@ -188,7 +188,7 @@ export class ModalSaveComponent implements OnInit {
 
   remove(image: WmFeature<Media, MediaProperties>): void {
     const i = this.photos.findIndex(
-      x => x.properties.uuid === image.properties.uuid
+      x => x.properties?.uuid === image.properties?.uuid
     );
     if (i > -1) {
       this.photos.splice(i, 1);
@@ -217,7 +217,7 @@ export class ModalSaveComponent implements OnInit {
       app_id: `${this._configSvc.geohubAppId}`,
       appVersion: packageJson.version,
     };
-    console.log('recordedFeature:', this.recordedFeature);
+/*     console.log('recordedFeature:', this.recordedFeature); */
 
     await this._ugcSvc.saveTrack(this.recordedFeature);
     this.backToSuccess();

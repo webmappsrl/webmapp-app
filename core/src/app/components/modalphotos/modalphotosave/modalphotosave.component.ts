@@ -79,10 +79,10 @@ export class ModalphotosaveComponent implements OnInit {
           text: translation['modals.photo.save.modalconfirm.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
-            const idx = this.photos.findIndex(x => x.properties.uuid == photo.properties.uuid);
+            const idx = this.photos.findIndex(x => x.properties?.uuid == photo.properties?.uuid);
             if (idx >= 0) {
               this.photos.splice(idx, 1);
-              removeImg(photo.properties.photo.webPath);
+              removeImg(photo.properties?.photo?.webPath);
             }
           },
         },
