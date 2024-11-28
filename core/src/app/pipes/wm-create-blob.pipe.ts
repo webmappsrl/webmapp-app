@@ -1,23 +1,28 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import { IPhotoItem } from 'wm-core/services/photo.service';
+import {IPhotoItem} from 'wm-core/services/camera.service';
+import {Feature} from 'geojson';
 @Pipe({
   name: 'wmCreateBlob',
   pure: false,
 })
 export class AppCreateBlobPipe implements PipeTransform {
-  transform(photo: IPhotoItem): string {
-    if (photo.rawData) {
-      if (typeof photo.rawData === 'string' && photo.rawData.includes('blob:')) {
-        return photo.rawData;
+  transform(feature: Feature): string {
+    const properties = feature.properties;
+    const rawData = properties.rawData;
+    const photo = properties.photo;
+    if (photo) {
+      return photo.webPath;
+    } else if (rawData) {
+      if (typeof properties.rawData === 'string' && properties.rawData.includes('blob:')) {
+        return properties.rawData;
       }
-      const rawData = JSON.parse(photo.rawData);
       if (rawData.arrayBuffer != null) {
         const url = `data:image/jpg;base64, ${this._arrayBufferToBase64(rawData.arrayBuffer)}`;
         return url;
       }
     }
 
-    return photo.photoURL;
+    return properties.url;
   }
 
   private _arrayBufferToBase64(buffer): string {

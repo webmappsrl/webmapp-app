@@ -119,6 +119,7 @@ webmapp-modal-waypoint-save {
       border-radius: 10px;
 
       background: #ffffff;
+      z-index: 1;
 
       @include box-shadow-light;
     }

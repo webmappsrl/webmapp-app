@@ -12,9 +12,9 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {NavigationExtras} from '@angular/router';
-import { PhotoService } from 'wm-core/services/photo.service';
-import { SaveService } from 'wm-core/services/save.service';
-import { LoginComponent } from 'wm-core/login/login.component';
+import {CameraService} from 'wm-core/services/camera.service';
+import {LoginComponent} from 'wm-core/login/login.component';
+import {UgcService} from 'wm-core/services/ugc.service';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -31,8 +31,8 @@ export class BtnTrackRecordingComponent {
   constructor(
     private _navCtrl: NavController,
     private _modalController: ModalController,
-    private _photoService: PhotoService,
-    private _saveService: SaveService,
+    private _cameraSvc: CameraService,
+    private _ugcSvc: UgcService,
   ) {}
 
   openModalLogin() {
@@ -65,7 +65,7 @@ export class BtnTrackRecordingComponent {
 
   async photo() {
     if (this.isLogged) {
-      let photoCollection = await this._photoService.addPhotos();
+      let photoCollection = await this._cameraSvc.addPhotos();
 
       const modal = await this._modalController.create({
         component: ModalphotosaveComponent,
@@ -77,7 +77,7 @@ export class BtnTrackRecordingComponent {
       const res = await modal.onDidDismiss();
 
       if (!res.data.dismissed) {
-        await this._saveService.savePhotos(res.data.photos);
+        await this._ugcSvc.saveMedias(res.data.photos);
         await this.openModalSuccess(res.data.photos);
       }
     } else {

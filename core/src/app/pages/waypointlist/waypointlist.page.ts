@@ -8,10 +8,10 @@ import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import { SaveService } from 'wm-core/services/save.service';
-import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-
+import {getUgcPois} from 'wm-core/utils/localForage';
+import {Point} from 'geojson';
+import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-waypointlist',
   templateUrl: './waypointlist.page.html',
@@ -21,24 +21,23 @@ import {confMAP} from 'wm-core/store/conf/conf.selector';
 })
 export class WaypointlistPage {
   confMap$: Observable<any> = this._store.select(confMAP);
-  waypoints$: Observable<WaypointSave[]>;
+  waypoints$: Observable<WmFeature<Point>[]>;
 
   constructor(
-    private _saveSvc: SaveService,
     private _navCtrl: NavController,
     private _cdr: ChangeDetectorRef,
     private _store: Store,
   ) {}
 
   ionViewWillEnter(): void {
-    this.waypoints$ = from(this._saveSvc.getWaypoints());
+    this.waypoints$ = from(getUgcPois());
     this._cdr.detectChanges();
   }
 
-  open(waypoint): void {
+  open(ugcPoi: WmFeature<Point>): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        waypoint: waypoint.key,
+        waypoint: ugcPoi.properties.id ?? ugcPoi.properties.uuid,
       },
     };
     this._navCtrl.navigateForward('waypointdetail', navigationExtras);

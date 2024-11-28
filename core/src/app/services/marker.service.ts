@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IGeojsonCluster, IGeojsonPoi} from '../types/model';
 import defaultImage from '../../assets/images/defaultImageB64.json';
-import { getImgTrack } from '../shared/map-core/src/utils';
+import {getImg} from 'wm-core/utils/localForage';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,12 +17,12 @@ export class MarkerService {
     let img2b64: string | ArrayBuffer = null;
     let img3b64: string | ArrayBuffer = null;
 
-    let img1b64: string | ArrayBuffer = await getImgTrack(value.properties.images[0]);
+    let img1b64: string | ArrayBuffer = await getImg(value.properties.images[0]);
     if (value.properties.images.length > 1) {
-      img2b64 = await getImgTrack(value.properties.images[1]);
+      img2b64 = await getImg(value.properties.images[1]);
     }
     if (value.properties.images.length > 2) {
-      img3b64 = await getImgTrack(value.properties.images[2]);
+      img3b64 = await getImg(value.properties.images[2]);
     }
     const clusterCount = value.properties.ids.length;
 

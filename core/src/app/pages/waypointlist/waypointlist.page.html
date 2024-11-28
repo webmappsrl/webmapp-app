@@ -22,16 +22,17 @@
             class="wm-trackdetail-map"
             [wmMapConf]="confMap$|async"
             [wmMapOnly]="true"
-            [wmMapGeojson]="waypoint.displayPosition"
+            [wmMapGeojson]="waypoint"
+            [wmMapGeojsonFit]="true"
           ></wm-map>
         </div>
-        <div>
-          <div class="wm-waypointlist-item-title">{{waypoint.title}}</div>
+        <div *ngIf="waypoint.properties as prop">
+          <div class="wm-waypointlist-item-title">{{prop.name}}</div>
           <div class="wm-waypointlist-item-date">
-            {{waypoint.date | date : "d MMMM YYYY - HH:mm"}}
+            {{prop.updated_at | date : "d MMMM YYYY - HH:mm"}}
           </div>
-          <div class="wm-waypointlist-item-date" *ngIf="waypoint.sync_id">
-            {{'sync id'|wmtrans}}: {{waypoint.sync_id}}
+          <div class="wm-waypointlist-item-date" *ngIf="prop.id">
+            {{'sync id'|wmtrans}}: {{prop.id}}
           </div>
         </div>
       </ion-item>

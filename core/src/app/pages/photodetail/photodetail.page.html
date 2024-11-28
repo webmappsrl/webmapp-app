@@ -32,14 +32,21 @@
 </ion-header>
 
 <ion-content id="main" *ngIf="photo$|async as photo">
-  <ion-img [src]="photo|wmCreateBlob" class="webmapp-photodetail-image"></ion-img>
+  <ng-container *ngIf="photo.properties as prop">
+    <ion-img [src]="photo|wmCreateBlob" class="webmapp-photodetail-image"></ion-img>
 
-  <div class="webmapp-photodetail-date">{{photo.date | date : "dd MMMM YYYY"}}</div>
+    <div class="webmapp-photodetail-date">
+      {{prop.date??prop.updated_at?? prop.position.time| date : "d MMMM YYYY - HH:mm"}}
+    </div>
 
-  <ion-list class="webmapp-photodetail-itemlist">
-    <ion-item class="webmapp-photodetail-item" lines="none" *ngIf="photo?.description">
-      <i class="icon-outline-list webmapp-photodetail-icon secondary" start></i>
-      <div class="webmapp-photodetail-item-description">{{photo.description}}</div>
-    </ion-item>
-  </ion-list>
+    <ion-list class="webmapp-photodetail-itemlist">
+      <ion-item *ngIf="prop.id">
+        <div class="webmapp-photolist-item">{{'sync id'|wmtrans}}: {{prop.id}}</div>
+      </ion-item>
+      <ion-item class="webmapp-photodetail-item" lines="none" *ngIf="prop?.description">
+        <i class="icon-outline-list webmapp-photodetail-icon secondary" start></i>
+        <div class="webmapp-photodetail-item-description">{{prop.description}}</div>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>

@@ -3,8 +3,8 @@ import {Component, OnInit} from '@angular/core';
 
 import {NavigationExtras, Router} from '@angular/router';
 import {LangService} from 'wm-core/localization/lang.service';
-import {getTracks, removeTrack} from 'src/app/shared/map-core/src/utils';
 import {GeoJSONFeature} from 'ol/format/GeoJSON';
+import {getEcTracks, removeEcTrack} from 'wm-core/utils/localForage';
 
 @Component({
   selector: 'app-downloadlist',
@@ -24,7 +24,7 @@ export class DownloadlistPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.tracks = await getTracks();
+    this.tracks = await getEcTracks();
   }
 
   async deleteSelected() {
@@ -37,7 +37,7 @@ export class DownloadlistPage implements OnInit {
           text: this._langSvc.instant('Elimina'),
           handler: () => {
             this.selected.forEach(track => {
-              removeTrack(`${track.properties.id}`);
+              removeEcTrack(`${track.properties.id}`);
             });
             this.isSelectedActive = false;
           },
@@ -89,7 +89,7 @@ export class DownloadlistPage implements OnInit {
   }
 
   private async _remove(track: GeoJSONFeature) {
-    await removeTrack(`${track.properties.id}`);
+    await removeEcTrack(`${track.properties.id}`);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
   }

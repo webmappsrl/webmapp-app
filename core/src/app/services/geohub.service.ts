@@ -1,28 +1,22 @@
-import {IGeojsonFeature, WhereTaxonomy} from '../types/model';
-
-import {CGeojsonLineStringFeature} from 'wm-core/classes/features/cgeojson-line-string-feature';
+import {WhereTaxonomy} from '../types/model';
 import {CommunicationService} from './base/communication.service';
 import {HttpHeaders} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {StorageService} from 'wm-core/services/storage.service';
-import {TAXONOMYWHERE_STORAGE_KEY} from '../constants/storage';
 import {environment} from 'src/environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {getTrack} from '../shared/map-core/src/utils';
+import {Feature, LineString} from 'geojson';
+import {getEcTrack} from 'wm-core/utils/localForage';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
   providedIn: 'root',
 })
 export class GeohubService {
-  private _ecTracks: Array<CGeojsonLineStringFeature>;
+  private _ecTracks: Array<Feature<LineString>>;
   private _favourites: Array<number> = null;
 
-  constructor(
-    private _communicationService: CommunicationService,
-    private _storageService: StorageService,
-  ) {
+  constructor(private _communicationService: CommunicationService) {
     this._ecTracks = [];
   }
 
@@ -47,10 +41,10 @@ export class GeohubService {
    *
    * @returns
    */
-  async getEcTrack(id: string | number): Promise<CGeojsonLineStringFeature> {
+  async getEcTrack(id: string | number): Promise<Feature<LineString>> {
     if (id == null) return null;
-    const cacheResult: CGeojsonLineStringFeature = this._ecTracks.find(
-      (ecTrack: CGeojsonLineStringFeature) => ecTrack?.properties?.id === id,
+    const cacheResult: Feature<LineString> = this._ecTracks.find(
+      (ecTrack: Feature<LineString>) => ecTrack?.properties?.id === id,
     );
     if (cacheResult) {
       return cacheResult;
@@ -61,7 +55,7 @@ export class GeohubService {
         .pipe(
           catchError(e => {
             if (!navigator.onLine) {
-              return getTrack(`${id}`);
+              return getEcTrack(`${id}`);
             }
             return of(null);
           }),
@@ -77,7 +71,7 @@ export class GeohubService {
     }
   }
 
-  async getFavouriteTracks(page: number = 0): Promise<Array<IGeojsonFeature>> {
+  async getFavouriteTracks(page: number = 0): Promise<Array<Feature<LineString>>> {
     const favourites = await this.favourites();
 
     let ids: number[] = [];
@@ -85,10 +79,10 @@ export class GeohubService {
       ids = favourites.slice(page * FAVOURITE_PAGESIZE, (page + 1) * FAVOURITE_PAGESIZE);
     }
 
-    return this.getTracks(ids);
+    return this.getEcTracks(ids);
   }
 
-  async getTracks(ids: number[]): Promise<Array<IGeojsonFeature>> {
+  async getEcTracks(ids: number[]): Promise<Array<Feature<LineString>>> {
     const res = await this._communicationService
       .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
       .pipe(map(x => x.features))
@@ -103,15 +97,11 @@ export class GeohubService {
    * @returns a where taxonomy
    */
   async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
-    const cacheId = `${TAXONOMYWHERE_STORAGE_KEY}-${id}`;
-    const cached = await this._getFromCache(cacheId);
-    if (cached) return cached;
     const res = await this._communicationService
       .get(`${environment.api}/api/taxonomy/where/${id}`)
       .pipe(
         map(value => {
           delete value.geometry;
-          this._setInCache(cacheId, value);
           return value;
         }),
       )
@@ -165,14 +155,5 @@ export class GeohubService {
       }
     }
     return isFavourite;
-  }
-
-  private async _getFromCache(cacheId: string): Promise<any> {
-    const res = await this._storageService.getByKey(cacheId);
-    return res;
-  }
-
-  private async _setInCache(cacheId, value) {
-    return this._storageService.setByKey(cacheId, value);
   }
 }

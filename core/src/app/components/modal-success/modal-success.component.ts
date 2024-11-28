@@ -2,14 +2,18 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
-import {ITrack} from 'src/app/types/track';
-import {WaypointSave} from 'src/app/types/waypoint';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import { IPhotoItem } from 'wm-core/services/photo.service';
-
+import {
+  LineStringProperties,
+  Media,
+  MediaProperties,
+  PointProperties,
+  WmFeature,
+} from '@wm-types/feature';
+import {Point, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-modal-registersuccess',
   templateUrl: './modal-success.component.html',
@@ -21,14 +25,13 @@ export class ModalSuccessComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private PHOTOSCATTER = 100;
 
-  @Input() photos: IPhotoItem[];
-  @Input() track: ITrack;
+  @Input() photos: WmFeature<Media, MediaProperties>[];
+  @Input() track: WmFeature<LineString, LineStringProperties>;
   @Input() type: ESuccessType;
-  @Input() waypoint: WaypointSave;
+  @Input() waypoint: WmFeature<Point, PointProperties>;
   @ViewChild('slider') slider: IonSlides;
 
   confMap$: Observable<any> = this._store.select(confMAP);
-  displayPosition;
   isPhotos = false;
   isTrack = false;
   isWaypoint = false;
@@ -54,12 +57,12 @@ export class ModalSuccessComponent implements OnInit {
   ngOnInit() {
     switch (this.type) {
       case ESuccessType.TRACK:
-        this.trackDate = this._geoUtils.getDate(this.track.geojson);
-        this.trackodo = this._geoUtils.getLength(this.track.geojson);
-        this.trackSlope = this._geoUtils.getSlope(this.track.geojson);
-        this.trackAvgSpeed = this._geoUtils.getAverageSpeed(this.track.geojson);
-        this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track.geojson);
-        this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(this.track.geojson));
+        this.trackDate = this._geoUtils.getDate(this.track);
+        this.trackodo = this._geoUtils.getLength(this.track);
+        this.trackSlope = this._geoUtils.getSlope(this.track);
+        this.trackAvgSpeed = this._geoUtils.getAverageSpeed(this.track);
+        this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track);
+        this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(this.track));
         this.isTrack = true;
         break;
       case ESuccessType.PHOTOS:
@@ -86,39 +89,38 @@ export class ModalSuccessComponent implements OnInit {
         break;
       case ESuccessType.WAYPOINT:
         this.isWaypoint = true;
-        this.displayPosition = this.waypoint.displayPosition;
         break;
     }
   }
 
-  async close() {
+  async close(): Promise<boolean> {
     return this._modalController.dismiss({
       dismissed: true,
     });
   }
 
-  async gotoPhotos() {
+  async gotoPhotos(): Promise<void> {
     await this.close();
     this._navController.navigateForward('photolist');
   }
 
-  async openTrack(track: ITrack) {
+  async openTrack(track: WmFeature<LineString>): Promise<void> {
     await this.close();
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        track: track.key,
+        track: track.properties.uuid ?? -1,
       },
     };
     this._navController.navigateForward('trackdetail', navigationExtras);
   }
 
-  async openWaypoint(waypoint: WaypointSave) {
+  async openWaypoint(waypoint: WmFeature<Point>): Promise<void> {
     await this.close();
 
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        waypoint: waypoint.key,
+        waypoint: waypoint.properties.uuid ?? -1,
       },
     };
     this._navController.navigateForward('waypointdetail', navigationExtras);

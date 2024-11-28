@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import {IGeojsonFeature, IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
+import {IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
 import {NavController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from './utils';
 import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
@@ -20,12 +20,11 @@ import {
 } from 'src/app/store/map/map.selector';
 
 import {Browser} from '@capacitor/browser';
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {IMapRootState} from 'src/app/store/map/map';
 import {Store} from '@ngrx/store';
 import {setCurrentPoiId} from 'src/app/store/map/map.actions';
-import {getTrack} from 'src/app/shared/map-core/src/utils';
-
+import {Feature, LineString} from 'geojson';
+import {getEcTrack} from 'wm-core/utils/localForage';
 @Component({
   selector: 'app-poi',
   templateUrl: './poi.page.html',
@@ -38,13 +37,13 @@ export class PoiPage implements OnInit, OnDestroy {
   private _changePoiSub: Subscription = Subscription.EMPTY;
 
   currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
-  currentTrack$: Observable<CGeojsonLineStringFeature> = this._storeMap.select(mapCurrentTrack);
+  currentTrack$: Observable<Feature<LineString>> = this._storeMap.select(mapCurrentTrack);
   nextPoiID$: Observable<number> = this._storeMap.select(nextPoiID);
   poiIdx: number;
   pois: Array<IGeojsonPoiDetailed> = [];
   prevPoiID$: Observable<number> = this._storeMap.select(prevPoiID);
   relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
-  route: IGeojsonFeature;
+  route: Feature;
   selectedPoi: IGeojsonPoiDetailed;
   slideOptions = {
     on: {
@@ -74,7 +73,7 @@ export class PoiPage implements OnInit, OnDestroy {
         take(1),
         tap(t => (this.route = t)),
         filter(g => g != null),
-        switchMap(f => getTrack(`${f.properties.id}`)),
+        switchMap(f => getEcTrack(`${f.properties.id}`)),
       )
       .subscribe(d => {
         this.useCache = d != null;

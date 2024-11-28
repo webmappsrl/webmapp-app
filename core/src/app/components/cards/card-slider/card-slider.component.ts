@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { IGeojsonFeature } from 'src/app/types/model';
-import { DeviceService } from 'wm-core/services/device.service';
-
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {DeviceService} from 'wm-core/services/device.service';
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-card-slider',
   templateUrl: './card-slider.component.html',
@@ -9,11 +8,11 @@ import { DeviceService } from 'wm-core/services/device.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class CardSliderComponent implements OnInit {
-  @Input('title') title: string;
+export class CardSliderComponent {
+  @Input('data') data: Feature<LineString>[];
   @Input('nodata') nodata: string;
-  @Input('data') data: Array<IGeojsonFeature>;
   @Input('showDistance') showDistance: boolean;
+  @Input('title') title: string;
 
   public sliderOptions: any;
 
@@ -27,6 +26,4 @@ export class CardSliderComponent implements OnInit {
       slidesPerView: this._deviceService.width / 235,
     };
   }
-
-  ngOnInit() {}
 }

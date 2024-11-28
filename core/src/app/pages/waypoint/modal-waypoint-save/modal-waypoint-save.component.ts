@@ -7,16 +7,20 @@ import {
 } from '@angular/core';
 import {ModalController, LoadingController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
-import { SaveService } from 'wm-core/services/save.service';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {WaypointSave} from 'src/app/types/waypoint';
 import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from 'wm-core/store/conf/conf.selector';
-import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
+import {CameraService} from 'wm-core/services/camera.service';
+import {UgcService} from 'wm-core/services/ugc.service';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
+import {Point} from 'geojson';
+import {generateUUID} from 'wm-core/utils/localForage';
+import {ConfService} from 'wm-core/store/conf/conf.service';
+import {DeviceService} from 'wm-core/services/device.service';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -32,7 +36,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   fg: UntypedFormGroup;
   isValidArray: boolean[] = [false, false];
   nominatim: any;
-  photos: any[] = [];
+  photos: WmFeature<Media, MediaProperties>[] = [];
   position: Location;
   positionCity: string = 'città';
   positionString: string;
@@ -42,11 +46,13 @@ export class ModalWaypointSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _photoSvc: PhotoService,
-    private _saveSvc: SaveService,
+    private _photoSvc: CameraService,
+    private _ugcSvc: UgcService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
+    private _configSvc: ConfService,
+    private _deviceSvc: DeviceService,
   ) {}
 
   ngOnInit() {
@@ -56,7 +62,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     }, 2000);
   }
 
-  async addPhotos() {
+  async addPhotos(): Promise<void> {
     let library = [];
     const loading = await this._loadingCtrl.create();
     loading.present();
@@ -68,12 +74,12 @@ export class ModalWaypointSaveComponent implements OnInit {
     loading.dismiss();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.photoURL),
-        md5 = Md5.hashStr(JSON.stringify(photoData));
+      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.properties.photo.webPath);
+      const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._photoSvc.getPhotoData(p.photoURL),
-          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        const pData = await this._photoSvc.getPhotoData(p.properties.photo.webPath);
+        const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
           break;
@@ -84,13 +90,13 @@ export class ModalWaypointSaveComponent implements OnInit {
     });
   }
 
-  close() {
+  close(): void {
     this._modalCtrl.dismiss({
       dismissed: true,
     });
   }
 
-  isValid() {
+  isValid(): boolean {
     this.validate = true;
     const allValid = this.isValidArray.reduce((x, curr) => {
       return curr && x;
@@ -98,7 +104,7 @@ export class ModalWaypointSaveComponent implements OnInit {
     return allValid;
   }
 
-  async openModalSuccess(waypoint) {
+  async openModalSuccess(waypoint: WmFeature<Point>): Promise<void> {
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
       componentProps: {
@@ -110,9 +116,9 @@ export class ModalWaypointSaveComponent implements OnInit {
     await modaSuccess.onDidDismiss();
   }
 
-  remove(image: IPhotoItem) {
+  remove(image: WmFeature<Media, MediaProperties>): void {
     const i = this.photos.findIndex(
-      x => x.photoURL === image.photoURL || (!!x.key && !!image.key && x.key === image.key),
+      x => x.properties.uuid === image.properties.uuid
     );
     if (i > -1) {
       this.photos.splice(i, 1);
@@ -120,26 +126,34 @@ export class ModalWaypointSaveComponent implements OnInit {
     this._cdr.detectChanges();
   }
 
-  async save() {
+  async save(): Promise<void> {
     if (this.fg.invalid) {
       return;
     }
-    const waypoint: WaypointSave = await this._saveSvc.saveWaypoint({
-      position: this.position,
-      displayPosition: this.displayPosition,
-      city: this.positionCity,
-      date: new Date(),
-      photos: this.photos,
-      nominatim: this.nominatim,
-      ...this.fg.value,
-    });
-
+    const device = await this._deviceSvc.getInfo();
+    const ugcPoi: WmFeature<Point> = {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [this.position.longitude, this.position.latitude],
+      },
+      properties: {
+        name: this.fg.value.title,
+        type: 'waypoint',
+        photos: this.photos,
+        nominatim: this.nominatim,
+        uuid: generateUUID(),
+        app_id: `${this._configSvc.geohubAppId}`,
+        form: this.fg.value,
+        device,
+      },
+    };
+    await this._ugcSvc.savePoi(ugcPoi);
     this._modalCtrl.dismiss();
-
-    await this.openModalSuccess(waypoint);
+    await this.openModalSuccess(ugcPoi);
   }
 
-  setIsValid(idx: number, isValid: boolean) {
+  setIsValid(idx: number, isValid: boolean): void {
     this.isValidArray[idx] = isValid;
   }
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { PhotoService } from 'wm-core/services/photo.service';
+import {Component, OnInit} from '@angular/core';
+import {ModalController} from '@ionic/angular';
+import {CameraService} from 'wm-core/services/camera.service';
 
 @Component({
   selector: 'webmapp-modal-selectphotos',
@@ -12,15 +12,12 @@ export class ModalWaypointSelectphotosComponent implements OnInit {
 
   public isAllSelected = false;
 
-  constructor(
-    private _modalController: ModalController,
-    private _photoService: PhotoService
-  ) {}
+  constructor(private _modalController: ModalController, private _cameraSvc: CameraService) {}
 
   async ngOnInit() {
-    const library = await this._photoService.getPhotos();
-    library.forEach((libraryItem) => {
-      const libraryItemCopy = Object.assign({ selected: false }, libraryItem);
+    const library = await this._cameraSvc.getPhotos();
+    library.forEach(libraryItem => {
+      const libraryItemCopy = Object.assign({selected: false}, libraryItem);
       this.images.push(libraryItemCopy);
     });
   }

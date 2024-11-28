@@ -24,14 +24,13 @@ import {
 import {loadConf} from 'wm-core/store/conf/conf.actions';
 import {loadPois, query} from 'wm-core/store/api/api.actions';
 import {online} from './store/network/network.selector';
-import {poisInitFeatureCollection} from 'wm-core/store/api/api.selector';
 import {WmLoadingService} from 'wm-core/services/loading.service';
 import {IGEOLOCATION} from 'wm-core/types/config';
-import {getImgTrack} from './shared/map-core/src/utils';
 import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager';
-import {SaveService} from 'wm-core/services/save.service';
 import {isLogged} from 'wm-core/store/auth/auth.selectors';
 import {loadAuths} from 'wm-core/store/auth/auth.actions';
+import {getImg} from 'wm-core/utils/localForage';
+import {UgcService} from 'wm-core/services/ugc.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -52,7 +51,7 @@ export class AppComponent {
     private _platform: Platform,
     private router: Router,
     private status: StatusService,
-    private saveService: SaveService,
+    private _ugcSvc: UgcService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
@@ -117,8 +116,7 @@ export class AppComponent {
         take(1),
       )
       .subscribe(_ => {
-        this.saveService.syncUgc();
-        this.saveService.uploadUnsavedContents();
+        this._ugcSvc.syncUgc();
       });
 
     this.status.showPhotos.subscribe(x => {
@@ -137,7 +135,7 @@ export class AppComponent {
           localStorage.setItem('wm-distance-filter', `${conf.gps_accuracy_default}`);
         });
     }
-    OfflineCallbackManager.setOfflineCallback(getImgTrack);
+    OfflineCallbackManager.setOfflineCallback(getImg);
   }
 
   closePhoto() {
@@ -185,7 +183,7 @@ export class AppComponent {
    */
   saveGeneratedContentsNowAndInterval(): void {
     setInterval(() => {
-      this.saveService.uploadUnsavedContents();
+      this._ugcSvc.syncUgc();
     }, GEOHUB_SAVING_TRY_INTERVAL);
   }
 

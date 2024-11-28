@@ -7,9 +7,8 @@ import {
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
-import { IPhotoItem } from 'wm-core/services/photo.service';
-import { SaveService } from 'wm-core/services/save.service';
-
+import {getUgcMedias} from 'wm-core/utils/localForage';
+import {Media, WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'webmapp-photolist',
   templateUrl: './photolist.page.html',
@@ -18,25 +17,21 @@ import { SaveService } from 'wm-core/services/save.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class PhotolistPage {
-  public photos$: Observable<IPhotoItem[]>;
+  public medias$: Observable<WmFeature<Media>[]>;
 
-  constructor(
-    private _saveSvc: SaveService,
-    private _navCtrl: NavController,
-    private _cdr: ChangeDetectorRef,
-  ) {}
+  constructor(private _navCtrl: NavController, private _cdr: ChangeDetectorRef) {}
 
-  open(photo: IPhotoItem): void {
+  ionViewWillEnter(): void {
+    this.medias$ = from(getUgcMedias());
+    this._cdr.detectChanges();
+  }
+
+  open(photo: WmFeature<Media>): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
-        photo: photo.key,
+        photo: photo.properties.id,
       },
     };
     this._navCtrl.navigateForward('photodetail', navigationExtras);
-  }
-
-  ionViewWillEnter(): void {
-    this.photos$ = from(this._saveSvc.getPhotos());
-    this._cdr.detectChanges();
   }
 }

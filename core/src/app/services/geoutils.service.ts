@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import { CGeojsonLineStringFeature } from 'wm-core/classes/features/cgeojson-line-string-feature';
 import {getDistance} from 'ol/sphere';
 import {Coordinate} from 'ol/coordinate';
-import {ILineString, IMultiLineString, IMultiPolygon, IPoint, IPolygon} from '../types/model';
-
+import {IPoint} from '../types/model';
+import {Feature, LineString} from 'geojson';
 @Injectable({
   providedIn: 'root',
 })
@@ -29,10 +28,10 @@ export class GeoutilsService {
   /**
    * Get the average speed on a track
    *
-   * @param {CGeojsonLineStringFeature} track a track feature
+   * @param {Feature<LineString>} track a track feature
    * @returns {number} the average speed
    */
-  getAverageSpeed(track: CGeojsonLineStringFeature): number {
+  getAverageSpeed(track: Feature<LineString>): number {
     const speeds = this.getSpeeds(track);
     const avgSpeed = speeds.reduce((a, curr) => a + curr, 0) / speeds.length;
     if (avgSpeed > 0) {
@@ -49,7 +48,7 @@ export class GeoutilsService {
    * @param track a track feature
    * @returns
    */
-  getCurrentSpeed(track: CGeojsonLineStringFeature): number {
+  getCurrentSpeed(track: Feature<LineString>): number {
     if (!track || !track.geometry) return 0;
     const lenPoints = track.geometry.coordinates.length;
     const lenTimes = track.properties.metadata.locations.length;
@@ -74,7 +73,7 @@ export class GeoutilsService {
    *
    * @param track a track feature
    */
-  getDate(track: CGeojsonLineStringFeature) {
+  getDate(track: Feature<LineString>) {
     return new Date();
   }
 
@@ -96,7 +95,7 @@ export class GeoutilsService {
    * @param track a track feature
    * @returns total length
    */
-  getLength(track: CGeojsonLineStringFeature | any): number {
+  getLength(track: Feature<LineString> | any): number {
     const coordinates =
       track?.geometry && track?.geometry?.coordinates
         ? track?.geometry?.coordinates
@@ -113,25 +112,26 @@ export class GeoutilsService {
     return 0;
   }
 
+  getLocations(track: Feature<LineString>): any[] {
+    const properties = track.properties;
+    const locations = properties?.locations ?? null;
+    return locations ?? [];
+  }
+
   /**
    * Get the difference in height of a track
    *
-   * @param {CGeojsonLineStringFeature} track a track feature
+   * @param {Feature<LineString>} track a track feature
    *
    * @returns {number} total height difference
    */
-  getSlope(track: {[key: string]: any}): number {
-    if (
-      track == null ||
-      track.properties == null ||
-      track.properties.locations == null ||
-      track.properties.locations.length < 2
-    ) {
+  getSlope(track: Feature<LineString>): number {
+    const locations = this.getLocations(track);
+    if (locations == null || locations.length < 2) {
       return 0;
     }
 
     let totalClimb = 0;
-    let locations = track.properties.locations;
 
     for (let i = 1; i < locations.length; i++) {
       const prev = locations[i - 1];
@@ -157,9 +157,10 @@ export class GeoutilsService {
    * @param track a track feature
    * @returns the time in seconds
    */
-  getSpeeds(track: CGeojsonLineStringFeature): number[] {
-    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
-      return track.properties.locations.map(l => l.speed);
+  getSpeeds(track: Feature<LineString>): number[] {
+    const locations = this.getLocations(track);
+    if (locations && locations.length > 1) {
+      return locations.map(l => l.speed);
     }
     return [];
   }
@@ -170,12 +171,10 @@ export class GeoutilsService {
    * @param track a track feature
    * @returns the time in seconds
    */
-  getTime(track: CGeojsonLineStringFeature): number {
-    if (track.properties && track.properties.locations && track.properties.locations.length > 1) {
-      return this._calcTimeS(
-        track.properties.locations[0].time,
-        track.properties.locations[track.properties.locations.length - 1].time,
-      );
+  getTime(track: Feature<LineString>): number {
+    const locations = this.getLocations(track);
+    if (locations && locations.length > 1) {
+      return this._calcTimeS(locations[0].time, locations[locations.length - 1].time);
     }
     return 0;
   }
@@ -183,11 +182,11 @@ export class GeoutilsService {
   /**
    * Get the top speed on all the track
    *
-   * @param {CGeojsonLineStringFeature} track a track feature
+   * @param {Feature<LineString>} track a track feature
    *
    * @returns {number} top speed
    */
-  getTopSpeed(track: CGeojsonLineStringFeature): number {
+  getTopSpeed(track: Feature<LineString>): number {
     if (!track) return 0;
     const speeds = this.getSpeeds(track);
     return this._getMaxValue(speeds);

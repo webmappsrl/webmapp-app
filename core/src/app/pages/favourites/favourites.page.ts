@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll} from '@ionic/angular';
-
 import {GeohubService} from 'src/app/services/geohub.service';
-import {IGeojsonFeature} from 'src/app/types/model';
 import {NavigationExtras, Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
-import { select, Store } from '@ngrx/store';
-import { isLogged } from 'wm-core/store/auth/auth.selectors';
-
+import {select, Store} from '@ngrx/store';
+import {isLogged} from 'wm-core/store/auth/auth.selectors';
+import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-favourites',
   templateUrl: './favourites.page.html',
@@ -19,13 +17,19 @@ export class FavouritesPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
-  tracks$: BehaviorSubject<IGeojsonFeature[]> = new BehaviorSubject<IGeojsonFeature[]>(null);
+  tracks$: BehaviorSubject<Feature<LineString>[]> = new BehaviorSubject<Feature<LineString>[]>(
+    null,
+  );
 
   constructor(
     private _geoHubService: GeohubService,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
   ) {}
+
+  async ngOnInit() {
+    this.doRefresh(null);
+  }
 
   async doRefresh(event) {
     this.page = 0;
@@ -48,11 +52,7 @@ export class FavouritesPage implements OnInit {
     event.target.complete();
   }
 
-  async ngOnInit() {
-    this.doRefresh(null);
-  }
-
-  open(track: IGeojsonFeature) {
+  open(track: Feature<LineString>) {
     const clickedFeatureId = track.properties.id;
     if (clickedFeatureId != null) {
       let navigationExtras: NavigationExtras = {
@@ -64,7 +64,7 @@ export class FavouritesPage implements OnInit {
     }
   }
 
-  async remove(track: IGeojsonFeature) {
+  async remove(track: Feature<LineString>) {
     await this._geoHubService.setFavouriteTrack(track.properties.id, false);
     const idx = this.tracks$.value.findIndex(x => x.properties.id == track.properties.id);
     const currentTracks = this.tracks$.value;

@@ -1,58 +1,44 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
+import {AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
-import { IPhotoItem, PhotoService } from 'wm-core/services/photo.service';
-
+import {CameraService} from 'wm-core/services/camera.service';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
+import {removeImg} from 'wm-core/utils/localForage';
 @Component({
   selector: 'webmapp-modalphotosave',
   templateUrl: './modalphotosave.component.html',
   styleUrls: ['./modalphotosave.component.scss'],
 })
 export class ModalphotosaveComponent implements OnInit {
-  public photos: IPhotoItem[];
+  public photos: WmFeature<Media, MediaProperties>[];
   public showList = false;
 
   constructor(
     private modalController: ModalController,
     private _translate: TranslateService,
     private _alertController: AlertController,
-    private _photoService: PhotoService,
+    private _cameraSvc: CameraService,
     private _cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {}
 
-  async addPhotos() {
+  async addPhotos(): Promise<void> {
     try {
-      const photos = await this._photoService.addPhotos();
+      const photos = await this._cameraSvc.addPhotos();
       this.photos = [...this.photos, ...photos];
     } catch {}
     this._cdr.detectChanges;
   }
 
-  close() {
+  close(): void  {
     this.modalController.dismiss({
       dismissed: true,
     });
   }
 
-  // async addPhotos() {
-  //   const modalPhotos = await this.modalController.create({
-  //     component: ModalphotosComponent,
-  //     componentProps: {
-  //       photoCollection: this.photos,
-  //     },
-  //   });
-  //   await modalPhotos.present();
-  //   const resPhoto = await modalPhotos.onDidDismiss();
-  //   if (!resPhoto.data.dismissed && resPhoto.data.photos) {
-  //     this.photos = resPhoto.data.photos;
-  //   }
-  //   // const photoCollection = resPhoto.data.photos;
-  //   // this.photos = [...this.photos,...photoCollection]
-  // }
-  async edit(photo) {
+  async edit(photo: WmFeature<Media, MediaProperties>): Promise<void> {
     const modalSinglePhoto = await this.modalController.create({
       component: ModalPhotoSingleComponent,
       componentProps: {
@@ -64,11 +50,11 @@ export class ModalphotosaveComponent implements OnInit {
     // const resPhoto = await modalSinglePhoto.onDidDismiss()
   }
 
-  isValid() {
+  isValid(): boolean {
     return true;
   }
 
-  async remove(photo) {
+  async remove(photo: WmFeature<Media, MediaProperties>): Promise<void> {
     const translation = await this._translate
       .get([
         'modals.photo.save.modalconfirm.title',
@@ -93,9 +79,10 @@ export class ModalphotosaveComponent implements OnInit {
           text: translation['modals.photo.save.modalconfirm.confirm'],
           cssClass: 'webmapp-modalconfirm-btn',
           handler: () => {
-            const idx = this.photos.findIndex(x => x.id == photo.id);
+            const idx = this.photos.findIndex(x => x.properties?.uuid == photo.properties?.uuid);
             if (idx >= 0) {
               this.photos.splice(idx, 1);
+              removeImg(photo.properties?.photo?.webPath);
             }
           },
         },
@@ -105,7 +92,7 @@ export class ModalphotosaveComponent implements OnInit {
     await alert.present();
   }
 
-  save() {
+  save(): void {
     if (!this.isValid()) {
       return;
     }
@@ -119,7 +106,7 @@ export class ModalphotosaveComponent implements OnInit {
     this.showList = isList;
   }
 
-  valChange(value, idx) {
-    this.photos[idx].description = value;
+  valChange(value: string, idx: number): void {
+    this.photos[idx].properties.description = value;
   }
 }
