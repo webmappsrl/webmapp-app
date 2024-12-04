@@ -77,7 +77,7 @@ export class WmFormComponent {
     this.currentForm$.next(this.forms$.value[idx]);
     let formObj = {};
 
-    this.currentForm$.value.fields.forEach(field => {
+    this.currentForm$.value?.fields.forEach(field => {
       const validators = [];
       if (field.required) {
         validators.push(Validators.required);
