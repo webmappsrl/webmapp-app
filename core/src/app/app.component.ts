@@ -1,6 +1,6 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
-import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
+import {debounceTime, filter, startWith, switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
@@ -114,7 +114,6 @@ export class AppComponent {
         switchMap(_ => this.isLogged$),
         filter(l => l),
         debounceTime(2000),
-        take(1),
       )
       .subscribe(_ => {
         this.saveService.syncUgc();

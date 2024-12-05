@@ -57,7 +57,7 @@ export abstract class DetailPage {
   presentToast(message: string): Observable<void> {
     return from(
       this.toastCtrl.create({
-        message: this.translateSvc.instant('Waypoint correttamente cancellato'),
+        message: this.translateSvc.instant('Elemento correttamente cancellato'),
         duration: 1500,
         position: 'bottom',
       }),
