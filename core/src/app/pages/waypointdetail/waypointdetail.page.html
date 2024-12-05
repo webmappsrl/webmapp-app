@@ -11,7 +11,6 @@
       </ion-buttons>
       <ion-title>{{'pages.waypointdetail.title'|wmtrans}}</ion-title>
       <ion-buttons slot="end">
-        <wm-export-to-btn [to]="'json'" [input]="waypoint"></wm-export-to-btn>
         <ion-button (click)="delete()" *ngIf="online$|async">
           <ion-icon name="trash-outline" start></ion-icon>
         </ion-button>

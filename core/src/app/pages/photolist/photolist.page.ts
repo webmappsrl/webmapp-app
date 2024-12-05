@@ -7,8 +7,9 @@ import {
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
-import { IPhotoItem } from 'wm-core/services/photo.service';
-import { SaveService } from 'wm-core/services/save.service';
+import {map} from 'rxjs/operators';
+import {IPhotoItem} from 'wm-core/services/photo.service';
+import {SaveService} from 'wm-core/services/save.service';
 
 @Component({
   selector: 'webmapp-photolist',
@@ -26,6 +27,21 @@ export class PhotolistPage {
     private _cdr: ChangeDetectorRef,
   ) {}
 
+  ionViewWillEnter(): void {
+    this.photos$ = from(this._saveSvc.getPhotos()).pipe(
+      map((photos: IPhotoItem[]) => {
+        const uniquePhotos = new Map<string, IPhotoItem>();
+        photos.forEach(photo => {
+          if (!uniquePhotos.has(photo.id)) {
+            uniquePhotos.set(photo.id, photo);
+          }
+        });
+        return Array.from(uniquePhotos.values());
+      }),
+    );
+    this._cdr.detectChanges();
+  }
+
   open(photo: IPhotoItem): void {
     const navigationExtras: NavigationOptions = {
       queryParams: {
@@ -33,10 +49,5 @@ export class PhotolistPage {
       },
     };
     this._navCtrl.navigateForward('photodetail', navigationExtras);
-  }
-
-  ionViewWillEnter(): void {
-    this.photos$ = from(this._saveSvc.getPhotos());
-    this._cdr.detectChanges();
   }
 }

@@ -4,12 +4,13 @@ import {AlertController, MenuController, NavController, ToastController} from '@
 import {Store} from '@ngrx/store';
 import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
-import {switchMap, take, tap} from 'rxjs/operators';
-import { SaveService } from 'wm-core/services/save.service';
+import {map, switchMap, take, tap} from 'rxjs/operators';
+import {SaveService} from 'wm-core/services/save.service';
 import {online} from 'src/app/store/network/network.selector';
 import {WaypointSave} from 'src/app/types/waypoint';
 import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
 import {DetailPage} from '../abstract/detail.page';
+import {IPhotoItem} from 'wm-core/services/photo.service';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',
@@ -40,6 +41,18 @@ export class WaypointdetailPage extends DetailPage {
     super(menuCtrl, alertCtrl, translateSvc, toastCtrl);
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),
+      map((waypoint: WaypointSave) => {
+        if (waypoint.photos && Array.isArray(waypoint.photos)) {
+          const uniquePhotos = new Map<string, IPhotoItem>();
+          waypoint.photos.forEach(photo => {
+            if (!uniquePhotos.has(photo.id)) {
+              uniquePhotos.set(photo.id, photo);
+            }
+          });
+          waypoint.photos = Array.from(uniquePhotos.values());
+        }
+        return waypoint;
+      }),
       tap(w => (this.currentWaypoint = w)),
     );
     this.waypoint$.subscribe(w => console.log(w));
@@ -64,6 +77,6 @@ export class WaypointdetailPage extends DetailPage {
   }
 
   presentToast(): Observable<void> {
-    return super.presentToast('Waypoint correttamente cancellato');
+    return super.presentToast('Elemento correttamente cancellato');
   }
 }

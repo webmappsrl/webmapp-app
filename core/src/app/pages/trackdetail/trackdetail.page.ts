@@ -63,6 +63,18 @@ export class TrackdetailPage extends DetailPage {
 
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),
+      map((waypoint: ITrack) => {
+        if (waypoint.photos && Array.isArray(waypoint.photos)) {
+          const uniquePhotos = new Map<string, IPhotoItem>();
+          waypoint.photos.forEach(photo => {
+            if (!uniquePhotos.has(photo.id)) {
+              uniquePhotos.set(photo.id, photo);
+            }
+          });
+          waypoint.photos = Array.from(uniquePhotos.values());
+        }
+        return waypoint;
+      }),
       tap(t => (this.currentTrack = t)),
     );
     this.track$.subscribe(track => console.log(track));
