@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.12.17](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v2.12.17) (2024-12-06)
+
+
+### Miscellaneous
+
+* Add subproject commit 493779ecb1d24800a5ba0016a89d20ea5b9c82aa to wm-types ([dbcd331](https://github.com/webmappsrl/webmapp-app/commit/dbcd3317f7386613c4b92fa5b7feea9532cbe956))
+* Add unique photos to waypoint and track detail pages oc:4433 ([1e9d598](https://github.com/webmappsrl/webmapp-app/commit/1e9d5988d825ecc60142761051971977f1142b93))
+* **poi-properties:** add excerpt display to properties oc: 4183 ([#66](https://github.com/webmappsrl/webmapp-app/issues/66)) ([d5a9e47](https://github.com/webmappsrl/webmapp-app/commit/d5a9e47af5d59467a2eeffd6d40881c0306da72a))
+* Update form.component.ts and waypointdetail.page.html ([9bdca7a](https://github.com/webmappsrl/webmapp-app/commit/9bdca7a5cec308476f388f48beddbbfca584d236))
+* Update release_please.yml workflow ([aea66d5](https://github.com/webmappsrl/webmapp-app/commit/aea66d5d00442ff82fe01f325d50968332174c21))
+* Update release_please.yml workflow ([76af493](https://github.com/webmappsrl/webmapp-app/commit/76af493db8d7159c357a1a8c4edf9826cf1d0ac1))
+* Update submodules in .gitmodules file ([5fe1d74](https://github.com/webmappsrl/webmapp-app/commit/5fe1d74fa4723b595b8623efb5ac52cf1d6c0777))
+
 ## [2.12.16](https://github.com/webmappsrl/webmapp-app/compare/v2.12.15...v2.12.16) (2024-11-01)
 
 
