@@ -64,15 +64,13 @@ export class TrackdetailPage extends DetailPage {
     this.track$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getTrack(param.track))),
       map((waypoint: ITrack) => {
-        if (waypoint.photos && Array.isArray(waypoint.photos)) {
-          const uniquePhotos = new Map<string, IPhotoItem>();
-          waypoint.photos.forEach(photo => {
-            if (!uniquePhotos.has(photo.id)) {
-              uniquePhotos.set(photo.id, photo);
-            }
-          });
-          waypoint.photos = Array.from(uniquePhotos.values());
+        const mediaBaseUrl = 'https://geohub.webmapp.it/storage/media/images/ugc/image_';
+        for (let i = 0; i < waypoint.photos.length; i++) {
+          waypoint.photos[i].id = waypoint.photoKeys[i];
+          waypoint.photos[i].photoURL = `${mediaBaseUrl}${waypoint.photoKeys[i]}.jpg`;
+          waypoint.photos[i].description = ``;
         }
+
         return waypoint;
       }),
       tap(t => (this.currentTrack = t)),
