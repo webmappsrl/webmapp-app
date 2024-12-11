@@ -68,9 +68,17 @@ export class TrackdetailPage extends DetailPage {
         for (let i = 0; i < waypoint.photos.length; i++) {
           waypoint.photos[i].id = waypoint.photoKeys[i];
           waypoint.photos[i].photoURL = `${mediaBaseUrl}${waypoint.photoKeys[i]}.jpg`;
-          waypoint.photos[i].description = ``;
+          waypoint.photos[i].description = `image_${waypoint.photoKeys[i]}.jpg`;
         }
-
+        if (waypoint.photos && Array.isArray(waypoint.photos)) {
+          const uniquePhotos = new Map<string, IPhotoItem>();
+          waypoint.photos.forEach(photo => {
+            if (!uniquePhotos.has(photo.id)) {
+              uniquePhotos.set(photo.id, photo);
+            }
+          });
+          waypoint.photos = Array.from(uniquePhotos.values());
+        }
         return waypoint;
       }),
       tap(t => (this.currentTrack = t)),

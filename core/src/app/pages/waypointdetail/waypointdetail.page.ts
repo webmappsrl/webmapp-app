@@ -42,6 +42,12 @@ export class WaypointdetailPage extends DetailPage {
     this.waypoint$ = this._route.queryParams.pipe(
       switchMap(param => from(this._saveSvc.getWaypoint(param.waypoint))),
       map((waypoint: WaypointSave) => {
+        const mediaBaseUrl = 'https://geohub.webmapp.it/storage/media/images/ugc/image_';
+        for (let i = 0; i < waypoint.photos.length; i++) {
+          waypoint.photos[i].id = waypoint.photoKeys[i];
+          waypoint.photos[i].photoURL = `${mediaBaseUrl}${waypoint.photoKeys[i]}.jpg`;
+          waypoint.photos[i].description = `image_${waypoint.photoKeys[i]}.jpg`;
+        }
         if (waypoint.photos && Array.isArray(waypoint.photos)) {
           const uniquePhotos = new Map<string, IPhotoItem>();
           waypoint.photos.forEach(photo => {
