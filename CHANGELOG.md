@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.12.18](https://github.com/webmappsrl/webmapp-app/compare/v2.12.17...v2.12.18) (2024-12-12)
+
+
+### Miscellaneous
+
+* Refactor photo handling in trackdetail and waypointdetail pages ([3a6bf14](https://github.com/webmappsrl/webmapp-app/commit/3a6bf142e4a666cd8ab17d4ad4f36e7340519493))
+* Update photo handling in trackdetail and waypointdetail pages ([e52109f](https://github.com/webmappsrl/webmapp-app/commit/e52109f9a5677ad382341a201c19145e8e676126))
+* Update trackdetail.page.ts to fix photo URLs and descriptions ([08ca4b1](https://github.com/webmappsrl/webmapp-app/commit/08ca4b10207f678934fb74a3ac7e6d6c58ed99a8))
+
 ## [2.12.17](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v2.12.17) (2024-12-06)
 
 
