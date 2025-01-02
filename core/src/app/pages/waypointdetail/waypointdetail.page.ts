@@ -6,12 +6,12 @@ import {TranslateService} from '@ngx-translate/core';
 import {from, Observable} from 'rxjs';
 import {filter, switchMap, take, tap} from 'rxjs/operators';
 import {online} from 'src/app/store/network/network.selector';
-import {confMAP, confPOIFORMS} from 'wm-core/store/conf/conf.selector';
+import {confMAP, confPOIFORMS} from '@wm-core/store/conf/conf.selector';
 import {DetailPage} from '../abstract/detail.page';
 import {Point} from 'geojson';
-import {UgcService} from 'wm-core/services/ugc.service';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
-import {getUgcMediasByIds, getUgcPoi} from 'wm-core/utils/localForage';
+import {getUgcMediasByIds, getUgcPoi} from '@wm-core/utils/localForage';
 @Component({
   selector: 'wm-waypointdetail',
   templateUrl: './waypointdetail.page.html',

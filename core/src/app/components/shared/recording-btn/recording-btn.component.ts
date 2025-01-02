@@ -1,6 +1,6 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { GeoutilsService } from 'src/app/services/geoutils.service';
-import { GeolocationService } from 'wm-core/services/geolocation.service';
+import {Component, OnInit, EventEmitter, Output} from '@angular/core';
+import {GeoutilsService} from 'src/app/services/geoutils.service';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
 
 @Component({
   selector: 'webmapp-recording-btn',
@@ -8,15 +8,15 @@ import { GeolocationService } from 'wm-core/services/geolocation.service';
   styleUrls: ['./recording-btn.component.scss'],
 })
 export class RecordingBtnComponent implements OnInit {
-
   @Output('btnClick') btnClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
-  public time: { hours: number; minutes: number; seconds: number } = { hours: 0, minutes: 0, seconds: 0 };
+  public time: {hours: number; minutes: number; seconds: number} = {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  };
 
-
-  constructor(
-    private _geolocationService: GeolocationService
-  ) { }
+  constructor(private _geolocationService: GeolocationService) {}
 
   ngOnInit() {
     setInterval(() => {
@@ -27,5 +27,4 @@ export class RecordingBtnComponent implements OnInit {
   click(ev) {
     this.btnClick.emit(ev);
   }
-
 }

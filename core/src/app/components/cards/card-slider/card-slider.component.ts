@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
-import {DeviceService} from 'wm-core/services/device.service';
+import {DeviceService} from '@wm-core/services/device.service';
 import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-card-slider',

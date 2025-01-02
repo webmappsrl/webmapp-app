@@ -11,20 +11,12 @@ import {IGeojsonPoi, IGeojsonPoiDetailed} from 'src/app/types/model';
 import {NavController} from '@ionic/angular';
 import {beforeInit, setTransition, setTranslate} from './utils';
 import {filter, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {
-  mapCurrentPoi,
-  mapCurrentRelatedPoi,
-  mapCurrentTrack,
-  nextPoiID,
-  prevPoiID,
-} from 'src/app/store/map/map.selector';
 
 import {Browser} from '@capacitor/browser';
-import {IMapRootState} from 'src/app/store/map/map';
 import {Store} from '@ngrx/store';
-import {setCurrentPoiId} from 'src/app/store/map/map.actions';
 import {Feature, LineString} from 'geojson';
-import {getEcTrack} from 'wm-core/utils/localForage';
+import {getEcTrack} from '@wm-core/utils/localForage';
+import {poi, track} from '@wm-core/store/features/features.selector';
 @Component({
   selector: 'app-poi',
   templateUrl: './poi.page.html',
@@ -36,13 +28,12 @@ export class PoiPage implements OnInit, OnDestroy {
   private _changePoiEVT$: EventEmitter<'prev' | 'next'> = new EventEmitter<'prev' | 'next'>();
   private _changePoiSub: Subscription = Subscription.EMPTY;
 
-  currentPoi$: Observable<IGeojsonPoiDetailed> = this._storeMap.select(mapCurrentPoi);
-  currentTrack$: Observable<Feature<LineString>> = this._storeMap.select(mapCurrentTrack);
-  nextPoiID$: Observable<number> = this._storeMap.select(nextPoiID);
+  currentPoi$ = this._store.select(poi);
+  currentTrack$: Observable<Feature<LineString>> = this._store.select(track);
+  nextPoiID$: Observable<number>;
   poiIdx: number;
   pois: Array<IGeojsonPoiDetailed> = [];
-  prevPoiID$: Observable<number> = this._storeMap.select(prevPoiID);
-  relatedPoi$: Observable<IGeojsonPoiDetailed[]> = this._storeMap.select(mapCurrentRelatedPoi);
+  prevPoiID$: Observable<number>;
   route: Feature;
   selectedPoi: IGeojsonPoiDetailed;
   slideOptions = {
@@ -59,12 +50,10 @@ export class PoiPage implements OnInit, OnDestroy {
   useAnimation = false;
   useCache = false;
 
-  constructor(private _navController: NavController, private _storeMap: Store<IMapRootState>) {
+  constructor(private _navController: NavController, private _store: Store) {
     this._changePoiSub = this._changePoiEVT$
       .pipe(withLatestFrom(this.prevPoiID$, this.nextPoiID$))
-      .subscribe(([evt, prev, next]) => {
-        this._storeMap.dispatch(setCurrentPoiId({currentPoiId: evt === 'prev' ? prev : next}));
-      });
+      .subscribe(([evt, prev, next]) => {});
   }
 
   ngOnInit() {
@@ -78,7 +67,6 @@ export class PoiPage implements OnInit, OnDestroy {
       .subscribe(d => {
         this.useCache = d != null;
       });
-    this.relatedPoi$.pipe(take(1)).subscribe(r => (this.pois = r));
 
     setTimeout(() => {
       this.useAnimation = true;
@@ -90,15 +78,10 @@ export class PoiPage implements OnInit, OnDestroy {
   }
 
   back() {
-    this._storeMap.dispatch(setCurrentPoiId({currentPoiId: -1}));
     this._navController.back();
   }
 
-  clickPoi(poi: IGeojsonPoi) {
-    if (poi != null) {
-      this._storeMap.dispatch(setCurrentPoiId({currentPoiId: +poi.properties.id}));
-    }
-  }
+  clickPoi(poi: IGeojsonPoi) {}
 
   email(_): void {}
 

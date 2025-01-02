@@ -1,10 +1,11 @@
 import {AlertController, NavController} from '@ionic/angular';
 import {Component, OnInit} from '@angular/core';
-
-import {NavigationExtras, Router} from '@angular/router';
-import {LangService} from 'wm-core/localization/lang.service';
+import {LineString} from 'geojson';
+import {LangService} from '@wm-core/localization/lang.service';
 import {GeoJSONFeature} from 'ol/format/GeoJSON';
-import {getEcTracks, removeEcTrack} from 'wm-core/utils/localForage';
+import {getEcTracks, removeEcTrack} from '@wm-core/utils/localForage';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {WmFeature} from '@wm-types/feature';
 
 @Component({
   selector: 'app-downloadlist',
@@ -18,9 +19,9 @@ export class DownloadlistPage implements OnInit {
 
   constructor(
     private _navCtrl: NavController,
-    private _router: Router,
     private _alertCtrl: AlertController,
     private _langSvc: LangService,
+    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   async ngOnInit() {
@@ -51,16 +52,11 @@ export class DownloadlistPage implements OnInit {
     this._navCtrl.navigateRoot('/map', {replaceUrl: true});
   }
 
-  open(track: GeoJSONFeature): void {
-    const clickedFeatureId = track.properties.id;
-    if (clickedFeatureId != null) {
-      let navigationExtras: NavigationExtras = {
-        queryParams: {
-          track: clickedFeatureId,
-        },
-      };
-      this._router.navigate(['map'], navigationExtras);
-    }
+  open(track: WmFeature<LineString>): void {
+    const clickedFeatureId = track.properties.id ?? null;
+    this._urlHandlerSvc.updateURL({
+      track: clickedFeatureId,
+    });
   }
 
   async remove(track: GeoJSONFeature) {

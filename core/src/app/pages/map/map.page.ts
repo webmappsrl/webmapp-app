@@ -32,32 +32,11 @@ import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
 import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-import {setCurrentFilters} from 'src/app/store/map/map.actions';
-import {currentFilters, padding} from 'src/app/store/map/map.selector';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
-import {LangService} from 'wm-core/localization/lang.service';
-import {FeatureCollection} from 'geojson';
-import {WmLoadingService} from 'wm-core/services/loading.service';
-import {
-  applyWhere,
-  loadPois,
-  resetPoiFilters,
-  resetTrackFilters,
-  setLastFilterType,
-  setLayer,
-  togglePoiFilter,
-  toggleTrackFilter,
-  updateTrackFilter,
-} from 'wm-core/store/api/api.actions';
-import {
-  apiElasticState,
-  apiElasticStateLayer,
-  apiSearchInputTyped,
-  countSelectedFilters,
-  poiFilterIdentifiers,
-  pois,
-} from 'wm-core/store/api/api.selector';
+import {LangService} from '@wm-core/localization/lang.service';
+import {FeatureCollection, LineString} from 'geojson';
+import {WmLoadingService} from '@wm-core/services/loading.service';
 import {
   confAPP,
   confAUTHEnable,
@@ -69,18 +48,21 @@ import {
   confPOIS,
   confPOISFilter,
   confPoisIcons,
-} from 'wm-core/store/conf/conf.selector';
-import {ISlopeChartHoverElements} from 'wm-core/types/slope-chart';
+} from '@wm-core/store/conf/conf.selector';
+import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
-import {SelectFilterOption, SliderFilter, Filter, ILAYER, IAPP} from 'wm-core/types/config';
-import {isLogged} from 'wm-core/store/auth/auth.selectors';
+import {ILAYER, IAPP} from '@wm-core/types/config';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {Location} from '@angular/common';
-import {DeviceService} from 'wm-core/services/device.service';
-import {GeolocationService} from 'wm-core/services/geolocation.service';
-import {ApiService} from 'wm-core/store/api/api.service';
+import {DeviceService} from '@wm-core/services/device.service';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
+import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
+import {WmFeature} from '@wm-types/feature';
+import {track} from '@wm-core/store/features/features.selector';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 
 export interface IDATALAYER {
   high: string;
@@ -94,14 +76,13 @@ export interface IDATALAYER {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapPage implements OnInit, OnDestroy {
+export class MapPage {
   private _bboxLayer = null;
   private _confMAPLAYERS$: Observable<ILAYER[]> = this._store.select(confMAPLAYERS);
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
-  private _routerSub: Subscription = Subscription.EMPTY;
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
@@ -117,30 +98,12 @@ export class MapPage implements OnInit, OnDestroy {
   @ViewChild(WmMapTrackRelatedPoisDirective)
   wmMapTrackRelatedPoisDirective: WmMapTrackRelatedPoisDirective;
 
-  apiElasticState$: Observable<any> = this._store.select(apiElasticState);
-  apiSearchInputTyped$: Observable<string> = this._store.select(apiSearchInputTyped);
+  apiSearchInputTyped$: Observable<string> = this._store.select(inputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   confAPP$: Observable<IAPP> = this._store.select(confAPP);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
-  confMap$: Observable<any> = this._store.select(confMAP).pipe(
-    tap(conf => {
-      if (conf && conf.flow_line_quote_show) {
-        this._flowLine$.next({
-          flow_line_quote_orange: conf.flow_line_quote_orange,
-          flow_line_quote_red: conf.flow_line_quote_red,
-        });
-      }
-    }),
-    tap(c => {
-      if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
-        this._store.dispatch(loadPois());
-      }
-      if (c != null && c.record_track_show) {
-        this.isTrackRecordingEnable$.next(true);
-      }
-    }),
-  );
+  confMap$: Observable<any> = this._store.select(confMAP);
   confOPTIONS$: Observable<any> = this._store.select(confOPTIONS);
   confPOIS$: Observable<any> = this._store.select(confPOIS);
   confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
@@ -162,10 +125,7 @@ export class MapPage implements OnInit, OnDestroy {
     }),
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
-  currentFilters$: Observable<string[]> = this._store.select(currentFilters);
-  currentLayer$ = this._store
-    .select(apiElasticStateLayer)
-    .pipe(tap(l => (this._bboxLayer = l?.bbox ?? null)));
+  currentLayer$ = this._store.select(ecLayer).pipe(tap(l => (this._bboxLayer = l?.bbox ?? null)));
   currentPoi$: BehaviorSubject<IGeojsonFeature> = new BehaviorSubject<IGeojsonFeature | null>(null);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -173,10 +133,7 @@ export class MapPage implements OnInit, OnDestroy {
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
-  currentTrack$: Observable<FeatureCollection | null> = this.trackid$.pipe(
-    switchMap(id => this._apiSvc.getEcTrack(id)),
-    startWith(null),
-  );
+  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(track);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
@@ -197,8 +154,6 @@ export class MapPage implements OnInit, OnDestroy {
     }),
   );
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
-  padding$: Observable<number[]> = this._store.select(padding);
-  poiFilterIdentifiers$: Observable<string[]> = this._store.select(poiFilterIdentifiers);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   poiProperties = this.currentPoi$.pipe(map(p => p.properties));
   poiProperties$: Observable<any> = merge(
@@ -227,10 +182,8 @@ export class MapPage implements OnInit, OnDestroy {
     ),
   ).pipe(share());
   pois: any[];
-  pois$: Observable<any> = this._store.select(pois).pipe(distinctUntilChanged());
   popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-  refreshLayer$: Observable<any> = this._store.select(countSelectedFilters);
   resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -264,14 +217,13 @@ export class MapPage implements OnInit, OnDestroy {
     private _geohubSvc: GeohubService,
     private _route: ActivatedRoute,
     private _location: Location,
-    private _router: Router,
     private _shareSvc: ShareService,
     private _cdr: ChangeDetectorRef,
     private _storeNetwork: Store<INetworkRootState>,
     private _geolocationSvc: GeolocationService,
     private _langSvc: LangService,
     private _loadingSvc: WmLoadingService,
-    private _apiSvc: ApiService,
+    private _urlHandlerSvc: UrlHandlerService,
     _platform: Platform,
   ) {
     this.dataLayerUrls$ = this.geohubId$.pipe(
@@ -293,26 +245,6 @@ export class MapPage implements OnInit, OnDestroy {
       slidesPerView: this._deviceSvc.width / 235,
     };
     this.currentPosition$ = this._geolocationSvc.onLocationChange;
-  }
-
-  ngOnInit(): void {
-    this._routerSub = this._route.queryParams.subscribe(queryParams => {
-      setTimeout(() => {
-        const trackId = queryParams['track'];
-        const poiId = queryParams['poi'];
-        if (trackId != null) {
-          this.goToTrack(trackId);
-        }
-        if (poiId != null) {
-          this.wmMapPoisDirective.setPoi(+poiId);
-        }
-        this._route.snapshot.queryParams = {};
-      }, 300);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this._routerSub.unsubscribe();
   }
 
   close(): void {
@@ -338,7 +270,6 @@ export class MapPage implements OnInit, OnDestroy {
     }
 
     if (!navigator.onLine) {
-      this._router.navigate(['home']);
     }
   }
 
@@ -367,45 +298,18 @@ export class MapPage implements OnInit, OnDestroy {
       : red;
   }
 
-  goToPage(page: String): void {
+  goToPage(page: string): void {
     this.close();
-    this._router.navigate([page]);
+
+    this._urlHandlerSvc.changeUrl(page);
   }
 
   async goToTrack(id: number): Promise<void> {
-    const queryParams = {...this._route.snapshot.queryParams, track: id};
-    const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
-    this._location.replaceState(url);
-    this._poiReset();
-    if (this.wmMapComponent != null) {
-      this.wmMapComponent.resetRotation();
+    const params = {ugc_track: undefined, track};
+    if (track == null) {
+      params['ec_related_poi'] = undefined;
     }
-    this.previewTrack$.next(true);
-    this.trackid$.next(id);
-    const isFav = await this._geohubSvc.isFavouriteTrack(id);
-    this.isFavourite$.next(isFav);
-    if (id != null && id !== -1) {
-      this.currentLayer$.pipe(take(1)).subscribe(l => {
-        if (l != null && l.edges != null) {
-          this.layerOpacity$.next(false);
-        } else {
-          this.layerOpacity$.next(true);
-        }
-        this.mapTrackDetailsCmp.open();
-      });
-    } else {
-      this.layerOpacity$.next(false);
-      this.mapTrackDetailsCmp.none();
-    }
-  }
-
-  ionViewDidEnter(): void {
-    this.resetEvt$.next(this.resetEvt$.value + 1);
-    this.onLine$.next(navigator.onLine);
-    this._cdr.detectChanges();
-    if (this.wmMapComponent.map) {
-      this.wmMapComponent.map.updateSize();
-    }
+    //this._urlHandlerSvc.updateURL(params);
   }
 
   ionViewWillEnter(): void {
@@ -468,62 +372,6 @@ export class MapPage implements OnInit, OnDestroy {
     this.wmMapTrackRelatedPoisDirective.poiPrev();
   }
 
-  resetFilters(): void {
-    this._store.dispatch(resetPoiFilters());
-    this._store.dispatch(resetTrackFilters());
-    this._store.dispatch(setLayer(null));
-    this._store.dispatch(applyWhere({where: null}));
-  }
-
-  selectedLayer(layer: any): void {
-    this._store.dispatch(setLayer({layer}));
-  }
-
-  selectedLayerById(id: number): void {
-    this._confMAPLAYERS$
-      .pipe(
-        take(1),
-        filter(layers => layers != null),
-        map(layers => {
-          const layer = layers.filter(l => +l.id === id);
-          return layer.length === 1 ? layer[0] : null;
-        }),
-      )
-      .subscribe(layer => {
-        this.selectedLayer(layer);
-      });
-  }
-
-  setCurrentFilters(filters: string[]): void {
-    this._store.dispatch(setCurrentFilters({currentFilters: filters}));
-  }
-
-  setCurrentPoi(poi: IGeojsonFeature | null) {
-    if (poi != null) {
-      this.currentRelatedPoi$.next(poi);
-    }
-  }
-
-  setLoader(event: string): void {
-    console.log(event);
-    switch (event) {
-      case 'rendering:layer_start':
-        this._loadingSvc.show('Rendering Layer');
-        break;
-      case 'rendering:layer_done':
-        this._loadingSvc.close('Rendering Layer');
-        break;
-      case 'rendering:pois_start':
-        this._loadingSvc.show('Rendering Pois');
-        break;
-      case 'rendering:pois_done':
-        this._loadingSvc.close('Rendering Pois');
-        break;
-      default:
-        this._loadingSvc.close();
-    }
-  }
-
   setNearestPoi(nearestPoi: Feature<Geometry>): void {
     const id = +nearestPoi.getId();
     this.wmMapTrackRelatedPoisDirective.setPoi = id;
@@ -531,8 +379,8 @@ export class MapPage implements OnInit, OnDestroy {
 
   setPoi(poi: IGeojsonFeature): void {
     const queryParams = {...this._route.snapshot.queryParams, poi: poi.properties.id};
-    const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
-    this._location.replaceState(url);
+    //  const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
+    //   this._location.replaceState(url);
     this.currentPoi$.next(poi);
     this.mapTrackDetailsCmp.open();
   }
@@ -590,23 +438,6 @@ export class MapPage implements OnInit, OnDestroy {
 
   toogleFullMap() {
     this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
-  }
-
-  updateLastFilterType(filter: 'tracks' | 'pois') {
-    this._store.dispatch(setLastFilterType({filter}));
-  }
-
-  updatePoiFilter(filter: SelectFilterOption | SliderFilter | Filter): void {
-    this._store.dispatch(togglePoiFilter({filterIdentifier: filter.identifier}));
-  }
-
-  updateTrackFilter(filterGeneric: SelectFilterOption | SliderFilter | Filter): void {
-    let filter = filterGeneric as Filter;
-    if (filter.type === 'slider') {
-      this._store.dispatch(updateTrackFilter({filter}));
-    } else {
-      this._store.dispatch(toggleTrackFilter({filter}));
-    }
   }
 
   async url(url) {

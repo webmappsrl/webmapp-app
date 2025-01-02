@@ -5,11 +5,11 @@ import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {ProfilePage} from './profile.page';
 import {ProfilePageRoutingModule} from './profile-routing.module';
-import {WmPipeModule} from 'wm-core/pipes/pipe.module';
-import { WmCoreModule } from 'wm-core/wm-core.module';
-import { ProfileDataTabComponent } from './tabs/profile-data-tab/profile-data-tab.component';
-import { ProfileRecordsTabComponent } from './tabs/profile-record-tab/profile-records-tab.component';
-import { SettingsModule } from 'src/app/components/settings/settings.module';
+import {WmPipeModule} from '@wm-core/pipes/pipe.module';
+import {WmCoreModule} from '@wm-core/wm-core.module';
+import {ProfileDataTabComponent} from './tabs/profile-data-tab/profile-data-tab.component';
+import {ProfileRecordsTabComponent} from './tabs/profile-record-tab/profile-records-tab.component';
+import {SettingsModule} from 'src/app/components/settings/settings.module';
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import { SettingsModule } from 'src/app/components/settings/settings.module';
     ProfilePageRoutingModule,
     SettingsModule,
     WmPipeModule,
-    WmCoreModule
+    WmCoreModule,
   ],
   declarations: [ProfilePage, ProfileDataTabComponent, ProfileRecordsTabComponent],
 })

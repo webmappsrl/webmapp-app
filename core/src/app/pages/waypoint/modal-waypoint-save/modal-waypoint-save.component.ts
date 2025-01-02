@@ -13,14 +13,14 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
-import {CameraService} from 'wm-core/services/camera.service';
-import {UgcService} from 'wm-core/services/ugc.service';
+import {confMAP} from '@wm-core/store/conf/conf.selector';
+import {CameraService} from '@wm-core/services/camera.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
-import {generateUUID} from 'wm-core/utils/localForage';
-import {ConfService} from 'wm-core/store/conf/conf.service';
-import {DeviceService} from 'wm-core/services/device.service';
+import {generateUUID} from '@wm-core/utils/localForage';
+import {ConfService} from '@wm-core/store/conf/conf.service';
+import {DeviceService} from '@wm-core/services/device.service';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -117,9 +117,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   remove(image: WmFeature<Media, MediaProperties>): void {
-    const i = this.photos.findIndex(
-      x => x.properties.uuid === image.properties.uuid
-    );
+    const i = this.photos.findIndex(x => x.properties.uuid === image.properties.uuid);
     if (i > -1) {
       this.photos.splice(i, 1);
     }

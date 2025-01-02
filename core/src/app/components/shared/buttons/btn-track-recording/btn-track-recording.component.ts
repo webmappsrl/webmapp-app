@@ -12,9 +12,9 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {NavigationExtras} from '@angular/router';
-import {CameraService} from 'wm-core/services/camera.service';
-import {LoginComponent} from 'wm-core/login/login.component';
-import {UgcService} from 'wm-core/services/ugc.service';
+import {CameraService} from '@wm-core/services/camera.service';
+import {LoginComponent} from '@wm-core/login/login.component';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 
 @Component({
   selector: 'wm-btn-track-recording',

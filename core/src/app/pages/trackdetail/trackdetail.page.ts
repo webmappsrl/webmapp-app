@@ -13,14 +13,14 @@ import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ModalSaveComponent} from '../register/modal-save/modal-save.component';
 import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
+import {confMAP} from '@wm-core/store/conf/conf.selector';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
-import {IPhotoItem} from 'wm-core/services/camera.service';
+import {IPhotoItem} from '@wm-core/services/camera.service';
 import {LineString} from 'geojson';
-import {getUgcTrack} from 'wm-core/utils/localForage';
-import {UgcService} from 'wm-core/services/ugc.service';
+import {getUgcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 
 @Component({
   selector: 'wm-trackdetail',

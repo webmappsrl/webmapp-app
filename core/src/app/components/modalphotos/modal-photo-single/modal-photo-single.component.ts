@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ModalController} from '@ionic/angular';
-import {IPhotoItem} from 'wm-core/services/camera.service';
+import {IPhotoItem} from '@wm-core/services/camera.service';
 
 @Component({
   selector: 'app-modal-photo-single',

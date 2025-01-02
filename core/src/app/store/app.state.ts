@@ -1,4 +1,4 @@
-import {IConfRootState} from './conf/conf.reducer';
+import {IConfRootState} from '@wm-core/store/conf/conf.reducer';
 
 export type AppState = IConfRootState;
 /* & OtherRootState  & ... */

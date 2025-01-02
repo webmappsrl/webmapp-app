@@ -4,11 +4,10 @@ import {Observable} from 'rxjs';
 import {StatusService} from 'src/app/services/status.service';
 import {select, Store} from '@ngrx/store';
 import {online} from 'src/app/store/network/network.selector';
-import {IMapRootState} from 'src/app/store/map/map';
-import {goToHome} from 'src/app/store/map/map.actions';
 import {IonTabs} from '@ionic/angular';
-import {confAUTHEnable} from 'wm-core/store/conf/conf.selector';
-import { isLogged } from 'wm-core/store/auth/auth.selectors';
+import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -28,19 +27,16 @@ export class TabsPage {
   constructor(
     private _statusService: StatusService,
     private _store: Store<any>,
-    private _storeMap: Store<IMapRootState>,
     private _storeNetwork: Store<INetworkRootState>,
+    private _urlHandlerService: UrlHandlerService,
   ) {}
 
   isBarHidden(): boolean {
     return this._statusService.isSelectedMapTrack;
   }
 
-  setCurrentTab(): void {
-    const tab = this.tabs.getSelected();
-    if (this.currentTab === 'home' && tab === 'home') {
-      this._storeMap.dispatch(goToHome());
-    }
+  setCurrentTab(tab = this.tabs.getSelected()): void {
     this.currentTab = tab;
+    this._urlHandlerService.changeUrl(tab);
   }
 }

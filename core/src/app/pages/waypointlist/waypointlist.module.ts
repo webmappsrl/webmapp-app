@@ -5,7 +5,7 @@ import {NgModule} from '@angular/core';
 import {WaypointlistPage} from './waypointlist.page';
 import {WaypointlistPageRoutingModule} from './waypointlist-routing.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
-import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [

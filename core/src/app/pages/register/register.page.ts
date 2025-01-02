@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
-import {GeolocationService} from 'wm-core/services/geolocation.service';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ModalSaveComponent} from './modal-save/modal-save.component';
 import {DEF_MAP_LOCATION_ZOOM} from 'src/app/constants/map';
@@ -19,8 +19,8 @@ import {LineString as olLinestring, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
-import {LangService} from 'wm-core/localization/lang.service';
-import {confMAP, confTRACKFORMS} from 'wm-core/store/conf/conf.selector';
+import {LangService} from '@wm-core/localization/lang.service';
+import {confMAP, confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
 @Component({
   selector: 'webmapp-register',
@@ -198,7 +198,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     await this._geolocationSvc.pauseRecording();
     this.isPaused = true;
 
-      // TODO: show dialog no coordinates recorded
+    // TODO: show dialog no coordinates recorded
 
     const recordedFeature = this._geolocationSvc.recordedFeature;
     const modal = await this._modalCtrl.create({

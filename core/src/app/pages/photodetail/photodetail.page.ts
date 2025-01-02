@@ -7,8 +7,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {Store} from '@ngrx/store';
 import {online} from 'src/app/store/network/network.selector';
 import {DetailPage} from '../abstract/detail.page';
-import {getUgcMedia} from 'wm-core/utils/localForage';
-import {UgcService} from 'wm-core/services/ugc.service';
+import {getUgcMedia} from '@wm-core/utils/localForage';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 import {Media, WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'webmapp-photodetail',

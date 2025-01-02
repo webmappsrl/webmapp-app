@@ -6,7 +6,7 @@ import {environment} from 'src/environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Feature, LineString} from 'geojson';
-import {getEcTrack} from 'wm-core/utils/localForage';
+import {getEcTrack} from '@wm-core/utils/localForage';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({

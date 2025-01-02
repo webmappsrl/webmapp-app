@@ -10,7 +10,7 @@ import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
 import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
 import {StatusService} from './services/status.service';
-import {LangService} from 'wm-core/localization/lang.service';
+import {LangService} from '@wm-core/localization/lang.service';
 import {startNetworkMonitoring} from './store/network/network.actions';
 import {INetworkRootState} from './store/network/netwotk.reducer';
 import {DOCUMENT} from '@angular/common';
@@ -20,17 +20,14 @@ import {
   confLANGUAGES,
   confMAP,
   confTHEMEVariables,
-} from 'wm-core/store/conf/conf.selector';
-import {loadConf} from 'wm-core/store/conf/conf.actions';
-import {loadPois, query} from 'wm-core/store/api/api.actions';
-import {online} from './store/network/network.selector';
-import {WmLoadingService} from 'wm-core/services/loading.service';
-import {IGEOLOCATION} from 'wm-core/types/config';
-import {OfflineCallbackManager} from 'wm-core/shared/img/offlineCallBackManager';
-import {isLogged} from 'wm-core/store/auth/auth.selectors';
-import {loadAuths} from 'wm-core/store/auth/auth.actions';
-import {getImg} from 'wm-core/utils/localForage';
-import {UgcService} from 'wm-core/services/ugc.service';
+} from '@wm-core/store/conf/conf.selector';
+import {loadConf} from '@wm-core/store/conf/conf.actions';
+import {IGEOLOCATION} from '@wm-core/types/config';
+import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {loadAuths} from '@wm-core/store/auth/auth.actions';
+import {getImg} from '@wm-core/utils/localForage';
+import {ecTracks} from '@wm-core/store/features/ec/ec.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -51,29 +48,17 @@ export class AppComponent {
     private _platform: Platform,
     private router: Router,
     private status: StatusService,
-    private _ugcSvc: UgcService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
-    private _loadingSvc: WmLoadingService,
   ) {
+    this._store.dispatch(loadAuths());
     this._store.dispatch(loadConf());
-    this._store.dispatch(query({init: true}));
+    this._store.dispatch(ecTracks({init: true}));
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this._store.dispatch(loadAuths());
-    this._store
-      .select(confMAP)
-      .pipe(
-        filter(p => p != null),
-        take(1),
-      )
-      .subscribe(c => {
-        if (c != null && c.pois != null && c.pois.apppoisApiLayer == true) {
-          this._store.dispatch(loadPois());
-        }
-      });
+
     this._store
       .select(confLANGUAGES)
       .pipe(
@@ -88,8 +73,6 @@ export class AppComponent {
       });
     this._platform.ready().then(
       () => {
-        this.saveGeneratedContentsNowAndInterval();
-        // this.router.navigate(['home']);
         SplashScreen.hide();
         const keepAwake =
           (localStorage.getItem('wm-keep-awake') != 'false' &&
@@ -105,19 +88,6 @@ export class AppComponent {
         SplashScreen.hide();
       },
     );
-
-    this._store
-      .select(online)
-      .pipe(
-        filter(o => o),
-        switchMap(_ => this.isLogged$),
-        filter(l => l),
-        debounceTime(2000),
-        take(1),
-      )
-      .subscribe(_ => {
-        this._ugcSvc.syncUgc();
-      });
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
@@ -171,21 +141,6 @@ export class AppComponent {
   }
 
   recordingClick(ev) {}
-
-  /**
-   * @description
-   * This function is used to save unsaved contents.
-   * It uses the saveService object to upload the unsaved contents.
-   * The setInterval() method is used to call the uploadUnsavedContents() method at a regular interval,
-   * which is specified by the GEOHUB_SAVING_TRY_INTERVAL constant.
-   * The setTimeout() method is used to call the uploadUnsavedContents() method after 2000 milliseconds (2 seconds).
-   * @memberof AppComponent
-   */
-  saveGeneratedContentsNowAndInterval(): void {
-    setInterval(() => {
-      this._ugcSvc.syncUgc();
-    }, GEOHUB_SAVING_TRY_INTERVAL);
-  }
 
   private _setGlobalCSS(css: {[name: string]: string | number}) {
     const rootDocument = this._document.querySelector(':root');

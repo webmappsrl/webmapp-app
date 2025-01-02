@@ -6,7 +6,7 @@ import {PoiPage} from './poi.page';
 import {PoiPageRoutingModule} from './poi-routing.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
-import {WmPipeModule} from 'wm-core/pipes/pipe.module';
+import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 
 @NgModule({
   imports: [

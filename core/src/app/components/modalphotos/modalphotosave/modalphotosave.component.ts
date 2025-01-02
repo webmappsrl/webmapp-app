@@ -2,9 +2,9 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {TranslateService} from '@ngx-translate/core';
 import {ModalPhotoSingleComponent} from '../modal-photo-single/modal-photo-single.component';
-import {CameraService} from 'wm-core/services/camera.service';
+import {CameraService} from '@wm-core/services/camera.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
-import {removeImg} from 'wm-core/utils/localForage';
+import {removeImg} from '@wm-core/utils/localForage';
 @Component({
   selector: 'webmapp-modalphotosave',
   templateUrl: './modalphotosave.component.html',
@@ -32,7 +32,7 @@ export class ModalphotosaveComponent implements OnInit {
     this._cdr.detectChanges;
   }
 
-  close(): void  {
+  close(): void {
     this.modalController.dismiss({
       dismissed: true,
     });

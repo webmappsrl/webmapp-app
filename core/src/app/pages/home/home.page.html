@@ -11,13 +11,13 @@
         [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)"
       >
       </ion-label>
-      <webmapp-search-bar
+      <wm-searchbar
         #searchCmp
+        *ngIf="(confOPTIONS$|async).show_searchbar && !(ugcOpened$|async)"
         [initSearch]=""
         (isTypings)="isTyping$.next($event)"
-        (words)="setSearch($event)"
       >
-      </webmapp-search-bar>
+      </wm-searchbar>
     </div>
     <wm-status-filter
       *ngIf="showResult$|async"
@@ -27,17 +27,18 @@
     <wm-home-layer></wm-home-layer>
     <wm-home-result
       *ngIf="showResult$|async;else home"
-      (trackEVT)="setTrack($event)"
-      (poiEVT)="setPoi($event.id)"
+      (trackEVT)="updateEcTrack($event)"
+      (poiEVT)="setPoi($event)"
     ></wm-home-result>
   </ng-container>
 </ion-content>
 <ng-template #home>
-  <wm-home-page
-    (poiTypeFilterBoxEVT)="toggleFilter($event[0],$event[1])"
-    (slugBoxEVT)="openSlug($event[0])"
+  <wm-home-landing
+    [ngClass]="{'hidden': showResult$ | async}"
+    (slugBoxEVT)="openSlug($event[0], $event[1])"
     (externalUrlBoxEVT)="openExternalUrl($event)"
-    (tracksBoxEVT)="setTrack($event)"
-    (layerBoxEVT)="setLayer($event[0])"
-  ></wm-home-page>
+    (tracksBoxEVT)="updateEcTrack($event)"
+    (layerBoxEVT)="setLayer($event[0], $event[1])"
+    (ugcBoxEvt)="setUgc()"
+  ></wm-home-landing>
 </ng-template>

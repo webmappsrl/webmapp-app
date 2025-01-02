@@ -3,8 +3,8 @@ import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {TrackPropertiesComponent} from './track-properties.component';
-import {WmPipeModule} from 'wm-core/pipes/pipe.module';
-import {WmCoreModule} from 'wm-core/wm-core.module';
+import {WmPipeModule} from '@wm-core/pipes/pipe.module';
+import {WmCoreModule} from '@wm-core/wm-core.module';
 
 const components = [TrackPropertiesComponent];
 @NgModule({

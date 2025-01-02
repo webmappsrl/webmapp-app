@@ -3,7 +3,7 @@ import {NavController} from '@ionic/angular';
 import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
-import {getEcTracks} from 'wm-core/utils/localForage';
+import {getEcTracks} from '@wm-core/utils/localForage';
 @Component({
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',

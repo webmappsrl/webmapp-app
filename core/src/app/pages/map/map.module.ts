@@ -15,9 +15,9 @@ import {MapPageRoutingModule} from './map-routing.module';
 import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
 import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
 import {MapPage} from './map.page';
-import {WmPipeModule} from 'wm-core/pipes/pipe.module';
-import {WmCoreModule} from 'wm-core/wm-core.module';
-import {WmTransPipe} from 'wm-core/pipes/wmtrans.pipe';
+import {WmPipeModule} from '@wm-core/pipes/pipe.module';
+import {WmCoreModule} from '@wm-core/wm-core.module';
+import {WmTransPipe} from '@wm-core/pipes/wmtrans.pipe';
 
 @NgModule({
   imports: [

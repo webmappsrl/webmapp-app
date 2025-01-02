@@ -5,8 +5,8 @@ import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {switchMap, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
-import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
-import {LangService} from 'wm-core/localization/lang.service';
+import {WmInnerHtmlComponent} from '@wm-core/inner-html/inner-html.component';
+import {LangService} from '@wm-core/localization/lang.service';
 import {
   confCREDITS,
   confDISCLAIMER,
@@ -14,11 +14,11 @@ import {
   confMAP,
   confPAGES,
   confPROJECT,
-} from 'wm-core/store/conf/conf.selector';
-import {GeolocationService} from 'wm-core/services/geolocation.service';
-import {isLogged} from 'wm-core/store/auth/auth.selectors';
-import {loadSignOuts} from 'wm-core/store/auth/auth.actions';
-import {APP_VERSION} from 'wm-core/store/conf/conf.token';
+} from '@wm-core/store/conf/conf.selector';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {loadSignOuts} from '@wm-core/store/auth/auth.actions';
+import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 
 @Component({
   selector: 'wm-settings',

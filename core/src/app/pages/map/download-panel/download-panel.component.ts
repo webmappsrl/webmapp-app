@@ -13,7 +13,7 @@ import {
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {LineString} from 'geojson';
-import {downloadEcTrack} from 'wm-core/utils/localForage';
+import {downloadEcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'wm-download-panel',

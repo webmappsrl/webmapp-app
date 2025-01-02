@@ -8,8 +8,8 @@ import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
-import {getUgcPois} from 'wm-core/utils/localForage';
+import {confMAP} from '@wm-core/store/conf/conf.selector';
+import {getUgcPois} from '@wm-core/utils/localForage';
 import {Point} from 'geojson';
 import {WmFeature} from '@wm-types/feature';
 @Component({

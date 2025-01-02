@@ -5,15 +5,15 @@ import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
 import {Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
-import {CameraService} from 'wm-core/services/camera.service';
+import {CameraService} from '@wm-core/services/camera.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
-import { generateUUID } from 'wm-core/utils/localForage';
-import { UgcService } from 'wm-core/services/ugc.service';
-import {ConfService} from 'wm-core/store/conf/conf.service';
-import { ModalSuccessComponent } from 'src/app/components/modal-success/modal-success.component';
-import { ESuccessType } from 'src/app/types/esuccess.enum';
-import { DeviceService } from 'wm-core/services/device.service';
+import {generateUUID} from '@wm-core/utils/localForage';
+import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
+import {ConfService} from '@wm-core/store/conf/conf.service';
+import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
+import {ESuccessType} from 'src/app/types/esuccess.enum';
+import {DeviceService} from '@wm-core/services/device.service';
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
@@ -57,7 +57,9 @@ export class ModalSaveComponent implements OnInit {
     const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.properties.photo.webPath);
+      const photoData = await this._cameraSvc.getPhotoData(
+        libraryItemCopy.properties.photo.webPath,
+      );
       const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
@@ -187,9 +189,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   remove(image: WmFeature<Media, MediaProperties>): void {
-    const i = this.photos.findIndex(
-      x => x.properties?.uuid === image.properties?.uuid
-    );
+    const i = this.photos.findIndex(x => x.properties?.uuid === image.properties?.uuid);
     if (i > -1) {
       this.photos.splice(i, 1);
     }
@@ -214,7 +214,7 @@ export class ModalSaveComponent implements OnInit {
       device,
       app_id: `${this._configSvc.geohubAppId}`,
     };
-/*     console.log('recordedFeature:', this.recordedFeature); */
+    /*     console.log('recordedFeature:', this.recordedFeature); */
 
     await this._ugcSvc.saveTrack(this.recordedFeature);
     this.backToSuccess();

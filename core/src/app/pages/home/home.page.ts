@@ -13,23 +13,26 @@ import {App} from '@capacitor/app';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, startWith, take, tap} from 'rxjs/operators';
 
-import {SearchBarComponent} from 'src/app/components/shared/search-bar/search-bar.component';
+import {loadConf} from '@wm-core/store/conf/conf.actions';
+import {confAPP, confOPTIONS, confPROJECT} from '@wm-core/store/conf/conf.selector';
+import {IAPP, ILAYER, IOPTIONS} from '@wm-core/types/config';
+import {WmInnerHtmlComponent} from '@wm-core/inner-html/inner-html.component';
+import {online} from 'src/app/store/network/network.selector';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
+import {showResult, ugcOpened} from '@wm-core/store/user-activity/user-activity.selector';
 import {
+  closeUgc,
+  goToHome,
   inputTyped,
-  resetPoiFilters,
+  openUgc,
   resetTrackFilters,
+  setCurrentPoi,
   setLayer,
   togglePoiFilter,
   toggleTrackFilterByIdentifier,
-} from 'wm-core/store/api/api.actions';
-import {showResult} from 'wm-core/store/api/api.selector';
-import {loadConf} from 'wm-core/store/conf/conf.actions';
-import {confAPP, confPROJECT} from 'wm-core/store/conf/conf.selector';
-import {toggleHome} from 'src/app/store/map/map.selector';
-import {IAPP, ILAYER} from 'wm-core/types/config';
-import {WmInnerHtmlComponent} from 'wm-core/inner-html/inner-html.component';
-import {online} from 'src/app/store/network/network.selector';
-import {GeolocationService} from 'wm-core/services/geolocation.service';
+} from '@wm-core/store/user-activity/user-activity.action';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {currentEcLayerId} from '@wm-core/store/features/ec/ec.actions';
 
 @Component({
   selector: 'wm-page-home',
@@ -42,10 +45,8 @@ export class HomePage implements OnDestroy {
   private _backBtnSub$: Subscription = Subscription.EMPTY;
   private _goToHomeSub: Subscription = Subscription.EMPTY;
 
-  @ViewChild('searchCmp') searchCmp: SearchBarComponent;
-
   confAPP$: Observable<IAPP> = this._store.select(confAPP);
-  goToHome$: Observable<any> = this._store.select(toggleHome);
+  confOPTIONS$: Observable<IOPTIONS> = this._store.select(confOPTIONS);
   isTyping$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   online$: Observable<boolean> = this._store.select(online).pipe(
     startWith(false),
@@ -56,6 +57,7 @@ export class HomePage implements OnDestroy {
     }),
   );
   showResult$ = this._store.select(showResult);
+  ugcOpened$ = this._store.select(ugcOpened);
 
   constructor(
     private _store: Store<any>,
@@ -63,23 +65,16 @@ export class HomePage implements OnDestroy {
     private _modalCtrl: ModalController,
     private _platform: Platform,
     private _geolocationSvc: GeolocationService,
+    private _urlHandlerSvc: UrlHandlerService,
     public sanitizer: DomSanitizer,
-  ) {
-    this._goToHomeSub = this.goToHome$.pipe(debounceTime(300)).subscribe(() => {
-      this.goToHome();
-    });
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this._goToHomeSub.unsubscribe();
   }
 
   goToHome(): void {
-    this.setLayer(null);
-    this._store.dispatch(resetPoiFilters());
-    try {
-      this.searchCmp.reset();
-    } catch (_) {}
+    this._store.dispatch(goToHome());
     this._navCtrl.navigateForward('home');
   }
 
@@ -98,7 +93,7 @@ export class HomePage implements OnDestroy {
     window.open(url);
   }
 
-  openSlug(slug: string): void {
+  openSlug(slug: string, idx?: number): void {
     if (slug === 'project') {
       this._store
         .select(confPROJECT)
@@ -108,7 +103,7 @@ export class HomePage implements OnDestroy {
             .create({
               component: WmInnerHtmlComponent,
               componentProps: {
-                html: conf.HTML,
+                html: conf.html ? conf.html : conf.HTML,
               },
               cssClass: 'wm-modal',
               backdropDismiss: true,
@@ -116,6 +111,9 @@ export class HomePage implements OnDestroy {
             })
             .then(modal => {
               modal.present();
+              if (idx) {
+                this._urlHandlerSvc.updateURL({slug: idx});
+              }
             });
         });
     } else {
@@ -123,8 +121,9 @@ export class HomePage implements OnDestroy {
     }
   }
 
-  removeLayer(layer: any): void {
+  removeLayer(_: any): void {
     this.setLayer(null);
+    this._urlHandlerSvc.updateURL({layer: undefined});
   }
 
   setFilter(filter: {identifier: string; taxonomy: string}): void {
@@ -139,51 +138,45 @@ export class HomePage implements OnDestroy {
   }
 
   setLayer(layer: ILAYER | null | any, idx?: number): void {
-    if (layer != null) {
-      if (layer.id != null) {
-        this._store.dispatch(setLayer({layer}));
-      }
-      if (typeof layer === 'number') {
-        layer = {id: layer};
-        this._store.dispatch(setLayer({layer}));
-      }
+    if (layer != null && typeof layer === 'number') {
+      layer = {id: layer};
+    }
+    if (layer != null && layer.id != null) {
+      this._store.dispatch(currentEcLayerId({currentEcLayerId: layer.id}));
     } else {
-      this._store.dispatch(setLayer(null));
       this._store.dispatch(resetTrackFilters());
     }
+
+    this._store.dispatch(closeUgc());
   }
 
-  setPoi(id: number): void {
-    if (id != null) {
-      this._navCtrl.navigateForward('map');
-      if (id != null) {
-        let navigationExtras: NavigationExtras = {
-          queryParams: {
-            poi: id,
-          },
-        };
-        this._navCtrl.navigateForward('map', navigationExtras);
-      }
-    }
+  setPoi(id: string | number): void {
+    this._store.dispatch(setCurrentPoi({currentPoi: null}));
+    this.ugcOpened$.pipe(take(1)).subscribe(ugcOpened => {
+      const queryParams = ugcOpened
+        ? {ugc_poi: id ? +id : undefined, poi: undefined}
+        : {poi: id ? +id : undefined, ugc_poi: undefined};
+      this._urlHandlerSvc.updateURL(queryParams);
+    });
   }
 
   setSearch(value: string): void {
     this._store.dispatch(inputTyped({inputTyped: value}));
   }
 
-  setTrack(id: string | number): void {
-    if (id != null) {
-      let navigationExtras: NavigationExtras = {
-        queryParams: {
-          track: id,
-        },
-        queryParamsHandling: 'merge',
-      };
-      this._navCtrl.navigateForward('map', navigationExtras);
-    }
+  setUgc(): void {
+    this._store.dispatch(openUgc());
   }
 
   toggleFilter(filterIdentifier: string, idx?: number): void {
     this.setFilter({identifier: filterIdentifier, taxonomy: 'activities'});
+  }
+
+  updateEcTrack(track = undefined): void {
+    const params = {ugc_track: undefined, track};
+    if (track == null) {
+      params['ec_related_poi'] = undefined;
+    }
+    this._urlHandlerSvc.updateURL(params);
   }
 }

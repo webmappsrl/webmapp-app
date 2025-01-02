@@ -4,8 +4,9 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {NavigationExtras, Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {isLogged} from 'wm-core/store/auth/auth.selectors';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Feature, LineString} from 'geojson';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
   selector: 'webmapp-favourites',
   templateUrl: './favourites.page.html',
@@ -23,8 +24,8 @@ export class FavouritesPage implements OnInit {
 
   constructor(
     private _geoHubService: GeohubService,
-    private _router: Router,
     private _store: Store,
+    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   async ngOnInit() {
@@ -53,15 +54,8 @@ export class FavouritesPage implements OnInit {
   }
 
   open(track: Feature<LineString>) {
-    const clickedFeatureId = track.properties.id;
-    if (clickedFeatureId != null) {
-      let navigationExtras: NavigationExtras = {
-        queryParams: {
-          track: clickedFeatureId,
-        },
-      };
-      this._router.navigate(['map'], navigationExtras);
-    }
+    const clickedFeatureId = track.properties.id ?? null;
+    this._urlHandlerSvc.updateURL({track: clickedFeatureId});
   }
 
   async remove(track: Feature<LineString>) {

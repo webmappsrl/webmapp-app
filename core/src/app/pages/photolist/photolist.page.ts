@@ -7,7 +7,7 @@ import {
 import {NavController} from '@ionic/angular';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {from, Observable} from 'rxjs';
-import {getUgcMedias} from 'wm-core/utils/localForage';
+import {getUgcMedias} from '@wm-core/utils/localForage';
 import {Media, WmFeature} from '@wm-types/feature';
 @Component({
   selector: 'webmapp-photolist',

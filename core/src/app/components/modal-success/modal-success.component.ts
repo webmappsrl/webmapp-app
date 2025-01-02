@@ -5,7 +5,7 @@ import {ESuccessType} from '../../types/esuccess.enum';
 import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {confMAP} from 'wm-core/store/conf/conf.selector';
+import {confMAP} from '@wm-core/store/conf/conf.selector';
 import {
   LineStringProperties,
   Media,

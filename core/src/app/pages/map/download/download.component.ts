@@ -8,8 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import {AlertController} from '@ionic/angular';
-import {LangService} from 'wm-core/localization/lang.service';
-import {downloadPanelStatus} from 'wm-core/types/downloadpanel.enum';
+import {LangService} from '@wm-core/localization/lang.service';
+import {downloadPanelStatus} from '@wm-core/types/downloadpanel.enum';
 
 @Component({
   selector: 'wm-download',

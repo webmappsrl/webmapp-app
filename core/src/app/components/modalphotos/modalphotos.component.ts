@@ -4,7 +4,7 @@ import {EPopoverPhotoType, ESuccessType} from '../../types/esuccess.enum';
 import {ModalSuccessComponent} from '../modal-success/modal-success.component';
 import {PopoverphotoComponent} from './popoverphoto/popoverphoto.component';
 import {Md5} from 'ts-md5/dist/md5';
-import {IPhotoItem, CameraService} from 'wm-core/services/camera.service';
+import {IPhotoItem, CameraService} from '@wm-core/services/camera.service';
 import {Feature, Point} from 'geojson';
 @Component({
   selector: 'webmapp-modalphotos',

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Share} from '@capacitor/share';
 import {environment} from 'src/environments/environment';
-import {LangService} from 'wm-core/localization/lang.service';
-import {ConfService} from 'wm-core/store/conf/conf.service';
+import {LangService} from '@wm-core/localization/lang.service';
+import {ConfService} from '@wm-core/store/conf/conf.service';
 import {Feature, LineString} from 'geojson';
 
 export interface ShareObject {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IGeojsonCluster, IGeojsonPoi} from '../types/model';
 import defaultImage from '../../assets/images/defaultImageB64.json';
-import {getImg} from 'wm-core/utils/localForage';
+import {getImg} from '@wm-core/utils/localForage';
 @Injectable({
   providedIn: 'root',
 })

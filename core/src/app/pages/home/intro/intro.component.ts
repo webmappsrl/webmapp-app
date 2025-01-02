@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {MenuController, NavController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {confAPP} from 'wm-core/store/conf/conf.selector';
-import {IAPP} from 'wm-core/types/config';
+import {confAPP} from '@wm-core/store/conf/conf.selector';
+import {IAPP} from '@wm-core/types/config';
 
 @Component({
   selector: 'webmapp-home-intro',
