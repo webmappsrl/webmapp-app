@@ -63,6 +63,7 @@ import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.se
 import {WmFeature} from '@wm-types/feature';
 import {track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
 
 export interface IDATALAYER {
   high: string;
@@ -133,7 +134,7 @@ export class MapPage {
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
-  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(track);
+  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(currentEcTrack);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
@@ -300,16 +301,15 @@ export class MapPage {
 
   goToPage(page: string): void {
     this.close();
-
-    this._urlHandlerSvc.changeUrl(page);
+    this._urlHandlerSvc.changeURL(page);
   }
 
-  async goToTrack(id: number): Promise<void> {
+  async goToTrack(track: number): Promise<void> {
     const params = {ugc_track: undefined, track};
     if (track == null) {
       params['ec_related_poi'] = undefined;
     }
-    //this._urlHandlerSvc.updateURL(params);
+    this._urlHandlerSvc.updateURL(params);
   }
 
   ionViewWillEnter(): void {
