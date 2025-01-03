@@ -2,10 +2,10 @@
 <ng-container *ngIf="track!= null">
   <ng-container *ngIf="track.properties  as prop">
     <wm-tab-detail class="webmapp-route-tab" [properties]="prop"></wm-tab-detail>
-    <wm-tab-howto *ngIf="prop.taxonomy.activity" [properties]="prop"></wm-tab-howto>
+    <wm-tab-howto *ngIf="prop?.taxonomy?.activity" [properties]="prop"></wm-tab-howto>
 
     <div
-      *ngIf="prop.related_url as relatedUrl"
+      *ngIf="prop?.related_url as relatedUrl"
       class="ripple-parent ion-activatable webmapp-pagepoi-info-reference"
     >
       <wm-related-urls [relatedUrls]="relatedUrl"> </wm-related-urls>
@@ -13,12 +13,12 @@
     </div>
     <wm-tab-image-gallery
       *ngIf="prop?.image_gallery?.length"
-      [imageGallery]="prop.image_gallery"
+      [imageGallery]="prop?.image_gallery"
     ></wm-tab-image-gallery>
 
     <wm-tab-description
       *ngIf="prop?.description != null"
-      [description]="prop.description"
+      [description]="prop?.description"
     ></wm-tab-description>
     <div *ngIf="prop?.osm_url as osm" target="_blank">
       <ion-icon class="wm-icn " name="link-outline" slot="start"></ion-icon>
@@ -26,7 +26,7 @@
         {{ "Vedi su OpenStreetMap" | wmtrans }}
       </a>
     </div>
-    <wm-track-audio *ngIf="prop?.audio" [audio]="prop.audio"></wm-track-audio>
+    <wm-track-audio *ngIf="prop?.audio" [audio]="prop?.audio"></wm-track-audio>
   </ng-container>
 </ng-container>
 <ng-content select="[bottom]"></ng-content>

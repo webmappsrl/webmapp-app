@@ -13,7 +13,7 @@ import {WmDownloadPanelComponent} from './download-panel/download-panel.componen
 import {WmDownloadComponent} from './download/download.component';
 import {MapPageRoutingModule} from './map-routing.module';
 import {MapTrackCardComponent} from './map-track-card/map-track-card.component';
-import {MapTrackDetailsComponent} from './map-track-details/map-track-details.component';
+import {MapDetailsComponent} from './map-details/map-details.component';
 import {MapPage} from './map.page';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 import {WmCoreModule} from '@wm-core/wm-core.module';
@@ -37,7 +37,7 @@ import {WmTransPipe} from '@wm-core/pipes/wmtrans.pipe';
   declarations: [
     MapPage,
     MapTrackCardComponent,
-    MapTrackDetailsComponent,
+    MapDetailsComponent,
     WmDownloadComponent,
     WmDownloadPanelComponent,
   ],

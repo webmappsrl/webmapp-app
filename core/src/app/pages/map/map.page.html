@@ -1,6 +1,6 @@
 <ion-content scrollY="false">
-  <wm-geobox-map>
-    <wm-map-track-details #details (closeEVT)="close()">
+  <wm-geobox-map #geoboxMap>
+    <wm-map-details #details (closeEVT)="close()">
       <div header>
         <div class="webmapp-info-header-container">
           <ng-container *ngIf="poiProperties$|async as properties">
@@ -42,6 +42,7 @@
           </ion-title>
         </div>
       </div>
+
       <wm-inner-component-html
         *ngIf="popup$|async as popup;else noPopup"
         [html]="popup.html"
@@ -106,7 +107,52 @@
       <ng-template #skeleton>
         <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
       </ng-template>
-    </wm-map-track-details>
+    </wm-map-details>
+    <div bottom-right>
+      <ion-fab
+        #fab2
+        slot="fixed"
+        vertical="top"
+        horizontal="start"
+        (click)="fab1?.close();fab3?.close()"
+        *ngIf="(currentTrack$|async)!= null"
+      >
+        <ion-fab-button>
+          <ion-icon name="locate-outline"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-list side="start">
+          <wm-btn-orientation
+            class="webmapp-map-fab"
+            [degrees]="geoboxMap.mapCmp.mapDegrees"
+            (click)="geoboxMap.mapCmp.orientNorth()"
+          >
+          </wm-btn-orientation>
+          <ion-fab-button (click)="navigation()">
+            <ion-icon name="navigate-outline"></ion-icon>
+          </ion-fab-button>
+          <wm-btn-center-position
+            *ngIf="false"
+            (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+          ></wm-btn-center-position>
+        </ion-fab-list>
+      </ion-fab>
+      <ion-fab
+        slot="fixed"
+        vertical="top"
+        horizontal="start"
+        #fab3
+        *ngIf="isTrackRecordingEnable$|async"
+        (click)="fab2?.close();fab1?.close()"
+      >
+        <ion-fab-button size="small" class="wm-btn-register-fab">
+          <i class="icon-outline-recording"></i>
+        </ion-fab-button>
+        <wm-btn-track-recording
+          [isLogged]="isLogged$|async"
+          (start-recording)="startRecording$.next($event)"
+        ></wm-btn-track-recording>
+      </ion-fab>
+    </div>
   </wm-geobox-map>
 
   <ng-template #offline>
@@ -124,7 +170,7 @@
       wmMapTrackRelatedPois
       (related-poi-next)="currentPoiNextID$.next(+$event)"
       (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
-      (related-poi)="setCurrentPoi($event)"
+      (related-poi)="setCurrentRelatedPoi($event)"
     >
       <div bottom-right>
         <ion-fab
@@ -178,7 +224,7 @@
   <wm-download
     *ngIf="showDownload$|async"
     [track]="currentTrack$|async"
-    (closeEvt)="showDownload$.next(false);mapTrackDetailsCmp.open()"
+    (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
     (goToEvt)="goToPage($event)"
   ></wm-download>
 </ion-content>

@@ -12,18 +12,20 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
+import {track} from '@wm-core/store/features/features.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {skip} from 'rxjs/operators';
 
 @Component({
-  selector: 'wm-map-track-details',
-  templateUrl: './map-track-details.component.html',
-  styleUrls: ['./map-track-details.component.scss'],
+  selector: 'wm-map-details',
+  templateUrl: './map-details.component.html',
+  styleUrls: ['./map-details.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapTrackDetailsComponent implements AfterViewInit {
+export class MapDetailsComponent implements AfterViewInit {
   private _animationSwipe: Animation;
-  private _currentTrack = this._store.select(currentEcTrack);
+  private _currentTrack = this._store.select(track);
   private _gesture: Gesture;
   private _initialStep: number = 1;
   private _started: boolean = false;
@@ -47,7 +49,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
   ) {
-    this._currentTrack.subscribe(track => {
+    this._currentTrack.pipe(skip(1)).subscribe(track => {
       if (track == null) {
         this.none();
       } else {

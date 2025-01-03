@@ -36,6 +36,10 @@ export class TabsPage {
   }
 
   setCurrentTab(tab: string): void {
+    if (this.currentTab === tab && this.currentTab === 'home') {
+      this._urlHandlerService.resetURL();
+      return;
+    }
     this.currentTab = tab;
     if (tab === 'home' || tab === 'map') {
       this._urlHandlerService.changeURL(tab);

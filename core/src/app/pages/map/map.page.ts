@@ -33,9 +33,9 @@ import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/direct
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
-import {MapTrackDetailsComponent} from 'src/app/pages/map/map-track-details/map-track-details.component';
+import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
 import {LangService} from '@wm-core/localization/lang.service';
-import {FeatureCollection, LineString} from 'geojson';
+import {FeatureCollection, LineString, Point} from 'geojson';
 import {WmLoadingService} from '@wm-core/services/loading.service';
 import {
   confAPP,
@@ -48,6 +48,7 @@ import {
   confPOIS,
   confPOISFilter,
   confPoisIcons,
+  confRecordTrackShow,
 } from '@wm-core/store/conf/conf.selector';
 import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
@@ -61,7 +62,7 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
-import {track} from '@wm-core/store/features/features.selector';
+import {poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
 
@@ -78,8 +79,6 @@ export interface IDATALAYER {
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage {
-  private _bboxLayer = null;
-  private _confMAPLAYERS$: Observable<ILAYER[]> = this._store.select(confMAPLAYERS);
   private _flowLine$: BehaviorSubject<null | {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
@@ -92,7 +91,7 @@ export class MapPage {
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
   @ViewChild(HomePage) homeCmp: HomePage;
-  @ViewChild('details') mapTrackDetailsCmp: MapTrackDetailsComponent;
+  @ViewChild('details') mapDetailsCmp: MapDetailsComponent;
   @ViewChild('gallery') slider: IonSlides;
   @ViewChild('wmap') wmMapComponent: WmMapComponent;
   @ViewChild(WmMapPoisDirective) wmMapPoisDirective: WmMapPoisDirective;
@@ -126,23 +125,23 @@ export class MapPage {
     }),
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
-  currentLayer$ = this._store.select(ecLayer).pipe(tap(l => (this._bboxLayer = l?.bbox ?? null)));
-  currentPoi$: BehaviorSubject<IGeojsonFeature> = new BehaviorSubject<IGeojsonFeature | null>(null);
+  currentLayer$ = this._store.select(ecLayer);
+  currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
-  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(currentEcTrack);
+  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(track);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
-  isTrackRecordingEnable$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLogged$: Observable<boolean> = this._store.select(isLogged);
+  isTrackRecordingEnable$: Observable<boolean> = this._store.select(confRecordTrackShow);
   lang = localStorage.getItem('wm-lang') || 'it';
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   modeFullMap = false;
@@ -156,7 +155,6 @@ export class MapPage {
   );
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-  poiProperties = this.currentPoi$.pipe(map(p => p.properties));
   poiProperties$: Observable<any> = merge(
     this.currentPoi$.pipe(
       distinctUntilChanged(),
@@ -177,9 +175,6 @@ export class MapPage {
         return {...p.properties, ...{isRelated: true}};
       }),
       share(),
-      tap(() => {
-        this.currentPoi$.next(null);
-      }),
     ),
   ).pipe(share());
   pois: any[];
@@ -252,23 +247,6 @@ export class MapPage {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
-    const isCurrentPoi = this.currentRelatedPoi$.value != null || this.currentPoi$.value != null;
-    if (isCurrentPoi) {
-      this.currentRelatedPoi$.next(null);
-      this.currentPoi$.next(null);
-      this.wmMapComponent.resetRotation();
-      if (this.wmMapTrackRelatedPoisDirective != null) {
-        this.wmMapTrackRelatedPoisDirective.setPoi = -1;
-      }
-
-      if (this.trackid$.value == null) {
-        this.goToTrack(null);
-      } else {
-        this.mapTrackDetailsCmp.open();
-      }
-    } else if (this.trackid$.value != null) {
-      this.goToTrack(null);
-    }
 
     if (!navigator.onLine) {
     }
@@ -277,7 +255,7 @@ export class MapPage {
   closeDownload(): void {
     this.showDownload$.next(false);
     setTimeout(() => {
-      this.mapTrackDetailsCmp.open();
+      this.mapDetailsCmp.open();
     }, 300);
   }
 
@@ -313,7 +291,7 @@ export class MapPage {
   }
 
   ionViewWillEnter(): void {
-    this.detailsIsOpen$ = this.mapTrackDetailsCmp.isOpen$.pipe(
+    this.detailsIsOpen$ = this.mapDetailsCmp.isOpen$.pipe(
       startWith(false),
       catchError(() => of(false)),
     );
@@ -324,17 +302,17 @@ export class MapPage {
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
     this.goToTrack(null);
-    this.mapTrackDetailsCmp.none();
+    this.mapDetailsCmp.none();
     this.showDownload$.next(false);
   }
 
   navigation(): void {
     const isFocused = !this.wmMapPositionfocus$.value;
     this.wmMapPositionfocus$.next(isFocused);
-    const isOpen = this.mapTrackDetailsCmp.isOpen$.value;
+    const isOpen = this.mapDetailsCmp.isOpen$.value;
     this.previewTrack$.next(false);
     if (isFocused && isOpen) {
-      this.mapTrackDetailsCmp.onlyTitle();
+      this.mapDetailsCmp.onlyTitle();
     }
   }
 
@@ -345,14 +323,14 @@ export class MapPage {
   openPopup(popup): void {
     this.popup$.next(popup);
     if (popup != null && popup != '') {
-      this.mapTrackDetailsCmp.open();
+      this.mapDetailsCmp.open();
     } else {
-      this.mapTrackDetailsCmp.none();
+      this.mapDetailsCmp.none();
     }
   }
 
   openTrackDownload(): void {
-    this.mapTrackDetailsCmp.background();
+    this.mapDetailsCmp.background();
     setTimeout(() => {
       this.showDownload$.next(true);
     }, 300);
@@ -372,17 +350,20 @@ export class MapPage {
     this.wmMapTrackRelatedPoisDirective.poiPrev();
   }
 
+  setCurrentRelatedPoi(feature: number | WmFeature<Point> | null): void {
+    if (feature == null) {
+      return;
+    } else if (typeof feature === 'number') {
+      this._urlHandlerSvc.updateURL({ec_related_poi: feature});
+    } else if (feature.properties != null && feature.properties.id != null) {
+      const id = feature.properties.id;
+      this._urlHandlerSvc.updateURL({ec_related_poi: id});
+    }
+  }
+
   setNearestPoi(nearestPoi: Feature<Geometry>): void {
     const id = +nearestPoi.getId();
     this.wmMapTrackRelatedPoisDirective.setPoi = id;
-  }
-
-  setPoi(poi: IGeojsonFeature): void {
-    const queryParams = {...this._route.snapshot.queryParams, poi: poi.properties.id};
-    //  const url = this._router.createUrlTree([], {relativeTo: this._route, queryParams}).toString();
-    //   this._location.replaceState(url);
-    this.currentPoi$.next(poi);
-    this.mapTrackDetailsCmp.open();
   }
 
   setTrackElevationChartHoverElements(elements?: ISlopeChartHoverElements): void {
@@ -437,7 +418,7 @@ export class MapPage {
   }
 
   toogleFullMap() {
-    this.modeFullMap = !this.mapTrackDetailsCmp.toggle();
+    this.modeFullMap = !this.mapDetailsCmp.toggle();
   }
 
   async url(url) {
@@ -446,7 +427,6 @@ export class MapPage {
 
   private _poiReset(): void {
     this.currentRelatedPoi$.next(null);
-    this.currentPoi$.next(null);
     this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
   }
 }
