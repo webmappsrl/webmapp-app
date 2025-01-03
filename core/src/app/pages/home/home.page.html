@@ -1,44 +1,10 @@
 <ion-content class="webmapp-home-content">
-  <ng-container *ngIf="(online$|async)=== false">
-    <div class="wm-home-header-container">
-      <downloaded-tracks-box></downloaded-tracks-box>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="(online$|async) === true">
-    <div class="wm-home-header-container">
-      <webmapp-home-intro class="wm-home-header-intro"> </webmapp-home-intro>
-      <ion-label
-        [innerHTML]="sanitizer.bypassSecurityTrustHtml((confAPP$|async).welcome | wmtrans)"
-      >
-      </ion-label>
-      <wm-searchbar
-        #searchCmp
-        *ngIf="(confOPTIONS$|async).show_searchbar && !(ugcOpened$|async)"
-        [initSearch]=""
-        (isTypings)="isTyping$.next($event)"
-      >
-      </wm-searchbar>
-    </div>
-    <wm-status-filter
-      *ngIf="showResult$|async"
-      (resetFiltersEVT)="goToHome()"
-      (removeLayerEVT)="removeLayer($event)"
-    ></wm-status-filter>
-    <wm-home-layer></wm-home-layer>
-    <wm-home-result
-      *ngIf="showResult$|async;else home"
-      (trackEVT)="updateEcTrack($event)"
-      (poiEVT)="setPoi($event)"
-    ></wm-home-result>
+  <ng-container *ngIf="(online$|async);else offline">
+    <wm-home></wm-home>
   </ng-container>
 </ion-content>
-<ng-template #home>
-  <wm-home-landing
-    [ngClass]="{'hidden': showResult$ | async}"
-    (slugBoxEVT)="openSlug($event[0], $event[1])"
-    (externalUrlBoxEVT)="openExternalUrl($event)"
-    (tracksBoxEVT)="updateEcTrack($event)"
-    (layerBoxEVT)="setLayer($event[0], $event[1])"
-    (ugcBoxEvt)="setUgc()"
-  ></wm-home-landing>
+<ng-template #offline>
+  <div class="wm-home-header-container">
+    <downloaded-tracks-box></downloaded-tracks-box>
+  </div>
 </ng-template>

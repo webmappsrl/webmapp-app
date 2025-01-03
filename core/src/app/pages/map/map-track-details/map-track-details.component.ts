@@ -9,6 +9,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {Animation, AnimationController, Gesture, GestureController, Platform} from '@ionic/angular';
+import {Store} from '@ngrx/store';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
 @Component({
@@ -20,6 +23,7 @@ import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 })
 export class MapTrackDetailsComponent implements AfterViewInit {
   private _animationSwipe: Animation;
+  private _currentTrack = this._store.select(currentEcTrack);
   private _gesture: Gesture;
   private _initialStep: number = 1;
   private _started: boolean = false;
@@ -40,7 +44,17 @@ export class MapTrackDetailsComponent implements AfterViewInit {
     private _platform: Platform,
     private _animationCtrl: AnimationController,
     private _gestureCtrl: GestureController,
-  ) {}
+    private _store: Store,
+    private _urlHandlerSvc: UrlHandlerService,
+  ) {
+    this._currentTrack.subscribe(track => {
+      if (track == null) {
+        this.none();
+      } else {
+        this.open();
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.setAnimations();
@@ -64,6 +78,7 @@ export class MapTrackDetailsComponent implements AfterViewInit {
 
   none(): void {
     this.background();
+    this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
     this.closeEVT.emit();
   }
 
