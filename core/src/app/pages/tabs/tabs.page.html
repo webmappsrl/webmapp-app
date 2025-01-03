@@ -1,18 +1,26 @@
 <ion-tabs #tabs>
   <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
-    <ion-tab-button (click)="setCurrentTab('home')">
+    <ion-tab-button (click)="setCurrentTab('home')" tab="home">
       <i class="icon-outline-home webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.home' | wmtrans}} </ion-label>
     </ion-tab-button>
-    <ion-tab-button (click)="setCurrentTab('map')">
+    <ion-tab-button (click)="setCurrentTab('map')" tab="map">
       <i class="icon-outline-map-outline webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.map' | wmtrans}} </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="favourites" *ngIf="(authEnable$|async) && (isLogged$|async)">
+    <ion-tab-button
+      tab="favourites"
+      (click)="setCurrentTab('favourites')"
+      *ngIf="(authEnable$ | async) && (isLogged$ | async)"
+    >
       <i class="icon-outline-heart webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.favourites' | wmtrans}} </ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="profile">
+    <ion-tab-button
+      tab="profile"
+      (click)="setCurrentTab('profile')"
+      [class.selected]="currentTab === 'profile'"
+    >
       <i class="icon-outline-user webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.profile' | wmtrans}} </ion-label>
     </ion-tab-button>

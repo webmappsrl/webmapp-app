@@ -35,8 +35,10 @@ export class TabsPage {
     return this._statusService.isSelectedMapTrack;
   }
 
-  setCurrentTab(tab = this.tabs.getSelected()): void {
+  setCurrentTab(tab: string): void {
     this.currentTab = tab;
-    this._urlHandlerService.changeUrl(tab);
+    if (tab === 'home' || tab === 'map') {
+      this._urlHandlerService.changeURL(tab);
+    }
   }
 }
