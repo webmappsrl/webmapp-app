@@ -10,17 +10,18 @@ import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-succ
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from '@wm-core/store/conf/conf.selector';
 import {CameraService} from '@wm-core/services/camera.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
-import {generateUUID} from '@wm-core/utils/localForage';
+import {generateUUID, saveUgcPoi} from '@wm-core/utils/localForage';
 import {ConfService} from '@wm-core/store/conf/conf.service';
 import {DeviceService} from '@wm-core/services/device.service';
-import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
+import {switchMap, take} from 'rxjs/operators';
+import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -47,7 +48,6 @@ export class ModalWaypointSaveComponent implements OnInit {
   constructor(
     private _modalCtrl: ModalController,
     private _photoSvc: CameraService,
-    private _ugcSvc: UgcService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
@@ -129,6 +129,7 @@ export class ModalWaypointSaveComponent implements OnInit {
       return;
     }
     const device = await this._deviceSvc.getInfo();
+    const dateNow = new Date();
     const ugcPoi: WmFeature<Point> = {
       type: 'Feature',
       geometry: {
@@ -142,13 +143,18 @@ export class ModalWaypointSaveComponent implements OnInit {
         nominatim: this.nominatim,
         uuid: generateUUID(),
         app_id: `${this._configSvc.geohubAppId}`,
+        createdAt: dateNow,
+        updatedAt: dateNow,
         form: this.fg.value,
         device,
       },
     };
-    await this._ugcSvc.savePoi(ugcPoi);
-    this._modalCtrl.dismiss();
-    await this.openModalSuccess(ugcPoi);
+
+    from(saveUgcPoi(ugcPoi)).pipe(
+      take(1),
+      switchMap(_ => this._modalCtrl.dismiss()),
+      switchMap(_ => this.openModalSuccess(ugcPoi)),
+    ).subscribe(_ => this._store.dispatch(syncUgcPois()));
   }
 
   setIsValid(idx: number, isValid: boolean): void {
