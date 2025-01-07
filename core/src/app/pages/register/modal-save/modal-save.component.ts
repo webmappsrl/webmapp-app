@@ -3,17 +3,20 @@ import {ActionSheetController, AlertController, ModalController, Platform} from 
 import {TranslateService} from '@ngx-translate/core';
 import {Md5} from 'ts-md5';
 import {activities} from 'src/app/constants/activities';
-import {Observable} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {UntypedFormGroup} from '@angular/forms';
 import {CameraService} from '@wm-core/services/camera.service';
 import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
-import {generateUUID} from '@wm-core/utils/localForage';
-import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
+import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
 import {ConfService} from '@wm-core/store/conf/conf.service';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {DeviceService} from '@wm-core/services/device.service';
+import {take} from 'rxjs/operators';
+import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
+import {switchMap} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
@@ -34,7 +37,6 @@ export class ModalSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _ugcSvc: UgcService,
     private _configSvc: ConfService,
     private _deviceSvc: DeviceService,
     private _translate: TranslateService,
@@ -42,6 +44,7 @@ export class ModalSaveComponent implements OnInit {
     private _cameraSvc: CameraService,
     private _cdr: ChangeDetectorRef,
     private _actionSheetCtrl: ActionSheetController,
+    private _store: Store<any>,
   ) {}
 
   ngOnInit() {
@@ -88,8 +91,8 @@ export class ModalSaveComponent implements OnInit {
     });
   }
 
-  backToSuccess(): void {
-    this._modalCtrl.dismiss({
+  backToSuccess(): Promise<boolean> {
+    return this._modalCtrl.dismiss({
       dismissed: false,
       save: true,
     });
@@ -203,6 +206,7 @@ export class ModalSaveComponent implements OnInit {
 
     const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
     const device = await this._deviceSvc.getInfo();
+    const dateNow = new Date();
 
     this.recordedFeature.properties = {
       ...this.recordedFeature.properties,
@@ -211,14 +215,17 @@ export class ModalSaveComponent implements OnInit {
       photos: this.photos,
       uuid: generateUUID(),
       distanceFilter,
-      device,
       app_id: `${this._configSvc.geohubAppId}`,
+      createdAt: dateNow,
+      updatedAt: dateNow,
+      device,
     };
-    /*     console.log('recordedFeature:', this.recordedFeature); */
 
-    await this._ugcSvc.saveTrack(this.recordedFeature);
-    this.backToSuccess();
-    await this.openModalSuccess(this.recordedFeature);
+    from(saveUgcTrack(this.recordedFeature)).pipe(
+      take(1),
+      switchMap(_ => this.backToSuccess()),
+      switchMap(_ => this.openModalSuccess(this.recordedFeature)),
+    ).subscribe(_ => this._store.dispatch(syncUgcTracks()));
   }
 
   setIsValid(idx: number, isValid: boolean): void {
