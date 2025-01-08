@@ -40,6 +40,7 @@
     "@capacitor/share": "^6.0.0",
     "@capacitor/splash-screen": "^6.0.0",
     "@capacitor/status-bar": "^6.0.0",
+    "@capacitor/device": "^6.0.0",
     "@dwayneparton/geojson-to-gpx": "^0.0.30",
     "@ionic/angular": "^6.7.5",
     "@ionic/pwa-elements": "^3.0.2",
