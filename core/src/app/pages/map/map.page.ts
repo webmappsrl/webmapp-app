@@ -65,6 +65,8 @@ import {WmFeature} from '@wm-types/feature';
 import {poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
+import {currentEcPoiId} from '@wm-core/store/features/ec/ec.selector';
+import {currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
 
 export interface IDATALAYER {
   high: string;
@@ -83,6 +85,7 @@ export class MapPage {
     flow_line_quote_orange: number;
     flow_line_quote_red: number;
   }> = new BehaviorSubject<null>(null);
+  private scrollPositions: {[key: string]: number} = {};
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
   readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
@@ -125,6 +128,7 @@ export class MapPage {
     }),
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
+  currentEcPoiId$ = this._store.select(currentEcPoiId);
   currentLayer$ = this._store.select(ecLayer);
   currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
@@ -176,7 +180,14 @@ export class MapPage {
       }),
       share(),
     ),
-  ).pipe(share());
+  ).pipe(
+    share(),
+    tap(val => {
+      this.getPosition();
+      if (val === null) {
+      }
+    }),
+  );
   pois: any[];
   popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -201,6 +212,7 @@ export class MapPage {
     if (value == null) return '';
     return this._langSvc.instant(value);
   };
+  ugcTrack$: Observable<WmFeature<LineString> | null> = this._store.select(currentUgcTrack);
   wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
   );
@@ -247,9 +259,6 @@ export class MapPage {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
-
-    if (!navigator.onLine) {
-    }
   }
 
   closeDownload(): void {
@@ -277,6 +286,13 @@ export class MapPage {
       : red;
   }
 
+  getPosition(): void {
+    const pos = this.scrollPositions['track'];
+    setTimeout(() => {
+      document.getElementsByTagName('ion-card-content')[0].scrollTo(0, pos);
+    }, 0);
+  }
+
   goToPage(page: string): void {
     this.close();
     this._urlHandlerSvc.changeURL(page);
@@ -295,6 +311,7 @@ export class MapPage {
       startWith(false),
       catchError(() => of(false)),
     );
+    this.scrollPositions = {};
   }
 
   ionViewWillLeave(): void {
@@ -348,6 +365,11 @@ export class MapPage {
 
   poiPrev(): void {
     this.wmMapTrackRelatedPoisDirective.poiPrev();
+  }
+
+  savePosition(key = 'track'): void {
+    const currentScrollPosition = document.getElementsByTagName('ion-card-content')[0].scrollTop;
+    this.scrollPositions[key] = currentScrollPosition;
   }
 
   setCurrentRelatedPoi(feature: number | WmFeature<Point> | null): void {
@@ -419,6 +441,15 @@ export class MapPage {
 
   toogleFullMap() {
     this.modeFullMap = !this.mapDetailsCmp.toggle();
+  }
+
+  updateEcTrack(track = undefined): void {
+    const params = {ugc_track: undefined, track};
+    if (track == null) {
+      params['ec_related_poi'] = undefined;
+    }
+
+    this._urlHandlerSvc.updateURL(params);
   }
 
   async url(url) {

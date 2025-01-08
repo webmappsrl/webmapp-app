@@ -3,7 +3,10 @@ webmapp-map-page {
   wm-map-popover {
     display: none;
   }
-
+  ion-toolbar,
+  .webmapp-track-title {
+    display: none;
+  }
   .orange {
     color: orange;
   }

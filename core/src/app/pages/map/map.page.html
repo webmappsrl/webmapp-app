@@ -44,65 +44,45 @@
       </div>
 
       <wm-inner-component-html
-        *ngIf="popup$|async as popup;else noPopup"
+        *ngIf="popup$|async as popup"
         [html]="popup.html"
         [enableDismiss]="false"
       ></wm-inner-component-html>
-      <ng-template #noPopup>
-        <ng-container *ngIf="poiProperties$|async as properties;">
-          <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
-            <wm-poi-properties [properties]="properties"></wm-poi-properties>
-          </ion-content>
-        </ng-container>
-        <ng-container *ngIf="!(poiProperties$|async);">
-          <ng-container *ngIf="currentLayer$|async as currentLayer">
-            <ng-container *ngIf="currentLayer.edges != null">
-              <wm-track-edges
-                *ngIf="currentTrack$|async as currentTrack"
-                [properties]="currentTrack.properties"
-                [conf]="currentLayer"
-              ></wm-track-edges>
-            </ng-container>
+      <ng-container *ngIf="poiProperties$|async as properties;else track">
+        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+          <wm-poi-properties [properties]="properties"></wm-poi-properties>
+        </ion-content>
+      </ng-container>
+      <ng-template #track>
+        <wm-track-properties
+          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+          (dismiss)="updateEcTrack()"
+          (click)="savePosition()"
+          class="webmapp-track-details"
+        >
+          <ng-container *ngIf="(confOPTIONS$|async) as opt">
+            <ion-item
+              *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
+              [href]="'https://geohub.webmapp.it/track/pdf/'+ecTrack.properties.id+'/?app_id='+(geohubId$|async)"
+              class="webmapp-track-download-urls-item"
+              target="_blank"
+            >
+              <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
+              <ion-label class="webmapp-track-download-urls-item-label">
+                {{"apri pdf"|wmtrans}}
+              </ion-label>
+            </ion-item>
           </ng-container>
-
-          <ng-container *ngIf="currentTrack$|async as currentTrack">
-            <wm-track-properties [track]="currentTrack">
-              <ng-container *ngIf="currentTrack.properties as prop">
-                <ion-label *ngIf="flowPopoverText$|async as flowPopoverText">
-                  <div [innerHTML]="flowPopoverText"></div>
-                </ion-label>
-                <ng-container *ngIf="(confMap$|async).alert_poi_show">
-                  <wm-tab-nearest-poi
-                    *ngIf="nearestPoi$|async as nearestPoi"
-                    [nearestPoi]="nearestPoi"
-                    (click)="setNearestPoi(nearestPoi)"
-                  ></wm-tab-nearest-poi>
-                </ng-container>
-
-                <wm-slope-chart
-                  [currentTrack]="currentTrack"
-                  (hover)="setTrackElevationChartHoverElements($event)"
-                ></wm-slope-chart>
-              </ng-container>
-              <div bottom>
-                <ng-container *ngIf="currentTrack$|async as currentTrack;else skeleton">
-                  <ng-container *ngIf="confOPTIONS$|async as confOPTIONS">
-                    <ng-container *ngIf="confOPTIONS.download_track_enable === true">
-                      <div class="webmapp-title">{{'Downloads'|wmtrans}}</div>
-                      <wm-track-download-urls
-                        class="wm-track-details-download-urls"
-                        [track]="currentTrack"
-                        id="webmapp-track-details-download-urls"
-                      >
-                      </wm-track-download-urls>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </wm-track-properties>
-          </ng-container>
-        </ng-container>
+        </wm-track-properties>
       </ng-template>
+
+      <wm-ugc-details
+        *ngIf="(ugcTrack$|async) as ugcTrack"
+        [track]="ugcTrack"
+        (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+        (poi-click)="setCurrentRelatedPoi($event)"
+        class="webmapp-track-details"
+      ></wm-ugc-details>
 
       <ng-template #skeleton>
         <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>

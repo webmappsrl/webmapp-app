@@ -6,7 +6,6 @@ import {IonicModule} from '@ionic/angular';
 import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properties.module';
 import {ButtonsModule} from 'src/app/components/shared/buttons/buttons.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
-import {TrackPropetiesModule} from 'src/app/components/track-properties/track-properties.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
 import {RegisterPageModule} from '../register/register.module';
 import {WmDownloadPanelComponent} from './download-panel/download-panel.component';
@@ -31,7 +30,6 @@ import {WmTransPipe} from '@wm-core/pipes/wmtrans.pipe';
     ButtonsModule,
     RegisterPageModule,
     PoiPropetiesModule,
-    TrackPropetiesModule,
     WmCoreModule,
   ],
   declarations: [

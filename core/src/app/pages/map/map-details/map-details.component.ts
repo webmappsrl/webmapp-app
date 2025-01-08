@@ -79,8 +79,15 @@ export class MapDetailsComponent implements AfterViewInit {
   }
 
   none(): void {
-    this.background();
-    this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
+    const queryParams = this._urlHandlerSvc.getCurrentQueryParams();
+    if (queryParams.ec_related_poi != null) {
+      this._urlHandlerSvc.updateURL({ec_related_poi: undefined});
+    } else {
+      this.background();
+
+      this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
+    }
+
     this.closeEVT.emit();
   }
 
