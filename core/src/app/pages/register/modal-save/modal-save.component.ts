@@ -180,7 +180,7 @@ export class ModalSaveComponent implements OnInit {
     return allValid;
   }
 
-  async openModalSuccess(track: WmFeature<LineString>): Promise<void> {
+  async openModalSuccess(track: WmFeature<LineString>): Promise<any> {
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
       componentProps: {
@@ -189,6 +189,7 @@ export class ModalSaveComponent implements OnInit {
       },
     });
     await modaSuccess.present();
+    return modaSuccess.onDidDismiss();
   }
 
   remove(image: WmFeature<Media, MediaProperties>): void {
@@ -225,7 +226,10 @@ export class ModalSaveComponent implements OnInit {
       take(1),
       switchMap(_ => this.backToSuccess()),
       switchMap(_ => this.openModalSuccess(this.recordedFeature)),
-    ).subscribe(_ => this._store.dispatch(syncUgcTracks()));
+    ).subscribe(async (dismiss) => {
+      await dismiss;
+      this._store.dispatch(syncUgcTracks());
+    });
   }
 
   setIsValid(idx: number, isValid: boolean): void {
