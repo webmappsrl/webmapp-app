@@ -21,7 +21,7 @@
       [langs]="(langs$|async)?.available"
       [defaultLang]="(langs$|async)?.default"
     ></wm-lang-selector>
-    <ion-item-group *ngIf="(confMap$|async).record_track_show">
+    <ion-item-group *ngIf="(confMap$|async)?.record_track_show">
       <ion-item-divider>
         <ion-label>GPS</ion-label>
       </ion-item-divider>
