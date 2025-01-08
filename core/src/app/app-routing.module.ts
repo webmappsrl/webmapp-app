@@ -13,16 +13,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/waypoint/waypoint.module').then(m => m.WaypointPageModule),
   },
   {
-    path: 'waypointlist',
-    loadChildren: () =>
-      import('./pages/waypointlist/waypointlist.module').then(m => m.WaypointlistPageModule),
-  },
-  {
-    path: 'waypointdetail',
-    loadChildren: () =>
-      import('./pages/waypointdetail/waypointdetail.module').then(m => m.WaypointdetailPageModule),
-  },
-  {
     path: 'photolist',
     loadChildren: () =>
       import('./pages/photolist/photolist.module').then(m => m.PhotolistPageModule),
@@ -31,16 +21,6 @@ const routes: Routes = [
     path: 'photodetail',
     loadChildren: () =>
       import('./pages/photodetail/photodetail.module').then(m => m.PhotodetailPageModule),
-  },
-  {
-    path: 'tracklist',
-    loadChildren: () =>
-      import('./pages/tracklist/tracklist.module').then(m => m.TracklistPageModule),
-  },
-  {
-    path: 'trackdetail',
-    loadChildren: () =>
-      import('./pages/trackdetail/trackdetail.module').then(m => m.TrackdetailPageModule),
   },
   {
     path: 'favourites',

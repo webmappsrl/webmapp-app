@@ -14,6 +14,7 @@ import {
   WmFeature,
 } from '@wm-types/feature';
 import {Point, LineString} from 'geojson';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
   selector: 'webmapp-modal-registersuccess',
   templateUrl: './modal-success.component.html',
@@ -52,6 +53,7 @@ export class ModalSuccessComponent implements OnInit {
     private _geoUtils: GeoutilsService,
     private _navController: NavController,
     private _store: Store,
+    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   ngOnInit() {
@@ -107,22 +109,20 @@ export class ModalSuccessComponent implements OnInit {
   async openTrack(track: WmFeature<LineString>): Promise<void> {
     await this.close();
 
-    const navigationExtras: NavigationOptions = {
-      queryParams: {
-        track: track.properties.uuid ?? -1,
-      },
+    const queryParams = {
+      ugc_track: track.properties.uuid ?? undefined,
     };
-    this._navController.navigateForward('trackdetail', navigationExtras);
+
+    this._urlHandlerSvc.updateURL(queryParams);
   }
 
   async openWaypoint(waypoint: WmFeature<Point>): Promise<void> {
     await this.close();
 
-    const navigationExtras: NavigationOptions = {
-      queryParams: {
-        waypoint: waypoint.properties.uuid ?? -1,
-      },
+    const queryParams = {
+      ugc_poi: waypoint.properties.uuid ?? undefined,
     };
-    this._navController.navigateForward('waypointdetail', navigationExtras);
+
+    this._urlHandlerSvc.updateURL(queryParams);
   }
 }
