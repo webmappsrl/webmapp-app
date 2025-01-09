@@ -11,8 +11,9 @@ import {
 import {Animation, AnimationController, Gesture, GestureController, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
-import {track} from '@wm-core/store/features/features.selector';
+import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
+import {Observable} from 'ol';
+import {merge} from 'rxjs';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {skip} from 'rxjs/operators';
 
@@ -25,7 +26,7 @@ import {skip} from 'rxjs/operators';
 })
 export class MapDetailsComponent implements AfterViewInit {
   private _animationSwipe: Animation;
-  private _currentTrack = this._store.select(track);
+  private _featureOpened = this._store.select(featureOpened);
   private _gesture: Gesture;
   private _initialStep: number = 1;
   private _started: boolean = false;
@@ -49,11 +50,11 @@ export class MapDetailsComponent implements AfterViewInit {
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
   ) {
-    this._currentTrack.pipe(skip(1)).subscribe(track => {
-      if (track == null) {
-        this.none();
-      } else {
+    this._featureOpened.pipe(skip(1)).subscribe(featureopened => {
+      if (featureopened) {
         this.open();
+      } else {
+        this.none();
       }
     });
   }
@@ -80,11 +81,13 @@ export class MapDetailsComponent implements AfterViewInit {
 
   none(): void {
     const queryParams = this._urlHandlerSvc.getCurrentQueryParams();
-    if (queryParams.ec_related_poi != null) {
+    if (queryParams.poi != null) {
+      this._urlHandlerSvc.updateURL({poi: undefined});
+      this.background();
+    } else if (queryParams.ec_related_poi != null) {
       this._urlHandlerSvc.updateURL({ec_related_poi: undefined});
     } else {
       this.background();
-
       this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
     }
 

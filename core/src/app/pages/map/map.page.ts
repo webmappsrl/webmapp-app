@@ -62,9 +62,8 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
-import {poi, track} from '@wm-core/store/features/features.selector';
+import {poi, poiProperties, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {currentEcTrack} from '@wm-core/store/features/ec/ec.selector';
 import {currentEcPoiId} from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
 
@@ -134,6 +133,7 @@ export class MapPage {
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiProperties$ = this._store.select(poiProperties);
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
@@ -159,35 +159,6 @@ export class MapPage {
   );
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
-  poiProperties$: Observable<any> = merge(
-    this.currentPoi$.pipe(
-      distinctUntilChanged(),
-      map(p => {
-        if (p == null) return null;
-        return p.properties;
-      }),
-      share(),
-      tap(() => {
-        this.trackid$.next(null);
-        this.layerOpacity$.next(false);
-      }),
-    ),
-    this.currentRelatedPoi$.pipe(
-      distinctUntilChanged(),
-      map(p => {
-        if (p == null) return null;
-        return {...p.properties, ...{isRelated: true}};
-      }),
-      share(),
-    ),
-  ).pipe(
-    share(),
-    tap(val => {
-      this.getPosition();
-      if (val === null) {
-      }
-    }),
-  );
   pois: any[];
   popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);

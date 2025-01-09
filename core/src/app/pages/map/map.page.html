@@ -3,7 +3,7 @@
     <wm-map-details #details (closeEVT)="close()">
       <div header>
         <div class="webmapp-info-header-container">
-          <ng-container *ngIf="poiProperties$|async as properties">
+          <ng-container *ngIf="currentPoiProperties$|async as properties">
             <div class="webmapp-pagepoi-info-header">
               <ng-container *ngIf="properties?.taxonomy.poi_types as poiTypes;else poiTypeTemplate">
                 <ng-container *ngFor="let poiType of poiTypes">

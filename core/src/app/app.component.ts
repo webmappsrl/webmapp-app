@@ -27,7 +27,7 @@ import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths} from '@wm-core/store/auth/auth.actions';
 import {getImg} from '@wm-core/utils/localForage';
-import {ecTracks} from '@wm-core/store/features/ec/ec.actions';
+import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -58,7 +58,7 @@ export class AppComponent {
     this._store.dispatch(ecTracks({init: true}));
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-
+    this._store.dispatch(loadEcPois());
     this._store
       .select(confLANGUAGES)
       .pipe(
