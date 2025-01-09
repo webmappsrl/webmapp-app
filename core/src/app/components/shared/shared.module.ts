@@ -12,7 +12,6 @@ import {ButtonsModule} from './buttons/buttons.module';
 import {WmSharedModule} from '@wm-core/shared/shared.module';
 import {getFormFieldIcnPipe} from './pipes/get-form-field-icn.pipe';
 import {getFormFieldValuePipe} from './pipes/get-form-field-value.pipe';
-import {SearchListComponent} from './search-list/search-list.component';
 const components = [
   RecordingBtnComponent,
   GalleryComponent,
@@ -20,7 +19,6 @@ const components = [
   BtnFilterComponent,
   getFormFieldIcnPipe,
   getFormFieldValuePipe,
-  SearchListComponent,
 ];
 @NgModule({
   declarations: components,
