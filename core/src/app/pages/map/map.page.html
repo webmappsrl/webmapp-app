@@ -37,7 +37,7 @@
               </div>
             </div>
           </ng-container>
-          <ion-title *ngIf="!(poiProperties$|async) && currentTrack$|async as currentTrack;">
+          <ion-title *ngIf="!(currentPoiProperties$|async) && currentTrack$|async as currentTrack;">
             {{currentTrack?.properties?.name|wmtrans }}
           </ion-title>
         </div>
@@ -48,7 +48,7 @@
         [html]="popup.html"
         [enableDismiss]="false"
       ></wm-inner-component-html>
-      <ng-container *ngIf="poiProperties$|async as properties;else track">
+      <ng-container *ngIf="currentPoiProperties$|async as properties;else track">
         <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
           <wm-poi-properties [properties]="properties"></wm-poi-properties>
         </ion-content>
