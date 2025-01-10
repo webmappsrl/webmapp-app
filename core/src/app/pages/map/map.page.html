@@ -40,6 +40,9 @@
           <ion-title *ngIf="!(currentPoiProperties$|async) && currentTrack$|async as currentTrack;">
             {{currentTrack?.properties?.name|wmtrans }}
           </ion-title>
+          <ion-title *ngIf="(currentUgcPoiProperties$|async) as ugcPoiProperties">
+            {{ugcPoiProperties.name|wmtrans}}
+          </ion-title>
         </div>
       </div>
 
