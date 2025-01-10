@@ -76,7 +76,7 @@
         </wm-track-properties>
       </ng-template>
       <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
-        <pre>{{ugcPoiProperties|json}}</pre>
+        <wm-ugc-poi-properties></wm-ugc-poi-properties>
       </ng-container>
       <ng-template #ugcTrack>
         <wm-ugc-track-properties
