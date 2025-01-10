@@ -67,6 +67,7 @@ import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {
   currentEcPoiId,
   currentEcPoiProperties,
+  currentEcTrackProperties,
   currentPoiProperties,
 } from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
@@ -132,6 +133,7 @@ export class MapPage {
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
   currentEcPoiId$ = this._store.select(currentEcPoiId);
+  currentEcTrackProperties$ = this._store.select(currentEcTrackProperties);
   currentLayer$ = this._store.select(ecLayer);
   currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
