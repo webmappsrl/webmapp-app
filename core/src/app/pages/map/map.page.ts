@@ -64,7 +64,11 @@ import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.se
 import {WmFeature} from '@wm-types/feature';
 import {poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {currentEcPoiId, currentEcPoiProperties} from '@wm-core/store/features/ec/ec.selector';
+import {
+  currentEcPoiId,
+  currentEcPoiProperties,
+  currentPoiProperties,
+} from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
 
 export interface IDATALAYER {
@@ -133,7 +137,7 @@ export class MapPage {
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
-  currentPoiProperties$ = this._store.select(currentEcPoiProperties);
+  currentPoiProperties$ = this._store.select(currentPoiProperties);
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
