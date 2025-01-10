@@ -62,10 +62,10 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
-import {poi, poiProperties, track} from '@wm-core/store/features/features.selector';
+import {poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {currentEcPoiId} from '@wm-core/store/features/ec/ec.selector';
-import {currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
+import {currentEcPoiId, currentEcPoiProperties} from '@wm-core/store/features/ec/ec.selector';
+import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
 
 export interface IDATALAYER {
   high: string;
@@ -133,11 +133,12 @@ export class MapPage {
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
   currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
-  currentPoiProperties$ = this._store.select(poiProperties);
+  currentPoiProperties$ = this._store.select(currentEcPoiProperties);
   currentPosition$: Observable<any>;
   currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
     new BehaviorSubject<IGeojsonFeature | null>(null);
   currentTrack$: Observable<WmFeature<LineString>> = this._store.select(track);
+  currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);

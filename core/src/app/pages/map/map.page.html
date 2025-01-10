@@ -75,14 +75,17 @@
           </ng-container>
         </wm-track-properties>
       </ng-template>
-
-      <wm-ugc-details
-        *ngIf="(ugcTrack$|async) as ugcTrack"
-        [track]="ugcTrack"
-        (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
-        (poi-click)="setCurrentRelatedPoi($event)"
-        class="webmapp-track-details"
-      ></wm-ugc-details>
+      <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
+        <pre>{{ugcPoiProperties|json}}</pre>
+      </ng-container>
+      <ng-template #ugcTrack>
+        <wm-ugc-track-properties
+          *ngIf="(ugcTrack$|async) as ugcTrack"
+          [track]="ugcTrack"
+          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+          (poi-click)="setCurrentRelatedPoi($event)"
+        ></wm-ugc-track-properties>
+      </ng-template>
 
       <ng-template #skeleton>
         <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
