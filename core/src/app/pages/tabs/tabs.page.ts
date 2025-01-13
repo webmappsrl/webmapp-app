@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {Observable} from 'rxjs';
 import {StatusService} from 'src/app/services/status.service';
 import {select, Store} from '@ngrx/store';
@@ -8,6 +7,7 @@ import {IonTabs} from '@ionic/angular';
 import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -28,7 +28,7 @@ export class TabsPage {
     private _statusService: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _urlHandlerService: UrlHandlerService,
+    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   isBarHidden(): boolean {
@@ -37,12 +37,12 @@ export class TabsPage {
 
   setCurrentTab(tab: string): void {
     if (this.currentTab === tab && this.currentTab === 'home') {
-      this._urlHandlerService.resetURL();
+      this._urlHandlerSvc.resetURL();
       return;
     }
     this.currentTab = tab;
     if (tab === 'home' || tab === 'map') {
-      this._urlHandlerService.changeURL(tab);
+      this._urlHandlerSvc.changeURL(tab);
     }
   }
 }
