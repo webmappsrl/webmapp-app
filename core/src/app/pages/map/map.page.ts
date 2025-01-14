@@ -71,6 +71,7 @@ import {
   currentPoiProperties,
 } from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
+import {WmSlopeChartHoverElements} from '@wm-types/slope-chart';
 
 export interface IDATALAYER {
   high: string;
@@ -366,7 +367,7 @@ export class MapPage {
     this.wmMapTrackRelatedPoisDirective.setPoi = id;
   }
 
-  setTrackElevationChartHoverElements(elements?: ISlopeChartHoverElements): void {
+  setTrackElevationChartHoverElements(elements?: WmSlopeChartHoverElements): void {
     if (elements != null) {
       this.trackElevationChartHoverElements$.next(elements);
       if (this._flowLine$.value != null) {
