@@ -21,7 +21,6 @@ export class TabsPage {
   @ViewChild('tabs', {static: false}) tabs: IonTabs;
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
-  currentTab = 'home';
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   online$: Observable<boolean> = this._storeNetwork.select(online);
 
@@ -37,11 +36,11 @@ export class TabsPage {
   }
 
   setCurrentTab(tab: string): void {
-    if (this.currentTab === tab && this.currentTab === 'home') {
+    const currentTab = this._urlHandlerSvc.getCurrentPath();
+    if (currentTab === tab && currentTab === 'home') {
       this._store.dispatch(goToHome());
       return;
     }
-    this.currentTab = tab;
     if (tab === 'home' || tab === 'map') {
       this._urlHandlerSvc.changeURL(tab);
     }
