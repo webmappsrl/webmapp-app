@@ -8,6 +8,7 @@ import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
+import {goToHome} from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -37,7 +38,7 @@ export class TabsPage {
 
   setCurrentTab(tab: string): void {
     if (this.currentTab === tab && this.currentTab === 'home') {
-      this._urlHandlerSvc.resetURL();
+      this._store.dispatch(goToHome());
       return;
     }
     this.currentTab = tab;
