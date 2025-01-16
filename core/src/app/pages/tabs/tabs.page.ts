@@ -37,11 +37,15 @@ export class TabsPage {
 
   setCurrentTab(tab: string): void {
     const currentTab = this._urlHandlerSvc.getCurrentPath();
-    if (currentTab === tab && currentTab === 'home') {
-      this._store.dispatch(goToHome());
+
+    if (currentTab === tab) {
+      if (tab === 'home') {
+        this._store.dispatch(goToHome());
+      }
       return;
     }
-    if (tab === 'home' || tab === 'map') {
+
+    if (['home', 'map'].includes(tab)) {
       this._urlHandlerSvc.changeURL(tab);
     }
   }
