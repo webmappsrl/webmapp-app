@@ -192,6 +192,11 @@ export class MapPage {
     private _urlHandlerSvc: UrlHandlerService,
     _platform: Platform,
   ) {
+    this.currentPoiProperties$.subscribe(p => {
+      if (p == null) {
+        this.getPosition();
+      }
+    });
     this.dataLayerUrls$ = this.geohubId$.pipe(
       filter(g => g != null),
       map(geohubId => {
@@ -262,7 +267,13 @@ export class MapPage {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
-    const params = {ugc_track: undefined, track: undefined, ec_related_poi: undefined};
+    const params = {
+      ugc_track: undefined,
+      ugc_poi: undefined,
+      track: undefined,
+      poi: undefined,
+      ec_related_poi: undefined,
+    };
     this._urlHandlerSvc.updateURL(params);
     this.showDownload$.next(false);
   }
