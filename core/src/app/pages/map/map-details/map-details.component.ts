@@ -11,9 +11,7 @@ import {
 import {Animation, AnimationController, Gesture, GestureController, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
-import {Observable} from 'ol';
-import {merge} from 'rxjs';
+import {featureOpened} from '@wm-core/store/features/features.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {skip} from 'rxjs/operators';
 
@@ -26,7 +24,7 @@ import {skip} from 'rxjs/operators';
 })
 export class MapDetailsComponent implements AfterViewInit {
   private _animationSwipe: Animation;
-  private _featureOpened = this._store.select(featureOpened);
+  private _featureOpened$ = this._store.select(featureOpened);
   private _gesture: Gesture;
   private _initialStep: number = 1;
   private _started: boolean = false;
@@ -49,19 +47,18 @@ export class MapDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
-  ) {
-    this._featureOpened.pipe(skip(1)).subscribe(featureopened => {
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.setAnimations();
+    this._setGesture();
+    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
       if (featureopened) {
         this.open();
       } else {
         this.none();
       }
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.setAnimations();
-    this._setGesture();
   }
 
   background(): void {

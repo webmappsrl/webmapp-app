@@ -2,29 +2,16 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {Browser} from '@capacitor/browser';
 import {IonFab, IonSlides, Platform} from '@ionic/angular';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, Observable, Subscription, merge, of} from 'rxjs';
-import {
-  catchError,
-  distinctUntilChanged,
-  filter,
-  map,
-  share,
-  startWith,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, take, tap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {WmMapComponent} from 'src/app/shared/map-core/src/components';
@@ -35,15 +22,13 @@ import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
 import {LangService} from '@wm-core/localization/lang.service';
-import {FeatureCollection, LineString, Point} from 'geojson';
-import {WmLoadingService} from '@wm-core/services/loading.service';
+import {LineString, Point} from 'geojson';
 import {
   confAPP,
   confAUTHEnable,
   confGeohubId,
   confJIDOUPDATETIME,
   confMAP,
-  confMAPLAYERS,
   confOPTIONS,
   confPOIS,
   confPOISFilter,
@@ -54,10 +39,9 @@ import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {online} from 'src/app/store/network/network.selector';
 import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
-import {ILAYER, IAPP} from '@wm-core/types/config';
+import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
-import {Location} from '@angular/common';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
@@ -66,7 +50,6 @@ import {poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {
   currentEcPoiId,
-  currentEcPoiProperties,
   currentEcTrackProperties,
   currentPoiProperties,
 } from '@wm-core/store/features/ec/ec.selector';
@@ -93,7 +76,6 @@ export class MapPage {
   private scrollPositions: {[key: string]: number} = {};
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
-  readonly trackid$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
@@ -200,16 +182,13 @@ export class MapPage {
 
   constructor(
     private _store: Store,
+    private _storeNetwork: Store<INetworkRootState>,
+    private _cdr: ChangeDetectorRef,
     private _deviceSvc: DeviceService,
     private _geohubSvc: GeohubService,
-    private _route: ActivatedRoute,
-    private _location: Location,
     private _shareSvc: ShareService,
-    private _cdr: ChangeDetectorRef,
-    private _storeNetwork: Store<INetworkRootState>,
     private _geolocationSvc: GeolocationService,
     private _langSvc: LangService,
-    private _loadingSvc: WmLoadingService,
     private _urlHandlerSvc: UrlHandlerService,
     _platform: Platform,
   ) {
@@ -247,14 +226,12 @@ export class MapPage {
     }, 300);
   }
 
-  email(_): void {}
-
   async favourite(trackID): Promise<void> {
     const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
     this.isFavourite$.next(isFav);
   }
 
-  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500) {
+  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500): string {
     const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
     const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
     const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
@@ -277,19 +254,7 @@ export class MapPage {
     this._urlHandlerSvc.changeURL(page);
   }
 
-  async goToTrack(track: number): Promise<void> {
-    const params = {ugc_track: undefined, track};
-    if (track == null) {
-      params['ec_related_poi'] = undefined;
-    }
-    this._urlHandlerSvc.updateURL(params);
-  }
-
   ionViewWillEnter(): void {
-    this.detailsIsOpen$ = this.mapDetailsCmp.isOpen$.pipe(
-      startWith(false),
-      catchError(() => of(false)),
-    );
     this.scrollPositions = {};
   }
 
@@ -297,8 +262,8 @@ export class MapPage {
     this._poiReset();
     this.resetEvt$.next(this.resetEvt$.value + 1);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
-    this.goToTrack(null);
-    this.mapDetailsCmp.none();
+    const params = {ugc_track: undefined, track: undefined, ec_related_poi: undefined};
+    this._urlHandlerSvc.updateURL(params);
     this.showDownload$.next(false);
   }
 
@@ -335,8 +300,6 @@ export class MapPage {
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
   }
-
-  phone(_): void {}
 
   poiNext(): void {
     this.wmMapTrackRelatedPoisDirective.poiNext();
@@ -394,7 +357,7 @@ export class MapPage {
     });
   }
 
-  showPhoto(idx) {
+  showPhoto(idx): void {
     this.imagePoiToggle$.next(true);
     setTimeout(() => {
       this.slider.slideTo(idx);
@@ -418,7 +381,7 @@ export class MapPage {
     this._cdr.detectChanges();
   }
 
-  toogleFullMap() {
+  toogleFullMap(): void {
     this.modeFullMap = !this.mapDetailsCmp.toggle();
   }
 

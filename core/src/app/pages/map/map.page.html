@@ -171,14 +171,12 @@
           vertical="top"
           horizontal="start"
           (click)="fab1?.close();fab3?.close()"
-          *ngIf="(trackid$|async)!= null"
         >
           <ion-fab-button>
             <ion-icon name="locate-outline"></ion-icon>
           </ion-fab-button>
           <ion-fab-list side="start">
             <wm-btn-orientation
-              *ngIf="(trackid$|async)!= null"
               class="webmapp-map-fab"
               [degrees]="wmap.mapDegrees"
               (click)="wmap.orientNorth()"
