@@ -5,7 +5,7 @@
         <div class="webmapp-info-header-container">
           <ng-container *ngIf="currentPoiProperties$|async as properties">
             <div class="webmapp-pagepoi-info-header">
-              <ng-container *ngIf="properties?.taxonomy.poi_types as poiTypes;else poiTypeTemplate">
+              <ng-container *ngIf="properties?.taxonom?.poi_types as poiTypes;else poiTypeTemplate">
                 <ng-container *ngFor="let poiType of poiTypes">
                   <div class="webmapp-pagepoi-info-header-pre-title">{{ poiType.name|wmtrans}}</div>
                 </ng-container>
@@ -13,7 +13,7 @@
               <ng-template #poiTypeTemplate>
                 <div
                   class="webmapp-pagepoi-info-header-pre-title"
-                  *ngIf="properties?.taxonomy.poi_type as poiType"
+                  *ngIf="properties?.taxonomy?.poi_type as poiType"
                 >
                   {{ poiType.name|wmtrans}}
                 </div>
@@ -55,35 +55,34 @@
         [html]="popup.html"
         [enableDismiss]="false"
       ></wm-inner-component-html>
-      <ng-container *ngIf="currentPoiProperties$|async as properties;else track">
+      <ng-container *ngIf="currentPoiProperties$|async as properties">
+        <pre>{{properties|async|json}}</pre>
         <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
-          <wm-poi-properties [properties]="properties"></wm-poi-properties>
+          <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
         </ion-content>
       </ng-container>
-      <ng-template #track>
-        <wm-track-properties
-          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
-          (dismiss)="updateEcTrack()"
-          (click)="savePosition()"
-          class="webmapp-track-details"
-        >
-          <ng-container *ngIf="(confOPTIONS$|async) as opt">
-            <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
-              <ion-item
-                *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
-                [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
-                class="webmapp-track-download-urls-item"
-                target="_blank"
-              >
-                <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
-                <ion-label class="webmapp-track-download-urls-item-label">
-                  {{"apri pdf"|wmtrans}}
-                </ion-label>
-              </ion-item>
-            </ng-container>
+      <wm-track-properties
+        (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+        (dismiss)="updateEcTrack()"
+        (click)="savePosition()"
+        class="webmapp-track-details"
+      >
+        <ng-container *ngIf="(confOPTIONS$|async) as opt">
+          <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
+            <ion-item
+              *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
+              [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
+              class="webmapp-track-download-urls-item"
+              target="_blank"
+            >
+              <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
+              <ion-label class="webmapp-track-download-urls-item-label">
+                {{"apri pdf"|wmtrans}}
+              </ion-label>
+            </ion-item>
           </ng-container>
-        </wm-track-properties>
-      </ng-template>
+        </ng-container>
+      </wm-track-properties>
       <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
         <wm-ugc-poi-properties></wm-ugc-poi-properties>
       </ng-container>
