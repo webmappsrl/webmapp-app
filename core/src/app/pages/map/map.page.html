@@ -56,7 +56,6 @@
         [enableDismiss]="false"
       ></wm-inner-component-html>
       <ng-container *ngIf="currentPoiProperties$|async as properties">
-        <pre>{{properties|async|json}}</pre>
         <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
           <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
         </ion-content>

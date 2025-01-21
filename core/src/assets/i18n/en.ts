@@ -626,10 +626,13 @@ export const appEN = {
   'MEMORIA': 'MEMORY',
   'resetta la memoria': 'reset memory',
   'sei sicuro di voler cancellare cache e dati  salvati?':
-  'are you sure you want to delete saved cache and data?',
+    'are you sure you want to delete saved cache and data?',
   'Elimina account': 'Delete account',
-  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.': 'Are you sure you want to delete your account? You must type "delete account" to proceed.',
+  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.':
+    'Are you sure you want to delete your account? You must type "delete account" to proceed.',
   'Digita "elimina account"': 'Type "delete account"',
-  'La conferma non corrisponde. Digita "elimina account" per procedere.': 'The confirmation does not match. Type "delete account" to proceed.',
-  'Conferma': 'Confirm'
+  'La conferma non corrisponde. Digita "elimina account" per procedere.':
+    'The confirmation does not match. Type "delete account" to proceed.',
+  'Conferma': 'Confirm',
+  'Link utili': 'Useful links',
 };
