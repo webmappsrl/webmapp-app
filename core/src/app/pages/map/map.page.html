@@ -135,7 +135,7 @@
             (click)="geoboxMap?.mapCmp?.orientNorth()"
           >
           </wm-btn-orientation>
-          <ion-fab-button (click)="navigation()">
+          <ion-fab-button (click)="geoboxMap.navigation()">
             <ion-icon name="navigate-outline"></ion-icon>
           </ion-fab-button>
           <wm-btn-center-position
@@ -168,68 +168,4 @@
       (goToEvt)="goToPage($event)"
     ></wm-download>
   </wm-geobox-map>
-
-  <ng-template #offline>
-    <wm-map
-      #wmap
-      [wmMapConf]="confMap$|async"
-      wmMapPosition
-      [wmMapPositioncurrentLocation]="currentPosition$|async"
-      [wmMapPositionCenter]="centerPositionEvt$|async"
-      [wmMapPositionfocus]="wmMapPositionfocus$|async"
-      wmMapTrack
-      [track]="currentTrack$|async"
-      [wmMapTrackColor]="trackColor$|async"
-      [trackElevationChartElements]="trackElevationChartHoverElements$|async"
-      wmMapTrackRelatedPois
-      (related-poi-next)="currentPoiNextID$.next(+$event)"
-      (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
-      (related-poi)="setCurrentRelatedPoi($event)"
-    >
-      <div bottom-right>
-        <ion-fab
-          #fab2
-          slot="fixed"
-          vertical="top"
-          horizontal="start"
-          (click)="fab1?.close();fab3?.close()"
-        >
-          <ion-fab-button>
-            <ion-icon name="locate-outline"></ion-icon>
-          </ion-fab-button>
-          <ion-fab-list side="start">
-            <wm-btn-orientation
-              class="webmapp-map-fab"
-              [degrees]="wmap.mapDegrees"
-              (click)="wmap.orientNorth()"
-            >
-            </wm-btn-orientation>
-            <ion-fab-button (click)="navigation()">
-              <ion-icon name="navigate-outline"></ion-icon>
-            </ion-fab-button>
-            <wm-btn-center-position
-              *ngIf="false"
-              (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
-            ></wm-btn-center-position>
-          </ion-fab-list>
-        </ion-fab>
-        <ion-fab
-          slot="fixed"
-          vertical="top"
-          horizontal="start"
-          #fab3
-          *ngIf="isTrackRecordingEnable$|async"
-          (click)="fab2?.close();fab1?.close()"
-        >
-          <ion-fab-button size="small" class="wm-btn-register-fab">
-            <i class="icon-outline-recording"></i>
-          </ion-fab-button>
-          <wm-btn-track-recording
-            [isLogged]="isLogged$|async"
-            (start-recording)="startRecording$.next($event)"
-          ></wm-btn-track-recording>
-        </ion-fab>
-      </div>
-    </wm-map>
-  </ng-template>
 </ion-content>

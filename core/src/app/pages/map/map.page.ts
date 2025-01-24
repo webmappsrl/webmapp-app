@@ -6,7 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {Browser} from '@capacitor/browser';
-import {IonFab, IonSlides, Platform} from '@ionic/angular';
+import {IonFab, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
@@ -14,9 +14,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, map, take, tap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
-import {WmMapComponent} from 'src/app/shared/map-core/src/components';
-import {WmMapPoisDirective} from 'src/app/shared/map-core/src/directives';
-import {WmMapTrackRelatedPoisDirective} from 'src/app/shared/map-core/src/directives/track.related-pois.directive';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
@@ -54,7 +51,7 @@ import {
   currentPoiProperties,
 } from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
-import {WmSlopeChartHoverElements} from '@wm-types/slope-chart';
+import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
 
 export interface IDATALAYER {
   high: string;
@@ -76,13 +73,9 @@ export class MapPage {
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;
   @ViewChild('fab3') fab3: IonFab;
+  @ViewChild(WmGeoboxMapComponent) geoboxMap: WmGeoboxMapComponent;
   @ViewChild(HomePage) homeCmp: HomePage;
   @ViewChild('details') mapDetailsCmp: MapDetailsComponent;
-  @ViewChild('gallery') slider: IonSlides;
-  @ViewChild('wmap') wmMapComponent: WmMapComponent;
-  @ViewChild(WmMapPoisDirective) wmMapPoisDirective: WmMapPoisDirective;
-  @ViewChild(WmMapTrackRelatedPoisDirective)
-  wmMapTrackRelatedPoisDirective: WmMapTrackRelatedPoisDirective;
 
   apiSearchInputTyped$: Observable<string> = this._store.select(inputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
@@ -284,14 +277,6 @@ export class MapPage {
     this._shareSvc.shareTrackByID(trackId);
   }
 
-  poiNext(): void {
-    this.wmMapTrackRelatedPoisDirective.poiNext();
-  }
-
-  poiPrev(): void {
-    this.wmMapTrackRelatedPoisDirective.poiPrev();
-  }
-
   savePosition(key = 'track'): void {
     const currentScrollPosition = document.getElementsByTagName('ion-card-content')[0].scrollTop;
     this.scrollPositions[key] = currentScrollPosition;
@@ -308,11 +293,6 @@ export class MapPage {
     }
   }
 
-  setNearestPoi(nearestPoi: Feature<Geometry>): void {
-    const id = +nearestPoi.getId();
-    this.wmMapTrackRelatedPoisDirective.setPoi = id;
-  }
-
   setWmMapFeatureCollection(overlay: any): void {
     this.wmMapFeatureCollectionOverlay$.next(overlay);
     this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
@@ -323,13 +303,6 @@ export class MapPage {
         });
       }
     });
-  }
-
-  showPhoto(idx): void {
-    this.imagePoiToggle$.next(true);
-    setTimeout(() => {
-      this.slider.slideTo(idx);
-    }, 300);
   }
 
   toggleDirective(data: {type: 'layers' | 'pois'; toggle: boolean}): void {
