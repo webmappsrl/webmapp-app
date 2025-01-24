@@ -69,10 +69,6 @@ export interface IDATALAYER {
   encapsulation: ViewEncapsulation.None,
 })
 export class MapPage {
-  private _flowLine$: BehaviorSubject<null | {
-    flow_line_quote_orange: number;
-    flow_line_quote_red: number;
-  }> = new BehaviorSubject<null>(null);
   private scrollPositions: {[key: string]: number} = {};
 
   readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
@@ -236,17 +232,6 @@ export class MapPage {
     this.isFavourite$.next(isFav);
   }
 
-  getFlowPopoverText(altitude = 0, orangeTreshold = 800, redTreshold = 1500): string {
-    const green = `<span class="green">Livello 1: tratti non interessati dall'alta quota (quota minore di ${orangeTreshold} metri)</span>`;
-    const orange = `<span class="orange">Livello 2: tratti parzialmente in alta quota (quota compresa tra ${orangeTreshold} metri e ${redTreshold} metri)</span>`;
-    const red = `<span class="red">Livello 3: in alta quota (quota superiore ${redTreshold} metri)</span>`;
-    return altitude < orangeTreshold
-      ? green
-      : altitude > orangeTreshold && altitude < redTreshold
-      ? orange
-      : red;
-  }
-
   getPosition(): void {
     const pos = this.scrollPositions['track'];
     setTimeout(() => {
@@ -256,7 +241,7 @@ export class MapPage {
 
   goToPage(page: string): void {
     this.close();
-    this._urlHandlerSvc.changeURL(page);
+    this._urlHandlerSvc.changeURL(page, {});
   }
 
   ionViewWillEnter(): void {
@@ -331,21 +316,6 @@ export class MapPage {
   setNearestPoi(nearestPoi: Feature<Geometry>): void {
     const id = +nearestPoi.getId();
     this.wmMapTrackRelatedPoisDirective.setPoi = id;
-  }
-
-  setTrackElevationChartHoverElements(elements?: WmSlopeChartHoverElements): void {
-    if (elements != null) {
-      this.trackElevationChartHoverElements$.next(elements);
-      if (this._flowLine$.value != null) {
-        this.flowPopoverText$.next(
-          this.getFlowPopoverText(
-            elements.location.altitude,
-            this._flowLine$.value.flow_line_quote_orange,
-            this._flowLine$.value.flow_line_quote_red,
-          ),
-        );
-      }
-    }
   }
 
   setWmMapFeatureCollection(overlay: any): void {

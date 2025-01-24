@@ -99,13 +99,31 @@
       </ng-template>
     </wm-map-details>
     <div bottom-right>
+      <ng-container *ngIf="currentEcTrackProperties$|async as trackProperties">
+        <ion-fab slot="fixed" vertical="top" horizontal="start">
+          <ion-fab-button (click)="openTrackShare(trackProperties.id)">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+        <ion-fab slot="fixed" vertical="top" horizontal="start">
+          <ion-fab-button (click)="openTrackDownload()">
+            <ion-icon name="download-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ng-container>
+      <ng-container *ngIf="currentEcPoiId$|async as poiId">
+        <ion-fab slot="fixed" vertical="top" horizontal="start">
+          <ion-fab-button (click)="openPoiShare(poiId)">
+            <ion-icon name="share-social-outline"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ng-container>
       <ion-fab
         #fab2
         slot="fixed"
         vertical="top"
         horizontal="start"
         (click)="fab1?.close();fab3?.close()"
-        *ngIf="(currentTrack$|async)!= null"
       >
         <ion-fab-button>
           <ion-icon name="locate-outline"></ion-icon>
@@ -113,8 +131,8 @@
         <ion-fab-list side="start">
           <wm-btn-orientation
             class="webmapp-map-fab"
-            [degrees]="geoboxMap.mapCmp.mapDegrees"
-            (click)="geoboxMap.mapCmp.orientNorth()"
+            [degrees]="geoboxMap?.mapCmp?.mapDegrees"
+            (click)="geoboxMap?.mapCmp?.orientNorth()"
           >
           </wm-btn-orientation>
           <ion-fab-button (click)="navigation()">
@@ -143,6 +161,12 @@
         ></wm-btn-track-recording>
       </ion-fab>
     </div>
+    <wm-download
+      *ngIf="showDownload$|async"
+      [track]="currentTrack$|async"
+      (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
+      (goToEvt)="goToPage($event)"
+    ></wm-download>
   </wm-geobox-map>
 
   <ng-template #offline>
@@ -208,11 +232,4 @@
       </div>
     </wm-map>
   </ng-template>
-
-  <wm-download
-    *ngIf="showDownload$|async"
-    [track]="currentTrack$|async"
-    (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
-    (goToEvt)="goToPage($event)"
-  ></wm-download>
 </ion-content>

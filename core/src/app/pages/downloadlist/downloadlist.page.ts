@@ -2,7 +2,6 @@ import {AlertController, NavController} from '@ionic/angular';
 import {Component, OnInit} from '@angular/core';
 import {LineString} from 'geojson';
 import {LangService} from '@wm-core/localization/lang.service';
-import {GeoJSONFeature} from 'ol/format/GeoJSON';
 import {getEcTracks, removeEcTrack} from '@wm-core/utils/localForage';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {WmFeature} from '@wm-types/feature';
@@ -14,8 +13,8 @@ import {WmFeature} from '@wm-types/feature';
 })
 export class DownloadlistPage implements OnInit {
   public isSelectedActive = false;
-  public selected: GeoJSONFeature[] = [];
-  public tracks: GeoJSONFeature[] = [];
+  public selected: WmFeature<LineString>[] = [];
+  public tracks: WmFeature<LineString>[] = [];
 
   constructor(
     private _navCtrl: NavController,
@@ -56,10 +55,10 @@ export class DownloadlistPage implements OnInit {
     const clickedFeatureId = track.properties.id ?? null;
     this._urlHandlerSvc.updateURL({
       track: clickedFeatureId,
-    });
+    }, ['map']);
   }
 
-  async remove(track: GeoJSONFeature) {
+  async remove(track: WmFeature<LineString>) {
     const alert = await this._alertCtrl.create({
       header: this._langSvc.instant('Attenzione'),
       message: this._langSvc.instant('Sei sicuro di voler eliminare la traccia?'),
@@ -84,7 +83,7 @@ export class DownloadlistPage implements OnInit {
     }
   }
 
-  private async _remove(track: GeoJSONFeature) {
+  private async _remove(track: WmFeature<LineString>) {
     await removeEcTrack(`${track.properties.id}`);
     const idx = this.tracks.findIndex(x => x.properties.id == track.properties.id);
     this.tracks.splice(idx, 1);
