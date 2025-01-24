@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {WmFeatureCollection} from '@wm-types/feature';
+import {WmFeature, WmFeatureCollection} from '@wm-types/feature';
+import {LineString} from 'geojson';
 
 @Component({
   selector: 'webmapp-card-track',
@@ -8,11 +9,11 @@ import {WmFeatureCollection} from '@wm-types/feature';
 })
 export class CardTrackComponent {
   @Input('isDownload') isDownload: boolean = false;
-  @Input('track') track: WmFeatureCollection;
-  @Output('open') openClick: EventEmitter<WmFeatureCollection> =
-    new EventEmitter<WmFeatureCollection>();
-  @Output('remove') removeClick: EventEmitter<WmFeatureCollection> =
-    new EventEmitter<WmFeatureCollection>();
+  @Input('track') track: WmFeature<LineString>;
+  @Output('open') openClick: EventEmitter<WmFeature<LineString>> =
+    new EventEmitter<WmFeature<LineString>>();
+  @Output('remove') removeClick: EventEmitter<WmFeature<LineString>> =
+    new EventEmitter<WmFeature<LineString>>();
 
   open(): void {
     this.openClick.emit(this.track);

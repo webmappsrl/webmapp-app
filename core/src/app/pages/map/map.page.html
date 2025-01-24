@@ -1,168 +1,124 @@
 <ion-content scrollY="false">
-  <wm-geobox-map #geoboxMap>
-    <wm-map-details #details (closeEVT)="close()">
-      <div header>
-        <div class="webmapp-info-header-container">
-          <ng-container *ngIf="currentPoiProperties$|async as properties">
-            <div class="webmapp-pagepoi-info-header">
-              <ng-container *ngIf="properties?.taxonom?.poi_types as poiTypes;else poiTypeTemplate">
-                <ng-container *ngFor="let poiType of poiTypes">
-                  <div class="webmapp-pagepoi-info-header-pre-title">{{ poiType.name|wmtrans}}</div>
+  <div class="wm-map-container">
+    <wm-geobox-map #geoboxMap>
+      <wm-map-details #details (closeEVT)="close()">
+        <div header>
+          <div class="webmapp-info-header-container">
+            <ng-container *ngIf="currentPoiProperties$|async as properties">
+              <div class="webmapp-pagepoi-info-header">
+                <ng-container *ngIf="properties?.taxonom?.poi_types as poiTypes;else poiTypeTemplate">
+                  <ng-container *ngFor="let poiType of poiTypes">
+                    <div class="webmapp-pagepoi-info-header-pre-title">{{ poiType.name|wmtrans}}</div>
+                  </ng-container>
                 </ng-container>
-              </ng-container>
-              <ng-template #poiTypeTemplate>
-                <div
-                  class="webmapp-pagepoi-info-header-pre-title"
-                  *ngIf="properties?.taxonomy?.poi_type as poiType"
-                >
-                  {{ poiType.name|wmtrans}}
+                <ng-template #poiTypeTemplate>
+                  <div
+                    class="webmapp-pagepoi-info-header-pre-title"
+                    *ngIf="properties?.taxonomy?.poi_type as poiType"
+                  >
+                    {{ poiType.name|wmtrans}}
+                  </div>
+                </ng-template>
+                <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
+                  {{name|wmtrans}}
                 </div>
-              </ng-template>
-              <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
-                {{name|wmtrans}}
-              </div>
 
-              <div class="webmapp-pagepoi-info-header-arrows" *ngIf="properties?.isRelated">
-                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
-                  <i class="icon-outline-arrow-left" (click)="poiPrev()"></i>
-                  <ion-ripple-effect></ion-ripple-effect>
-                </div>
-                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
-                  <i
-                    class="icon-outline-arrow-right webmapp-pagepoi-info-header-arrow-icon"
-                    (click)="poiNext()"
-                  ></i>
-                  <ion-ripple-effect></ion-ripple-effect>
+                <div class="webmapp-pagepoi-info-header-arrows" *ngIf="properties?.isRelated">
+                  <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+                    <i class="icon-outline-arrow-left" (click)="poiPrev()"></i>
+                    <ion-ripple-effect></ion-ripple-effect>
+                  </div>
+                  <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
+                    <i
+                      class="icon-outline-arrow-right webmapp-pagepoi-info-header-arrow-icon"
+                      (click)="poiNext()"
+                    ></i>
+                    <ion-ripple-effect></ion-ripple-effect>
+                  </div>
                 </div>
               </div>
-            </div>
-          </ng-container>
-          <ng-container
-            *ngIf="(currentUgcPoiProperties$|async) as ugcPoiProperties;else titleTrack"
-          >
-            <ion-title> {{ugcPoiProperties.name|wmtrans}} </ion-title>
-          </ng-container>
-          <ng-template #titleTrack>
-            <ng-container *ngIf="currentTrack$|async as currentTrack;">
-              <ion-title> {{currentTrack?.properties?.name|wmtrans }} </ion-title>
             </ng-container>
-          </ng-template>
-        </div>
-      </div>
-
-      <wm-inner-component-html
-        *ngIf="popup$|async as popup"
-        [html]="popup.html"
-        [enableDismiss]="false"
-      ></wm-inner-component-html>
-      <ng-container *ngIf="currentPoiProperties$|async as properties">
-        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
-          <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
-        </ion-content>
-      </ng-container>
-      <wm-track-properties
-        (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
-        (dismiss)="updateEcTrack()"
-        (click)="savePosition()"
-        class="webmapp-track-details"
-      >
-        <ng-container *ngIf="(confOPTIONS$|async) as opt">
-          <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
-            <ion-item
-              *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
-              [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
-              class="webmapp-track-download-urls-item"
-              target="_blank"
+            <ng-container
+              *ngIf="(currentUgcPoiProperties$|async) as ugcPoiProperties;else titleTrack"
             >
-              <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
-              <ion-label class="webmapp-track-download-urls-item-label">
-                {{"apri pdf"|wmtrans}}
-              </ion-label>
-            </ion-item>
-          </ng-container>
+              <ion-title> {{ugcPoiProperties.name|wmtrans}} </ion-title>
+            </ng-container>
+            <ng-template #titleTrack>
+              <ng-container *ngIf="currentTrack$|async as currentTrack;">
+                <ion-title> {{currentTrack?.properties?.name|wmtrans }} </ion-title>
+              </ng-container>
+            </ng-template>
+          </div>
+        </div>
+
+        <wm-inner-component-html
+          *ngIf="popup$|async as popup"
+          [html]="popup.html"
+          [enableDismiss]="false"
+        ></wm-inner-component-html>
+        <ng-container *ngIf="currentPoiProperties$|async as properties">
+          <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
+            <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
+          </ion-content>
         </ng-container>
-      </wm-track-properties>
-      <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
-        <wm-ugc-poi-properties></wm-ugc-poi-properties>
-      </ng-container>
-      <ng-template #ugcTrack>
-        <wm-ugc-track-properties
-          *ngIf="(ugcTrack$|async) as ugcTrack"
-          [track]="ugcTrack"
+        <wm-track-properties
           (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
-          (poi-click)="setCurrentRelatedPoi($event)"
-        ></wm-ugc-track-properties>
-      </ng-template>
+          (dismiss)="updateEcTrack()"
+          (click)="savePosition()"
+          class="webmapp-track-details"
+        >
+          <ng-container *ngIf="(confOPTIONS$|async) as opt">
+            <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
+              <ion-item
+                *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
+                [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
+                class="webmapp-track-download-urls-item"
+                target="_blank"
+              >
+                <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
+                <ion-label class="webmapp-track-download-urls-item-label">
+                  {{"apri pdf"|wmtrans}}
+                </ion-label>
+              </ion-item>
+            </ng-container>
+          </ng-container>
+        </wm-track-properties>
+        <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
+          <wm-ugc-poi-properties></wm-ugc-poi-properties>
+        </ng-container>
+        <ng-template #ugcTrack>
+          <wm-ugc-track-properties
+            *ngIf="(ugcTrack$|async) as ugcTrack"
+            [track]="ugcTrack"
+            (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+            (poi-click)="setCurrentRelatedPoi($event)"
+          ></wm-ugc-track-properties>
+        </ng-template>
 
-      <ng-template #skeleton>
-        <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
-      </ng-template>
-    </wm-map-details>
-    <div bottom-right>
-      <ion-fab
-        #fab2
-        slot="fixed"
-        vertical="top"
-        horizontal="start"
-        (click)="fab1?.close();fab3?.close()"
-        *ngIf="(currentTrack$|async)!= null"
-      >
-        <ion-fab-button>
-          <ion-icon name="locate-outline"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-list side="start">
-          <wm-btn-orientation
-            class="webmapp-map-fab"
-            [degrees]="geoboxMap.mapCmp.mapDegrees"
-            (click)="geoboxMap.mapCmp.orientNorth()"
-          >
-          </wm-btn-orientation>
-          <ion-fab-button (click)="navigation()">
-            <ion-icon name="navigate-outline"></ion-icon>
-          </ion-fab-button>
-          <wm-btn-center-position
-            *ngIf="false"
-            (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
-          ></wm-btn-center-position>
-        </ion-fab-list>
-      </ion-fab>
-      <ion-fab
-        slot="fixed"
-        vertical="top"
-        horizontal="start"
-        #fab3
-        *ngIf="isTrackRecordingEnable$|async"
-        (click)="fab2?.close();fab1?.close()"
-      >
-        <ion-fab-button size="small" class="wm-btn-register-fab">
-          <i class="icon-outline-recording"></i>
-        </ion-fab-button>
-        <wm-btn-track-recording
-          [isLogged]="isLogged$|async"
-          (start-recording)="startRecording$.next($event)"
-        ></wm-btn-track-recording>
-      </ion-fab>
-    </div>
-  </wm-geobox-map>
-
-  <ng-template #offline>
-    <wm-map
-      #wmap
-      [wmMapConf]="confMap$|async"
-      wmMapPosition
-      [wmMapPositioncurrentLocation]="currentPosition$|async"
-      [wmMapPositionCenter]="centerPositionEvt$|async"
-      [wmMapPositionfocus]="wmMapPositionfocus$|async"
-      wmMapTrack
-      [track]="currentTrack$|async"
-      [wmMapTrackColor]="trackColor$|async"
-      [trackElevationChartElements]="trackElevationChartHoverElements$|async"
-      wmMapTrackRelatedPois
-      (related-poi-next)="currentPoiNextID$.next(+$event)"
-      (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
-      (related-poi)="setCurrentRelatedPoi($event)"
-    >
+        <ng-template #skeleton>
+          <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
+        </ng-template>
+      </wm-map-details>
       <div bottom-right>
+        <ng-container *ngIf="currentEcTrackProperties$|async as trackProperties">
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="openTrackShare(trackProperties.id)">
+              <ion-icon name="share-social-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="openTrackDownload()">
+              <ion-icon name="download-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </ng-container>
+        <ng-container *ngIf="currentEcPoiId$|async as poiId">
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="openPoiShare(poiId)">
+              <ion-icon name="share-social-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+        </ng-container>
         <ion-fab
           #fab2
           slot="fixed"
@@ -176,8 +132,8 @@
           <ion-fab-list side="start">
             <wm-btn-orientation
               class="webmapp-map-fab"
-              [degrees]="wmap.mapDegrees"
-              (click)="wmap.orientNorth()"
+              [degrees]="geoboxMap?.mapCmp?.mapDegrees"
+              (click)="geoboxMap?.mapCmp?.orientNorth()"
             >
             </wm-btn-orientation>
             <ion-fab-button (click)="navigation()">
@@ -206,13 +162,77 @@
           ></wm-btn-track-recording>
         </ion-fab>
       </div>
-    </wm-map>
-  </ng-template>
+    </wm-geobox-map>
 
-  <wm-download
-    *ngIf="showDownload$|async"
-    [track]="currentTrack$|async"
-    (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
-    (goToEvt)="goToPage($event)"
-  ></wm-download>
+    <ng-template #offline>
+      <wm-map
+        #wmap
+        [wmMapConf]="confMap$|async"
+        wmMapPosition
+        [wmMapPositioncurrentLocation]="currentPosition$|async"
+        [wmMapPositionCenter]="centerPositionEvt$|async"
+        [wmMapPositionfocus]="wmMapPositionfocus$|async"
+        wmMapTrack
+        [track]="currentTrack$|async"
+        [wmMapTrackColor]="trackColor$|async"
+        [trackElevationChartElements]="trackElevationChartHoverElements$|async"
+        wmMapTrackRelatedPois
+        (related-poi-next)="currentPoiNextID$.next(+$event)"
+        (wmMapTrackRelatedPoisNearestPoiEvt)="nearestPoi$.next($event)"
+        (related-poi)="setCurrentRelatedPoi($event)"
+      >
+        <div bottom-right>
+          <ion-fab
+            #fab2
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            (click)="fab1?.close();fab3?.close()"
+          >
+            <ion-fab-button>
+              <ion-icon name="locate-outline"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list side="start">
+              <wm-btn-orientation
+                class="webmapp-map-fab"
+                [degrees]="wmap.mapDegrees"
+                (click)="wmap.orientNorth()"
+              >
+              </wm-btn-orientation>
+              <ion-fab-button (click)="navigation()">
+                <ion-icon name="navigate-outline"></ion-icon>
+              </ion-fab-button>
+              <wm-btn-center-position
+                *ngIf="false"
+                (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)"
+              ></wm-btn-center-position>
+            </ion-fab-list>
+          </ion-fab>
+          <ion-fab
+            slot="fixed"
+            vertical="top"
+            horizontal="start"
+            #fab3
+            *ngIf="isTrackRecordingEnable$|async"
+            (click)="fab2?.close();fab1?.close()"
+          >
+            <ion-fab-button size="small" class="wm-btn-register-fab">
+              <i class="icon-outline-recording"></i>
+            </ion-fab-button>
+            <wm-btn-track-recording
+              [isLogged]="isLogged$|async"
+              (start-recording)="startRecording$.next($event)"
+            ></wm-btn-track-recording>
+          </ion-fab>
+        </div>
+      </wm-map>
+    </ng-template>
+
+    <wm-download
+      *ngIf="showDownload$|async"
+      [track]="currentTrack$|async"
+      (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
+      (goToEvt)="goToPage($event)"
+    ></wm-download>
+  </div>
 </ion-content>
