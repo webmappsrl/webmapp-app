@@ -7,7 +7,6 @@ import {startWith, tap} from 'rxjs/operators';
 
 import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {online} from 'src/app/store/network/network.selector';
-import {GeolocationService} from '@wm-core/services/geolocation.service';
 
 @Component({
   selector: 'wm-page-home',
@@ -28,17 +27,12 @@ export class HomePage {
     }),
   );
 
-  constructor(
-    private _store: Store<any>,
-    private _platform: Platform,
-    private _geolocationSvc: GeolocationService,
-  ) {}
+  constructor(private _store: Store<any>, private _platform: Platform) {}
 
   ionViewDidEnter(): void {
     this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {
       App.exitApp();
     });
-    this._geolocationSvc.start();
   }
 
   ionViewWillLeave(): void {

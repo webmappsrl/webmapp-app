@@ -188,6 +188,7 @@ export class MapPage {
     private _urlHandlerSvc: UrlHandlerService,
     _platform: Platform,
   ) {
+    this._geolocationSvc.start();
     this.currentPoiProperties$.subscribe(p => {
       if (p == null) {
         this.getPosition();
@@ -220,13 +221,6 @@ export class MapPage {
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
   }
 
-  closeDownload(): void {
-    this.showDownload$.next(false);
-    setTimeout(() => {
-      this.mapDetailsCmp.open();
-    }, 300);
-  }
-
   async favourite(trackID): Promise<void> {
     const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
     this.isFavourite$.next(isFav);
@@ -256,6 +250,7 @@ export class MapPage {
   }
 
   navigation(): void {
+    this._geolocationSvc.start();
     const isFocused = !this.wmMapPositionfocus$.value;
     this.wmMapPositionfocus$.next(isFocused);
     const isOpen = this.mapDetailsCmp.isOpen$.value;

@@ -8,7 +8,6 @@ import {select, Store} from '@ngrx/store';
 import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
-import {GEOHUB_SAVING_TRY_INTERVAL} from './constants/geohub';
 import {StatusService} from './services/status.service';
 import {LangService} from '@wm-core/localization/lang.service';
 import {startNetworkMonitoring} from './store/network/network.actions';
