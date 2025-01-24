@@ -63,7 +63,6 @@
     "tokml": "0.4.0",
     "ts-md5": "^1.2.9",
     "tslib": "^2.0.0",
-    "xmldom": "^0.6.0",
     "zone.js": "~0.13.2"
   },
   "devDependencies": {
