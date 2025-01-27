@@ -55,33 +55,35 @@
         [html]="popup.html"
         [enableDismiss]="false"
       ></wm-inner-component-html>
-      <ng-container *ngIf="currentPoiProperties$|async as properties">
+      <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
         <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
           <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
         </ion-content>
       </ng-container>
-      <wm-track-properties
-        (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
-        (dismiss)="updateEcTrack()"
-        (click)="savePosition()"
-        class="webmapp-track-details"
-      >
-        <ng-container *ngIf="(confOPTIONS$|async) as opt">
-          <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
-            <ion-item
-              *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
-              [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
-              class="webmapp-track-download-urls-item"
-              target="_blank"
-            >
-              <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
-              <ion-label class="webmapp-track-download-urls-item-label">
-                {{"apri pdf"|wmtrans}}
-              </ion-label>
-            </ion-item>
+      <ng-template #ecTrack>
+        <wm-track-properties
+          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
+          (dismiss)="updateEcTrack()"
+          (click)="savePosition()"
+          class="webmapp-track-details"
+        >
+          <ng-container *ngIf="(confOPTIONS$|async) as opt">
+            <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
+              <ion-item
+                *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
+                [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
+                class="webmapp-track-download-urls-item"
+                target="_blank"
+              >
+                <ion-icon class="wm-icn icon-link" slot="start"></ion-icon>
+                <ion-label class="webmapp-track-download-urls-item-label">
+                  {{"apri pdf"|wmtrans}}
+                </ion-label>
+              </ion-item>
+            </ng-container>
           </ng-container>
-        </ng-container>
-      </wm-track-properties>
+        </wm-track-properties>
+      </ng-template>
       <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
         <wm-ugc-poi-properties></wm-ugc-poi-properties>
       </ng-container>
