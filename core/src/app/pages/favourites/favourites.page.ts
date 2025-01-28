@@ -55,7 +55,7 @@ export class FavouritesPage implements OnInit {
 
   open(track: Feature<LineString>) {
     const clickedFeatureId = track.properties.id ?? null;
-    this._urlHandlerSvc.updateURL({track: clickedFeatureId});
+    this._urlHandlerSvc.changeURL('map', {track: clickedFeatureId});
   }
 
   async remove(track: Feature<LineString>) {
