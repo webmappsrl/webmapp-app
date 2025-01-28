@@ -10,8 +10,8 @@ import {IonFab, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {filter, map, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, from} from 'rxjs';
+import {filter, map, take, tap, switchMap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
@@ -105,7 +105,15 @@ export class MapPage {
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
   currentEcPoiId$ = this._store.select(currentEcPoiId);
-  currentEcTrackProperties$ = this._store.select(currentEcTrackProperties);
+  currentEcTrackProperties$ = this._store.select(currentEcTrackProperties).pipe(
+    tap(trackProperties => {
+      if (trackProperties?.id) {
+        from(this._geohubSvc.isFavouriteTrack(trackProperties?.id))
+          .pipe(take(1))
+          .subscribe(isFav => this.isFavourite$.next(isFav));
+      }
+    })
+  );
   currentLayer$ = this._store.select(ecLayer);
   currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
   currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);

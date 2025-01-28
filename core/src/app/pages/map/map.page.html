@@ -99,6 +99,16 @@
       </ng-template>
     </wm-map-details>
     <div bottom-right>
+      <ng-container
+          *ngIf="(authEnable$|async) && (isLogged$|async) && (currentEcTrackProperties$|async) as trackProperties"
+        >
+          <ion-fab slot="fixed" vertical="top" horizontal="start">
+            <ion-fab-button (click)="favourite(trackProperties?.id)">
+              <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
+              <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+      </ng-container>
       <ng-container *ngIf="currentEcTrackProperties$|async as trackProperties">
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="openTrackShare(trackProperties.id)">
