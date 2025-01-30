@@ -62,7 +62,6 @@
       </ng-container>
       <ng-template #ecTrack>
         <wm-track-properties
-          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
           (dismiss)="updateEcTrack()"
           (click)="savePosition()"
           class="webmapp-track-details"
@@ -91,7 +90,6 @@
         <wm-ugc-track-properties
           *ngIf="(ugcTrack$|async) as ugcTrack"
           [track]="ugcTrack"
-          (trackElevationChartHover)="setTrackElevationChartHoverElements($event)"
           (poi-click)="setCurrentRelatedPoi($event)"
         ></wm-ugc-track-properties>
       </ng-template>
