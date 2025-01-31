@@ -56,9 +56,7 @@
         [enableDismiss]="false"
       ></wm-inner-component-html>
       <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
-        <ion-content class="webmapp-pagepoi-info-body" scrollY="true">
           <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
-        </ion-content>
       </ng-container>
       <ng-template #ecTrack>
         <wm-track-properties
