@@ -635,4 +635,6 @@ export const appEN = {
     'The confirmation does not match. Type "delete account" to proceed.',
   'Conferma': 'Confirm',
   'Link utili': 'Useful links',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "To record tracks and display them correctly, enable the location permission in the settings",
+  "Apri impostazioni App": "Open app settings",
 };

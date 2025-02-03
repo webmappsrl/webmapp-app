@@ -628,4 +628,6 @@ export const appIT = {
   'Annulla': 'Annulla',
   'Conferma': 'Conferma',
   'Link utili': 'Link utili',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni",
+  "Apri impostazioni App": "Apri impostazioni App",
 };
