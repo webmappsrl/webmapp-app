@@ -81,6 +81,10 @@ wm-map-details {
       overflow-x: hidden;
       padding: 0 !important;
       margin: 0 !important;
+
+      wm-poi-properties {
+        position: relative;
+      }
     }
   }
 }

@@ -36,7 +36,7 @@ export class MapDetailsComponent implements AfterViewInit {
   height = 700;
   isOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   maxInfoheight = 850;
-  minInfoheight = 350;
+  minInfoheight = 320;
   modeFullMap = false;
   stepStatus = 0;
 
@@ -99,7 +99,7 @@ export class MapDetailsComponent implements AfterViewInit {
   }
 
   open(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${320}px`);
+    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.minInfoheight}px`);
     this.isOpen$.next(true);
   }
 
@@ -137,12 +137,6 @@ export class MapDetailsComponent implements AfterViewInit {
     this.toggleEVT.emit();
   }
 
-  private _clamp(min: number, n: number, max: number): number {
-    const val = Math.max(min, Math.min(n, max));
-    this.stepStatus = val;
-    return this.stepStatus;
-  }
-
   private _getCurrentHeight(): number {
     return this._elRef.nativeElement.offsetHeight;
   }
@@ -155,7 +149,7 @@ export class MapDetailsComponent implements AfterViewInit {
       onStart: ev => {
         this.toggleEVT.emit();
 
-        if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() === 56) {
+        if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
           this.open();
         } else {
           this.full();
@@ -172,29 +166,5 @@ export class MapDetailsComponent implements AfterViewInit {
       this._gesture.enable(true);
     });
     this.stepStatus = shouldComplete ? 0 : 1;
-  }
-
-  private getStep(ev) {
-    const delta = this._initialStep - ev.deltaY;
-    return this._clamp(0, delta / (this.maxInfoheight - this.minInfoheight), 1);
-  }
-
-  private onEnd(ev) {
-    if (!this._started) {
-      return;
-    }
-    this._gesture.enable(false);
-    const step = this.getStep(ev);
-    const shouldComplete = step > 0.5;
-    this.endAnimation(shouldComplete, step);
-  }
-
-  private onMove(ev) {
-    if (!this._started) {
-      this._animationSwipe.progressStart(false);
-      this._started = true;
-    }
-    const step = this.getStep(ev);
-    this._animationSwipe.progressStep(step);
   }
 }
