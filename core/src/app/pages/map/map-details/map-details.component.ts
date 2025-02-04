@@ -146,7 +146,10 @@ export class MapDetailsComponent implements AfterViewInit {
       el: this.dragHandleIcon.nativeElement,
       threshold: 0,
       gestureName: 'handler-drag',
+      gesturePriority: 100,
+      passive: false,
       onStart: ev => {
+        ev.event?.preventDefault();
         this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
@@ -155,6 +158,9 @@ export class MapDetailsComponent implements AfterViewInit {
           this.full();
         }
       },
+      onEnd: ev => {
+        ev.event?.preventDefault();
+      }
     });
 
     this._gesture.enable(true);
