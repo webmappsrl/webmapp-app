@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { ProfilePage } from './profile.page';
 import { ProfileDataTabComponent } from './tabs/profile-data-tab/profile-data-tab.component';
-import { ProfileRecordsTabComponent } from './tabs/profile-record-tab/profile-records-tab.component';
 
 const routes: Routes = [
   {
@@ -13,10 +12,6 @@ const routes: Routes = [
       {
         path: 'profile-data',
         component: ProfileDataTabComponent,
-      },
-      {
-        path: 'profile-records',
-        component: ProfileRecordsTabComponent,
       },
       {
         path: '',

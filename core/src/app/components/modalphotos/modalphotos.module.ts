@@ -4,7 +4,6 @@ import {IonicModule} from '@ionic/angular';
 import {ModalPhotoSingleComponent} from './modal-photo-single/modal-photo-single.component';
 import {ModalSuccessModule} from '../modal-success/modal-success.module';
 import {ModalphotosComponent} from './modalphotos.component';
-import {ModalphotosaveComponent} from './modalphotosave/modalphotosave.component';
 import {NgModule} from '@angular/core';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 import {PopoverphotoComponent} from './popoverphoto/popoverphoto.component';
@@ -15,7 +14,6 @@ import {WmSharedModule} from '@wm-core/shared/shared.module';
   declarations: [
     ModalphotosComponent,
     PopoverphotoComponent,
-    ModalphotosaveComponent,
     ModalPhotoSingleComponent,
   ],
   imports: [

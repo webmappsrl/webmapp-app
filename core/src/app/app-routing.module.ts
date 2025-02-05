@@ -13,16 +13,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/waypoint/waypoint.module').then(m => m.WaypointPageModule),
   },
   {
-    path: 'photolist',
-    loadChildren: () =>
-      import('./pages/photolist/photolist.module').then(m => m.PhotolistPageModule),
-  },
-  {
-    path: 'photodetail',
-    loadChildren: () =>
-      import('./pages/photodetail/photodetail.module').then(m => m.PhotodetailPageModule),
-  },
-  {
     path: 'favourites',
     loadChildren: () =>
       import('./pages/favourites/favourites.module').then(m => m.FavouritesPageModule),
