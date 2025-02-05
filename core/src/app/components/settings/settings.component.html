@@ -28,6 +28,22 @@
       <ion-item>
         <ion-note>
           <h5>
+            {{ "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni" | wmtrans }}.
+          </h5>
+        </ion-note>
+      </ion-item>
+      <ion-item
+        button
+        (click)="openAppSettings()"
+        class="webmapp-settings-button"
+        mode="md"
+      >
+        <ion-label>{{'Apri impostazioni App'|wmtrans}}</ion-label>
+        <i class="icon-outline-chevron-right-outline" slot="end"></i>
+      </ion-item>
+      <ion-item>
+        <ion-note>
+          <h5>
             {{'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.'|wmtrans}}
           </h5>
           <br />

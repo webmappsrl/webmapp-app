@@ -626,4 +626,6 @@ export const appFR = {
     'La confirmation ne correspond pas. Tapez "supprimer le compte" pour continuer.',
   'Conferma': 'Confirmer',
   'Link utili': 'Liens utiles',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
+  "Apri impostazioni App": "Ouvrir les paramètres de l'application",
 };

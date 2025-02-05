@@ -173,6 +173,10 @@ export class SettingsComponent {
       );
   }
 
+  openAppSettings(): void {
+    this._geolocationSvc.openAppSettings();
+  }
+
   openCmp(nameCmp: string) {
     this.confPages$
       .pipe(

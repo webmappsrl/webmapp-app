@@ -610,5 +610,7 @@
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.": "Are you sure you want to delete your account? You must type 'delete account' to proceed.",
   "Digita 'elimina account'": "Type 'delete account'",
   "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "The confirmation does not match. Type 'delete account' to proceed.",
-  "Link utili": "Useful links"
+  "Link utili": "Useful links",
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "To record tracks and display them correctly, enable the location permission in the settings",
+  "Apri impostazioni App": "Open app settings"
 }
