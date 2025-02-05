@@ -26,7 +26,6 @@ import {Feature, LineString} from 'geojson';
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  providers: [LangService],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

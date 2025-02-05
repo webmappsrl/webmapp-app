@@ -33,7 +33,6 @@ import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  providers: [LangService],
 })
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);

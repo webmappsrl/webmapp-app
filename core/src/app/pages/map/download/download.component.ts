@@ -15,7 +15,6 @@ import {downloadPanelStatus} from '@wm-core/types/downloadpanel.enum';
   selector: 'wm-download',
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss'],
-  providers: [LangService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
