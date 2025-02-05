@@ -36,17 +36,6 @@
         <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
         <div class="webmapp-profile-tabs-tab-button-border"></div>
       </ion-tab-button>
-      <ion-tab-button
-        *ngIf="(authEnable$|async) && (isLogged$|async)"
-        (click)="tabClick($event, '/profile/profile-records')"
-        tab="profile-records"
-        class="webmapp-profile-tabs-tab-button"
-      >
-        <ion-label class="webmapp-profile-tabs-tab-label">
-          {{'Le tue registrazioni'|wmtrans}}
-        </ion-label>
-        <div class="webmapp-profile-tabs-tab-button-border"></div>
-      </ion-tab-button>
     </ion-tab-bar>
   </ion-tabs>
   <ng-container *ngIf="(authEnable$|async) === true">

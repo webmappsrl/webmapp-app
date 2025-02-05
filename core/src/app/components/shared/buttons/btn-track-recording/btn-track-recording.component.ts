@@ -10,11 +10,8 @@ import {
 
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
-import {ModalphotosaveComponent} from 'src/app/components/modalphotos/modalphotosave/modalphotosave.component';
 import {NavigationExtras} from '@angular/router';
-import {CameraService} from '@wm-core/services/camera.service';
 import {LoginComponent} from '@wm-core/login/login.component';
-import {UgcService} from '@wm-core/store/features/ugc/ugc.service';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -30,12 +27,10 @@ export class BtnTrackRecordingComponent {
 
   constructor(
     private _navCtrl: NavController,
-    private _modalController: ModalController,
-    private _cameraSvc: CameraService,
-    private _ugcSvc: UgcService,
+    private _modalController: ModalController
   ) {}
 
-  openModalLogin() {
+  openModalLogin(): void {
     this._modalController
       .create({
         component: LoginComponent,
@@ -51,7 +46,7 @@ export class BtnTrackRecordingComponent {
       });
   }
 
-  async openModalSuccess(photos) {
+  async openModalSuccess(photos): Promise<void> {
     const modaSuccess = await this._modalController.create({
       component: ModalSuccessComponent,
       componentProps: {
@@ -63,28 +58,6 @@ export class BtnTrackRecordingComponent {
     await modaSuccess.onDidDismiss();
   }
 
-  async photo() {
-    if (this.isLogged) {
-      let photoCollection = await this._cameraSvc.addPhotos();
-
-      const modal = await this._modalController.create({
-        component: ModalphotosaveComponent,
-        componentProps: {
-          photos: photoCollection,
-        },
-      });
-      await modal.present();
-      const res = await modal.onDidDismiss();
-
-      if (!res.data.dismissed) {
-        await this._ugcSvc.saveMedias(res.data.photos);
-        await this.openModalSuccess(res.data.photos);
-      }
-    } else {
-      this.openModalLogin();
-    }
-  }
-
   track(): void {
     if (this.isLogged) {
       let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
@@ -94,7 +67,7 @@ export class BtnTrackRecordingComponent {
     }
   }
 
-  waypoint() {
+  waypoint(): void {
     if (this.isLogged) {
       let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
       this._navCtrl.navigateForward('waypoint', navigationExtras);
