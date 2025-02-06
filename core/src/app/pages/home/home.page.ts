@@ -6,7 +6,7 @@ import {Observable, Subscription} from 'rxjs';
 import {startWith, tap} from 'rxjs/operators';
 
 import {loadConf} from '@wm-core/store/conf/conf.actions';
-import {online} from 'src/app/store/network/network.selector';
+import {online} from '@wm-core/store/network/network.selector';
 
 @Component({
   selector: 'wm-page-home',

@@ -1,10 +1,3 @@
 <ion-content class="webmapp-home-content">
-  <ng-container *ngIf="(online$|async);else offline">
-    <wm-home></wm-home>
-  </ng-container>
+  <wm-home></wm-home>
 </ion-content>
-<ng-template #offline>
-  <div class="wm-home-header-container">
-    <downloaded-tracks-box></downloaded-tracks-box>
-  </div>
-</ng-template>

@@ -20,8 +20,6 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {ModalphotosModule} from './components/modalphotos/modalphotos.module';
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
-import {NetworkEffects} from './store/network/network.effects';
-import {networkReducer} from './store/network/netwotk.reducer';
 import packageJson from 'package.json';
 import {APP_ID, APP_VERSION, ENVIRONMENT_CONFIG} from '@wm-core/store/conf/conf.token';
 import {ConfService} from '@wm-core/store/conf/conf.service';
@@ -41,17 +39,12 @@ registerLocaleData(localeIt);
       name: 'webmapp_app_storage',
       driverOrder: ['indexeddb', 'websql', 'localstorage'],
     }),
-    EffectsModule.forRoot([NetworkEffects]),
+    EffectsModule.forRoot(),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
-    StoreModule.forRoot(
-      {
-        network: networkReducer,
-      },
-      {},
-    ),
+    StoreModule.forRoot(),
     AppRoutingModule,
     SharedModule,
     SettingsModule,

@@ -10,8 +10,6 @@ import {appFR} from 'src/assets/i18n/fr';
 import {appIT} from 'src/assets/i18n/it';
 import {StatusService} from './services/status.service';
 import {LangService} from '@wm-core/localization/lang.service';
-import {startNetworkMonitoring} from './store/network/network.actions';
-import {INetworkRootState} from './store/network/netwotk.reducer';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
 import {
@@ -27,6 +25,8 @@ import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths} from '@wm-core/store/auth/auth.actions';
 import {getImg} from '@wm-core/utils/localForage';
 import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
+import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
+import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 
 @Component({
   selector: 'webmapp-app-root',

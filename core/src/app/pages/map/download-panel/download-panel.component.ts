@@ -15,6 +15,9 @@ import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
 import {LineString} from 'geojson';
 import {downloadEcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
+import {Store} from '@ngrx/store';
+import {goToHome, openDownloads} from '@wm-core/store/user-activity/user-activity.action';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
   selector: 'wm-download-panel',
   templateUrl: './download-panel.component.html',
@@ -36,7 +39,11 @@ export class WmDownloadPanelComponent implements OnChanges {
   isInit = true;
   status: DownloadStatus = {finish: false, map: 0, data: 0, media: 0, install: 0};
 
-  constructor(private _cdr: ChangeDetectorRef) {
+  constructor(
+    private _cdr: ChangeDetectorRef,
+    private _store: Store,
+    private _urlHandlerSvc: UrlHandlerService,
+  ) {
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
   }
 
@@ -58,7 +65,9 @@ export class WmDownloadPanelComponent implements OnChanges {
   }
 
   gotoDownloads(): void {
-    this.exit.emit(null);
+    this._store.dispatch(goToHome());
+    this._store.dispatch(openDownloads());
+    this._urlHandlerSvc.changeURL('home');
   }
 
   async start() {

@@ -2,13 +2,13 @@ import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '
 import {Observable} from 'rxjs';
 import {StatusService} from 'src/app/services/status.service';
 import {select, Store} from '@ngrx/store';
-import {online} from 'src/app/store/network/network.selector';
 import {IonTabs} from '@ionic/angular';
 import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {goToHome} from '@wm-core/store/user-activity/user-activity.action';
+import {online} from '@wm-core/store/network/network.selector';
+import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 
 @Component({
   selector: 'webmapp-page-tabs',

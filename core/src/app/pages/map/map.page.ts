@@ -33,8 +33,6 @@ import {
   confRecordTrackShow,
 } from '@wm-core/store/conf/conf.selector';
 import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
-import {online} from 'src/app/store/network/network.selector';
-import {INetworkRootState} from 'src/app/store/network/netwotk.reducer';
 import {HomePage} from '../home/home.page';
 import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
@@ -52,6 +50,8 @@ import {
 } from '@wm-core/store/features/ec/ec.selector';
 import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
 import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
+import {online} from '@wm-core/store/network/network.selector';
+import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 
 export interface IDATALAYER {
   high: string;
@@ -112,7 +112,7 @@ export class MapPage {
           .pipe(take(1))
           .subscribe(isFav => this.isFavourite$.next(isFav));
       }
-    })
+    }),
   );
   currentLayer$ = this._store.select(ecLayer);
   currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
