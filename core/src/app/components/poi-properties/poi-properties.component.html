@@ -1,20 +1,21 @@
 <ng-container *ngIf="properties!= null">
-  <div class="webmapp-pagepoi-info-body">
+  <div class="wm-poi-properties-body">
     <wm-excerpt *ngIf="properties?.excerpt as excerpt" [excerpt]="excerpt"></wm-excerpt>
-    <wm-image-gallery
+    <wm-tab-image-gallery
       *ngIf="properties?.image_gallery?.length"
       [imageGallery]="properties?.image_gallery"
-    ></wm-image-gallery>
-    <wm-address *ngIf="properties?.address as address" [address]="address"></wm-address>
-    <wm-elevation *ngIf="properties?.ele as ele" [elevation]="ele"></wm-elevation>
-    <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
-    <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
-    <wm-related-urls *ngIf="properties?.related_url as relatedUrl" [relatedUrls]="relatedUrl">
-    </wm-related-urls>
+    ></wm-tab-image-gallery>
+    <wm-tab-detail [properties]="properties"></wm-tab-detail>
     <wm-tab-description
       *ngIf="properties?.description"
       [description]="properties?.description"
     ></wm-tab-description>
+    <wm-feature-useful-urls>
+      <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
+      <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
+      <wm-related-urls *ngIf="properties?.related_url as relatedUrl" [relatedUrls]="relatedUrl">
+      </wm-related-urls>
+    </wm-feature-useful-urls>
     <div *ngIf="properties?.osm_url as osm" target="_blank">
       <ion-icon class="wm-icn " name="link-outline" slot="start"></ion-icon>
       <a class="webmapp-track-download-urls-item-label" [href]="osm">
