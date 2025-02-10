@@ -11,7 +11,7 @@ import {appIT} from 'src/assets/i18n/it';
 import {StatusService} from './services/status.service';
 import {LangService} from '@wm-core/localization/lang.service';
 import {DOCUMENT} from '@angular/common';
-import {from, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 import {
   confGEOLOCATION,
   confLANGUAGES,
@@ -23,11 +23,10 @@ import {IGEOLOCATION} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths} from '@wm-core/store/auth/auth.actions';
-import {getImg, getUgcLoadedOnce} from '@wm-core/utils/localForage';
+import {getImg} from '@wm-core/utils/localForage';
 import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
-import {setUgcLoaded} from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -87,13 +86,6 @@ export class AppComponent {
         SplashScreen.hide();
       },
     );
-    from(getUgcLoadedOnce())
-      .pipe(take(1))
-      .subscribe(ugcLoadedOnce => {
-        if (ugcLoadedOnce) {
-          this._store.dispatch(setUgcLoaded({ugcLoaded: true}));
-        }
-      });
 
     this.status.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
