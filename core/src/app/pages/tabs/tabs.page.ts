@@ -44,9 +44,15 @@ export class TabsPage {
       }
       return;
     }
-
-    if (['home', 'map'].includes(tab)) {
+    if (tab === 'map') {
       this._urlHandlerSvc.changeURL(tab);
+    }
+    if (tab === 'home') {
+      const queryParams = {
+        ...this._urlHandlerSvc.getCurrentQueryParams(),
+        ...{track: undefined, poi: undefined},
+      };
+      this._urlHandlerSvc.changeURL(tab, queryParams);
     }
   }
 }
