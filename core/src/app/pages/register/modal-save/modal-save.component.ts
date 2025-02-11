@@ -1,22 +1,24 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActionSheetController, AlertController, ModalController, Platform} from '@ionic/angular';
-import {TranslateService} from '@ngx-translate/core';
-import {Md5} from 'ts-md5';
-import {activities} from 'src/app/constants/activities';
-import {from, Observable} from 'rxjs';
-import {UntypedFormGroup} from '@angular/forms';
-import {CameraService} from '@wm-core/services/camera.service';
-import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
-import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
-import {ConfService} from '@wm-core/store/conf/conf.service';
-import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
-import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {DeviceService} from '@wm-core/services/device.service';
-import {take} from 'rxjs/operators';
-import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
-import {switchMap} from 'rxjs/operators';
+import {Observable, from} from 'rxjs';
+import {Md5} from 'ts-md5';
+
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
+import {Photo} from '@capacitor/camera';
+import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
+import {TranslateService} from '@ngx-translate/core';
+import {CameraService} from '@wm-core/services/camera.service';
+import {DeviceService} from '@wm-core/services/device.service';
+import {ConfService} from '@wm-core/store/conf/conf.service';
+import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
+import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
+import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
+import {switchMap, take} from 'rxjs/operators';
+import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
+import {activities} from 'src/app/constants/activities';
+import {ESuccessType} from 'src/app/types/esuccess.enum';
+
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
@@ -27,12 +29,12 @@ export class ModalSaveComponent implements OnInit {
   public activities = activities;
   public activity: string;
   public description: string;
-  fg: UntypedFormGroup;
+  public fg: UntypedFormGroup;
   public isValidArray: boolean[] = [false, false];
-  public photos: WmFeature<Media, MediaProperties>[] = [];
-  recordedFeature: WmFeature<LineString>;
+  public photos: Photo[] = [];
+  public recordedFeature: WmFeature<LineString>;
   public title: string;
-  track: WmFeature<LineString>;
+  public track: WmFeature<LineString>;
   public validate = false;
 
   constructor(
@@ -47,26 +49,15 @@ export class ModalSaveComponent implements OnInit {
     private _store: Store<any>,
   ) {}
 
-  ngOnInit() {
-    if (this.track && this.track.properties) {
-      const properties = this.track.properties;
-      this.title = properties.name ?? '';
-      this.description = properties.form?.description ?? '';
-      this.activity = properties.form?.activity ?? '';
-    }
-  }
-
   async addPhotos(): Promise<void> {
     const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._cameraSvc.getPhotoData(
-        libraryItemCopy.properties.photo.webPath,
-      );
+      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.webPath);
       const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._cameraSvc.getPhotoData(p.properties.photo.webPath),
+        const pData = await this._cameraSvc.getPhotoData(p.webPath),
           pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
@@ -180,6 +171,15 @@ export class ModalSaveComponent implements OnInit {
     return allValid;
   }
 
+  ngOnInit() {
+    if (this.track && this.track.properties) {
+      const properties = this.track.properties;
+      this.title = properties.name ?? '';
+      this.description = properties.form?.description ?? '';
+      this.activity = properties.form?.activity ?? '';
+    }
+  }
+
   async openModalSuccess(track: WmFeature<LineString>): Promise<any> {
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
@@ -190,14 +190,6 @@ export class ModalSaveComponent implements OnInit {
     });
     await modaSuccess.present();
     return modaSuccess.onDidDismiss();
-  }
-
-  remove(image: WmFeature<Media, MediaProperties>): void {
-    const i = this.photos.findIndex(x => x.properties?.uuid === image.properties?.uuid);
-    if (i > -1) {
-      this.photos.splice(i, 1);
-    }
-    this._cdr.detectChanges();
   }
 
   async save(): Promise<void> {
@@ -222,14 +214,16 @@ export class ModalSaveComponent implements OnInit {
       device,
     };
 
-    from(saveUgcTrack(this.recordedFeature)).pipe(
-      take(1),
-      switchMap(_ => this.backToSuccess()),
-      switchMap(_ => this.openModalSuccess(this.recordedFeature)),
-    ).subscribe(async (dismiss) => {
-      await dismiss;
-      this._store.dispatch(syncUgcTracks());
-    });
+    from(saveUgcTrack(this.recordedFeature))
+      .pipe(
+        take(1),
+        switchMap(_ => this.backToSuccess()),
+        switchMap(_ => this.openModalSuccess(this.recordedFeature)),
+      )
+      .subscribe(async dismiss => {
+        await dismiss;
+        this._store.dispatch(syncUgcTracks());
+      });
   }
 
   setIsValid(idx: number, isValid: boolean): void {

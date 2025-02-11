@@ -22,6 +22,7 @@ import {ConfService} from '@wm-core/store/conf/conf.service';
 import {DeviceService} from '@wm-core/services/device.service';
 import {switchMap, take} from 'rxjs/operators';
 import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
+import {Photo} from '@capacitor/camera';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -37,7 +38,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   fg: UntypedFormGroup;
   isValidArray: boolean[] = [false, false];
   nominatim: any;
-  photos: WmFeature<Media, MediaProperties>[] = [];
+  photos: Photo[] = [];
   position: Location;
   positionCity: string = 'città';
   positionString: string;
@@ -74,11 +75,11 @@ export class ModalWaypointSaveComponent implements OnInit {
     loading.dismiss();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.properties.photo.webPath);
+      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.webPath);
       const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._photoSvc.getPhotoData(p.properties.photo.webPath);
+        const pData = await this._photoSvc.getPhotoData(p.webPath);
         const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
@@ -116,10 +117,9 @@ export class ModalWaypointSaveComponent implements OnInit {
     await modaSuccess.onDidDismiss();
   }
 
-  remove(image: WmFeature<Media, MediaProperties>): void {
-    const i = this.photos.findIndex(x => x.properties.uuid === image.properties.uuid);
-    if (i > -1) {
-      this.photos.splice(i, 1);
+  remove(idx: number): void {
+    if (idx > -1) {
+      this.photos.splice(idx, 1);
     }
     this._cdr.detectChanges();
   }
@@ -150,11 +150,13 @@ export class ModalWaypointSaveComponent implements OnInit {
       },
     };
 
-    from(saveUgcPoi(ugcPoi)).pipe(
-      take(1),
-      switchMap(_ => this._modalCtrl.dismiss()),
-      switchMap(_ => this.openModalSuccess(ugcPoi)),
-    ).subscribe(_ => this._store.dispatch(syncUgcPois()));
+    from(saveUgcPoi(ugcPoi))
+      .pipe(
+        take(1),
+        switchMap(_ => this._modalCtrl.dismiss()),
+        switchMap(_ => this.openModalSuccess(ugcPoi)),
+      )
+      .subscribe(_ => this._store.dispatch(syncUgcPois()));
   }
 
   setIsValid(idx: number, isValid: boolean): void {

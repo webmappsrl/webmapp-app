@@ -17,7 +17,6 @@ import {ModalCoinsModule} from './components/modal-coins/modal-coins.module';
 import {ModalGiftCoinsModule} from './components/modal-gift-coins/modal-gift-coin.module';
 import {ModalStoreSuccessModule} from './components/modal-store-success/modal-store-success.module';
 import {ModalSuccessModule} from './components/modal-success/modal-success.module';
-import {ModalphotosModule} from './components/modalphotos/modalphotos.module';
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
@@ -48,7 +47,6 @@ registerLocaleData(localeIt);
     AppRoutingModule,
     SharedModule,
     SettingsModule,
-    ModalphotosModule,
     ModalSuccessModule,
     ModalCoinsModule,
     ModalStoreSuccessModule,

@@ -1,10 +1,7 @@
 <ion-header class="webmapp-modalwaypoint-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button
-        color="dark"
-        (click)="close()"
-      >
+      <ion-button color="dark" (click)="close()">
         <ion-icon slot="icon-only" name="chevron-back"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -74,19 +71,19 @@
               </div>
             </div>
           </ion-col>
-          <ion-col size="4" *ngFor="let image of photos">
+          <ion-col size="4" *ngFor="let image of photos;let idx = index">
             <div class="webmapp-waypoint-modalsave-imagecontainer">
               <ion-icon
                 name="close-outline"
                 class="webmapp-waypoint-modalsave-remove"
-                (click)="remove(image)"
+                (click)="remove(idx)"
               >
               </ion-icon>
               <!-- <img class="webmapp-waypoint-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-              <ng-container *ngIf="image.properties as photoProp">
+              <ng-container *ngIf="image as photoProp">
                 <wm-img
                   class="webmapp-waypoint-modalsave-image"
-                  [src]="photoProp?.photo?.webPath"
+                  [src]="photoProp?.webPath"
                 ></wm-img>
               </ng-container>
             </div>
