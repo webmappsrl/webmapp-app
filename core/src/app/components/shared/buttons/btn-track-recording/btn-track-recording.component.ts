@@ -46,18 +46,6 @@ export class BtnTrackRecordingComponent {
       });
   }
 
-  async openModalSuccess(photos): Promise<void> {
-    const modaSuccess = await this._modalController.create({
-      component: ModalSuccessComponent,
-      componentProps: {
-        type: ESuccessType.PHOTOS,
-        photos,
-      },
-    });
-    await modaSuccess.present();
-    await modaSuccess.onDidDismiss();
-  }
-
   track(): void {
     if (this.isLogged) {
       let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};

@@ -205,7 +205,7 @@ export class ModalSaveComponent implements OnInit {
       ...this.recordedFeature.properties,
       name: this.fg.value.title,
       form: this.fg.value,
-      photos: this.photos,
+      media: this.photos,
       uuid: generateUUID(),
       distanceFilter,
       app_id: `${this._configSvc.geohubAppId}`,

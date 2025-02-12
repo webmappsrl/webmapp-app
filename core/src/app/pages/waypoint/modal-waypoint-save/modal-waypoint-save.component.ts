@@ -15,7 +15,7 @@ import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from '@wm-core/store/conf/conf.selector';
 import {CameraService} from '@wm-core/services/camera.service';
-import {Media, MediaProperties, WmFeature} from '@wm-types/feature';
+import {WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
 import {generateUUID, saveUgcPoi} from '@wm-core/utils/localForage';
 import {ConfService} from '@wm-core/store/conf/conf.service';
@@ -139,7 +139,7 @@ export class ModalWaypointSaveComponent implements OnInit {
       properties: {
         name: this.fg.value.title,
         type: 'waypoint',
-        photos: this.photos,
+        media: this.photos,
         nominatim: this.nominatim,
         uuid: generateUUID(),
         app_id: `${this._configSvc.geohubAppId}`,

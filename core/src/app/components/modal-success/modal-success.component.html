@@ -8,170 +8,149 @@
     ></ion-icon>
   </div>
   <div class="webmapp-modalsuccess-body">
-    <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" *ngIf="isTrack" />
-    <img class="webmapp-modalsuccess-img" src="assets/images/photosuccess.png" *ngIf="isPhotos" />
-    <img
-      class="webmapp-modalsuccess-img"
-      src="assets/images/waypointsuccess.png"
-      *ngIf="isWaypoint"
-    />
-    <div class="webmapp-modalsuccess-title" *ngIf="isTrack">
-      {{'modals.success.track.title' | wmtrans}}
-    </div>
-    <div class="webmapp-modalsuccess-title" *ngIf="isPhotos">
-      {{'modals.success.photos.title' | wmtrans}}
-    </div>
-    <div class="webmapp-modalsuccess-title" *ngIf="isWaypoint">
-      {{'modals.success.waypoint.title' | wmtrans}}
-    </div>
-    <div class="webmapp-modalsuccess-text" *ngIf="isTrack">
-      {{'modals.success.track.text' | wmtrans}}
-    </div>
-    <div class="webmapp-modalsuccess-text" *ngIf="isPhotos">
-      {{'modals.success.photos.text' | wmtrans}}
-    </div>
-    <div class="webmapp-modalsuccess-text" *ngIf="isWaypoint">
-      {{'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.' | wmtrans}}
-    </div>
-    <ion-card class="webmapp-modalsuccess-infopanel" *ngIf="isTrack" (click)="openTrack(track)">
-      <div class="webmapp-modalsuccess-infopanel-top">
-        <div class="webmapp-modalsuccess-infopanel-top-map">
-          <wm-map [wmMapConf]="confMap$|async" [wmMapOnly]="true" [wmMapGeojson]="track"></wm-map>
-        </div>
-        <div class="webmapp-modalsuccess-infopanel-top-info">
-          <div class="webmapp-modalsuccess-infopanel-top-name">{{track.properties.name}}</div>
-          <div class="webmapp-modalsuccess-infopanel-top-date">{{trackDate | date}}</div>
-        </div>
+    <ng-container *ngIf="isTrack">
+      <img class="webmapp-modalsuccess-img" src="assets/images/registersuccess.svg" />
+      <div class="webmapp-modalsuccess-title">
+        {{'modals.success.track.title' | wmtrans}}
       </div>
-
-      <div class="webmapp-modalsuccess-infopanel-middle">
-        <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
-        {{trackTime?.hours | number : '2.0-0'}}:
-        {{trackTime?.minutes| number : '2.0-0'}}:
-        {{trackTime?.seconds| number : '2.0-0'}}
+      <div class="webmapp-modalsuccess-text">
+        {{'modals.success.track.text' | wmtrans}}
       </div>
-      <div class="webmapp-modalsuccess-infopanel-middle">
-        <i class="webmapp-icon-distance webmapp-modalsuccess-infopanel-icon"></i>
-        {{trackodo | number : '1.1-1'}}km
-      </div>
-      <div class="webmapp-modalsuccess-infopanel-middle">
-        <i class="webmapp-icon-downhill-outline webmapp-modalsuccess-infopanel-icon"></i>
-        {{trackSlope | number:'1.0-00'}}m
-      </div>
-      <ng-container *ngIf="track.properties as properties">
-        <div
-          class="webmapp-modalsuccess-infopanel-photobottom"
-          *ngIf="properties.photos && properties.photos.length"
-        >
-          <div
-            class="webmapp-modalsuccess-infopanel-photocontainer"
-            *ngFor="let photo of properties.photos  | slice:0:3;let idx = index"
-          >
-            <ng-container *ngIf="photo.properties as photoProp">
-              <div *ngIf="idx<3">
-                <wm-img [src]="photoProp?.photo?.webPath " class="webmapp-modalsuccess-infopanel-photo"></wm-img>
-                <div
-                  class="webmapp-modalsuccess-infopanel-photoextra"
-                  *ngIf="idx===2 && photoProp?.photos?.length>3"
-                >
-                  +{{properties.photos.length-3}}
-                </div>
-              </div>
-            </ng-container>
+      <ion-card class="webmapp-modalsuccess-infopanel" (click)="openTrack(track)">
+        <div class="webmapp-modalsuccess-infopanel-top">
+          <div class="webmapp-modalsuccess-infopanel-top-map">
+            <wm-map [wmMapConf]="confMap$|async" [wmMapOnly]="true" [wmMapGeojson]="track"></wm-map>
+          </div>
+          <div class="webmapp-modalsuccess-infopanel-top-info">
+            <div class="webmapp-modalsuccess-infopanel-top-name">{{track.properties.name}}</div>
+            <div class="webmapp-modalsuccess-infopanel-top-date">{{trackDate | date}}</div>
           </div>
         </div>
-      </ng-container>
-    </ion-card>
 
-    <div class="webmapp-modalsuccess-photogallery" *ngIf="isPhotos" (click)="gotoPhotos()">
-      <div
-        class="webmapp-modalsuccess-photocontainer"
-        *ngFor="let photo of photos | slice:0:3;let idx = index;"
-      >
-        <div *ngIf="idx<3">
-          <ng-container *ngIf="photo.properties as photoProp">
-            <wm-img
-              [src]="photoProp?.photo?.webPath"
-              class="webmapp-modalsuccess-photo"
-            ></wm-img>
+        <div class="webmapp-modalsuccess-infopanel-middle">
+          <i class="webmapp-icon-duration-outline webmapp-modalsuccess-infopanel-icon"></i>
+          {{trackTime?.hours | number : '2.0-0'}}: {{trackTime?.minutes| number : '2.0-0'}}:
+          {{trackTime?.seconds| number : '2.0-0'}}
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-middle">
+          <i class="webmapp-icon-distance webmapp-modalsuccess-infopanel-icon"></i>
+          {{trackodo | number : '1.1-1'}}km
+        </div>
+        <div class="webmapp-modalsuccess-infopanel-middle">
+          <i class="webmapp-icon-downhill-outline webmapp-modalsuccess-infopanel-icon"></i>
+          {{trackSlope | number:'1.0-00'}}m
+        </div>
+        <ng-container *ngIf="track.properties as properties">
+          <div
+            class="webmapp-modalsuccess-infopanel-photobottom"
+            *ngIf="properties.media && properties.media.length"
+          >
             <div
-              class="webmapp-modalsuccess-photoextra"
-              *ngIf="idx===2 && photoProp?.photos?.length>3"
+              class="webmapp-modalsuccess-infopanel-photocontainer"
+              *ngFor="let photo of properties.media  | slice:0:3;let idx = index"
             >
-              +{{photoProp?.photos?.length-3}}
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-    <ion-card
-      class="webmapp-modalsuccess-infopanel"
-      *ngIf="isWaypoint"
-      (click)="openWaypoint(waypoint)"
-    >
-      <div class="webmapp-modalsuccess-infopanel-top">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="4">
-              <div class="webmapp-modalsuccess-infopanel-top-map">
-                <wm-map
-                  [wmMapConf]="confMap$|async"
-                  [wmMapOnly]="true"
-                  [wmMapGeojson]="waypoint"
-                ></wm-map>
-              </div>
-            </ion-col>
-            <ion-col
-              size="8"
-              class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info"
-              *ngIf="waypoint.properties as properties"
-            >
-              <div class="webmapp-modalsuccess-infopanel-top-name" *ngIf="properties.name as name">
-                {{name}}
-              </div>
-              <div class="webmapp-modalsuccess-infopanel-top-date" *ngIf="properties.date as date">
-                {{date| date }}
-              </div>
-              <div
-                class="webmapp-modalsuccess-infopanel-section"
-                *ngIf="waypoint.geometry as geometry"
-              >
-                <i class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"></i>
-                <div class="webmapp-modalsuccess-infopanel-top-text">
-                  {{geometry[0]??geometry?.coordinates[0]}} , {{geometry[1]??geometry?.coordinates[1]}}
+                <div *ngIf="idx<3">
+                  <wm-img
+                    [src]="photo?.webPath "
+                    class="webmapp-modalsuccess-infopanel-photo"
+                  ></wm-img>
+                  <div
+                    class="webmapp-modalsuccess-infopanel-photoextra"
+                    *ngIf="idx===2 && properties.media?.length>3"
+                  >
+                    +{{properties.media.length-3}}
+                  </div>
                 </div>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
-      <ng-container *ngIf="waypoint.properties as properties">
-        <div
-          class="webmapp-modalsuccess-infopanel-photobottom"
-          *ngIf="properties.photos && properties.photos.length > 0"
-        >
-          <div
-            class="webmapp-modalsuccess-infopanel-photocontainer"
-            *ngFor="let photo of properties.photos | slice:0:3;let idx = index"
-          >
-            <div *ngIf="idx<3">
-              <ng-container *ngIf="photo.properties as photoProp">
-                <wm-img
-                  [src]="photoProp?.photo?.webPath"
-                  class="webmapp-modalsuccess-infopanel-photo"
-                ></wm-img>
-                <div
-                  class="webmapp-modalsuccess-infopanel-photoextra"
-                  *ngIf="idx===2 && photoProp?.photos?.length>3"
-                >
-                  +{{photoProp?.photos?.length-3}}
-                </div>
-              </ng-container>
             </div>
           </div>
+        </ng-container>
+      </ion-card>
+    </ng-container>
+    <ng-container *ngIf="isWaypoint">
+      <img class="webmapp-modalsuccess-img" src="assets/images/waypointsuccess.png" />
+
+      <div class="webmapp-modalsuccess-title">
+        {{'modals.success.waypoint.title' | wmtrans}}
+      </div>
+
+      <div class="webmapp-modalsuccess-text">
+        {{'Hai salvato correttamente il tuo waypoint. Puoi visualizzarlo accedendo al tuo profilo.' | wmtrans}}
+      </div>
+
+      <ion-card class="webmapp-modalsuccess-infopanel" (click)="openWaypoint(waypoint)">
+        <div class="webmapp-modalsuccess-infopanel-top">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <div class="webmapp-modalsuccess-infopanel-top-map">
+                  <wm-map
+                    [wmMapConf]="confMap$|async"
+                    [wmMapOnly]="true"
+                    [wmMapGeojson]="waypoint"
+                  ></wm-map>
+                </div>
+              </ion-col>
+              <ion-col
+                size="8"
+                class="webmapp-modalsuccess-infopanel-top-info webmapp-modalsuccess-infopanel-top-info"
+                *ngIf="waypoint.properties as properties"
+              >
+                <div
+                  class="webmapp-modalsuccess-infopanel-top-name"
+                  *ngIf="properties.name as name"
+                >
+                  {{name}}
+                </div>
+                <div
+                  class="webmapp-modalsuccess-infopanel-top-date"
+                  *ngIf="properties.date as date"
+                >
+                  {{date| date }}
+                </div>
+                <div
+                  class="webmapp-modalsuccess-infopanel-section"
+                  *ngIf="waypoint.geometry as geometry"
+                >
+                  <i
+                    class="webmapp-icon-pin-outline webmapp-modalsuccess-infopanel-sectionicon"
+                  ></i>
+                  <div class="webmapp-modalsuccess-infopanel-top-text">
+                    {{geometry[0]??geometry?.coordinates[0]}} ,
+                    {{geometry[1]??geometry?.coordinates[1]}}
+                  </div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
-      </ng-container>
-    </ion-card>
+        <ng-container *ngIf="waypoint.properties as properties">
+          <div
+            class="webmapp-modalsuccess-infopanel-photobottom"
+            *ngIf="properties.media && properties.media.length > 0"
+          >
+            <div
+              class="webmapp-modalsuccess-infopanel-photocontainer"
+              *ngFor="let photo of properties.media | slice:0:3;let idx = index"
+            >
+              <div *ngIf="idx<3">
+                <ng-container>
+                  <wm-img
+                    [src]="photo.webPath"
+                    class="webmapp-modalsuccess-infopanel-photo"
+                  ></wm-img>
+                  <div
+                    class="webmapp-modalsuccess-infopanel-photoextra"
+                    *ngIf="idx===2 &&  properties?.media?.length>3"
+                  >
+                    +{{ properties?.media?.length}}
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ion-card>
+    </ng-container>
   </div>
   <div class="webmapp-modalsuccess-footer" (click)="close()">
     {{'modals.success.return' | wmtrans}}

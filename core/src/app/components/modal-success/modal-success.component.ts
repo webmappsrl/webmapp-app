@@ -2,14 +2,12 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {IonSlides, ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
-import {NavigationOptions} from '@ionic/angular/providers/nav-controller';
 import {Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {confMAP} from '@wm-core/store/conf/conf.selector';
 import {
   LineStringProperties,
   Media,
-  MediaProperties,
   PointProperties,
   WmFeature,
 } from '@wm-types/feature';
@@ -26,7 +24,6 @@ export class ModalSuccessComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private PHOTOSCATTER = 100;
 
-  @Input() photos: WmFeature<Media, MediaProperties>[];
   @Input() track: WmFeature<LineString, LineStringProperties>;
   @Input() type: ESuccessType;
   @Input() waypoint: WmFeature<Point, PointProperties>;
@@ -66,28 +63,6 @@ export class ModalSuccessComponent implements OnInit {
         this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track);
         this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(this.track));
         this.isTrack = true;
-        break;
-      case ESuccessType.PHOTOS:
-        this.isPhotos = true;
-        this.photos.forEach(x => {
-          let scatter = Math.random() * this.PHOTOSCATTER;
-          if (this.topValues.length) {
-            while (
-              Math.abs(scatter - this.topValues[this.topValues.length - 1]) < this.MINSCATTER
-            ) {
-              scatter = Math.random() * this.PHOTOSCATTER;
-            }
-          }
-          this.topValues.push(scatter);
-        });
-
-        setTimeout(() => {
-          //need for slider to use correct slides per view
-          if (this.slider) {
-            this.slider.update();
-          }
-        }, 100);
-
         break;
       case ESuccessType.WAYPOINT:
         this.isWaypoint = true;
