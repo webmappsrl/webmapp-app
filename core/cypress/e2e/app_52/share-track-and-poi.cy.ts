@@ -18,8 +18,6 @@ describe('Share track and poi', () => {
   });
 
   it('Should open share window when click on share button', () => {
-    cy.wait(1000);
-
     getShareButton().as('shareBtn');
     cy.get('@shareBtn').click();
   });
@@ -33,8 +31,6 @@ describe('Share track and poi', () => {
   });
 
   it('Should open share window when click on share button', () => {
-    cy.wait(1000);
-
     getShareButton().as('shareBtn');
     cy.get('@shareBtn').click();
   });
