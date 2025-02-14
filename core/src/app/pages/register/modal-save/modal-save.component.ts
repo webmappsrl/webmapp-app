@@ -7,7 +7,6 @@ import {UntypedFormGroup} from '@angular/forms';
 import {Photo} from '@capacitor/camera';
 import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {TranslateService} from '@ngx-translate/core';
 import {CameraService} from '@wm-core/services/camera.service';
 import {DeviceService} from '@wm-core/services/device.service';
 import {ConfService} from '@wm-core/store/conf/conf.service';
@@ -18,6 +17,7 @@ import {switchMap, take} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {activities} from 'src/app/constants/activities';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
+import {LangService} from '@wm-core/localization/lang.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -41,7 +41,7 @@ export class ModalSaveComponent implements OnInit {
     private _modalCtrl: ModalController,
     private _configSvc: ConfService,
     private _deviceSvc: DeviceService,
-    private _translate: TranslateService,
+    private _langSvc: LangService,
     private _alertController: AlertController,
     private _cameraSvc: CameraService,
     private _cdr: ChangeDetectorRef,
@@ -90,7 +90,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async close(): Promise<void> {
-    const translation = await this._translate
+    const translation = await this._langSvc
       .get([
         'pages.register.modalsave.closemodal.title',
         'pages.register.modalsave.closemodal.back',
@@ -129,7 +129,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async exit(): Promise<void> {
-    const translation = await this._translate
+    const translation = await this._langSvc
       .get([
         'pages.register.modalexit.title',
         'pages.register.modalexit.text',
