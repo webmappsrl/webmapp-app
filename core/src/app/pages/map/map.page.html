@@ -69,11 +69,11 @@
               <ion-item
                 *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
                 [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
-                class="wm-track-useful-urls-item"
+                class="wm-feature-useful-urls-item"
                 target="_blank"
               >
                 <ion-icon name="link-outline" slot="start"></ion-icon>
-                <ion-label class="wm-track-useful-urls-item-label">
+                <ion-label class="wm-feature-useful-urls-item-label">
                   {{"Apri pdf"|wmtrans}}
                 </ion-label>
               </ion-item>
