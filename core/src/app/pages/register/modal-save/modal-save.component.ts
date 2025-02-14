@@ -12,7 +12,7 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {ConfService} from '@wm-core/store/conf/conf.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
 import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
-import {WmFeature} from '@wm-types/feature';
+import {Media, WmFeature} from '@wm-types/feature';
 import {switchMap, take} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {activities} from 'src/app/constants/activities';
@@ -74,6 +74,13 @@ export class ModalSaveComponent implements OnInit {
       dismissed: false,
       save: false,
     });
+  }
+
+  remove(index: number): void {
+    if (index > -1) {
+      this.photos.splice(index, 1);
+    }
+    this._cdr.detectChanges();
   }
 
   backToRecording(): void {
