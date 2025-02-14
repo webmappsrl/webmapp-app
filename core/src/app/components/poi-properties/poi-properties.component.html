@@ -5,12 +5,15 @@
       *ngIf="properties?.image_gallery?.length"
       [imageGallery]="properties?.image_gallery"
     ></wm-tab-image-gallery>
-    <wm-tab-detail [properties]="properties"></wm-tab-detail>
+    <wm-tab-detail
+      *ngIf="showTechnicalDetails$|async"
+      [properties]="properties"
+    ></wm-tab-detail>
     <wm-tab-description
       *ngIf="properties?.description"
       [description]="properties?.description"
     ></wm-tab-description>
-    <wm-feature-useful-urls>
+    <wm-feature-useful-urls *ngIf="showUsefulUrls$|async">
       <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
       <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
       <wm-related-urls *ngIf="properties?.related_url as relatedUrl" [relatedUrls]="relatedUrl">
