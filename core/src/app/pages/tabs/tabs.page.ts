@@ -50,7 +50,12 @@ export class TabsPage {
     if (tab === 'home') {
       const queryParams = {
         ...this._urlHandlerSvc.getCurrentQueryParams(),
-        ...{track: undefined, poi: undefined},
+        ...{
+          track: undefined,
+          poi: undefined,
+          ugc_track: undefined,
+          ugc_poi: undefined,
+        },
       };
       this._urlHandlerSvc.changeURL(tab, queryParams);
     }
