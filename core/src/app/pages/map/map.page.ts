@@ -189,7 +189,7 @@ export class MapPage {
     private _urlHandlerSvc: UrlHandlerService,
     _platform: Platform,
   ) {
-    this._geolocationSvc.start();
+    this._geolocationSvc.startNavigation();
     this.currentPoiProperties$.subscribe(p => {
       if (p == null) {
         this.getPosition();
@@ -251,7 +251,7 @@ export class MapPage {
   }
 
   navigation(): void {
-    this._geolocationSvc.start();
+    this._geolocationSvc.startNavigation();
     const isFocused = !this.wmMapPositionfocus$.value;
     this.wmMapPositionfocus$.next(isFocused);
     const isOpen = this.mapDetailsCmp.isOpen$.value;

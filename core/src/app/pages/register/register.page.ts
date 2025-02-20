@@ -115,7 +115,6 @@ export class RegisterPage implements OnInit, OnDestroy {
   backToMap(): void {
     this._navCtrl.navigateForward('map');
     this.reset();
-    this._geolocationSvc.stop();
   }
 
   background(ev: MouseEvent): void {
@@ -137,7 +136,7 @@ export class RegisterPage implements OnInit, OnDestroy {
   }
 
   ionViewDidEnter(): void {
-    this._geolocationSvc.start();
+    this._geolocationSvc.startNavigation();
     this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {});
   }
 

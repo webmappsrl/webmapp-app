@@ -140,7 +140,7 @@ export class SettingsComponent {
   }
 
   async dismiss(): Promise<void> {
-    this._geolocationSvc.reset();
+    this._geolocationSvc.stopAll();
     this._modalCtrl.dismiss('webmapp-login-modal');
   }
 
