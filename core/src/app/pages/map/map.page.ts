@@ -241,6 +241,7 @@ export class MapPage {
 
   ionViewWillEnter(): void {
     this.scrollPositions = {};
+    this._geolocationSvc.startNavigation();
   }
 
   ionViewWillLeave(): void {
