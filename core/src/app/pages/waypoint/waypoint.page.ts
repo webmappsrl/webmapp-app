@@ -49,9 +49,7 @@ export class WaypointPage implements OnInit, OnDestroy {
     });
   }
   ngOnInit(): void {
-    if (this._geolocationSvc.currentMode !== 'recording') {
-      this._geolocationSvc.startNavigation();
-    }
+    this._geolocationSvc.startNavigation();
 
     this._geolocationSvc.onLocationChange
       .pipe(
