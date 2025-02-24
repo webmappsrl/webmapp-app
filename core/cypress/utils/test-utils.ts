@@ -1,5 +1,5 @@
 import {environment} from 'src/environments/environment';
-import {removeAuth} from '@wm-core/utils/localForage';
+import {clearUgcData, removeAuth} from '@wm-core/utils/localForage';
 
 /**
  * Clears the test state.
@@ -9,7 +9,28 @@ import {removeAuth} from '@wm-core/utils/localForage';
 export function clearTestState(): void {
   cy.clearLocalStorage();
   cy.clearCookies();
+  clearUgcData();
   removeAuth();
+}
+
+/**
+ * Intercepts the configuration request and enables authentication.
+ * @returns A Cypress chainable object.
+ */
+export function confWithAuthEnabled(): Cypress.Chainable {
+  return cy.intercept('GET', confURL, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        AUTH: {
+          ...res.body.AUTH,
+          enable: true,
+          webappEnable: true,
+        },
+      };
+      res.send(newRes);
+    });
+  });
 }
 
 /**
@@ -58,6 +79,31 @@ export function goProfile() {
 }
 
 /**
+ * Mocks the get api ugc tracks request.
+ * @param mockRes - The mock response.
+ * @returns A Cypress chainable object.
+ */
+export function mockGetApiTracks(mockRes: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.api}/api/v2/ugc/track/index`, req => {
+    req.reply(res => {
+      res.send(mockRes);
+    });
+  });
+}
+
+/**
+ * Mocks the save api ugc tracks request with a network error.
+ * @returns A Cypress chainable object.
+ */
+export function mockSaveApiTracksOffline(): Cypress.Chainable {
+  // forceNetworkError: true, correctly simulates the network error, but still sends the track to the backend
+  return cy.intercept('POST', `${environment.api}/api/v2/ugc/track/store`, {
+    statusCode: 500,
+    body: {error: 'Simulated server error'},
+  });
+}
+
+/**
  * Opens a layer by its title.
  * @param layerTitle the title of the layer to open.
  */
@@ -91,6 +137,7 @@ export function openTrack(trackTitle: string) {
   });
 }
 
+const confURL = `${environment.awsApi}/conf/52.json`;
 export const data = {
   layers: {
     ecTrack: 'Tracks test e2e',
