@@ -2,18 +2,18 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ModalController, NavController} from '@ionic/angular';
 
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {NominatimService} from 'src/app/services/nominatim.service';
-
+import GeoJSON from 'ol/format/GeoJSON.js';
 import {ModalWaypointSaveComponent} from './modal-waypoint-save/modal-waypoint-save.component';
 import {Location} from 'src/app/types/location';
 import {Store} from '@ngrx/store';
-import {ActivatedRoute, Router} from '@angular/router';
 import {confMAP, confPOIFORMS} from '@wm-core/store/conf/conf.selector';
-import {LineString} from 'geojson';
-import {WmFeature} from '@wm-types/feature';
+import {fromLonLat} from 'ol/proj';
+import {Point} from 'ol/geom';
+import {Collection, Feature as OlFeature} from 'ol';
 
 @Component({
   selector: 'webmapp-waypoint',
@@ -22,43 +22,26 @@ import {WmFeature} from '@wm-types/feature';
 })
 export class WaypointPage implements OnInit, OnDestroy {
   private _destroyer: Subject<boolean> = new Subject<boolean>();
-
+  point = new Point([]);
   confMap$: Observable<any> = this._store.select(confMAP);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
-  currentTrack$: BehaviorSubject<WmFeature<LineString> | null> = new BehaviorSubject(null);
   location: Location;
-  locationString: string;
+  locationString$: BehaviorSubject<string> = new BehaviorSubject(null);
   nominatimObj$: BehaviorSubject<any> = new BehaviorSubject(null);
-
+  geojson$: BehaviorSubject<any> = new BehaviorSubject(null);
+  currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
   constructor(
     private _geolocationSvc: GeolocationService,
     private _nominatimSvc: NominatimService,
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
     private _store: Store,
-    private _route: ActivatedRoute,
-    private _router: Router,
-  ) {
-    this._route.queryParams.subscribe(params => {
-      if (this._router.getCurrentNavigation().extras.state) {
-        const state = this._router.getCurrentNavigation().extras.state;
-        if (state.currentTrack) {
-          this.currentTrack$.next(state.currentTrack);
-        }
-      }
-    });
-  }
+  ) {}
   ngOnInit(): void {
     this._geolocationSvc.startNavigation();
-
-    this._geolocationSvc.onLocationChange
-      .pipe(
-        distinctUntilChanged((a, b) => a.latitude === b.latitude && a.longitude === b.longitude),
-        takeUntil(this._destroyer),
-      )
-      .subscribe(x => {
-        this.onChangeLocation(x);
-      });
+    this.currentPosition$.pipe(takeUntil(this._destroyer)).subscribe(loc => {
+      this.onChangeLocation(loc);
+    });
   }
 
   ngOnDestroy(): void {
@@ -66,8 +49,16 @@ export class WaypointPage implements OnInit, OnDestroy {
   }
 
   onChangeLocation(location: Location): void {
-    this.locationString = `${location.latitude}, ${location.longitude}`;
     this.location = location;
+    const coordinate = fromLonLat([location.longitude, location.latitude]);
+    const point = new Point(coordinate);
+    const featureCollection = new Collection([new OlFeature({geometry: point})]);
+    const geojson = new GeoJSON({featureProjection: 'EPSG:3857'}).writeFeaturesObject(
+      featureCollection.getArray(),
+    );
+    this.geojson$.next(geojson);
+    const locationString = `${location.latitude}, ${location.longitude}`;
+    this.locationString$.next(locationString);
     this._nominatimSvc
       .getFromPosition(location)
       .pipe(takeUntil(this._destroyer))

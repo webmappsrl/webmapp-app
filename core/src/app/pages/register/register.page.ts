@@ -19,7 +19,6 @@ import {LineString as olLinestring, Point} from 'ol/geom';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
-import {LangService} from '@wm-core/localization/lang.service';
 import {confMAP, confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
 @Component({
