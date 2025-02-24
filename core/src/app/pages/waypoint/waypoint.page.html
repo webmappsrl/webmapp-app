@@ -16,9 +16,8 @@
   <wm-map
     class="webmapp-pagewaypoint-map-container"
     [wmMapConf]="confMap$|async"
-    [wmMapGeojson]="location"
+    [wmMapGeojson]="geojson$|async"
     wmMapTrack
-    [track]="currentTrack$|async"
   ></wm-map>
 
   <ion-card class="webmapp-pagewaypoint-infopanel" *ngIf="this.nominatimObj$|async as nominatimObj">
@@ -29,11 +28,14 @@
     </div>
     <div class="webmapp-pagewaypoint-infopanel-bottom">
       <div class="webmapp-pagewaypoint-infopanel-bottom-title">{{nominatimObj.display_name}}</div>
-      <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{locationString}}</div>
+      <div class="webmapp-pagewaypoint-infopanel-bottom-data">{{locationString$|async }}</div>
     </div>
   </ion-card>
 
-  <ion-button class="webmapp-pagewaypoint-savebtn" [disabled]="!locationString" (click)="save()"
+  <ion-button
+    class="webmapp-pagewaypoint-savebtn"
+    [disabled]="!(locationString$|async)"
+    (click)="save()"
     >{{'pages.waypoint.save' | wmtrans}}</ion-button
   >
 </ion-content>
