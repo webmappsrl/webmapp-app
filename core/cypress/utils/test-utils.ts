@@ -101,6 +101,6 @@ export const data = {
     exampleTwo: 'Track example two',
   },
   pois: {
-    ecPoi: 'Poi example one',
+    exampleOne: 'Poi example one',
   },
 };
