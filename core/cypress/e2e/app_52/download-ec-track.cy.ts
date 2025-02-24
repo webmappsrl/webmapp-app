@@ -23,7 +23,7 @@ describe('Download ec-track', () => {
 
   it('Should visualize the download track', () => {
     getGoToDownloadsButton().click();
-    cy.get('wm-search-box').contains('ion-card-title', 'Track example one').should('exist');
+    cy.get('wm-search-box').contains('ion-card-title', data.tracks.exampleOne).should('exist');
   });
 });
 
@@ -32,5 +32,5 @@ function getDownloadButton() {
 }
 
 function getGoToDownloadsButton() {
-  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 10000});
+  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 7000});
 }
