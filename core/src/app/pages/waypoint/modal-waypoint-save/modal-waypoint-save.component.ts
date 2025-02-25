@@ -48,7 +48,7 @@ export class ModalWaypointSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _photoSvc: CameraService,
+    private _cameraSvc: CameraService,
     private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
@@ -64,23 +64,15 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   async addPhotos(): Promise<void> {
-    let library = [];
-    const loading = await this._loadingCtrl.create();
-    loading.present();
-    try {
-      library = await this._photoSvc.getPhotos();
-    } catch (_) {
-      loading.dismiss();
-    }
-    loading.dismiss();
+    const library = await this._cameraSvc.getPhotos();
     library.forEach(async libraryItem => {
       const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._photoSvc.getPhotoData(libraryItemCopy.webPath);
+      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.webPath);
       const md5 = Md5.hashStr(JSON.stringify(photoData));
       let exists: boolean = false;
       for (let p of this.photos) {
-        const pData = await this._photoSvc.getPhotoData(p.webPath);
-        const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+        const pData = await this._cameraSvc.getPhotoData(p.webPath),
+          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
         if (md5 === pictureMd5) {
           exists = true;
           break;
@@ -153,13 +145,22 @@ export class ModalWaypointSaveComponent implements OnInit {
     from(saveUgcPoi(ugcPoi))
       .pipe(
         take(1),
-        switchMap(_ => this._modalCtrl.dismiss()),
+        switchMap(_ => this.backToSuccess()),
         switchMap(_ => this.openModalSuccess(ugcPoi)),
       )
-      .subscribe(_ => this._store.dispatch(syncUgcPois()));
+      .subscribe(async dismiss => {
+        await dismiss;
+        this._store.dispatch(syncUgcPois());
+      });
   }
 
   setIsValid(idx: number, isValid: boolean): void {
     this.isValidArray[idx] = isValid;
+  }
+  backToSuccess(): Promise<boolean> {
+    return this._modalCtrl.dismiss({
+      dismissed: false,
+      save: true,
+    });
   }
 }
