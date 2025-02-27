@@ -64,7 +64,9 @@ export class ModalSaveComponent implements OnInit {
           break;
         }
       }
-      if (!exists) this.photos.push(libraryItemCopy);
+      if (this.photos.length < 3) {
+        if (!exists) this.photos.push(libraryItemCopy);
+      }
       this._cdr.detectChanges();
     });
   }
