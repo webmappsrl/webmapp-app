@@ -27,6 +27,7 @@ import {getImg} from '@wm-core/utils/localForage';
 import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
+import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -54,9 +55,10 @@ export class AppComponent {
     this._store.dispatch(loadAuths());
     this._store.dispatch(loadConf());
     this._store.dispatch(ecTracks({init: true}));
+    this._store.dispatch(loadEcPois());
+    this._store.dispatch(syncUgc());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this._store.dispatch(loadEcPois());
     this._store
       .select(confLANGUAGES)
       .pipe(
