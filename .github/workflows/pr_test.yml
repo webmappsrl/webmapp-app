@@ -36,7 +36,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          start: cd core && ionic serve
+          start: ionic serve
+          working-directory: core
           wait-on: http://localhost:8100
           wait-on-timeout: 280
           headed: false
