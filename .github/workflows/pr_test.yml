@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -24,9 +26,6 @@ jobs:
       - name: Create Cypress.env.json file
         run: |
           echo '{ "email": "${{ secrets.TEST_EMAIL }}", "password": "${{ secrets.TEST_PASSWORD }}" }' > Cypress.env.json
-
-      - name: List directory contents
-        run: ls -R core/src/environments
           
       - name: Update geohubId in environment.ts
         run: |
