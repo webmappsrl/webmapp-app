@@ -1,5 +1,112 @@
 # Changelog
 
+## [3.0.0](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v3.0.0) (2025-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* This update may introduce breaking changes in the codebase due to changes in the @capacitor/device library.
+
+### Features
+
+* add e2e test for orientation and location buttons oc: 4989 ([#94](https://github.com/webmappsrl/webmapp-app/issues/94)) ([fa100bb](https://github.com/webmappsrl/webmapp-app/commit/fa100bb1a533f29d7fff3e5f1b13668ba6440479))
+* **map:** replace JSON display with custom component ([904c7af](https://github.com/webmappsrl/webmapp-app/commit/904c7af0702385f8b037ffde5fb15eba197bd259))
+* **tabs:** update URL handling for home tab oc:4907 ([bff6c43](https://github.com/webmappsrl/webmapp-app/commit/bff6c432845a7f33a16b750cf08849d71401eef1))
+
+
+### Bug Fixes
+
+* Add dynamic title for UGC POI properties in map page ([#74](https://github.com/webmappsrl/webmapp-app/issues/74)) ([f6d70be](https://github.com/webmappsrl/webmapp-app/commit/f6d70be98eb34e8ba276e9d6bfc8eaaef8889c63))
+* **ec:** add loadEcPois action to app.component.ts ([27cf0fe](https://github.com/webmappsrl/webmapp-app/commit/27cf0fe30d6b208be7590176012a93efecbd74b4))
+* **tabs:** add functionality to go to home page ([6b69d46](https://github.com/webmappsrl/webmapp-app/commit/6b69d466a25bfd1af64abd0d1fcbbee2f31c1dc2))
+
+
+### Miscellaneous
+
+* Add custom Cypress commands and test utilities ([b78c697](https://github.com/webmappsrl/webmapp-app/commit/b78c697d4a7d72f4428d92a757c2ecdf1d2b9213))
+* Add cypress.config.ts and update package-lock.json ([#87](https://github.com/webmappsrl/webmapp-app/issues/87)) ([19ac578](https://github.com/webmappsrl/webmapp-app/commit/19ac578881c9760526bba0fc6e4ca029e6fea5ae))
+* Add display of UGC POI properties in map page ([50a188b](https://github.com/webmappsrl/webmapp-app/commit/50a188bd85147c4f081cc8186b2db16ed39aee45))
+* add distance and duration filters test oc:4925 ([#90](https://github.com/webmappsrl/webmapp-app/issues/90)) ([20c8184](https://github.com/webmappsrl/webmapp-app/commit/20c818442ec9a361ba61f4b70689c49a0249fbab))
+* add e2e test for downloading ec-track oc: 4974 ([#91](https://github.com/webmappsrl/webmapp-app/issues/91)) ([f6b4aa6](https://github.com/webmappsrl/webmapp-app/commit/f6b4aa61b37363fb734564ef1bad94aeab277206))
+* add e2e test for non-accessible track ([#85](https://github.com/webmappsrl/webmapp-app/issues/85)) ([75ef1be](https://github.com/webmappsrl/webmapp-app/commit/75ef1be58dea125681b8eced6f7788df0da0ce69))
+* Add e2e tests for sharing track and poi oc: 4927 ([#86](https://github.com/webmappsrl/webmapp-app/issues/86)) ([9fbe96e](https://github.com/webmappsrl/webmapp-app/commit/9fbe96ef086e9f01e7ad3e62d2ba3cedcea94a59))
+* add flow line quote feature oc:4955 ([#93](https://github.com/webmappsrl/webmapp-app/issues/93)) ([ae05a25](https://github.com/webmappsrl/webmapp-app/commit/ae05a259e4654ca0ddab35bc8dab8b9977a3f712))
+* add import UGC test ([#96](https://github.com/webmappsrl/webmapp-app/issues/96)) ([013656d](https://github.com/webmappsrl/webmapp-app/commit/013656df93aefebfd6581b6360aeba49718a19a1))
+* add login offline e2e test ([#97](https://github.com/webmappsrl/webmapp-app/issues/97)) ([f6fc436](https://github.com/webmappsrl/webmapp-app/commit/f6fc436d4762061870ec5c9b2e37e78352148ec3))
+* Add subproject commit 493779ecb1d24800a5ba0016a89d20ea5b9c82aa to wm-types ([dbcd331](https://github.com/webmappsrl/webmapp-app/commit/dbcd3317f7386613c4b92fa5b7feea9532cbe956))
+* Add tests for favorites functionality oc:4990 ([#92](https://github.com/webmappsrl/webmapp-app/issues/92)) ([5541a52](https://github.com/webmappsrl/webmapp-app/commit/5541a527ecaf9edba0f1987015167cbc42920c8c))
+* add tests for visualizing sync badge  oc:5003 ([#95](https://github.com/webmappsrl/webmapp-app/issues/95)) ([e30f69b](https://github.com/webmappsrl/webmapp-app/commit/e30f69b40ca6dee72b4d059b2fc87ba3a7286af1))
+* Add UGC synchronization oc:4835 ([2ebdb59](https://github.com/webmappsrl/webmapp-app/commit/2ebdb59953ee9f85006253af8d875a0beef03228))
+* **favourites:** update URL handling in open method ([771ae2e](https://github.com/webmappsrl/webmapp-app/commit/771ae2e23c192bf7c642ddccde1ad99f0e015681))
+* **map:** start navigation on view enter ([81ec700](https://github.com/webmappsrl/webmapp-app/commit/81ec70095d3c49cc111903469aac79c40f56598d))
+* **map:** start navigation on view enter ([4759c30](https://github.com/webmappsrl/webmapp-app/commit/4759c3079a47cb5bcfbbfa40b1266dedaaa6841d))
+* offline refactor and info device ([f3543ba](https://github.com/webmappsrl/webmapp-app/commit/f3543baba527d3098eba5d3759009de891621173))
+* **poi-properties:** add excerpt display to properties oc: 4183 ([#66](https://github.com/webmappsrl/webmapp-app/issues/66)) ([d5a9e47](https://github.com/webmappsrl/webmapp-app/commit/d5a9e47af5d59467a2eeffd6d40881c0306da72a))
+* Refactor setCurrentTab method in TabsPage ([4923386](https://github.com/webmappsrl/webmapp-app/commit/49233867842a1a8811f57c5ad9088a34ef3e75e8))
+* Refactor waypoint.page.ts ([70290f6](https://github.com/webmappsrl/webmapp-app/commit/70290f62e98d8563c68bdca789e206b3d324b651))
+* Refactor waypoint.page.ts ([34153c4](https://github.com/webmappsrl/webmapp-app/commit/34153c462b8c1c6a7cafbbfc05f864b860352fd2))
+* Remove form component and related files ([d20dc40](https://github.com/webmappsrl/webmapp-app/commit/d20dc4073757094655d7ca264caf003f2e9b1f6b))
+* Remove image gallery component and related files ([4802fef](https://github.com/webmappsrl/webmapp-app/commit/4802fef0a9a3721d0af5afc957a636c91a9e3663))
+* Remove LangService provider from multiple components oc:4781 ([2fced83](https://github.com/webmappsrl/webmapp-app/commit/2fced8332f7d09098decedb89097978e67a93997))
+* Remove modalphotos module and related components ([5123443](https://github.com/webmappsrl/webmapp-app/commit/512344316e52d93bda1a99038326a5ccb694c3e0))
+* Remove search-bar component and related files ([0216cd8](https://github.com/webmappsrl/webmapp-app/commit/0216cd880c8aa89e7ae4a121cf7d831468fa4306))
+* Remove search-list component ([#73](https://github.com/webmappsrl/webmapp-app/issues/73)) ([4cb91d6](https://github.com/webmappsrl/webmapp-app/commit/4cb91d632578c7d84bfe714376ff84fc5742b9fe))
+* Remove tracklist, trackdetail, waypointlist, waypointdetail pages and related files oc: 4611 ([#72](https://github.com/webmappsrl/webmapp-app/issues/72)) ([6652001](https://github.com/webmappsrl/webmapp-app/commit/6652001c945677a9575c47fb6ccf8eccc603fb7c))
+* Remove unnecessary code in MapDetailsComponent and MapPage ([00794ca](https://github.com/webmappsrl/webmapp-app/commit/00794cad1dd6c5accc06082a6722545d13eaf2d1))
+* Remove unnecessary trackElevationChartHover event listener ([#78](https://github.com/webmappsrl/webmapp-app/issues/78)) ([98003b5](https://github.com/webmappsrl/webmapp-app/commit/98003b57ff87d66b8a4facb5dd5d0ceefdd1d941))
+* Remove unused code and files related to saving photos oc: 4892 ([4c99a2d](https://github.com/webmappsrl/webmapp-app/commit/4c99a2d8453a63c932f20940d062da48583d7f7c))
+* Remove unused code and start geolocation service ([d84f7ba](https://github.com/webmappsrl/webmapp-app/commit/d84f7ba6f5ea9a53dc7f3dbf254a8b695f25a98f))
+* Remove unused imports in modal-save.component.ts ([bf79bae](https://github.com/webmappsrl/webmapp-app/commit/bf79bae87ab870db72638fe37bbf327339293416))
+* Remove unused variable and refactor setCurrentTab method ([e2a8a21](https://github.com/webmappsrl/webmapp-app/commit/e2a8a214501db0a1650736b3adf255ece12e800f))
+* Update @capacitor/device to version 6.0.2 ([b2d9b61](https://github.com/webmappsrl/webmapp-app/commit/b2d9b611907b5a93581ca2595ed19c875330b45b))
+* Update app.component.ts ([#84](https://github.com/webmappsrl/webmapp-app/issues/84)) ([c038c0d](https://github.com/webmappsrl/webmapp-app/commit/c038c0d698021e7e2f5dd6e94d1d0a3cdc1e5655))
+* Update CameraService reference in ModalWaypointSaveComponent ([d654b9b](https://github.com/webmappsrl/webmapp-app/commit/d654b9b03d133d877abb9c467395ee12cabf8d82))
+* Update CameraService reference in ModalWaypointSaveComponent ([c082bbd](https://github.com/webmappsrl/webmapp-app/commit/c082bbd9b5186978892b2c5418959f8798e5186b))
+* Update card-track.component.ts and downloadlist.page.ts oc:4740,4745,4739,4741,4727 ([#75](https://github.com/webmappsrl/webmapp-app/issues/75)) ([c355cc8](https://github.com/webmappsrl/webmapp-app/commit/c355cc804f05f5f0256be409ff4805577ddfd43b))
+* Update dependencies and imports in modal-save.component.ts oc:4781 ([1bd18b9](https://github.com/webmappsrl/webmapp-app/commit/1bd18b9b42cc24d38f5d69df52386027a669e8bb))
+* Update geohubId in environment.ts ([ca801a2](https://github.com/webmappsrl/webmapp-app/commit/ca801a27c7a957d512cbd5dc8b6a86f2a3ee0eb2))
+* Update geohubId in environment.ts ([6fcc054](https://github.com/webmappsrl/webmapp-app/commit/6fcc054a14392f74dd9b482f46c8d7387829beb9))
+* Update geolocation service usage ([7de0e27](https://github.com/webmappsrl/webmapp-app/commit/7de0e27f049436691335ce604b81ad06b8b702d0))
+* Update geolocation service usage ([ca16cd8](https://github.com/webmappsrl/webmapp-app/commit/ca16cd8b1f7941791774a805e85638037f9d7411))
+* Update home page template and component ([84028fd](https://github.com/webmappsrl/webmapp-app/commit/84028fd9ff0aef3e8276d7e190f8e22e2c006cec))
+* Update map page and translations ([831266d](https://github.com/webmappsrl/webmapp-app/commit/831266dd32d31d8a7b4c9611d57a7ba5f9e15697))
+* Update map page HTML ([35babcc](https://github.com/webmappsrl/webmapp-app/commit/35babccf0ddeef5dbaa3e899977ac28269db652e))
+* Update map page HTML and TypeScript files ([88de3e3](https://github.com/webmappsrl/webmapp-app/commit/88de3e35c3a340334c4ab4c217dbacb1f953abd9))
+* Update map page HTML and TypeScript files ([b2db519](https://github.com/webmappsrl/webmapp-app/commit/b2db519a5cfe48d6a9420b652d7e9cb5b94deafb))
+* Update map page HTML and TypeScript files ([14be90d](https://github.com/webmappsrl/webmapp-app/commit/14be90dcbc06a0027ea4c70d0909039a855b2330))
+* Update map page HTML and TypeScript files ([322a56b](https://github.com/webmappsrl/webmapp-app/commit/322a56b51ff22f10ae4721ca744653e42e11a2a6)), closes [#123](https://github.com/webmappsrl/webmapp-app/issues/123)
+* Update map page layout and functionality ([d61fbb3](https://github.com/webmappsrl/webmapp-app/commit/d61fbb31f0edb2b41fa8fd86745c1f679cd0d1b2))
+* Update map-details component styles and logic ([#79](https://github.com/webmappsrl/webmapp-app/issues/79)) ([060469b](https://github.com/webmappsrl/webmapp-app/commit/060469b9893badf53f3e3ffdbefdcaf1de3bd7db))
+* Update map-details.component.scss and map.page.html ([#76](https://github.com/webmappsrl/webmapp-app/issues/76)) ([437043a](https://github.com/webmappsrl/webmapp-app/commit/437043a07fd32d6b13c581a096ac7127ee2145a8))
+* Update map-details.component.ts ([#81](https://github.com/webmappsrl/webmapp-app/issues/81)) ([f77e39b](https://github.com/webmappsrl/webmapp-app/commit/f77e39b9c05743dd6dd43d9bc277005fae6d4968))
+* Update map-details.component.ts, map.page.html, and map.page.ts ([3202f90](https://github.com/webmappsrl/webmapp-app/commit/3202f9057429ad41f36bbef69c62d85576ba213f))
+* Update map.page.html ([c5d67dc](https://github.com/webmappsrl/webmapp-app/commit/c5d67dcf94e6716ce80aa09663c966dd7c130bee))
+* Update map.page.ts ([2bec469](https://github.com/webmappsrl/webmapp-app/commit/2bec469e80c27b983c705c0b71910bd5441b8ecc))
+* Update modal-save.component.html and modal-save.component.ts ([9ff8870](https://github.com/webmappsrl/webmapp-app/commit/9ff8870409446d6f2617491fd0d3db203b4af026))
+* Update modal-save.component.ts ([#71](https://github.com/webmappsrl/webmapp-app/issues/71)) ([86ed979](https://github.com/webmappsrl/webmapp-app/commit/86ed979ed51129fef61e20db61645ef68d65e8c4))
+* Update modal-success.component.html ([f4e5cca](https://github.com/webmappsrl/webmapp-app/commit/f4e5ccaa11b4dcd971fc6241a5253710ea2a112f))
+* Update modal-waypoint-save.component.ts ([#70](https://github.com/webmappsrl/webmapp-app/issues/70)) ([5883c79](https://github.com/webmappsrl/webmapp-app/commit/5883c793abf0dbb5c81f4b564e0c579aea6779cf))
+* Update photo limit to 3 ([8d8fc17](https://github.com/webmappsrl/webmapp-app/commit/8d8fc1739b38da4856d569806d9ca62f88ea7e09))
+* Update poi-properties component oc:4837 ([#88](https://github.com/webmappsrl/webmapp-app/issues/88)) ([1955d5d](https://github.com/webmappsrl/webmapp-app/commit/1955d5dd4388360b89487ba95105ece0a478a6d7))
+* Update release_please.yml workflow ([aea66d5](https://github.com/webmappsrl/webmapp-app/commit/aea66d5d00442ff82fe01f325d50968332174c21))
+* Update release_please.yml workflow ([76af493](https://github.com/webmappsrl/webmapp-app/commit/76af493db8d7159c357a1a8c4edf9826cf1d0ac1))
+* Update settings component ([#80](https://github.com/webmappsrl/webmapp-app/issues/80)) ([a2ea10a](https://github.com/webmappsrl/webmapp-app/commit/a2ea10afad16f1f545ab7443b036304b410dcfc0))
+* Update settings.component.html ([292e626](https://github.com/webmappsrl/webmapp-app/commit/292e626821f943cc302431245514bcd0576baf6e))
+* Update setTrackElevationChartHoverElements parameter type ([d2d2da5](https://github.com/webmappsrl/webmapp-app/commit/d2d2da5b2a11f2675232379aa6bedf2c2edb7887))
+* Update submodules in .gitmodules file ([5fe1d74](https://github.com/webmappsrl/webmapp-app/commit/5fe1d74fa4723b595b8623efb5ac52cf1d6c0777))
+* Update subproject ([a8221c4](https://github.com/webmappsrl/webmapp-app/commit/a8221c493a5ad88e7cb951c08cc6c2af6b319b4f))
+* Update subproject commit reference ([bc0d614](https://github.com/webmappsrl/webmapp-app/commit/bc0d61456cda6aac19472a99805456897ad34747))
+* Update subproject imports ([2320916](https://github.com/webmappsrl/webmapp-app/commit/2320916004c5341a410774ebb8dc4a8ddc9283c1))
+* Update subproject oc:5000 ([05e87e6](https://github.com/webmappsrl/webmapp-app/commit/05e87e6707e05017c11f1dfefaed1b24ff39231b))
+* Update subproject oc:5000 ([8fd839b](https://github.com/webmappsrl/webmapp-app/commit/8fd839bd3e36a0c191215e4868fa49aa69c9d5e7))
+* Update tabs.page.html and tabs.page.ts ([8829b2e](https://github.com/webmappsrl/webmapp-app/commit/8829b2e210ec1578d84a23c27c6a56244ddf86e8))
+* Update tabs.page.html and tabs.page.ts ([7047d30](https://github.com/webmappsrl/webmapp-app/commit/7047d30af1146ebaf1735bfa657d85963b00d1d4))
+* Update tabs.page.ts to reset additional query parameters oc:4907 ([#89](https://github.com/webmappsrl/webmapp-app/issues/89)) ([540007c](https://github.com/webmappsrl/webmapp-app/commit/540007cc361cd137760763b8266a70ec80c17051))
+* Update test-utils.ts ([153a6f2](https://github.com/webmappsrl/webmapp-app/commit/153a6f2fdb1fb9f462fb38f2c044492443c940aa))
+* Update track properties component and map details component ([f25a957](https://github.com/webmappsrl/webmapp-app/commit/f25a957595be24d28f0941181499c1e6e403c6ad))
+* Update waypoint.page.ts ([29a7ba7](https://github.com/webmappsrl/webmapp-app/commit/29a7ba7037b19ceea5e4b96177cbbf4b8d1445a4))
+* Update waypoint.page.ts ([680b325](https://github.com/webmappsrl/webmapp-app/commit/680b32594af1141788ea3b12a457a262f18bc762))
+
 ## [2.12.16](https://github.com/webmappsrl/webmapp-app/compare/v2.12.15...v2.12.16) (2024-11-01)
 
 
