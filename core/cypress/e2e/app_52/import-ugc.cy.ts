@@ -8,7 +8,7 @@ describe('Import UGC', () => {
     cy.visit('/');
   });
 
-  it('Should open import UGC', () => {
+  it('Should open import UGC [oc:4778,4779] [https://orchestrator.maphub.it/resources/developer-stories/4778,https://orchestrator.maphub.it/resources/developer-stories/4779]', () => {
     e2eLogin();
     cy.get('ion-alert button').click();
     goHome();

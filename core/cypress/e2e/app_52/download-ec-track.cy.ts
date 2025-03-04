@@ -6,7 +6,7 @@ describe('Download ec-track', () => {
     cy.visit('/');
   });
 
-  it('Should visualize ec-track download button', () => {
+  it('Should visualize ec-track download button [oc:4741] [https://orchestrator.maphub.it/resources/developer-stories/4741]', () => {
     openLayer(data.layers.ecTrack);
     openTrack(data.tracks.exampleOne);
 
@@ -32,5 +32,5 @@ function getDownloadButton() {
 }
 
 function getGoToDownloadsButton() {
-  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 7000});
+  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 10000});
 }

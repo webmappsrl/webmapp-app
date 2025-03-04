@@ -11,7 +11,7 @@ const trackToImport = 'trackToImport.geojson';
 let titleSynchronizedTrack;
 let titleNotSynchronizedTrack;
 
-describe('Visualize sync badge', () => {
+describe('Visualize sync badge [oc:4776] [https://orchestrator.maphub.it/resources/developer-stories/4776]', () => {
   before(() => {
     clearTestState();
     confWithAuthEnabled().as('getConf');

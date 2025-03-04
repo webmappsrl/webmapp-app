@@ -3,7 +3,7 @@ import {environment} from 'src/environments/environment';
 
 const meUrl = `${environment.api}/api/auth/me`;
 
-describe('Login offline', () => {
+describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/developer-stories/4772]', () => {
   before(() => {
     clearTestState();
     confWithAuthEnabled().as('getConf');
