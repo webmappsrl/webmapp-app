@@ -46,7 +46,7 @@ export function e2eLogin(
   cy.intercept('POST', apiLogin).as('loginRequest');
   goProfile();
   cy.get('.wm-profile-logged-out-login-button').click();
-  cy.get('ion-input[formcontrolname="email"] input').focus().clear().type(email);
+  cy.get('ion-input[formcontrolname="email"] input').should('have.focus').clear().type(email);
   cy.get('ion-input[formcontrolname="password"] input').focus().clear().type(password);
   cy.get('.wm-login-submit-button').click();
   return cy.wait('@loginRequest').its('response.body');
