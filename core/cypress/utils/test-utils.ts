@@ -79,6 +79,19 @@ export function goProfile() {
 }
 
 /**
+ * Mocks the get api ugc pois request.
+ * @param mockRes - The mock response.
+ * @returns A Cypress chainable object.
+ */
+export function mockGetApiPois(mockRes: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.api}/api/v2/ugc/poi/index`, req => {
+    req.reply(res => {
+      res.send(mockRes);
+    });
+  });
+}
+
+/**
  * Mocks the get api ugc tracks request.
  * @param mockRes - The mock response.
  * @returns A Cypress chainable object.
