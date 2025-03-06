@@ -1,0 +1,602 @@
+{
+  "activities": {
+    "cycling": "Ciclismo",
+    "hiking": "Caminhada",
+    "running": "Corrida",
+    "skitouring": "Esqui",
+    "walking": "Caminhada",
+    "asphalt": "Asfalto",
+    "bitumenduro": "Bitumenduro",
+    "onoff": "On/Off",
+    "real-dirt": "Terra real",
+    "bar": "Bar"
+  },
+  "sidemenu": {
+    "project": "Projeto",
+    "offline": "Offline",
+    "settings": "Configurações",
+    "credits": "Créditos",
+    "disclaimer": "Aviso legal"
+  },
+  "components": {
+    "cardtrack": {
+      "delete": "Excluir",
+      "remove": "Remover"
+    },
+    "map": {
+      "btnrec": {
+        "slide": "Deslize para gravar"
+      },
+      "register": {
+        "cancel": "Cancelar",
+        "photo": "Foto",
+        "title": "Registrar",
+        "track": "Rota",
+        "vocal": "Nota de voz",
+        "waypoint": "Ponto de referência"
+      }
+    },
+    "searchbar": {
+      "filters": "Filtrar por",
+      "nofilters": "Nenhum filtro corresponde à pesquisa realizada",
+      "noplaces": "Nenhum lugar corresponde à pesquisa realizada",
+      "notracks": "Nenhuma rota corresponde à pesquisa realizada",
+      "placeholder": "pesquisar",
+      "places": "Lugares",
+      "tracks": "Rotas"
+    },
+    "slopechart": {
+      "slope": {
+        "label": "inclinação"
+      },
+      "surfaces": {
+        "asphalt": {
+          "label": "asfalto"
+        },
+        "concrete": {
+          "label": "concreto"
+        },
+        "dirt": {
+          "label": "terra"
+        },
+        "grass": {
+          "label": "grama"
+        },
+        "gravel": {
+          "label": "cascalho"
+        },
+        "paved": {
+          "label": "pavimentado"
+        },
+        "sand": {
+          "label": "areia"
+        }
+      }
+    }
+  },
+  "generic": {
+    "cancel": "cancelar",
+    "confirm": "confirmar",
+    "delete": "excluir",
+    "error": "Ocorreu um erro. Tente novamente mais tarde",
+    "hour": "hora",
+    "minute": "min",
+    "ok": "ok",
+    "retry": "tentar novamente",
+    "warning": "Atenção"
+  },
+  "modals": {
+    "coin": {
+      "buttonall": "Ver todos os pacotes de moedas",
+      "buttonone": "Comprar 1 Moeda / 1€",
+      "defaultmessage": "Compre moedas para baixar conteúdo offline",
+      "info1": "Você pode comprar uma única rota",
+      "info2": "Tenha tudo disponível mesmo sem cobertura",
+      "info3": "Receba notificações de proximidade",
+      "subinfo1": "Compre uma única moeda por 1€",
+      "subinfo2": "Navegação precisa mesmo quando offline",
+      "subinfo3": "Notificamos você na proximidade de pontos de interesse na rota"
+    },
+    "giftcoin": {
+      "button": "Comece a explorar",
+      "info": "Você ganha imediatamente 2 moedas webmapp de presente para baixar conteúdo offline!",
+      "title": "Bem-vindo ao webmapp!"
+    },
+    "login": {
+      "email": "E-mail",
+      "errors": {
+        "401": "As credenciais que você inseriu não estão corretas. Verifique o e-mail e a senha e tente novamente",
+        "form": {
+          "emailInvalid": "Você inseriu um e-mail inválido",
+          "emailRequired": "E-mail é obrigatório",
+          "passwordRequired": "Senha é obrigatória"
+        },
+        "generic": "Oops! Algo deu errado! Aguarde alguns minutos e tente novamente."
+      },
+      "forgotPassword": "Esqueceu a senha?",
+      "login": "Entrar",
+      "message": "Entre com suas credenciais para continuar.",
+      "password": "Senha",
+      "rememberLogin": "Lembrar credenciais",
+      "title": "Entrar",
+      "welcome": "Bem-vindo de volta!"
+    },
+    "photo": {
+      "next": "Próximo",
+      "popover": {
+        "cancel": "Cancelar",
+        "library": "Da biblioteca",
+        "shot": "Tirar uma foto",
+        "title": "Fonte da imagem"
+      },
+      "save": {
+        "addphoto": "Adicionar foto",
+        "formphototitle": "Título ",
+        "formtitle": "Dê um título às suas fotos",
+        "modalconfirm": {
+          "cancel": "Cancelar",
+          "confirm": "Sim, excluir",
+          "text": "Se você excluir, não será adicionado a este registro",
+          "title": "Tem certeza de que deseja excluir esta foto do registro?"
+        },
+        "placeholder": "Aqui você pode inserir um título",
+        "savebtn": "Salvar",
+        "title": "Registrar foto"
+      },
+      "single": {
+        "formphototitle": "Título",
+        "placeholder": "Aqui você pode inserir um título",
+        "savebtn": "Feito",
+        "title": "Modificar foto"
+      }
+    },
+    "settings": {
+      "alert": {
+        "logout": "Tem certeza de que deseja sair da sua conta?"
+      },
+      "logout": "Sair",
+      "title": "Configurações",
+      "version": "Versão"
+    },
+    "storesuccess": {
+      "back": "Voltar para a pesquisa",
+      "buttondownload": "Baixar agora",
+      "continue": "Deseja usar sua moeda imediatamente para baixar ",
+      "continue2": "?",
+      "info": "Você pode verificar o saldo de suas moedas diretamente na sua área pessoal!",
+      "or": "Ou",
+      "title": "Obrigado por comprar sua primeira moeda!"
+    },
+    "success": {
+      "photos": {
+        "text": "Suas fotos foram salvas com sucesso. Você pode visualizá-las acessando seu perfil.",
+        "title": "Fotos registradas com sucesso!"
+      },
+      "return": "Voltar para explorar",
+      "track": {
+        "avgspeed": "Velocidade média",
+        "odo": "Km percorridos",
+        "slope": "Diferença de altitude",
+        "text": "As rotas foram salvas com sucesso. Você pode visualizá-las acessando seu perfil.",
+        "time": "Tempo",
+        "title": "Atividade registrada com sucesso!",
+        "topspeed": "Velocidade máxima"
+      },
+      "waypoint": {
+        "text": "Você salvou com sucesso seu ponto de referência. Você pode visualizá-lo acessando seu perfil.",
+        "title": "Ponto de referência registrado com sucesso!"
+      }
+    }
+  },
+  "pages": {
+    "downloadlist": {
+      "cancel": "Cancelar",
+      "deleteselected": "Excluir selecionados",
+      "nodata": "Você ainda não baixou nenhuma rota",
+      "nodata2": "Com conteúdos para uso offline, você navega com tranquilidade mesmo sem conexão!",
+      "nodatabtn": "Explorar",
+      "select": "Selecionar",
+      "title": "Downloads"
+    },
+    "favourites": {
+      "nodata": "Não há rotas favoritas, clique no ícone de coração de uma rota para adicioná-la a esta lista",
+      "title": "Favoritos"
+    },
+    "home": {
+      "button": "Escolha um ponto de partida",
+      "closerTracks": "Rotas próximas",
+      "intro": "Planejamos juntos sua próxima aventura",
+      "mostViewedTracks": "Rotas mais visualizadas",
+      "nocloserTracks": "Parece que não há rotas próximas à localização atual",
+      "welcome": "Bem-vindo!"
+    },
+    "itinerary": {
+      "btnFullMapExpand": "Expandir",
+      "btnFullMapReduce": "Reduzir",
+      "btndnavigate": "Navegar",
+      "btndownload": "Baixar",
+      "btnfavourite": "Favoritos",
+      "btnshare": "Compartilhar",
+      "description": {
+        "description": "Descrição",
+        "gallery": "Galeria"
+      },
+      "detail": {
+        "ascent": "Diferença de altitude +",
+        "descent": "Diferença de altitude -",
+        "distance": "Distância",
+        "ele_from": "Altitude de partida",
+        "ele_max": "Altitude máxima",
+        "ele_min": "Altitude mínima",
+        "ele_to": "Altitude de chegada"
+      },
+      "directions": "Obter direções",
+      "download": "Baixar",
+      "downloadpanel": {
+        "complete": "Download concluído",
+        "dontclose": "Não feche o aplicativo durante a fase de instalação dos dados",
+        "downdata": "Baixando dados",
+        "download": "Baixar",
+        "downloadbtn": "Baixar",
+        "downloading": "Baixando",
+        "downmap": "Baixando mapa",
+        "downmedia": "Baixando mídias",
+        "downsetup": "Configuração inicial",
+        "gotobtn": "Ir para meus downloads",
+        "install": "Instalação"
+      },
+      "favbtn": {
+        "isFavourite": "Adicionado aos favoritos!",
+        "isNotFavourite": "Removido dos favoritos!"
+      },
+      "modalconfirm": {
+        "cancel": "Cancelar",
+        "confirm": "Sair",
+        "text": "Sair sem concluir o download da rota?",
+        "title": "Interromper download?"
+      },
+      "modalNotImpemented": {
+        "text": "Em breve",
+        "title": "Atualmente não disponível",
+        "confirm": "ok"
+      },
+      "navigate": "Navegar",
+      "share": "Compartilhar",
+      "tabdescription": "Descrição",
+      "tabdetail": "Detalhes",
+      "tabeat": "Onde comer",
+      "tabhowto": "Como chegar",
+      "tabviability": "Viabilidade",
+      "tabwalkable": "Acessibilidade",
+      "viability": {
+        "info": "Outras informações",
+        "title": "Viabilidade da rota"
+      }
+    },
+    "map": {
+      "loading": "procurando...",
+      "recordingbtn": "Gravando",
+      "searchherebtn": "Pesquisar nesta área"
+    },
+    "photodetail": {
+      "delete": "Excluir registro",
+      "edit": "Modificar registro",
+      "title": "Foto registrada"
+    },
+    "photolist": {
+      "noitem": "Atualmente não há fotos registradas",
+      "title": "Fotos registradas"
+    },
+    "profile": {
+      "data": {
+        "data": "Uso de dados",
+        "downloads": "Downloads",
+        "tracks": "Rotas baixadas"
+      },
+      "loggedOut": {
+        "login": "Entrar",
+        "signup": "Registrar-se",
+        "slides": {
+          "0": "Entre e baixe suas rotas favoritas",
+          "1": "Você também pode compartilhá-las com seus amigos de viagem"
+        }
+      },
+      "records": {
+        "photos": "Fotos",
+        "title": "Registros",
+        "tracks": "Rotas",
+        "vocals": "Notas de voz",
+        "waypoints": "Pontos de referência"
+      },
+      "title": "Perfil",
+      "lang": "idioma",
+      "langPlaceholder": "escolher",
+      "projectlink": "Projeto",
+      "disclaimerlink": "Aviso legal",
+      "creditslink": "Créditos",
+      "privacylink": "Privacidade"
+    },
+    "register": {
+      "averagespeed": "Velocidade média",
+      "backgroundbtn": "Gravar em segundo plano",
+      "currentspeed": "Velocidade atual",
+      "modalconfirm": {
+        "cancel": "Cancelar",
+        "confirm": "Confirmar",
+        "text": "Uma vez confirmado, você não poderá reiniciar esta navegação",
+        "title": "Confirma que deseja finalizar a gravação?"
+      },
+      "modalexit": {
+        "cancel": "Cancelar",
+        "confirm": "Excluir",
+        "text": "Ao finalizar a ação, a rota será excluída do seu perfil e do Webmapp. A operação não pode ser desfeita.",
+        "title": "Excluir permanentemente?"
+      },
+      "modalphotos": {
+        "deselectall": "Desmarcar todos",
+        "noimages": "Não há imagens capturadas durante o registro da rota",
+        "savebtn": "Carregar",
+        "selectall": "Selecionar todos",
+        "title": "Carregar fotos"
+      },
+      "modalsave": {
+        "closemodal": {
+          "back": "Voltar para o registro",
+          "cancel": "Cancelar",
+          "delete": "Excluir registro"
+        },
+        "deletebtn": "SAIR SEM SALVAR",
+        "formactivity": "Tipo de atividade",
+        "formactivityerror": "O tipo de atividade é um campo obrigatório",
+        "formactivityplaceholder": "Escolher",
+        "formdescription": "Descrição",
+        "formdescriptionplaceholder": "Se desejar, você pode adicionar uma descrição",
+        "formphotos": "Adicionar fotos capturadas durante a rota",
+        "formtitle": "Título da rota",
+        "formtitleerror": "O campo de título é obrigatório",
+        "formtitleplaceholder": "Insira um título",
+        "photoaction": "Carregar",
+        "photoactionshort": "Adicionar",
+        "photoadvice": "Tamanho máximo: 3 fotos",
+        "photoadviceshort": "(máx 3 fotos)",
+        "phototext": "fotos da galeria do telefone",
+        "phototextshort": "Fotos",
+        "savebtn": "Salvar",
+        "title": "Salvar rota",
+        "titleEdit": "Modificar rota"
+      },
+      "odo": "Km percorridos",
+      "pausebtn": "Pausar",
+      "resumebtn": "Continuar",
+      "stopbtn": "Finalizar",
+      "time": "Em movimento",
+      "title": "Registrar uma rota"
+    },
+    "registeruser": {
+      "cf": "Código Fiscal",
+      "cfextra": "Por que pedimos o CF?",
+      "cfph": "XXXXXXXXXXXXXXXX",
+      "cfpopovermessage": "Se você é Membro CAI, insira seu CF durante o registro. Para você, o download das etapas do Sentiero Italia CAI será automaticamente gratuito!",
+      "cfpopovertitle": "Por que pedimos o Código Fiscal?",
+      "confirmPassword": "Confirmar senha",
+      "confirmPasswordph": "Repita a senha",
+      "email": "Email",
+      "emailph": "exemplo@email.com",
+      "errors": {
+        "form": {
+          "nameRequired": "É necessário inserir um nome"
+        },
+        "form.cfInvalid": "O código fiscal não é válido",
+        "form.confirmPasswordInvalid": "A confirmação não corresponde à senha inserida acima",
+        "form.confirmPasswordRequired": "É necessário confirmar a senha",
+        "form.emailInvalid": "Email não é válido",
+        "form.emailRequired": "É necessário inserir um email",
+        "form.passwordRequired": "É necessário inserir uma senha"
+      },
+      "genericError": "Erro ao registrar o usuário",
+      "loading": "Registrando em andamento",
+      "name": "Nome",
+      "nameph": "insira seu nome",
+      "password": "Senha",
+      "passwordph": "insira sua senha",
+      "privacy1": "Ao clicar em \"Registrar-se\" você aceita nossa ",
+      "privacy2": "e",
+      "privacy3": "",
+      "privacylink1": "Política de Privacidade",
+      "privacylink2": "Termos e condições",
+      "registerbutton": "Registrar-se",
+      "title": "Junte-se à comunidade webmapp!"
+    },
+    "route": {
+      "btnFullMapExpand": "Expandir",
+      "btnFullMapReduce": "Reduzir",
+      "btndnavigate": "Navegar",
+      "btndownload": "Baixar",
+      "btnfavourite": "Favoritos",
+      "btnshare": "Compartilhar",
+      "description": {
+        "description": "Descrição",
+        "gallery": "Galeria"
+      },
+      "detail": {
+        "from": "Partida",
+        "to": "Chegada",
+        "ascent": "Diferença de altitude +",
+        "descent": "Diferença de altitude -",
+        "distance": "Distância",
+        "duration_forward": "duração da ida",
+        "duration_backward": "duração da volta",
+        "difficulty": "Dificuldade",
+        "ele_from": "Altitude de partida",
+        "ele_max": "Altitude máxima",
+        "ele_min": "Altitude mínima",
+        "ele_to": "Altitude de chegada"
+      },
+      "directions": "Obter direções",
+      "download": "Baixar",
+      "downloadpanel": {
+        "complete": "Download concluído",
+        "dontclose": "Não feche o aplicativo durante a fase de instalação dos dados",
+        "downdata": "Baixando dados",
+        "download": "Baixar",
+        "downloadbtn": "Baixar",
+        "downloading": "Baixando",
+        "downmap": "Baixando mapa",
+        "downmedia": "Baixando mídias",
+        "downsetup": "Configuração inicial",
+        "gotobtn": "Ir para meus downloads",
+        "install": "Instalação"
+      },
+      "favbtn": {
+        "isFavourite": "Adicionado aos favoritos!",
+        "isNotFavourite": "Removido dos favoritos!"
+      },
+      "modalconfirm": {
+        "cancel": "Cancelar",
+        "confirm": "Sair",
+        "text": "Sair sem concluir o download da rota?",
+        "title": "Interromper download?"
+      },
+      "navigate": "Navegar",
+      "share": "Compartilhar",
+      "tabdescription": "Descrição",
+      "tabdetail": "Detalhes",
+      "tabeat": "Onde comer",
+      "tabhowto": "Como chegar",
+      "tabviability": "Viabilidade",
+      "tabwalkable": "Acessibilidade",
+      "viability": {
+        "info": "Outras informações",
+        "title": "Viabilidade da rota"
+      }
+    },
+    "store": {
+      "button1": "1 Moeda Única",
+      "button100": "Pacote de 100 moedas",
+      "button20": "Pacote de 20 Moedas",
+      "button50": "Pacote de 50 moedas",
+      "main": "Moedas Webmapp",
+      "text": "Você pode comprar uma Moeda única, ou escolher entre um ou mais pacotes!",
+      "text2": "As moedas servem para baixar rotas e conteúdo offline, e para acessar muitos benefícios!",
+      "title": "Loja"
+    },
+    "trackdetail": {
+      "avgspeed": "Velocidade média",
+      "delete": "Excluir registro",
+      "details": "Detalhes",
+      "distance": "Km percorridos",
+      "edit": "Modificar registro",
+      "photos": "Fotos",
+      "slope": "Diferença de altitude",
+      "time": "Tempo",
+      "title": "Rota registrada",
+      "topspeed": "Velocidade máxima"
+    },
+    "tracklist": {
+      "noitem": "Atualmente não há rotas registradas",
+      "title": "Rotas registradas"
+    },
+    "waypoint": {
+      "here": "Você está aqui:",
+      "modalsave": {
+        "formdescription": "Descrição",
+        "formdescriptionplaceholder": "Se desejar, você pode adicionar uma descrição",
+        "formoptional": "Opcional",
+        "formphotos": "Adicionar fotos do Ponto de Referência",
+        "formtitle": "Título do ponto de referência",
+        "formtitleerror": "O título do ponto de referência é obrigatório",
+        "formtitleplaceholder": "Insira um título",
+        "formtype": "Tipo de Ponto de Referência",
+        "formtypeerror": "O tipo de ponto de referência é obrigatório",
+        "formtypeplaceholder": "Escolher",
+        "photoaction": "Carregar",
+        "photoactionshort": "Adicionar",
+        "photoadvice": "Tamanho máximo: 3 fotos",
+        "photoadviceshort": "(máx 3 fotos)",
+        "phototext": "fotos da galeria do telefone",
+        "phototextshort": "Fotos",
+        "save": "Salvar ",
+        "title": "Registrar um ponto de referência"
+      },
+      "save": "Salvar ponto de referência",
+      "title": "Registrar um ponto de referência"
+    },
+    "waypointdetail": {
+      "delete": "Excluir registro",
+      "edit": "Modificar registro",
+      "title": "Ponto de referência registrado"
+    },
+    "waypointlist": {
+      "noitem": "Atualmente não há pontos de referência registrados",
+      "title": "Pontos de referência registrados"
+    },
+    "project": {
+      "title": "Projeto"
+    },
+    "credits": {
+      "title": "Créditos",
+      "webmappContent1": "O aplicativo {{appName}} é desenvolvido e mantido pela Webmapp.<br> A Webmapp realiza serviços cartográficos na internet, aplicativos móveis e cartografia impressa para Turismo de Natureza & Aventura.<br>Para mais informações, visite nosso site ",
+      "webmappContent2": " ou escreva para nós no endereço <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
+      "map": "Mapa",
+      "mapContent": "© Webmapp, distribuído sob licença CC BY-NC-SA",
+      "cartographicData": "Dados cartográficos",
+      "cartographicDataContent": "© Contribuidores do OpenStreetMap"
+    },
+    "disclaimer": {
+      "title": "Aviso legal",
+      "content": "Caminhar na natureza e, mais amplamente, atividades ao ar livre, são atividades potencialmente perigosas: antes de partir para uma excursão, certifique-se de que você tem o conhecimento e as habilidades para fazê-lo. Se você não tiver certeza, procure especialistas locais que possam ajudá-lo, sugerir e apoiar no planejamento e desenvolvimento de suas atividades. Os dados apresentados neste APLICATIVO não podem garantir totalmente a viabilidade sem riscos da rota: podem ter ocorrido mudanças, até mesmo significativas, desde a última verificação da rota. Portanto, é essencial que aqueles que pretendem desenvolver atividades avaliem cuidadosamente a possibilidade de prosseguir com base nas sugestões e conselhos contidos neste APLICATIVO, com base em sua experiência, condições meteorológicas (mesmo dos dias anteriores) e uma avaliação feita no local no início do desenvolvimento da atividade. A empresa Webmapp S.r.l. não oferece garantias para a segurança dos locais descritos e não assume qualquer responsabilidade por possíveis danos causados pelo desenvolvimento das atividades descritas."
+    }
+  },
+  "services": {
+    "geolocation": {
+      "notification": {
+        "text": {
+          "newTrackRecord": "Toque na notificação para abrir o aplicativo"
+        },
+        "title": {
+          "newTrackRecord": "Gravação em andamento"
+        }
+      }
+    },
+    "share": {
+      "dialogTitle": "Compartilhar com seus amigos",
+      "text": "Aqui está uma rota interessante do webmapp",
+      "title": "Você viu esta rota?",
+      "url": "www.webmapp.it"
+    }
+  },
+  "tabs": {
+    "favourites": "favoritos",
+    "home": "home",
+    "map": "mapa",
+    "profile": "perfil"
+  },
+  "no-tracks": "Você ainda não baixou nenhuma rota",
+  "hiking": "Caminhada",
+  "skitouring": "Esqui",
+  "walking": "Caminhada",
+  "running": "Corrida",
+  "asphalt": "Asfalto",
+  "bitumenduro": "Bitumenduro",
+  "onoff": "On/Off",
+  "real-dirt": "Terra real",
+  "bar": "Bar",
+  "cycling": "Ciclismo",
+  "poi_type": "ponto de interesse",
+  "where": "lugares",
+  "I tuoi dati": "Seus dados",
+  "Scarica il tracciato GPX": "Baixar a rota GPX",
+  "Scarica il tracciato KML": "Baixar a rota KML",
+  "Scarica il tracciato GEOJSON": "Baixar a rota GEOJSON",
+  "Elimina account": "Excluir conta",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere 'elimina account' per procedere.": "Você realmente deseja excluir sua conta? É obrigatório escrever 'excluir conta' para prosseguir.",
+  "Digita 'elimina account'": "Digite 'excluir conta'",
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "A confirmação não corresponde. É necessário escrever 'excluir conta' para prosseguir.",
+  "Azione irreversibile": "Ação irreversível",
+  "Attenzione": "Atenção",
+  "Annulla": "Cancelar",
+  "Conferma": "Confirmar",
+  "Link utili": "Links úteis",
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Para registrar rotas e exibi-las corretamente, ative a permissão de localização nas configurações",
+  "Apri impostazioni App": "Abrir configurações do aplicativo"
+}
