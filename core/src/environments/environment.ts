@@ -2,17 +2,80 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import {Environment} from '@wm-types/environment';
+
+export const environment: Environment = {
   production: false,
-  analyticsId: '285809815',
-  geohubId: 3,
-  apiCarg: 'https://carg.maphub.it',
-  elasticApi: 'https://elastic-json.webmapp.it/v2/search',
-  osm2caiApi: 'https://osm2cai.cai.it',
-  api: 'https://geohub.webmapp.it',
-  awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
-  // api: 'http://127.0.0.1:8000',
-  //elasticApi: 'http://localhost:3000/v2/search'
+  appId: 75,
+  shardName: 'geohub',
+  shards: {
+    geohub: {
+      origin: 'https://geohub.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+    osm2cai: {
+      origin: 'https://osm2cai.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+    camminiditalia: {
+      origin: 'https://camminiditalia.maphub.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditalia',
+    },
+    carg: {
+      origin: 'https://carg.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+  },
+  redirects: {
+    'sentieri.caiparma.it': {
+      shardName: 'geohub',
+      appId: 33,
+    },
+    'motomappa.motoabbigliamento.it': {
+      shardName: 'geohub',
+      appId: 53,
+    },
+    'maps.parcoforestecasentinesi.it': {
+      shardName: 'geohub',
+      appId: 49,
+    },
+    'maps.parcopan.org': {
+      shardName: 'geohub',
+      appId: 63,
+    },
+    'maps.acquasorgente.cai.it': {
+      shardName: 'geohub',
+      appId: 58,
+    },
+    'maps.caipontedera.it': {
+      shardName: 'geohub',
+      appId: 59,
+    },
+    'maps.parcapuane.it': {
+      shardName: 'geohub',
+      appId: 62,
+    },
+    'fiemaps.it': {
+      shardName: 'geohub',
+      appId: 29,
+    },
+    'fiemaps.eu': {
+      shardName: 'geohub',
+      appId: 29,
+    },
+    'maps.sentierodeiducati.it': {
+      shardName: 'geohub',
+      appId: 60,
+    },
+  },
 };
 
 /*
@@ -22,4 +85,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/plugins/zone-error'; // Included with Angular CLI.
+// import 'zone.js/dist/zone-error'; // Included with Angular CLI.
