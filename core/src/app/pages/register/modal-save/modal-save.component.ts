@@ -48,27 +48,53 @@ export class ModalSaveComponent implements OnInit {
     private _actionSheetCtrl: ActionSheetController,
     private _store: Store<any>,
   ) {}
+  private _addFormError(error): void {
+    this.fg.setErrors({...(this.fg.errors || {}), error});
+  }
+  private _removeFormError(errorKey: string): void {
+    if (!this.fg.errors || !this.fg.errors.error) return;
 
+    const currentErrors = {...this.fg.errors.error};
+    delete currentErrors[errorKey];
+
+    // Se non ci sono più errori, rimuove l'oggetto `error`, altrimenti lo aggiorna
+    if (Object.keys(currentErrors).length === 0) {
+      const newErrors = {...this.fg.errors};
+      delete newErrors.error;
+      this.fg.setErrors(Object.keys(newErrors).length ? newErrors : null);
+    } else {
+      this.fg.setErrors({...this.fg.errors, error: currentErrors});
+    }
+  }
   async addPhotos(): Promise<void> {
+    this._addFormError({photo: true}); // serve a invalidare il form durante il caricamento delle foto
     const library = await this._cameraSvc.getPhotos();
-    library.forEach(async libraryItem => {
-      const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-      const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.webPath);
-      const md5 = Md5.hashStr(JSON.stringify(photoData));
-      let exists: boolean = false;
-      for (let p of this.photos) {
-        const pData = await this._cameraSvc.getPhotoData(p.webPath),
-          pictureMd5 = Md5.hashStr(JSON.stringify(pData));
-        if (md5 === pictureMd5) {
-          exists = true;
-          break;
+
+    await Promise.all(
+      library.map(async libraryItem => {
+        const libraryItemCopy = Object.assign({selected: false}, libraryItem);
+        const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.webPath);
+        const md5 = Md5.hashStr(JSON.stringify(photoData));
+
+        let exists: boolean = false;
+        for (let p of this.photos) {
+          const pData = await this._cameraSvc.getPhotoData(p.webPath);
+          const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
+          if (md5 === pictureMd5) {
+            exists = true;
+            break;
+          }
         }
-      }
-      if (this.photos.length < 3) {
-        if (!exists) this.photos.push(libraryItemCopy);
-      }
-      this._cdr.detectChanges();
-    });
+
+        if (this.photos.length < 3 && !exists) {
+          this.photos.push(libraryItemCopy);
+          this._cdr.detectChanges(); // Forza il refresh della view per visualizzare le foto aggiunte
+        }
+      }),
+    );
+
+    this._removeFormError('photo'); // rimuove l'errore di validazione
+    this._cdr.detectChanges(); // Forza il refresh della view per abilitare il pulsante di salvataggio
   }
 
   backToMap(): void {
