@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.3](https://github.com/webmappsrl/webmapp-app/compare/v3.0.2...v3.0.3) (2025-03-12)
+
+
+### Bug Fixes
+
+* disable form when add photos oc:4104 ([239af5f](https://github.com/webmappsrl/webmapp-app/commit/239af5f9b086ebe877993aaba02023d5f4ecc3ad))
+
 ## [3.0.2](https://github.com/webmappsrl/webmapp-app/compare/v3.0.1...v3.0.2) (2025-03-12)
 
 
