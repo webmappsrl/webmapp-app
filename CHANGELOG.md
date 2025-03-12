@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/webmappsrl/webmapp-app/compare/v3.0.1...v3.0.2) (2025-03-12)
+
+
+### Miscellaneous
+
+* Update map page HTML ([3bf9737](https://github.com/webmappsrl/webmapp-app/commit/3bf97379f96bb90f9da902745f7a066f76227385))
+
 ## [3.0.1](https://github.com/webmappsrl/webmapp-app/compare/v3.0.0...v3.0.1) (2025-03-12)
 
 
