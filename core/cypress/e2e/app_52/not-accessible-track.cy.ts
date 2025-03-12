@@ -6,28 +6,34 @@
     - It is checked that the non-accessibility message is correctly displayed
 */
 
-const layerTitle = 'Tracce per tests e2e';
-const trackTitle = 'Traccia non accessibile';
-const notAccessibleMessage = 'Questo sentiero non è accessibile';
+import {data} from 'cypress/utils/test-utils';
 
-describe('Not accessible track', () => {
+const notAccessibleMessage = 'This trail is not accessible';
+
+describe('Not accessible track [oc:4699] [https://orchestrator.maphub.it/resources/developer-stories/4699]', () => {
   beforeEach(() => {
     cy.visit('/');
   });
 
   it('Should correctly display the non-accessibility message', () => {
-    cy.get('wm-layer-box').contains('div.wm-box-title', layerTitle).then(($box) => {
-      cy.wrap($box).click();
-    });
+    cy.get('wm-layer-box')
+      .contains('div.wm-box-title', data.layers.ecTrack)
+      .then($box => {
+        cy.wrap($box).click();
+      });
 
-    cy.get('wm-search-box').contains('ion-card-title', trackTitle).then(($searchBox) => {
-      cy.wrap($searchBox).click();
-    });
+    cy.get('wm-search-box')
+      .contains('ion-card-title', data.tracks.exampleOne)
+      .then($searchBox => {
+        cy.wrap($searchBox).click();
+      });
 
     cy.get('wm-track-properties').within(() => {
-      cy.get('wm-track-alert').should('exist').within(() => {
-        cy.get('ion-label').contains(notAccessibleMessage).should('exist');
-      });
+      cy.get('wm-track-alert')
+        .should('exist')
+        .within(() => {
+          cy.get('ion-label').contains(notAccessibleMessage).should('exist');
+        });
     });
   });
 });

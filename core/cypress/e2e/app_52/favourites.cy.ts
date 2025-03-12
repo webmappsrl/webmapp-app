@@ -28,7 +28,7 @@ before(() => {
   cy.visit('/');
 });
 
-describe('Favourites', () => {
+describe('Favourites [oc:4757] [https://orchestrator.maphub.it/resources/developer-stories/4757]', () => {
   it('Should favorites button not visible if not logged in', () => {
     openLayer(data.layers.ecTrack);
     openTrack(data.tracks.exampleOne);

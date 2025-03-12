@@ -1,0 +1,74 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "form": {
+          "id": "poi",
+          "index": 4,
+          "title": "My personal poi example",
+          "description": "",
+          "waypointtype": "landscape"
+        },
+        "name": "My personal poi example",
+        "type": "waypoint",
+        "uuid": "a58cbb28-f5bd-4d00-adf1-db77cd227be0",
+        "media": [],
+        "app_id": "3",
+        "device": {
+          "name": "Pixel 9 Pro XL",
+          "model": "Pixel 9 Pro XL",
+          "memUsed": 14052944,
+          "diskFree": 0,
+          "platform": "android",
+          "diskTotal": 873529344,
+          "isVirtual": false,
+          "osVersion": "15",
+          "appVersion": "2.12.16",
+          "manufacturer": "Google",
+          "realDiskFree": 157688655872,
+          "realDiskTotal": 245501087744,
+          "webViewVersion": "132.0.6834.166",
+          "operatingSystem": "android",
+          "androidSDKVersion": 35
+        },
+        "createdAt": "2025-02-25T14:27:39.903Z",
+        "nominatim": {
+          "lat": "42.99084153452096",
+          "lon": "13.869034012092355",
+          "name": "Via Pietro Laureati",
+          "type": "tertiary",
+          "osm_id": 122963606,
+          "address": {
+            "road": "Via Pietro Laureati",
+            "town": "Grottammare",
+            "state": "Marche",
+            "county": "Ascoli Piceno",
+            "country": "Italia",
+            "postcode": "63066",
+            "country_code": "it",
+            "ISO3166-2-lvl4": "IT-57",
+            "ISO3166-2-lvl6": "IT-AP"
+          },
+          "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "category": "highway",
+          "osm_type": "way",
+          "place_id": 72098302,
+          "importance": 0.05335933394369417,
+          "place_rank": 26,
+          "addresstype": "road",
+          "boundingbox": ["42.9908338", "42.9908455", "13.8688240", "13.8698337"],
+          "display_name": "Via Pietro Laureati, Grottammare, Ascoli Piceno, Marche, 63066, Italia"
+        },
+        "updatedAt": "2025-02-25T14:27:39.903Z",
+        "photos": [],
+        "id": 5028
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [13.8690371, 42.9910066]
+      }
+    }
+  ]
+}

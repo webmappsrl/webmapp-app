@@ -8,7 +8,7 @@ const flowLineQuoteConfig = {
   flow_line_quote_red: 1200,
 };
 
-describe('Flow line quote', () => {
+describe('Flow line quote [oc:4727] [https://orchestrator.maphub.it/resources/developer-stories/4727]', () => {
   beforeEach(() => {
     cy.clearLocalStorage();
     cy.intercept('GET', confURL, req => {
@@ -41,24 +41,30 @@ describe('Flow line quote', () => {
         const {flow_line_quote_red, flow_line_quote_orange} = flowLineQuoteConfig;
         // click livel 3:
         cy.wrap(canvas).click(canvasWidth * 0.25, canvasHeight * 0.5);
-        cy.get('@flowline').should(
-          'contain',
-          `Livello 3: in alta quota (quota superiore ${flow_line_quote_red} metri)`,
-        );
+        cy.get('@flowline')
+          .invoke('text')
+          .should(
+            'contain',
+            `Level 3: in high altitude (altitude above ${flow_line_quote_red} meters)`,
+          );
 
         // click livel 2:
         cy.wrap(canvas).click(canvasWidth * 0.5, canvasHeight * 0.5);
-        cy.get('@flowline').should(
-          'contain',
-          `Livello 2: tratti parzialmente in alta quota (quota compresa tra ${flow_line_quote_orange} metri e ${flow_line_quote_red} metri)`,
-        );
+        cy.get('@flowline')
+          .invoke('text')
+          .should(
+            'contain',
+            `Level 2: sections partially in high altitude (altitude between ${flow_line_quote_orange} meters and ${flow_line_quote_red} meters)`,
+          );
 
         // click livel 1:
         cy.wrap(canvas).click(canvasWidth * 0.75, canvasHeight * 0.5);
-        cy.get('@flowline').should(
-          'contain',
-          `Livello 1: tratti non interessati dall'alta quota (quota minore di ${flow_line_quote_orange} metri)`,
-        );
+        cy.get('@flowline')
+          .invoke('text')
+          .should(
+            'contain',
+            `Level 1: sections not affected by high altitude (altitude less than ${flow_line_quote_orange} meters)`,
+          );
       });
   });
 });

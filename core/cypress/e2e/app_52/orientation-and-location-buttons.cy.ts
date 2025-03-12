@@ -1,11 +1,11 @@
 import {goMap} from 'cypress/utils/test-utils';
 
-beforeEach(() => {
-  cy.clearLocalStorage();
-  cy.visit('/');
-});
+describe('Orientation and location buttons [oc:4745] [https://orchestrator.maphub.it/resources/developer-stories/4745]', () => {
+  beforeEach(() => {
+    cy.clearLocalStorage();
+    cy.visit('/');
+  });
 
-describe('Orientation and location buttons', () => {
   it('Should visualize the orientation and location buttons', () => {
     goMap();
     cy.get('ion-fab-button:has(ion-icon[name="locate-outline"])').click();

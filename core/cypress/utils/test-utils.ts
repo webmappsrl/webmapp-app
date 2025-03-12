@@ -46,8 +46,8 @@ export function e2eLogin(
   cy.intercept('POST', apiLogin).as('loginRequest');
   goProfile();
   cy.get('.wm-profile-logged-out-login-button').click();
-  cy.get('ion-input[formcontrolname="email"] input').type(email);
-  cy.get('ion-input[formcontrolname="password"] input').type(password);
+  cy.get('ion-input[formcontrolname="email"] input').should('have.focus').clear().type(email);
+  cy.get('ion-input[formcontrolname="password"] input').focus().clear().type(password);
   cy.get('.wm-login-submit-button').click();
   return cy.wait('@loginRequest').its('response.body');
 }
@@ -76,6 +76,19 @@ export function goMap() {
  */
 export function goProfile() {
   cy.get('#tab-button-profile').click();
+}
+
+/**
+ * Mocks the get api ugc pois request.
+ * @param mockRes - The mock response.
+ * @returns A Cypress chainable object.
+ */
+export function mockGetApiPois(mockRes: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.api}/api/v2/ugc/poi/index`, req => {
+    req.reply(res => {
+      res.send(mockRes);
+    });
+  });
 }
 
 /**

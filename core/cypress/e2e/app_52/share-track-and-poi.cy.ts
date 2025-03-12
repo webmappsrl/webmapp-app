@@ -1,18 +1,13 @@
-import {goHome, openLayer, openPoi, openTrack} from "cypress/utils/test-utils";
+import {goHome, openLayer, openPoi, openTrack, data} from 'cypress/utils/test-utils';
 
-const layerTracksTitle = 'Tracce per tests e2e';
-const layerPoiTitle = 'Poi per test e2e';
-const trackTitle = 'Traccia non accessibile';
-const poiTitle = 'Poi semplice';
-
-describe('Share track and poi', () => {
+describe('Share track and poi [oc:4740] [https://orchestrator.maphub.it/resources/developer-stories/4740]', () => {
   before(() => {
     cy.visit('/');
   });
 
   it('Should correctly display share button when select track', () => {
-    openLayer(layerTracksTitle);
-    openTrack(trackTitle);
+    openLayer(data.layers.ecTrack);
+    openTrack(data.tracks.exampleOne);
 
     getShareButton().should('exist');
   });
@@ -24,8 +19,8 @@ describe('Share track and poi', () => {
 
   it('Should correctly display share button when select poi', () => {
     goHome();
-    openLayer(layerPoiTitle);
-    openPoi(poiTitle);
+    openLayer(data.layers.ecPoi);
+    openPoi(data.pois.exampleOne);
 
     getShareButton().should('exist');
   });
@@ -34,7 +29,6 @@ describe('Share track and poi', () => {
     getShareButton().as('shareBtn');
     cy.get('@shareBtn').click();
   });
-
 });
 
 function getShareButton() {
