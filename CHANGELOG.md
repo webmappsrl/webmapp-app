@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.1](https://github.com/webmappsrl/webmapp-app/compare/v3.0.0...v3.0.1) (2025-03-12)
+
+
+### Miscellaneous
+
+* Add PR test workflow ([#100](https://github.com/webmappsrl/webmapp-app/issues/100)) ([996bb4a](https://github.com/webmappsrl/webmapp-app/commit/996bb4aa6686b2b15f1124b67d708c097a40d133))
+* add test for visualizing related poi in track detail ([5bde1da](https://github.com/webmappsrl/webmapp-app/commit/5bde1da88682ff04b3dc6fa41684ea515656789a))
+* add translations oc: 5066 ([e6ee79e](https://github.com/webmappsrl/webmapp-app/commit/e6ee79ebc219878e25dbafcb89498a5ecf51c6b0))
+* **e2e:** add tests for My paths tabs ([b571bef](https://github.com/webmappsrl/webmapp-app/commit/b571befe7ef7123037b56132bc8ec06c1e9c3045))
+* Update e2e tests ([5165002](https://github.com/webmappsrl/webmapp-app/commit/5165002c26c32a746943c1d93bdad5aec0f92360))
+* Update e2e tests ([3c6a870](https://github.com/webmappsrl/webmapp-app/commit/3c6a87098044fda9faa127d55b91fab573679667))
+* Update PR test workflow configuration ([996bb4a](https://github.com/webmappsrl/webmapp-app/commit/996bb4aa6686b2b15f1124b67d708c097a40d133))
+
 ## [3.0.0](https://github.com/webmappsrl/webmapp-app/compare/v2.12.16...v3.0.0) (2025-02-28)
 
 
