@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.4](https://github.com/webmappsrl/webmapp-app/compare/v3.0.3...v3.0.4) (2025-03-12)
+
+
+### Miscellaneous
+
+* Update subproject commit reference ([de21d37](https://github.com/webmappsrl/webmapp-app/commit/de21d373cecd849e8c994b30f668ae8be57aaf9c))
+* Updated submodule core/src/app/shared/map-core ([a366a28](https://github.com/webmappsrl/webmapp-app/commit/a366a289da1e90b0f5179385dbe8080a9195a6ce))
+
 ## [3.0.3](https://github.com/webmappsrl/webmapp-app/compare/v3.0.2...v3.0.3) (2025-03-12)
 
 
