@@ -1,5 +1,5 @@
 <ion-content scrollY="false">
-  <wm-geobox-map #geoboxMap>
+  <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
       <div header>
         <div class="webmapp-info-header-container">
@@ -56,7 +56,7 @@
         [enableDismiss]="false"
       ></wm-inner-component-html>
       <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
-          <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
+        <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
       </ng-container>
       <ng-template #ecTrack>
         <wm-track-properties
@@ -98,14 +98,14 @@
     </wm-map-details>
     <div bottom-right>
       <ng-container
-          *ngIf="(authEnable$|async) && (isLogged$|async) && (currentEcTrackProperties$|async) as trackProperties"
-        >
-          <ion-fab slot="fixed" vertical="top" horizontal="start">
-            <ion-fab-button (click)="favourite(trackProperties?.id)">
-              <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
-              <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
-            </ion-fab-button>
-          </ion-fab>
+        *ngIf="(authEnable$|async) && (isLogged$|async) && (currentEcTrackProperties$|async) as trackProperties"
+      >
+        <ion-fab slot="fixed" vertical="top" horizontal="start">
+          <ion-fab-button (click)="favourite(trackProperties?.id)">
+            <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
+            <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
       </ng-container>
       <ng-container *ngIf="currentEcTrackProperties$|async as trackProperties">
         <ion-fab slot="fixed" vertical="top" horizontal="start">
