@@ -1,5 +1,4 @@
-import {goHome, goMap} from 'cypress/utils/test-utils';
-import {environment} from 'src/environments/environment';
+import {confURL, goHome, goMap} from 'cypress/utils/test-utils';
 
 const minDistance = 13;
 const maxDistance = 30;
@@ -11,7 +10,6 @@ const labelDuration = 'Outward Duration';
 
 const waitFilterResults = 500;
 
-const confURL = `${environment.awsApi}/conf/52.json`;
 const filters = {
   track_duration: {
     type: 'slider',

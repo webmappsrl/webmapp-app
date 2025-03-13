@@ -1,7 +1,4 @@
-import {clearTestState, confWithAuthEnabled, e2eLogin, goProfile} from 'cypress/utils/test-utils';
-import {environment} from 'src/environments/environment';
-
-const meUrl = `${environment.api}/api/auth/me`;
+import {clearTestState, confWithAuthEnabled, e2eLogin, goProfile, meUrl} from 'cypress/utils/test-utils';
 
 describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/developer-stories/4772]', () => {
   before(() => {
