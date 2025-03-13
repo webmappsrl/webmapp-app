@@ -27,6 +27,7 @@ import {appIT} from 'src/assets/i18n/it';
 import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
 import {WmTranslations} from '@wm-types/language';
+import {MetaComponent} from '@wm-core/meta/meta.component';
 registerLocaleData(localeIt);
 export const langs: WmTranslations = {
   'it': appIT,
@@ -70,7 +71,7 @@ export const langs: WmTranslations = {
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     {provide: APP_TRANSLATION, useValue: langs},
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent, MetaComponent],
 })
 export class AppModule {
   constructor(private _environmentSvc: EnvironmentService) {
