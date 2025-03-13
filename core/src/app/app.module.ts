@@ -23,9 +23,7 @@ import packageJson from 'package.json';
 import {APP_TRANSLATION, APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
 import {EnvironmentService} from '@wm-core/services/environment.service';
-import {appIT} from 'src/assets/i18n/it';
-import {appEN} from 'src/assets/i18n/en';
-import {appFR} from 'src/assets/i18n/fr';
+import {MetaComponent} from '@wm-core/meta/meta.component';
 import {Translations} from '@wm-types/language';
 registerLocaleData(localeIt);
 export const langs: Translations = {
@@ -70,7 +68,7 @@ export const langs: Translations = {
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     {provide: APP_TRANSLATION, useValue:langs}
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent, MetaComponent],
 })
 export class AppModule {
   constructor(private _environmentSvc: EnvironmentService) {
