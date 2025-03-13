@@ -339,8 +339,12 @@ function update(instanceName, geohubInstanceId, shardName) {
 
     if (argv.url) url = argv.url;
     else {
-      url = envJson.shards[shardName].origin + '/api/app/webmapp/' + geohubInstanceId;
-      console.log(config);
+      const shard = envJson.shards?.[shardName] ?? null;
+      if (!shard) {
+        reject(`Error: shard "${shardName}" not found in environment`);
+        return;
+      }
+      url = shard?.origin + '/api/app/webmapp/' + geohubInstanceId;
       if (verbose) debug('Using default url: ' + url);
     }
 
@@ -1764,7 +1768,7 @@ function getJsonEnvironment() {
   }
   const fileEnv = fs.readFileSync(envPath, 'utf8');
   const envMatch = fileEnv.match(/export const environment: Environment = ({[\s\S]*?});/);
-  if (!envMatch) {
+  if (!envMatch || !envMatch[1]) {
     reject("Impossibile trovare l'oggetto environment nel file");
     return;
   }
