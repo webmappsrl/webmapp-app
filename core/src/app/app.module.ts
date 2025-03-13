@@ -23,6 +23,7 @@ import packageJson from 'package.json';
 import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {MetaComponent} from '@wm-core/meta/meta.component';
 
 registerLocaleData(localeIt);
 
@@ -61,7 +62,7 @@ registerLocaleData(localeIt);
     },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent, MetaComponent],
 })
 export class AppModule {
   constructor(private _environmentSvc: EnvironmentService) {
