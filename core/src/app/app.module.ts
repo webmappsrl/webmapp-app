@@ -20,9 +20,9 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
-import {APP_ID, APP_VERSION, ENVIRONMENT_CONFIG} from '@wm-core/store/conf/conf.token';
-import {ConfService} from '@wm-core/store/conf/conf.service';
+import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 
 registerLocaleData(localeIt);
 
@@ -54,13 +54,7 @@ registerLocaleData(localeIt);
     WmCoreModule,
   ],
   providers: [
-    {provide: ENVIRONMENT_CONFIG, useValue: environment},
     {provide: LOCALE_ID, useValue: 'it'},
-    {
-      provide: APP_ID,
-      useFactory: (confSvc: ConfService) => confSvc.geohubAppId,
-      deps: [ConfService],
-    },
     {
       provide: APP_VERSION,
       useValue: packageJson.version,
@@ -69,4 +63,8 @@ registerLocaleData(localeIt);
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private _environmentSvc: EnvironmentService) {
+    this._environmentSvc.init(environment);
+  }
+}
