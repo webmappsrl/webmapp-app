@@ -1,0 +1,66 @@
+:root {
+  --wm-home-translate-y: -77px;
+}
+
+wm-home .root {
+  padding: 0px !important;
+}
+
+.wm-home-header-container {
+  padding-top: 0px !important;
+}
+
+wm-searchbar {
+  transform: translateY(var(--wm-home-translate-y));
+  display: block;
+  padding: 10px 15px !important;
+}
+
+wm-home-landing {
+  transform: translateY(var(--wm-home-translate-y));
+  display: block;
+  margin-top: 25px !important;
+}
+
+wm-layer-box .wm-box {
+  min-height: 150px;
+}
+
+wm-layer-box .wm-box::after {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  background-color: white;
+  color: black;
+  border-radius: 50%;
+  content: '\e985';
+  font-family: 'webmapp' !important;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+}
+
+wm-layer-box .wm-box wm-img {
+  flex: 1;
+}
+
+wm-box .wm-box .wm-box-title,
+wm-layer-box .wm-box .wm-box-title {
+  font-size: 20px !important;
+  line-height: initial !important;
+}
+wm-layer-box .wm-box .wm-box-title {
+  padding: 16px 55px 16px 16px !important;
+}
+
+wm-features-box .wm-features-wrapper .wm-features-arrow {
+  display: none !important;
+}
