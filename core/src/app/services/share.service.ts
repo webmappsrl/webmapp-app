@@ -4,6 +4,7 @@ import {environment} from 'src/environments/environment';
 import {LangService} from '@wm-core/localization/lang.service';
 import {ConfService} from '@wm-core/store/conf/conf.service';
 import {Feature, LineString} from 'geojson';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 
 export interface ShareObject {
   dialogTitle?: string;
@@ -26,9 +27,8 @@ export class ShareService {
     dialogTitle: 'Share with buddies',
   };
 
-  constructor(private _translate: LangService, private _confSvc: ConfService) {
-    this._host = this._confSvc.getHost();
-    this._baseLink = this._host ? this._host : `${this._confSvc.geohubAppId}.app.webmapp.it`;
+  constructor(private _translate: LangService, private _environmentSvc: EnvironmentService) {
+    this._baseLink = this._environmentSvc.shareLink;
 
     this._translate
       .get(['services.share.title', 'services.share.url', 'services.share.dialogTitle'])
@@ -61,7 +61,7 @@ export class ShareService {
 
   public async shareRoute(route: Feature<LineString>): Promise<void> {
     return this.share({
-      url: `${DEFAULT_ROUTE_LINK_BASEURL}${route.properties.id}`,
+      url: `${this._environmentSvc.origin}/track/${route.properties.id}`,
     });
   }
 
@@ -71,5 +71,3 @@ export class ShareService {
     });
   }
 }
-
-const DEFAULT_ROUTE_LINK_BASEURL = `${environment.api}/track/`;

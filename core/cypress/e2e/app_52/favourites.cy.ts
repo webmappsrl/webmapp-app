@@ -1,14 +1,12 @@
 import {
   clearTestState,
+  confURL,
   data,
   e2eLogin,
   goHome,
   openLayer,
   openTrack,
 } from 'cypress/utils/test-utils';
-import {environment} from 'src/environments/environment';
-
-const confURL = `${environment.awsApi}/conf/52.json`;
 
 before(() => {
   clearTestState();

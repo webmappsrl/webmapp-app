@@ -150,6 +150,13 @@ const argv = yargs(hideBin(process.argv))
       describe: 'Set the bundle version for the ios build',
       type: 'boolean',
     },
+    s: {
+      alias: 'shardName',
+      demandOption: true,
+      default: 'geohub',
+      describe: 'Set the shard name to work with',
+      type: 'string',
+    },
     force: {
       demandOption: false,
       default: false,
@@ -311,7 +318,7 @@ function create(instanceName, force) {
   });
 }
 
-function update(instanceName, geohubInstanceId) {
+function update(instanceName, geohubInstanceId, shardName) {
   return new Promise((resolve, reject) => {
     if (!instanceName) {
       reject('Instance name required. See gulp help');
@@ -323,13 +330,21 @@ function update(instanceName, geohubInstanceId) {
       return;
     }
 
+    const envJson = getJsonEnvironment();
+    envJson.appId = geohubInstanceId;
+    envJson.shardName = shardName;
+
     var dir = instancesDir + instanceName,
       url = '';
 
     if (argv.url) url = argv.url;
     else {
-      url = API + '/api/app/webmapp/' + geohubInstanceId;
-      console.log(config);
+      const shard = envJson.shards?.[shardName] ?? null;
+      if (!shard) {
+        reject(`Error: shard "${shardName}" not found in environment`);
+        return;
+      }
+      url = shard?.origin + '/api/app/webmapp/' + geohubInstanceId;
       if (verbose) debug('Using default url: ' + url);
     }
 
@@ -418,17 +433,8 @@ function update(instanceName, geohubInstanceId) {
       reject('Missing instance. See gulp help for more');
     }
     console.log(config);
-    // enviroment.ts
-    const env = `
-export const environment = {
-  production: false,
-  geohubId: ${geohubInstanceId},
-  analyticsId:'285809815',
-  api: '${API}',
-  awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
-  elasticApi: 'https://elastic-json.webmapp.it/v2/search',
-};
-`;
+
+    const env = `export const environment = ${JSON.stringify(envJson)};`;
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
   });
 }
@@ -693,7 +699,7 @@ function updateGradleVersion(instanceName, newVersion) {
   });
 }
 
-function build(instanceName, geohubInstanceId) {
+function build(instanceName, geohubInstanceId, shardName) {
   // setAPI(instanceName);
   return new Promise((resolve, reject) => {
     if (!instanceName) {
@@ -718,7 +724,7 @@ function build(instanceName, geohubInstanceId) {
       function () {
         if (verbose) debug('`build()` - create completed');
         if (verbose) debug('`build()`- running `update()`');
-        update(instanceName, geohubInstanceId).then(
+        update(instanceName, geohubInstanceId, shardName).then(
           result => {
             if (verbose) debug('`build()` - update completed');
             if (verbose) debug('`build()` completed');
@@ -739,10 +745,10 @@ function build(instanceName, geohubInstanceId) {
   });
 }
 
-function buildAndroid(instanceName, geohubInstanceId) {
+function buildAndroid(instanceName, geohubInstanceId, shardName) {
   //setAPI(instanceName);
   return new Promise((resolve, reject) => {
-    build(instanceName, geohubInstanceId).then(
+    build(instanceName, geohubInstanceId, shardName).then(
       result => {
         if (!result.id) {
           abort('The app id could not be found');
@@ -1187,10 +1193,10 @@ function updateIosPlatform(instanceName, appId, appName) {
   });
 }
 
-function buildIos(instanceName, geohubInstanceId) {
+function buildIos(instanceName, geohubInstanceId, shardName) {
   return new Promise((resolve, reject) => {
     //setAPI(instanceName);
-    build(instanceName, geohubInstanceId).then(
+    build(instanceName, geohubInstanceId, shardName).then(
       result => {
         if (!result.id) {
           abort('The app id could not be found');
@@ -1432,7 +1438,8 @@ gulp.task('build', function (done) {
  */
 gulp.task('build-android', function (done) {
   var instanceName = argv.instance ? argv.instance : '',
-    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '';
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '',
+    shardName = argv.shardName ? argv.shardName : 'geohub';
 
   if (verbose) debug('Building android platform for instance ' + instanceName);
   if (!instanceName) {
@@ -1446,7 +1453,7 @@ gulp.task('build-android', function (done) {
     return;
   }
 
-  buildAndroid(instanceName, geohubInstanceId).then(
+  buildAndroid(instanceName, geohubInstanceId, shardName).then(
     () => {
       done();
     },
@@ -1622,7 +1629,8 @@ gulp.task('build-android-bundle', function (done) {
  */
 gulp.task('build-ios', function (done) {
   var instanceName = argv.instance ? argv.instance : '',
-    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '';
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '',
+    shardName = argv.shardName ? argv.shardName : 'geohub';
   if (!instanceName) {
     abort('Instance name requred. See gulp help');
     done();
@@ -1635,7 +1643,7 @@ gulp.task('build-ios', function (done) {
   }
 
   if (verbose) debug('Building iOS platform for instance ' + instanceName);
-  buildIos(instanceName, geohubInstanceId).then(
+  buildIos(instanceName, geohubInstanceId, shardName).then(
     () => {
       done();
     },
@@ -1750,4 +1758,20 @@ function addPermissionsIfNotPresent() {
     this.push(file);
     callback();
   });
+}
+
+function getJsonEnvironment() {
+  const envPath = 'core/src/environments/environment.ts';
+  if (!fs.existsSync(envPath)) {
+    reject(`File ${envPath} non trovato.`);
+    return;
+  }
+  const fileEnv = fs.readFileSync(envPath, 'utf8');
+  const envMatch = fileEnv.match(/export const environment: Environment = ({[\s\S]*?});/);
+  if (!envMatch || !envMatch[1]) {
+    reject("Impossibile trovare l'oggetto environment nel file");
+    return;
+  }
+
+  return eval('(' + envMatch[1] + ')');
 }

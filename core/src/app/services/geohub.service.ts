@@ -7,6 +7,7 @@ import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Feature, LineString} from 'geojson';
 import {getEcTrack} from '@wm-core/utils/localForage';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 const FAVOURITE_PAGESIZE = 3;
 
 @Injectable({
@@ -16,7 +17,10 @@ export class GeohubService {
   private _ecTracks: Array<Feature<LineString>>;
   private _favourites: Array<number> = null;
 
-  constructor(private _communicationService: CommunicationService) {
+  constructor(
+    private _communicationService: CommunicationService,
+    private _environmentSvc: EnvironmentService,
+  ) {
     this._ecTracks = [];
   }
 
@@ -24,7 +28,7 @@ export class GeohubService {
     if (!this._favourites) {
       try {
         const {favorites} = await this._communicationService
-          .get(`${environment.api}/api/ec/track/favorite/list`)
+          .get(`${this._environmentSvc.origin}/api/ec/track/favorite/list`)
           .toPromise();
         this._favourites = favorites;
       } catch (err) {
@@ -51,7 +55,7 @@ export class GeohubService {
     }
     if (+id > -1) {
       const result = await this._communicationService
-        .get(`${environment.api}/api/ec/track/${id}`)
+        .get(`${this._environmentSvc.origin}/api/ec/track/${id}`)
         .pipe(
           catchError(e => {
             if (!navigator.onLine) {
@@ -71,6 +75,14 @@ export class GeohubService {
     }
   }
 
+  async getEcTracks(ids: number[]): Promise<Array<Feature<LineString>>> {
+    const res = await this._communicationService
+      .get(`${this._environmentSvc.origin}/api/ec/track/multiple?ids=${ids.join(',')}`)
+      .pipe(map(x => x.features))
+      .toPromise();
+    return res;
+  }
+
   async getFavouriteTracks(page: number = 0): Promise<Array<Feature<LineString>>> {
     const favourites = await this.favourites();
 
@@ -82,14 +94,6 @@ export class GeohubService {
     return this.getEcTracks(ids);
   }
 
-  async getEcTracks(ids: number[]): Promise<Array<Feature<LineString>>> {
-    const res = await this._communicationService
-      .get(`${environment.api}/api/ec/track/multiple?ids=${ids.join(',')}`)
-      .pipe(map(x => x.features))
-      .toPromise();
-    return res;
-  }
-
   /**
    * Get a where taxonomy (form cache if available)
    *
@@ -98,7 +102,7 @@ export class GeohubService {
    */
   async getWhereTaxonomy(id: string): Promise<WhereTaxonomy> {
     const res = await this._communicationService
-      .get(`${environment.api}/api/taxonomy/where/${id}`)
+      .get(`${this._environmentSvc.origin}/api/taxonomy/where/${id}`)
       .pipe(
         map(value => {
           delete value.geometry;
@@ -121,7 +125,7 @@ export class GeohubService {
     if (isFavourite) {
       await this._communicationService
         .post(
-          `${environment.api}/api/ec/track/favorite/add/${trackId}`,
+          `${this._environmentSvc.origin}/api/ec/track/favorite/add/${trackId}`,
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
@@ -131,7 +135,7 @@ export class GeohubService {
     } else {
       await this._communicationService
         .post(
-          `${environment.api}/api/ec/track/favorite/remove/${trackId}`,
+          `${this._environmentSvc.origin}/api/ec/track/favorite/remove/${trackId}`,
           null,
           new HttpHeaders({
             'Content-Type': 'application/json',
