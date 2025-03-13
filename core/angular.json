@@ -22,6 +22,7 @@
               "includePaths": ["src/theme/default"]
             },
             "assets": [
+              "src/theme",
               {
                 "glob": "**/*",
                 "input": "src/assets",
