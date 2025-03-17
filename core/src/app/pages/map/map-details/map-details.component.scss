@@ -1,8 +1,11 @@
 wm-map-details {
   .wm-close-btn {
     position: absolute;
-    top: constant(safe-area-inset-top, 30px); // for ios 11.1
-    top: env(safe-area-inset-top, 30px); // for ios 11.2 and onwards
+    top: calc(16px + constant(safe-area-inset-top, 30px)); // for ios 11.1
+    top: calc(16px + env(safe-area-inset-top, 30px)); // for ios 11.2 and onwards
+    left: calc(16px + constant(safe-area-inset-left, 30px));
+    left: calc(16px + env(safe-area-inset-left, 30px));
+    margin: 0;
   }
   .wm-drag {
     width: 100%;
