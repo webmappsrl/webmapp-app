@@ -109,26 +109,26 @@
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="favourite(trackProperties?.id)">
             <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
-            <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart"></ion-icon>
+            <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart" color="dark"></ion-icon>
           </ion-fab-button>
         </ion-fab>
       </ng-container>
       <ng-container *ngIf="currentEcTrackProperties$|async as trackProperties">
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="openTrackShare(trackProperties.id)">
-            <ion-icon name="share-social-outline"></ion-icon>
+            <ion-icon name="share-social-outline" color="dark"></ion-icon>
           </ion-fab-button>
         </ion-fab>
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="openTrackDownload()">
-            <ion-icon name="download-outline"></ion-icon>
+            <ion-icon name="download-outline" color="dark"></ion-icon>
           </ion-fab-button>
         </ion-fab>
       </ng-container>
       <ng-container *ngIf="currentEcPoiId$|async as poiId">
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="openPoiShare(poiId)">
-            <ion-icon name="share-social-outline"></ion-icon>
+            <ion-icon name="share-social-outline" color="dark"></ion-icon>
           </ion-fab-button>
         </ion-fab>
       </ng-container>
@@ -140,7 +140,7 @@
         (click)="fab1?.close();fab3?.close()"
       >
         <ion-fab-button>
-          <ion-icon name="locate-outline"></ion-icon>
+          <ion-icon name="locate-outline" color="dark"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="start">
           <wm-btn-orientation
@@ -150,7 +150,7 @@
           >
           </wm-btn-orientation>
           <ion-fab-button (click)="geoboxMap.navigation()">
-            <ion-icon name="navigate-outline"></ion-icon>
+            <ion-icon name="navigate-outline" color="dark"></ion-icon>
           </ion-fab-button>
           <wm-btn-center-position
             *ngIf="false"

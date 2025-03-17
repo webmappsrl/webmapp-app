@@ -1,5 +1,21 @@
+
+/* Home */
+
 :root {
   --wm-home-translate-y: -77px;
+
+  --wm-75-font-family-title: "Playfair Display", serif;
+  --wm-75-font-family-utility: "Montserrat", sans-serif;
+
+  --wm-font-size-xs: .75rem;
+  --wm-font-size-sm: .875rem;
+  --wm-font-size-base: 1rem;
+  --wm-font-size-lg: 1.125rem;
+  --wm-font-size-xl: 1.25rem;
+  --wm-font-size-2xl: 1.375rem;
+  --wm-font-size-4xl: 1.625rem;
+
+  --ion-text-color: #131313;
 }
 
 wm-home .root {
@@ -63,4 +79,97 @@ wm-layer-box .wm-box .wm-box-title {
 
 wm-features-box .wm-features-wrapper .wm-features-arrow {
   display: none !important;
+}
+
+/* Perocorsi */
+wm-filters .filter-button{
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+wm-filters .filter-button ion-icon{
+  font-size: 22px !important;
+}
+
+wm-map .map-container .ol-zoom{
+  top: unset !important;
+  bottom: 50px !important;
+}
+
+wm-track-properties ion-header{
+  order:1
+}
+wm-track-properties wm-tab-description{
+  order: 2;
+}
+wm-track-properties wm-track-alert{
+  order: 3;
+}
+wm-track-properties wm-track-edges{
+  order: 4;
+}
+wm-track-properties .wm-flowline{
+  order: 5;
+}
+wm-track-properties wm-slope-chart{
+  order: 6;
+}
+wm-track-properties wm-tab-detail{
+  order: 7;
+}
+wm-track-properties wm-tab-howto{
+  order: 8;
+}
+wm-track-properties wm-tab-image-gallery{
+  order: 9;
+}
+wm-track-properties .wm-track-details-track-related-poi{
+  order: 10;
+}
+wm-track-properties wm-tab-audio{
+  order: 11;
+}
+wm-track-properties .wm-track-details-download{
+  order: 12;
+}
+
+wm-map-details ion-card ion-card-header ion-title{
+  font-size: var(--wm-font-size-xl);
+  color: var(--ion-text-color);
+  font-weight: 700;
+  padding: 8px;
+}
+
+wm-tab-description{
+  position: relative;
+  margin-top: 0px !important;
+}
+wm-tab-description::after{
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--ion-color-light-shade);
+}
+wm-map-details ion-card{
+  position: relative;
+}
+wm-map-details ion-card::after{
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background-color: white;
+  border-radius: 10px 10px 0 0;
+  z-index: 1;
+}
+wm-tab-description ion-label{
+  display: none;
+}
+wm-tab-description .webmapp-pageroute-tabdescription-description{
+  padding: 0px !important;
 }
