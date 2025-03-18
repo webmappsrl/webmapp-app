@@ -16,6 +16,10 @@
   --wm-font-size-4xl: 1.625rem;
 
   --ion-text-color: #131313;
+  --wm-feature-details-title-color: #131313!important;
+  --wm-feature-details-title-font-weight: 700!important;
+  --wm-feature-details-title-font-size: var(--wm-font-size-xl)!important;
+  --wm-feature-details-title-font-family: var(--wm-75-font-family-title)!important;
 }
 
 wm-home .root {
@@ -108,29 +112,38 @@ wm-track-properties wm-track-alert{
 wm-track-properties wm-track-edges{
   order: 4;
 }
-wm-track-properties .wm-flowline{
+wm-travel-mode{
   order: 5;
 }
-wm-track-properties wm-slope-chart{
+wm-track-properties .wm-flowline{
   order: 6;
 }
-wm-track-properties wm-tab-detail{
+wm-track-properties wm-slope-chart{
   order: 7;
 }
-wm-track-properties wm-tab-howto{
+wm-track-properties wm-get-directions{
   order: 8;
 }
-wm-track-properties wm-tab-image-gallery{
+wm-track-properties wm-tab-detail{
+  display: none;
   order: 9;
 }
-wm-track-properties .wm-track-details-track-related-poi{
+wm-track-properties wm-tab-howto{
   order: 10;
 }
-wm-track-properties wm-tab-audio{
+wm-track-properties wm-tab-image-gallery{
+  display: none;
   order: 11;
 }
-wm-track-properties .wm-track-details-download{
+wm-track-properties .wm-track-details-track-related-poi{
   order: 12;
+}
+wm-track-properties wm-tab-audio{
+  order: 13;
+}
+wm-track-properties .wm-track-details-download{
+  display: none;
+  order: 14;
 }
 
 wm-map-details ion-card ion-card-header ion-title{
@@ -140,14 +153,23 @@ wm-map-details ion-card ion-card-header ion-title{
   padding: 8px;
 }
 
-wm-tab-description{
-  position: relative;
+wm-tab-description,
+wm-get-directions{
   margin-top: 0px !important;
 }
-wm-tab-description::after{
+wm-tab-description,
+wm-get-directions,
+wm-tab-image-gallery,
+wm-track-related-poi{
+  position: relative;
+}
+wm-tab-description::after,
+wm-get-directions::after,
+wm-tab-image-gallery::after,
+wm-track-related-poi::after{
   content: '';
   position: absolute;
-  bottom: -12px;
+  bottom: -24px;
   left: 0;
   width: 100%;
   height: 1px;
@@ -167,9 +189,42 @@ wm-map-details ion-card::after{
   border-radius: 10px 10px 0 0;
   z-index: 1;
 }
+
 wm-tab-description ion-label{
   display: none;
 }
 wm-tab-description .webmapp-pageroute-tabdescription-description{
   padding: 0px !important;
+}
+
+wm-track-related-poi .webmapp-track-poi-distance-from-current-location{
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+wm-track-related-poi .webmapp-track-poi-btns{
+  display: none !important;
+}
+wm-track-related-poi > ion-button{
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+
+wm-get-directions ion-button{
+  --background: #F8F8FE;
+  --border-radius: 25px;
+}
+wm-get-directions ion-label{
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+
+wm-travel-mode{
+  margin-bottom: 0px !important;
+}
+wm-travel-mode ion-segment{
+  --background: #F8F8FE;
+}
+wm-travel-mode ion-grid ion-row ion-col div{
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+
+wm-tab-description .webmapp-pageroute-tabdescription-description span{
+  font-family: 'Merriweather' !important;
 }
