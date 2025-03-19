@@ -222,7 +222,8 @@ wm-track-properties .wm-track-details-download{
 }
 
 wm-map-details ion-card ion-card-header ion-title{
-  font-size: var(--wm-font-size-xl);
+  font-family: var(--wm-75-font-family-title) !important;
+  font-size: var(--wm-font-size-4xl);
   color: var(--ion-text-color);
   font-weight: 700;
   padding: 8px;
@@ -269,14 +270,33 @@ wm-tab-description ion-label{
   display: none;
 }
 wm-tab-description .webmapp-pageroute-tabdescription-description{
+  font-size: var(--wm-font-size-base) !important;
+  line-height: 26px !important;
   padding: 0px !important;
+  margin-bottom: 0px !important;
+}
+wm-tab-description .webmapp-pageroute-tabdescription-description span{
+  font-family: 'Merriweather' !important;
+  font-size: var(--wm-font-size-base) !important;
+  line-height: 26px !important;
+}
+wm-tab-description .wm-expand-button{
+  margin-top: 0px !important;
+  font-size: var(--wm-font-size-base) !important;
+  line-height: 26px !important;
 }
 
+wm-track-related-poi{
+  --height: 71px !important;
+}
 wm-track-related-poi .webmapp-track-poi-distance-from-current-location{
   font-family: var(--wm-75-font-family-utility) !important;
 }
 wm-track-related-poi .webmapp-track-poi-btns{
   display: none !important;
+}
+wm-track-related-poi .webmapp-track-poi-title{
+  font-family: var(--wm-75-font-family-title) !important;
 }
 wm-track-related-poi > ion-button{
   font-family: var(--wm-75-font-family-utility) !important;
@@ -285,8 +305,13 @@ wm-track-related-poi > ion-button{
 wm-get-directions ion-button{
   --background: #F8F8FE;
   --border-radius: 25px;
+  height: 36px !important;
 }
-wm-get-directions ion-label{
+wm-get-directions ion-button ion-icon{
+  font-size: 20px !important;
+}
+wm-get-directions ion-button ion-label{
+  font-size: var(--wm-font-size-sm) !important;
   font-family: var(--wm-75-font-family-utility) !important;
 }
 
@@ -296,10 +321,18 @@ wm-travel-mode{
 wm-travel-mode ion-segment{
   --background: #F8F8FE;
 }
+wm-travel-mode ion-segment ion-segment-button{
+  --color: #585B78 !important;
+  --indicator-box-shadow: 0px 4px 4px -1px rgba(12, 12, 13, 0.05),
+  0px 4px 4px -1px rgba(12, 12, 13, 0.1) !important;
+}
 wm-travel-mode ion-grid ion-row ion-col div{
   font-family: var(--wm-75-font-family-utility) !important;
 }
-
-wm-tab-description .webmapp-pageroute-tabdescription-description span{
-  font-family: 'Merriweather' !important;
+wm-travel-mode ion-grid ion-row ion-col div:first-of-type{
+  font-size: var(--wm-font-size-4xl) !important;
+}
+wm-travel-mode ion-grid ion-row ion-col div:first-of-type.to-delete{
+  font-size: 48px !important;
+  line-height: 39px !important;
 }
