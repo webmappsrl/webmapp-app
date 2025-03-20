@@ -306,6 +306,8 @@ wm-track-related-poi > ion-label {
 }
 wm-track-related-poi > ion-button {
   font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-sm) !important;
+  height: 36px !important;
 }
 
 wm-get-directions ion-button {
