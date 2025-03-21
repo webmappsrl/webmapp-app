@@ -12,6 +12,7 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
+import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {skip} from 'rxjs/operators';
 
@@ -47,7 +48,27 @@ export class MapDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
-  ) {}
+  ) {
+    this._store.select(mapDetailsStatus).subscribe(status => {
+      switch (status) {
+        case 'open':
+          this.open();
+          break;
+        case 'onlyTitle':
+          this.onlyTitle();
+          break;
+        case 'none':
+          this.none();
+          break;
+        case 'background':
+          this.background();
+          break;
+        case 'toggle':
+          this.toggle();
+          break;
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.setAnimations();
@@ -160,7 +181,7 @@ export class MapDetailsComponent implements AfterViewInit {
       },
       onEnd: ev => {
         ev.event?.preventDefault();
-      }
+      },
     });
 
     this._gesture.enable(true);
