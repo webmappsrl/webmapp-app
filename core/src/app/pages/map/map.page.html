@@ -55,7 +55,10 @@
           </ng-template>
         </div>
       </div>
-
+      <div>
+        <wm-home-layer></wm-home-layer>
+        <wm-home-result></wm-home-result>
+      </div>
       <wm-inner-component-html
         *ngIf="popup$|async as popup"
         [html]="popup.html"
@@ -109,7 +112,11 @@
         <ion-fab slot="fixed" vertical="top" horizontal="start">
           <ion-fab-button (click)="favourite(trackProperties?.id)">
             <ion-icon *ngIf="isFavourite$|async" class="icon-fill-heart"></ion-icon>
-            <ion-icon *ngIf="!(isFavourite$|async)" class="icon-outline-heart" color="dark"></ion-icon>
+            <ion-icon
+              *ngIf="!(isFavourite$|async)"
+              class="icon-outline-heart"
+              color="dark"
+            ></ion-icon>
           </ion-fab-button>
         </ion-fab>
       </ng-container>
