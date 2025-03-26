@@ -274,7 +274,7 @@ wm-tab-description .webmapp-pageroute-tabdescription-description {
   padding: 0px !important;
   margin-bottom: 0px !important;
 }
-wm-tab-description .webmapp-pageroute-tabdescription-description span {
+wm-tab-description .webmapp-pageroute-tabdescription-description * {
   font-family: 'Merriweather' !important;
   font-size: var(--wm-font-size-base) !important;
   line-height: 26px !important;
@@ -326,6 +326,9 @@ wm-get-directions ion-button ion-label {
 wm-travel-mode {
   margin-bottom: 0px !important;
 }
+wm-travel-mode ion-label {
+  font-family: var(--wm-75-font-family-title) !important;
+}
 wm-travel-mode ion-segment {
   --background: #f8f8fe;
 }
@@ -334,7 +337,11 @@ wm-travel-mode ion-segment ion-segment-button {
   --indicator-box-shadow: 0px 4px 4px -1px rgba(12, 12, 13, 0.05),
     0px 4px 4px -1px rgba(12, 12, 13, 0.1) !important;
 }
-wm-travel-mode ion-grid ion-row ion-col div {
+wm-travel-mode ion-grid ion-row ion-col div .value {
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+wm-travel-mode ion-grid ion-row ion-col div .unit {
+  font-size: var(--wm-font-size-base) !important;
   font-family: var(--wm-75-font-family-utility) !important;
 }
 wm-travel-mode ion-grid ion-row ion-col div:first-of-type {
@@ -343,4 +350,102 @@ wm-travel-mode ion-grid ion-row ion-col div:first-of-type {
 wm-travel-mode ion-grid ion-row ion-col div:first-of-type.to-delete {
   font-size: 48px !important;
   line-height: 39px !important;
+}
+
+/* LAYER */
+wm-map-details ion-card ion-card-content:has(> wm-home-layer) {
+  top: 25px !important;
+}
+wm-map-details wm-home-layer wm-img {
+  min-height: auto !important;
+  margin: 8px !important;
+}
+wm-map-details wm-home-layer wm-img img {
+  display: none;
+}
+wm-map-details wm-home-layer wm-img .wm-box-title {
+  font-family: var(--wm-75-font-family-title) !important;
+  font-size: var(--wm-font-size-4xl) !important;
+  color: var(--ion-text-color);
+  position: relative;
+  padding: 0px;
+}
+wm-map-details wm-home-layer .wm-description span {
+  font-size: var(--wm-font-size-base) !important;
+  line-height: 26px !important;
+  color: var(--ion-text-color);
+}
+wm-map-details wm-home-layer wm-tab-description::after {
+  display: none !important;
+}
+wm-map-details wm-home-layer wm-tab-description .webmapp-pageroute-tabdescription-description {
+  margin-top: 8px !important;
+}
+
+wm-home-result .wm-home-content {
+  padding-top: 12px;
+}
+wm-home-result ion-segment {
+  box-shadow: 0px 4px 4px -4px rgba(12, 12, 13, 0.05), 0px 16px 16px -8px rgba(12, 12, 13, 0.1);
+}
+wm-home-result ion-segment-button ion-label {
+  display: flex;
+  flex-direction: row-reverse !important;
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-base) !important;
+  text-transform: none !important;
+}
+wm-home-result ion-segment-button ion-label span {
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-base) !important;
+  margin: 0 4px !important;
+  font-weight: 800 !important;
+}
+
+wm-search-box {
+  display: block !important;
+  margin: 12px 0px !important;
+}
+wm-search-box > ion-card {
+  margin: 0 !important;
+  width: 100% !important;
+  box-shadow: none !important;
+}
+wm-search-box > ion-card wm-img {
+  min-height: 151px !important;
+}
+wm-search-box > ion-card wm-img > img {
+  border-radius: 16px !important;
+}
+wm-search-box > ion-card > ion-card-header {
+  padding: 0px !important;
+}
+wm-search-box > ion-card > ion-card-header > ion-card-subtitle {
+  display: none;
+}
+wm-search-box > ion-card > ion-card-header > ion-card-title {
+  font-family: var(--wm-75-font-family-title) !important;
+  font-size: var(--wm-font-size-xl) !important;
+  color: var(--ion-text-color) !important;
+  font-weight: 700 !important;
+  margin-left: 0px !important;
+  margin-bottom: 0px !important;
+  line-height: 24px !important;
+}
+wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label {
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-sm) !important;
+  color: var(--ion-text-color) !important;
+  height: auto !important;
+  line-height: 26px;
+}
+wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label::after {
+  background-color: #bdbfd7 !important;
+}
+wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label span {
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-sm) !important;
+  color: var(--ion-text-color) !important;
+  font-weight: 700;
+  line-height: 26px;
 }
