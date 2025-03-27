@@ -55,10 +55,10 @@
           </ng-template>
         </div>
       </div>
-      <div>
+      <ng-container *ngIf="!(featureOpened$|async)">
         <wm-home-layer></wm-home-layer>
         <wm-home-result></wm-home-result>
-      </div>
+      </ng-container>
       <wm-inner-component-html
         *ngIf="popup$|async as popup"
         [html]="popup.html"
