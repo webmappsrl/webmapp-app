@@ -353,8 +353,24 @@ wm-travel-mode ion-grid ion-row ion-col div:first-of-type.to-delete {
 }
 
 /* LAYER */
+wm-status-filter * {
+  font-family: var(--wm-75-font-family-utility) !important;
+}
+wm-map-details wm-status-filter ion-col {
+  padding: 0px !important;
+}
+wm-map-details wm-status-filter ion-col span {
+  color: var(--ion-text-color) !important;
+}
+wm-map-details wm-status-filter ion-chip {
+  --background: #f8f8fe;
+  margin-right: 0px;
+  margin-left: 0px;
+}
+
 wm-map-details ion-card ion-card-content:has(> wm-home-layer) {
   top: 25px !important;
+  height: calc(100% + 37px) !important;
 }
 wm-map-details wm-home-layer wm-img {
   min-height: auto !important;
@@ -402,19 +418,23 @@ wm-home-result ion-segment-button ion-label span {
   font-weight: 800 !important;
 }
 
-wm-search-box {
+wm-search-box,
+wm-poi-box {
   display: block !important;
   margin: 12px 0px !important;
 }
-wm-search-box > ion-card {
+wm-search-box > ion-card,
+wm-poi-box > ion-card {
   margin: 0 !important;
   width: 100% !important;
   box-shadow: none !important;
 }
-wm-search-box > ion-card wm-img {
+wm-search-box > ion-card wm-img,
+wm-poi-box > ion-card wm-img {
   min-height: 151px !important;
 }
-wm-search-box > ion-card wm-img > img {
+wm-search-box > ion-card wm-img > img,
+wm-poi-box > ion-card wm-img > img {
   border-radius: 16px !important;
 }
 wm-search-box > ion-card > ion-card-header {
@@ -432,7 +452,8 @@ wm-search-box > ion-card > ion-card-header > ion-card-title {
   margin-bottom: 0px !important;
   line-height: 24px !important;
 }
-wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label {
+wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label,
+wm-poi-box > ion-card > ion-label {
   font-family: var(--wm-75-font-family-utility) !important;
   font-size: var(--wm-font-size-sm) !important;
   color: var(--ion-text-color) !important;
@@ -442,10 +463,20 @@ wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label
 wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label::after {
   background-color: #bdbfd7 !important;
 }
-wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label span {
+wm-search-box > ion-card > ion-card-header > .wm-search-box-properties ion-label span,
+wm-poi-box > ion-card > ion-label span {
   font-family: var(--wm-75-font-family-utility) !important;
   font-size: var(--wm-font-size-sm) !important;
   color: var(--ion-text-color) !important;
   font-weight: 700;
   line-height: 26px;
+}
+
+wm-poi-box > ion-card > .wm-box-name {
+  font-family: var(--wm-75-font-family-title) !important;
+  font-size: var(--wm-font-size-xl);
+  color: var(--ion-text-color);
+  font-weight: 700;
+  line-height: 24px;
+  margin-top: 16px;
 }
