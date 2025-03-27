@@ -53,6 +53,14 @@ export class MapDetailsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.setAnimations();
     this._setGesture();
+    /* TODO: modificare gli status del map details, dovrebbero essere solo 4:
+      background, onlyTitle, open, full che corrispondono alle 4 posizioni del map details,
+      chiuso, aperto solo con titolo, aperto, aperto completo.
+      Questo per gestire la transizione tra le varie posizioni. Attualmente "none()" è una funzione usata per verificare
+      se c'è ad esempio un releted_poi aperto e nel caso chiudere solo il releted e non la traccia, quindi non sempre
+      chiude il dettaglio, impendendomi ai successivi click del back button di chiudere il dettaglio
+      (essendo già il suo stato a none).
+    */
     this._store.select(mapDetailsStatus).subscribe(status => {
       switch (status) {
         case 'open':
@@ -69,6 +77,9 @@ export class MapDetailsComponent implements AfterViewInit {
           break;
         case 'toggle':
           this.toggle();
+          break;
+        case 'full':
+          this.full();
           break;
       }
     });
@@ -97,13 +108,13 @@ export class MapDetailsComponent implements AfterViewInit {
     const queryParams = this._urlHandlerSvc.getCurrentQueryParams();
     if (queryParams.poi != null) {
       this._urlHandlerSvc.updateURL({poi: undefined});
-      this.background();
+      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     } else if (queryParams.ec_related_poi != null) {
       this._urlHandlerSvc.updateURL({ec_related_poi: undefined});
     } else if (queryParams.ugc_poi != null) {
       this._urlHandlerSvc.updateURL({ugc_poi: undefined});
     } else {
-      this.background();
+      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
       this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
     }
 
@@ -141,10 +152,10 @@ export class MapDetailsComponent implements AfterViewInit {
 
   toggle(): boolean {
     if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() <= 110) {
-      this.open();
+      this._store.dispatch(setMapDetailsStatus({status: 'open'}));
       return true;
     } else {
-      this.onlyTitle();
+      this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
       return false;
     }
   }
@@ -170,9 +181,9 @@ export class MapDetailsComponent implements AfterViewInit {
         this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
-          this.open();
+          this._store.dispatch(setMapDetailsStatus({status: 'open'}));
         } else {
-          this.full();
+          this._store.dispatch(setMapDetailsStatus({status: 'full'}));
         }
       },
       onEnd: ev => {
