@@ -12,9 +12,9 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
+import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
-import {skip} from 'rxjs/operators';
 
 @Component({
   selector: 'wm-map-details',
@@ -48,7 +48,11 @@ export class MapDetailsComponent implements AfterViewInit {
     private _gestureCtrl: GestureController,
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
-  ) {
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.setAnimations();
+    this._setGesture();
     this._store.select(mapDetailsStatus).subscribe(status => {
       switch (status) {
         case 'open':
@@ -70,21 +74,13 @@ export class MapDetailsComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    this.setAnimations();
-    this._setGesture();
-    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
-      if (featureopened) {
-        this.open();
-      } else {
-        this.none();
-      }
-    });
-  }
-
   background(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
+  }
+
+  clickBack(): void {
+    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
   }
 
   full(): void {
