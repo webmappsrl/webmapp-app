@@ -26,7 +26,7 @@ wm-map-details {
       }
     }
   }
-  wm-search-box {
+  > wm-search-box {
     ion-card {
       max-height: 90%;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.4);
@@ -41,13 +41,13 @@ wm-map-details {
     background-color: white;
     z-index: 99;
   }
-  ion-card {
+  > ion-card {
     margin-inline: 0 !important;
     margin: 0;
     padding: 10px;
     height: 100%;
     padding-bottom: 15%;
-    ion-card-header {
+    > ion-card-header {
       margin: 0;
       padding: 0;
       width: 100%;
