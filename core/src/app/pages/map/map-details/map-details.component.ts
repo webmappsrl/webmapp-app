@@ -12,10 +12,7 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
-import {
-  backOfMapDetails,
-  setMapDetailsStatus,
-} from '@wm-core/store/user-activity/user-activity.action';
+import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
@@ -48,6 +45,7 @@ export class MapDetailsComponent implements AfterViewInit {
     private _animationCtrl: AnimationController,
     private _gestureCtrl: GestureController,
     private _store: Store,
+    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -74,6 +72,10 @@ export class MapDetailsComponent implements AfterViewInit {
   background(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
+  }
+
+  clickBack(): void {
+    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
   }
 
   full(): void {
