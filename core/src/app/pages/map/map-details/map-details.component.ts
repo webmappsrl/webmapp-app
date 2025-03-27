@@ -17,7 +17,6 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
-import {skip} from 'rxjs/operators';
 
 @Component({
   selector: 'wm-map-details',
@@ -83,6 +82,10 @@ export class MapDetailsComponent implements AfterViewInit {
   background(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
+  }
+
+  clickBack(): void {
+    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
   }
 
   full(): void {
