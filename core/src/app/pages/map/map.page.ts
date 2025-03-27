@@ -41,7 +41,7 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
-import {poi, track} from '@wm-core/store/features/features.selector';
+import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {
   currentEcPoiId,
@@ -128,6 +128,7 @@ export class MapPage {
   currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
+  featureOpened$: Observable<boolean> = this._store.select(featureOpened);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
