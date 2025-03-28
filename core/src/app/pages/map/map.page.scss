@@ -114,4 +114,17 @@ webmapp-map-page {
   ion-title {
     font-size: unset;
   }
+
+  .bottom-right,
+  .ol-zoom {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+  }
+  .full-details {
+    .bottom-right,
+    .ol-zoom {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
 }
