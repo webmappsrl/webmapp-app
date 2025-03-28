@@ -12,7 +12,10 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
-import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  backOfMapDetails,
+  setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 
@@ -30,8 +33,6 @@ export class MapDetailsComponent implements AfterViewInit {
   private _initialStep: number = 1;
   private _started: boolean = false;
 
-  @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
-  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
@@ -47,20 +48,11 @@ export class MapDetailsComponent implements AfterViewInit {
     private _animationCtrl: AnimationController,
     private _gestureCtrl: GestureController,
     private _store: Store,
-    private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
   ngAfterViewInit(): void {
     this.setAnimations();
     this._setGesture();
-    /* TODO: modificare gli status del map details, dovrebbero essere solo 4:
-      background, onlyTitle, open, full che corrispondono alle 4 posizioni del map details,
-      chiuso, aperto solo con titolo, aperto, aperto completo.
-      Questo per gestire la transizione tra le varie posizioni. Attualmente "none()" è una funzione usata per verificare
-      se c'è ad esempio un releted_poi aperto e nel caso chiudere solo il releted e non la traccia, quindi non sempre
-      chiude il dettaglio, impendendomi ai successivi click del back button di chiudere il dettaglio
-      (essendo già il suo stato a none).
-    */
     this._store.select(mapDetailsStatus).subscribe(status => {
       switch (status) {
         case 'open':
@@ -69,14 +61,8 @@ export class MapDetailsComponent implements AfterViewInit {
         case 'onlyTitle':
           this.onlyTitle();
           break;
-        case 'none':
-          this.none();
-          break;
         case 'background':
           this.background();
-          break;
-        case 'toggle':
-          this.toggle();
           break;
         case 'full':
           this.full();
@@ -90,10 +76,6 @@ export class MapDetailsComponent implements AfterViewInit {
     this.isOpen$.next(false);
   }
 
-  clickBack(): void {
-    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
-  }
-
   full(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
     this.isOpen$.next(true);
@@ -104,21 +86,8 @@ export class MapDetailsComponent implements AfterViewInit {
     this.endAnimation(shouldComplete, this.stepStatus ? 0 : 1);
   }
 
-  none(): void {
-    const queryParams = this._urlHandlerSvc.getCurrentQueryParams();
-    if (queryParams.poi != null) {
-      this._urlHandlerSvc.updateURL({poi: undefined});
-      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
-    } else if (queryParams.ec_related_poi != null) {
-      this._urlHandlerSvc.updateURL({ec_related_poi: undefined});
-    } else if (queryParams.ugc_poi != null) {
-      this._urlHandlerSvc.updateURL({ugc_poi: undefined});
-    } else {
-      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
-      this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
-    }
-
-    this.closeEVT.emit();
+  back(): void {
+    this._store.dispatch(backOfMapDetails());
   }
 
   onlyTitle(): void {
@@ -162,7 +131,6 @@ export class MapDetailsComponent implements AfterViewInit {
 
   toogleFullMap() {
     this.modeFullMap = !this.toggle();
-    this.toggleEVT.emit();
   }
 
   private _getCurrentHeight(): number {
@@ -178,7 +146,6 @@ export class MapDetailsComponent implements AfterViewInit {
       passive: false,
       onStart: ev => {
         ev.event?.preventDefault();
-        this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
           this._store.dispatch(setMapDetailsStatus({status: 'open'}));

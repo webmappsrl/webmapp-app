@@ -127,4 +127,27 @@ webmapp-map-page {
       pointer-events: none;
     }
   }
+
+  wm-map-details {
+    wm-status-filter {
+      ion-grid {
+        height: fit-content;
+        opacity: 1;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+
+  .only-title {
+    wm-map-details {
+      wm-status-filter {
+        ion-grid {
+          height: 0;
+          opacity: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
 }
