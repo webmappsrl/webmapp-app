@@ -75,6 +75,9 @@ export class MapDetailsComponent implements AfterViewInit {
         case 'full':
           this.full();
           break;
+        case 'full':
+          this.full();
+          break;
       }
     });
   }
