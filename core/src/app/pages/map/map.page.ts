@@ -39,7 +39,11 @@ import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
-import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
+import {
+  ecLayer,
+  inputTyped,
+  mapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
 import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
@@ -54,6 +58,7 @@ import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {backOfMapDetails, setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
 
+import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -137,6 +142,7 @@ export class MapPage {
   isTrackRecordingEnable$: Observable<boolean> = this._store.select(confRecordTrackShow);
   lang = localStorage.getItem('wm-lang') || 'it';
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  mapDetailsStatus$: Observable<mapDetailsStatusType> = this._store.select(mapDetailsStatus);
   modeFullMap = false;
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
