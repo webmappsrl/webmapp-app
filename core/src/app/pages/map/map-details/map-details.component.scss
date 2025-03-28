@@ -45,7 +45,7 @@ wm-map-details {
     margin-inline: 0 !important;
     margin: 0;
     padding: 10px;
-    height: 100%;
+    height: inherit;
     padding-bottom: 15%;
     > ion-card-header {
       margin: 0;
@@ -77,13 +77,23 @@ wm-map-details {
         }
       }
     }
-    ion-card-content {
+    > ion-card-content {
       height: 100%;
       top: 70px;
       overflow-y: auto;
       overflow-x: hidden;
       padding: 0 !important;
       margin: 0 !important;
+
+      wm-status-filter {
+        > ion-grid {
+          > ion-row {
+            > ion-col:nth-of-type(2) {
+              display: none;
+            }
+          }
+        }
+      }
 
       wm-poi-properties {
         position: relative;
