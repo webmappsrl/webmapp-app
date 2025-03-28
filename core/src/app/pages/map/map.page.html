@@ -1,4 +1,4 @@
-<ion-content scrollY="false">
+<ion-content scrollY="false" [class.full-details]="(mapDetailsStatus$|async) === 'full'">
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
       <div header>
@@ -50,6 +50,7 @@
         </div>
       </div>
       <ng-container *ngIf="!(featureOpened$|async)">
+        <wm-status-filter></wm-status-filter>
         <wm-home-layer></wm-home-layer>
         <wm-home-result></wm-home-result>
       </ng-container>
