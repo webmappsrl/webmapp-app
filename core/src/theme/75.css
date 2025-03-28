@@ -252,8 +252,9 @@ wm-track-related-poi::after {
 }
 wm-map-details ion-card {
   position: relative;
+  display: block;
 }
-wm-map-details ion-card::after {
+wm-map-details::after {
   content: '';
   position: absolute;
   top: -10px;
