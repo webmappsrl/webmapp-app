@@ -56,7 +56,10 @@ import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/
 import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
-import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  backOfMapDetails,
+  setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
 export interface IDATALAYER {
   high: string;
@@ -278,7 +281,7 @@ export class MapPage {
     if (popup != null && popup != '') {
       this._store.dispatch(setMapDetailsStatus({status: 'open'}));
     } else {
-      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+      this._store.dispatch(backOfMapDetails());
     }
   }
 
@@ -291,6 +294,10 @@ export class MapPage {
 
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
+  }
+
+  closeDetails(): void {
+    this._store.dispatch(backOfMapDetails());
   }
 
   savePosition(key = 'track'): void {
