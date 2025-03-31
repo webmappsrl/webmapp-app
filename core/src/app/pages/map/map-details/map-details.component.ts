@@ -32,8 +32,6 @@ export class MapDetailsComponent implements AfterViewInit {
   private _initialStep: number = 1;
   private _started: boolean = false;
 
-  @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
-  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
@@ -75,9 +73,6 @@ export class MapDetailsComponent implements AfterViewInit {
         case 'full':
           this.full();
           break;
-        case 'full':
-          this.full();
-          break;
       }
     });
   }
@@ -85,10 +80,6 @@ export class MapDetailsComponent implements AfterViewInit {
   background(): void {
     this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
     this.isOpen$.next(false);
-  }
-
-  clickBack(): void {
-    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
   }
 
   full(): void {
@@ -146,7 +137,6 @@ export class MapDetailsComponent implements AfterViewInit {
 
   toogleFullMap() {
     this.modeFullMap = !this.toggle();
-    this.toggleEVT.emit();
   }
 
   private _getCurrentHeight(): number {
@@ -162,7 +152,6 @@ export class MapDetailsComponent implements AfterViewInit {
       passive: false,
       onStart: ev => {
         ev.event?.preventDefault();
-        this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
           this._store.dispatch(setMapDetailsStatus({status: 'open'}));
