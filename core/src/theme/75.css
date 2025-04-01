@@ -481,3 +481,23 @@ wm-poi-box > ion-card > .wm-box-name {
   line-height: 24px;
   margin-top: 16px;
 }
+
+/* POI */
+wm-map-details ion-card ion-card-header .webmapp-pagepoi-info-header-pre-title {
+  display: none;
+}
+wm-map-details ion-card ion-card-header .webmapp-pagepoi-info-header-title {
+  font-family: var(--wm-75-font-family-title) !important;
+  font-size: var(--wm-font-size-4xl) !important;
+  line-height: 29px !important;
+  font-weight: 700;
+  padding: 8px;
+}
+wm-map-details ion-card:has(wm-poi-properties) ion-card-header ion-title {
+  display: none !important;
+}
+
+wm-poi-properties > .wm-poi-properties-body > ion-label * {
+  font-family: var(--wm-75-font-family-utility) !important;
+  color: var(--ion-text-color) !important;
+}
