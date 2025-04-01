@@ -64,7 +64,7 @@
         [enableDismiss]="false"
       ></wm-inner-component-html>
       <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
-        <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
+        <wm-poi-properties></wm-poi-properties>
       </ng-container>
       <ng-template #ecTrack>
         <wm-track-properties
