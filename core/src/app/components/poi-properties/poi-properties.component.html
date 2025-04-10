@@ -11,8 +11,8 @@
     ></wm-tab-image-gallery>
     <wm-tab-detail *ngIf="showTechnicalDetails$|async" [properties]="properties"></wm-tab-detail>
     <wm-tab-description
-      *ngIf="properties?.description"
-      [description]="properties?.description"
+      *ngIf="properties?.description as description"
+      [description]="description"
     ></wm-tab-description>
     <wm-poi-types-badges
       *ngIf="properties?.taxonomy?.poi_types as poiTypes"
