@@ -12,7 +12,7 @@ wm-map-details {
     height: auto;
     text-align: center;
     display: block;
-    position: absolute;
+    // position: absolute; TODO: da verificare se è necessario
     background-color: white;
     font-size: medium;
     z-index: 99;
@@ -64,7 +64,7 @@ wm-map-details {
       height: auto;
       text-align: left;
       display: block;
-      position: absolute;
+      // position: absolute; TODO: da verificare se è necessario
       background-color: white;
       z-index: 99;
       border-radius: 16px 16px 0 0;
@@ -90,7 +90,7 @@ wm-map-details {
     }
     > ion-card-content {
       height: 100%;
-      top: 70px;
+      // top: 70px; TODO: da verificare se è necessario
       overflow-y: auto;
       overflow-x: hidden;
       padding: 0 !important;

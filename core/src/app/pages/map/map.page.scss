@@ -90,23 +90,12 @@ webmapp-map-page {
       .webmapp-pagepoi-info-header-title {
         font-size: var(--wm-font-lg);
         font-weight: var(--wm-font-weight-bold);
-      }
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
 
-      .webmapp-pagepoi-info-header-arrows {
-        position: absolute;
-        right: 0;
-        top: 0;
-        .webmapp-pagepoi-info-header-arrow {
-          display: inline-block;
-          width: 50px;
-          height: 30px;
-          text-align: center;
-          padding: 6px;
-          border-radius: 30px;
-
-          .webmapp-pagepoi-info-header-arrow-icon {
-            font-size: large;
-          }
+        > div {
+          flex: 1;
         }
       }
     }
