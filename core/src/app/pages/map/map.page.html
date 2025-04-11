@@ -23,21 +23,8 @@
                 </div>
               </ng-template>
               <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
-                {{name|wmtrans}}
-              </div>
-
-              <div class="webmapp-pagepoi-info-header-arrows" *ngIf="properties?.isRelated">
-                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
-                  <i class="icon-outline-arrow-left" (click)="poiPrev()"></i>
-                  <ion-ripple-effect></ion-ripple-effect>
-                </div>
-                <div class="ripple-parent ion-activatable webmapp-pagepoi-info-header-arrow">
-                  <i
-                    class="icon-outline-arrow-right webmapp-pagepoi-info-header-arrow-icon"
-                    (click)="poiNext()"
-                  ></i>
-                  <ion-ripple-effect></ion-ripple-effect>
-                </div>
+                <div>{{name|wmtrans}}</div>
+                <wm-related-pois-navigator></wm-related-pois-navigator>
               </div>
             </div>
           </ng-container>
@@ -64,7 +51,7 @@
         [enableDismiss]="false"
       ></wm-inner-component-html>
       <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
-        <wm-poi-properties [properties]="properties" *ngIf="properties!=null"></wm-poi-properties>
+        <wm-poi-properties></wm-poi-properties>
       </ng-container>
       <ng-template #ecTrack>
         <wm-track-properties
