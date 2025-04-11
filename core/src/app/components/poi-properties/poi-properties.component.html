@@ -1,18 +1,27 @@
-<ng-container *ngIf="properties!= null">
+<ng-container *ngIf="currentPoiProperties$|async as properties">
   <div class="wm-poi-properties-body">
+    <ion-label>
+      {{"Distanza da te" | wmtrans}}
+      <span>{{distanceFromCurrentPoi$|async|distance:'auto':0}}</span>
+    </ion-label>
     <wm-excerpt *ngIf="properties?.excerpt as excerpt" [excerpt]="excerpt"></wm-excerpt>
     <wm-tab-image-gallery
       *ngIf="properties?.image_gallery?.length"
       [imageGallery]="properties?.image_gallery"
     ></wm-tab-image-gallery>
-    <wm-tab-detail
-      *ngIf="showTechnicalDetails$|async"
-      [properties]="properties"
-    ></wm-tab-detail>
+    <wm-tab-detail *ngIf="showTechnicalDetails$|async" [properties]="properties"></wm-tab-detail>
     <wm-tab-description
-      *ngIf="properties?.description"
-      [description]="properties?.description"
+      *ngIf="properties?.description as description"
+      [description]="description"
     ></wm-tab-description>
+    <wm-poi-types-badges
+      *ngIf="properties?.taxonomy?.poi_types as poiTypes"
+      [poiTypes]="poiTypes"
+    ></wm-poi-types-badges>
+    <ng-container *ngIf="properties?.info as info">
+      <div class="wm-poi-properties-info" [innerHTML]="sanitize(info)"></div>
+    </ng-container>
+    <wm-get-directions></wm-get-directions>
     <wm-feature-useful-urls *ngIf="showUsefulUrls$|async">
       <wm-phone *ngIf="properties?.contact_phone as phone" [phone]="phone"></wm-phone>
       <wm-email *ngIf="properties?.contact_email as email" [email]="email"></wm-email>
