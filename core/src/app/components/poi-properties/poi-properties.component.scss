@@ -11,6 +11,15 @@ wm-poi-properties {
 
   .wm-poi-properties-body {
     --padding-bottom: 30px;
+
+    > ion-label {
+      display: block;
+      margin: var(--wm-feature-details-margin);
+      margin-top: 0px;
+      span {
+        font-weight: 700;
+      }
+    }
     .wm-poi-properties-info {
       margin: var(--wm-feature-details-margin);
     }
