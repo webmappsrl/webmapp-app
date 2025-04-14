@@ -96,6 +96,11 @@ wm-map-details {
       padding: 0 !important;
       margin: 0 !important;
 
+      wm-image-detail {
+        display: block;
+        min-height: 100%;
+      }
+
       wm-status-filter {
         > ion-grid {
           > ion-row {
