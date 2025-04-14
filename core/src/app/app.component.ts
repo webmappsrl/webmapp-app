@@ -15,8 +15,8 @@ import {Observable} from 'rxjs';
 import {
   confGEOLOCATION,
   confLANGUAGES,
-  confMAP,
   confTHEMEVariables,
+  confTRANSLATIONS,
 } from '@wm-core/store/conf/conf.selector';
 import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {IGEOLOCATION} from '@wm-core/types/config';
@@ -37,7 +37,9 @@ import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 })
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
+  confLANGUAGES$: Observable<any> = this._store.select(confLANGUAGES);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
+  confTRANSLATIONS$ = this._store.select(confTRANSLATIONS);
   public image_gallery: any[];
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   public photoIndex: number = 0;
@@ -64,12 +66,24 @@ export class AppComponent {
       .pipe(
         filter(p => p != null),
         take(1),
+        switchMap(l => {
+          this._langService.setTranslation('it', appIT, true);
+          this._langService.setTranslation('en', appEN, true);
+          this._langService.setTranslation('fr', appFR, true);
+          this._langService.initLang(l.default);
+          return this.confTRANSLATIONS$.pipe(
+            filter(t => t != null),
+            take(1),
+          );
+        }),
       )
-      .subscribe(l => {
-        this._langService.setTranslation('it', appIT, true);
-        this._langService.setTranslation('en', appEN, true);
-        this._langService.setTranslation('fr', appFR, true);
-        this._langService.initLang(l.default);
+      .subscribe(t => {
+        if (t['it'] != null) {
+          this._langService.setTranslation('it', {...appIT, ...t['it']}, true);
+        }
+        if (t['en'] != null) {
+          this._langService.setTranslation('en', {...appEN, ...t['en']}, true);
+        }
       });
     this._platform.ready().then(
       () => {

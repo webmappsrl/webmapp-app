@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src: url('fonts/webmapp.eot?i3p6k');
-  src: url('fonts/webmapp.eot?i3p6k#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?i3p6k') format('truetype'),
-    url('fonts/webmapp.woff?i3p6k') format('woff'),
-    url('fonts/webmapp.svg?i3p6k#webmapp') format('svg');
+  src: url('fonts/icomoon.eot?wcakxr');
+  src: url('fonts/icomoon.eot?wcakxr#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?wcakxr') format('truetype'),
+    url('fonts/icomoon.woff?wcakxr') format('woff'),
+    url('fonts/icomoon.svg?wcakxr#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -400,14 +400,11 @@
 .icon-outline-star:before {
   content: '\e970';
 }
-.icon-outline-starting-point .path1:before {
+.icon-uniE971:before {
   content: '\e971';
-  color: rgb(50, 48, 49);
 }
-.icon-outline-starting-point .path2:before {
+.icon-uniE972:before {
   content: '\e972';
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
 .icon-outline-stop-outline:before {
   content: '\e973';
@@ -460,9 +457,6 @@
 .icon-fill-arrow-down:before {
   content: '\e983';
 }
-.icon-fill-arrow-left:before {
-  content: '\e984';
-}
 .icon-fill-arrow-right:before {
   content: '\e985';
 }
@@ -502,72 +496,38 @@
 .icon-fill-camera:before {
   content: '\e991';
 }
-.icon-fill-check:before {
-  content: '\e992';
-}
-.icon-fill-chevron-left:before {
-  content: '\e993';
-}
-.icon-fill-chevron-right:before {
-  content: '\e994';
-}
-.icon-fill-chevron-up:before {
-  content: '\e995';
-}
 .icon-fill-children:before {
   content: '\e996';
 }
 .icon-fill-city-tour:before {
   content: '\e997';
 }
-.icon-fill-close:before {
-  content: '\e998';
-}
-.icon-fill-difficulty-easy .path1:before {
+.icon-uniE999:before {
   content: '\e999';
-  color: rgb(50, 48, 49);
 }
-.icon-fill-difficulty-easy .path2:before {
+.icon-uniE99A:before {
   content: '\e99a';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
-  opacity: 0.4;
 }
-.icon-fill-difficulty-easy .path3:before {
+.icon-uniE99B:before {
   content: '\e99b';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
-  opacity: 0.4;
 }
 .icon-fill-difficulty-high:before {
   content: '\e99c';
 }
-.icon-fill-difficulty-medium .path1:before {
+.icon-uniE99D:before {
   content: '\e99d';
-  color: rgb(50, 48, 49);
 }
-.icon-fill-difficulty-medium .path2:before {
+.icon-uniE99E:before {
   content: '\e99e';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-difficulty-medium .path3:before {
+.icon-uniE99F:before {
   content: '\e99f';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
-  opacity: 0.4;
 }
 .icon-fill-difficulty-new:before {
   content: '\e9a0';
 }
 .icon-fill-directions:before {
   content: '\e9a1';
-}
-.icon-fill-dislivello-negativo:before {
-  content: '\e9a2';
-}
-.icon-fill-dislivello-positivo:before {
-  content: '\e9a3';
 }
 .icon-fill-distance:before {
   content: '\e9a4';
@@ -577,9 +537,6 @@
 }
 .icon-fill-downhill:before {
   content: '\e9a6';
-}
-.icon-fill-download:before {
-  content: '\e9a7';
 }
 .icon-fill-duration:before {
   content: '\e9a8';
@@ -593,13 +550,11 @@
 .icon-fill-filters:before {
   content: '\e9ab';
 }
-.icon-fill-flag .path1:before {
+.icon-uniE9AC:before {
   content: '\e9ac';
 }
-.icon-fill-flag .path2:before {
+.icon-uniE9AD:before {
   content: '\e9ad';
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
 .icon-fill-globe:before {
   content: '\e9ae';
@@ -682,39 +637,26 @@
 .icon-fill-river:before {
   content: '\e9c8';
 }
-.icon-fill-running .path1:before {
+.icon-uniE9C9:before {
   content: '\e9c9';
-  color: rgb(50, 48, 49);
 }
-.icon-fill-running .path2:before {
+.icon-uniE9CA:before {
   content: '\e9ca';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-running .path3:before {
+.icon-uniE9CB:before {
   content: '\e9cb';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-running .path4:before {
+.icon-uniE9CC:before {
   content: '\e9cc';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-running .path5:before {
+.icon-uniE9CD:before {
   content: '\e9cd';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-running .path6:before {
+.icon-uniE9CE:before {
   content: '\e9ce';
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
-.icon-fill-running .path7:before {
+.icon-uniE9CF:before {
   content: '\e9cf';
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
 .icon-fill-search:before {
   content: '\e9d0';
@@ -740,19 +682,14 @@
 .icon-fill-star:before {
   content: '\e9d7';
 }
-.icon-fill-starting-point .path1:before {
+.icon-uniE9D8:before {
   content: '\e9d8';
 }
-.icon-fill-starting-point .path2:before {
+.icon-uniE9D9:before {
   content: '\e9d9';
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
 .icon-fill-stop:before {
   content: '\e9da';
-}
-.icon-fill-Tavola-disegno-1:before {
-  content: '\e9db';
 }
 .icon-fill-track:before {
   content: '\e9dc';
@@ -769,49 +706,32 @@
 .icon-fill-walking-copy:before {
   content: '\e9e0';
 }
-.icon-fill-walking .path1:before {
+.icon-uniE9E1:before {
   content: '\e9e1';
-  color: rgb(0, 0, 0);
 }
-.icon-fill-walking .path2:before {
+.icon-uniE9E2:before {
   content: '\e9e2';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path3:before {
+.icon-uniE9E3:before {
   content: '\e9e3';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path4:before {
+.icon-uniE9E4:before {
   content: '\e9e4';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path5:before {
+.icon-uniE9E5:before {
   content: '\e9e5';
-  margin-left: -1em;
-  color: rgb(50, 48, 49);
 }
-.icon-fill-walking .path6:before {
+.icon-uniE9E6:before {
   content: '\e9e6';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path7:before {
+.icon-uniE9E7:before {
   content: '\e9e7';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path8:before {
+.icon-uniE9E8:before {
   content: '\e9e8';
-  margin-left: -1em;
-  color: none;
 }
-.icon-fill-walking .path9:before {
+.icon-uniE9E9:before {
   content: '\e9e9';
-  margin-left: -1em;
-  color: none;
 }
 .icon-fill-waterfall:before {
   content: '\e9ea';
@@ -822,22 +742,24 @@
 .icon-fill-with-guide:before {
   content: '\e9ec';
 }
-.icon-compass .path1:before {
-  content: '\e972';
-  color: rgb(192, 57, 43);
+.icon-uniE984:before {
+  content: '\e984';
 }
-.icon-compass .path2:before {
-  content: '\e973';
-  margin-left: -1em;
-  color: rgb(189, 195, 199);
+.icon-uniE992:before {
+  content: '\e992';
 }
-.icon-compass .path3:before {
-  content: '\e974';
-  margin-left: -1em;
-  color: rgb(231, 76, 60);
+.icon-uniE993:before {
+  content: '\e993';
 }
-.icon-compass .path4:before {
-  content: '\e975';
-  margin-left: -1em;
-  color: rgb(236, 240, 241);
+.icon-uniE994:before {
+  content: '\e994';
+}
+.icon-compass-outline:before {
+  content: '\e995';
+}
+.icon-map-outline:before {
+  content: '\e998';
+}
+.icon-person-outline:before {
+  content: '\e9a2';
 }
