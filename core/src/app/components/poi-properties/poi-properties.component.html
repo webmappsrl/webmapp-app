@@ -1,8 +1,8 @@
 <ng-container *ngIf="currentPoiProperties$|async as properties">
   <div class="wm-poi-properties-body">
-    <ion-label>
+    <ion-label *ngIf="distanceFromCurrentPoi$|async as distanceFromCurrentPoi">
       {{"Distanza da te" | wmtrans}}
-      <span>{{distanceFromCurrentPoi$|async|distance:'auto':0}}</span>
+      <span>{{distanceFromCurrentPoi|distance:'auto':0}}</span>
     </ion-label>
     <wm-excerpt *ngIf="properties?.excerpt as excerpt" [excerpt]="excerpt"></wm-excerpt>
     <wm-tab-image-gallery
