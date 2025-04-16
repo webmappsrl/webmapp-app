@@ -20,11 +20,19 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
-import {APP_VERSION} from '@wm-core/store/conf/conf.token';
+import {APP_TRANSLATION, APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
 import {EnvironmentService} from '@wm-core/services/environment.service';
-
+import {appIT} from 'src/assets/i18n/it';
+import {appEN} from 'src/assets/i18n/en';
+import {appFR} from 'src/assets/i18n/fr';
+import {Translations} from '@wm-types/language';
 registerLocaleData(localeIt);
+export const langs: Translations = {
+  'it': appIT,
+  'en': appEN,
+  'fr': appFR
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -60,6 +68,7 @@ registerLocaleData(localeIt);
       useValue: packageJson.version,
     },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    {provide: APP_TRANSLATION, useValue:langs}
   ],
   bootstrap: [AppComponent],
 })
