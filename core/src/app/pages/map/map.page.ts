@@ -272,12 +272,12 @@ export class MapPage {
     if (popup != null && popup != '') {
       this._store.dispatch(setMapDetailsStatus({status: 'open'}));
     } else {
-      this._store.dispatch(setMapDetailsStatus({status: 'none'}));
+      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     }
   }
 
   openTrackDownload(): void {
-    this._store.dispatch(setMapDetailsStatus({status: 'none'}));
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     setTimeout(() => {
       this.showDownload$.next(true);
     }, 300);

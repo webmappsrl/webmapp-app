@@ -12,6 +12,10 @@ import {Animation, AnimationController, Gesture, GestureController, Platform} fr
 import {Store} from '@ngrx/store';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
+import {
+  backOfMapDetails,
+  setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {skip} from 'rxjs/operators';
@@ -47,8 +51,16 @@ export class MapDetailsComponent implements AfterViewInit {
     private _animationCtrl: AnimationController,
     private _gestureCtrl: GestureController,
     private _store: Store,
-    private _urlHandlerSvc: UrlHandlerService,
-  ) {
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.setAnimations();
+    this._setGesture();
+    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
+      if (featureopened) {
+        this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+      }
+    });
     this._store.select(mapDetailsStatus).subscribe(status => {
       switch (status) {
         case 'open':
@@ -57,27 +69,12 @@ export class MapDetailsComponent implements AfterViewInit {
         case 'onlyTitle':
           this.onlyTitle();
           break;
-        case 'none':
-          this.none();
-          break;
         case 'background':
           this.background();
           break;
-        case 'toggle':
-          this.toggle();
+        case 'full':
+          this.full();
           break;
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.setAnimations();
-    this._setGesture();
-    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
-      if (featureopened) {
-        this.open();
-      } else {
-        this.none();
       }
     });
   }
@@ -97,21 +94,8 @@ export class MapDetailsComponent implements AfterViewInit {
     this.endAnimation(shouldComplete, this.stepStatus ? 0 : 1);
   }
 
-  none(): void {
-    const queryParams = this._urlHandlerSvc.getCurrentQueryParams();
-    if (queryParams.poi != null) {
-      this._urlHandlerSvc.updateURL({poi: undefined});
-      this.background();
-    } else if (queryParams.ec_related_poi != null) {
-      this._urlHandlerSvc.updateURL({ec_related_poi: undefined});
-    } else if (queryParams.ugc_poi != null) {
-      this._urlHandlerSvc.updateURL({ugc_poi: undefined});
-    } else {
-      this.background();
-      this._urlHandlerSvc.updateURL({track: undefined, ugc_track: undefined});
-    }
-
-    this.closeEVT.emit();
+  back(): void {
+    this._store.dispatch(backOfMapDetails());
   }
 
   onlyTitle(): void {
@@ -145,10 +129,10 @@ export class MapDetailsComponent implements AfterViewInit {
 
   toggle(): boolean {
     if (this._getCurrentHeight() > this.maxInfoheight / 2 || this._getCurrentHeight() <= 110) {
-      this.open();
+      this._store.dispatch(setMapDetailsStatus({status: 'open'}));
       return true;
     } else {
-      this.onlyTitle();
+      this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
       return false;
     }
   }
@@ -174,9 +158,9 @@ export class MapDetailsComponent implements AfterViewInit {
         this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
-          this.open();
+          this._store.dispatch(setMapDetailsStatus({status: 'open'}));
         } else {
-          this.full();
+          this._store.dispatch(setMapDetailsStatus({status: 'full'}));
         }
       },
       onEnd: ev => {

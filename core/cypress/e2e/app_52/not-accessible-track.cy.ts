@@ -6,7 +6,7 @@
     - It is checked that the non-accessibility message is correctly displayed
 */
 
-import {data} from 'cypress/utils/test-utils';
+import {data, openLayer, openTrack} from 'cypress/utils/test-utils';
 
 const notAccessibleMessage = 'This trail is not accessible';
 
@@ -16,17 +16,8 @@ describe('Not accessible track [oc:4699] [https://orchestrator.maphub.it/resourc
   });
 
   it('Should correctly display the non-accessibility message', () => {
-    cy.get('wm-layer-box')
-      .contains('div.wm-box-title', data.layers.ecTrack)
-      .then($box => {
-        cy.wrap($box).click();
-      });
-
-    cy.get('wm-search-box')
-      .contains('ion-card-title', data.tracks.exampleOne)
-      .then($searchBox => {
-        cy.wrap($searchBox).click();
-      });
+    openLayer(data.layers.ecTrack);
+    openTrack(data.tracks.exampleOne);
 
     cy.get('wm-track-properties').within(() => {
       cy.get('wm-track-alert')

@@ -134,7 +134,7 @@ export function openLayer(layerTitle: string) {
  */
 export function openPoi(poiTitle: string) {
   cy.get('wm-poi-box').contains('.wm-box-name', poiTitle).as('poiBox');
-  cy.get('@poiBox').then($poiBox => {
+  cy.get('@poiBox').should('be.visible').then($poiBox => {
     cy.wrap($poiBox).click();
   });
 }
@@ -144,8 +144,9 @@ export function openPoi(poiTitle: string) {
  * @param trackTitle the title of the track to open.
  */
 export function openTrack(trackTitle: string) {
+  cy.get('wm-search-box').should('exist');
   cy.get('wm-search-box').contains('ion-card-title', trackTitle).as('searchBox');
-  cy.get('@searchBox').then($searchBox => {
+  cy.get('@searchBox').should('be.visible').then($searchBox => {
     cy.wrap($searchBox).click();
   });
 }
