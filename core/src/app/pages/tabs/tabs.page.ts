@@ -48,14 +48,9 @@ export class TabsPage {
       this._urlHandlerSvc.changeURL(tab);
     }
     if (tab === 'home') {
+      const {layer} = this._urlHandlerSvc.getCurrentQueryParams();
       const queryParams = {
-        ...this._urlHandlerSvc.getCurrentQueryParams(),
-        ...{
-          track: undefined,
-          poi: undefined,
-          ugc_track: undefined,
-          ugc_poi: undefined,
-        },
+        layer,
       };
       this._urlHandlerSvc.changeURL(tab, queryParams);
     }
