@@ -27,7 +27,7 @@ export class PoiPropertiesComponent {
     .select(poi)
     .pipe(
       switchMap(poi =>
-        this._geolocationSvc.getDistanceFromCurrentLocation(poi?.geometry?.coordinates),
+        this._geolocationSvc.getDistanceFromCurrentLocation$(poi?.geometry?.coordinates),
       ),
     );
   showTechnicalDetails$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
