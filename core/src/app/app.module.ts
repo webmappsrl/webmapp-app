@@ -25,12 +25,15 @@ import {StoreModule} from '@ngrx/store';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {MetaComponent} from '@wm-core/meta/meta.component';
 import {Translations} from '@wm-types/language';
+import {appIT} from 'src/assets/i18n/it';
+import {appEN} from 'src/assets/i18n/en';
+import {appFR} from 'src/assets/i18n/fr';
 registerLocaleData(localeIt);
 export const langs: Translations = {
   'it': appIT,
   'en': appEN,
-  'fr': appFR
-}
+  'fr': appFR,
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,7 +69,7 @@ export const langs: Translations = {
       useValue: packageJson.version,
     },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    {provide: APP_TRANSLATION, useValue:langs}
+    {provide: APP_TRANSLATION, useValue: langs},
   ],
   bootstrap: [AppComponent, MetaComponent],
 })
