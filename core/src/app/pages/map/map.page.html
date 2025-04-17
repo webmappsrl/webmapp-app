@@ -5,7 +5,7 @@
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
-      <div header>
+      <div header *ngIf="(currentEcImageGalleryIndex$|async) == null">
         <div class="webmapp-info-header-container">
           <ng-container *ngIf="currentPoiProperties$|async as properties">
             <div class="webmapp-pagepoi-info-header">
@@ -46,53 +46,57 @@
           </ng-template>
         </div>
       </div>
-      <ng-container *ngIf="!(featureOpened$|async)">
-        <wm-status-filter (removeLayerEVT)="closeDetails()"></wm-status-filter>
-        <wm-home-layer></wm-home-layer>
-        <wm-home-result></wm-home-result>
+      <ng-container *ngIf="(currentEcImageGalleryIndex$|async) != null; else noImageSelected">
+        <wm-image-detail></wm-image-detail>
       </ng-container>
-      <wm-inner-component-html
-        *ngIf="popup$|async as popup"
-        [html]="popup.html"
-        [enableDismiss]="false"
-      ></wm-inner-component-html>
-      <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
-        <wm-poi-properties></wm-poi-properties>
-      </ng-container>
-      <ng-template #ecTrack>
-        <wm-track-properties
-          (dismiss)="updateEcTrack()"
-          (click)="savePosition()"
-          class="webmapp-track-details"
-        >
-          <ng-container *ngIf="(confOPTIONS$|async) as opt">
-            <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
-              <ion-item
-                *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
-                [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
-                class="wm-feature-useful-urls-item"
-                target="_blank"
-              >
-                <ion-icon name="link-outline" slot="start"></ion-icon>
-                <ion-label class="wm-feature-useful-urls-item-label">
-                  {{"Apri pdf"|wmtrans}}
-                </ion-label>
-              </ion-item>
+      <ng-template #noImageSelected>
+        <ng-container *ngIf="!(featureOpened$|async)">
+          <wm-status-filter (removeLayerEVT)="closeDetails()"></wm-status-filter>
+          <wm-home-layer></wm-home-layer>
+          <wm-home-result></wm-home-result>
+        </ng-container>
+        <wm-inner-component-html
+          *ngIf="popup$|async as popup"
+          [html]="popup.html"
+          [enableDismiss]="false"
+        ></wm-inner-component-html>
+        <ng-container *ngIf="currentPoiProperties$|async as properties; else ecTrack">
+          <wm-poi-properties></wm-poi-properties>
+        </ng-container>
+        <ng-template #ecTrack>
+          <wm-track-properties
+            (dismiss)="updateEcTrack()"
+            (click)="savePosition()"
+            class="webmapp-track-details"
+          >
+            <ng-container *ngIf="(confOPTIONS$|async) as opt">
+              <ng-container *ngIf="currentEcTrackProperties$|async as currentEcTrackProperties">
+                <ion-item
+                  *ngIf="opt.print_track_enable != null && opt.print_track_enable === true"
+                  [href]="'https://geohub.webmapp.it/track/pdf/'+currentEcTrackProperties?.id+'/?app_id='+(geohubId$|async)"
+                  class="wm-feature-useful-urls-item"
+                  target="_blank"
+                >
+                  <ion-icon name="link-outline" slot="start"></ion-icon>
+                  <ion-label class="wm-feature-useful-urls-item-label">
+                    {{"Apri pdf"|wmtrans}}
+                  </ion-label>
+                </ion-item>
+              </ng-container>
             </ng-container>
-          </ng-container>
-        </wm-track-properties>
+          </wm-track-properties>
+        </ng-template>
+        <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
+          <wm-ugc-poi-properties></wm-ugc-poi-properties>
+        </ng-container>
+        <ng-template #ugcTrack>
+          <wm-ugc-track-properties
+            *ngIf="(ugcTrack$|async) as ugcTrack"
+            [track]="ugcTrack"
+            (poi-click)="setCurrentRelatedPoi($event)"
+          ></wm-ugc-track-properties>
+        </ng-template>
       </ng-template>
-      <ng-container *ngIf="currentUgcPoiProperties$|async as ugcPoiProperties; else ugcTrack">
-        <wm-ugc-poi-properties></wm-ugc-poi-properties>
-      </ng-container>
-      <ng-template #ugcTrack>
-        <wm-ugc-track-properties
-          *ngIf="(ugcTrack$|async) as ugcTrack"
-          [track]="ugcTrack"
-          (poi-click)="setCurrentRelatedPoi($event)"
-        ></wm-ugc-track-properties>
-      </ng-template>
-
       <ng-template #skeleton>
         <ion-skeleton-text [animated]="true" style="height:100%;width: 100%"></ion-skeleton-text>
       </ng-template>
