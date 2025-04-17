@@ -48,6 +48,7 @@ import {WmFeature} from '@wm-types/feature';
 import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {
+  currentEcImageGalleryIndex,
   currentEcPoiId,
   currentEcTrackProperties,
   currentPoiProperties,
@@ -112,6 +113,7 @@ export class MapPage {
     }),
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
+  currentEcImageGalleryIndex$ = this._store.select(currentEcImageGalleryIndex);
   currentEcPoiId$ = this._store.select(currentEcPoiId);
   currentEcTrackProperties$ = this._store.select(currentEcTrackProperties).pipe(
     tap(trackProperties => {
