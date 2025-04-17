@@ -66,9 +66,6 @@ export class AppComponent {
         take(1),
       )
       .subscribe(l => {
-        this._langService.setTranslation('it', appIT, true);
-        this._langService.setTranslation('en', appEN, true);
-        this._langService.setTranslation('fr', appFR, true);
         this._langService.initLang(l.default);
       });
     this._platform.ready().then(
