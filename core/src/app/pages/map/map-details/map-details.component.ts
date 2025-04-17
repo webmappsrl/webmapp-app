@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -17,6 +15,7 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {skip} from 'rxjs/operators';
 
 @Component({
   selector: 'wm-map-details',
