@@ -47,7 +47,16 @@ const APIGEOHUB = 'https://geohub.webmapp.it';
 const APIOSM2CAI = 'https://osm2cai.cai.it';
 const APICARG = 'https://carg.maphub.it';
 let API = APIGEOHUB;
-const wrongInstanceVersion = ['fumaiolosentieri', 'pec', 'cammini', 'ucvs', 'gavorrano', 'sicai'];
+const wrongInstanceVersion = [
+  'fumaiolosentieri',
+  'pec',
+  'cammini',
+  'camminiditalia',
+  'camminiditaliadev',
+  'ucvs',
+  'gavorrano',
+  'sicai',
+];
 
 function debug(message) {
   console.debug(CONSOLE_COLORS.Dim + '[DEBUG]   ' + CONSOLE_COLORS.Reset + ' ' + message);
@@ -235,9 +244,9 @@ function abort(err) {
 }
 
 function updateCapacitorConfigJson(instanceName, id, name) {
-  if(verbose) {
-    debug('updateCapacitorConfigJson')
-    debug(instanceName, id, name)
+  if (verbose) {
+    debug('updateCapacitorConfigJson');
+    debug(instanceName, id, name);
   }
   return new Promise((resolve, reject) => {
     var dir = '';
@@ -376,7 +385,8 @@ function update(instanceName, geohubInstanceId, shardName) {
                 try {
                   if (verbose) debug('configJson è una stringa, tentativo di parsing...');
                   configJson = JSON.parse(configJson);
-                  if (verbose) debug('configJson convertito con successo da stringa a oggetto JSON');
+                  if (verbose)
+                    debug('configJson convertito con successo da stringa a oggetto JSON');
                 } catch (e) {
                   const errorMsg = 'Errore nel parsing di configJson come stringa: ' + e;
                   if (verbose) debug(errorMsg);
@@ -387,14 +397,16 @@ function update(instanceName, geohubInstanceId, shardName) {
 
               // Verifica che configJson sia un oggetto e contenga APP
               if (!configJson || typeof configJson !== 'object') {
-                const errorMsg = 'configJson non è un oggetto valido: ' + JSON.stringify(configJson);
+                const errorMsg =
+                  'configJson non è un oggetto valido: ' + JSON.stringify(configJson);
                 if (verbose) debug(errorMsg);
                 reject(errorMsg);
                 return;
               }
 
               if (!configJson.APP) {
-                const errorMsg = 'Proprietà APP mancante in configJson: ' + JSON.stringify(configJson);
+                const errorMsg =
+                  'Proprietà APP mancante in configJson: ' + JSON.stringify(configJson);
                 if (verbose) debug(errorMsg);
                 reject(errorMsg);
                 return;
@@ -404,7 +416,7 @@ function update(instanceName, geohubInstanceId, shardName) {
                 reject('Missing app id at ' + config);
                 return;
               }
-              
+
               if (!configJson.APP.name) {
                 reject('Missing app name at ' + config);
                 return;
@@ -733,7 +745,7 @@ function updateGradleVersion(instanceName, newVersion) {
   });
 }
 
-function build(instanceName, geohubInstanceId, shardName) {
+function build(instanceName, geohubInstanceId, shardName = 'geohub') {
   // setAPI(instanceName);
   return new Promise((resolve, reject) => {
     if (!instanceName) {
@@ -1442,7 +1454,8 @@ gulp.task('set', function (done) {
  */
 gulp.task('build', function (done) {
   var instanceName = argv.instance ? argv.instance : '',
-    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '';
+    geohubInstanceId = argv.geohubInstanceId ? argv.geohubInstanceId : '',
+    shardName = argv.shardName ?? 'geohub';
 
   if (verbose) debug('Running build function for ' + instanceName);
   if (!instanceName) {
@@ -1456,7 +1469,7 @@ gulp.task('build', function (done) {
     return;
   }
 
-  build(instanceName, geohubInstanceId).then(
+  build(instanceName, geohubInstanceId, shardName).then(
     () => {
       done();
     },

@@ -9,15 +9,15 @@ import {ActionSheetController, AlertController, ModalController} from '@ionic/an
 import {Store} from '@ngrx/store';
 import {CameraService} from '@wm-core/services/camera.service';
 import {DeviceService} from '@wm-core/services/device.service';
-import {ConfService} from '@wm-core/store/conf/conf.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
 import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
-import {Media, WmFeature} from '@wm-types/feature';
+import {WmFeature} from '@wm-types/feature';
 import {switchMap, take} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {activities} from 'src/app/constants/activities';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {LangService} from '@wm-core/localization/lang.service';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -39,7 +39,7 @@ export class ModalSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _configSvc: ConfService,
+    private _environmentSvc: EnvironmentService,
     private _deviceSvc: DeviceService,
     private _langSvc: LangService,
     private _alertController: AlertController,
@@ -243,7 +243,7 @@ export class ModalSaveComponent implements OnInit {
       media: this.photos,
       uuid: generateUUID(),
       distanceFilter,
-      app_id: `${this._configSvc.geohubAppId}`,
+      app_id: `${this._environmentSvc.appId}`,
       createdAt: dateNow,
       updatedAt: dateNow,
       device,
