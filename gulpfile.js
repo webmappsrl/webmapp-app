@@ -235,6 +235,10 @@ function abort(err) {
 }
 
 function updateCapacitorConfigJson(instanceName, id, name) {
+  if(verbose) {
+    debug('updateCapacitorConfigJson')
+    debug(instanceName, id, name)
+  }
   return new Promise((resolve, reject) => {
     var dir = '';
 
@@ -367,10 +371,40 @@ function update(instanceName, geohubInstanceId, shardName) {
 
               if (verbose) debug('Config file downloaded');
 
+              // Verifica se configJson è una stringa e in tal caso esegue il parsing
+              if (typeof configJson === 'string') {
+                try {
+                  if (verbose) debug('configJson è una stringa, tentativo di parsing...');
+                  configJson = JSON.parse(configJson);
+                  if (verbose) debug('configJson convertito con successo da stringa a oggetto JSON');
+                } catch (e) {
+                  const errorMsg = 'Errore nel parsing di configJson come stringa: ' + e;
+                  if (verbose) debug(errorMsg);
+                  reject(errorMsg);
+                  return;
+                }
+              }
+
+              // Verifica che configJson sia un oggetto e contenga APP
+              if (!configJson || typeof configJson !== 'object') {
+                const errorMsg = 'configJson non è un oggetto valido: ' + JSON.stringify(configJson);
+                if (verbose) debug(errorMsg);
+                reject(errorMsg);
+                return;
+              }
+
+              if (!configJson.APP) {
+                const errorMsg = 'Proprietà APP mancante in configJson: ' + JSON.stringify(configJson);
+                if (verbose) debug(errorMsg);
+                reject(errorMsg);
+                return;
+              }
+
               if (!configJson.APP.sku) {
                 reject('Missing app id at ' + config);
                 return;
               }
+              
               if (!configJson.APP.name) {
                 reject('Missing app name at ' + config);
                 return;
