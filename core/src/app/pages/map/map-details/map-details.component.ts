@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import {Animation, AnimationController, Gesture, GestureController, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {featureOpened} from '@wm-core/store/features/features.selector';
 import {
   backOfMapDetails,
@@ -59,6 +58,8 @@ export class MapDetailsComponent implements AfterViewInit {
     this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
       if (featureopened) {
         this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+      } else {
+        this._store.dispatch(setMapDetailsStatus({status: 'background'}));
       }
     });
     this._store.select(mapDetailsStatus).subscribe(status => {
