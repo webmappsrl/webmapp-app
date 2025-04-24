@@ -35,5 +35,7 @@ gulp build -i parcopan -g 63
 gulp build -i vdc -g 64
 gulp build -i pnab -g 65
 
+gulp build -i camminiditalia -s camminiditalia -g 1
+
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio
