@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.0.5](https://github.com/webmappsrl/webmapp-app/compare/v3.0.4...v3.0.5) (2025-04-24)
+
+
+### Miscellaneous
+
+* handling generate app with shard ([918af1b](https://github.com/webmappsrl/webmapp-app/commit/918af1b659a770bbae2d8ab8fada926b56f092aa))
+* Update appId in environment.ts ([158720b](https://github.com/webmappsrl/webmapp-app/commit/158720b2a2e438cd3269eb872fc2a89e506f5970))
+* update environment ([5a78a57](https://github.com/webmappsrl/webmapp-app/commit/5a78a5747524a1f3a1350dea5acbf13ae2d60881))
+* Update map-details.component.ts and map.page.ts ([2e04d55](https://github.com/webmappsrl/webmapp-app/commit/2e04d55e72c0cf592f9e9eb892d951c9d5423b34))
+* update test-utils and map-details component ([8c51817](https://github.com/webmappsrl/webmapp-app/commit/8c518175db308bfc57a6048ce1ad3d1e3f42e6fd))
+* Update translations in app component and app module oc: 5343 ([#118](https://github.com/webmappsrl/webmapp-app/issues/118)) ([69cd697](https://github.com/webmappsrl/webmapp-app/commit/69cd697f399ae996632cf2eb1952f6b723768a59))
+* updates to use EnviromentService and update gulpfile oc: 5108 ([#107](https://github.com/webmappsrl/webmapp-app/issues/107)) ([643ad41](https://github.com/webmappsrl/webmapp-app/commit/643ad414461dba0c25bb81fdabf23fdca49d6301))
+
 ## [3.0.4](https://github.com/webmappsrl/webmapp-app/compare/v3.0.3...v3.0.4) (2025-03-12)
 
 
