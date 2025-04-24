@@ -8,6 +8,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 import {environment} from 'src/environments/environment';
 
 @Injectable({
@@ -16,7 +17,7 @@ import {environment} from 'src/environments/environment';
 export class CommunicationService {
   private _token: string;
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient, private _environmentSvc: EnvironmentService) {}
 
   /**
    * Perform a GET request and get the result
@@ -82,7 +83,7 @@ export class CommunicationService {
       if (!options.headers) options.headers = new HttpHeaders();
 
       options.headers = options.headers.set('Authorization', `Bearer ${this._token}`);
-      options.headers = options.headers.set('App-id', `${environment.geohubId}`);
+      options.headers = options.headers.set('App-id', `${this._environmentSvc.appId}`);
     }
     return options;
   }

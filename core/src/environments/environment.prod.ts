@@ -1,9 +1,81 @@
-export const environment = {
+import {Environment} from '@wm-types/environment';
+
+export const environment: Environment = {
   production: true,
-  geohubId: 17,
-  api: 'https://geohub.webmapp.it',
-  elasticApi: 'https://elastic-json.webmapp.it/v2/search',
-  awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
-  //api: 'http://127.0.0.1:8000',
-  //elasticApi: 'http://localhost:3000/v2/search'
+  appId: 3,
+  shardName: 'geohub',
+  shards: {
+    geohub: {
+      origin: 'https://geohub.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+    osm2cai: {
+      origin: 'https://osm2cai.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+    camminiditalia: {
+      origin: 'https://camminiditalia.maphub.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditalia',
+    },
+    camminiditaliadev: {
+      origin: 'https://camminiditalia.dev.maphub.it',
+      elasticApi: 'https://camminiditalia.dev.maphub.it/api/v2/elasticsearch',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditaliadev',
+    },
+    carg: {
+      origin: 'https://carg.webmapp.it',
+      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+    },
+  },
+  redirects: {
+    'sentieri.caiparma.it': {
+      shardName: 'geohub',
+      appId: 33,
+    },
+    'motomappa.motoabbigliamento.it': {
+      shardName: 'geohub',
+      appId: 53,
+    },
+    'maps.parcoforestecasentinesi.it': {
+      shardName: 'geohub',
+      appId: 49,
+    },
+    'maps.parcopan.org': {
+      shardName: 'geohub',
+      appId: 63,
+    },
+    'maps.acquasorgente.cai.it': {
+      shardName: 'geohub',
+      appId: 58,
+    },
+    'maps.caipontedera.it': {
+      shardName: 'geohub',
+      appId: 59,
+    },
+    'maps.parcapuane.it': {
+      shardName: 'geohub',
+      appId: 62,
+    },
+    'fiemaps.it': {
+      shardName: 'geohub',
+      appId: 29,
+    },
+    'fiemaps.eu': {
+      shardName: 'geohub',
+      appId: 29,
+    },
+    'maps.sentierodeiducati.it': {
+      shardName: 'geohub',
+      appId: 60,
+    },
+  },
 };

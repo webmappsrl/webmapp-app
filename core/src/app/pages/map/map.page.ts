@@ -52,6 +52,7 @@ import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/
 import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
+import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
 
 export interface IDATALAYER {
   high: string;
@@ -258,7 +259,7 @@ export class MapPage {
     const isOpen = this.mapDetailsCmp.isOpen$.value;
     this.previewTrack$.next(false);
     if (isFocused && isOpen) {
-      this.mapDetailsCmp.onlyTitle();
+      this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
     }
   }
 
@@ -269,14 +270,14 @@ export class MapPage {
   openPopup(popup): void {
     this.popup$.next(popup);
     if (popup != null && popup != '') {
-      this.mapDetailsCmp.open();
+      this._store.dispatch(setMapDetailsStatus({status: 'open'}));
     } else {
-      this.mapDetailsCmp.none();
+      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     }
   }
 
   openTrackDownload(): void {
-    this.mapDetailsCmp.background();
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     setTimeout(() => {
       this.showDownload$.next(true);
     }, 300);

@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import {ModalController, LoadingController} from '@ionic/angular';
+import {ModalController} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {Md5} from 'ts-md5';
@@ -18,11 +18,11 @@ import {CameraService} from '@wm-core/services/camera.service';
 import {WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
 import {generateUUID, saveUgcPoi} from '@wm-core/utils/localForage';
-import {ConfService} from '@wm-core/store/conf/conf.service';
 import {DeviceService} from '@wm-core/services/device.service';
 import {switchMap, take} from 'rxjs/operators';
 import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 import {Photo} from '@capacitor/camera';
+import {EnvironmentService} from '@wm-core/services/environment.service';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -49,10 +49,9 @@ export class ModalWaypointSaveComponent implements OnInit {
   constructor(
     private _modalCtrl: ModalController,
     private _cameraSvc: CameraService,
-    private _loadingCtrl: LoadingController,
     private _store: Store<any>,
     private _cdr: ChangeDetectorRef,
-    private _configSvc: ConfService,
+    private _environmentSvc: EnvironmentService,
     private _deviceSvc: DeviceService,
   ) {}
 
@@ -163,7 +162,7 @@ export class ModalWaypointSaveComponent implements OnInit {
         media: this.photos,
         nominatim: this.nominatim,
         uuid: generateUUID(),
-        app_id: `${this._configSvc.geohubAppId}`,
+        app_id: `${this._environmentSvc.appId}`,
         createdAt: dateNow,
         updatedAt: dateNow,
         form: this.fg.value,

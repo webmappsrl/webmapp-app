@@ -20,11 +20,19 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
-import {APP_ID, APP_VERSION, ENVIRONMENT_CONFIG} from '@wm-core/store/conf/conf.token';
-import {ConfService} from '@wm-core/store/conf/conf.service';
+import {APP_TRANSLATION, APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
-
+import {EnvironmentService} from '@wm-core/services/environment.service';
+import {appIT} from 'src/assets/i18n/it';
+import {appEN} from 'src/assets/i18n/en';
+import {appFR} from 'src/assets/i18n/fr';
+import {Translations} from '@wm-types/language';
 registerLocaleData(localeIt);
+export const langs: Translations = {
+  'it': appIT,
+  'en': appEN,
+  'fr': appFR
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,19 +62,18 @@ registerLocaleData(localeIt);
     WmCoreModule,
   ],
   providers: [
-    {provide: ENVIRONMENT_CONFIG, useValue: environment},
     {provide: LOCALE_ID, useValue: 'it'},
-    {
-      provide: APP_ID,
-      useFactory: (confSvc: ConfService) => confSvc.geohubAppId,
-      deps: [ConfService],
-    },
     {
       provide: APP_VERSION,
       useValue: packageJson.version,
     },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
+    {provide: APP_TRANSLATION, useValue:langs}
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private _environmentSvc: EnvironmentService) {
+    this._environmentSvc.init(environment);
+  }
+}

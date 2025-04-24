@@ -27,9 +27,9 @@ jobs:
         run: |
           echo '{ "email": "${{ secrets.TEST_EMAIL }}", "password": "${{ secrets.TEST_PASSWORD }}" }' > core/cypress.env.json
 
-      - name: Update geohubId in environment.ts
+      - name: Update appId in environment.ts
         run: |
-          sed -i 's/geohubId: [0-9]\+/geohubId: 52/' core/src/environments/environment.ts
+          sed -i '0,/appId: [0-9]\+/s//appId: 52/' core/src/environments/environment.ts
 
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6

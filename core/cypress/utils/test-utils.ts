@@ -42,7 +42,7 @@ export function e2eLogin(
   email: string = Cypress.env('email'),
   password: string = Cypress.env('password'),
 ): Cypress.Chainable {
-  const apiLogin = `${environment.api}/api/auth/login`;
+  const apiLogin = `${environment?.shards?.geohub?.origin}/api/auth/login`;
   cy.intercept('POST', apiLogin).as('loginRequest');
   goProfile();
   cy.get('.wm-profile-logged-out-login-button').click();
@@ -84,7 +84,7 @@ export function goProfile() {
  * @returns A Cypress chainable object.
  */
 export function mockGetApiPois(mockRes: any): Cypress.Chainable {
-  return cy.intercept('GET', `${environment.api}/api/v2/ugc/poi/index`, req => {
+  return cy.intercept('GET', `${environment.shards.geohub.origin}/api/v2/ugc/poi/index`, req => {
     req.reply(res => {
       res.send(mockRes);
     });
@@ -97,7 +97,7 @@ export function mockGetApiPois(mockRes: any): Cypress.Chainable {
  * @returns A Cypress chainable object.
  */
 export function mockGetApiTracks(mockRes: any): Cypress.Chainable {
-  return cy.intercept('GET', `${environment.api}/api/v2/ugc/track/index`, req => {
+  return cy.intercept('GET', `${environment.shards.geohub.origin}/api/v2/ugc/track/index`, req => {
     req.reply(res => {
       res.send(mockRes);
     });
@@ -110,7 +110,7 @@ export function mockGetApiTracks(mockRes: any): Cypress.Chainable {
  */
 export function mockSaveApiTracksOffline(): Cypress.Chainable {
   // forceNetworkError: true, correctly simulates the network error, but still sends the track to the backend
-  return cy.intercept('POST', `${environment.api}/api/v2/ugc/track/store`, {
+  return cy.intercept('POST', `${environment.shards.geohub.origin}/api/v2/ugc/track/store`, {
     statusCode: 500,
     body: {error: 'Simulated server error'},
   });
@@ -134,7 +134,7 @@ export function openLayer(layerTitle: string) {
  */
 export function openPoi(poiTitle: string) {
   cy.get('wm-poi-box').contains('.wm-box-name', poiTitle).as('poiBox');
-  cy.get('@poiBox').then($poiBox => {
+  cy.get('@poiBox').should('be.visible').then($poiBox => {
     cy.wrap($poiBox).click();
   });
 }
@@ -144,13 +144,15 @@ export function openPoi(poiTitle: string) {
  * @param trackTitle the title of the track to open.
  */
 export function openTrack(trackTitle: string) {
+  cy.get('wm-search-box').should('exist');
   cy.get('wm-search-box').contains('ion-card-title', trackTitle).as('searchBox');
-  cy.get('@searchBox').then($searchBox => {
+  cy.get('@searchBox').should('be.visible').then($searchBox => {
     cy.wrap($searchBox).click();
   });
 }
 
-const confURL = `${environment.awsApi}/conf/52.json`;
+export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;
+export const confURL = `${environment.shards.geohub.awsApi}/conf/52.json`;
 export const data = {
   layers: {
     ecTrack: 'Tracks test e2e',
@@ -159,6 +161,7 @@ export const data = {
   tracks: {
     exampleOne: 'Track example one',
     exampleTwo: 'Track example two',
+    exampleTwoRelatedPoi: 'related poi example',
   },
   pois: {
     exampleOne: 'Poi example one',

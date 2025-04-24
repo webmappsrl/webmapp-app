@@ -1,7 +1,5 @@
-import {data, openLayer, openTrack} from 'cypress/utils/test-utils';
-import {environment} from 'src/environments/environment';
+import {confURL, data, openLayer, openTrack} from 'cypress/utils/test-utils';
 
-const confURL = `${environment.awsApi}/conf/52.json`;
 const flowLineQuoteConfig = {
   flow_line_quote_show: true,
   flow_line_quote_orange: 1000,
