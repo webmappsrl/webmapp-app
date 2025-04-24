@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.6](https://github.com/webmappsrl/webmapp-app/compare/v3.0.5...v3.0.6) (2025-04-24)
+
+
+### Bug Fixes
+
+* Updated submodule core/src/app/shared/wm-core ([8105af2](https://github.com/webmappsrl/webmapp-app/commit/8105af2158c43ff4660b60a94763dc6a11d1eef4))
+
 ## [3.0.5](https://github.com/webmappsrl/webmapp-app/compare/v3.0.4...v3.0.5) (2025-04-24)
 
 
