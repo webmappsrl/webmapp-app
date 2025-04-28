@@ -107,13 +107,18 @@ webmapp-map-page {
   .bottom-right,
   .ol-zoom {
     opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   }
-  .full-details {
+  .full {
     .bottom-right,
     .ol-zoom {
       opacity: 0;
       pointer-events: none;
+    }
+  }
+  .move-bottom {
+    .bottom-right:first-of-type {
+      transform: translateY(-116px);
     }
   }
 
@@ -128,7 +133,7 @@ webmapp-map-page {
     }
   }
 
-  .only-title {
+  .onlyTitle {
     wm-map-details {
       wm-status-filter {
         ion-grid {
@@ -137,6 +142,15 @@ webmapp-map-page {
           padding: 0;
         }
       }
+    }
+  }
+
+  .background {
+    #webmapp-map-attribution-container {
+      bottom: 4px !important;
+    }
+    #webmapp-map-scale-line-container {
+      bottom: 4px !important;
     }
   }
 }
