@@ -1,7 +1,7 @@
 <ion-content
   scrollY="false"
-  [class.full-details]="(mapDetailsStatus$|async) === 'full'"
-  [class.only-title]="(mapDetailsStatus$|async) === 'onlyTitle'"
+  [ngClass]="mapDetailsStatus$|async"
+  [class.has-feature-in-viewport]="hasFeatureInViewport$|async"
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
