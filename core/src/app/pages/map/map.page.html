@@ -1,7 +1,7 @@
 <ion-content
   scrollY="false"
   [ngClass]="mapDetailsStatus$|async"
-  [class.has-feature-in-viewport]="hasFeatureInViewport$|async"
+  [class.move-bottom]="hasFeatureInViewport$|async"
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">

@@ -116,8 +116,7 @@ webmapp-map-page {
       pointer-events: none;
     }
   }
-  .has-feature-in-viewport {
-    // .ol-zoom,
+  .move-bottom {
     .bottom-right:first-of-type {
       transform: translateY(-116px);
     }
