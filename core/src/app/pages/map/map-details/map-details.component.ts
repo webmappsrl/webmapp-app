@@ -54,8 +54,6 @@ export class MapDetailsComponent implements AfterViewInit {
     this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
       if (featureopened) {
         this._store.dispatch(setMapDetailsStatus({status: 'open'}));
-      } else {
-        this._store.dispatch(setMapDetailsStatus({status: 'background'}));
       }
     });
     this._store.select(mapDetailsStatus).subscribe(status => {

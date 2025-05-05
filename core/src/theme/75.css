@@ -21,6 +21,9 @@
   --wm-feature-details-title-font-family: var(--wm-75-font-family-title) !important;
 
   --wm-75-color-detail: #585b78;
+  --wm-75-feature-details-padding: 24px 16px 24px 16px;
+
+  --wm-feature-details-margin: 0px !important;
 }
 
 webmapp-page-tabs ion-tabs ion-tab-bar {
@@ -171,7 +174,11 @@ wm-layer-box .wm-box .wm-box-title {
   padding: 16px 55px 16px 16px !important;
 }
 
-/* Perocorsi */
+/* Track */
+wm-map-details ion-card ion-card-content:has(> wm-track-properties) {
+  height: calc(100% + 24px) !important;
+}
+
 wm-filters .filter-button {
   font-family: var(--wm-75-font-family-utility) !important;
   font-weight: 600 !important;
@@ -186,11 +193,15 @@ wm-map .map-container .ol-zoom {
   bottom: 50px !important;
 }
 
+wm-track-properties > *:has(*):not(ion-header) {
+  padding: var(--wm-75-feature-details-padding);
+}
 wm-track-properties ion-header {
   order: 1 !important;
 }
 wm-track-properties wm-tab-description {
   order: 2 !important;
+  padding-top: 12px;
 }
 wm-track-properties wm-track-alert {
   order: 3 !important;
@@ -206,9 +217,11 @@ wm-track-properties .wm-flowline {
 }
 wm-track-properties wm-slope-chart {
   order: 7 !important;
+  padding-top: 0px;
 }
 wm-track-properties wm-get-directions {
   order: 8 !important;
+  padding-top: 0px;
 }
 wm-track-properties wm-tab-detail {
   display: none;
@@ -254,11 +267,10 @@ wm-track-related-poi {
 wm-tab-howto::after,
 wm-tab-description::after,
 wm-get-directions::after,
-wm-tab-image-gallery::after,
-wm-track-related-poi::after {
+wm-tab-image-gallery::after {
   content: '';
   position: absolute;
-  bottom: -24px;
+  bottom: 0px;
   left: 0;
   width: 100%;
   height: 1px;
@@ -268,6 +280,8 @@ wm-map-details ion-card {
   position: relative;
   display: block;
   padding-bottom: 90px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 wm-map-details::after {
   content: '';
@@ -279,6 +293,10 @@ wm-map-details::after {
   background-color: white;
   border-radius: 10px 10px 0 0;
   z-index: 1;
+}
+
+wm-map-details ion-card ion-card-header .webmapp-info-header-container ion-title {
+  padding: 8px 16px !important;
 }
 
 wm-tab-howto .webmapp-walkability-label {
@@ -371,8 +389,33 @@ wm-travel-mode ion-grid ion-row ion-col div:first-of-type.to-delete {
   font-size: 48px !important;
   line-height: 39px !important;
 }
+wm-tab-howto .webmapp-walkability {
+  padding: 10px 0px 0px 0px !important;
+  gap: 10px;
+}
+wm-tab-howto .webmapp-walkability .webmapp-walkability-box {
+  background-color: #f8f8fe !important;
+  margin: 0px !important;
+}
+wm-tab-howto .webmapp-walkability .webmapp-walkability-box > * {
+  color: var(--wm-75-color-detail) !important;
+}
+wm-tab-howto .webmapp-walkability .webmapp-walkability-box > span {
+  font-weight: 600 !important;
+}
 
 /* LAYER */
+wm-status-filter ion-grid {
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+wm-home-layer {
+  padding: 24px 16px !important;
+}
+wm-home-result .wm-home-content {
+  padding: 12px 16px 0px 16px !important;
+}
+
 wm-status-filter * {
   font-family: var(--wm-75-font-family-utility) !important;
 }
@@ -389,12 +432,15 @@ wm-map-details wm-status-filter ion-chip {
 }
 
 wm-map-details ion-card ion-card-content:has(> wm-home-layer) {
-  top: 25px !important;
-  height: calc(100% + 37px) !important;
+  height: calc(100% + 70px) !important;
 }
 wm-map-details wm-home-layer wm-img {
   min-height: auto !important;
   margin: 8px !important;
+}
+wm-map-details wm-home-layer wm-img {
+  margin-right: 0px !important;
+  margin-left: 0px !important;
 }
 wm-map-details wm-home-layer wm-img img {
   display: none;
@@ -445,8 +491,9 @@ wm-poi-box {
 }
 wm-search-box > ion-card,
 wm-poi-box > ion-card {
-  margin: 0 !important;
   width: 100% !important;
+  margin: 0 !important;
+  padding-top: 0px !important;
   box-shadow: none !important;
 }
 wm-search-box > ion-card wm-img,
@@ -502,6 +549,13 @@ wm-poi-box > ion-card > .wm-box-name {
 }
 
 /* POI */
+wm-map-details ion-card ion-card-content:has(> wm-poi-properties) {
+  height: calc(100% + 14px) !important;
+}
+wm-map-details ion-card ion-card-content:has(> wm-image-detail) {
+  height: calc(100% + 70px) !important;
+}
+
 wm-map-details ion-card ion-card-header .webmapp-pagepoi-info-header-pre-title {
   display: none;
 }
@@ -509,8 +563,7 @@ wm-map-details ion-card ion-card-header .webmapp-pagepoi-info-header-title {
   font-family: var(--wm-75-font-family-title) !important;
   font-size: var(--wm-font-size-4xl) !important;
   line-height: 29px !important;
-  font-weight: 700;
-  padding: 8px;
+  padding: 8px 16px;
 }
 wm-map-details ion-card:has(wm-poi-properties) ion-card-header ion-title {
   display: none !important;
@@ -520,20 +573,26 @@ wm-poi-properties > .wm-poi-properties-body {
   display: flex;
   flex-direction: column;
 }
+wm-poi-properties > .wm-poi-properties-body > *:has(*) {
+  padding: var(--wm-75-feature-details-padding);
+}
 wm-poi-properties > .wm-poi-properties-body ion-label {
   order: 1;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-tab-description {
   order: 2;
+  padding-top: 16px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-poi-types-badges {
   order: 3;
-  margin-top: 0px;
+  padding-top: 0px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-poi-types-badges::after {
   content: '';
   position: absolute;
-  bottom: -24px;
+  bottom: 0px;
   left: 0;
   width: 100%;
   height: 1px;
@@ -546,12 +605,10 @@ wm-poi-properties > .wm-poi-properties-body .wm-poi-properties-info {
   order: 5;
   background-color: #f8f8fe;
   margin: 0 !important;
-  padding: var(--wm-feature-details-margin);
 }
 wm-poi-properties > .wm-poi-properties-body wm-get-directions {
   order: 6;
-  margin: 0px !important;
-  padding-bottom: 24px;
+  padding-top: 0px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-excerpt {
   order: 7;
@@ -580,6 +637,10 @@ wm-poi-types-badges > div {
   border: 1px solid var(--wm-75-color-detail);
   color: var(--wm-75-color-detail);
 }
+wm-poi-types-badges > div svg {
+  width: 18px !important;
+  height: 18px !important;
+}
 wm-poi-types-badges > div svg > circle {
   fill: transparent !important;
 }
@@ -588,6 +649,9 @@ wm-poi-types-badges > div svg > g {
 }
 wm-poi-types-badges span {
   color: var(--wm-75-color-detail) !important;
+  font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-xs) !important;
+  font-weight: 500 !important;
 }
 wm-poi-properties > .wm-poi-properties-body > wm-get-directions {
   background-color: #f8f8fe;
@@ -596,8 +660,8 @@ wm-poi-properties > .wm-poi-properties-body > wm-get-directions > ion-button {
   width: fit-content;
   height: fit-content !important;
   margin: 0px !important;
-  --padding-start: 6px;
-  --padding-end: 6px;
+  --padding-start: 0px;
+  --padding-end: 0px;
   --border-radius: 0px !important;
   --ion-color-base: #f8f8fe !important;
 }
@@ -610,6 +674,8 @@ wm-poi-properties > .wm-poi-properties-body > wm-get-directions > ion-button ion
 wm-poi-properties > .wm-poi-properties-body > wm-get-directions > ion-button ion-label {
   font-family: unset !important;
   text-decoration: underline;
+  font-size: var(--wm-font-size-sm) !important;
+  font-weight: 700 !important;
 }
 wm-tab-image-gallery ion-label {
   font-size: var(--wm-font-size-xl) !important;
@@ -660,9 +726,23 @@ wm-features-in-viewport
   span {
   font-size: var(--wm-font-size-xs) !important;
   line-height: 26px !important;
+  margin-left: 5px !important;
+}
+wm-features-in-viewport
+  wm-search-box
+  > ion-card
+  > ion-card-header
+  > .wm-search-box-properties
+  > .property-distance {
+  color: var(--wm-75-color-detail) !important;
 }
 .move-bottom .ol-zoom {
   transform: translateY(-116px);
+}
+
+wm-image-gallery .webmapp-pagepoi-info-body-photoslider ion-slide ion-text {
+  font-family: var(--wm-75-font-family-title) !important;
+  font-weight: 700 !important;
 }
 
 /* TODO: remove this */
@@ -688,7 +768,7 @@ wm-filters {
 wm-filters ion-list {
   border-radius: 20px;
   background-color: white !important;
-  width: 265px;
+  width: 265px !important;
 }
 wm-filters ion-list ion-accordion-group {
   display: flex;
