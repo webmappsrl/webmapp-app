@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src: url('fonts/webmapp.eot?xbefmz');
-  src: url('fonts/webmapp.eot?xbefmz#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?xbefmz') format('truetype'),
-    url('fonts/webmapp.woff?xbefmz') format('woff'),
-    url('fonts/webmapp.svg?xbefmz#webmapp') format('svg');
+  src: url('fonts/webmapp.eot?l3u76c');
+  src: url('fonts/webmapp.eot?l3u76c#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?l3u76c') format('truetype'),
+    url('fonts/webmapp.woff?l3u76c') format('woff'),
+    url('fonts/webmapp.svg?l3u76c#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -762,4 +762,7 @@
 }
 .icon-person-outline:before {
   content: '\e9a2';
+}
+.icon-pin-distance-line:before {
+  content: '\e9a3';
 }
