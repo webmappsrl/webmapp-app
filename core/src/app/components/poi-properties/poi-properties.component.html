@@ -35,5 +35,11 @@
       </a>
     </div>
     <wm-track-audio *ngIf="properties?.audio" [audio]="properties?.audio"></wm-track-audio>
+    <wm-inner-component-html
+      *ngIf="properties?.embeddedElement as embeddedElement"
+      [enableDismiss]="false"
+      [title]="embeddedElement?.title"
+      [html]="embeddedElement?.html"
+    ></wm-inner-component-html>
   </div>
 </ng-container>
