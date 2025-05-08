@@ -576,7 +576,7 @@ wm-poi-properties > .wm-poi-properties-body {
 wm-poi-properties > .wm-poi-properties-body > *:has(*) {
   padding: var(--wm-75-feature-details-padding);
 }
-wm-poi-properties > .wm-poi-properties-body ion-label {
+wm-poi-properties > .wm-poi-properties-body > ion-label {
   order: 1;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -605,10 +605,10 @@ wm-poi-properties > .wm-poi-properties-body .wm-poi-properties-info {
   order: 5;
   background-color: #f8f8fe;
   margin: 0 !important;
+  padding-bottom: 0px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-get-directions {
   order: 6;
-  padding-top: 0px;
 }
 wm-poi-properties > .wm-poi-properties-body wm-excerpt {
   order: 7;
@@ -622,7 +622,7 @@ wm-poi-properties > .wm-poi-properties-body wm-feature-useful-urls {
 wm-poi-properties > .wm-poi-properties-body wm-tab-audio {
   order: 10;
 }
-wm-poi-properties > .wm-poi-properties-body wm-embedded-element {
+wm-poi-properties > .wm-poi-properties-body wm-inner-component-html {
   order: 11;
 }
 wm-poi-properties > .wm-poi-properties-body wm-tab-description::after,
@@ -693,6 +693,10 @@ wm-feature-useful-urls ion-item ion-label {
 }
 wm-related-pois-navigator span {
   font-family: var(--wm-75-font-family-utility) !important;
+}
+wm-image-detail > .footer .image-counter {
+  font-family: var(--wm-75-font-family-utility);
+  color: var(--ion-text-color);
 }
 
 /* FEATURES IN VIEWPORT */
