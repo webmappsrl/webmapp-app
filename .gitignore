@@ -5,3 +5,6 @@ unit_tests/*
 keys
 
 .env
+
+core/cypress/screenshots/*
+core/Cypress.env.json
