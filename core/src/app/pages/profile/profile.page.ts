@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewEncapsulation} from '@angular/core';
+import {Component, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ModalController} from '@ionic/angular';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
@@ -12,6 +12,11 @@ import {TranslateService} from '@ngx-translate/core';
 import {from} from 'rxjs';
 import {take} from 'rxjs/operators';
 import {deleteUser} from '@wm-core/store/auth/auth.actions';
+import {WmFeature} from '@wm-types/feature';
+import {MultiPolygon} from 'geojson';
+import {getHitmapFeatures} from '@map-core/utils';
+import {WmHomeHitMapComponent} from '@wm-core/home/home-hitmap/home-hitmap.component';
+
 @Component({
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
@@ -24,7 +29,8 @@ export class ProfilePage implements OnDestroy {
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
-
+  hitmapFeatures$: Observable<WmFeature<MultiPolygon>[]> = from(getHitmapFeatures());
+  @ViewChild(WmHomeHitMapComponent) hitmapComp: WmHomeHitMapComponent;
   constructor(
     private _modalController: ModalController,
     private _store: Store<any>,
@@ -61,6 +67,12 @@ export class ProfilePage implements OnDestroy {
   tabClick(event: Event, tab: string): void {
     event.stopImmediatePropagation();
     this._router.navigate([tab]);
+  }
+
+  ionViewWillEnter(): void {
+    setTimeout(() => {
+      this.hitmapComp.refresh();
+    }, 50);
   }
 
   deleteUserAlert(): void {

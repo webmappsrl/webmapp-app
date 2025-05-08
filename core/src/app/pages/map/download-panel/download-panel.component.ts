@@ -71,9 +71,13 @@ export class WmDownloadPanelComponent implements OnChanges {
   }
 
   gotoDownloads(): void {
-    this._store.dispatch(goToHome());
-    this._store.dispatch(openDownloads());
-    this._urlHandlerSvc.changeURL('home');
+    if (this.overlayUrls != null) {
+      this._urlHandlerSvc.changeURL('profile');
+    } else {
+      this._store.dispatch(goToHome());
+      this._store.dispatch(openDownloads());
+      this._urlHandlerSvc.changeURL('home');
+    }
   }
 
   async start() {

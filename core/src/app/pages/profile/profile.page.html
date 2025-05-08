@@ -26,18 +26,38 @@
 
 <ion-content scrollY="false" class="webmapp-profile-container">
   <wm-profile-user></wm-profile-user>
-  <ion-tabs class="webmapp-profile-tabs" [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }">
-    <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
-      <ion-tab-button
-        (click)="tabClick($event, '/profile/profile-data')"
-        tab="profile-data"
-        class="webmapp-profile-tabs-tab-button"
-      >
-        <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
-        <div class="webmapp-profile-tabs-tab-button-border"></div>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+  <ng-container *ngIf="hitmapFeatures$|async as hitmapFeatures; else nohitmap">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-title>{{'Downloads'|wmtrans}}</ion-title>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <wm-home-hitmap [downloads]="true"></wm-home-hitmap>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
+  <ng-template #nohitmap>
+    <ion-tabs
+      class="webmapp-profile-tabs"
+      [ngStyle]="{'height':(isLogged$|async) ? '100%' : '25%' }"
+    >
+      <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
+        <ion-tab-button
+          (click)="tabClick($event, '/profile/profile-data')"
+          tab="profile-data"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ng-template>
+
   <ng-container *ngIf="(authEnable$|async) === true">
     <wm-profile-auth
       [slide1]="'assets/images/profile/logged_out_slide_1.svg'"
