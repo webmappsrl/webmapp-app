@@ -1,13 +1,10 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
-import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {select, Store} from '@ngrx/store';
-import {appEN} from 'src/assets/i18n/en';
-import {appFR} from 'src/assets/i18n/fr';
-import {appIT} from 'src/assets/i18n/it';
 import {StatusService} from './services/status.service';
 import {LangService} from '@wm-core/localization/lang.service';
 import {DOCUMENT} from '@angular/common';
@@ -19,7 +16,7 @@ import {
   confTHEMEVariables,
 } from '@wm-core/store/conf/conf.selector';
 import {loadConf} from '@wm-core/store/conf/conf.actions';
-import {IGEOLOCATION} from '@wm-core/types/config';
+import {IGEOLOCATION, ILANGUAGES} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths} from '@wm-core/store/auth/auth.actions';
@@ -28,6 +25,8 @@ import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
+import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
+import {currentHitmapFeature} from '@wm-core/store/user-activity/user-activity.selector';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -38,18 +37,20 @@ import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
-  public image_gallery: any[];
+  confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
+  confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;
 
   constructor(
     private _platform: Platform,
-    private router: Router,
-    private status: StatusService,
+    private _router: Router,
+    private _statusSvc: StatusService,
+    private _langSvc: LangService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadAuths());
@@ -57,16 +58,31 @@ export class AppComponent {
     this._store.dispatch(ecTracks({init: true}));
     this._store.dispatch(loadEcPois());
     this._store.dispatch(syncUgc());
-    this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this._store
-      .select(confLANGUAGES)
+    this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
+    this.confMap$
+      .pipe(
+        filter(f => f != null),
+        take(1),
+      )
+      .subscribe(confMap => {
+        this._store.dispatch(loadHitmapFeatures({url: confMap?.hitMapUrl}));
+      });
+    this.confLANGUAGES$
       .pipe(
         filter(p => p != null),
         take(1),
       )
       .subscribe(l => {
-        this._langService.initLang(l.default);
+        this._langSvc.initLang(l.default);
+      });
+    this.confMap$
+      .pipe(
+        filter(p => p != null && p.hitMapUrl != null),
+        take(1),
+      )
+      .subscribe(confMap => {
+        console.log(confMap.hitMapUrl);
       });
     this._platform.ready().then(
       () => {
@@ -86,7 +102,7 @@ export class AppComponent {
       },
     );
 
-    this.status.showPhotos.subscribe(x => {
+    this._statusSvc.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
@@ -103,6 +119,9 @@ export class AppComponent {
         });
     }
     OfflineCallbackManager.setOfflineCallback(getImg);
+    this._store.select(currentHitmapFeature).subscribe(val => {
+      console.log(val);
+    });
   }
 
   closePhoto() {
@@ -122,16 +141,16 @@ export class AppComponent {
    * @memberof AppComponent
    */
   recBtnPosition() {
-    const tree = this.router.parseUrl(this.router.url);
+    const tree = this._router.parseUrl(this._router.url);
     if (tree?.root?.children && tree.root.children['primary']) {
       const url = tree.root.children['primary'].segments[0].path;
       switch (url) {
         case 'register':
           return 'none';
         case 'route':
-          return this.status.showingRouteDetails ? 'high' : 'middle';
+          return this._statusSvc.showingRouteDetails ? 'high' : 'middle';
         case 'map':
-          return this.status.showingMapResults ? 'middlehigh' : 'low';
+          return this._statusSvc.showingMapResults ? 'middlehigh' : 'low';
       }
     }
     return 'low';

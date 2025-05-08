@@ -36,7 +36,10 @@ import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {HomePage} from '../home/home.page';
 import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
+import {
+  hitMapFeatureCollection,
+  hitMapGeometry,
+} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
@@ -146,6 +149,7 @@ export class MapPage {
     }),
   );
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
+  hitMapGeometry$ = this._store.select(hitMapGeometry);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
   popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -277,6 +281,14 @@ export class MapPage {
   }
 
   openTrackDownload(): void {
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
+  downloadOverlay(): void {
+    console.log('downloadOverlay');
     this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     setTimeout(() => {
       this.showDownload$.next(true);
