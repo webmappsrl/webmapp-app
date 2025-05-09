@@ -36,10 +36,7 @@ import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {HomePage} from '../home/home.page';
 import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {
-  hitMapFeatureCollection,
-  hitMapGeometry,
-} from 'src/app/shared/map-core/src/store/map-core.selector';
+import {hitMapGeometry} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
@@ -148,7 +145,6 @@ export class MapPage {
       this._cdr.detectChanges();
     }),
   );
-  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   hitMapGeometry$ = this._store.select(hitMapGeometry);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
@@ -313,18 +309,6 @@ export class MapPage {
       const id = feature.properties.id;
       this._urlHandlerSvc.updateURL({ec_related_poi: id});
     }
-  }
-
-  setWmMapFeatureCollection(overlay: any): void {
-    this.wmMapFeatureCollectionOverlay$.next(overlay);
-    this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
-      if (overlay['featureType'] != null && feature[overlay['featureType']] != null) {
-        this.wmMapFeatureCollectionOverlay$.next({
-          ...overlay,
-          ...{url: feature[overlay['featureType']]},
-        });
-      }
-    });
   }
 
   toggleDirective(data: {type: 'layers' | 'pois'; toggle: boolean}): void {
