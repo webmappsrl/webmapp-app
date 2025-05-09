@@ -598,5 +598,8 @@
   "Conferma": "Konfirmo",
   "Link utili": "Lidhje të dobishme",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Për të regjistruar gjurmë dhe për t'i shfaqur ato saktë, aktivizo lejen e vendndodhjes në cilësime",
-  "Apri impostazioni App": "Hap cilësimet e aplikacionit"
+  "Apri impostazioni App": "Hap cilësimet e aplikacionit",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
+    "A dëshironi vërtet të fshini llogarinë tuaj? Duhet të shkruani \"delete account\" për të vazhduar.",
+  "Digita \"delete account\"": "Shkruani \"delete account\""
 }
