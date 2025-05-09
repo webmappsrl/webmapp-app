@@ -598,5 +598,8 @@
   "Conferma": "Bestätigen",
   "Link utili": "Nützliche Links",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Um Strecken korrekt aufzuzeichnen und anzuzeigen, aktivieren Sie die Standortberechtigung in den Einstellungen",
-  "Apri impostazioni App": "App-Einstellungen öffnen"
+  "Apri impostazioni App": "App-Einstellungen öffnen",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
+    "Möchten Sie Ihr Konto wirklich löschen? Sie müssen \"delete account\" eingeben, um fortzufahren.",
+  "Digita \"delete account\"": "Geben Sie \"delete account\" ein"
 }
