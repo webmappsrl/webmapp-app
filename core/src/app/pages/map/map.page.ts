@@ -36,7 +36,10 @@ import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {HomePage} from '../home/home.page';
 import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {hitMapGeometry} from 'src/app/shared/map-core/src/store/map-core.selector';
+import {
+  hitMapFeatureCollection,
+  hitMapGeometry,
+} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
@@ -177,7 +180,7 @@ export class MapPage {
   );
   wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
+  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   constructor(
     private _store: Store,
     private _storeNetwork: Store<INetworkRootState>,
