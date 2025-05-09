@@ -7,4 +7,5 @@ keys
 .env
 
 core/cypress/screenshots/*
+core/cypress/videos/*
 core/Cypress.env.json
