@@ -603,5 +603,8 @@
   "Conferma": "Confirmer",
   "Link utili": "Liens utiles",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
-  "Apri impostazioni App": "Ouvrir les paramètres de l'application"
+  "Apri impostazioni App": "Ouvrir les paramètres de l'application",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
+    "Voulez-vous vraiment supprimer votre compte? Vous devez taper \"delete account\" pour continuer.",
+  "Digita \"delete account\"": "Tapez \"delete account\""
 }

@@ -598,5 +598,8 @@
   "Conferma": "Confirmar",
   "Link utili": "Enlaces útiles",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Para registrar rutas y mostrarlas correctamente, activa el permiso de ubicación en configuraciones",
-  "Apri impostazioni App": "Abrir configuraciones de la aplicación"
+  "Apri impostazioni App": "Abrir configuraciones de la aplicación",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
+    "¿Realmente deseas eliminar tu cuenta? Es obligatorio escribir \"delete account\" para proceder.",
+  "Digita \"delete account\"": "Escribe \"delete account\""
 }
