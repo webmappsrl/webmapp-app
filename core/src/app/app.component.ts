@@ -26,7 +26,6 @@ import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
-import {currentHitmapFeature} from '@wm-core/store/user-activity/user-activity.selector';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -76,14 +75,7 @@ export class AppComponent {
       .subscribe(l => {
         this._langSvc.initLang(l.default);
       });
-    this.confMap$
-      .pipe(
-        filter(p => p != null && p.hitMapUrl != null),
-        take(1),
-      )
-      .subscribe(confMap => {
-        console.log(confMap.hitMapUrl);
-      });
+
     this._platform.ready().then(
       () => {
         SplashScreen.hide();
@@ -119,9 +111,6 @@ export class AppComponent {
         });
     }
     OfflineCallbackManager.setOfflineCallback(getImg);
-    this._store.select(currentHitmapFeature).subscribe(val => {
-      console.log(val);
-    });
   }
 
   closePhoto() {
