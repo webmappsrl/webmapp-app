@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.0.7](https://github.com/webmappsrl/webmapp-app/compare/v3.0.6...v3.0.7) (2025-05-09)
+
+
+### Bug Fixes
+
+* Aggiunto componente wm-updated-at per visualizzare la data di aggiornamento nei titoli delle proprietà UGC e delle tracce. oc: 5331 ([b035933](https://github.com/webmappsrl/webmapp-app/commit/b035933758d8b9ef2886867c97c0369c7671a027))
+* change TranslationService with LangService ([abca6d1](https://github.com/webmappsrl/webmapp-app/commit/abca6d11555c50ab73cf48fe7d0af3f8aae66065))
+* translate ([367e507](https://github.com/webmappsrl/webmapp-app/commit/367e5078115a82fe6b7813910fbc3170d912a242))
+
+
+### Miscellaneous
+
+* add test for map control routes oc:5468 ([f2db44f](https://github.com/webmappsrl/webmapp-app/commit/f2db44f7c61beea98792f8eb0d46c6c7f8af9924))
+* add translation for profile.pages.ts ([#126](https://github.com/webmappsrl/webmapp-app/issues/126)) ([abca6d1](https://github.com/webmappsrl/webmapp-app/commit/abca6d11555c50ab73cf48fe7d0af3f8aae66065))
+* aggiungi supporto per la registrazione dei video nei test di Cypress ([2083372](https://github.com/webmappsrl/webmapp-app/commit/20833723aa00bd783116d020df02a2aee19ef8dc))
+* modifica il workflow di test per caricare i video di Cypress in caso di errore ([bd54968](https://github.com/webmappsrl/webmapp-app/commit/bd54968a1807bcb4e771dbd69f78d991f355608b))
+* update git ignore ([78ea077](https://github.com/webmappsrl/webmapp-app/commit/78ea077d0b70ba9c5d6ae9c4df193aa0e6ac1f04))
+
 ## [3.0.6](https://github.com/webmappsrl/webmapp-app/compare/v3.0.5...v3.0.6) (2025-04-24)
 
 
