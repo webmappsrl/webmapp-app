@@ -1,7 +1,5 @@
 on:
   pull_request:
-    branches:
-      - develop
 
 jobs:
   test:
@@ -48,3 +46,10 @@ jobs:
         with:
           name: cypress-screenshots
           path: core/cypress/screenshots
+
+      - name: Upload Cypress Videos on Failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: core/cypress/videos
