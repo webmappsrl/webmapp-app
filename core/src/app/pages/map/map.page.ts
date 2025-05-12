@@ -11,7 +11,7 @@ import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
 import {BehaviorSubject, Observable, from} from 'rxjs';
-import {filter, map, take, tap, switchMap} from 'rxjs/operators';
+import {filter, map, take, tap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
@@ -52,7 +52,7 @@ import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/
 import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
-import {setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
+import {backOfMapDetails, setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
 
 export interface IDATALAYER {
   high: string;
@@ -272,7 +272,7 @@ export class MapPage {
     if (popup != null && popup != '') {
       this._store.dispatch(setMapDetailsStatus({status: 'open'}));
     } else {
-      this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+      this._store.dispatch(backOfMapDetails());
     }
   }
 
