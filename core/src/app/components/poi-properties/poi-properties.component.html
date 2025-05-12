@@ -19,7 +19,7 @@
       [poiTypes]="poiTypes"
     ></wm-poi-types-badges>
     <ng-container *ngIf="properties?.info as info">
-      <div class="wm-poi-properties-info" [innerHTML]="sanitize(info)"></div>
+      <div class="wm-poi-properties-info" [innerHTML]="sanitize(info|wmtrans)"></div>
     </ng-container>
     <wm-get-directions></wm-get-directions>
     <wm-feature-useful-urls *ngIf="showUsefulUrls$|async">
@@ -36,10 +36,9 @@
     </div>
     <wm-track-audio *ngIf="properties?.audio" [audio]="properties?.audio"></wm-track-audio>
     <wm-inner-component-html
-      *ngIf="properties?.embeddedElement as embeddedElement"
+      *ngIf="(confOPTIONSShowEmbeddedHtml$|async) && properties?.embedded_html"
       [enableDismiss]="false"
-      [title]="embeddedElement?.title"
-      [html]="embeddedElement?.html"
+      [html]="properties.embedded_html"
     ></wm-inner-component-html>
   </div>
 </ng-container>
