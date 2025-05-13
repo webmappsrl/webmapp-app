@@ -22,6 +22,7 @@
     "gulp-streamify": "^1.0.2",
     "gulp-symlink": "^2.1.4",
     "gulp-through2": "^1.0.2",
+    "prettier": "^3.5.3",
     "request": "^2.88.2",
     "shelljs": "^0.8.4",
     "vinyl-source-stream": "^2.0.0",
