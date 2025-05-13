@@ -1,4 +1,10 @@
-import {clearTestState, confWithAuthEnabled, e2eLogin, goProfile, meUrl} from 'cypress/utils/test-utils';
+import {
+  clearTestState,
+  confWithAuthEnabled,
+  e2eLogin,
+  goProfile,
+  meUrl,
+} from 'cypress/utils/test-utils';
 
 describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/developer-stories/4772]', () => {
   before(() => {
@@ -23,7 +29,6 @@ describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/deve
         });
       });
     }).as('meOffline');
-    cy.reload();
     cy.wait('@meOffline');
     goProfile();
     cy.get('wm-profile-user').should('not.be.empty');
