@@ -60,8 +60,8 @@ import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {
   backOfMapDetails,
-} from '@wm-core/store/user-activity/user-activity.action';
   setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
 export interface IDATALAYER {
   high: string;

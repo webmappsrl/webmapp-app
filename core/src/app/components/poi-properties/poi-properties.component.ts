@@ -7,6 +7,7 @@ import {tap} from 'rxjs/internal/operators/tap';
 import {poi} from '@wm-core/store/features/features.selector';
 import {switchMap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
+import {confOPTIONSShowEmbeddedHtml} from '@wm-core/store/conf/conf.selector';
 @Component({
   selector: 'wm-poi-properties',
   templateUrl: './poi-properties.component.html',
@@ -15,6 +16,7 @@ import {DomSanitizer} from '@angular/platform-browser';
   encapsulation: ViewEncapsulation.None,
 })
 export class PoiPropertiesComponent {
+  confOPTIONSShowEmbeddedHtml$ = this._store.select(confOPTIONSShowEmbeddedHtml);
   currentPoiProperties$ = this._store.select(currentPoiProperties).pipe(
     tap(properties => {
       this.showTechnicalDetails$.next(properties?.ele || properties?.address);

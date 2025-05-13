@@ -64,7 +64,7 @@ describe('Distance and duration filters [oc:4726] [https://orchestrator.maphub.i
 
     goHome(false);
     cy.wait(waitFilterResults);
-    cy.get('wm-search-box').each($el => {
+    cy.get('wm-home wm-search-box').each($el => {
       cy.wrap($el).click();
       cy.get('wm-tab-detail ion-item')
         .contains('ion-label', labelDistance)
@@ -94,14 +94,14 @@ describe('Distance and duration filters [oc:4726] [https://orchestrator.maphub.i
 
     goHome(false);
     cy.wait(waitFilterResults);
-    cy.get('wm-search-box').each($el => {
+    cy.get('wm-home wm-search-box').each($el => {
       cy.wrap($el).click();
       cy.get('wm-tab-detail ion-item')
         .contains('ion-label', labelDuration)
         .parents('ion-item')
         .within(() => {
           cy.get('ion-note').then($note => {
-            const duration = $note.text().replace('h', '');
+            const duration = $note.text();
             const durationNumber = convertDurationToMinutes(duration);
             expect(durationNumber).to.be.greaterThan(minDuration);
             expect(durationNumber).to.be.lessThan(maxDuration);
@@ -150,6 +150,18 @@ function setSliderFilter(
 }
 
 function convertDurationToMinutes(duration: string): number {
-  const [hours, minutes] = duration.split(':').map(part => parseInt(part, 10));
+  let hours = 0;
+  let minutes = 0;
+
+  const hoursMatch = duration.match(/(\d+)\s*h/);
+  const minutesMatch = duration.match(/(\d+)\s*m/);
+
+  if (hoursMatch) {
+    hours = parseInt(hoursMatch[1], 10);
+  }
+  if (minutesMatch) {
+    minutes = parseInt(minutesMatch[1], 10);
+  }
+
   return hours * 60 + minutes;
 }
