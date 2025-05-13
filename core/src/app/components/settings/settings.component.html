@@ -17,10 +17,7 @@
     <ion-item class="webmapp-settings-version" mode="md">
       <ion-label> {{ "modals.settings.version" | wmtrans }} {{ APP_VERSION }}</ion-label>
     </ion-item>
-    <wm-lang-selector
-      [langs]="(langs$|async)?.available"
-      [defaultLang]="(langs$|async)?.default"
-    ></wm-lang-selector>
+    <wm-lang-selector></wm-lang-selector>
     <ion-item-group *ngIf="(confMap$|async)?.record_track_show">
       <ion-item-divider>
         <ion-label>GPS</ion-label>
@@ -28,16 +25,12 @@
       <ion-item>
         <ion-note>
           <h5>
-            {{ "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni" | wmtrans }}.
+            {{ "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni" | wmtrans
+            }}.
           </h5>
         </ion-note>
       </ion-item>
-      <ion-item
-        button
-        (click)="openAppSettings()"
-        class="webmapp-settings-button"
-        mode="md"
-      >
+      <ion-item button (click)="openAppSettings()" class="webmapp-settings-button" mode="md">
         <ion-label>{{'Apri impostazioni App'|wmtrans}}</ion-label>
         <i class="icon-outline-chevron-right-outline" slot="end"></i>
       </ion-item>

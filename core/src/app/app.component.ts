@@ -1,23 +1,14 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
-import {debounceTime, filter, switchMap, take} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {select, Store} from '@ngrx/store';
-import {appEN} from 'src/assets/i18n/en';
-import {appFR} from 'src/assets/i18n/fr';
-import {appIT} from 'src/assets/i18n/it';
 import {StatusService} from './services/status.service';
-import {LangService} from '@wm-core/localization/lang.service';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
-import {
-  confGEOLOCATION,
-  confLANGUAGES,
-  confMAP,
-  confTHEMEVariables,
-} from '@wm-core/store/conf/conf.selector';
+import {confGEOLOCATION, confTHEMEVariables} from '@wm-core/store/conf/conf.selector';
 import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {IGEOLOCATION} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
@@ -49,7 +40,6 @@ export class AppComponent {
     private status: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _langService: LangService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadAuths());
@@ -59,15 +49,7 @@ export class AppComponent {
     this._store.dispatch(syncUgc());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this._store
-      .select(confLANGUAGES)
-      .pipe(
-        filter(p => p != null),
-        take(1),
-      )
-      .subscribe(l => {
-        this._langService.initLang(l.default);
-      });
+
     this._platform.ready().then(
       () => {
         SplashScreen.hide();
