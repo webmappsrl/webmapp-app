@@ -25,6 +25,9 @@
 
   --wm-feature-details-margin: 0px !important;
 }
+wm-page-home .webmapp-home-content {
+  --padding-bottom: 0px !important;
+}
 
 webmapp-page-tabs ion-tabs ion-tab-bar {
   --wm-font-tabicon: 20px;
@@ -276,7 +279,7 @@ wm-tab-image-gallery::after {
   height: 1px;
   background-color: var(--ion-color-light-shade);
 }
-wm-map-details ion-card {
+wm-map-details > ion-card {
   position: relative;
   display: block;
   padding-bottom: 90px !important;
@@ -343,13 +346,14 @@ wm-track-related-poi > ion-label {
   margin-bottom: 8px;
 }
 wm-track-related-poi > ion-button {
+  --ion-color-light: #f8f8fe;
   font-family: var(--wm-75-font-family-utility) !important;
   font-size: var(--wm-font-size-sm) !important;
   height: 36px !important;
 }
 
 wm-get-directions ion-button {
-  --background: #f8f8fe;
+  --ion-color-light: #f8f8fe;
   --border-radius: 25px;
   height: 36px !important;
 }
@@ -359,6 +363,7 @@ wm-get-directions ion-button ion-icon {
 wm-get-directions ion-button ion-label {
   font-size: var(--wm-font-size-sm) !important;
   font-family: var(--wm-75-font-family-utility) !important;
+  font-weight: 600;
 }
 
 wm-travel-mode {
@@ -375,12 +380,12 @@ wm-travel-mode ion-segment ion-segment-button {
   --indicator-box-shadow: 0px 4px 4px -1px rgba(12, 12, 13, 0.05),
     0px 4px 4px -1px rgba(12, 12, 13, 0.1) !important;
 }
-wm-travel-mode ion-grid ion-row ion-col div .value {
+wm-travel-mode ion-grid ion-row ion-col div,
+wm-travel-mode ion-grid ion-row ion-col div > * {
   font-family: var(--wm-75-font-family-utility) !important;
 }
 wm-travel-mode ion-grid ion-row ion-col div .unit {
   font-size: var(--wm-font-size-base) !important;
-  font-family: var(--wm-75-font-family-utility) !important;
 }
 wm-travel-mode ion-grid ion-row ion-col div:first-of-type {
   font-size: var(--wm-font-size-4xl) !important;
@@ -414,6 +419,7 @@ wm-home-layer {
 }
 wm-home-result .wm-home-content {
   padding: 12px 16px 0px 16px !important;
+  background-color: #fff !important;
 }
 
 wm-status-filter * {
@@ -490,7 +496,7 @@ wm-poi-box {
   margin: 12px 0px !important;
 }
 wm-home-result wm-search-box > ion-card,
-wm-home-resultwm-poi-box > ion-card {
+wm-home-result wm-poi-box > ion-card {
   width: 100% !important;
   margin: 0 !important;
   padding-top: 0px !important;
@@ -636,6 +642,13 @@ wm-poi-properties > .wm-poi-properties-body > ion-label * {
   font-family: var(--wm-75-font-family-utility) !important;
   color: var(--ion-text-color) !important;
 }
+wm-poi-properties
+  > .wm-poi-properties-body
+  .webmapp-pagepoi-info-body-photoslider
+  .webmapp-pagepoi-info-body-photo {
+  height: 141px !important;
+  width: 230px !important;
+}
 wm-poi-types-badges > div {
   border: 1px solid var(--wm-75-color-detail);
   color: var(--wm-75-color-detail);
@@ -680,6 +693,13 @@ wm-poi-properties > .wm-poi-properties-body > wm-get-directions > ion-button ion
   font-size: var(--wm-font-size-sm) !important;
   font-weight: 700 !important;
 }
+wm-poi-properties > .wm-poi-properties-body wm-inner-component-html > ion-label {
+  font-weight: var(--wm-feature-details-title-font-weight);
+  font-size: var(--wm-font-size-xl);
+  color: var(--wm-feature-details-title-color);
+  font-family: var(--wm-75-font-family-title);
+  margin-bottom: 16px;
+}
 wm-tab-image-gallery ion-label {
   font-size: var(--wm-font-size-xl) !important;
 }
@@ -690,6 +710,7 @@ wm-tab-howto .webmapp-title {
 }
 wm-feature-useful-urls ion-item ion-label {
   font-family: var(--wm-75-font-family-utility) !important;
+  font-size: var(--wm-font-size-sm) !important;
 }
 wm-related-pois-navigator span {
   font-family: var(--wm-75-font-family-utility) !important;
@@ -753,6 +774,9 @@ wm-features-in-viewport
 wm-image-gallery .webmapp-pagepoi-info-body-photoslider ion-slide ion-text {
   font-family: var(--wm-75-font-family-title) !important;
   font-weight: 700 !important;
+}
+wm-image-gallery .webmapp-pagepoi-info-body-photoslider ion-slide {
+  width: 230px !important;
 }
 
 /* TODO: remove this */
