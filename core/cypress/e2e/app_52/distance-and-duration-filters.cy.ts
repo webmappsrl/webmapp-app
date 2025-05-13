@@ -138,8 +138,10 @@ function setSliderFilter(
       .then($slider => {
         const sliderWidth = $slider[0]?.getBoundingClientRect()?.width ?? 0;
         const ticks = (max - min) / steps + 1;
-        const clickPositionMax = ((maxValue / steps - 1) / (ticks - 1)) * sliderWidth;
-        const clickPositionMin = ((minValue / steps - 1) / (ticks - 1)) * sliderWidth;
+        const clickPositionMax =
+          Math.floor(((maxValue / steps - 1) / (ticks - 1)) * sliderWidth) - 1;
+        const clickPositionMin =
+          Math.floor(((minValue / steps - 1) / (ticks - 1)) * sliderWidth) - 1;
 
         cy.wrap($slider).click(clickPositionMax, 10);
         cy.wrap($slider).click(clickPositionMin, 10);

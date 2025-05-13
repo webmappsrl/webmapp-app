@@ -3,6 +3,9 @@ import {clearTestState, confWithAuthEnabled, e2eLogin, goProfile, meUrl} from 'c
 describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/developer-stories/4772]', () => {
   before(() => {
     clearTestState();
+  });
+
+  beforeEach(() => {
     confWithAuthEnabled().as('getConf');
     cy.visit('/');
   });
