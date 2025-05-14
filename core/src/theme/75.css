@@ -267,6 +267,7 @@ wm-tab-image-gallery,
 wm-track-related-poi {
   position: relative;
 }
+wm-feature-useful-urls::after,
 wm-tab-howto::after,
 wm-tab-description::after,
 wm-get-directions::after,
@@ -624,6 +625,7 @@ wm-poi-properties > .wm-poi-properties-body wm-tab-detail {
 }
 wm-poi-properties > .wm-poi-properties-body wm-feature-useful-urls {
   order: 9;
+  position: relative;
 }
 wm-poi-properties > .wm-poi-properties-body wm-tab-audio {
   order: 10;
@@ -693,7 +695,8 @@ wm-poi-properties > .wm-poi-properties-body > wm-get-directions > ion-button ion
   font-size: var(--wm-font-size-sm) !important;
   font-weight: 700 !important;
 }
-wm-poi-properties > .wm-poi-properties-body wm-inner-component-html > ion-label {
+wm-poi-properties > .wm-poi-properties-body wm-inner-component-html ion-label {
+  display: block;
   font-weight: var(--wm-feature-details-title-font-weight);
   font-size: var(--wm-font-size-xl);
   color: var(--wm-feature-details-title-color);
@@ -707,6 +710,9 @@ wm-feature-useful-urls .webmapp-title,
 wm-tab-howto .webmapp-title {
   font-size: var(--wm-font-size-xl) !important;
   font-family: var(--wm-75-font-family-title) !important;
+}
+wm-feature-useful-urls ion-item {
+  --inner-border-width: 0px;
 }
 wm-feature-useful-urls ion-item ion-label {
   font-family: var(--wm-75-font-family-utility) !important;
