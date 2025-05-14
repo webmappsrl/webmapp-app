@@ -52,7 +52,10 @@
       <ng-template #noImageSelected>
         <ng-container *ngIf="!(featureOpened$|async)">
           <wm-status-filter (removeLayerEVT)="closeDetails()"></wm-status-filter>
-          <wm-home-layer></wm-home-layer>
+          <wm-home-ugc *ngIf="(ugcOpened$|async);else layerView"></wm-home-ugc>
+          <ng-template #layerView>
+            <wm-home-layer></wm-home-layer>
+          </ng-template>
           <wm-home-result></wm-home-result>
         </ng-container>
         <wm-inner-component-html
