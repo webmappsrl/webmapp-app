@@ -44,6 +44,7 @@ import {
   hasFeatureInViewport,
   inputTyped,
   mapDetailsStatus,
+  ugcOpened,
 } from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
 import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
@@ -184,6 +185,7 @@ export class MapPage {
     if (value == null) return '';
     return this._langSvc.instant(value);
   };
+  ugcOpened$: Observable<boolean> = this._store.select(ugcOpened);
   ugcTrack$: Observable<WmFeature<LineString> | null> = this._store.select(currentUgcTrack);
   wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
