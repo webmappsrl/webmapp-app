@@ -3,6 +3,7 @@
     <wm-inner-component-html
       class="wm-excerpt"
       *ngIf="properties?.excerpt as excerpt"
+      [enableDismiss]="false"
       [html]="excerpt|wmtrans"
     >
     </wm-inner-component-html>
