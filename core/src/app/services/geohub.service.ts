@@ -31,9 +31,7 @@ export class GeohubService {
           .get(`${this._environmentSvc.origin}/api/ec/track/favorite/list`)
           .toPromise();
         this._favourites = favorites;
-      } catch (err) {
-        console.log('------- ~ GeohubService ~ favourites ~ err', err);
-      }
+      } catch (err) {}
     }
     return this._favourites;
   }
