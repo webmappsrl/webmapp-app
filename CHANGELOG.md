@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.0.8](https://github.com/webmappsrl/webmapp-app/compare/v3.0.7...v3.0.8) (2025-05-16)
+
+
+### Bug Fixes
+
+* Management of Map details status, added test e2e oc:5500 ([#127](https://github.com/webmappsrl/webmapp-app/issues/127)) ([b2af206](https://github.com/webmappsrl/webmapp-app/commit/b2af206af304a2edff04a1f20714c33bcb87391c))
+* test e2e ([0e98a16](https://github.com/webmappsrl/webmapp-app/commit/0e98a167976339e8d4dc40304c8b3363e48c674d))
+
+
+### Miscellaneous
+
+* clean code ([2e67a27](https://github.com/webmappsrl/webmapp-app/commit/2e67a274518a76698802f4c4dba0ab3afb9979ca))
+* remove useless excerpt ([425331a](https://github.com/webmappsrl/webmapp-app/commit/425331aa73d58f92fd96c55990206dbdb013269a))
+
 ## [3.0.7](https://github.com/webmappsrl/webmapp-app/compare/v3.0.6...v3.0.7) (2025-05-09)
 
 
