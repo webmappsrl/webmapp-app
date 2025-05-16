@@ -6,7 +6,6 @@ import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {select, Store} from '@ngrx/store';
 import {StatusService} from './services/status.service';
-import {LangService} from '@wm-core/localization/lang.service';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
 import {
@@ -47,7 +46,6 @@ export class AppComponent {
     private _platform: Platform,
     private _router: Router,
     private _statusSvc: StatusService,
-    private _langSvc: LangService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     @Inject(DOCUMENT) private _document: Document,
@@ -57,8 +55,8 @@ export class AppComponent {
     this._store.dispatch(ecTracks({init: true}));
     this._store.dispatch(loadEcPois());
     this._store.dispatch(syncUgc());
-    this._storeNetwork.dispatch(startNetworkMonitoring());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
+    this._storeNetwork.dispatch(startNetworkMonitoring());
     this.confMap$
       .pipe(
         filter(f => f != null),
@@ -66,14 +64,6 @@ export class AppComponent {
       )
       .subscribe(confMap => {
         this._store.dispatch(loadHitmapFeatures({url: confMap?.hitMapUrl}));
-      });
-    this.confLANGUAGES$
-      .pipe(
-        filter(p => p != null),
-        take(1),
-      )
-      .subscribe(l => {
-        this._langSvc.initLang(l.default);
       });
 
     this._platform.ready().then(
