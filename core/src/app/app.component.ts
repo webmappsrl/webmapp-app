@@ -12,6 +12,7 @@ import {
   confGEOLOCATION,
   confLANGUAGES,
   confMAP,
+  confMAPHitMapUrl,
   confTHEMEVariables,
 } from '@wm-core/store/conf/conf.selector';
 import {loadConf} from '@wm-core/store/conf/conf.actions';
@@ -36,6 +37,8 @@ export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
   confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
+  confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+
   confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   public image_gallery: any[];
@@ -57,13 +60,14 @@ export class AppComponent {
     this._store.dispatch(syncUgc());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-    this.confMap$
+
+    this.confMAPHitMapUrl$
       .pipe(
         filter(f => f != null),
         take(1),
       )
-      .subscribe(confMap => {
-        this._store.dispatch(loadHitmapFeatures({url: confMap?.hitMapUrl}));
+      .subscribe(hitMapUrl => {
+        this._store.dispatch(loadHitmapFeatures({url: hitMapUrl}));
       });
 
     this._platform.ready().then(
