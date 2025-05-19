@@ -26,19 +26,21 @@
 
 <ion-content scrollY="false" class="webmapp-profile-container">
   <wm-profile-user></wm-profile-user>
-  <ng-container *ngIf="hitmapFeatures$|async as hitmapFeatures; else nohitmap">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-title>{{'Downloads'|wmtrans}}</ion-title>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <wm-home-hitmap [downloads]="true"></wm-home-hitmap>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ng-container *ngIf="confMAPHitMapUrl$|async;else nohitmap">
+    <ng-container *ngIf="hitmapFeatures$|async as hitmapFeatures;">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-title>{{'Downloads'|wmtrans}}</ion-title>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <wm-home-hitmap [downloads]="true"></wm-home-hitmap>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ng-container>
   </ng-container>
   <ng-template #nohitmap>
     <ion-tabs

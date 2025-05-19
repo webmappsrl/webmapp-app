@@ -3,7 +3,7 @@ import {ModalController} from '@ionic/angular';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {select, Store} from '@ngrx/store';
-import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
+import {confAUTHEnable, confMAPHitMapUrl} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Router} from '@angular/router';
 import {filter, skip} from 'rxjs/operators';
@@ -29,6 +29,7 @@ export class ProfilePage implements OnDestroy {
 
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
   hitmapFeatures$: Observable<WmFeature<MultiPolygon>[]> = from(getHitmapFeatures());
   @ViewChild(WmHomeHitMapComponent) hitmapComp: WmHomeHitMapComponent;
   constructor(
