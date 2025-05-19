@@ -103,17 +103,19 @@ export class WmDownloadPanelComponent implements OnChanges {
 
   updateStatus(status: DownloadStatus): void {
     this.status = {...this.status, ...status};
-    const statusKeys = Object.keys(this.status);
-    this.downloadElements = statusKeys
-      .filter(k => k != 'finish')
-      .map(key => ({
-        name: `down${key}`,
-        value: this.status[key],
-      }));
+    const statusKeys = Object.keys(this.status).filter(k => k != 'finish');
+    this.downloadElements = statusKeys.map(key => ({
+      name: `down${key}`,
+      value: this.status[key],
+    }));
 
-    if (this.status && this.status.finish) {
+    // Verifica se tutti i valori di status (escluso finish) sono uguali a 1
+    const allComplete = statusKeys.every(key => this.status[key] === 1);
+    if (allComplete) {
+      this.status.finish = true;
       this.completeDownloads();
     }
+
     this._cdr.detectChanges();
   }
 }
