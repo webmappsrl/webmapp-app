@@ -104,6 +104,36 @@ export function mockGetApiTracks(mockRes: any): Cypress.Chainable {
   });
 }
 
+export function mockGetTrack(id: string, mockPropertiesRes: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.shards.geohub.awsApi}/tracks/${id}.json`, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        properties: {
+          ...res.body.properties,
+          ...mockPropertiesRes,
+        },
+      };
+      res.send(newRes);
+    });
+  });
+}
+
+export function mockGetPoi(mockFeatures: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.shards.geohub.awsApi}/pois/52.geojson`, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        features: [
+          ...(Array.isArray(res.body.features) ? res.body.features : []),
+          mockFeatures,
+        ],
+      };
+      res.send(newRes);
+    });
+  });
+}
+
 /**
  * Mocks the save api ugc tracks request with a network error.
  * @returns A Cypress chainable object.

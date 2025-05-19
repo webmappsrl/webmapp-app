@@ -3,8 +3,8 @@ import {clearTestState, goMap} from "cypress/utils/test-utils";
 const waitTime = 800;
 const zoom_coordinates = [8.229458808898698, 280.25369262695403];
 const track_coordinates = [208.15484619140534, 412.5570373535229];
-const empty_click_coordinates = [141.97242736816406, 294.8253173828707];
-const second_track_coordinates = [191.19117736816406, 678.142517089902]; //[185.1913604736319, 440.9936828613281]
+const empty_click_coordinates = [398.3473205566406, 82.79532623291016];
+const second_track_coordinates = [174.95277404785156, 471.4070739746094]; //[185.1913604736319, 440.9936828613281]
 
 describe('Open and close Map Details [oc:5500] [https://orchestrator.maphub.it/resources/developer-stories/5500]', () => {
   before(() => {
