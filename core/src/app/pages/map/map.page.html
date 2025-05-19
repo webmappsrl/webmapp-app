@@ -182,10 +182,24 @@
           (start-recording)="startRecording$.next($event)"
         ></wm-btn-track-recording>
       </ion-fab>
+      <ion-fab
+        slot="fixed"
+        vertical="top"
+        horizontal="start"
+        *ngIf="overlayFeatureCollections$|async as url"
+      >
+        <ion-fab-button>
+          <ion-icon name="download-outline" (click)="downloadOverlay()"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
     </div>
+
     <wm-download
       *ngIf="showDownload$|async"
       [track]="currentTrack$|async"
+      [overlayUrls]="overlayFeatureCollections$|async"
+      [overlayXYZ]="'https://tiles.webmapp.it/carg'"
+      [overlayGeometry]="hitMapGeometry$|async"
       (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
       (goToEvt)="goToPage($event)"
     ></wm-download>

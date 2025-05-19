@@ -9,6 +9,9 @@
     </i>
     <wm-download-panel
       [track]="track"
+      [overlayUrls]="overlayUrls"
+      [overlayGeometry]="overlayGeometry"
+      [overlayXYZ]="overlayXYZ"
       (changeStatus)="downloadStatus($event)"
       (exit)="endDownload()"
     ></wm-download-panel>

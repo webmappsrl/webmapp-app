@@ -36,7 +36,10 @@ import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {HomePage} from '../home/home.page';
 import {IAPP} from '@wm-core/types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {hitMapFeatureCollection} from 'src/app/shared/map-core/src/store/map-core.selector';
+import {
+  hitMapFeatureCollection,
+  hitMapGeometry,
+} from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {
@@ -159,7 +162,7 @@ export class MapPage {
       this._cdr.detectChanges();
     }),
   );
-  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
+  hitMapGeometry$ = this._store.select(hitMapGeometry);
   poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
   pois: any[];
   popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -192,7 +195,7 @@ export class MapPage {
   );
   wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
+  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   constructor(
     private _store: Store,
     private _storeNetwork: Store<INetworkRootState>,
@@ -298,6 +301,14 @@ export class MapPage {
     }, 300);
   }
 
+  downloadOverlay(): void {
+    console.log('downloadOverlay');
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
   }
@@ -320,18 +331,6 @@ export class MapPage {
       const id = feature.properties.id;
       this._urlHandlerSvc.updateURL({ec_related_poi: id});
     }
-  }
-
-  setWmMapFeatureCollection(overlay: any): void {
-    this.wmMapFeatureCollectionOverlay$.next(overlay);
-    this.overlayFeatureCollections$.pipe(take(1)).subscribe(feature => {
-      if (overlay['featureType'] != null && feature[overlay['featureType']] != null) {
-        this.wmMapFeatureCollectionOverlay$.next({
-          ...overlay,
-          ...{url: feature[overlay['featureType']]},
-        });
-      }
-    });
   }
 
   toggleDirective(data: {type: 'layers' | 'pois'; toggle: boolean}): void {

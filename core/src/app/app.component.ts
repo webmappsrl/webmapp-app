@@ -8,9 +8,15 @@ import {select, Store} from '@ngrx/store';
 import {StatusService} from './services/status.service';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
-import {confGEOLOCATION, confTHEMEVariables} from '@wm-core/store/conf/conf.selector';
+import {
+  confGEOLOCATION,
+  confLANGUAGES,
+  confMAP,
+  confMAPHitMapUrl,
+  confTHEMEVariables,
+} from '@wm-core/store/conf/conf.selector';
 import {loadConf} from '@wm-core/store/conf/conf.actions';
-import {IGEOLOCATION} from '@wm-core/types/config';
+import {IGEOLOCATION, ILANGUAGES} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths} from '@wm-core/store/auth/auth.actions';
@@ -19,6 +25,7 @@ import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
+import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -29,15 +36,19 @@ import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 export class AppComponent {
   confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
-  public image_gallery: any[];
+  confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
+  confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+
+  confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  public image_gallery: any[];
   public photoIndex: number = 0;
   public showingPhotos = false;
 
   constructor(
     private _platform: Platform,
-    private router: Router,
-    private status: StatusService,
+    private _router: Router,
+    private _statusSvc: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     @Inject(DOCUMENT) private _document: Document,
@@ -49,6 +60,15 @@ export class AppComponent {
     this._store.dispatch(syncUgc());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
+
+    this.confMAPHitMapUrl$
+      .pipe(
+        filter(f => f != null),
+        take(1),
+      )
+      .subscribe(hitMapUrl => {
+        this._store.dispatch(loadHitmapFeatures({url: hitMapUrl}));
+      });
 
     this._platform.ready().then(
       () => {
@@ -68,7 +88,7 @@ export class AppComponent {
       },
     );
 
-    this.status.showPhotos.subscribe(x => {
+    this._statusSvc.showPhotos.subscribe(x => {
       this.showingPhotos = x.showingPhotos;
       this.image_gallery = x.image_gallery;
       this.photoIndex = x.photoIndex;
@@ -104,16 +124,16 @@ export class AppComponent {
    * @memberof AppComponent
    */
   recBtnPosition() {
-    const tree = this.router.parseUrl(this.router.url);
+    const tree = this._router.parseUrl(this._router.url);
     if (tree?.root?.children && tree.root.children['primary']) {
       const url = tree.root.children['primary'].segments[0].path;
       switch (url) {
         case 'register':
           return 'none';
         case 'route':
-          return this.status.showingRouteDetails ? 'high' : 'middle';
+          return this._statusSvc.showingRouteDetails ? 'high' : 'middle';
         case 'map':
-          return this.status.showingMapResults ? 'middlehigh' : 'low';
+          return this._statusSvc.showingMapResults ? 'middlehigh' : 'low';
       }
     }
     return 'low';
