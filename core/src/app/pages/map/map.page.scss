@@ -88,28 +88,67 @@ webmapp-map-page {
       .webmapp-pagepoi-info-header-title {
         font-size: var(--wm-font-lg);
         font-weight: var(--wm-font-weight-bold);
-      }
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
 
-      .webmapp-pagepoi-info-header-arrows {
-        position: absolute;
-        right: 0;
-        top: 0;
-        .webmapp-pagepoi-info-header-arrow {
-          display: inline-block;
-          width: 50px;
-          height: 30px;
-          text-align: center;
-          padding: 6px;
-          border-radius: 30px;
-
-          .webmapp-pagepoi-info-header-arrow-icon {
-            font-size: large;
-          }
+        > div {
+          flex: 1;
         }
       }
     }
   }
   ion-title {
     font-size: unset;
+  }
+
+  .bottom-right,
+  .ol-zoom {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  }
+  .full {
+    .bottom-right,
+    .ol-zoom {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+  .move-bottom {
+    .bottom-right:first-of-type {
+      transform: translateY(-116px);
+    }
+  }
+
+  wm-map-details {
+    wm-status-filter {
+      ion-grid {
+        height: fit-content;
+        opacity: 1;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+
+  .onlyTitle {
+    wm-map-details {
+      wm-status-filter {
+        ion-grid {
+          height: 0;
+          opacity: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
+
+  .background {
+    #webmapp-map-attribution-container {
+      bottom: 0px !important;
+    }
+    #webmapp-map-scale-line-container {
+      bottom: 0px !important;
+    }
   }
 }

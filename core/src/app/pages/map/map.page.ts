@@ -42,11 +42,18 @@ import {
 } from 'src/app/shared/map-core/src/store/map-core.selector';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
-import {ecLayer, inputTyped} from '@wm-core/store/user-activity/user-activity.selector';
+import {
+  ecLayer,
+  hasFeatureInViewport,
+  inputTyped,
+  mapDetailsStatus,
+  ugcOpened,
+} from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
-import {poi, track} from '@wm-core/store/features/features.selector';
+import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {
+  currentEcImageGalleryIndex,
   currentEcPoiId,
   currentEcTrackProperties,
   currentPoiProperties,
@@ -55,8 +62,11 @@ import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/
 import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
-import {backOfMapDetails, setMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.action';
-
+import {
+  backOfMapDetails,
+  setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
+import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -108,6 +118,7 @@ export class MapPage {
     }),
   );
   confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
+  currentEcImageGalleryIndex$ = this._store.select(currentEcImageGalleryIndex);
   currentEcPoiId$ = this._store.select(currentEcPoiId);
   currentEcTrackProperties$ = this._store.select(currentEcTrackProperties).pipe(
     tap(trackProperties => {
@@ -131,14 +142,17 @@ export class MapPage {
   currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
+  featureOpened$: Observable<boolean> = this._store.select(featureOpened);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
+  hasFeatureInViewport$: Observable<boolean> = this._store.select(hasFeatureInViewport);
   imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isLogged$: Observable<boolean> = this._store.select(isLogged);
   isTrackRecordingEnable$: Observable<boolean> = this._store.select(confRecordTrackShow);
   lang = localStorage.getItem('wm-lang') || 'it';
   layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  mapDetailsStatus$: Observable<mapDetailsStatusType> = this._store.select(mapDetailsStatus);
   modeFullMap = false;
   nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
     new BehaviorSubject<Feature<Geometry> | null>(null);
@@ -174,6 +188,7 @@ export class MapPage {
     if (value == null) return '';
     return this._langSvc.instant(value);
   };
+  ugcOpened$: Observable<boolean> = this._store.select(ugcOpened);
   ugcTrack$: Observable<WmFeature<LineString> | null> = this._store.select(currentUgcTrack);
   wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
@@ -296,6 +311,10 @@ export class MapPage {
 
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
+  }
+
+  closeDetails(): void {
+    this._store.dispatch(backOfMapDetails());
   }
 
   savePosition(key = 'track'): void {

@@ -32,6 +32,7 @@ describe('Favourites [oc:4757] [https://orchestrator.maphub.it/resources/develop
     openTrack(data.tracks.exampleOne);
 
     cy.get('ion-fab-button:has(.icon-outline-heart)').should('not.exist');
+    goHome();
   });
 
   it('Should favorites button visible if logged in', () => {

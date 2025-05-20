@@ -1,18 +1,22 @@
 wm-map-details {
   .wm-close-btn {
     position: absolute;
-    top: constant(safe-area-inset-top, 30px); // for ios 11.1
-    top: env(safe-area-inset-top, 30px); // for ios 11.2 and onwards
+    top: calc(16px + constant(safe-area-inset-top, 30px)); // for ios 11.1
+    top: calc(16px + env(safe-area-inset-top, 30px)); // for ios 11.2 and onwards
+    left: calc(16px + constant(safe-area-inset-left, 30px));
+    left: calc(16px + env(safe-area-inset-left, 30px));
+    margin: 0;
   }
   .wm-drag {
     width: 100%;
     height: auto;
     text-align: center;
     display: block;
-    position: absolute;
+    // position: absolute; TODO: da verificare se è necessario
     background-color: white;
     font-size: medium;
     z-index: 99;
+    border-radius: 20px 20px 0 0;
     .wm-drag-btn {
       .wm-drag-handle {
         background-color: var(--wm-color-grey);
@@ -20,10 +24,11 @@ wm-map-details {
         width: 55px;
         height: 5px;
         border-radius: 5px;
+        margin-top: 10px;
       }
     }
   }
-  wm-search-box {
+  > wm-search-box {
     ion-card {
       max-height: 90%;
       box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.4);
@@ -37,23 +42,32 @@ wm-map-details {
     position: absolute;
     background-color: white;
     z-index: 99;
+    border-radius: 20px 20px 0 0;
   }
-  ion-card {
+  > ion-card {
     margin-inline: 0 !important;
     margin: 0;
     padding: 10px;
-    height: 100%;
+    height: inherit;
     padding-bottom: 15%;
-    ion-card-header {
+    border-radius: 16px 16px 0 0;
+    position: relative;
+    background: white;
+    transition: margin-top 0.25s ease;
+    &.open {
+      margin-top: -16px !important;
+    }
+    > ion-card-header {
       margin: 0;
       padding: 0;
       width: 100%;
       height: auto;
       text-align: left;
       display: block;
-      position: absolute;
+      // position: absolute; TODO: da verificare se è necessario
       background-color: white;
       z-index: 99;
+      border-radius: 16px 16px 0 0;
       .wm-drag-btn {
         .wm-drag-handle {
           background-color: var(--wm-color-grey);
@@ -74,13 +88,28 @@ wm-map-details {
         }
       }
     }
-    ion-card-content {
+    > ion-card-content {
       height: 100%;
-      top: 70px;
+      // top: 70px; TODO: da verificare se è necessario
       overflow-y: auto;
       overflow-x: hidden;
       padding: 0 !important;
       margin: 0 !important;
+
+      wm-image-detail {
+        display: block;
+        min-height: 100%;
+      }
+
+      wm-status-filter {
+        > ion-grid {
+          > ion-row {
+            > ion-col:nth-of-type(2) {
+              display: none;
+            }
+          }
+        }
+      }
 
       wm-poi-properties {
         position: relative;

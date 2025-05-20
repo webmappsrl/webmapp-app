@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -33,8 +31,6 @@ export class MapDetailsComponent implements AfterViewInit {
   private _initialStep: number = 1;
   private _started: boolean = false;
 
-  @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
-  @Output() toggleEVT: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
@@ -58,8 +54,6 @@ export class MapDetailsComponent implements AfterViewInit {
     this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
       if (featureopened) {
         this._store.dispatch(setMapDetailsStatus({status: 'open'}));
-      } else {
-        this._store.dispatch(setMapDetailsStatus({status: 'background'}));
       }
     });
     this._store.select(mapDetailsStatus).subscribe(status => {
@@ -140,7 +134,6 @@ export class MapDetailsComponent implements AfterViewInit {
 
   toogleFullMap() {
     this.modeFullMap = !this.toggle();
-    this.toggleEVT.emit();
   }
 
   private _getCurrentHeight(): number {
@@ -156,7 +149,6 @@ export class MapDetailsComponent implements AfterViewInit {
       passive: false,
       onStart: ev => {
         ev.event?.preventDefault();
-        this.toggleEVT.emit();
 
         if (this._getCurrentHeight() > this.minInfoheight || this._getCurrentHeight() === 56) {
           this._store.dispatch(setMapDetailsStatus({status: 'open'}));

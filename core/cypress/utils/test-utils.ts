@@ -156,6 +156,7 @@ export function openLayer(layerTitle: string) {
     .then($box => {
       cy.wrap($box).click();
     });
+  cy.get('.wm-drag-btn').should('be.visible').click();
 }
 
 /**
@@ -164,9 +165,11 @@ export function openLayer(layerTitle: string) {
  */
 export function openPoi(poiTitle: string) {
   cy.get('wm-poi-box').contains('.wm-box-name', poiTitle).as('poiBox');
-  cy.get('@poiBox').should('be.visible').then($poiBox => {
-    cy.wrap($poiBox).click();
-  });
+  cy.get('@poiBox')
+    .should('be.visible')
+    .then($poiBox => {
+      cy.wrap($poiBox).click();
+    });
 }
 
 /**
@@ -174,11 +177,13 @@ export function openPoi(poiTitle: string) {
  * @param trackTitle the title of the track to open.
  */
 export function openTrack(trackTitle: string) {
-  cy.get('wm-search-box').should('exist');
-  cy.get('wm-search-box').contains('ion-card-title', trackTitle).as('searchBox');
-  cy.get('@searchBox').should('be.visible').then($searchBox => {
-    cy.wrap($searchBox).click();
-  });
+  cy.get('wm-map-details wm-search-box').should('exist');
+  cy.get('wm-map-details wm-search-box').contains('ion-card-title', trackTitle).as('searchBox');
+  cy.get('@searchBox')
+    .should('be.visible')
+    .then($searchBox => {
+      cy.wrap($searchBox).click();
+    });
 }
 
 export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;

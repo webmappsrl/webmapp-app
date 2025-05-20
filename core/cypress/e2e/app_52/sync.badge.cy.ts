@@ -45,7 +45,7 @@ describe('Visualize sync badge [oc:4776] [https://orchestrator.maphub.it/resourc
   });
 
   it('should ugc track box not synchronized correct icon', () => {
-    cy.get('wm-home-ugc wm-ugc-box ion-button').click();
+    cy.get('wm-map-details wm-home-ugc wm-ugc-box ion-button').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/${trackToImport}`, {force: true});
     cy.get('ion-button[e2e-upload-button]').click();
     cy.get('@saveApiTracksOffline.all').then(calls => {
@@ -60,7 +60,7 @@ describe('Visualize sync badge [oc:4776] [https://orchestrator.maphub.it/resourc
 
 function checkSynchronizedBadge(title: string, beSynchronized: boolean) {
   const iconName = beSynchronized ? 'cloud-done-outline' : 'cloud-offline-outline';
-  cy.get('wm-search-box')
+  cy.get('wm-map-details wm-search-box')
     .contains('ion-card-title', title)
     .parents('wm-search-box')
     .within(() => {

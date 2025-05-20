@@ -2,11 +2,13 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 import {Store} from '@ngrx/store';
 import {Platform} from '@ionic/angular';
 import {App} from '@capacitor/app';
-import {Observable, Subscription} from 'rxjs';
-import {startWith, tap} from 'rxjs/operators';
+import {Observable, Subscription, merge} from 'rxjs';
+import {filter, startWith, tap} from 'rxjs/operators';
 
 import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {online} from '@wm-core/store/network/network.selector';
+import {currentEcLayer, ugcOpened} from '@wm-core/store/user-activity/user-activity.selector';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 
 @Component({
   selector: 'wm-page-home',
@@ -17,6 +19,8 @@ import {online} from '@wm-core/store/network/network.selector';
 })
 export class HomePage {
   private _backBtnSub$: Subscription = Subscription.EMPTY;
+  private _currentLayer$ = this._store.select(currentEcLayer);
+  private _ugcOpened$ = this._store.select(ugcOpened);
 
   online$: Observable<boolean> = this._store.select(online).pipe(
     startWith(false),
@@ -27,7 +31,18 @@ export class HomePage {
     }),
   );
 
-  constructor(private _store: Store<any>, private _platform: Platform) {}
+  constructor(
+    private _store: Store<any>,
+    private _platform: Platform,
+    private _urlHandlerSvc: UrlHandlerService,
+  ) {
+    merge(
+      this._currentLayer$.pipe(filter(l => l != null)),
+      this._ugcOpened$.pipe(filter(ugcOpened => ugcOpened != null && ugcOpened)),
+    ).subscribe(_ => {
+      this._urlHandlerSvc.changeURL('map');
+    });
+  }
 
   ionViewDidEnter(): void {
     this._backBtnSub$ = this._platform.backButton.subscribeWithPriority(99999, () => {
