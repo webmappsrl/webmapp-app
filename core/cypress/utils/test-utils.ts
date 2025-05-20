@@ -183,15 +183,18 @@ export function openTrack(trackTitle: string) {
 
 export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;
 export const confURL = `${environment.shards.geohub.awsApi}/conf/52.json`;
+export const elasticUrl = `${environment.shards.geohub.elasticApi}`;
 export const data = {
   layers: {
     ecTrack: 'Tracks test e2e',
     ecPoi: 'Poi test e2e',
+    ecTracksEdge: 'Edge Layer Test e2e',
   },
   tracks: {
     exampleOne: 'Track example one',
     exampleTwo: 'Track example two',
     exampleTwoRelatedPoi: 'related poi example',
+    exampleFirstEdge: 'Track Edge Example 01',
   },
   pois: {
     exampleOne: 'Poi example one',
