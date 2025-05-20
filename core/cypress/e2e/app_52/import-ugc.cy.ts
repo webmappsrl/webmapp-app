@@ -13,7 +13,7 @@ describe('Import UGC', () => {
     cy.get('ion-alert button').click();
     goHome();
     cy.get('wm-ugc-box').click();
-    cy.get('wm-home-ugc wm-ugc-box ion-button').click();
+    cy.get('wm-map-details wm-home-ugc wm-ugc-box ion-button').click();
 
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/${fileToImport}`, {force: true});
   });
