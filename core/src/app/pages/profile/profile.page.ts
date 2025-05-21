@@ -72,7 +72,7 @@ export class ProfilePage implements OnDestroy {
 
   ionViewWillEnter(): void {
     setTimeout(() => {
-      this.hitmapComp.refresh();
+      this.hitmapComp?.refresh();
     }, 50);
   }
 

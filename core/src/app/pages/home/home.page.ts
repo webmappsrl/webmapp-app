@@ -36,6 +36,7 @@ export class HomePage {
     private _platform: Platform,
     private _urlHandlerSvc: UrlHandlerService,
   ) {
+    // TODO: creare uno store della app e gestire questo caso come effect del repo app
     merge(
       this._currentLayer$.pipe(filter(l => l != null)),
       this._ugcOpened$.pipe(filter(ugcOpened => ugcOpened != null && ugcOpened)),
