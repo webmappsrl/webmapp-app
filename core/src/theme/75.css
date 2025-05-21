@@ -55,6 +55,9 @@ webmapp-page-tabs ion-tabs ion-tab-bar ion-label {
 wm-home .root {
   padding: 0px !important;
 }
+wm-home .wm-home-header-container > wm-inner-component-html {
+  padding: 0 !important;
+}
 wm-home wm-searchbar ion-item ion-icon {
   color: var(--wm-75-color-detail) !important;
   margin-right: 12px !important;
