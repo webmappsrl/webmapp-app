@@ -47,7 +47,7 @@ describe('Visualize sync badge [oc:4776] [https://orchestrator.maphub.it/resourc
   it('should ugc track box not synchronized correct icon', () => {
     cy.get('wm-home-ugc wm-ugc-box ion-button').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/${trackToImport}`, {force: true});
-    cy.get('ion-toolbar ion-buttons[slot="end"] ion-button').contains('Upload').click();
+    cy.get('ion-button[e2e-upload-button]').click();
     cy.get('@saveApiTracksOffline.all').then(calls => {
       cy.log(`API chiamata ${calls.length} volte`);
     });

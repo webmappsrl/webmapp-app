@@ -104,6 +104,36 @@ export function mockGetApiTracks(mockRes: any): Cypress.Chainable {
   });
 }
 
+export function mockGetTrack(id: string, mockPropertiesRes: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.shards.geohub.awsApi}/tracks/${id}.json`, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        properties: {
+          ...res.body.properties,
+          ...mockPropertiesRes,
+        },
+      };
+      res.send(newRes);
+    });
+  });
+}
+
+export function mockGetPoi(mockFeatures: any): Cypress.Chainable {
+  return cy.intercept('GET', `${environment.shards.geohub.awsApi}/pois/52.geojson`, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        features: [
+          ...(Array.isArray(res.body.features) ? res.body.features : []),
+          mockFeatures,
+        ],
+      };
+      res.send(newRes);
+    });
+  });
+}
+
 /**
  * Mocks the save api ugc tracks request with a network error.
  * @returns A Cypress chainable object.
@@ -153,15 +183,18 @@ export function openTrack(trackTitle: string) {
 
 export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;
 export const confURL = `${environment.shards.geohub.awsApi}/conf/52.json`;
+export const elasticUrl = `${environment.shards.geohub.elasticApi}`;
 export const data = {
   layers: {
     ecTrack: 'Tracks test e2e',
     ecPoi: 'Poi test e2e',
+    ecTracksEdge: 'Edge Layer Test e2e',
   },
   tracks: {
     exampleOne: 'Track example one',
     exampleTwo: 'Track example two',
     exampleTwoRelatedPoi: 'related poi example',
+    exampleFirstEdge: 'Track Edge Example 01',
   },
   pois: {
     exampleOne: 'Poi example one',
