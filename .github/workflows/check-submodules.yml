@@ -1,0 +1,65 @@
+name: Check Submodules Changes
+
+on:
+  push:
+    branches:
+      - '**' # si attiva su tutti i branch
+
+jobs:
+  check-submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Check Submodules Changes
+        id: check_submodules
+        run: |
+          # Ottieni l'ultimo commit
+          LAST_COMMIT=$(git rev-parse HEAD)
+
+          # Ottieni il commit precedente
+          PREV_COMMIT=$(git rev-parse HEAD^)
+
+          # Controlla se ci sono cambiamenti nei submodules
+          if git diff --submodule=log $PREV_COMMIT $LAST_COMMIT | grep -q "Submodule"; then
+            echo "submodule_changes=true" >> $GITHUB_OUTPUT
+            echo "changes<<EOF" >> $GITHUB_OUTPUT
+            git diff --submodule=log $PREV_COMMIT $LAST_COMMIT >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "submodule_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update Commit Message
+        if: steps.check_submodules.outputs.submodule_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const commit_sha = context.sha;
+
+            // Ottieni i dettagli del commit
+            const commit = await github.rest.repos.getCommit({
+              owner,
+              repo,
+              ref: commit_sha
+            });
+
+            // Prepara il nuovo messaggio
+            const originalMessage = commit.data.commit.message;
+            const submoduleChanges = `${{ steps.check_submodules.outputs.changes }}`;
+
+            const newMessage = `${originalMessage}\n\nCambiamenti nei submodules:\n${submoduleChanges}`;
+
+            // Aggiorna il messaggio del commit
+            await github.rest.repos.updateCommit({
+              owner,
+              repo,
+              commit_sha,
+              message: newMessage
+            });
