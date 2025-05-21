@@ -357,11 +357,6 @@
         "formtitle": "Track title",
         "formtitleerror": "The title field is required",
         "formtitleplaceholder": "Enter a title",
-        "photoaction": "Load",
-        "photoactionshort": "Add",
-        "photoadvice": "Maximum 3 photo",
-        "photoadviceshort": "(max 3 photo)",
-        "phototext": "photo from the phone gallery",
         "phototextshort": "Photo",
         "savebtn": "Save",
         "title": "Save track",
@@ -511,11 +506,6 @@
         "formtype": "Waypoint type",
         "formtypeerror": "Type of waypoint required",
         "formtypeplaceholder": "Select",
-        "photoaction": "Load",
-        "photoactionshort": "add",
-        "photoadvice": "Maximum 3 photo",
-        "photoadviceshort": "(max 3 photo)",
-        "phototext": "photo from the phone gallery",
         "phototextshort": "photo",
         "save": "Save ",
         "title": "Register a waypoint"
@@ -613,7 +603,6 @@
   "Link utili": "Useful links",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "To record tracks and display them correctly, enable the location permission in the settings",
   "Apri impostazioni App": "Open app settings",
-  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
-    "Do you really want to delete your account? You must type \"delete account\" to proceed.",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Do you really want to delete your account? You must type \"delete account\" to proceed.",
   "Digita \"delete account\"": "Type \"delete account\""
 }

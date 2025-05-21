@@ -355,11 +355,6 @@
         "formtitle": "Título de la ruta",
         "formtitleerror": "El campo de título es obligatorio",
         "formtitleplaceholder": "Introduce un título",
-        "photoaction": "Cargar",
-        "photoactionshort": "Añadir",
-        "photoadvice": "Tamaño máximo: 3 fotos",
-        "photoadviceshort": "(máx 3 fotos)",
-        "phototext": "fotos de la galería del teléfono",
         "phototextshort": "Fotos",
         "savebtn": "Guardar",
         "title": "Guardar ruta",
@@ -509,11 +504,6 @@
         "formtype": "Tipo de Punto de Referencia",
         "formtypeerror": "El tipo de punto de referencia es obligatorio",
         "formtypeplaceholder": "Elegir",
-        "photoaction": "Cargar",
-        "photoactionshort": "Añadir",
-        "photoadvice": "Tamaño máximo: 3 fotos",
-        "photoadviceshort": "(máx 3 fotos)",
-        "phototext": "fotos de la galería del teléfono",
         "phototextshort": "Fotos",
         "save": "Guardar ",
         "title": "Registrar un punto de referencia"
@@ -599,7 +589,6 @@
   "Link utili": "Enlaces útiles",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Para registrar rutas y mostrarlas correctamente, activa el permiso de ubicación en configuraciones",
   "Apri impostazioni App": "Abrir configuraciones de la aplicación",
-  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
-    "¿Realmente deseas eliminar tu cuenta? Es obligatorio escribir \"delete account\" para proceder.",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "¿Realmente deseas eliminar tu cuenta? Es obligatorio escribir \"delete account\" para proceder.",
   "Digita \"delete account\"": "Escribe \"delete account\""
 }

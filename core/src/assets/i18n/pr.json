@@ -355,11 +355,6 @@
         "formtitle": "Título da rota",
         "formtitleerror": "O campo de título é obrigatório",
         "formtitleplaceholder": "Insira um título",
-        "photoaction": "Carregar",
-        "photoactionshort": "Adicionar",
-        "photoadvice": "Tamanho máximo: 3 fotos",
-        "photoadviceshort": "(máx 3 fotos)",
-        "phototext": "fotos da galeria do telefone",
         "phototextshort": "Fotos",
         "savebtn": "Salvar",
         "title": "Salvar rota",
@@ -599,7 +594,6 @@
   "Link utili": "Links úteis",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Para registrar rotas e exibi-las corretamente, ative a permissão de localização nas configurações",
   "Apri impostazioni App": "Abrir configurações do aplicativo",
-  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
-    "Você realmente deseja excluir sua conta? É obrigatório escrever \"delete account\" para prosseguir.",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Você realmente deseja excluir sua conta? É obrigatório escrever \"delete account\" para prosseguir.",
   "Digita \"delete account\"": "Digite \"delete account\""
 }

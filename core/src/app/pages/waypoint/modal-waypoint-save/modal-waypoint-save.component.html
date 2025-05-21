@@ -31,65 +31,11 @@
         ><span></span
       ></webmapp-form-field>
 
-      <ion-grid>
-        <ion-row *ngIf="!photos?.length">
-          <ion-col size="12">
-            <div class="webmapp-waypoint-modalsave-loadphoto-wrapper">
-              <div class="webmapp-waypoint-modalsave-loadphoto" (click)="addPhotos()">
-                <div class="webmapp-waypoint-modalsave-loadphoto-text">
-                  <div class="webmapp-waypoint-modalsave-loadphoto-action">
-                    {{ "pages.waypoint.modalsave.photoaction" | wmtrans }}
-                  </div>
-                  {{ "pages.waypoint.modalsave.phototext" | wmtrans }}
-                </div>
-                <div class="webmapp-waypoint-modalsave-loadphoto-advice">
-                  {{ "pages.waypoint.modalsave.photoadvice" | wmtrans }}
-                </div>
-              </div>
-            </div>
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col size="4" *ngIf="photos?.length">
-            <div
-              class="
-              webmapp-waypoint-modalsave-imagecontainer
-              webmapp-waypoint-modalsave-addimagecontainer
-              webmapp-waypoint-modalsave-loadphoto
-            "
-              (click)="addPhotos()"
-            >
-              <div class="webmapp-waypoint-modalsave-loadphoto-text">
-                <div class="webmapp-waypoint-modalsave-loadphoto-action">
-                  {{ "pages.waypoint.modalsave.photoactionshort" | wmtrans }}
-                </div>
-                {{ "pages.waypoint.modalsave.phototextshort" | wmtrans }}
-              </div>
-              <div class="webmapp-waypoint-modalsave-loadphoto-advice">
-                {{ "pages.waypoint.modalsave.photoadviceshort" | wmtrans }}
-              </div>
-            </div>
-          </ion-col>
-          <ion-col size="4" *ngFor="let image of photos;let idx = index">
-            <div class="webmapp-waypoint-modalsave-imagecontainer">
-              <ion-icon
-                name="close-outline"
-                class="webmapp-waypoint-modalsave-remove"
-                (click)="remove(idx)"
-              >
-              </ion-icon>
-              <!-- <img class="webmapp-waypoint-modalsave-image" [src]="image.thumbnailURL | cdvphotolibrary"> -->
-              <ng-container *ngIf="image as photoProp">
-                <wm-img
-                  class="webmapp-waypoint-modalsave-image"
-                  [src]="photoProp?.webPath"
-                ></wm-img>
-              </ng-container>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+      <wm-image-picker
+        (startAddPhotos)="startAddPhotos()"
+        (endAddPhotos)="endAddPhotos()"
+        (photosChanged)="onPhotosAdded($event)"
+      ></wm-image-picker>
     </wm-form>
   </ion-list>
 </ion-content>
