@@ -30,7 +30,6 @@ describe('Select ugc_track on map and open details', () => {
     goMap();
     cy.wait(1500);
     cy.get('.ol-viewport .ol-layer canvas').click(click_ugc_track[0], click_ugc_track[1]);
-    cy.get('.ol-viewport .ol-layer canvas').click(click_ugc_track[0], click_ugc_track[1]);
     cy.wait(500);
     cy.get('wm-map-details ion-card-header ion-title').contains(ugcTrack.properties.name);
     cy.get('wm-map-details > ion-fab-button').should('be.visible').click();
