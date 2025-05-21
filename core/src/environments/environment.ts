@@ -40,7 +40,7 @@ export const environment: Environment = {
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
     },
     cargdev: {
-      origin: 'https://carg.dev.webmapp.it',
+      origin: 'https://carg.dev.maphub.it',
       elasticApi: 'https://carg.dev.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/cargdev',
