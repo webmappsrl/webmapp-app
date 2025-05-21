@@ -80,37 +80,6 @@ export class ModalWaypointSaveComponent implements OnInit {
     }
   }
 
-  async addPhotos(): Promise<void> {
-    this._addFormError({photo: true}); // serve a invalidare il form durante il caricamento delle foto
-    const library = await this._cameraSvc.getPhotos();
-
-    await Promise.all(
-      library.map(async libraryItem => {
-        const libraryItemCopy = Object.assign({selected: false}, libraryItem);
-        const photoData = await this._cameraSvc.getPhotoData(libraryItemCopy.webPath);
-        const md5 = Md5.hashStr(JSON.stringify(photoData));
-
-        let exists: boolean = false;
-        for (let p of this.photos) {
-          const pData = await this._cameraSvc.getPhotoData(p.webPath);
-          const pictureMd5 = Md5.hashStr(JSON.stringify(pData));
-          if (md5 === pictureMd5) {
-            exists = true;
-            break;
-          }
-        }
-
-        if (this.photos.length < 3 && !exists) {
-          this.photos.push(libraryItemCopy);
-          this._cdr.detectChanges(); // Forza il refresh della view per visualizzare le foto aggiunte
-        }
-      }),
-    );
-
-    this._removeFormError('photo'); // rimuove l'errore di validazione
-    this._cdr.detectChanges(); // Forza il refresh della view per abilitare il pulsante di salvataggio
-  }
-
   close(): void {
     this._modalCtrl.dismiss({
       dismissed: true,
@@ -125,6 +94,10 @@ export class ModalWaypointSaveComponent implements OnInit {
     return allValid;
   }
 
+  onPhotosAdded(photos: Photo[]): void {
+    this.photos = photos;
+  }
+
   async openModalSuccess(waypoint: WmFeature<Point>): Promise<void> {
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
@@ -135,13 +108,6 @@ export class ModalWaypointSaveComponent implements OnInit {
     });
     await modaSuccess.present();
     await modaSuccess.onDidDismiss();
-  }
-
-  remove(idx: number): void {
-    if (idx > -1) {
-      this.photos.splice(idx, 1);
-    }
-    this._cdr.detectChanges();
   }
 
   async save(): Promise<void> {
@@ -190,5 +156,13 @@ export class ModalWaypointSaveComponent implements OnInit {
       dismissed: false,
       save: true,
     });
+  }
+
+  startAddPhotos(): void {
+    this._addFormError({photo: true});
+  }
+
+  endAddPhotos(): void {
+    this._removeFormError('photo');
   }
 }
