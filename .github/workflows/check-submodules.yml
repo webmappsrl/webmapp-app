@@ -18,21 +18,33 @@ jobs:
       - name: Check Submodules Changes
         id: check_submodules
         run: |
-          # Ottieni l'ultimo commit
-          LAST_COMMIT=$(git rev-parse HEAD)
-
-          # Ottieni il commit precedente
-          PREV_COMMIT=$(git rev-parse HEAD^)
-
-          # Controlla se ci sono cambiamenti nei submodules
-          if git diff --submodule=log $PREV_COMMIT $LAST_COMMIT | grep -q "Submodule"; then
-            echo "submodule_changes=true" >> $GITHUB_OUTPUT
-            echo "changes<<EOF" >> $GITHUB_OUTPUT
-            git diff --submodule=log $PREV_COMMIT $LAST_COMMIT >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
-          else
+          set -e
+          # Trova i submodules modificati
+          SUBMODULE_PATHS=$(git diff --cached --submodule=log HEAD^ HEAD | grep 'Submodule' | awk '{print $2}')
+          if [ -z "$SUBMODULE_PATHS" ]; then
             echo "submodule_changes=false" >> $GITHUB_OUTPUT
+            exit 0
           fi
+          echo "submodule_changes=true" >> $GITHUB_OUTPUT
+          LOGS=""
+          for SUBMODULE in $SUBMODULE_PATHS; do
+            # Estrai old e new commit
+            OLD_NEW=$(git diff --cached --submodule=log HEAD^ HEAD | grep "$SUBMODULE" | grep 'Submodule' | awk '{print $4,$6}')
+            OLD_COMMIT=$(echo $OLD_NEW | awk '{print $1}')
+            NEW_COMMIT=$(echo $OLD_NEW | awk '{print $2}')
+            # Clona solo il submodule
+            git clone --no-checkout $(git config --file .gitmodules --get submodule.$SUBMODULE.url) tmp_submodule
+            cd tmp_submodule
+            git fetch origin $OLD_COMMIT $NEW_COMMIT
+            LOG=$(git log --oneline $OLD_COMMIT..$NEW_COMMIT)
+            cd ..
+            rm -rf tmp_submodule
+            LOGS+="\nSubmodule $SUBMODULE ($OLD_COMMIT → $NEW_COMMIT):\n$LOG\n"
+          done
+          # Salva i log in output
+          echo "logs<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$LOGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Update Commit Message
         if: steps.check_submodules.outputs.submodule_changes == 'true'
@@ -42,21 +54,14 @@ jobs:
           script: |
             const { owner, repo } = context.repo;
             const commit_sha = context.sha;
-
-            // Ottieni i dettagli del commit
             const commit = await github.rest.repos.getCommit({
               owner,
               repo,
               ref: commit_sha
             });
-
-            // Prepara il nuovo messaggio
             const originalMessage = commit.data.commit.message;
-            const submoduleChanges = `${{ steps.check_submodules.outputs.changes }}`;
-
-            const newMessage = `${originalMessage}\n\nCambiamenti nei submodules:\n${submoduleChanges}`;
-
-            // Aggiorna il messaggio del commit
+            const logs = `${{ steps.check_submodules.outputs.logs }}`;
+            const newMessage = `${originalMessage}\n\nLog aggiornamento submodules:${logs}`;
             await github.rest.repos.updateCommit({
               owner,
               repo,
