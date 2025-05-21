@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.9](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.0.9) (2025-05-21)
+
+
+### Bug Fixes
+
+* check all complete by filter values ([2dfed99](https://github.com/webmappsrl/webmapp-app/commit/2dfed9993369bc45bf27ae752643c2791a3d0609))
+* correct hitmap dispatch ([61806ae](https://github.com/webmappsrl/webmapp-app/commit/61806ae163a5fc498883c4f187442a34ad4fda3f))
+* correct hitmap sho ([36b3e25](https://github.com/webmappsrl/webmapp-app/commit/36b3e25ac7fec49647f74ac2efb36c717eaa0e25))
+* test anchor button by attribute ([cd630b8](https://github.com/webmappsrl/webmapp-app/commit/cd630b88ac6e77b051dcf181ccf9463c7ec84216))
+
+
+### Miscellaneous
+
+* update test-e2e ([7e0a230](https://github.com/webmappsrl/webmapp-app/commit/7e0a23081c98cfa5717eef6d0abdf66b8d963eca))
+* update tests e2e ([8a9819b](https://github.com/webmappsrl/webmapp-app/commit/8a9819b31d1e29a9ab12e3f283ecf03da60bbe85))
+
 ## [3.0.8](https://github.com/webmappsrl/webmapp-app/compare/v3.0.7...v3.0.8) (2025-05-16)
 
 
