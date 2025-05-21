@@ -2,7 +2,7 @@ import {confURL, data, openLayer, openTrack} from 'cypress/utils/test-utils';
 
 const flowLineQuoteConfig = {
   flow_line_quote_show: true,
-  flow_line_quote_orange: 1000,
+  flow_line_quote_orange: 900,
   flow_line_quote_red: 1200,
 };
 
@@ -45,7 +45,7 @@ describe('Flow line quote [oc:4727] [https://orchestrator.maphub.it/resources/de
         );
 
         // click livel 2:
-        cy.wrap(canvas).click(canvasWidth * 0.5, canvasHeight * 0.5);
+        cy.wrap(canvas).click(canvasWidth * 0.4, canvasHeight * 0.5);
         cy.get('@flowline').should(
           'contain.text',
           `Level 2: sections partially in high altitude (altitude between ${flow_line_quote_orange} meters and ${flow_line_quote_red} meters)`,
