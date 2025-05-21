@@ -22,6 +22,7 @@ describe('Login offline [oc:4772] [https://orchestrator.maphub.it/resources/deve
   });
 
   it('Should login offline', () => {
+    cy.reload();
     cy.intercept('POST', meUrl, req => {
       req.reply(res => {
         res.send({
