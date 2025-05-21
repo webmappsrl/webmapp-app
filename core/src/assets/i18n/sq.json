@@ -355,11 +355,6 @@
         "formtitle": "Titulli i gjurmës",
         "formtitleerror": "Fusha e titullit është e detyrueshme",
         "formtitleplaceholder": "Fut një titull",
-        "photoaction": "Ngarko",
-        "photoactionshort": "Shto",
-        "photoadvice": "Madhësia maksimale: 3 foto",
-        "photoadviceshort": "(max 3 foto)",
-        "phototext": "foto nga galeria e telefonit",
         "phototextshort": "Foto",
         "savebtn": "Ruaj",
         "title": "Ruaj gjurmën",
@@ -509,11 +504,6 @@
         "formtype": "Lloji i Pikës së Rrugës",
         "formtypeerror": "Lloji i pikës së rrugës është i detyrueshëm",
         "formtypeplaceholder": "Zgjidh",
-        "photoaction": "Ngarko",
-        "photoactionshort": "Shto",
-        "photoadvice": "Madhësia maksimale: 3 foto",
-        "photoadviceshort": "(max 3 foto)",
-        "phototext": "foto nga galeria e telefonit",
         "phototextshort": "Foto",
         "save": "Ruaj ",
         "title": "Regjistro një pikë të rrugës"
@@ -599,7 +589,6 @@
   "Link utili": "Lidhje të dobishme",
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Për të regjistruar gjurmë dhe për t'i shfaqur ato saktë, aktivizo lejen e vendndodhjes në cilësime",
   "Apri impostazioni App": "Hap cilësimet e aplikacionit",
-  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.":
-    "A dëshironi vërtet të fshini llogarinë tuaj? Duhet të shkruani \"delete account\" për të vazhduar.",
+  "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "A dëshironi vërtet të fshini llogarinë tuaj? Duhet të shkruani \"delete account\" për të vazhduar.",
   "Digita \"delete account\"": "Shkruani \"delete account\""
 }
