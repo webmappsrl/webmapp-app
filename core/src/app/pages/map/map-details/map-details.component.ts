@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
+  Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -31,6 +33,7 @@ export class MapDetailsComponent implements AfterViewInit {
   private _initialStep: number = 1;
   private _started: boolean = false;
 
+  @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
 
   height = 700;
@@ -91,6 +94,7 @@ export class MapDetailsComponent implements AfterViewInit {
 
   back(): void {
     this._store.dispatch(backOfMapDetails());
+    this.closeEVT.emit();
   }
 
   onlyTitle(): void {

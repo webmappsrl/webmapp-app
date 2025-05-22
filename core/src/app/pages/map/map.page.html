@@ -200,7 +200,7 @@
       [overlayUrls]="overlayFeatureCollections$|async"
       [overlayXYZ]="'https://tiles.webmapp.it/carg'"
       [overlayGeometry]="hitMapGeometry$|async"
-      (closeEvt)="showDownload$.next(false);mapDetailsCmp.open()"
+      (closeEvt)="closeDownload()"
       (goToEvt)="goToPage($event)"
     ></wm-download>
   </wm-geobox-map>
