@@ -23,7 +23,7 @@ for NAME in "${SUBMODULES[@]}"; do
   if [[ "$OLD_COMMIT" != "$NEW_COMMIT" && -n "$CHANGELOG" ]]; then
     echo "✅ Cambiamenti trovati in $NAME: $OLD_COMMIT → $NEW_COMMIT"
     git add "$SUBMODULE_PATH"
-    git commit -m "feat($NAME): bump to ${NEW_COMMIT:0:7}" -m "$CHANGELOG"
+    git commit -m "chore($NAME): bump to ${NEW_COMMIT:0:7}" -m "$CHANGELOG"
     HAS_CHANGES=true
   else
     echo "ℹ️ Nessun cambiamento rilevante per $NAME"
