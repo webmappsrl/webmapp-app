@@ -239,6 +239,16 @@ export class MapPage {
     this.showDownload$.next(false);
     this.wmMapPositionfocus$.next(false);
     this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
+    this.popup$.next(null);
+  }
+
+  closeDownload(): void {
+    this.showDownload$.next(false);
+    this.currentTrack$.pipe(take(1)).subscribe(track => {
+      if (track != null || this.popup$.value != null) {
+        this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+      }
+    });
   }
 
   async favourite(trackID): Promise<void> {

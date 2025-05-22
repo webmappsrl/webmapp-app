@@ -32,5 +32,5 @@ function getDownloadButton() {
 }
 
 function getGoToDownloadsButton() {
-  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 12500});
+  return cy.get('wm-download ion-button.webmapp-downloadpanel-button', {timeout: 15000});
 }

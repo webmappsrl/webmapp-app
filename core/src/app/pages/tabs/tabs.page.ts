@@ -6,7 +6,11 @@ import {IonTabs} from '@ionic/angular';
 import {confAUTHEnable} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {goToHome, resetMap} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  goToHome,
+  resetMap,
+  wmMapHitMapChangeFeatureById,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 
@@ -55,6 +59,7 @@ export class TabsPage {
       const queryParams = {
         layer,
       };
+      this._store.dispatch(wmMapHitMapChangeFeatureById({id: null}));
       this._urlHandlerSvc.changeURL(tab, queryParams);
     }
   }
