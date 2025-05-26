@@ -83,7 +83,10 @@ export class MapDetailsComponent implements AfterViewInit {
   }
 
   full(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${this.height - 200}px`);
+    this.setAnimations(
+      `${this._getCurrentHeight()}px`,
+      `calc(${this.height - 200}px - env(safe-area-inset-top))`,
+    );
     this.isOpen$.next(true);
   }
 
