@@ -35,9 +35,9 @@ export const environment: Environment = {
     },
     carg: {
       origin: 'https://carg.webmapp.it',
-      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      elasticApi: 'https://carg.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
-      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/carg',
     },
     cargdev: {
       origin: 'https://carg.dev.maphub.it',

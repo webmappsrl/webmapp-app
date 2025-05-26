@@ -2,7 +2,7 @@ import {Environment} from '@wm-types/environment';
 
 export const environment: Environment = {
   production: true,
-  appId: 3,
+  appId: 52,
   shardName: 'geohub',
   shards: {
     geohub: {
@@ -31,9 +31,15 @@ export const environment: Environment = {
     },
     carg: {
       origin: 'https://carg.webmapp.it',
-      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      elasticApi: 'https://carg.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
-      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/carg',
+    },
+    cargdev: {
+      origin: 'https://carg.dev.maphub.it',
+      elasticApi: 'https://carg.dev.maphub.it/api/v2/elasticsearch',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/cargdev',
     },
   },
   redirects: {
