@@ -3,7 +3,7 @@ name: Generate Changelog for Submodule Updates
 on:
   push:
     branches:
-      - develop  # cambia se usi un altro branch
+      - develop # cambia se usi un altro branch
 
 jobs:
   submodule-changelog:
@@ -39,7 +39,7 @@ jobs:
               echo "📦 Submodule $NAME updated: $OLD_COMMIT → $NEW_COMMIT"
 
               cd "$SUBMODULE_PATH"
-              CHANGELOG=$(git log --pretty=format:"- %s" "$OLD_COMMIT..$NEW_COMMIT" || echo "")
+              CHANGELOG=$(git log --pretty=format:"- %s%n%b" "$OLD_COMMIT..$NEW_COMMIT" || echo "")
               cd - > /dev/null
 
               if [[ -n "$CHANGELOG" ]]; then
