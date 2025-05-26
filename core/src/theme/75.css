@@ -84,6 +84,12 @@ wm-home-landing {
   display: block;
   margin-top: 25px !important;
 }
+
+wm-home-landing wm-downloads-ec-track-box {
+  display: block;
+  transform: translateY(60px);
+}
+
 wm-home-landing webmapp-title {
   padding-left: 16px !important;
   font-size: var(--wm-font-size-4xl) !important;
@@ -318,6 +324,7 @@ wm-tab-description .webmapp-pageroute-tabdescription-description {
   line-height: 26px !important;
   padding: 0px !important;
   margin-bottom: 0px !important;
+  max-height: calc(var(--wm-max-description-lines) * 26px) !important;
 }
 wm-tab-description .webmapp-pageroute-tabdescription-description * {
   font-family: 'Merriweather' !important;
