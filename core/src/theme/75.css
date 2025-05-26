@@ -205,6 +205,10 @@ wm-map .map-container .ol-zoom {
   bottom: 50px !important;
 }
 
+wm-map .bottom-right ion-fab-button ion-icon {
+  color: var(--ion-text-color);
+}
+
 wm-track-properties > *:has(*):not(ion-header) {
   padding: var(--wm-75-feature-details-padding);
 }
