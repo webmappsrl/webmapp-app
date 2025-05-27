@@ -11,6 +11,12 @@ export const environment: Environment = {
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
     },
+    geohub2: {
+      origin: 'https://geohub2.maphub.it',
+      elasticApi: 'https://geohub2.maphub.it/api/v2/elasticsearch',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub2',
+    },
     osm2cai: {
       origin: 'https://osm2cai.webmapp.it',
       elasticApi: 'https://elastic-json.webmapp.it/v2/search',
@@ -19,7 +25,7 @@ export const environment: Environment = {
     },
     camminiditalia: {
       origin: 'https://camminiditalia.maphub.it',
-      elasticApi: 'https://elastic-json.webmapp.it/v2/search',
+      elasticApi: 'https://camminiditalia.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditalia',
     },
@@ -30,7 +36,7 @@ export const environment: Environment = {
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditaliadev',
     },
     carg: {
-      origin: 'https://carg.webmapp.it',
+      origin: 'https://carg.maphub.it',
       elasticApi: 'https://carg.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/carg',
