@@ -5,6 +5,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import {ModalController, NavController, Platform} from '@ionic/angular';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
@@ -21,6 +23,8 @@ import {fromLonLat} from 'ol/proj';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {confMAP, confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
+import {filter, map, switchMap, take} from 'rxjs/operators';
+import {WmMapComponent} from '@map-core/components';
 @Component({
   selector: 'webmapp-register',
   templateUrl: './register.page.html',
@@ -28,7 +32,9 @@ import {Feature, LineString} from 'geojson';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterPage implements OnInit, OnDestroy {
+export class RegisterPage implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild(WmMapComponent) mapCmp: WmMapComponent;
+
   private _backBtnSub$: Subscription = Subscription.EMPTY;
   private _timerInterval: any;
 
@@ -55,7 +61,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     seconds: 0,
   };
   trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
-
+  wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
   constructor(
     private _geolocationSvc: GeolocationService,
     private _geoutilsSvc: GeoutilsService,
@@ -103,6 +109,22 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.updateMap();
     });
     this.checkRecording();
+  }
+
+  ngAfterViewInit() {
+    this.mapCmp.isInit$ //TODO: use only for carg
+      .pipe(
+        filter(isInit => isInit),
+        take(1),
+        switchMap(() => this.wmMapHitMapUrl$),
+        filter(url => url != null),
+      )
+      .subscribe(_ => {
+        this.mapCmp.addTileLayer('https://tiles.webmapp.it/carg/{z}/{x}/{y}.png');
+        const currentExtent = this.mapCmp.map.getView().calculateExtent();
+        this.mapCmp.fitView(currentExtent, {maxZoom: 14});
+        this.mapCmp.map.updateSize();
+      });
   }
 
   ngOnDestroy(): void {
