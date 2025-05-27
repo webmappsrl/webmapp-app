@@ -1,5 +1,5 @@
 import {environment} from 'src/environments/environment';
-import {clearUgcData, removeAuth} from '@wm-core/utils/localForage';
+import {clearUgcSynchronizedData, clearUgcDeviceData, removeAuth} from '@wm-core/utils/localForage';
 
 /**
  * Clears the test state.
@@ -9,7 +9,8 @@ import {clearUgcData, removeAuth} from '@wm-core/utils/localForage';
 export function clearTestState(): void {
   cy.clearLocalStorage();
   cy.clearCookies();
-  clearUgcData();
+  clearUgcSynchronizedData();
+  clearUgcDeviceData();
   removeAuth();
 }
 
@@ -124,10 +125,7 @@ export function mockGetPoi(mockFeatures: any): Cypress.Chainable {
     req.reply(res => {
       const newRes = {
         ...res.body,
-        features: [
-          ...(Array.isArray(res.body.features) ? res.body.features : []),
-          mockFeatures,
-        ],
+        features: [...(Array.isArray(res.body.features) ? res.body.features : []), mockFeatures],
       };
       res.send(newRes);
     });
@@ -186,6 +184,7 @@ export function openTrack(trackTitle: string) {
     });
 }
 
+export const originUrl = environment.shards.geohub.origin;
 export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;
 export const confURL = `${environment.shards.geohub.awsApi}/conf/52.json`;
 export const elasticUrl = `${environment.shards.geohub.elasticApi}`;

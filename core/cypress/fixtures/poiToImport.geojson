@@ -1,0 +1,60 @@
+{
+  "type": "Feature",
+  "properties": {
+    "form": {
+      "id": "poi",
+      "index": 0,
+      "title": "Poi geojson file",
+      "description": "This is a test poi geojson for import",
+      "waypointtype": "other"
+    },
+    "name": "Poi geojson file",
+    "type": "waypoint",
+    "uuid": "526ed6bc-3027-441e-917d-88744bfc2532",
+    "app_id": "52",
+    "device": {
+      "model": "iPhone",
+      "platform": "web",
+      "isVirtual": false,
+      "osVersion": "16.6",
+      "appVersion": "0.0.1",
+      "manufacturer": "Google Inc.",
+      "operatingSystem": "ios"
+    },
+    "createdAt": "2025-05-22T06:54:13.059Z",
+    "nominatim": {
+      "lat": "42.9926163",
+      "lon": "13.8300535",
+      "name": "Strada Provinciale 23 Cuprense",
+      "type": "secondary",
+      "osm_id": 58851536,
+      "address": {
+        "road": "Strada Provinciale 23 Cuprense",
+        "town": "Grottammare",
+        "state": "Marche",
+        "county": "Ascoli Piceno",
+        "hamlet": "Petrella",
+        "country": "Italia",
+        "postcode": "63066",
+        "country_code": "it",
+        "ISO3166-2-lvl4": "IT-57",
+        "ISO3166-2-lvl6": "IT-AP"
+      },
+      "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+      "category": "highway",
+      "osm_type": "way",
+      "place_id": 72453438,
+      "importance": 0.05338779812314027,
+      "place_rank": 26,
+      "addresstype": "road",
+      "boundingbox": ["42.9905515", "42.9940737", "13.7685728", "13.8542372"],
+      "display_name": "Strada Provinciale 23 Cuprense, Petrella, Grottammare, Ascoli Piceno, Marche, 63066, Italia"
+    },
+    "updatedAt": "2025-05-22T06:54:13.059Z",
+    "id": 8
+  },
+  "geometry": {
+    "type": "Point",
+    "coordinates": [13.830035271, 42.99254669]
+  }
+}
