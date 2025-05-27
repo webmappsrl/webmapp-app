@@ -23,6 +23,7 @@ import {switchMap, take} from 'rxjs/operators';
 import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 import {Photo} from '@capacitor/camera';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {addFormError, removeFormError} from '@wm-core/utils/form';
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -60,24 +61,6 @@ export class ModalWaypointSaveComponent implements OnInit {
     setTimeout(() => {
       this.displayPosition = this.position;
     }, 2000);
-  }
-  private _addFormError(error): void {
-    this.fg.setErrors({...(this.fg.errors || {}), error});
-  }
-  private _removeFormError(errorKey: string): void {
-    if (!this.fg.errors || !this.fg.errors.error) return;
-
-    const currentErrors = {...this.fg.errors.error};
-    delete currentErrors[errorKey];
-
-    // Se non ci sono più errori, rimuove l'oggetto `error`, altrimenti lo aggiorna
-    if (Object.keys(currentErrors).length === 0) {
-      const newErrors = {...this.fg.errors};
-      delete newErrors.error;
-      this.fg.setErrors(Object.keys(newErrors).length ? newErrors : null);
-    } else {
-      this.fg.setErrors({...this.fg.errors, error: currentErrors});
-    }
   }
 
   close(): void {
@@ -159,10 +142,10 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   startAddPhotos(): void {
-    this._addFormError({photo: true});
+    addFormError(this.fg, {photo: true});
   }
 
   endAddPhotos(): void {
-    this._removeFormError('photo');
+    removeFormError(this.fg, 'photo');
   }
 }
