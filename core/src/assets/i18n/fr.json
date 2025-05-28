@@ -595,5 +595,6 @@
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
   "Apri impostazioni App": "Ouvrir les paramètres de l'application",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Voulez-vous vraiment supprimer votre compte? Vous devez taper \"delete account\" pour continuer.",
-  "Digita \"delete account\"": "Tapez \"delete account\""
+  "Digita \"delete account\"": "Tapez \"delete account\"",
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmation ne correspond pas. Tapez \"delete account\" pour continuer."
 }

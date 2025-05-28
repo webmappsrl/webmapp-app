@@ -590,5 +590,6 @@
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "To record tracks and display them correctly, enable the location permission in the settings",
   "Apri impostazioni App": "Open app settings",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.",
-  "Digita \"delete account\"": "Digita \"delete account\""
+  "Digita \"delete account\"": "Digita \"delete account\"",
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La conferma non corrisponde. Digita \"delete account\" per procedere."
 }

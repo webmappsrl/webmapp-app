@@ -106,7 +106,7 @@ export class ProfilePage implements OnDestroy {
                 const errorAlert = await this._alertCtrl.create({
                   header: this._langSvc.instant('Attenzione'),
                   message: this._langSvc.instant(
-                    'La conferma non corrisponde. Digita "elimina account" per procedere.',
+                    'La conferma non corrisponde. Digita "delete account" per procedere.',
                   ),
                   buttons: [this._langSvc.instant('generic.ok')],
                 });
