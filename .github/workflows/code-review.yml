@@ -1,0 +1,40 @@
+name: 🤖 AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE*'
+      - 'node_modules/**'
+      - 'builds/**'
+      - '.DS_Store'
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    name: AI Code Review
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: 🤖 AI Code Review
+        uses: mattzcarey/code-review-gpt@v0.16.0
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          
+      - name: 📊 Review Summary
+        if: always()
+        run: |
+          echo "✅ Code review completata!"
+          echo "📝 I commenti della review sono stati aggiunti al PR" 
