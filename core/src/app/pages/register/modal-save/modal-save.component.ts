@@ -18,6 +18,7 @@ import {activities} from 'src/app/constants/activities';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {LangService} from '@wm-core/localization/lang.service';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {addFormError, removeFormError} from '@wm-core/utils/form';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -48,24 +49,6 @@ export class ModalSaveComponent implements OnInit {
     private _actionSheetCtrl: ActionSheetController,
     private _store: Store<any>,
   ) {}
-  private _addFormError(error): void {
-    this.fg.setErrors({...(this.fg.errors || {}), error});
-  }
-  private _removeFormError(errorKey: string): void {
-    if (!this.fg.errors || !this.fg.errors.error) return;
-
-    const currentErrors = {...this.fg.errors.error};
-    delete currentErrors[errorKey];
-
-    // Se non ci sono più errori, rimuove l'oggetto `error`, altrimenti lo aggiorna
-    if (Object.keys(currentErrors).length === 0) {
-      const newErrors = {...this.fg.errors};
-      delete newErrors.error;
-      this.fg.setErrors(Object.keys(newErrors).length ? newErrors : null);
-    } else {
-      this.fg.setErrors({...this.fg.errors, error: currentErrors});
-    }
-  }
 
   backToMap(): void {
     this._modalCtrl.dismiss({
@@ -88,11 +71,11 @@ export class ModalSaveComponent implements OnInit {
   }
 
   startAddPhotos(): void {
-    this._addFormError({photo: true});
+    addFormError(this.fg, {photo: true});
   }
 
   endAddPhotos(): void {
-    this._removeFormError('photo');
+    removeFormError(this.fg, 'photo');
   }
 
   photosChanged(photos: Photo[]): void {
