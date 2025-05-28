@@ -23,6 +23,7 @@ import packageJson from 'package.json';
 import {APP_TRANSLATION, APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {initializeConsoleOverride} from './utils/console-override';
 import {appIT} from 'src/assets/i18n/it';
 import {appEN} from 'src/assets/i18n/en';
 import {appFR} from 'src/assets/i18n/fr';
@@ -76,5 +77,7 @@ export const langs: WmTranslations = {
 export class AppModule {
   constructor(private _environmentSvc: EnvironmentService) {
     this._environmentSvc.init(environment);
+    // Inizializza l'override di console dopo aver inizializzato l'environment
+    initializeConsoleOverride();
   }
 }
