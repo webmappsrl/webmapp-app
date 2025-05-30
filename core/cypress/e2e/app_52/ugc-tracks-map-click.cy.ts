@@ -28,7 +28,7 @@ describe('Select ugc_track on map and open details', () => {
     cy.get('ion-alert button').click();
 
     goMap();
-    cy.wait(1500);
+    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
     cy.get('.ol-viewport .ol-layer canvas').click(click_ugc_track[0], click_ugc_track[1]);
     cy.wait(500);
     cy.get('wm-map-details ion-card-header ion-title').contains(ugcTrack.properties.name);
