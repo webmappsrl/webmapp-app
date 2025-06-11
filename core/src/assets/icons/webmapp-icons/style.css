@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'webmapp';
-  src: url('fonts/webmapp.eot?l3u76c');
-  src: url('fonts/webmapp.eot?l3u76c#iefix') format('embedded-opentype'),
-    url('fonts/webmapp.ttf?l3u76c') format('truetype'),
-    url('fonts/webmapp.woff?l3u76c') format('woff'),
-    url('fonts/webmapp.svg?l3u76c#webmapp') format('svg');
+  src:  url('fonts/webmapp.eot?lawp0b');
+  src:  url('fonts/webmapp.eot?lawp0b#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?lawp0b') format('truetype'),
+    url('fonts/webmapp.woff?lawp0b') format('woff'),
+    url('fonts/webmapp.svg?lawp0b#webmapp') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -457,6 +457,9 @@
 .icon-fill-arrow-down:before {
   content: '\e983';
 }
+.icon-uniE984:before {
+  content: '\e984';
+}
 .icon-fill-arrow-right:before {
   content: '\e985';
 }
@@ -496,11 +499,26 @@
 .icon-fill-camera:before {
   content: '\e991';
 }
+.icon-uniE992:before {
+  content: '\e992';
+}
+.icon-uniE993:before {
+  content: '\e993';
+}
+.icon-uniE994:before {
+  content: '\e994';
+}
+.icon-compass-outline:before {
+  content: '\e995';
+}
 .icon-fill-children:before {
   content: '\e996';
 }
 .icon-fill-city-tour:before {
   content: '\e997';
+}
+.icon-map-outline:before {
+  content: '\e998';
 }
 .icon-uniE999:before {
   content: '\e999';
@@ -528,6 +546,12 @@
 }
 .icon-fill-directions:before {
   content: '\e9a1';
+}
+.icon-person-outline:before {
+  content: '\e9a2';
+}
+.icon-pin-distance-line:before {
+  content: '\e9a3';
 }
 .icon-fill-distance:before {
   content: '\e9a4';
@@ -742,27 +766,21 @@
 .icon-fill-with-guide:before {
   content: '\e9ec';
 }
-.icon-uniE984:before {
-  content: '\e984';
+.icon-swimming:before {
+  content: '\e9a7';
 }
-.icon-uniE992:before {
-  content: '\e992';
+.icon-wheelchair:before {
+  content: '\e9db';
 }
-.icon-uniE993:before {
-  content: '\e993';
+.icon-binoculars:before {
+  content: '\e9ed';
 }
-.icon-uniE994:before {
-  content: '\e994';
+.icon-restaurant:before {
+  content: '\e9ee';
 }
-.icon-compass-outline:before {
-  content: '\e995';
+.icon-temples:before {
+  content: '\e9ef';
 }
-.icon-map-outline:before {
-  content: '\e998';
-}
-.icon-person-outline:before {
-  content: '\e9a2';
-}
-.icon-pin-distance-line:before {
-  content: '\e9a3';
+.icon-train:before {
+  content: '\e9f0';
 }
