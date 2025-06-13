@@ -31,13 +31,13 @@ describe('Select ugc_track on map and open details', () => {
     cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
     cy.get('.ol-viewport .ol-layer canvas').click(click_ugc_track[0], click_ugc_track[1]);
     cy.wait(500);
-    cy.get('wm-map-details ion-card-header ion-title').contains(ugcTrack.properties.name);
+    cy.get('[e2e-map-details-title]').contains(ugcTrack.properties.name);
     cy.get('wm-map-details > ion-fab-button').should('be.visible').click();
     cy.wait(500);
     cy.get('.ol-viewport .ol-layer canvas').click(
       second_click_ugc_track[0],
       second_click_ugc_track[1],
     );
-    cy.get('wm-map-details ion-card-header ion-title').contains(ugcTrack.properties.name);
+    cy.get('[e2e-map-details-title]').contains(ugcTrack.properties.name);
   });
 });

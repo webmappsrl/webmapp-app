@@ -51,7 +51,7 @@ function iterateUntilEdgeButtonDoesNotExist(selectedTrackId, direction) {
       lastTrackId = edges[selectedTrackId][edgeKey][0];
       const edgeTrack = ecTracks.find(track => track.id === lastTrackId);
       clickFunction();
-      cy.get('wm-map-details ion-title').should('contain', edgeTrack.name);
+      cy.get('[e2e-map-details-title]').should('contain', edgeTrack.name);
       iterateUntilEdgeButtonDoesNotExist(lastTrackId, direction);
     }
   });

@@ -56,7 +56,7 @@ describe('Show correct ec_track details', () => {
     openTrack(data.tracks.exampleOne);
     cy.wait('@getApiTrack');
 
-    cy.get('wm-map-details ion-title').should('contain', ec_track_properties.name.en);
+    cy.get('[e2e-map-details-title]').should('contain', ec_track_properties.name.en);
   });
 
   it('should show correct description on ec_track details', () => {

@@ -261,7 +261,7 @@ wm-track-properties .wm-track-details-download {
   order: 14 !important;
 }
 
-wm-map-details ion-card ion-card-header ion-title {
+wm-map-details ion-card ion-card-header .webmapp-info-header-container > ion-label {
   font-family: var(--wm-75-font-family-title) !important;
   font-size: var(--wm-font-size-4xl);
   color: var(--ion-text-color);
@@ -312,8 +312,9 @@ wm-map-details::after {
   z-index: 1;
 }
 
-wm-map-details ion-card ion-card-header .webmapp-info-header-container ion-title {
-  padding: 8px 16px !important;
+wm-map-details ion-card ion-card-header .webmapp-info-header-container > ion-label {
+  margin: 8px 16px;
+  padding: 0px;
 }
 
 wm-tab-howto .webmapp-walkability-label {
@@ -586,7 +587,11 @@ wm-map-details ion-card ion-card-header .webmapp-pagepoi-info-header-title {
   line-height: 29px !important;
   padding: 8px 16px;
 }
-wm-map-details ion-card:has(wm-poi-properties) ion-card-header ion-title {
+wm-map-details
+  ion-card:has(wm-poi-properties)
+  ion-card-header
+  .webmapp-info-header-container
+  > ion-label {
   display: none !important;
 }
 
