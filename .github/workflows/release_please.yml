@@ -25,4 +25,3 @@ jobs:
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
           pull-request-title-pattern: 'release ${component} ${version}'
           pull-request-header: ':robot: I have created a release. Changelog updated with this data:'
-          changelog-notes-type: github
