@@ -1,5 +1,93 @@
 # Changelog
 
+## [3.1.0](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0) (2025-06-13)
+
+
+### Features
+
+* **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
+* new minor 3.1 ([db7a193](https://github.com/webmappsrl/webmapp-app/commit/db7a1935a635ed182a86c73d7a03b954dd36fb24))
+* **wm-types:** bump to 858fd88 ([2b73a94](https://github.com/webmappsrl/webmapp-app/commit/2b73a94214fc7158572677b5d13f4179e3d29320))
+
+
+### Bug Fixes
+
+* check all complete by filter values ([2dfed99](https://github.com/webmappsrl/webmapp-app/commit/2dfed9993369bc45bf27ae752643c2791a3d0609))
+* correct hitmap dispatch ([61806ae](https://github.com/webmappsrl/webmapp-app/commit/61806ae163a5fc498883c4f187442a34ad4fda3f))
+* correct hitmap sho ([36b3e25](https://github.com/webmappsrl/webmapp-app/commit/36b3e25ac7fec49647f74ac2efb36c717eaa0e25))
+* test anchor button by attribute ([cd630b8](https://github.com/webmappsrl/webmapp-app/commit/cd630b88ac6e77b051dcf181ccf9463c7ec84216))
+
+
+### Miscellaneous
+
+* add direction.svg and update font styles in 75.css ([3775ccc](https://github.com/webmappsrl/webmapp-app/commit/3775ccc691ec166f75a2fb2414bab2e956d5a18a))
+* add MetaComponent and custom css ([5856894](https://github.com/webmappsrl/webmapp-app/commit/585689445e2cde34fce8e3e924f8f288bd79f271))
+* **ci:** ✨ add release workflow for minor versions ([5416168](https://github.com/webmappsrl/webmapp-app/commit/5416168e3a33f2be3c60b08a54f121590c2816e0))
+* **e2e:** ✨ add UGC import tests for tracks and POIs ([99b383a](https://github.com/webmappsrl/webmapp-app/commit/99b383a6490c19f99a10d6cdf5b10ef461ec1ab2))
+* enrich changelog with commit descriptions ([34a5a8c](https://github.com/webmappsrl/webmapp-app/commit/34a5a8cb9047773a069747e78b040485c4dd3785))
+* **environment:** update appId and add new shard configuration ([4b01f61](https://github.com/webmappsrl/webmapp-app/commit/4b01f6123c376133022c5371b31c01d8096a6eb5))
+* **i18n:** added missing translations oc 5617 ([a5b3ad2](https://github.com/webmappsrl/webmapp-app/commit/a5b3ad20a678d0688385204cb9176797a3fb1902))
+* manage mapDetails with ugc oc:5228 ([07a414c](https://github.com/webmappsrl/webmapp-app/commit/07a414c6bf3de66a3719e4eeb421ca5a3ba5b617))
+* **map-core:** changelog for bump to 56cb844 ([65e15af](https://github.com/webmappsrl/webmapp-app/commit/65e15af2b775308419afa0d38e3eab862e44ec54))
+* **map-core:** changelog for bump to 5c49e47 ([cb1de94](https://github.com/webmappsrl/webmapp-app/commit/cb1de9411c70eb021c2a51ad4e673aade2bde40b))
+* **map-core:** changelog for bump to 6ac6c6c ([5fc05a3](https://github.com/webmappsrl/webmapp-app/commit/5fc05a37bf64a82695849eaecdb07abbb6eb38a4))
+* **map-core:** changelog for bump to d189285 ([117b406](https://github.com/webmappsrl/webmapp-app/commit/117b4062e6f2bb2791a53cfea3f35c004b9a2003))
+* **map-core:** changelog for bump to d3fd181 ([2c40623](https://github.com/webmappsrl/webmapp-app/commit/2c40623b54a5881727c41f74e17f14e17fe73f57))
+* **map.page:** update styles ([797fc15](https://github.com/webmappsrl/webmapp-app/commit/797fc1573806ffeafba64bf8b41961397974c172))
+* **poi-properties:** add support for embedded elements ([#124](https://github.com/webmappsrl/webmapp-app/issues/124)) ([a818bbf](https://github.com/webmappsrl/webmapp-app/commit/a818bbf7ca7eb33669186f16343a5c536db31a79))
+* **submodule:** 🔧 update wm-core submodule to latest commit ([93fd6d3](https://github.com/webmappsrl/webmapp-app/commit/93fd6d3ea494e0f8347160fe9ef0f869c0b2c3fd))
+* update 75 styles ([539296e](https://github.com/webmappsrl/webmapp-app/commit/539296ece8319c87b56502ccbe088cc3d29843f7))
+* Update 75.css ([ec60fbc](https://github.com/webmappsrl/webmapp-app/commit/ec60fbce04f7c6beaf76003d747dcb913a15d583))
+* Update 75.css for theme changes ([c50cce4](https://github.com/webmappsrl/webmapp-app/commit/c50cce41b173efa84256e1d839a5121fe0ed4650))
+* Update 75.css in core/src/theme ([590e55e](https://github.com/webmappsrl/webmapp-app/commit/590e55e59d8d28e91c671c1388fb0b738b2f82bf))
+* Update 75.css with theme changes ([ed5562e](https://github.com/webmappsrl/webmapp-app/commit/ed5562e27527ead519abea7e740925aebadee9c3))
+* Update app.module.ts and map-details.component.ts ([7d9238e](https://github.com/webmappsrl/webmapp-app/commit/7d9238e07bbc21c97c1250260dd67ff3709acf20))
+* Update component names and styles in theme 75.css ([2f945f0](https://github.com/webmappsrl/webmapp-app/commit/2f945f0ac37a3b4cc60f879069ca7b8ea762bae9))
+* Update conf and ecPoi.properties parameters name oc:5452 ([#129](https://github.com/webmappsrl/webmapp-app/issues/129)) ([4472bfb](https://github.com/webmappsrl/webmapp-app/commit/4472bfb52f2041dd0c94bd53623d600ceffe6222))
+* update e2e tests ([e8d81ec](https://github.com/webmappsrl/webmapp-app/commit/e8d81ec15399708bf0f62af152c5c53b1deb3b25))
+* update font families in theme CSS ([b596835](https://github.com/webmappsrl/webmapp-app/commit/b596835ccbaca1efd53e8dfcc7208fc0e336f2ca))
+* Update font sizes and styles in theme CSS ([0d7ed57](https://github.com/webmappsrl/webmapp-app/commit/0d7ed575480859bd0cdc787f78d8e85a84e9255a))
+* Update getDistanceFromCurrentLocation method in PoiPropertiesComponent ([#119](https://github.com/webmappsrl/webmapp-app/issues/119)) ([9b52f78](https://github.com/webmappsrl/webmapp-app/commit/9b52f783f12bbe500706d8309bc7e8e97311922d))
+* update layers view oc: 5162 ([#108](https://github.com/webmappsrl/webmapp-app/issues/108)) ([8dec572](https://github.com/webmappsrl/webmapp-app/commit/8dec572fb5682fab7bbe4c394b75527acc231794))
+* update layers view oc: 5201 ([#109](https://github.com/webmappsrl/webmapp-app/issues/109)) ([26d33c2](https://github.com/webmappsrl/webmapp-app/commit/26d33c217e98b81b4c0339ffea92ef2b612c6609))
+* update layers view oc:5203 ([#110](https://github.com/webmappsrl/webmapp-app/issues/110)) ([1e6bab7](https://github.com/webmappsrl/webmapp-app/commit/1e6bab7451ffec0d3d8de1a237614b9ae56a9476))
+* Update map page HTML and SCSS oc:5363 ([#122](https://github.com/webmappsrl/webmapp-app/issues/122)) ([45db5ea](https://github.com/webmappsrl/webmapp-app/commit/45db5ea4c49e1465f5d11df68ae455386838741d))
+* update map-detail template ([4f71e0d](https://github.com/webmappsrl/webmapp-app/commit/4f71e0d3437fb88beeba65cba03c3a7d0a98710a))
+* Update map-details.component.scss, map.page.html, and tabs.page.ts oc:5298 ([#113](https://github.com/webmappsrl/webmapp-app/issues/113)) ([f342d42](https://github.com/webmappsrl/webmapp-app/commit/f342d42f8189fce2edc3d9585127b5f58ec9b008))
+* Update map-details.component.ts, webmapp-icons fonts and style.css ([2445372](https://github.com/webmappsrl/webmapp-app/commit/2445372a94d2f548f347ba1d0309d1f4ff521aa0))
+* Update poi-properties component oc:5275 ([#112](https://github.com/webmappsrl/webmapp-app/issues/112)) ([1fea37b](https://github.com/webmappsrl/webmapp-app/commit/1fea37bf5729c38c7adb4ba7561f46adb9f4ecce))
+* Update poi-properties.component.html ([#115](https://github.com/webmappsrl/webmapp-app/issues/115)) ([219fe3c](https://github.com/webmappsrl/webmapp-app/commit/219fe3c5eead46058c7a65daf1bb7cce037b3691))
+* Update subproject ([e213bc5](https://github.com/webmappsrl/webmapp-app/commit/e213bc51495f40aaf10f1f80cfd46a89967608de))
+* Update subproject theme/75.css ([971d179](https://github.com/webmappsrl/webmapp-app/commit/971d1792c5a993df63b376ea667cdfd9c2cacfa6))
+* Update surge deployment scripts and theme styles ([a9c8cdc](https://github.com/webmappsrl/webmapp-app/commit/a9c8cdcb4a898608e523c590b42edbc454762b40))
+* update test-e2e ([7e0a230](https://github.com/webmappsrl/webmapp-app/commit/7e0a23081c98cfa5717eef6d0abdf66b8d963eca))
+* update tests e2e ([c79bd16](https://github.com/webmappsrl/webmapp-app/commit/c79bd16dc0af8f693e18a73c083eb7431b4d61e7))
+* update tests e2e ([8a9819b](https://github.com/webmappsrl/webmapp-app/commit/8a9819b31d1e29a9ab12e3f283ecf03da60bbe85))
+* Update theme CSS for POI display ([deeeed7](https://github.com/webmappsrl/webmapp-app/commit/deeeed7c3ec602c21ec8d04c2cd4c1db77e6a983))
+* Update theme CSS for version 75 ([7eb611b](https://github.com/webmappsrl/webmapp-app/commit/7eb611be7f337144f505c1dde900975b211b7f8f))
+* Update theme CSS for wm-map-details component ([46a005e](https://github.com/webmappsrl/webmapp-app/commit/46a005e85dadbe44ef7fb52ffb7cb517edaf8c54))
+* Update theme CSS for wm-status-filter, wm-map-details, wm-search-box, and wm-poi-box ([5e44bb2](https://github.com/webmappsrl/webmapp-app/commit/5e44bb2721841be7728249373aa0350af0f213e8))
+* Update webmapp icons oc: 5714 ([#136](https://github.com/webmappsrl/webmapp-app/issues/136)) ([5757b95](https://github.com/webmappsrl/webmapp-app/commit/5757b9596498d6ff43b59db122f8e082dacca0ac))
+* update webmapp-icons font files ([#116](https://github.com/webmappsrl/webmapp-app/issues/116)) ([bd16159](https://github.com/webmappsrl/webmapp-app/commit/bd161591c00be4bb78a4636b592964db5dbd235a))
+* **wm-core:** bump to 02473e8 ([4a6f54b](https://github.com/webmappsrl/webmapp-app/commit/4a6f54bd124abca18d7ca833c404d781f1587941))
+* **wm-core:** changelog for bump to 125a36f ([ebcc34c](https://github.com/webmappsrl/webmapp-app/commit/ebcc34ce3699ffe9816740af1551741b9453264e))
+* **wm-core:** changelog for bump to 2a64c6f ([800822c](https://github.com/webmappsrl/webmapp-app/commit/800822cc853fe1de0d0cc9609685ecff776ce91f))
+* **wm-core:** changelog for bump to 2bf28c0 ([ed59897](https://github.com/webmappsrl/webmapp-app/commit/ed598970451020108113498fc91701e0447d75e7))
+* **wm-core:** changelog for bump to 2f5a730 ([bdff3a2](https://github.com/webmappsrl/webmapp-app/commit/bdff3a2626e77501e8bbf573a410f1767beffd46))
+* **wm-core:** changelog for bump to 3e39d25 ([c7b56b6](https://github.com/webmappsrl/webmapp-app/commit/c7b56b6901db8a481082d383d32c91d84d7c5a9b))
+* **wm-core:** changelog for bump to 57a6a08 ([98d09ef](https://github.com/webmappsrl/webmapp-app/commit/98d09ef287bbb2e95b550f5f89e29e29ff0d6941))
+* **wm-core:** changelog for bump to 811c1c8 ([47c06a9](https://github.com/webmappsrl/webmapp-app/commit/47c06a903e3761fc1cb75b3496687e1cdba9bc35))
+* **wm-core:** changelog for bump to 8126351 ([ea6c7c5](https://github.com/webmappsrl/webmapp-app/commit/ea6c7c5ba5639ba3a29392b53b58f1490ed21759))
+* **wm-core:** changelog for bump to a16e565 ([5995766](https://github.com/webmappsrl/webmapp-app/commit/599576607a5c2b672e996892003da880b470be2c))
+* **wm-core:** changelog for bump to b204ed8 ([363fd71](https://github.com/webmappsrl/webmapp-app/commit/363fd71db8e498cb58aeded83c41bc1b98a188c2))
+* **wm-core:** changelog for bump to beb7f1a ([37c1804](https://github.com/webmappsrl/webmapp-app/commit/37c180450258e256e04371b2aedf342e1d84dbc8))
+* **wm-core:** changelog for bump to cdd8f71 ([5a250b2](https://github.com/webmappsrl/webmapp-app/commit/5a250b29d8020bf63676c3cabf6e45d5b413039d))
+* **wm-core:** changelog for bump to eb2b2f1 ([cfd963b](https://github.com/webmappsrl/webmapp-app/commit/cfd963b49779df6107915100e2dc0193c2d15102))
+* **wm-types:** changelog for bump to 4330974 ([824810f](https://github.com/webmappsrl/webmapp-app/commit/824810fa0a51fbbd1f2e018204370a556b6f1825))
+* **wm-types:** changelog for bump to abe7232 ([fcf3a21](https://github.com/webmappsrl/webmapp-app/commit/fcf3a21d93c71e7e69d4f68cb90fb2f2c60de8b9))
+* **wm-types:** changelog for bump to d761839 ([1ad6a48](https://github.com/webmappsrl/webmapp-app/commit/1ad6a489826117e556226112b88f3645ff0c0d5e))
+* **workflows:** 🔧 update release please workflows with changelog notes type ([cab80f4](https://github.com/webmappsrl/webmapp-app/commit/cab80f45d3d95581d4653c8628ee9626983b3abb))
+
 ## [3.0.9](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.0.9) (2025-06-13)
 
 
