@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - 'v[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: Make a release (minor)
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Release Please Action
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: webmapp-app
+          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
+          pull-request-title-pattern: 'release ${component} ${version}'
+          pull-request-header: ':robot: I have created a release. Changelog updated with this data:'
