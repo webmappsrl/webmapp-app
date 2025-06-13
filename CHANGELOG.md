@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.1.0 (2025-06-13)
+
+## What's Changed
+* 🔧 chore(modal-save): integrate wm-image-picker for photo management oc:oc:5435 by @peco11 in https://github.com/webmappsrl/webmapp-app/pull/131
+* 🔧 chore(map-details): add close event emitter oc:5573 by @peco11 in https://github.com/webmappsrl/webmapp-app/pull/132
+* 🐛 fix(map-details): adjust animation height calculation oc:5591 by @peco11 in https://github.com/webmappsrl/webmapp-app/pull/133
+* refactor(modal-save): ♻️ replace custom form error management with utility functions oc:5582 by @peco11 in https://github.com/webmappsrl/webmapp-app/pull/134
+* improve(core): ✨ add console override for conditional logging by @peppedeka in https://github.com/webmappsrl/webmapp-app/pull/135
+* chore: Update webmapp icons oc: 5714 by @RubensGarofalo in https://github.com/webmappsrl/webmapp-app/pull/136
+
+
+**Full Changelog**: https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0
+
 ## [3.0.9](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.0.9) (2025-06-13)
 
 
