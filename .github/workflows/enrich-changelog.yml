@@ -1,0 +1,30 @@
+name: Enrich Changelog
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  enrich-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Enrich Changelog
+        run: |
+          chmod +x ./enrich-changelog-with-body.sh
+          ./enrich-changelog-with-body.sh
+
+      - name: Commit and push if changed
+        run: |
+          git add CHANGELOG.md
+          git diff --staged --quiet || (git commit -m "chore: enrich changelog with commit descriptions" && git push)
