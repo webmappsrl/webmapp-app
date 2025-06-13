@@ -70,8 +70,15 @@ webmapp-map-page {
     --background-hover-opacity: 0;
   }
   .webmapp-info-header-container {
-    ion-title {
+    > ion-label {
       text-align: left;
+      font-size: unset;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 6px;
     }
     .webmapp-pagepoi-info-header {
       width: 100%;
@@ -97,9 +104,6 @@ webmapp-map-page {
         }
       }
     }
-  }
-  ion-title {
-    font-size: unset;
   }
 
   .bottom-right,
