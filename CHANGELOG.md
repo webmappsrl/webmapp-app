@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.1.1](https://github.com/webmappsrl/webmapp-app/compare/v3.1.0...v3.1.1) (2025-06-16)
+
+
+### Bug Fixes
+
+* **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([3fbd200](https://github.com/webmappsrl/webmapp-app/commit/3fbd200e42c75dd2ca6b222dbe44fbeb1e913053))
+* enrich changelog with commit descriptions ([ee44978](https://github.com/webmappsrl/webmapp-app/commit/ee449785a13e4d0611a28cf6c57431d9ee4d3c81))
+
 ## [3.1.0](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0) (2025-06-16)
 
 
