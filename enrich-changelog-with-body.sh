@@ -41,42 +41,6 @@ while IFS= read -r line; do
   # Trasforma i riferimenti OC in link in ogni riga (si ferma appena finisce la sequenza numerica)
   line=$(echo "$line" | sed -E 's/oc[: ]*([0-9]+)([^0-9]|$)/<a href="https:\/\/orchestrator\.maphub\.it\/resources\/customer-stories\/\1" target="_blank" rel="noopener noreferrer">OC[\1]<\/a>\2/g')
   echo "$line" >> "$TMPFILE"
-  # Cerca una riga con commit hash (es. ([abc1234](https://.../commit/abc1234)))
-  if [[ $line =~ \(\[([a-f0-9]{7,40})\]\(https://github\.com/.*/commit/([a-f0-9]{7,40})\)\) ]]; then
-    commit_sha="${BASH_REMATCH[1]}"
-    # Leggi la prossima riga senza avanzare il ciclo
-    read -r next_line
-    # Se la prossima riga è il marker, copia il marker e tutte le righe indentate (descrizione già presente)
-    if [[ "$next_line" == "<!-- COMMIT_DESC -->" ]]; then
-      echo "$next_line" >> "$TMPFILE"
-      while IFS= read -r desc_line; do
-        if [[ "$desc_line" =~ ^[[:space:]] ]]; then
-          # Trasforma i riferimenti OC in link anche nella descrizione
-          desc_line=$(echo "$desc_line" | sed -E 's/oc[: ]*([0-9]+)([^0-9]|$)/<a href="https:\/\/orchestrator\.maphub\.it\/resources\/customer-stories\/\1" target="_blank" rel="noopener noreferrer">OC[\1]<\/a>\2/g')
-          echo "$desc_line" >> "$TMPFILE"
-        else
-          line="$desc_line"
-          break
-        fi
-      done
-    else
-      # Prendi il body del commit (escludi la prima riga)
-      body=$(git log -1 --pretty=%B "$commit_sha" | tail -n +2)
-      if [[ -n "$body" ]]; then
-        # Trasforma i riferimenti OC in link anche nel body
-        body=$(echo "$body" | sed -E 's/oc[: ]*([0-9]+)([^0-9]|$)/<a href="https:\/\/orchestrator\.maphub\.it\/resources\/customer-stories\/\1" target="_blank" rel="noopener noreferrer">OC[\1]<\/a>\2/g')
-        # Aggiungi il marker e il body indentato
-        echo "<!-- COMMIT_DESC -->" >> "$TMPFILE"
-        while IFS= read -r body_line; do
-          echo "    $body_line" >> "$TMPFILE"
-        done <<< "$body"
-      fi
-      # Se avevamo letto una riga, la processiamo normalmente
-      if [[ -n "$next_line" ]]; then
-        echo "$next_line" >> "$TMPFILE"
-      fi
-    fi
-  fi
 done < "$CHANGELOG"
 
 mv "$TMPFILE" "$CHANGELOG"
