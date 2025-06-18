@@ -5,7 +5,7 @@ wm-map-details {
     top: env(safe-area-inset-top, 30px); // for ios 11.2 and onwards
   }
   .wm-drag {
-    width: 100%;
+    width: calc(100% - 20px);
     height: auto;
     text-align: center;
     display: block;

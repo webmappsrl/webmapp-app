@@ -11,7 +11,9 @@ describe('Track releted poi [oc:4735] [https://orchestrator.maphub.it/resources/
     openLayer(data.layers.ecTrack);
     openTrack(data.tracks.exampleTwo);
 
-    cy.get('wm-map-details').contains('ion-title', data.tracks.exampleTwo).should('exist');
+    cy.get('wm-map-details')
+      .contains('[e2e-map-details-title]', data.tracks.exampleTwo)
+      .should('exist');
     cy.get('wm-track-related-poi').should('exist');
   });
 
@@ -23,14 +25,14 @@ describe('Track releted poi [oc:4735] [https://orchestrator.maphub.it/resources/
         .contains(data.tracks.exampleTwoRelatedPoi)
         .should('exist');
 
-      cy.get('ion-title').contains(data.tracks.exampleTwo).should('exist');
+      cy.get('[e2e-map-details-title]').contains(data.tracks.exampleTwo).should('exist');
     });
   });
 
   it('Should viusalize only track detail when click on close button', () => {
     cy.get('wm-map-details').within(() => {
       cy.get('ion-fab-button.wm-close-btn').click();
-      cy.get('ion-title').contains(data.tracks.exampleTwo).should('exist');
+      cy.get('[e2e-map-details-title]').contains(data.tracks.exampleTwo).should('exist');
       cy.get('.webmapp-pagepoi-info-header-title').should('not.exist');
     });
   });

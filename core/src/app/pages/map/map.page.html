@@ -40,17 +40,17 @@
           <ng-container
             *ngIf="(currentUgcPoiProperties$|async) as ugcPoiProperties;else titleTrack"
           >
-            <ion-title>
+            <ion-label e2e-map-details-title>
               {{ugcPoiProperties.name|wmtrans}}
               <wm-updated-at [updatedAt]="ugcPoiProperties?.updatedAt"></wm-updated-at>
-            </ion-title>
+            </ion-label>
           </ng-container>
           <ng-template #titleTrack>
             <ng-container *ngIf="currentTrack$|async as currentTrack;">
-              <ion-title>
+              <ion-label e2e-map-details-title>
                 {{currentTrack?.properties?.name|wmtrans }}
                 <wm-updated-at [updatedAt]="currentTrack?.properties?.updatedAt"></wm-updated-at
-              ></ion-title>
+              ></ion-label>
             </ng-container>
           </ng-template>
         </div>
