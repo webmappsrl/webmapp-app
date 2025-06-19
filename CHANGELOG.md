@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.1 (2025-06-19)
+
+**Full Changelog**: https://github.com/webmappsrl/webmapp-app/compare/v3.1.0...v3.1.1
+
 ## [3.1.0](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0) (2025-06-16)
 
 
