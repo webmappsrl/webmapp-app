@@ -26,6 +26,7 @@
     wmMapPosition
     [wmMapPositioncurrentLocation]="currentPosition$|async"
     [wmMapPositionfocus]="focusPosition$|async"
+    [wmMapPositionCenter]="centerPositionEvt$|async"
     wmMapTrack
     [track]="currentTrack$|async"
     [wmMapTrackColor]="trackColor$|async"
@@ -137,6 +138,9 @@
       vertical="bottom"
       horizontal="end"
     >
+      <ion-fab-button (click)="centerPositionEvt$.next((!centerPositionEvt$.value)||false)">
+        <ion-icon name="navigate-outline" color="primary"></ion-icon>
+      </ion-fab-button>
       <wm-btn-orientation
         [degrees]="wmapregister.mapDegrees"
         (click)="wmapregister.orientNorth()"

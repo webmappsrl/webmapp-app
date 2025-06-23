@@ -152,9 +152,14 @@
   left: 10px;
 }
 
-.wm-fab-container{
+.wm-fab-container {
   bottom: 33px;
-  ion-fab-button{
+  > ion-fab-button {
+    height: 42px;
+    width: 42px;
+    margin: 8px;
+  }
+  ion-fab-button {
     --background: var(--wm-color-light);
   }
 }

@@ -40,6 +40,7 @@ export class RegisterPage implements OnInit, OnDestroy, AfterViewInit {
 
   actualSpeed: number = 0;
   averageSpeed: number = 0;
+  centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
   confMap$: Observable<any> = this._store.select(confMAP);
   confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange;
