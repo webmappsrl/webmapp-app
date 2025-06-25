@@ -1,0 +1,13 @@
+wm-home > .root {
+  overflow-x: hidden;
+}
+
+wm-home .wm-home-header-container {
+  padding-top: 0px !important;
+  width: 103%;
+  transform: translate(-6px, -5px);
+}
+
+wm-home .wm-home-header-container > wm-inner-component-html {
+  padding: 0px !important;
+}
