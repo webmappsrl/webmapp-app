@@ -6,8 +6,9 @@ import {Environment} from '@wm-types/environment';
 
 export const environment: Environment = {
   production: false,
-  appId: 52,
-  shardName: 'geohub',
+  debug: true,
+  appId: 1,
+  shardName: 'carg',
   shards: {
     geohub: {
       origin: 'https://geohub.webmapp.it',
@@ -46,16 +47,16 @@ export const environment: Environment = {
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/camminiditaliadev',
     },
     carg: {
+      origin: 'https://carg.geosciences-ir.it',
+      elasticApi: 'https://carg.geosciences-ir.it/api/v2/elasticsearch',
+      graphhopperHost: 'https://graphhopper.webmapp.it/',
+      awsApi: 'https://carg.geosciences-ir.it/storage/wmfe/carg',
+    },
+    cargdev: {
       origin: 'https://carg.maphub.it',
       elasticApi: 'https://carg.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/carg',
-    },
-    cargdev: {
-      origin: 'https://carg.dev.maphub.it',
-      elasticApi: 'https://carg.dev.maphub.it/api/v2/elasticsearch',
-      graphhopperHost: 'https://graphhopper.webmapp.it/',
-      awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/cargdev',
     },
   },
   redirects: {
