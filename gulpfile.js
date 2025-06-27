@@ -45,7 +45,7 @@ const CONSOLE_COLORS = {
 };
 const APIGEOHUB = 'https://geohub.webmapp.it';
 const APIOSM2CAI = 'https://osm2cai.cai.it';
-const APICARG = 'https://carg.maphub.it';
+const APICARG = 'https://carg.geosciences-ir.it/';
 let API = APIGEOHUB;
 const wrongInstanceVersion = [
   'fumaiolosentieri',
