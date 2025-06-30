@@ -16,13 +16,13 @@
     [wmMapGeojson]="position"
   ></wm-map>
 
-  <ion-list class="webmapp-modalwaypoint-itemlist">
+  <ion-list class="webmapp-modalwaypoint-itemlist" #formContainer>
     <ion-item class="webmapp-formfield-item">
       <ion-label class="webmapp-formfield-label" position="stacked">
         {{  nominatim?.display_name  | wmtrans }}
       </ion-label>
     </ion-item>
-    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event">
+    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="setFormGroup($event)">
       <webmapp-form-field
         [icon]="'webmapp-icon-camera'"
         [iconColor]="'secondary'"
@@ -45,7 +45,7 @@
     <ion-button
       class="webmapp-modalwaypoint-savebtn"
       (click)="save()"
-      [disabled]="fg ==null || (fg!=null &&fg.invalid)"
+      [disabled]="formGroup == null || (formGroup != null &&formGroup.invalid) || !(seeAllForm$|async)"
     >
       {{ "pages.waypoint.modalsave.save" | wmtrans }}
     </ion-button>

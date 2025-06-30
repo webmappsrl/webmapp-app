@@ -1,13 +1,10 @@
 import {LineString} from 'geojson';
 import {Observable, from} from 'rxjs';
-import {Md5} from 'ts-md5';
 
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {UntypedFormGroup} from '@angular/forms';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Photo} from '@capacitor/camera';
-import {ActionSheetController, AlertController, ModalController} from '@ionic/angular';
+import {ActionSheetController, AlertController, IonContent, ModalController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
-import {CameraService} from '@wm-core/services/camera.service';
 import {DeviceService} from '@wm-core/services/device.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
 import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
@@ -19,18 +16,21 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {LangService} from '@wm-core/localization/lang.service';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {addFormError, removeFormError} from '@wm-core/utils/form';
+import {BaseFormVisibilityComponent} from 'src/app/components/base-form-visibility.component.ts/base-form-visibility.component';
 
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
   styleUrls: ['./modal-save.component.scss'],
 })
-export class ModalSaveComponent implements OnInit {
+export class ModalSaveComponent extends BaseFormVisibilityComponent implements OnInit {
+  @ViewChild(IonContent, {static: false}) ionContent: IonContent;
+  @ViewChild('formContainer', {static: false}) formContainer: ElementRef;
+
   acquisitionFORM$: Observable<any[]>;
   public activities = activities;
   public activity: string;
   public description: string;
-  public fg: UntypedFormGroup;
   public isValidArray: boolean[] = [false, false];
   public photos: Photo[] = [];
   public recordedFeature: WmFeature<LineString>;
@@ -44,11 +44,12 @@ export class ModalSaveComponent implements OnInit {
     private _deviceSvc: DeviceService,
     private _langSvc: LangService,
     private _alertController: AlertController,
-    private _cameraSvc: CameraService,
-    private _cdr: ChangeDetectorRef,
+    protected _cdr: ChangeDetectorRef,
     private _actionSheetCtrl: ActionSheetController,
     private _store: Store<any>,
-  ) {}
+  ) {
+    super(_cdr);
+  }
 
   backToMap(): void {
     this._modalCtrl.dismiss({
@@ -71,11 +72,11 @@ export class ModalSaveComponent implements OnInit {
   }
 
   startAddPhotos(): void {
-    addFormError(this.fg, {photo: true});
+    addFormError(this.formGroup, {photo: true});
   }
 
   endAddPhotos(): void {
-    removeFormError(this.fg, 'photo');
+    removeFormError(this.formGroup, 'photo');
   }
 
   photosChanged(photos: Photo[]): void {
@@ -186,7 +187,7 @@ export class ModalSaveComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    if (this.fg.invalid) {
+    if (this.formGroup.invalid) {
       return;
     }
 
@@ -196,8 +197,8 @@ export class ModalSaveComponent implements OnInit {
 
     this.recordedFeature.properties = {
       ...this.recordedFeature.properties,
-      name: this.fg.value.title,
-      form: this.fg.value,
+      name: this.formGroup.value.title,
+      form: this.formGroup.value,
       media: this.photos,
       uuid: generateUUID(),
       distanceFilter,

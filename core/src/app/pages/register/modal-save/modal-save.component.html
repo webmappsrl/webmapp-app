@@ -20,8 +20,8 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <ion-list>
-    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="fg = $event">
+  <ion-list #formContainer>
+    <wm-form [confPOIFORMS]="acquisitionFORM$|async" (formGroupEvt)="setFormGroup($event)">
       <webmapp-form-field
         [icon]="'webmapp-icon-camera'"
         [iconColor]="'secondary'"
@@ -42,7 +42,7 @@
   <ion-button
     class="webmapp-register-modalsave-savebtn"
     (click)="save()"
-    [disabled]="fg == null || (fg!=null && fg.invalid)"
+    [disabled]="formGroup == null || (formGroup!=null && formGroup.invalid) || !(seeAllForm$|async)"
   >
     {{ "pages.register.modalsave.savebtn" | wmtrans }}</ion-button
   >

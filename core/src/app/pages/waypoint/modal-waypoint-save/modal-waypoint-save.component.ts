@@ -4,17 +4,16 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
-import {ModalController} from '@ionic/angular';
+import {ModalController, IonContent} from '@ionic/angular';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {Md5} from 'ts-md5';
 import {Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
-import {UntypedFormGroup} from '@angular/forms';
 import {Location} from 'src/app/types/location';
 import {confMAP} from '@wm-core/store/conf/conf.selector';
-import {CameraService} from '@wm-core/services/camera.service';
 import {WmFeature} from '@wm-types/feature';
 import {Point} from 'geojson';
 import {generateUUID, saveUgcPoi} from '@wm-core/utils/localForage';
@@ -24,6 +23,8 @@ import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 import {Photo} from '@capacitor/camera';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {addFormError, removeFormError} from '@wm-core/utils/form';
+import {BaseFormVisibilityComponent} from 'src/app/components/base-form-visibility.component.ts/base-form-visibility.component';
+
 @Component({
   selector: 'webmapp-modal-waypoint-save',
   templateUrl: './modal-waypoint-save.component.html',
@@ -31,12 +32,14 @@ import {addFormError, removeFormError} from '@wm-core/utils/form';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ModalWaypointSaveComponent implements OnInit {
+export class ModalWaypointSaveComponent extends BaseFormVisibilityComponent implements OnInit {
+  @ViewChild(IonContent, {static: false}) ionContent: IonContent;
+  @ViewChild('formContainer', {static: false}) formContainer: ElementRef;
+
   acquisitionFORM$: Observable<any[]>;
   confMap$: Observable<any> = this._store.select(confMAP);
   description: string;
   displayPosition: Location;
-  fg: UntypedFormGroup;
   isValidArray: boolean[] = [false, false];
   nominatim: any;
   photos: Photo[] = [];
@@ -49,12 +52,13 @@ export class ModalWaypointSaveComponent implements OnInit {
 
   constructor(
     private _modalCtrl: ModalController,
-    private _cameraSvc: CameraService,
     private _store: Store<any>,
-    private _cdr: ChangeDetectorRef,
+    protected _cdr: ChangeDetectorRef,
     private _environmentSvc: EnvironmentService,
     private _deviceSvc: DeviceService,
-  ) {}
+  ) {
+    super(_cdr);
+  }
 
   ngOnInit() {
     this.positionString = `${this.position.latitude}, ${this.position.longitude}`;
@@ -94,7 +98,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   async save(): Promise<void> {
-    if (this.fg.invalid) {
+    if (this.formGroup.invalid) {
       return;
     }
     const device = await this._deviceSvc.getInfo();
@@ -106,7 +110,7 @@ export class ModalWaypointSaveComponent implements OnInit {
         coordinates: [this.position.longitude, this.position.latitude],
       },
       properties: {
-        name: this.fg.value.title,
+        name: this.formGroup.value.title,
         type: 'waypoint',
         media: this.photos,
         nominatim: this.nominatim,
@@ -114,7 +118,7 @@ export class ModalWaypointSaveComponent implements OnInit {
         app_id: `${this._environmentSvc.appId}`,
         createdAt: dateNow,
         updatedAt: dateNow,
-        form: this.fg.value,
+        form: this.formGroup.value,
         device,
       },
     };
@@ -134,6 +138,7 @@ export class ModalWaypointSaveComponent implements OnInit {
   setIsValid(idx: number, isValid: boolean): void {
     this.isValidArray[idx] = isValid;
   }
+
   backToSuccess(): Promise<boolean> {
     return this._modalCtrl.dismiss({
       dismissed: false,
@@ -142,10 +147,10 @@ export class ModalWaypointSaveComponent implements OnInit {
   }
 
   startAddPhotos(): void {
-    addFormError(this.fg, {photo: true});
+    addFormError(this.formGroup, {photo: true});
   }
 
   endAddPhotos(): void {
-    removeFormError(this.fg, 'photo');
+    removeFormError(this.formGroup, 'photo');
   }
 }
