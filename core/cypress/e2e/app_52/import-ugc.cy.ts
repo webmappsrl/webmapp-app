@@ -57,8 +57,6 @@ describe('Import UGC', () => {
   });
 
   it('Should send correct ugc track data', () => {
-    cy.get('form ion-item').eq(0).click();
-    cy.get('ion-alert .alert-button-group button').eq(1).click();
     mockSaveApiUgcOk('track', ugcTrackProperties).as('saveApiUgcOk');
     cy.get('ion-button[e2e-upload-button]').click();
     cy.wait('@saveApiUgcOk');
@@ -84,8 +82,6 @@ describe('Import UGC', () => {
   });
 
   it('Should send correct ugc poi data', () => {
-    cy.get('form ion-item').eq(0).click();
-    cy.get('ion-alert .alert-button-group button').eq(1).click();
     mockSaveApiUgcOk('poi', ugcPoiProperties).as('saveApiUgcOk');
     cy.get('ion-button[e2e-upload-button]').click();
     cy.wait('@saveApiUgcOk');
