@@ -8,7 +8,7 @@ export const environment: Environment = {
   production: false,
   debug: true,
   appId: 1,
-  shardName: 'carg',
+  shardName: 'osm2caidev',
   shards: {
     geohub: {
       origin: 'https://geohub.webmapp.it',
@@ -29,7 +29,7 @@ export const environment: Environment = {
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/geohub',
     },
     osm2caidev: {
-      origin: 'https://osm2cai2.dev.maphub.it/',
+      origin: 'https://osm2cai2.dev.maphub.it',
       elasticApi: 'https://osm2cai2.dev.maphub.it/api/v2/elasticsearch',
       graphhopperHost: 'https://graphhopper.webmapp.it/',
       awsApi: 'https://wmfe.s3.eu-central-1.amazonaws.com/osm2cai2dev',
