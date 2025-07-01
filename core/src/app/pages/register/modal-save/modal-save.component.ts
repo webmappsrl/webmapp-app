@@ -16,14 +16,14 @@ import {ESuccessType} from 'src/app/types/esuccess.enum';
 import {LangService} from '@wm-core/localization/lang.service';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {addFormError, removeFormError} from '@wm-core/utils/form';
-import {BaseFormVisibilityComponent} from 'src/app/components/base-form-visibility.component.ts/base-form-visibility.component';
+import {BaseSaveComponent} from 'src/app/components/base-save.component.ts/base-save.component';
 
 @Component({
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
   styleUrls: ['./modal-save.component.scss'],
 })
-export class ModalSaveComponent extends BaseFormVisibilityComponent implements OnInit {
+export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   @ViewChild(IonContent, {static: false}) ionContent: IonContent;
   @ViewChild('formContainer', {static: false}) formContainer: ElementRef;
 

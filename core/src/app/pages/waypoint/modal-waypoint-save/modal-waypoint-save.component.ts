@@ -23,7 +23,7 @@ import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 import {Photo} from '@capacitor/camera';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {addFormError, removeFormError} from '@wm-core/utils/form';
-import {BaseFormVisibilityComponent} from 'src/app/components/base-form-visibility.component.ts/base-form-visibility.component';
+import {BaseSaveComponent} from 'src/app/components/base-save.component.ts/base-save.component';
 
 @Component({
   selector: 'webmapp-modal-waypoint-save',
@@ -32,7 +32,7 @@ import {BaseFormVisibilityComponent} from 'src/app/components/base-form-visibili
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class ModalWaypointSaveComponent extends BaseFormVisibilityComponent implements OnInit {
+export class ModalWaypointSaveComponent extends BaseSaveComponent implements OnInit {
   @ViewChild(IonContent, {static: false}) ionContent: IonContent;
   @ViewChild('formContainer', {static: false}) formContainer: ElementRef;
 

@@ -5,11 +5,11 @@ import {BehaviorSubject, from} from 'rxjs';
 import {take, tap} from 'rxjs/operators';
 
 /**
- * Classe astratta che fornisce funzionalità per monitorare la visibilità di un form
- * all'interno di un contenitore scrollabile di Ionic.
+ * Abstract class that provides functionality to monitor form visibility
+ * within a scrollable Ionic container.
  *
- * Questa classe utilizza RxJS per gestire gli osservabili e determina quando un form
- * è completamente visibile o quando l'utente ha raggiunto il fondo del contenuto.
+ * This class uses RxJS to handle observables and determines when a form
+ * is completely visible or when the user has reached the bottom of the content.
  *
  * @example
  * ```typescript
@@ -18,12 +18,12 @@ import {take, tap} from 'rxjs/operators';
  *   template: `
  *     <ion-content #ionContent>
  *       <div #formContainer>
- *         <!-- Il tuo form qui -->
+ *         <!-- Your form here -->
  *       </div>
  *     </ion-content>
  *   `
  * })
- * export class MyFormComponent extends BaseFormVisibilityComponent {
+ * export class MyFormComponent extends BaseSaveComponent {
  *   @ViewChild('ionContent', { static: true }) ionContent: IonContent;
  *   @ViewChild('formContainer', { static: true }) formContainer: ElementRef;
  *
@@ -33,34 +33,34 @@ import {take, tap} from 'rxjs/operators';
  *
  *     this.seeAllForm$.subscribe(isVisible => {
  *       if (isVisible) {
- *         console.log('Form completamente visibile');
+ *         console.log('Form completely visible');
  *       }
  *     });
  *   }
  * }
  * ```
  */
-export abstract class BaseFormVisibilityComponent {
+export abstract class BaseSaveComponent {
   /**
-   * Riferimento al componente IonContent di Ionic.
-   * Deve essere implementato nelle classi figlie.
+   * Reference to the Ionic IonContent component.
+   * Must be implemented in child classes.
    */
   abstract ionContent: IonContent;
 
   /**
-   * Riferimento al contenitore del form.
-   * Deve essere implementato nelle classi figlie.
+   * Reference to the form container.
+   * Must be implemented in child classes.
    */
   abstract formContainer: ElementRef;
 
   /**
-   * Il form group da monitorare per la visibilità.
+   * The form group to monitor for visibility.
    */
   formGroup: UntypedFormGroup;
 
   /**
-   * Observable che emette `true` quando il form è completamente visibile
-   * o quando l'utente ha raggiunto il fondo del contenuto scrollabile.
+   * Observable that emits `true` when the form is completely visible
+   * or when the user has reached the bottom of the scrollable content.
    *
    * @example
    * ```typescript
@@ -72,21 +72,21 @@ export abstract class BaseFormVisibilityComponent {
   seeAllForm$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   /**
-   * Costruttore della classe.
-   * @param _cdr - ChangeDetectorRef per forzare il change detection
+   * Class constructor.
+   * @param _cdr - ChangeDetectorRef to force change detection
    */
   constructor(protected _cdr: ChangeDetectorRef) {}
 
   /**
-   * Controlla se il form è completamente visibile o se l'utente è al fondo del contenuto.
+   * Checks if the form is completely visible or if the user is at the bottom of the content.
    *
-   * L'algoritmo di visibilità:
-   * 1. Form completamente visibile: `formRect.top >= contentRect.top && formRect.bottom <= contentRect.bottom`
-   * 2. Al fondo del contenuto: `scrollTop + contentHeight >= scrollHeight - 1`
-   * 3. Condizione finale: `shouldSeeAllForm = isFormFullyVisible || isAtBottom`
+   * Visibility algorithm:
+   * 1. Form completely visible: `formRect.top >= contentRect.top && formRect.bottom <= contentRect.bottom`
+   * 2. At bottom of content: `scrollTop + contentHeight >= scrollHeight - 1`
+   * 3. Final condition: `shouldSeeAllForm = isFormFullyVisible || isAtBottom`
    *
-   * Se il form diventa visibile, rimuove automaticamente il listener di scroll
-   * per ottimizzare le performance.
+   * If the form becomes visible, it automatically removes the scroll listener
+   * to optimize performance.
    */
   private _checkFormVisibility = (): void => {
     if (!this.ionContent || !this.formContainer) {
@@ -121,10 +121,10 @@ export abstract class BaseFormVisibilityComponent {
   };
 
   /**
-   * Configura il listener per gli eventi di scroll.
+   * Sets up the scroll event listener.
    *
-   * Aggiunge un event listener per l'evento 'scroll' che chiama
-   * `_checkFormVisibility` ogni volta che l'utente scorre il contenuto.
+   * Adds an event listener for the 'scroll' event that calls
+   * `_checkFormVisibility` every time the user scrolls the content.
    */
   private _setupScrollListener(): void {
     if (!this.ionContent) {
@@ -142,15 +142,15 @@ export abstract class BaseFormVisibilityComponent {
   }
 
   /**
-   * Inizializza il monitoraggio della visibilità del form.
+   * Initializes form visibility monitoring.
    *
-   * Utilizza `requestAnimationFrame` per attendere che il form sia
-   * completamente renderizzato nel DOM prima di iniziare il monitoraggio.
-   * Questo assicura che tutti gli elementi siano disponibili per i calcoli.
+   * Uses `requestAnimationFrame` to wait for the form to be
+   * completely rendered in the DOM before starting monitoring.
+   * This ensures that all elements are available for calculations.
    */
   private _initializeFormVisibility(): void {
-    // Usato perchè il cambiamento della form non è immediato, attendo che la form sia
-    // renderizzata nel DOM
+    // Used because the form change is not immediate, I wait for the form to be
+    // rendered in the DOM
     requestAnimationFrame(() => {
       this._checkFormVisibility();
       this._setupScrollListener();
@@ -158,12 +158,12 @@ export abstract class BaseFormVisibilityComponent {
   }
 
   /**
-   * Inizializza il monitoraggio della visibilità per un form group specifico.
+   * Initializes visibility monitoring for a specific form group.
    *
-   * Questo metodo deve essere chiamato dopo aver creato il form group
-   * per avviare il monitoraggio della visibilità.
+   * This method must be called after creating the form group
+   * to start visibility monitoring.
    *
-   * @param formGroup - Il form group da monitorare per la visibilità
+   * @param formGroup - The form group to monitor for visibility
    *
    * @example
    * ```typescript
