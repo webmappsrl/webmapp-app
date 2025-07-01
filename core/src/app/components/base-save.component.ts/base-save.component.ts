@@ -94,30 +94,27 @@ export abstract class BaseSaveComponent {
     }
 
     from(this.ionContent.getScrollElement())
-      .pipe(
-        take(1),
-        tap(scrollElement => {
-          const contentHeight = scrollElement?.clientHeight;
-          const scrollTop = scrollElement?.scrollTop;
-          const scrollHeight = scrollElement?.scrollHeight;
+      .pipe(take(1))
+      .subscribe(scrollElement => {
+        const contentHeight = scrollElement?.clientHeight;
+        const scrollTop = scrollElement?.scrollTop;
+        const scrollHeight = scrollElement?.scrollHeight;
 
-          const formElement = (this.formContainer as any)?.el;
-          const formRect = formElement?.getBoundingClientRect();
-          const contentRect = scrollElement.getBoundingClientRect();
+        const formElement = (this.formContainer as any)?.el;
+        const formRect = formElement?.getBoundingClientRect();
+        const contentRect = scrollElement.getBoundingClientRect();
 
-          const isFormFullyVisible =
-            formRect?.top >= contentRect?.top && formRect?.bottom <= contentRect?.bottom;
-          const isAtBottom = scrollTop + contentHeight >= scrollHeight - 1;
-          const shouldSeeAllForm = isFormFullyVisible || isAtBottom;
+        const isFormFullyVisible =
+          formRect?.top >= contentRect?.top && formRect?.bottom <= contentRect?.bottom;
+        const isAtBottom = scrollTop + contentHeight >= scrollHeight - 1;
+        const shouldSeeAllForm = isFormFullyVisible || isAtBottom;
 
-          if (shouldSeeAllForm) {
-            scrollElement.removeEventListener('scroll', this._checkFormVisibility);
-          }
-          this.seeAllForm$.next(shouldSeeAllForm);
-          this._cdr.detectChanges();
-        }),
-      )
-      .subscribe();
+        if (shouldSeeAllForm) {
+          scrollElement.removeEventListener('scroll', this._checkFormVisibility);
+        }
+        this.seeAllForm$.next(shouldSeeAllForm);
+        this._cdr.detectChanges();
+      });
   };
 
   /**
@@ -132,13 +129,10 @@ export abstract class BaseSaveComponent {
     }
 
     from(this.ionContent.getScrollElement())
-      .pipe(
-        take(1),
-        tap(scrollElement => {
-          scrollElement.addEventListener('scroll', this._checkFormVisibility);
-        }),
-      )
-      .subscribe();
+      .pipe(take(1))
+      .subscribe(scrollElement => {
+        scrollElement.addEventListener('scroll', this._checkFormVisibility);
+      });
   }
 
   /**
