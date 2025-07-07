@@ -145,10 +145,15 @@ export abstract class BaseSaveComponent {
   private _initializeFormVisibility(): void {
     // Used because the form change is not immediate, I wait for the form to be
     // rendered in the DOM
-    requestAnimationFrame(() => {
-      this._checkFormVisibility();
-      this._setupScrollListener();
-    });
+    const interval = setInterval(() => {
+      const formElement = (this.formContainer as any)?.el;
+      const formHeight = formElement?.scrollHeight;
+      if (formHeight && formHeight > 0) {
+        clearInterval(interval);
+        this._checkFormVisibility();
+        this._setupScrollListener();
+      }
+    }, 50);
   }
 
   /**
