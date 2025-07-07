@@ -343,7 +343,14 @@ function update(instanceName, geohubInstanceId, shardName) {
       return;
     }
 
-    const envJson = getJsonEnvironment();
+    let envJson;
+    try {
+      envJson = getJsonEnvironment();
+    } catch (error) {
+      reject("Errore nella lettura dell'environment: " + error.message);
+      return;
+    }
+
     envJson.appId = geohubInstanceId;
     envJson.shardName = shardName;
 
@@ -1810,15 +1817,56 @@ function addPermissionsIfNotPresent() {
 function getJsonEnvironment() {
   const envPath = 'core/src/environments/environment.ts';
   if (!fs.existsSync(envPath)) {
-    reject(`File ${envPath} non trovato.`);
-    return;
+    throw new Error(`File ${envPath} non trovato.`);
   }
+
+  // Leggiamo le shards e redirects dal file wm-types
+  const wmTypesPath = 'core/src/app/shared/wm-types/src/environment.ts';
+  if (!fs.existsSync(wmTypesPath)) {
+    throw new Error(`File ${wmTypesPath} non trovato.`);
+  }
+
+  const wmTypesContent = fs.readFileSync(wmTypesPath, 'utf8');
+
+  // Estraiamo le shards
+  const shardsMatch = wmTypesContent.match(/export const shards: Shards = ({[\s\S]*?});/);
+  if (!shardsMatch || !shardsMatch[1]) {
+    throw new Error("Impossibile trovare l'oggetto shards nel file wm-types");
+  }
+
+  // Estraiamo i redirects
+  const redirectsMatch = wmTypesContent.match(/export const redirects: Redirects = ({[\s\S]*?});/);
+  if (!redirectsMatch || !redirectsMatch[1]) {
+    throw new Error("Impossibile trovare l'oggetto redirects nel file wm-types");
+  }
+
   const fileEnv = fs.readFileSync(envPath, 'utf8');
   const envMatch = fileEnv.match(/export const environment: Environment = ({[\s\S]*?});/);
   if (!envMatch || !envMatch[1]) {
-    reject("Impossibile trovare l'oggetto environment nel file");
-    return;
+    throw new Error("Impossibile trovare l'oggetto environment nel file");
   }
 
-  return eval('(' + envMatch[1] + ')');
+  if (verbose) {
+    debug('Shards estratte: ' + shardsMatch[1].substring(0, 100) + '...');
+    debug('Redirects estratti: ' + redirectsMatch[1].substring(0, 100) + '...');
+    debug('Environment estratto: ' + envMatch[1]);
+  }
+
+  // Costruiamo l'oggetto environment sostituendo i riferimenti con i valori effettivi
+  let envString = envMatch[1];
+  envString = envString.replace(/\bshards,/g, 'shards: ' + shardsMatch[1] + ',');
+  envString = envString.replace(/\bredirects,/g, 'redirects: ' + redirectsMatch[1] + ',');
+
+  if (verbose) {
+    debug("Environment finale prima dell'eval: " + envString);
+  }
+
+  const environment = eval('(' + envString + ')');
+
+  if (verbose) {
+    debug('Environment creato:');
+    console.log(JSON.stringify(environment, null, 2));
+  }
+
+  return environment;
 }
