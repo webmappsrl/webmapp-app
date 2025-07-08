@@ -1,5 +1,41 @@
 # Changelog
 
+## [3.1.1](https://github.com/webmappsrl/webmapp-app/compare/v3.1.0...v3.1.1) (2025-07-08)
+
+
+### Bug Fixes
+
+* **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
+* **download:** 🖼️ update logo image path and style adjustments ([fb69b8b](https://github.com/webmappsrl/webmapp-app/commit/fb69b8bd763836a9215c29f3c04c554c8097f2a6))
+* **environment:** 🔧 update origin URLs and shard name ([1418268](https://github.com/webmappsrl/webmapp-app/commit/1418268bb1c6959be010573bc622a383e9bcd632))
+
+
+### Miscellaneous
+
+* add new images ([529c70a](https://github.com/webmappsrl/webmapp-app/commit/529c70a2fdb9c6b594d4346a61a761e8169337c4))
+* **core:** ✨ add base form visibility component oc:5577 ([#149](https://github.com/webmappsrl/webmapp-app/issues/149)) ([54b533c](https://github.com/webmappsrl/webmapp-app/commit/54b533cef37bc112488f340cc6f632e22ab6277f))
+* enrich changelog with commit descriptions ([e145592](https://github.com/webmappsrl/webmapp-app/commit/e145592435b0f8391c206f7f64a87c921833b802))
+* enrich changelog with commit descriptions ([d3a0b82](https://github.com/webmappsrl/webmapp-app/commit/d3a0b822fa7915ce2fc2b201ee2e42e9b33050d5))
+* enrich changelog with commit descriptions ([3fbd200](https://github.com/webmappsrl/webmapp-app/commit/3fbd200e42c75dd2ca6b222dbe44fbeb1e913053))
+* enrich changelog with commit descriptions ([ee44978](https://github.com/webmappsrl/webmapp-app/commit/ee449785a13e4d0611a28cf6c57431d9ee4d3c81))
+* **environment:** ✨ add osm2caidev configuration ([01f6f4a](https://github.com/webmappsrl/webmapp-app/commit/01f6f4a18b2f43ad9b443aa7ecc2dee133b279ab))
+* **environment:** 🔧 update API endpoints and environment configuration ([865bed2](https://github.com/webmappsrl/webmapp-app/commit/865bed2de76026fa4bf2c059a5ef74aa0f1d3d62))
+* **environment:** 🔧 update appId and shardName for development environment ([337c1d3](https://github.com/webmappsrl/webmapp-app/commit/337c1d367bbe950938f8141a16a76bde35b73f82))
+* **map, register:** ✨ add center position feature ([#146](https://github.com/webmappsrl/webmapp-app/issues/146)) ([ee6a063](https://github.com/webmappsrl/webmapp-app/commit/ee6a0639fcbed58c064ba7edcdd766f69a6cbd8d))
+* **submodule:** 🔄 update wm-core submodule to latest commit ([d873e08](https://github.com/webmappsrl/webmapp-app/commit/d873e08826d9a1820a6934c48831a285f8c1cfc6))
+* **theme:** ✨ add camminiditalia theme and reorganize geohub theme oc: 5834 ([#147](https://github.com/webmappsrl/webmapp-app/issues/147)) ([2e48655](https://github.com/webmappsrl/webmapp-app/commit/2e48655c0c04b1c5c86a9cbbac35649ba3ea323d))
+* **wm-core:** changelog for bump to 25a6dcd ([4357b3b](https://github.com/webmappsrl/webmapp-app/commit/4357b3b087ff23ca5bc3acf0b573b363f7638a99))
+* **wm-core:** changelog for bump to 27bef9c ([8330aef](https://github.com/webmappsrl/webmapp-app/commit/8330aef57f5ac52877be619d5fd2218e22e880c9))
+* **wm-core:** changelog for bump to 29594e4 ([6ed2bdf](https://github.com/webmappsrl/webmapp-app/commit/6ed2bdf8e50c8b273002559d2cd03bba29dd4383))
+* **wm-core:** changelog for bump to 33cf3ba ([25b26ef](https://github.com/webmappsrl/webmapp-app/commit/25b26ef865d22dc5171f09b1feb63685d88ff3df))
+* **wm-core:** changelog for bump to c30a6d7 ([0adbf8a](https://github.com/webmappsrl/webmapp-app/commit/0adbf8ade4690304bb5d7333dbe3db58356d4ee6))
+* **wm-core:** changelog for bump to ca76850 ([e588813](https://github.com/webmappsrl/webmapp-app/commit/e5888133c8e22776fb31c7e81d589fbcd52d720f))
+* **wm-core:** changelog for bump to cd5815f ([87f0eda](https://github.com/webmappsrl/webmapp-app/commit/87f0edaadef4ddd7fd7ba7c668849a9be1958d6f))
+* **wm-core:** changelog for bump to d565438 ([a6c6b09](https://github.com/webmappsrl/webmapp-app/commit/a6c6b09f10eaab7cea09cad80f622421d81b1d89))
+* **wm-core:** changelog for bump to db5af37 ([d0aafbe](https://github.com/webmappsrl/webmapp-app/commit/d0aafbe3ea045fb6db9cb800bef7ab8cafef17f5))
+* **wm-types:** changelog for bump to 4ba94e3 ([2386009](https://github.com/webmappsrl/webmapp-app/commit/238600941c4504e4abe295be14a848f4611183ec))
+* **wm-types:** changelog for bump to d97b402 ([d024f09](https://github.com/webmappsrl/webmapp-app/commit/d024f094794e44fc2ec30106f088915f714e766d))
+
 ## [3.1.0](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0) (2025-06-16)
 
 
