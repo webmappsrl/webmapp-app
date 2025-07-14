@@ -14,7 +14,6 @@
     - Add a marker for commit descriptions to differentiate them in the changelog
     - Handle already present descriptions by copying indented lines following the marker
     - Improve readability and maintainability of changelog entries by automating body inclusion
-* **environment:** 🔧 update origin URLs and shard name ([1418268](https://github.com/webmappsrl/webmapp-app/commit/1418268bb1c6959be010573bc622a383e9bcd632))
 <!-- COMMIT_DESC -->
     
     - Removed trailing slash from 'osm2caidev' origin URL in both production and development environment files for consistency.
@@ -26,18 +25,14 @@
 <!-- COMMIT_DESC -->
     
     Introduces two webp profile images to the assets folder.
-* enrich changelog with commit descriptions ([3015ba7](https://github.com/webmappsrl/webmapp-app/commit/3015ba70960b4122f2e8b06fb4219fde8e802031))
 * enrich changelog with commit descriptions ([ebac2b6](https://github.com/webmappsrl/webmapp-app/commit/ebac2b623aeaaafb612c973ce368a7e0e6ca64d5))
-* enrich changelog with commit descriptions ([1121aa3](https://github.com/webmappsrl/webmapp-app/commit/1121aa3d3313c89d21fda1cbb0dd58d6b85d179e))
 * enrich changelog with commit descriptions ([d3a0b82](https://github.com/webmappsrl/webmapp-app/commit/d3a0b822fa7915ce2fc2b201ee2e42e9b33050d5))
-* enrich changelog with commit descriptions ([ee44978](https://github.com/webmappsrl/webmapp-app/commit/ee449785a13e4d0611a28cf6c57431d9ee4d3c81))
 * **environment:** 🔧 update API endpoints and environment configuration ([865bed2](https://github.com/webmappsrl/webmapp-app/commit/865bed2de76026fa4bf2c059a5ef74aa0f1d3d62))
 <!-- COMMIT_DESC -->
     
     - Updated `origin`, `elasticApi`, and `awsApi` endpoints for `carg` and `cargdev` configurations in both production and development environments.
     - Changed `appId` and `shardName` values and added `debug` flag in the development environment configuration for improved debugging capabilities.
     - Adjusted URLs to reflect new domain structure and storage paths for better resource management.
-* **map, register:** ✨ add center position feature ([#146](https://github.com/webmappsrl/webmapp-app/issues/146)) ([ee6a063](https://github.com/webmappsrl/webmapp-app/commit/ee6a0639fcbed58c064ba7edcdd766f69a6cbd8d))
 <!-- COMMIT_DESC -->
     
     - Removed the dark color from the navigation icon in `map.page.html` to use the default color.
@@ -58,7 +53,6 @@
     * fix(theme): 🐛 adjust header container translation and prevent horizontal overflow
     
     Added overflow-x: hidden to the root of wm-home to prevent horizontal scrolling. Adjusted the transform property of wm-home-header-container for proper alignment.
-* **wm-core:** changelog for bump to 27bef9c ([8330aef](https://github.com/webmappsrl/webmapp-app/commit/8330aef57f5ac52877be619d5fd2218e22e880c9))
 <!-- COMMIT_DESC -->
     
     - chore(image-picker): ✨ add readonlyPhotos support and improve photo handling <a href="https://orchestrator.maphub.it/resources/customer-stories/5240" target="_blank" rel="noopener noreferrer">OC[5240]</a> (#123)
@@ -127,7 +121,6 @@
     Removed the usage of `confGeohubId` observable and replaced it with `shardName` and `appId` from `EnvironmentService`. This change simplifies the theme application logic by directly using the environment service to retrieve the necessary identifiers for constructing the theme stylesheet URL.
     
     Additionally, added a `shardName` getter in the `EnvironmentService` to expose the private `_shardName` property for external usage.
-* **wm-core:** changelog for bump to 6d371d1 ([b4b1f53](https://github.com/webmappsrl/webmapp-app/commit/b4b1f53c2284dbb4afbe8eddc07b3f3f61170b9a))
 <!-- COMMIT_DESC -->
     
     - chore(ugc): ✨ add EXIF data cleaning feature to remove special characters <a href="https://orchestrator.maphub.it/resources/customer-stories/5926" target="_blank" rel="noopener noreferrer">OC[5926]</a> (#127)
@@ -146,7 +139,6 @@
     
     - chore(media): ✨ add MAX_PHOTOS constant and update import path
     Introduced a new constant `MAX_PHOTOS` in the `media.ts` file within the `wm-core` project. This file is created to store media-related constants. Updated the `image-picker.component.ts` to import `MAX_PHOTOS` from the new location `@wm-core/constants/media` instead of the previous `@map-core/readonly/constants`. This change enhances code organization by centralizing media constants.
-* **wm-core:** changelog for bump to cd5815f ([87f0eda](https://github.com/webmappsrl/webmapp-app/commit/87f0edaadef4ddd7fd7ba7c668849a9be1958d6f))
 <!-- COMMIT_DESC -->
     
     - chore(geobox-map): ✨ add map controls support <a href="https://orchestrator.maphub.it/resources/customer-stories/5248" target="_blank" rel="noopener noreferrer">OC[5248]</a> (#117)
@@ -251,7 +243,6 @@
     Renamed `currentUgcPoiDrwaing` to `setCurrentUgcPoiDrawn` to correct the spelling and improve clarity. Updated all references in the `geobox-map.component.html`, `geobox-map.component.ts`, and the relevant action and reducer files.
     
     Additionally, added new actions (`startEditUgcPoi` and `stopEditUgcPoi`) to manage the UGC POI editing state. Implemented effects to handle these actions by setting the current UGC POI and controlling the draw state. This improves the maintainability and readability of the UGC POI handling logic.
-* **wm-types:** changelog for bump to d97b402 ([d024f09](https://github.com/webmappsrl/webmapp-app/commit/d024f094794e44fc2ec30106f088915f714e766d))
 <!-- COMMIT_DESC -->
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
@@ -281,7 +272,6 @@
     
     - feat: Aggiungi proprietà opzionale 'debug' all'interfaccia Environment
     - feat: Aggiungi tipo UIEvent per gestire eventi dell'interfaccia utente
-
 * add direction.svg and update font styles in 75.css ([3775ccc](https://github.com/webmappsrl/webmapp-app/commit/3775ccc691ec166f75a2fb2414bab2e956d5a18a))
 <!-- COMMIT_DESC -->
     
@@ -304,7 +294,6 @@
     - ✨ feat(map): add custom tile layer support
     - introduce addTileLayer method for adding tile layers with custom source
     - utilize CustomTileSource for enhanced configuration options
-<!-- COMMIT_DESC -->
     
     - feat(utils): ✨ add maxZoom parameter to initVectorTileLayer function
     - Introduced a new parameter `maxZoom` with a default value of 13 to the `initVectorTileLayer` function.
@@ -340,7 +329,6 @@
     * chore: update test e2e
     
     * Updated submodule core/src/app/shared/wm-core
-<!-- COMMIT_DESC -->
     
     - Updated the font families for title and utility in the theme CSS file
     - Changed single quotes to double quotes for consistency
@@ -419,7 +407,6 @@
     - Added surge-ville-uat script for deploying to UAT environment
     - Added surge-ville-dev script for deploying to development environment
     - Updated theme styles to include new icons for home, map, and user
-<!-- COMMIT_DESC -->
     
     - Hide pre-title in POI header
     - Adjust font family, size, and weight for POI title
@@ -505,7 +492,6 @@
     - add fallback colors for border variables to ensure consistency across themes
     
     - 🐛 fix(geobox-map): update reloadCustomTracks condition (#99)
-<!-- COMMIT_DESC -->
     
     - ...
     
@@ -544,7 +530,6 @@
     - Added `changelog-notes-type: github` to both `release_please.yml` and `release_please_minor.yml` workflows
     - Ensures that changelog notes are generated using GitHub's format
     - Aids in maintaining consistency and clarity in release documentation
-- check all complete by filter values ([2dfed99](https://github.com/webmappsrl/webmapp-app/commit/2dfed9993369bc45bf27ae752643c2791a3d0609))
 <!-- COMMIT_DESC -->
     
     - Introduce a new GitHub Actions workflow to automate releases for minor version updates.
@@ -562,9 +547,7 @@
     * fix: Management of Map details status, added test e2e
     
     * ...
-
 - Aggiunto componente wm-updated-at per visualizzare la data di aggiornamento nei titoli delle proprietà UGC e delle tracce. <a href="https://orchestrator.maphub.it/resources/customer-stories/5331" target="_blank" rel="noopener noreferrer">OC[5331]</a> ([b035933](https://github.com/webmappsrl/webmapp-app/commit/b035933758d8b9ef2886867c97c0369c7671a027))
-
 - Updated submodule core/src/app/shared/wm-core ([8105af2](https://github.com/webmappsrl/webmapp-app/commit/8105af2158c43ff4660b60a94763dc6a11d1eef4))
 <!-- COMMIT_DESC -->
     
@@ -618,10 +601,8 @@
     ---------
     
     Co-authored-by: bongiu <peppedeka@gmail.com>
-### Miscellaneous
 
 - Update subproject commit reference ([de21d37](https://github.com/webmappsrl/webmapp-app/commit/de21d373cecd849e8c994b30f668ae8be57aaf9c))
-- disable form when add photos <a href="https://orchestrator.maphub.it/resources/customer-stories/4104" target="_blank" rel="noopener noreferrer">OC[4104]</a> ([239af5f](https://github.com/webmappsrl/webmapp-app/commit/239af5f9b086ebe877993aaba02023d5f4ecc3ad))
 <!-- COMMIT_DESC -->
     
     - Fixed a bug in the save button's disabled state in modal-save.component.html
@@ -653,7 +634,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-
 ### ⚠ BREAKING CHANGES
 
 - This update may introduce breaking changes in the codebase due to changes in the @capacitor/device library.
@@ -673,7 +653,6 @@
     This commit enhances the map page by dynamically displaying a title for UGC POI properties when available.
     
     This commit adds the functionality to go to the home page when the current tab is 'home' and the user clicks on it again. It dispatches the action to navigate to the home page using the `goToHome()` method from `user-activity.action`.
-- Add custom Cypress commands and test utilities ([b78c697](https://github.com/webmappsrl/webmapp-app/commit/b78c697d4a7d72f4428d92a757c2ecdf1d2b9213))
 <!-- COMMIT_DESC -->
     
     This commit adds a new file `commands.ts` in the `core/cypress/support` directory, which contains custom Cypress commands for login, drag, dismiss, and visit. It also adds a new file `e2e.ts` in the same directory, which imports the `commands.ts` file.
@@ -729,7 +708,6 @@
     This commit removes the form component and its associated HTML, SCSS, and TypeScript files. The form component was no longer needed in the project.
     
     Updated submodule core/src/app/shared/wm-core
-<!-- COMMIT_DESC -->
     
     - Removed the LangService provider from app.component.ts, modal-store-success.component.ts, download.component.ts, and register.page.ts.
     
@@ -771,7 +749,6 @@
     - Updated the `addPhotos()` method to use `_cameraSvc.getPhotoData()` instead of `_photoSvc.getPhotoData()`.
     - Added a new method `backToSuccess()` to handle dismissing the modal and returning to success state.
     - Modified the subscription in `saveUgcPoi()` to await dismissal of the modal before dispatching `syncUgcPois()`.
-<!-- COMMIT_DESC -->
     
     - Removed unused import of TranslateService
     - Added import of LangService from @wm-core/localization/lang.service
@@ -802,7 +779,6 @@
     
     - Adjusted the top position of ion-card-content in map-details.component.scss
     - Added a ng-template block for wm-track-properties in map.page.html
-<!-- COMMIT_DESC -->
     
     - Removed unnecessary imports and variables
     - Refactored ngAfterViewInit() method in MapDetailsComponent
@@ -855,7 +831,6 @@
     
     - Added submodule "core/src/app/shared/wm-types"
     - Updated URL for submodule "core/src/app/shared/wm-core"
-<!-- COMMIT_DESC -->
     
     - Removed unused import in register.page.ts
     - Updated wmMapGeojson binding in waypoint.page.html
@@ -881,7 +856,6 @@
     
     - Added a condition to start navigation only if the current mode is not 'recording'
     - Improved efficiency by avoiding unnecessary calls to startNavigation()
-- make release ([808ee25](https://github.com/webmappsrl/webmapp-app/commit/808ee257c904af326fb38dc69a532fcbd8fb5527))
 <!-- COMMIT_DESC -->
     
     This commit adds a condition to the `navigation` method in the `MapPage` component. The `onlyTitle` method of the `mapTrackDetailsCmp` will now be called only if the map is focused and the track details component is open.
@@ -900,7 +874,6 @@
 <!-- COMMIT_DESC -->
     
     This commit adds the GeolocationService to the home and map pages. The GeolocationService is used to retrieve the user's current location.
-<!-- COMMIT_DESC -->
     
     Include translation for 'cai_scale' in the Italian language file.
     
@@ -921,13 +894,11 @@
     
     - Removed unnecessary code in AppComponent
     - Fixed a condition in setWmMapFeatureCollection method of MapPage
-
 - Update Android platform and remove storage permission request <a href="https://orchestrator.maphub.it/resources/customer-stories/3969" target="_blank" rel="noopener noreferrer">OC[3969]</a> ([7e3845f](https://github.com/webmappsrl/webmapp-app/commit/7e3845f4f7824ff2759f119e9be368368a82b0f8))
 <!-- COMMIT_DESC -->
     
     - Updated compileSdkVersion and targetSdkVersion in gulpfile.js to 33
     - Removed the requestStoragePermission() function from trackdetail.page.ts
-- Update Android platform versions in gulpfile.js ([51f230e](https://github.com/webmappsrl/webmapp-app/commit/51f230e475755b9759fea53b7158a18bc38e3c84))
 <!-- COMMIT_DESC -->
     
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
@@ -944,7 +915,6 @@
     - Modified the TypeScript file to handle storage permission requests before saving files
     
     This commit adds a new script "surge-osm2cai" to the package.json file in the core directory. The script allows deploying the project to the OSM2CAI domain using Surge.
-
 - Update app.module.ts and settings.component.html/ts ([00614b5](https://github.com/webmappsrl/webmapp-app/commit/00614b59331dd548b52d71987900b5f9bea2962b))
 <!-- COMMIT_DESC -->
     
@@ -970,7 +940,6 @@
     - Removed duplicate definition of `openPoiShare()` function in `map.page.ts`
     - Added new function `openPoiShare()` to share a point of interest by ID
     - Removed unused function parameters and variables
-
 ### Bug Fixes
 
 - Fix error handling in app.component.ts ([99d2e90](https://github.com/webmappsrl/webmapp-app/commit/99d2e90fc976f2b292d7574b81eddac2ff226d5a))
@@ -1066,7 +1035,6 @@
     This commit removes unnecessary imports and code from the app.component.ts file. It removes the AlertController import, as well as the authError$ observable and its related code. These changes help to clean up the codebase and improve readability.
     
     This commit removes several unused methods and imports in the GeohubService class. The removed code includes methods for getting details of POIs, EC media, and EC tracks, as well as performing searches and string searches. Additionally, unused imports and dependencies have been removed.
-<!-- COMMIT_DESC -->
     
     - Added APP_ID_TOKEN to providers
     - Use ConfigService to get the value for APP_ID_TOKEN
@@ -1081,7 +1049,6 @@
     
     - Removed unused imports and variables
     - Updated import paths for services and classes
-
 - Refactor shareTrackByID method in ShareService <a href="https://orchestrator.maphub.it/resources/customer-stories/3850" target="_blank" rel="noopener noreferrer">OC[3850]</a> ([#36](https://github.com/webmappsrl/webmapp-app/issues/36)) ([6a060df](https://github.com/webmappsrl/webmapp-app/commit/6a060df97401f53b9ee63cd261af0da3733a4aa7))
 <!-- COMMIT_DESC -->
     
@@ -1100,7 +1067,6 @@
     * chore: Remove empty text property in defaultShareObj
     
     The code change removes the assignment of an empty string to the text property in the defaultShareObj object. This change was made in the ShareService file.
-<!-- COMMIT_DESC -->
     
     - Added a new share button for points of interest in the map page.
     - When clicked, it opens a modal to share the selected point of interest.
@@ -1121,7 +1087,6 @@
     - Added wmMapHitMapCollection directive to the map page template
     - Added hitMapFeatureCollection selector to the map page component
     - Updated setWmMapFeatureCollection method in the map page component to handle overlay feature collections
-- add 'parcapuane' map to ConfigService ([3c4bb72](https://github.com/webmappsrl/webmapp-app/commit/3c4bb7275423421177ec29f30a91155940074844))
 <!-- COMMIT_DESC -->
     
     A new map, 'parcapuane', has been added to the list of maps in the ConfigService. This extends the range of available maps within the application.
@@ -1129,7 +1094,6 @@
 <!-- COMMIT_DESC -->
     
     Added a new feature to the settings component that allows users to clear cache and saved data. This includes clearing local storage, session storage, IndexedDB, Cache Storage, and cookies. Also restructured the HTML of the settings component for better organization and readability. Added corresponding translations for new features in English language file.
-- Register page privacy link modal <a href="https://orchestrator.maphub.it/resources/customer-stories/3568" target="_blank" rel="noopener noreferrer">OC[3568]</a> ([ed9e5aa](https://github.com/webmappsrl/webmapp-app/commit/ed9e5aa7c925b9945d0077c308f9c0db4c9d77b0))
 <!-- COMMIT_DESC -->
     
     * chore: add new deployment commands for projects bagnolo and apuane
@@ -1154,7 +1118,6 @@
     Changed the directory for writing a file in the TrackdetailPage from Directory.Documents to Directory.External. This change ensures that the file is written to the external storage instead of the documents directory.
     
     The code changes in this commit remove the unnecessary code that handles location permission denial. This includes the prompt to open settings and the call to `backgroundGeolocation.openSettings()`.
-
 - add privacy link to settings component ([#24](https://github.com/webmappsrl/webmapp-app/issues/24)) ([d6f4d00](https://github.com/webmappsrl/webmapp-app/commit/d6f4d00a7860e7556e1cab2a41dde3e21eff57c7))
 <!-- COMMIT_DESC -->
     
@@ -1167,14 +1130,12 @@
     
     - Removed ng-container and moved wm-map component to the top level
     - Reorganized ion-fab buttons for better layout and functionality
-
 - Update localization files for English, French, and Italian with new translations and additions. Fix typo in "Salking" to "Walking". Add new terms like "Asphalt", "Bitumenduro", "Onoff", "Real dirt", and "Bar". ([#21](https://github.com/webmappsrl/webmapp-app/issues/21)) ([daccd32](https://github.com/webmappsrl/webmapp-app/commit/daccd3273c5f187d042e681ecaf9a3c5f292f6f3))
 <!-- COMMIT_DESC -->
     
     Added the Italian translation for the new waypoint message to the i18n file.
     
     - Updated the URL for low and high resolution tiles in the IDATALAYER object.
-<!-- COMMIT_DESC -->
     
     - Added the take(1) operator to the observable chain in app.component.ts
     - Ensures that only the first emitted value is taken into account
@@ -1186,7 +1147,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-
 - **config:** The private variable \_geohubAppId has been added to store the selected geohubAppId value.
 
 ### Features
@@ -1200,7 +1160,6 @@
     
     - Commented out the navigation to 'home' in app.component.ts
     - Added a new route in tabs-routing.module.ts to redirect to 'home' when the path is empty
-
 ### Bug Fixes
 
 - Add gulp-through2 package ([a971689](https://github.com/webmappsrl/webmapp-app/commit/a9716894c7179a731b363bb4fab4d72bb5c241c0))
@@ -1210,7 +1169,6 @@
     
     style(map-track-details.component): increased padding bottom
     fix(track-properties.component): activity tab fixed
-<!-- COMMIT_DESC -->
     
     - Removed the condition for disabling layers when there are no current filters
     - Added a new condition for disabling layers when there are current filters and toggleLayerDirective is false and currentLayer is null
@@ -1224,7 +1182,6 @@
     
     - Refactored code in the register page to update the metadata object
     - Updated the save service to handle metadata parsing and set locations property in geojson
-
 - **i18n:** Add translations for new points of interest ([d3a9b09](https://github.com/webmappsrl/webmapp-app/commit/d3a9b09cdbd7c1eb492824070ef0dff6449958eb))
 <!-- COMMIT_DESC -->
     
@@ -1244,14 +1201,12 @@
     - Added private property _backBtnSub$ of type Subscription
     - Added ionViewDidEnter() method to handle back button event and exit the app
     - Added ionViewWillLeave() method to unsubscribe from back button event
-
 ### Miscellaneous
 
 - **deploy-commands:** updated ([6278031](https://github.com/webmappsrl/webmapp-app/commit/627803168adc54acb2132c1fe25d7008f4b57831))
 <!-- COMMIT_DESC -->
     
     - Removed the `providers` property for `LangService` in the `SettingsComponent` and `ProfilePage` files.
-<!-- COMMIT_DESC -->
     
     Replaced the 'confPOIFORMS' observable with a new 'acquisitionFORM' observable in the waypoint save modal. This change affects both the HTML template and TypeScript component of the modal. Also, added 'confPOIFORMS' to waypoint page for data acquisition.
     
@@ -1272,7 +1227,6 @@
     - Created a new method in the RegisterPage component called "waypoint" that navigates to the "waypoint" page with the current track as a parameter.
     
     This commit adds functionality to allow users to add waypoints while registering.
-<!-- COMMIT_DESC -->
     
     improved button visibility
 <!-- COMMIT_DESC -->
@@ -1308,7 +1262,6 @@
     
     - Removed line separator from ion-item element
     - Added a new ion-item element to display helper text for the current form
-<!-- COMMIT_DESC -->
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
@@ -1320,7 +1273,6 @@
     - Updated updateLastFilterType() method in map.page.ts to dispatch setLastFilterType action
     
     The minSdkVersion in the Android platform has been updated from 31 to 28. This change ensures compatibility with a wider range of devices.
-
 - Add deploy command for motomappa ([0475fc2](https://github.com/webmappsrl/webmapp-app/commit/0475fc20986c1e634d6132daea9e99e639748a9a))
 <!-- COMMIT_DESC -->
     
@@ -1338,7 +1290,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-## [2.6.1](https://github.com/webmappsrl/webmapp-app/compare/v2.6.0...v2.6.1) (2024-01-11)
 
 ### Miscellaneous
 
@@ -1359,7 +1310,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-## [2.6.0](https://github.com/webmappsrl/webmapp-app/compare/v2.5.0...v2.6.0) (2023-12-07)
 
 ### Features
 
@@ -1376,7 +1326,6 @@
     - Removed unnecessary line break in the form label
     - Added helper text for form fields
     - Adjusted padding for the form field helper text
-
 ### Features
 
 - **home:** add home layer ([5e485df](https://github.com/webmappsrl/webmapp-app/commit/5e485df7bb6082d84dbb4676e47a25893913324e))
@@ -1385,10 +1334,8 @@
     The import statement for HomeModule was removed as it was not being used in the code. This change helps to clean up the module and improve code readability.
     
     The minSdkVersion in the Android platform has been updated from 31 to 28. This change ensures compatibility with a wider range of devices.
-### Features
 
 - **social-share:** add configurable text ([7544147](https://github.com/webmappsrl/webmapp-app/commit/75441472c46df96cca8536352b5aa81d2b290054))
-### Features
 
 - update ([6d55ba5](https://github.com/webmappsrl/webmapp-app/commit/6d55ba58244485a1bf59b1d12a7f6f20b89fe76f))
 <!-- COMMIT_DESC -->
@@ -1396,7 +1343,6 @@
     - Added event listener for wmMapOverlayEVT$ in map.page.html
     - Added event listener for lastFilterTypeEvt in map.page.html
     - Updated updateLastFilterType() method in map.page.ts to dispatch setLastFilterType action
-- Update deploy-messages.txt ([1f39225](https://github.com/webmappsrl/webmapp-app/commit/1f392255ecd82065970c35eab8ccca131be14e3f))
 <!-- COMMIT_DESC -->
     
     - Improved rendering performance of layers
@@ -1411,7 +1357,6 @@
 <!-- COMMIT_DESC -->
     
     This commit adds a new release-please configuration file, `release-please-config.json`, which includes an extra-file entry for the `core/version.json` file. The JSON path `$version` is specified to extract the version information. This change follows semantic versioning guidelines.
-
 - Add release automation workflow ([004bc16](https://github.com/webmappsrl/webmapp-app/commit/004bc16781f50387128c0308fb1fd8df30dec87e))
 <!-- COMMIT_DESC -->
     
@@ -1419,7 +1364,6 @@
     
     
     ...
-- Update package version to 2.1.51 ([c2f8753](https://github.com/webmappsrl/webmapp-app/commit/c2f8753f1a4073d4e7f18e9582fe94ea097cff65))
 <!-- COMMIT_DESC -->
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
