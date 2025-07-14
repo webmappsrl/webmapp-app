@@ -158,6 +158,13 @@ export function openLayer(layerTitle: string) {
 }
 
 /**
+ * Opens the UGC box.
+ */
+export function openUgcBox() {
+  cy.get('wm-ugc-box').click();
+}
+
+/**
  * Opens a POI in a layer by its title.
  * @param poiTitle the title of the POI to open.
  */

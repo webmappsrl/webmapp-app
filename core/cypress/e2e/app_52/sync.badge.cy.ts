@@ -5,6 +5,7 @@ import {
   goHome,
   mockGetApiTracks,
   mockSaveApiTracksOffline,
+  openUgcBox,
 } from 'cypress/utils/test-utils';
 
 const trackToImport = 'trackToImport.geojson';
@@ -39,7 +40,7 @@ describe('Visualize sync badge [oc:4776] [https://orchestrator.maphub.it/resourc
     cy.get('ion-alert button').click();
 
     goHome();
-    cy.get('wm-ugc-box').click();
+    openUgcBox();
 
     checkSynchronizedBadge(titleSynchronizedTrack, true);
   });

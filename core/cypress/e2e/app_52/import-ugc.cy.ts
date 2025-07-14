@@ -3,6 +3,7 @@ import {
   confWithAuthEnabled,
   e2eLogin,
   goHome,
+  openUgcBox,
   originUrl,
 } from 'cypress/utils/test-utils';
 const fileTrackToImport = 'trackToImport.geojson';
@@ -28,7 +29,7 @@ describe('Import UGC', () => {
     e2eLogin();
     cy.get('ion-alert button').click();
     goHome();
-    cy.get('wm-ugc-box').click();
+    openUgcBox();
     cy.get('wm-map-details wm-home-ugc wm-ugc-box ion-button').click();
     cy.get('input[type="file"]').selectFile(`cypress/fixtures/${fileTrackToImport}`, {force: true});
   });

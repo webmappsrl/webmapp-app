@@ -4,6 +4,7 @@ import {
   goHome,
   mockGetApiPois,
   mockGetApiTracks,
+  openUgcBox,
 } from 'cypress/utils/test-utils';
 
 import {clearTestState} from 'cypress/utils/test-utils';
@@ -28,7 +29,7 @@ describe('My paths tabs', () => {
     cy.get('ion-alert button').click();
 
     goHome();
-    cy.get('wm-ugc-box').click();
+    openUgcBox();
 
     cy.get('ion-segment-button[value="tracks"]').should('exist');
     cy.get('ion-segment-button[value="pois"]').should('exist');
