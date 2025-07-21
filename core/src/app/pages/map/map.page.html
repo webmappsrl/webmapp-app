@@ -2,6 +2,7 @@
   scrollY="false"
   [ngClass]="mapDetailsStatus$|async"
   [class.move-bottom]="hasFeatureInViewport$|async"
+  [class.register-panel-enabled]="enableRecoderPanel$|async"
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
@@ -203,5 +204,7 @@
       (closeEvt)="closeDownload()"
       (goToEvt)="goToPage($event)"
     ></wm-download>
+
+    <wm-recorder *ngIf="enableRecoderPanel$|async"></wm-recorder>
   </wm-geobox-map>
 </ion-content>

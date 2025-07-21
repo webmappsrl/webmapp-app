@@ -44,6 +44,7 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {
   ecLayer,
+  enableRecoderPanel,
   hasFeatureInViewport,
   inputTyped,
   mapDetailsStatus,
@@ -142,6 +143,7 @@ export class MapPage {
   currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
+  enableRecoderPanel$: Observable<boolean> = this._store.select(enableRecoderPanel);
   featureOpened$: Observable<boolean> = this._store.select(featureOpened);
   flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
   geohubId$ = this._store.select(confGeohubId);
