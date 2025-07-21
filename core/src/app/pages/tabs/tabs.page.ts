@@ -13,6 +13,7 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
+import {enableRecoderPanel} from '@wm-core/store/user-activity/user-activity.selector';
 
 @Component({
   selector: 'webmapp-page-tabs',
@@ -27,6 +28,7 @@ export class TabsPage {
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   online$: Observable<boolean> = this._storeNetwork.select(online);
+  enableRecoderPanel$: Observable<boolean> = this._store.select(enableRecoderPanel);
 
   constructor(
     private _statusService: StatusService,

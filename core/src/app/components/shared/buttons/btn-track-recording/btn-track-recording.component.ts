@@ -8,10 +8,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {ESuccessType} from 'src/app/types/esuccess.enum';
-import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {NavigationExtras} from '@angular/router';
 import {LoginComponent} from '@wm-core/login/login.component';
+import {Store} from '@ngrx/store';
+import {setEnableRecoderPanel} from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -26,6 +26,7 @@ export class BtnTrackRecordingComponent {
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
+    private _store: Store,
     private _navCtrl: NavController,
     private _modalController: ModalController
   ) {}
@@ -48,8 +49,7 @@ export class BtnTrackRecordingComponent {
 
   track(): void {
     if (this.isLogged) {
-      let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
-      this._navCtrl.navigateForward('register', navigationExtras);
+      this._store.dispatch(setEnableRecoderPanel({enable: true}));
     } else {
       this.openModalLogin();
     }

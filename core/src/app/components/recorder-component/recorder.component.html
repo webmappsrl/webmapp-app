@@ -1,0 +1,62 @@
+<div class="wm-recorder-container">
+  <ion-card
+    [ngStyle]="{
+      'opacity': opacity
+    }"
+  >
+    <div class="wm-recorder-infopanel-buttons">
+      <ion-button (click)="resume()" *ngIf="isPaused; else pauseButton">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-button>
+      <ng-template #pauseButton>
+        <ion-button (click)="pause()">
+          <ion-icon name="pause-outline"></ion-icon>
+        </ion-button>
+      </ng-template>
+      <ion-button (click)="stop()">
+        <ion-icon name="stop-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="waypoint()">
+        <ion-icon name="pin-outline"></ion-icon>
+      </ion-button>
+    </div>
+    <div class="wm-recorder-infopanel-top">
+      <div class="wm-recorder-infopanel-top-center">
+        <div class="wm-recorder-infopanel-top-title">
+          {{'pages.register.time' | wmtrans}}
+        </div>
+        <div class="wm-recorder-infopanel-top-data">
+          {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
+          number : '2.0-0'}}
+        </div>
+      </div>
+    </div>
+    <div class="wm-recorder-infopanel-bottom">
+      <div class="wm-recorder-infopanel-bottom-title">
+        {{'pages.register.currentspeed' | wmtrans}}
+      </div>
+      <div class="wm-recorder-infopanel-bottom-data">{{actualSpeed | number:'1.0-0'}}<span>km/h</span></div>
+    </div>
+    <div
+      class="
+        wm-recorder-infopanel-bottom
+        wm-recorder-infopanel-bottom-middle
+      "
+    >
+      <div class="wm-recorder-infopanel-bottom-title">
+        {{'pages.register.averagespeed' | wmtrans}}
+      </div>
+      <div class="wm-recorder-infopanel-bottom-data">{{averageSpeed | number:'1.0-0'}}<span>km/h</span></div>
+    </div>
+    <div class="wm-recorder-infopanel-bottom">
+      <div class="wm-recorder-infopanel-bottom-title">
+        {{'pages.register.odo' | wmtrans}}
+      </div>
+      <div class="wm-recorder-infopanel-bottom-data">{{length | number:'1.2-2'}}</div>
+    </div>
+  </ion-card>
+
+  <div class="wm-recorder-btnrec-container">
+    <wm-btn-rec (move)="recordMove($event)" (unlocked)="recordStart($event)"> </wm-btn-rec>
+  </div>
+</div>
