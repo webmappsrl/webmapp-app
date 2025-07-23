@@ -6,9 +6,7 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([63a366e](https://github.com/webmappsrl/webmapp-app/commit/63a366e217b6759205cfd388cbab1e03ad6537ef))
-* enrich changelog with commit descriptions ([123b9e8](https://github.com/webmappsrl/webmapp-app/commit/123b9e85dd251f7e23130d552a7bb74198826eae))
 * enrich changelog with commit descriptions ([c73e0f3](https://github.com/webmappsrl/webmapp-app/commit/c73e0f3cb671141b2c55497523829d8c3221d557))
-* **wm-core:** changelog for bump to 166a1f0 ([cda7a92](https://github.com/webmappsrl/webmapp-app/commit/cda7a92b0c47cfe5186c25f9bb9b2374ef2f7f1e))
 <!-- COMMIT_DESC -->
     
     - fix(localization): 🐛 correct typo in "downloads" across multiple translations <a href="https://orchestrator.maphub.it/resources/customer-stories/5967" target="_blank" rel="noopener noreferrer">OC[5967]</a>
@@ -39,7 +37,6 @@
     
     - Removed trailing slash from 'osm2caidev' origin URL in both production and development environment files for consistency.
     - Updated 'shardName' from 'carg' to 'osm2caidev' in development environment to reflect the correct configuration.
-
 * add new images ([529c70a](https://github.com/webmappsrl/webmapp-app/commit/529c70a2fdb9c6b594d4346a61a761e8169337c4))
 <!-- COMMIT_DESC -->
     
@@ -48,7 +45,6 @@
     - Updated `origin`, `elasticApi`, and `awsApi` endpoints for `carg` and `cargdev` configurations in both production and development environments.
     - Changed `appId` and `shardName` values and added `debug` flag in the development environment configuration for improved debugging capabilities.
     - Adjusted URLs to reflect new domain structure and storage paths for better resource management.
-<!-- COMMIT_DESC -->
     
     - Removed the dark color from the navigation icon in `map.page.html` to use the default color.
     - Added a new input `[wmMapPositionCenter]` in `register.page.html` to bind the `centerPositionEvt$`.
@@ -145,7 +141,6 @@
     * refactor(ugc): ♻️ clone feature object to prevent mutation
     
     In the `_cleanExifData` method, a deep clone of the `feature` object is created using `structuredClone`. This prevents mutations to the original `feature` object when cleaning EXIF data. The cleaned feature object is returned instead of the original. This change ensures that the original data remains untouched, improving data integrity.
-* **wm-core:** changelog for bump to c30a6d7 ([0adbf8a](https://github.com/webmappsrl/webmapp-app/commit/0adbf8ade4690304bb5d7333dbe3db58356d4ee6))
 <!-- COMMIT_DESC -->
     
     - chore(media): ✨ add MAX_PHOTOS constant and update import path
@@ -313,7 +308,6 @@
     chore: Update inner component in poi-properties template
     
     Refactor inner component tag with new attributes for better functionality.
-<!-- COMMIT_DESC -->
     
     - Updated the wm-core submodule reference to the latest commit to incorporate recent changes and improvements.
     - Ensures the main project is using the most up-to-date version of the wm-core submodule.
@@ -425,7 +419,6 @@
     Updates webmapp font files to include new icons such as swimming, binoculars, and restaurant. Updates associated CSS to reflect new icon classes.
     
     Implements security improvements through updated submodule reference.
-<!-- COMMIT_DESC -->
     
     - 💄 style(changelog): remove extra newlines
     
@@ -597,7 +590,6 @@
     ---------
     
     Co-authored-by: bongiu <peppedeka@gmail.com>
-- Update subproject commit reference ([de21d37](https://github.com/webmappsrl/webmapp-app/commit/de21d373cecd849e8c994b30f668ae8be57aaf9c))
 <!-- COMMIT_DESC -->
     
     - Fixed a bug in the save button's disabled state in modal-save.component.html
@@ -684,7 +676,6 @@
     This commit adds new test cases to visualize the sync badge in the application. The tests cover scenarios where the track is synchronized and not synchronized, and verify that the correct icon is displayed based on the synchronization status.
     
     This commit updates the URL handling in the open method of the FavouritesPage class. Instead of using the `updateURL` method, it now uses the `changeURL` method with the 'map' parameter. This change improves the consistency and clarity of the code.
-<!-- COMMIT_DESC -->
     
     This commit adds a call to the `_geolocationSvc.startNavigation()` method in the `ionViewWillEnter` lifecycle hook of the `MapPage` component. This ensures that navigation is started when the page is entered.
     
@@ -826,7 +817,6 @@
     - Renamed _urlHandlerService to _urlHandlerSvc in tabs.page.ts
     
     This commit updates the tabs.page.ts file to reset the "ugc_track" and "ugc_poi" query parameters along with "track" and "poi". This ensures that all relevant query parameters are properly reset when navigating to the home tab.
-<!-- COMMIT_DESC -->
     
     - Updated the track-properties.component.html file to use optional chaining operator for accessing nested properties.
     - Renamed the map-track-details.component.html, map-track-details.component.scss, and map-track-details.component.ts files to map-details.component.html, map-details.component.scss, and map-details.component.ts respectively.
@@ -866,7 +856,6 @@
     * chore: Remove unused enableOverLay$ BehaviorSubject and optimize ngOnInit in MapPage
     
     Removed the unused enableOverLay$ BehaviorSubject and optimized the ngOnInit method in MapPage for better performance.
-<!-- COMMIT_DESC -->
     
     This commit comments out the console.log statement in the getUrlFile function and removes unused code in the build function.
     
@@ -914,7 +903,6 @@
     - Removed duplicate definition of `openPoiShare()` function in `map.page.ts`
     - Added new function `openPoiShare()` to share a point of interest by ID
     - Removed unused function parameters and variables
-
 - Fix error handling in app.component.ts ([99d2e90](https://github.com/webmappsrl/webmapp-app/commit/99d2e90fc976f2b292d7574b81eddac2ff226d5a))
 <!-- COMMIT_DESC -->
     
@@ -1020,7 +1008,6 @@
     
     - Removed unused imports and variables
     - Updated import paths for services and classes
-<!-- COMMIT_DESC -->
     
     * chore: Refactor shareTrackByID method in ShareService <a href="https://orchestrator.maphub.it/resources/customer-stories/3850" target="_blank" rel="noopener noreferrer">OC[3850]</a>
     
@@ -1076,7 +1063,6 @@
     * Refactored privacy policy handling in registration page
     
     Simplified the way privacy policy is handled on the user registration page. The code now checks if a custom privacy policy exists and falls back to a default one if not. Also, refactored the openCmp function for better readability and performance.
-- Change directory for writing file in TrackdetailPage <a href="https://orchestrator.maphub.it/resources/customer-stories/3422" target="_blank" rel="noopener noreferrer">OC[3422]</a> ([63b6b22](https://github.com/webmappsrl/webmapp-app/commit/63b6b228ca33d338898baf39dd710dfe6dcfb579))
 <!-- COMMIT_DESC -->
     
     Changed the directory for writing a file in the TrackdetailPage from Directory.Documents to Directory.External. This change ensures that the file is written to the external storage instead of the documents directory.
@@ -1119,7 +1105,6 @@
     
     - Commented out the navigation to 'home' in app.component.ts
     - Added a new route in tabs-routing.module.ts to redirect to 'home' when the path is empty
-<!-- COMMIT_DESC -->
     
     The commit adds the gulp-through2 package to the project dependencies. This package is required for performing tasks in the Gulp build process.
     
@@ -1164,7 +1149,6 @@
     Replaced the 'confPOIFORMS' observable with a new 'acquisitionFORM' observable in the waypoint save modal. This change affects both the HTML template and TypeScript component of the modal. Also, added 'confPOIFORMS' to waypoint page for data acquisition.
     
     The @capacitor-community/keep-awake package has been added to the project dependencies. This package allows the application to prevent the device from going into sleep mode. The version installed is 4.0.0, which requires a peer dependency of @capacitor/core at version 5.0.0 or higher.
-<!-- COMMIT_DESC -->
     
     This commit adds the ability to open a popup on the map page when a feature collection is clicked. The popup displays additional information about the selected feature.
     
@@ -1237,7 +1221,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-- Add deploy command for motomappa ([0475fc2](https://github.com/webmappsrl/webmapp-app/commit/0475fc20986c1e634d6132daea9e99e639748a9a))
 <!-- COMMIT_DESC -->
     
     Added a new deploy command for the motomappa project.
@@ -1267,7 +1250,6 @@
     - Removed unnecessary line break in the form label
     - Added helper text for form fields
     - Adjusted padding for the form field helper text
-<!-- COMMIT_DESC -->
     
     The import statement for HomeModule was removed as it was not being used in the code. This change helps to clean up the module and improve code readability.
     
@@ -1286,7 +1268,6 @@
     - Fixed minor bugs
     
     This commit adds logic to control the opacity of a layer on the map and opens the track details component. The opacity is set based on whether the current layer has edges or not. If there are edges, the opacity is set to false; otherwise, it is set to true.
-<!-- COMMIT_DESC -->
     
     This commit adds a new release-please configuration file, `release-please-config.json`, which includes an extra-file entry for the `core/version.json` file. The JSON path `$version` is specified to extract the version information. This change follows semantic versioning guidelines.
     
