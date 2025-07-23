@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-23)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([9f130dd](https://github.com/webmappsrl/webmapp-app/commit/9f130dd2a3533a922424dbe1eddd431120a88da4))
+* enrich changelog with commit descriptions ([8858da1](https://github.com/webmappsrl/webmapp-app/commit/8858da10df0c7a15058cbf08c97a8beeada896f7))
+* **wm-types:** changelog for bump to 6ec3990 ([0eaac1e](https://github.com/webmappsrl/webmapp-app/commit/0eaac1e496fe86a40143362c13c4b948468e5f21))
+
 ## [3.1.2](https://github.com/webmappsrl/webmapp-app/compare/v3.1.1...v3.1.2) (2025-07-23)
 
 
