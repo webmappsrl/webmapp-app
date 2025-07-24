@@ -6,6 +6,7 @@ wm-map-details {
     left: calc(16px + constant(safe-area-inset-left, 30px));
     left: calc(16px + env(safe-area-inset-left, 30px));
     margin: 0;
+    z-index: 1001;
   }
   .wm-drag {
     width: 100%;

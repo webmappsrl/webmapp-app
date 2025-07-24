@@ -14,7 +14,7 @@ describe('Open and close Map Details [oc:5500] [https://orchestrator.maphub.it/r
 
   it('should open Map Details on click track in map', () => {
     goMap();
-    cy.wait(1500);
+    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
     cy.get('.ol-viewport .ol-layer canvas').click(zoom_coordinates[0], zoom_coordinates[1]);
     cy.wait(waitTime);
     cy.get('.ol-viewport .ol-layer canvas').click(track_coordinates[0], track_coordinates[1]);
