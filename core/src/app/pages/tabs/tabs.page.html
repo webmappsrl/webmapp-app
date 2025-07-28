@@ -1,5 +1,5 @@
 <ion-tabs #tabs>
-  <ion-tab-bar slot="bottom" [hidden]="isBarHidden()">
+  <ion-tab-bar slot="bottom" [hidden]="enableRecoderPanel$|async">
     <ion-tab-button tab="home" (click)="setCurrentTab('home')">
       <i class="icon-outline-home webmapp-tabs-icon"></i>
       <ion-label class="webmapp-tabs-label"> {{'tabs.home' | wmtrans}} </ion-label>

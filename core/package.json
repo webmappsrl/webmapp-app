@@ -56,6 +56,7 @@
     "chart.js": "^3.5.1",
     "color": "^4.2.0",
     "cordova-res": "^0.15.4",
+    "cypress-real-events": "^1.14.0",
     "geojson-to-kml": "0.0.1",
     "graphhopper-js-api-client": "^5.0.2",
     "ol": "7.1.0",

@@ -12,6 +12,8 @@ import {ButtonsModule} from './buttons/buttons.module';
 import {WmSharedModule} from '@wm-core/shared/shared.module';
 import {getFormFieldIcnPipe} from './pipes/get-form-field-icn.pipe';
 import {getFormFieldValuePipe} from './pipes/get-form-field-value.pipe';
+import {ModalSaveComponent} from './modal-save/modal-save.component';
+import {WmCoreModule} from '@wm-core/wm-core.module';
 const components = [
   RecordingBtnComponent,
   GalleryComponent,
@@ -19,6 +21,7 @@ const components = [
   BtnFilterComponent,
   getFormFieldIcnPipe,
   getFormFieldValuePipe,
+  ModalSaveComponent,
 ];
 @NgModule({
   declarations: components,
@@ -30,6 +33,7 @@ const components = [
     WmPipeModule,
     ButtonsModule,
     WmSharedModule,
+    WmCoreModule,
   ],
   exports: [...components, ButtonsModule],
 })

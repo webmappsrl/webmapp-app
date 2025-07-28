@@ -31,10 +31,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/store/store.module').then(m => m.StorePageModule),
   },
   {
-    path: 'register',
-    loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule),
-  },
-  {
     path: 'project',
     loadChildren: () => import('./pages/project/project.module').then(m => m.ProjectPageModule),
   },

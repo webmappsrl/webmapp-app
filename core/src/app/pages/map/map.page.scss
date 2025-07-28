@@ -26,28 +26,30 @@ webmapp-map-page {
     width: 0%;
   }
 
-  ion-fab-button {
-    @include box-shadow-light;
+  wm-map {
+    ion-fab-button {
+      @include box-shadow-light;
 
-    border-radius: 20px;
+      border-radius: 20px;
 
-    --color: var(--wm-color-primary);
-    --background: var(--wm-color-light);
-    --background-activated: var(--wm-color-primary);
-    --background-activated-opacity: 0.25;
-    --background-focused: var(--wm-color-light);
-    --background-focused-opacity: 0;
-    --background-hover: var(--wm-color-light);
-    --background-hover-opacity: 0;
-    i {
-      width: 42px;
-      height: 42px;
-      padding: 9px;
-      font-size: var(--wm-font-icon);
+      --color: var(--wm-color-primary);
+      --background: var(--wm-color-light);
+      --background-activated: var(--wm-color-primary);
+      --background-activated-opacity: 0.25;
+      --background-focused: var(--wm-color-light);
+      --background-focused-opacity: 0;
+      --background-hover: var(--wm-color-light);
+      --background-hover-opacity: 0;
+      i {
+        width: 42px;
+        height: 42px;
+        padding: 9px;
+        font-size: var(--wm-font-icon);
+      }
     }
-  }
-  ion-fab-list {
-    position: absolute;
+    ion-fab-list {
+      position: absolute;
+    }
   }
 
   .success {
@@ -121,6 +123,19 @@ webmapp-map-page {
   .move-bottom {
     .bottom-right:first-of-type {
       transform: translateY(-116px);
+    }
+  }
+  .register-panel-enabled {
+    .bottom-right {
+      ion-fab {
+        display: none !important;
+      }
+      ion-fab:nth-last-child(2) {
+        display: block !important;
+      }
+    }
+    .top-right {
+      display: none !important;
     }
   }
 
