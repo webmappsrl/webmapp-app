@@ -19,7 +19,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-## [3.1.1](https://github.com/webmappsrl/webmapp-app/compare/v3.1.0...v3.1.1) (2025-07-09)
 
 
 ### Bug Fixes
@@ -36,7 +35,6 @@
     
     - Removed trailing slash from 'osm2caidev' origin URL in both production and development environment files for consistency.
     - Updated 'shardName' from 'carg' to 'osm2caidev' in development environment to reflect the correct configuration.
-<!-- COMMIT_DESC -->
     
     Introduces two webp profile images to the assets folder.
     
@@ -246,7 +244,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-## [3.1.0](https://github.com/webmappsrl/webmapp-app/compare/v3.0.8...v3.1.0) (2025-06-16)
 
 
 ### Features
@@ -308,7 +305,6 @@
     
     - Updated the wm-core submodule reference to the latest commit to incorporate recent changes and improvements.
     - Ensures the main project is using the most up-to-date version of the wm-core submodule.
-<!-- COMMIT_DESC -->
     
     - Increase font size for wm-track-related-poi ion-button
     - Set height to 36px for wm-track-related-poi ion-button
@@ -613,7 +609,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-
 - This update may introduce breaking changes in the codebase due to changes in the @capacitor/device library.
 
 ### Features
@@ -736,7 +731,6 @@
     - Removed the display of currentPoiProperties in map.page.html
     - Updated translations for "Conferma" to "Confirm" in en.json, fr.json, and it.json
     - Added translation for "Link utili" as "Useful links" in en.json, fr.json, and it.json
-<!-- COMMIT_DESC -->
     
     - Added a new ng-container in the HTML file to display a favorite button for authenticated users
     - Updated the TypeScript file to handle the favorite button functionality by checking if a track is already marked as favorite
@@ -860,7 +854,6 @@
     - Removed the requestStoragePermission() function from trackdetail.page.ts
     
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
-<!-- COMMIT_DESC -->
     
     This commit adds a new API endpoint for OSM2CAI, which is set to 'https://osm2cai.cai.it'. This allows for integration with the OSM2CAI service.
 
@@ -896,7 +889,6 @@
     - Removed duplicate definition of `openPoiShare()` function in `map.page.ts`
     - Added new function `openPoiShare()` to share a point of interest by ID
     - Removed unused function parameters and variables
-<!-- COMMIT_DESC -->
     
     The code change fixes the error handling in the app.component.ts file. The filter condition has been updated to check for 'Unauthorized' instead of 'Unauthenticated'. This ensures that the correct error message is displayed when an unauthorized error occurs.
     
@@ -1069,7 +1061,6 @@
     
     - Removed ng-container and moved wm-map component to the top level
     - Reorganized ion-fab buttons for better layout and functionality
-<!-- COMMIT_DESC -->
     
     Added the Italian translation for the new waypoint message to the i18n file.
     
@@ -1111,7 +1102,6 @@
     
     - Refactored code in the register page to update the metadata object
     - Updated the save service to handle metadata parsing and set locations property in geojson
-<!-- COMMIT_DESC -->
     
     - Added translations for new points of interest categories and descriptions in English and Italian.
     - Updated the translation files `en.ts` and `it.ts`.
@@ -1186,7 +1176,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-<!-- COMMIT_DESC -->
     
     - Added event listener for wmMapOverlayEVT$ in map.page.html
     - Added event listener for lastFilterTypeEvt in map.page.html
@@ -1225,7 +1214,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-- Add popup functionality to map page ([38b999e](https://github.com/webmappsrl/webmapp-app/commit/38b999efed09cd3e0cf1005e48564b5880491e8e))
 <!-- COMMIT_DESC -->
     
     This commit adds the ability to open a popup on the map page when a feature collection is clicked. The popup displays additional information about the selected feature.
