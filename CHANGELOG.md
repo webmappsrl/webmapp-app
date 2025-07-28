@@ -6,7 +6,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([63a366e](https://github.com/webmappsrl/webmapp-app/commit/63a366e217b6759205cfd388cbab1e03ad6537ef))
-* enrich changelog with commit descriptions ([c73e0f3](https://github.com/webmappsrl/webmapp-app/commit/c73e0f3cb671141b2c55497523829d8c3221d557))
 <!-- COMMIT_DESC -->
     
     - fix(localization): 🐛 correct typo in "downloads" across multiple translations <a href="https://orchestrator.maphub.it/resources/customer-stories/5967" target="_blank" rel="noopener noreferrer">OC[5967]</a>
@@ -37,7 +36,6 @@
     
     - Removed trailing slash from 'osm2caidev' origin URL in both production and development environment files for consistency.
     - Updated 'shardName' from 'carg' to 'osm2caidev' in development environment to reflect the correct configuration.
-* add new images ([529c70a](https://github.com/webmappsrl/webmapp-app/commit/529c70a2fdb9c6b594d4346a61a761e8169337c4))
 <!-- COMMIT_DESC -->
     
     Introduces two webp profile images to the assets folder.
@@ -141,7 +139,6 @@
     * refactor(ugc): ♻️ clone feature object to prevent mutation
     
     In the `_cleanExifData` method, a deep clone of the `feature` object is created using `structuredClone`. This prevents mutations to the original `feature` object when cleaning EXIF data. The cleaned feature object is returned instead of the original. This change ensures that the original data remains untouched, improving data integrity.
-<!-- COMMIT_DESC -->
     
     - chore(media): ✨ add MAX_PHOTOS constant and update import path
     Introduced a new constant `MAX_PHOTOS` in the `media.ts` file within the `wm-core` project. This file is created to store media-related constants. Updated the `image-picker.component.ts` to import `MAX_PHOTOS` from the new location `@wm-core/constants/media` instead of the previous `@map-core/readonly/constants`. This change enhances code organization by centralizing media constants.
@@ -311,7 +308,6 @@
     
     - Updated the wm-core submodule reference to the latest commit to incorporate recent changes and improvements.
     - Ensures the main project is using the most up-to-date version of the wm-core submodule.
-* Update 75.css ([ec60fbc](https://github.com/webmappsrl/webmapp-app/commit/ec60fbce04f7c6beaf76003d747dcb913a15d583))
 <!-- COMMIT_DESC -->
     
     - Increase font size for wm-track-related-poi ion-button
@@ -590,7 +586,6 @@
     ---------
     
     Co-authored-by: bongiu <peppedeka@gmail.com>
-<!-- COMMIT_DESC -->
     
     - Fixed a bug in the save button's disabled state in modal-save.component.html
     - Added private methods _addFormError and _removeFormError to handle form errors in modal-save.component.ts
@@ -741,7 +736,6 @@
     - Removed the display of currentPoiProperties in map.page.html
     - Updated translations for "Conferma" to "Confirm" in en.json, fr.json, and it.json
     - Added translation for "Link utili" as "Useful links" in en.json, fr.json, and it.json
-- Update map page HTML and TypeScript files ([88de3e3](https://github.com/webmappsrl/webmapp-app/commit/88de3e35c3a340334c4ab4c217dbacb1f953abd9))
 <!-- COMMIT_DESC -->
     
     - Added a new ng-container in the HTML file to display a favorite button for authenticated users
@@ -864,7 +858,6 @@
     
     - Updated compileSdkVersion and targetSdkVersion in gulpfile.js to 33
     - Removed the requestStoragePermission() function from trackdetail.page.ts
-<!-- COMMIT_DESC -->
     
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
 <!-- COMMIT_DESC -->
@@ -903,7 +896,6 @@
     - Removed duplicate definition of `openPoiShare()` function in `map.page.ts`
     - Added new function `openPoiShare()` to share a point of interest by ID
     - Removed unused function parameters and variables
-- Fix error handling in app.component.ts ([99d2e90](https://github.com/webmappsrl/webmapp-app/commit/99d2e90fc976f2b292d7574b81eddac2ff226d5a))
 <!-- COMMIT_DESC -->
     
     The code change fixes the error handling in the app.component.ts file. The filter condition has been updated to check for 'Unauthorized' instead of 'Unauthenticated'. This ensures that the correct error message is displayed when an unauthorized error occurs.
@@ -1063,7 +1055,6 @@
     * Refactored privacy policy handling in registration page
     
     Simplified the way privacy policy is handled on the user registration page. The code now checks if a custom privacy policy exists and falls back to a default one if not. Also, refactored the openCmp function for better readability and performance.
-<!-- COMMIT_DESC -->
     
     Changed the directory for writing a file in the TrackdetailPage from Directory.Documents to Directory.External. This change ensures that the file is written to the external storage instead of the documents directory.
     
@@ -1113,7 +1104,6 @@
     
     - Removed the condition for disabling layers when there are no current filters
     - Added a new condition for disabling layers when there are current filters and toggleLayerDirective is false and currentLayer is null
-<!-- COMMIT_DESC -->
     
     - Removed unused imports and variables
     - Fixed indentation and spacing issues
@@ -1167,7 +1157,6 @@
     Added a new deploy command for the motomappa project.
     
     The commit removes the code that updates the manifest.json file in the PR branch, as it is no longer needed. This change simplifies the workflow and improves efficiency.
-<!-- COMMIT_DESC -->
     
     - Removed the `removeTrackFilterEVT` and `removePoiFilterEVT` event listeners from the HTML template.
     - Removed the `toggleTrackFilter` and `removePoiFilter` methods from the TypeScript file.
@@ -1221,7 +1210,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-<!-- COMMIT_DESC -->
     
     Added a new deploy command for the motomappa project.
     
@@ -1254,7 +1242,6 @@
     The import statement for HomeModule was removed as it was not being used in the code. This change helps to clean up the module and improve code readability.
     
     The minSdkVersion in the Android platform has been updated from 31 to 28. This change ensures compatibility with a wider range of devices.
-- update ([6d55ba5](https://github.com/webmappsrl/webmapp-app/commit/6d55ba58244485a1bf59b1d12a7f6f20b89fe76f))
 <!-- COMMIT_DESC -->
     
     - Added event listener for wmMapOverlayEVT$ in map.page.html
