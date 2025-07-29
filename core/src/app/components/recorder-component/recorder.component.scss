@@ -91,5 +91,6 @@ wm-recorder {
     right: 0;
     width: fit-content;
     z-index: 1000;
+    transition: bottom 0.4s ease-in-out;
   }
 }

@@ -113,11 +113,28 @@ webmapp-map-page {
     opacity: 1;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   }
+  .onlyTitle {
+    wm-recorder {
+      .wm-recorder-btnrec-container {
+        bottom: 110px;
+      }
+    }
+  }
+  .open {
+    wm-recorder {
+      .wm-recorder-btnrec-container {
+        bottom: 357px;
+      }
+    }
+  }
   .full {
     .bottom-right,
     .ol-zoom {
       opacity: 0;
       pointer-events: none;
+    }
+    .wm-recorder-btnrec-container {
+      bottom: calc(100vh - 170px);
     }
   }
   .move-bottom {
