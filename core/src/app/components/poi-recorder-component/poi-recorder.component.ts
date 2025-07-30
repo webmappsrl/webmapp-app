@@ -51,9 +51,9 @@ import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
       }
       ion-card {
         position: absolute;
-        left: 50px;
-        right: 50px;
-        top: 6px;
+        left: calc(50px + env(safe-area-inset-left, 30px));
+        right: calc(50px + env(safe-area-inset-right, 30px));
+        top: calc(6px + env(safe-area-inset-top, 30px));
         border-radius: 15px;
         z-index: 10;
 
