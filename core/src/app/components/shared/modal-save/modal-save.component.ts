@@ -1,6 +1,5 @@
-import {LineString, Position} from 'geojson';
-import {Observable, from} from 'rxjs';
-
+import {LineString} from 'geojson';
+import {Observable, from, of} from 'rxjs';
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Photo} from '@capacitor/camera';
 import {ActionSheetController, AlertController, IonContent, ModalController} from '@ionic/angular';
@@ -205,12 +204,11 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
     await modaSuccess.onDidDismiss();
   }
 
-  async save(): Promise<void> {
+  save(): void {
     if (this.formGroup.invalid) {
       return;
     }
 
-    const device = await this._deviceSvc.getInfo();
     const dateNow = new Date();
     const geometry: Point | LineString = this.isWaypoint
       ? {type: 'Point', coordinates: [this.position.longitude, this.position.latitude]}
@@ -227,16 +225,20 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
         app_id: `${this._environmentSvc.appId}`,
         createdAt: dateNow,
         updatedAt: dateNow,
-        device,
+        device: null,
         ...(this.isWaypoint
           ? {nominatim: this.nominatim}
           : {distanceFilter: +localStorage.getItem('wm-distance-filter') || 10}),
       },
     };
 
-    from(saveUgc(ugcFeature))
+    from(this._deviceSvc.getInfo())
       .pipe(
         take(1),
+        switchMap(device => {
+          ugcFeature.properties.device = device;
+          return from(saveUgc(ugcFeature));
+        }),
         switchMap(_ => this.backToSuccess()),
         switchMap(_ =>
           this.openModalSuccess(
@@ -245,9 +247,19 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
               : {track: ugcFeature as WmFeature<LineString>},
           ),
         ),
+        switchMap(_ =>
+          from(this._modalCtrl.getTop()).pipe(
+            switchMap(topModal => {
+              if (topModal) {
+                return from(this._modalCtrl.dismiss());
+              } else {
+                return of(null);
+              }
+            }),
+          ),
+        ),
       )
-      .subscribe(async dismiss => {
-        await dismiss;
+      .subscribe(() => {
         this._store.dispatch(this.isWaypoint ? syncUgcPois() : syncUgcTracks());
       });
   }
