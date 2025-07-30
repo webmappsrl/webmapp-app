@@ -159,8 +159,8 @@ describe('Test wm-form field', () => {
 
     cy.get('.wm-btn-register-fab').should('be.visible').click();
     cy.get('[e2e-waypoint-btn]').should('be.visible').click();
-    cy.get('.webmapp-pagewaypoint-savebtn').should('be.visible').click();
-    cy.get('webmapp-modal-waypoint-save').should('be.visible');
+    cy.get('wm-poi-recorder ion-card ion-button').should('be.visible').click();
+    cy.get('webmapp-modal-save').should('be.visible');
   });
 
   it('should select type form whene there are multiple types', () => {
