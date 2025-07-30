@@ -195,6 +195,7 @@ export const originUrl = environment.shards.geohub.origin;
 export const meUrl = `${environment.shards.geohub.origin}/api/auth/me`;
 export const confURL = `${environment.shards.geohub.awsApi}/conf/52.json`;
 export const elasticUrl = `${environment.shards.geohub.elasticApi}`;
+export const mapReadyTimeout = 10000;
 export const data = {
   layers: {
     ecTrack: 'Tracks test e2e',

@@ -1,4 +1,11 @@
-import {clearTestState, confURL, e2eLogin, goMap, originUrl} from 'cypress/utils/test-utils';
+import {
+  clearTestState,
+  confURL,
+  e2eLogin,
+  goMap,
+  mapReadyTimeout,
+  originUrl,
+} from 'cypress/utils/test-utils';
 import 'cypress-real-events';
 
 const coordinates = [42.990973, 13.868811];
@@ -41,7 +48,7 @@ describe('Record UGC POI [oc:6003] [https://orchestrator.maphub.it/resources/dev
     e2eLogin();
     cy.get('ion-alert button').click();
     goMap();
-    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
+    cy.get('body', {timeout: mapReadyTimeout}).should('have.attr', 'e2e-map-ready', 'true');
 
     cy.get('.wm-btn-register-fab').should('be.visible').click();
     cy.get('[e2e-waypoint-btn]').should('be.visible').click();
@@ -103,7 +110,7 @@ describe('Record UGC POI [oc:6003] [https://orchestrator.maphub.it/resources/dev
       });
     });
     goMap();
-    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
+    cy.get('body', {timeout: mapReadyTimeout}).should('have.attr', 'e2e-map-ready', 'true');
 
     cy.get('.wm-btn-register-fab').should('be.visible').click();
     cy.get('[e2e-track-recording-btn]').should('be.visible').click();
