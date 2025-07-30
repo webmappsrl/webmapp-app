@@ -13,22 +13,22 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 import {ModalController, NavController} from '@ionic/angular';
 import {confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
-import {NavigationExtras} from '@angular/router';
 import {onRecord} from '@wm-core/store/user-activity/user-activity.selector';
 import {take} from 'rxjs/operators';
 import {
-  setEnableRecoderPanel,
+  setEnablePoiRecorderPanel,
+  setEnableTrackRecorderPanel,
   setOnRecord,
 } from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
-  selector: 'wm-recorder',
-  templateUrl: './recorder.component.html',
-  styleUrls: ['./recorder.component.scss'],
+  selector: 'wm-track-recorder',
+  templateUrl: './track-recorder.component.html',
+  styleUrls: ['./track-recorder.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecorderComponent implements OnInit, OnDestroy {
+export class TrackRecorderComponent implements OnInit, OnDestroy {
   //TODO: Gestire il flusso della registrazione dallo store creando action, effect, selector e reducer necessari
   actualSpeed: number = 0;
   averageSpeed: number = 0;
@@ -117,7 +117,7 @@ export class RecorderComponent implements OnInit, OnDestroy {
     this.averageSpeed = 0;
     this.length = 0;
     this._store.dispatch(setOnRecord({onRecord: false}));
-    this._store.dispatch(setEnableRecoderPanel({enable: false}));
+    this._store.dispatch(setEnableTrackRecorderPanel({enable: false}));
     this.focusPosition$.next(false);
 
     this.isPaused = false;
@@ -168,9 +168,6 @@ export class RecorderComponent implements OnInit, OnDestroy {
   }
 
   waypoint(): void {
-    let navigationExtras: NavigationExtras = {
-      state: {currentTrack: this._geolocationSvc.recordedFeature},
-    };
-    this._navCtrl.navigateForward('waypoint', navigationExtras);
+    this._store.dispatch(setEnablePoiRecorderPanel({enable: true}));
   }
 }

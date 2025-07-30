@@ -1,4 +1,14 @@
-wm-recorder {
+wm-track-recorder {
+  .wm-track-recorder-close-btn {
+    position: absolute;
+    top: calc(16px + constant(safe-area-inset-top, 30px));
+    top: calc(16px + env(safe-area-inset-top, 30px));
+    left: calc(16px + constant(safe-area-inset-left, 30px));
+    left: calc(16px + env(safe-area-inset-left, 30px));
+    margin: 0;
+    z-index: 1000;
+  }
+
   ion-card {
     position: absolute;
     left: 50px;

@@ -7,11 +7,6 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule),
   },
-
-  {
-    path: 'waypoint',
-    loadChildren: () => import('./pages/waypoint/waypoint.module').then(m => m.WaypointPageModule),
-  },
   {
     path: 'favourites',
     loadChildren: () =>

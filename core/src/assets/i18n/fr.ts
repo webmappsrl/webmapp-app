@@ -619,4 +619,7 @@ export const appFR = {
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni":
     "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
   'Apri impostazioni App': "Ouvrir les paramètres de l'application",
+  'Ti trovi qui': 'Vous êtes ici',
+  'Salva Waypoint': 'Enregistrer le waypoint',
+  'Salva Traccia': 'Enregistrer la trace',
 };

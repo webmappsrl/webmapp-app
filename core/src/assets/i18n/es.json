@@ -591,5 +591,8 @@
   "Apri impostazioni App": "Abrir configuraciones de la aplicación",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "¿Realmente deseas eliminar tu cuenta? Es obligatorio escribir \"delete account\" para proceder.",
   "Digita \"delete account\"": "Escribe \"delete account\"",
-  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmación no coincide. Escribe \"delete account\" para proceder."
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmación no coincide. Escribe \"delete account\" para proceder.",
+  "Ti trovi qui": "Estás aquí",
+  "Salva Waypoint": "Guardar punto de referencia",
+  "Salva Traccia": "Guardar ruta"
 }

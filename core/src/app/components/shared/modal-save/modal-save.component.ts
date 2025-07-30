@@ -1,4 +1,4 @@
-import {LineString} from 'geojson';
+import {LineString, Position} from 'geojson';
 import {Observable, from} from 'rxjs';
 
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
@@ -7,7 +7,7 @@ import {ActionSheetController, AlertController, IonContent, ModalController} fro
 import {Store} from '@ngrx/store';
 import {DeviceService} from '@wm-core/services/device.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
-import {generateUUID, saveUgcTrack} from '@wm-core/utils/localForage';
+import {generateUUID} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 import {switchMap, take} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
@@ -17,6 +17,9 @@ import {LangService} from '@wm-core/localization/lang.service';
 import {EnvironmentService} from '@wm-core/services/environment.service';
 import {addFormError, removeFormError} from '@wm-core/utils/form';
 import {BaseSaveComponent} from 'src/app/components/base-save.component.ts/base-save.component';
+import {Point} from 'geojson';
+import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
+import {saveUgc} from '@wm-core/utils/localForage';
 
 @Component({
   selector: 'webmapp-modal-save',
@@ -37,6 +40,9 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   public title: string;
   public track: WmFeature<LineString>;
   public validate = false;
+  public isWaypoint: boolean = false;
+  public position: {latitude: number; longitude: number};
+  public nominatim: any;
 
   constructor(
     private _modalCtrl: ModalController,
@@ -84,6 +90,10 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   }
 
   async close(): Promise<void> {
+    if (this.isWaypoint) {
+      await this._modalCtrl.dismiss();
+      return;
+    }
     const translation = await this._langSvc
       .get([
         'pages.register.modalsave.closemodal.title',
@@ -123,6 +133,10 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   }
 
   async exit(): Promise<void> {
+    if (this.isWaypoint) {
+      await this._modalCtrl.dismiss();
+      return;
+    }
     const translation = await this._langSvc
       .get([
         'pages.register.modalexit.title',
@@ -174,16 +188,21 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
     }
   }
 
-  async openModalSuccess(track: WmFeature<LineString>): Promise<any> {
+  async openModalSuccess(feature: {
+    track?: WmFeature<LineString>;
+    waypoint?: WmFeature<Point>;
+  }): Promise<void> {
+    const successType = feature.waypoint ? ESuccessType.WAYPOINT : ESuccessType.TRACK;
     const modaSuccess = await this._modalCtrl.create({
       component: ModalSuccessComponent,
       componentProps: {
-        type: ESuccessType.TRACK,
-        track,
+        type: successType,
+        track: feature.track,
+        waypoint: feature.waypoint,
       },
     });
     await modaSuccess.present();
-    return modaSuccess.onDidDismiss();
+    await modaSuccess.onDidDismiss();
   }
 
   async save(): Promise<void> {
@@ -191,32 +210,45 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
       return;
     }
 
-    const distanceFilter = +localStorage.getItem('wm-distance-filter') || 10;
     const device = await this._deviceSvc.getInfo();
     const dateNow = new Date();
+    const geometry: Point | LineString = this.isWaypoint
+      ? {type: 'Point', coordinates: [this.position.longitude, this.position.latitude]}
+      : {type: 'LineString', coordinates: this.recordedFeature.geometry.coordinates};
 
-    this.recordedFeature.properties = {
-      ...this.recordedFeature.properties,
-      name: this.formGroup.value.title,
-      form: this.formGroup.value,
-      media: this.photos,
-      uuid: generateUUID(),
-      distanceFilter,
-      app_id: `${this._environmentSvc.appId}`,
-      createdAt: dateNow,
-      updatedAt: dateNow,
-      device,
+    const ugcFeature: WmFeature<LineString | Point> = {
+      type: 'Feature',
+      geometry,
+      properties: {
+        name: this.formGroup.value.title,
+        form: this.formGroup.value,
+        media: this.photos,
+        uuid: generateUUID(),
+        app_id: `${this._environmentSvc.appId}`,
+        createdAt: dateNow,
+        updatedAt: dateNow,
+        device,
+        ...(this.isWaypoint
+          ? {nominatim: this.nominatim}
+          : {distanceFilter: +localStorage.getItem('wm-distance-filter') || 10}),
+      },
     };
 
-    from(saveUgcTrack(this.recordedFeature))
+    from(saveUgc(ugcFeature))
       .pipe(
         take(1),
         switchMap(_ => this.backToSuccess()),
-        switchMap(_ => this.openModalSuccess(this.recordedFeature)),
+        switchMap(_ =>
+          this.openModalSuccess(
+            this.isWaypoint
+              ? {waypoint: ugcFeature as WmFeature<Point>}
+              : {track: ugcFeature as WmFeature<LineString>},
+          ),
+        ),
       )
       .subscribe(async dismiss => {
         await dismiss;
-        this._store.dispatch(syncUgcTracks());
+        this._store.dispatch(this.isWaypoint ? syncUgcPois() : syncUgcTracks());
       });
   }
 

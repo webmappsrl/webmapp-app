@@ -596,5 +596,8 @@
   "Apri impostazioni App": "Ouvrir les paramètres de l'application",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Voulez-vous vraiment supprimer votre compte? Vous devez taper \"delete account\" pour continuer.",
   "Digita \"delete account\"": "Tapez \"delete account\"",
-  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmation ne correspond pas. Tapez \"delete account\" pour continuer."
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmation ne correspond pas. Tapez \"delete account\" pour continuer.",
+  "Ti trovi qui": "Vous êtes ici",
+  "Salva Waypoint": "Enregistrer le waypoint",
+  "Salva Traccia": "Enregistrer la trace"
 }

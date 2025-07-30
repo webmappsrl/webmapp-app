@@ -621,4 +621,7 @@ export const appIT = {
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni":
     "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni",
   'Apri impostazioni App': 'Apri impostazioni App',
+  'Ti trovi qui': 'Ti trovi qui',
+  'Salva Waypoint': 'Salva Waypoint',
+  'Salva Traccia': 'Salva Traccia',
 };
