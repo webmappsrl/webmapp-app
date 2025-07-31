@@ -6,17 +6,113 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
-* enrich changelog with commit descriptions ([6dab8b9](https://github.com/webmappsrl/webmapp-app/commit/6dab8b91766ebc98e6349092b364d09f9ade709c))
 * enrich changelog with commit descriptions ([650a2de](https://github.com/webmappsrl/webmapp-app/commit/650a2de08bae048e3b7bcca0432bbc0c5c0bd6ed))
-* enrich changelog with commit descriptions ([d608d28](https://github.com/webmappsrl/webmapp-app/commit/d608d281065c703a534c11a37a9ed8bb03305208))
 * enrich changelog with commit descriptions ([b5e0b32](https://github.com/webmappsrl/webmapp-app/commit/b5e0b32666e20e4e5448d9eb5c92b84ec24cb8d3))
-* enrich changelog with commit descriptions ([9f130dd](https://github.com/webmappsrl/webmapp-app/commit/9f130dd2a3533a922424dbe1eddd431120a88da4))
 * enrich changelog with commit descriptions ([8858da1](https://github.com/webmappsrl/webmapp-app/commit/8858da10df0c7a15058cbf08c97a8beeada896f7))
-* **map-core:** changelog for bump to eeb53d7 ([6450d1d](https://github.com/webmappsrl/webmapp-app/commit/6450d1d0dab1869cf0892555b2326a2932036e92))
-* **poi:** ✨ add Point of Interest (POI) recording functionality oc:6003 ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
-* **wm-core:** changelog for bump to e0e3473 ([bc4d6d9](https://github.com/webmappsrl/webmapp-app/commit/bc4d6d9992ada41addf5870db5918f60d8ac61d5))
+* **poi:** ✨ add Point of Interest (POI) recording functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/6003" target="_blank" rel="noopener noreferrer">OC[6003]</a> ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
+<!-- COMMIT_DESC -->
+    
+    * chore(poi): ✨ add Point of Interest (POI) recording functionality
+    
+    This commit introduces the ability to record User Generated Content (UGC) Points of Interest (POI) within the application. Key changes include:
+    
+    - Creation of a new `PoiRecorderComponent` for recording POIs.
+    - Modification of existing track recording components and modules to support POI recording.
+    - Removal of the old waypoint page and its related components.
+    - Update of localization files to include new translations for POI recording.
+    - Adjustment of routing and component architecture to integrate the new POI recording feature seamlessly within the app.
+    
+    These changes allow users to record and save POIs, enhancing the application's functionality for user-generated map content.
+    
+    * Updated submodule core/src/app/shared/map-core
+    
+    * Updated submodule core/src/app/shared/wm-core
+    
+    * refactor(e2e): ♻️ use mapReadyTimeout constant for consistency
+    
+    Updated Cypress e2e tests to use the `mapReadyTimeout` constant instead of hardcoded timeout values. This improves maintainability by centralizing timeout configuration.
+    
+    - Added `mapReadyTimeout` constant in `test-utils.ts`.
+    - Replaced hardcoded timeout values with `mapReadyTimeout` in related test files.
+    - Adjusted `appId` in `environment.ts` for configuration consistency.
+    
+    * fix(e2e): 🐛 update selectors for waypoint save button
+    
+    Updated the Cypress test for the wm-form field to use the correct selectors for the waypoint save button. The previous selectors were outdated and caused test failures. The new selectors ensure that the test accurately reflects the current UI elements.
+    
+    * style(ui): 💄 update ion-card positioning with safe area insets
+    
+    Adjusted the positioning of the `ion-card` in both `poi-recorder.component.ts` and `track-recorder.component.scss` to account for safe area insets. This change ensures proper layout and appearance on devices with notches or other display cutouts by using `env()` for `safe-area-inset-left`, `safe-area-inset-right`, and `safe-area-inset-top`.
+    
+    * refactor(modal-save): ♻️ simplify save method with updated device info flow
+    
+    Removed unnecessary async/await for device information retrieval. Integrated device info into a reactive stream using switchMap to update the `ugcFeature` properties. Ensured modal dismissal logic is reactive and streamlined the subscription handling for dispatching sync actions. This refactor enhances the maintainability and readability of the `save` method.
+    
+    * refactor(poi-recorder): ♻️ separate HTML and SCSS from TypeScript component
+    
+    The template and styles of the poi-recorder component have been moved from the TypeScript file into their respective HTML and SCSS files. This separation improves code organization and maintainability. The HTML content is now located in `poi-recorder.component.html` and the styles in `poi-recorder.component.scss`. The TypeScript component file now references these files using `templateUrl` and `styleUrls`.
+    
+    * Updated submodule core/src/app/shared/wm-core
+    
+    * refactor(map): ♻️ rename wm-recorder to wm-track-recorder
+    
+    Updated the SCSS to change the class name from `wm-recorder` to `wm-track-recorder` to better reflect its functionality. This change affects both `.onlyTitle` and `.open` sections for consistent naming conventions.
+    
+    * Updated submodule core/src/app/shared/wm-core
 * **wm-core:** changelog for bump to e0eb5e0 ([409e047](https://github.com/webmappsrl/webmapp-app/commit/409e047909d9a61c1451a6dc2e80a4ef7264a450))
-* **wm-types:** changelog for bump to 6ec3990 ([0eaac1e](https://github.com/webmappsrl/webmapp-app/commit/0eaac1e496fe86a40143362c13c4b948468e5f21))
+<!-- COMMIT_DESC -->
+    
+    - chore(map): 🗺️ add focus position and recording panel functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/5239" target="_blank" rel="noopener noreferrer">OC[5239]</a> (#130)
+    * chore(map): 🗺️ add focus position and recording panel functionality
+    
+    Added new functionalities to the geobox map component including focus position and recording panel toggles. Updated HTML to bind new observables for map control parameters. Refactored TypeScript to manage state and integrate with GeolocationService. Introduced new actions and effects for handling recording state and focus position. Modified reducer and selectors to manage corresponding states.
+    
+    - Added `[wmMapDisableFitView]` and `[wmMapGeojson]` bindings to HTML.
+    - Introduced `focusPosition$`, `enableRecoderPanel$`, and `recordedTrack$` observables.
+    - Updated GeolocationService to dispatch actions for recording state changes.
+    - Created new actions: `setEnableRecoderPanel`, `setOnRecord`, and `setFocusPosition`.
+    - Added effects to handle side effects of recording state changes.
+    - Enhanced reducer and selectors for new states: `enableRecoderPanel`, `onRecord`, and `focusPosition`.
+    
+    This enhancement allows better user control over focus positioning and track recording within the map interface.
+    
+    * chore(geolocation): ✨ add recording of coordinates in web watcher
+    
+    Enhanced the `_startWebWatcher` method in `GeolocationService` to record coordinates when in 'recording' mode. This change appends the current location's longitude, latitude, and altitude to the `_recordedFeature.geometry.coordinates` array, allowing for continuous tracking of location updates.
+    
+    * refactor(geobox-map): ♻️ rename and refactor focus position logic
+    
+    This commit updates the `geobox-map.component` to rename the `focusPosition$` observable to `wmMapPositionfocus$` for consistency with other naming conventions in the component. It also refactors the way the focus position is handled by changing its type from `BehaviorSubject` to `Observable` and directly selecting it from the store using `this._store.select(focusPosition)`.
+    
+    Additionally, the HTML template is updated to reflect this change by using the new `wmMapPositionfocus$` binding. These changes ensure a more consistent and maintainable codebase by aligning variable names and removing unnecessary observables.
+    
+    * refactor(geobox-map): ♻️ update map component and feature selector logic
+    
+    Enhanced the `WmGeoboxMapComponent` by replacing `wmMapPositionfocus$` with `enableRecoderPanel$` for better clarity and functionality. Adjusted the logic to append coordinates only when `enableRecoderPanel` is active. Also, updated the `features.selector.ts` to include `enableRecoderPanel` in the `showFeaturesInViewport` selector for improved feature visibility control.
+    
+    * refactor(geobox-map): ♻️ move side effects from observable to subscription
+    
+    The side effects initially present within the `enableRecoderPanel$` observable were moved to a separate subscription. This improves readability and separates the data stream definition from side effect handling. Now, `enableRecoderPanel$` simply represents the data stream, and the side effects (resetting `_linestring` and `recordedTrack$`) are handled explicitly in a subscription.
+    - refactor(features-in-viewport): 🔄 make sliderOptions observable <a href="https://orchestrator.maphub.it/resources/customer-stories/6000" target="_blank" rel="noopener noreferrer">OC[6000]</a> (#133)
+    * refactor(features-in-viewport): 🔄 make sliderOptions observable
+    
+    Changed sliderOptions to an observable sliderOptions$ to dynamically adjust slide settings based on the number of features in the viewport. This allows for different configurations when there is only one feature compared to multiple features. The adjustment includes changes to properties like `slidesPerView`, `spaceBetween`, `slidesOffsetBefore`, `slidesOffsetAfter`, and `centeredSlides`.
+    
+    * refactor(features-in-viewport): ♻️ extract slider options logic to a private method
+    
+    Simplified the logic for determining slider options by extracting it into a private method `_getSliderOptions`. This method takes the feature count as an argument and returns the appropriate slider configuration, reducing redundancy and improving code readability.
+    - chore(draw-ugc-button): ✨ add e2e attributes to buttons
+    Enhanced the draw UGC button component by adding end-to-end test attributes to the buttons. This includes:
+    
+    - `e2e-draw-button` for the main draw button.
+    - `e2e-draw-button-exit` for the exit button in the drawing feature template.
+    - `e2e-draw-button-poi` for the point of interest draw button.
+    - `e2e-draw-button-track` for the track draw button.
+    
+    These attributes facilitate automated testing by providing selectors for interaction and validation.
+    
+    - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
+    Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
 
 ## [3.1.2](https://github.com/webmappsrl/webmapp-app/compare/v3.1.1...v3.1.2) (2025-07-23)
 
@@ -37,7 +133,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-### Bug Fixes
 
 * **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
 <!-- COMMIT_DESC -->
@@ -258,7 +353,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-
 
 ### Features
 
@@ -537,7 +631,6 @@
     - Customize the pull request title and header for clarity and automation acknowledgment.
     
     Add test for tracks edges
-- Management of Map details status, added test e2e <a href="https://orchestrator.maphub.it/resources/customer-stories/5500" target="_blank" rel="noopener noreferrer">OC[5500]</a> ([#127](https://github.com/webmappsrl/webmapp-app/issues/127)) ([b2af206](https://github.com/webmappsrl/webmapp-app/commit/b2af206af304a2edff04a1f20714c33bcb87391c))
 <!-- COMMIT_DESC -->
     
     * fix: Management of Map details status, added test e2e
@@ -836,7 +929,6 @@
     - Added a new map component
     - Updated the layout of the bottom buttons
     - Adjusted the position and style of the orientation button
-
 - Add geolocation service to home and map pages <a href="https://orchestrator.maphub.it/resources/customer-stories/4113" target="_blank" rel="noopener noreferrer">OC[4113]</a> ([37903a7](https://github.com/webmappsrl/webmapp-app/commit/37903a78f46f1a95f9ddccc1d370615609f11ab7))
 <!-- COMMIT_DESC -->
     
@@ -864,7 +956,6 @@
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
     
     This commit adds a new API endpoint for OSM2CAI, which is set to 'https://osm2cai.cai.it'. This allows for integration with the OSM2CAI service.
-<!-- COMMIT_DESC -->
     
     - Added a function to save files in the Documents directory
     - Created a popup message to inform the user about successful file saving and ask for sharing
@@ -1079,7 +1170,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-### Features
 
 - **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
 <!-- COMMIT_DESC -->
@@ -1122,7 +1212,6 @@
     - Added private property _backBtnSub$ of type Subscription
     - Added ionViewDidEnter() method to handle back button event and exit the app
     - Added ionViewWillLeave() method to unsubscribe from back button event
-- **deploy-commands:** updated ([6278031](https://github.com/webmappsrl/webmapp-app/commit/627803168adc54acb2132c1fe25d7008f4b57831))
 <!-- COMMIT_DESC -->
     
     - Removed the `providers` property for `LangService` in the `SettingsComponent` and `ProfilePage` files.
