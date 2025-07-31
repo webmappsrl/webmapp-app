@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-31)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
+* enrich changelog with commit descriptions ([6dab8b9](https://github.com/webmappsrl/webmapp-app/commit/6dab8b91766ebc98e6349092b364d09f9ade709c))
+* enrich changelog with commit descriptions ([650a2de](https://github.com/webmappsrl/webmapp-app/commit/650a2de08bae048e3b7bcca0432bbc0c5c0bd6ed))
+* enrich changelog with commit descriptions ([d608d28](https://github.com/webmappsrl/webmapp-app/commit/d608d281065c703a534c11a37a9ed8bb03305208))
+* enrich changelog with commit descriptions ([b5e0b32](https://github.com/webmappsrl/webmapp-app/commit/b5e0b32666e20e4e5448d9eb5c92b84ec24cb8d3))
+* enrich changelog with commit descriptions ([9f130dd](https://github.com/webmappsrl/webmapp-app/commit/9f130dd2a3533a922424dbe1eddd431120a88da4))
+* enrich changelog with commit descriptions ([8858da1](https://github.com/webmappsrl/webmapp-app/commit/8858da10df0c7a15058cbf08c97a8beeada896f7))
+* **map-core:** changelog for bump to eeb53d7 ([6450d1d](https://github.com/webmappsrl/webmapp-app/commit/6450d1d0dab1869cf0892555b2326a2932036e92))
+* **poi:** ✨ add Point of Interest (POI) recording functionality oc:6003 ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
+* **wm-core:** changelog for bump to e0e3473 ([bc4d6d9](https://github.com/webmappsrl/webmapp-app/commit/bc4d6d9992ada41addf5870db5918f60d8ac61d5))
+* **wm-core:** changelog for bump to e0eb5e0 ([409e047](https://github.com/webmappsrl/webmapp-app/commit/409e047909d9a61c1451a6dc2e80a4ef7264a450))
+* **wm-types:** changelog for bump to 6ec3990 ([0eaac1e](https://github.com/webmappsrl/webmapp-app/commit/0eaac1e496fe86a40143362c13c4b948468e5f21))
+
 ## [3.1.2](https://github.com/webmappsrl/webmapp-app/compare/v3.1.1...v3.1.2) (2025-07-23)
 
 
