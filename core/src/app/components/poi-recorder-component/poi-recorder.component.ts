@@ -12,82 +12,8 @@ import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 
 @Component({
   selector: 'wm-poi-recorder',
-  template: `
-  <ion-fab-button
-    (click)="close()"
-    color="light"
-    size="small"
-    class="wm-poi-recorder-close-btn"
-  >
-  <ion-icon name="arrow-back-outline"></ion-icon>
-</ion-fab-button>
-  <ion-card *ngIf="nominatim$|async as nominatim">
-    <ion-card-header>
-      <ion-card-title>
-        {{'Ti trovi qui' | wmtrans}}
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <div>{{nominatim?.display_name}}</div>
-      <div>{{nominatim?.lat}}, {{nominatim?.lon}}</div>
-      <ion-button (click)="save()">
-        <ion-icon slot="start"  name="pin-outline"></ion-icon>
-        {{'Salva Waypoint' | wmtrans}}
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-  `,
-  styles: [
-    `
-    wm-poi-recorder {
-      .wm-poi-recorder-close-btn {
-        position: absolute;
-        top: calc(16px + constant(safe-area-inset-top, 30px));
-        top: calc(16px + env(safe-area-inset-top, 30px));
-        left: calc(16px + constant(safe-area-inset-left, 30px));
-        left: calc(16px + env(safe-area-inset-left, 30px));
-        margin: 0;
-        z-index: 1000;
-      }
-      ion-card {
-        position: absolute;
-        left: calc(50px + env(safe-area-inset-left, 30px));
-        right: calc(50px + env(safe-area-inset-right, 30px));
-        top: calc(6px + env(safe-area-inset-top, 30px));
-        border-radius: 15px;
-        z-index: 10;
-
-        ion-card-header {
-          padding: 10px;
-          border-bottom: 1px solid var(--wm-color-lightgray);
-
-          ion-card-title {
-            text-align: center;
-          }
-        }
-
-        ion-card-content {
-          min-height: 155px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-          padding-bottom: 6px !important;
-          text-align: center;
-
-          > div:first-child {
-            font-weight: bold;
-            color: var(--wm-color-dark);
-          }
-
-          ion-button {
-            --border-radius: 20px;
-          }
-        }
-      }
-
-    }
-    `,
-  ],
+  templateUrl: './poi-recorder.component.html',
+  styleUrls: ['./poi-recorder.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
