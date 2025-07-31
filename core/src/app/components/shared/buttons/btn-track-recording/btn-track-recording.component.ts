@@ -1,4 +1,4 @@
-import {ModalController, NavController} from '@ionic/angular';
+import {ModalController} from '@ionic/angular';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,10 +8,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import {NavigationExtras} from '@angular/router';
 import {LoginComponent} from '@wm-core/login/login.component';
 import {Store} from '@ngrx/store';
-import {setEnableRecoderPanel} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  setEnablePoiRecorderPanel,
+  setEnableTrackRecorderPanel,
+} from '@wm-core/store/user-activity/user-activity.action';
 
 @Component({
   selector: 'wm-btn-track-recording',
@@ -25,11 +27,7 @@ export class BtnTrackRecordingComponent {
   @Input() isLogged = false;
   @Output('start-recording') startRecording: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(
-    private _store: Store,
-    private _navCtrl: NavController,
-    private _modalController: ModalController
-  ) {}
+  constructor(private _store: Store, private _modalController: ModalController) {}
 
   openModalLogin(): void {
     this._modalController
@@ -49,7 +47,7 @@ export class BtnTrackRecordingComponent {
 
   track(): void {
     if (this.isLogged) {
-      this._store.dispatch(setEnableRecoderPanel({enable: true}));
+      this._store.dispatch(setEnableTrackRecorderPanel({enable: true}));
     } else {
       this.openModalLogin();
     }
@@ -57,8 +55,7 @@ export class BtnTrackRecordingComponent {
 
   waypoint(): void {
     if (this.isLogged) {
-      let navigationExtras: NavigationExtras = {state: {currentTrack: this.currentTrack}};
-      this._navCtrl.navigateForward('waypoint', navigationExtras);
+      this._store.dispatch(setEnablePoiRecorderPanel({enable: true}));
     } else {
       this.openModalLogin();
     }

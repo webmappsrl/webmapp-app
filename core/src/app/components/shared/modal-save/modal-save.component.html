@@ -11,12 +11,7 @@
       >
       </ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="!track">{{
-      "pages.register.modalsave.title" | wmtrans
-    }}</ion-title>
-    <ion-title *ngIf="track">{{
-      "pages.register.modalsave.titleEdit" | wmtrans
-    }}</ion-title>
+    <ion-title>{{ (isWaypoint ? "Salva Waypoint" : "Salva Traccia") | wmtrans }}</ion-title>
   </ion-toolbar>
 </ion-header>
 <ion-content>

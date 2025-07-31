@@ -1,4 +1,4 @@
-import {clearTestState, goMap} from 'cypress/utils/test-utils';
+import {clearTestState, goMap, mapReadyTimeout} from 'cypress/utils/test-utils';
 
 const waitTime = 800;
 const zoom_coordinates = [8.229458808898698, 280.25369262695403];
@@ -14,7 +14,7 @@ describe('Open and close Map Details [oc:5500] [https://orchestrator.maphub.it/r
 
   it('should open Map Details on click track in map', () => {
     goMap();
-    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
+    cy.get('body', {timeout: mapReadyTimeout}).should('have.attr', 'e2e-map-ready', 'true');
     cy.get('.ol-viewport .ol-layer canvas').click(zoom_coordinates[0], zoom_coordinates[1]);
     cy.wait(waitTime);
     cy.get('.ol-viewport .ol-layer canvas').click(track_coordinates[0], track_coordinates[1]);

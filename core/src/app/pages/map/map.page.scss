@@ -114,14 +114,14 @@ webmapp-map-page {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
   }
   .onlyTitle {
-    wm-recorder {
+    wm-track-recorder {
       .wm-recorder-btnrec-container {
         bottom: 110px;
       }
     }
   }
   .open {
-    wm-recorder {
+    wm-track-recorder {
       .wm-recorder-btnrec-container {
         bottom: 357px;
       }

@@ -16,7 +16,8 @@ import {MapPage} from './map.page';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 import {WmCoreModule} from '@wm-core/wm-core.module';
 import {WmTransPipe} from '@wm-core/pipes/wmtrans.pipe';
-import {RecorderModule} from 'src/app/components/recorder-component/recorder.module';
+import {TrackRecorderModule} from 'src/app/components/track-recorder-component/track-recorder.module';
+import {PoiRecorderModule} from 'src/app/components/poi-recorder-component/poi-recorder.module';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {RecorderModule} from 'src/app/components/recorder-component/recorder.mod
     WmMapModule,
     ButtonsModule,
     PoiPropetiesModule,
-    RecorderModule,
+    TrackRecorderModule,
+    PoiRecorderModule,
     WmCoreModule,
   ],
   declarations: [

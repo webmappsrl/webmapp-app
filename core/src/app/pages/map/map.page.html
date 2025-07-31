@@ -2,7 +2,7 @@
   scrollY="false"
   [ngClass]="mapDetailsStatus$|async"
   [class.move-bottom]="hasFeatureInViewport$|async"
-  [class.register-panel-enabled]="enableRecoderPanel$|async"
+  [class.register-panel-enabled]="enableRecorderPanel$|async"
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
     <wm-map-details #details (closeEVT)="close()">
@@ -205,6 +205,7 @@
       (goToEvt)="goToPage($event)"
     ></wm-download>
 
-    <wm-recorder *ngIf="enableRecoderPanel$|async"></wm-recorder>
+    <wm-track-recorder *ngIf="enableTrackRecorderPanel$|async"></wm-track-recorder>
+    <wm-poi-recorder *ngIf="enablePoiRecorderPanel$|async"></wm-poi-recorder>
   </wm-geobox-map>
 </ion-content>

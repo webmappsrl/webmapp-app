@@ -605,5 +605,8 @@
   "Apri impostazioni App": "Open app settings",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Do you really want to delete your account? You must type \"delete account\" to proceed.",
   "Digita \"delete account\"": "Type \"delete account\"",
-  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "The confirmation does not match. Type \"delete account\" to proceed."
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "The confirmation does not match. Type \"delete account\" to proceed.",
+  "Ti trovi qui": "You are here",
+  "Salva Waypoint": "Save Waypoint",
+  "Salva Traccia": "Save track"
 }

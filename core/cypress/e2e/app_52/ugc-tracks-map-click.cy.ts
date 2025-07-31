@@ -3,6 +3,7 @@ import {
   confWithAuthEnabled,
   e2eLogin,
   goMap,
+  mapReadyTimeout,
   mockGetApiTracks,
 } from 'cypress/utils/test-utils';
 
@@ -28,7 +29,7 @@ describe('Select ugc_track on map and open details', () => {
     cy.get('ion-alert button').click();
 
     goMap();
-    cy.get('body', {timeout: 5000}).should('have.attr', 'e2e-map-ready', 'true');
+    cy.get('body', {timeout: mapReadyTimeout}).should('have.attr', 'e2e-map-ready', 'true');
     cy.get('.ol-viewport .ol-layer canvas').click(click_ugc_track[0], click_ugc_track[1]);
     cy.wait(500);
     cy.get('[e2e-map-details-title]').contains(ugcTrack.properties.name);

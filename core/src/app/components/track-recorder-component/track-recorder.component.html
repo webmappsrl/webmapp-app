@@ -1,3 +1,15 @@
+<ion-fab-button
+  (click)="backToMap()"
+  color="light"
+  size="small"
+  class="wm-track-recorder-close-btn"
+  [ngStyle]="{
+    'opacity': 1 - opacity
+  }"
+>
+  <ion-icon name="arrow-back-outline"></ion-icon>
+</ion-fab-button>
+
 <ion-card
   [ngStyle]="{
       'opacity': opacity

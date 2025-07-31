@@ -628,4 +628,7 @@ export const appEN = {
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni":
     'To record tracks and display them correctly, enable the location permission in the settings',
   'Apri impostazioni App': 'Open app settings',
+  'Ti trovi qui': 'You are here',
+  'Salva Waypoint': 'Save Waypoint',
+  'Salva Traccia': 'Save track',
 };

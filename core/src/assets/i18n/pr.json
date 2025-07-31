@@ -596,5 +596,8 @@
   "Apri impostazioni App": "Abrir configurações do aplicativo",
   "Vuoi veramente eliminare il tuo account? È obbligatorio scrivere \"delete account\" per procedere.": "Você realmente deseja excluir sua conta? É obrigatório escrever \"delete account\" para prosseguir.",
   "Digita \"delete account\"": "Digite \"delete account\"",
-  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "A confirmação não corresponde. Digite \"delete account\" para prosseguir."
+  "La conferma non corrisponde. Digita \"delete account\" per procedere.": "A confirmação não corresponde. Digite \"delete account\" para prosseguir.",
+  "Ti trovi qui": "Você está aqui",
+  "Salva Waypoint": "Salvar ponto de referência",
+  "Salva Traccia": "Salvar rota"
 }
