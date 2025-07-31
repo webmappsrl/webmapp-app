@@ -19,7 +19,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-
 ### Bug Fixes
 
 * **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
@@ -46,7 +45,6 @@
     - Introduced a new center position button in the register page's fab container for centering the map.
     - Updated the SCSS for the fab button in `register.page.scss` to control the size and margin.
     - Added `centerPositionEvt$` BehaviorSubject to `register.page.ts` to manage the center position state.
-<!-- COMMIT_DESC -->
     
     * chore(theme): ✨ add camminiditalia theme and reorganize geohub theme
     
@@ -521,7 +519,6 @@
     - Customize the pull request title and header for clarity and automation acknowledgment.
     
     Add test for tracks edges
-
 - Management of Map details status, added test e2e <a href="https://orchestrator.maphub.it/resources/customer-stories/5500" target="_blank" rel="noopener noreferrer">OC[5500]</a> ([#127](https://github.com/webmappsrl/webmapp-app/issues/127)) ([b2af206](https://github.com/webmappsrl/webmapp-app/commit/b2af206af304a2edff04a1f20714c33bcb87391c))
 <!-- COMMIT_DESC -->
     
@@ -606,7 +603,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-
 ### Features
 
 - add e2e test for orientation and location buttons <a href="https://orchestrator.maphub.it/resources/customer-stories/4989" target="_blank" rel="noopener noreferrer">OC[4989]</a> ([#94](https://github.com/webmappsrl/webmapp-app/issues/94)) ([fa100bb](https://github.com/webmappsrl/webmapp-app/commit/fa100bb1a533f29d7fff3e5f1b13668ba6440479))
@@ -822,7 +818,6 @@
     - Added a new map component
     - Updated the layout of the bottom buttons
     - Adjusted the position and style of the orientation button
-### Miscellaneous
 
 - Add geolocation service to home and map pages <a href="https://orchestrator.maphub.it/resources/customer-stories/4113" target="_blank" rel="noopener noreferrer">OC[4113]</a> ([37903a7](https://github.com/webmappsrl/webmapp-app/commit/37903a78f46f1a95f9ddccc1d370615609f11ab7))
 <!-- COMMIT_DESC -->
@@ -851,7 +846,6 @@
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
     
     This commit adds a new API endpoint for OSM2CAI, which is set to 'https://osm2cai.cai.it'. This allows for integration with the OSM2CAI service.
-- Add file saving functionality and permission handling ([b3ba923](https://github.com/webmappsrl/webmapp-app/commit/b3ba923a609e6c900954e427aebacb431df21452))
 <!-- COMMIT_DESC -->
     
     - Added a function to save files in the Documents directory
@@ -1067,7 +1061,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-
 ### Features
 
 - **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
@@ -1111,7 +1104,6 @@
     - Added private property _backBtnSub$ of type Subscription
     - Added ionViewDidEnter() method to handle back button event and exit the app
     - Added ionViewWillLeave() method to unsubscribe from back button event
-
 - **deploy-commands:** updated ([6278031](https://github.com/webmappsrl/webmapp-app/commit/627803168adc54acb2132c1fe25d7008f4b57831))
 <!-- COMMIT_DESC -->
     
@@ -1173,7 +1165,6 @@
     - Updated updateLastFilterType() method in map.page.ts to dispatch setLastFilterType action
     
     The minSdkVersion in the Android platform has been updated from 31 to 28. This change ensures compatibility with a wider range of devices.
-<!-- COMMIT_DESC -->
     
     Added a new deploy command for the motomappa project.
     
