@@ -20,7 +20,6 @@
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
 
-
 ### Bug Fixes
 
 * **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
@@ -47,7 +46,6 @@
     - Introduced a new center position button in the register page's fab container for centering the map.
     - Updated the SCSS for the fab button in `register.page.scss` to control the size and margin.
     - Added `centerPositionEvt$` BehaviorSubject to `register.page.ts` to manage the center position state.
-* **theme:** ✨ add camminiditalia theme and reorganize geohub theme <a href="https://orchestrator.maphub.it/resources/customer-stories/5834" target="_blank" rel="noopener noreferrer">OC[5834]</a> ([#147](https://github.com/webmappsrl/webmapp-app/issues/147)) ([2e48655](https://github.com/webmappsrl/webmapp-app/commit/2e48655c0c04b1c5c86a9cbbac35649ba3ea323d))
 <!-- COMMIT_DESC -->
     
     * chore(theme): ✨ add camminiditalia theme and reorganize geohub theme
@@ -514,7 +512,6 @@
     - Added `changelog-notes-type: github` to both `release_please.yml` and `release_please_minor.yml` workflows
     - Ensures that changelog notes are generated using GitHub's format
     - Aids in maintaining consistency and clarity in release documentation
-<!-- COMMIT_DESC -->
     
     - Introduce a new GitHub Actions workflow to automate releases for minor version updates.
     - The workflow triggers on pushes to branches that match the pattern 'v[0-9]+.[0-9]+'.
@@ -609,7 +606,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-- This update may introduce breaking changes in the codebase due to changes in the @capacitor/device library.
 
 ### Features
 
@@ -826,7 +822,6 @@
     - Added a new map component
     - Updated the layout of the bottom buttons
     - Adjusted the position and style of the orientation button
-
 ### Miscellaneous
 
 - Add geolocation service to home and map pages <a href="https://orchestrator.maphub.it/resources/customer-stories/4113" target="_blank" rel="noopener noreferrer">OC[4113]</a> ([37903a7](https://github.com/webmappsrl/webmapp-app/commit/37903a78f46f1a95f9ddccc1d370615609f11ab7))
@@ -856,7 +851,6 @@
     Update the compileSdkVersion and targetSdkVersion in the gulpfile.js to version 34.
     
     This commit adds a new API endpoint for OSM2CAI, which is set to 'https://osm2cai.cai.it'. This allows for integration with the OSM2CAI service.
-
 - Add file saving functionality and permission handling ([b3ba923](https://github.com/webmappsrl/webmapp-app/commit/b3ba923a609e6c900954e427aebacb431df21452))
 <!-- COMMIT_DESC -->
     
@@ -1015,7 +1009,6 @@
     
     - Updated the paths for the deploy-to-web scripts in package.json to use relative paths instead of absolute paths.
     - Replaced the absolute file paths with "./www/*" and "./www/assets/*" to ensure correct deployment to the web server.
-
 - Add referrer field to login request ([e953006](https://github.com/webmappsrl/webmapp-app/commit/e95300641080b3e61a44c61373503ebd4844f971))
 <!-- COMMIT_DESC -->
     
@@ -1074,7 +1067,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-- **config:** The private variable \_geohubAppId has been added to store the selected geohubAppId value.
 
 ### Features
 
@@ -1119,7 +1111,6 @@
     - Added private property _backBtnSub$ of type Subscription
     - Added ionViewDidEnter() method to handle back button event and exit the app
     - Added ionViewWillLeave() method to unsubscribe from back button event
-### Miscellaneous
 
 - **deploy-commands:** updated ([6278031](https://github.com/webmappsrl/webmapp-app/commit/627803168adc54acb2132c1fe25d7008f4b57831))
 <!-- COMMIT_DESC -->
@@ -1182,7 +1173,6 @@
     - Updated updateLastFilterType() method in map.page.ts to dispatch setLastFilterType action
     
     The minSdkVersion in the Android platform has been updated from 31 to 28. This change ensures compatibility with a wider range of devices.
-- Add deploy command for motomappa ([0475fc2](https://github.com/webmappsrl/webmapp-app/commit/0475fc20986c1e634d6132daea9e99e639748a9a))
 <!-- COMMIT_DESC -->
     
     Added a new deploy command for the motomappa project.
