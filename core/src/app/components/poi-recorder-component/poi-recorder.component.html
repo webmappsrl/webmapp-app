@@ -1,16 +1,18 @@
 <ion-fab-button (click)="close()" color="light" size="small" class="wm-poi-recorder-close-btn">
   <ion-icon name="arrow-back-outline"></ion-icon>
 </ion-fab-button>
-<ion-card *ngIf="nominatim$|async as nominatim">
+<ion-card>
   <ion-card-header>
     <ion-card-title>
       {{'Ti trovi qui' | wmtrans}}
     </ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <div>{{nominatim?.display_name}}</div>
-    <div>{{nominatim?.lat}}, {{nominatim?.lon}}</div>
-    <ion-button (click)="save()">
+    <div *ngIf="nominatim$|async as nominatim">{{nominatim?.display_name}}</div>
+    <div *ngIf="currentPosition$|async as currentPosition">
+      {{currentPosition?.latitude}}, {{currentPosition?.longitude}}
+    </div>
+    <ion-button (click)="save()" [disabled]="!(currentPosition$|async)">
       <ion-icon slot="start" name="pin-outline"></ion-icon>
       {{'Salva Waypoint' | wmtrans}}
     </ion-button>
