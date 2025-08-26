@@ -141,6 +141,11 @@
           </ion-fab-button>
         </ion-fab>
       </ng-container>
+      <ion-fab slot="fixed" vertical="top" horizontal="start">
+        <ion-fab-button (click)="toggleTilesDownload()" e2e-map-tiles-download-button>
+          <ion-icon name="scan-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
       <ion-fab
         #fab2
         slot="fixed"
@@ -172,7 +177,7 @@
         vertical="top"
         horizontal="start"
         #fab3
-        *ngIf="isTrackRecordingEnable$|async"
+        *ngIf="(isTrackRecordingEnable$|async) && !(enableTilesDownload$|async)"
         (click)="fab2?.close();fab1?.close()"
       >
         <ion-fab-button size="small" class="wm-btn-register-fab">
@@ -201,11 +206,18 @@
       [overlayUrls]="overlayFeatureCollections$|async"
       [overlayXYZ]="'https://tiles.webmapp.it/carg'"
       [overlayGeometry]="hitMapGeometry$|async"
+      [boundingBox]="wmMapTilesBoundingBox$|async"
       (closeEvt)="closeDownload()"
       (goToEvt)="goToPage($event)"
     ></wm-download>
 
     <wm-track-recorder *ngIf="enableTrackRecorderPanel$|async"></wm-track-recorder>
     <wm-poi-recorder *ngIf="enablePoiRecorderPanel$|async"></wm-poi-recorder>
+
+    <div class="wm-map-tiles-download-button" *ngIf="enableTilesDownload$|async">
+      <ion-button (click)="downloadTiles()" [disabled]="disableTilesDownloadButton$|async"
+        >Download Tiles</ion-button
+      >
+    </div>
   </wm-geobox-map>
 </ion-content>

@@ -26,6 +26,7 @@ export class WmDownloadComponent implements OnInit {
   @Input() overlayUrls: {[featureName: string]: string};
   @Input() overlayGeometry: any;
   @Input() overlayXYZ: string;
+  @Input() boundingBox: any;
   @Output() closeEvt: EventEmitter<void> = new EventEmitter<void>();
   @Output() goToEvt: EventEmitter<string> = new EventEmitter<string>();
 

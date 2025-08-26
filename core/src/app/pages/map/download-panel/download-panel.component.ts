@@ -16,11 +16,17 @@ import {LineString} from 'geojson';
 import {downloadEcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 import {Store} from '@ngrx/store';
-import {goToHome, openDownloads} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  goToHome,
+  openDownloads,
+  setEnableTilesDownload,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
-import {downloadOverlay} from '@map-core/utils';
+import {downloadOverlay, downloadTilesByBoundingBox} from '@map-core/utils';
 import {currentHitmapFeature} from '@wm-core/store/user-activity/user-activity.selector';
 import {take} from 'rxjs/operators';
+import {from} from 'rxjs';
+import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 @Component({
   selector: 'wm-download-panel',
   templateUrl: './download-panel.component.html',
@@ -35,8 +41,10 @@ export class WmDownloadPanelComponent implements OnChanges {
   @Input() overlayUrls: {[featureName: string]: string};
   @Input() overlayGeometry: any;
   @Input() overlayXYZ: string = `https://api.webmapp.it/tiles`;
+  @Input() boundingBox: any;
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
+  @Output('closeDownload') closeDownload: EventEmitter<any> = new EventEmitter<any>();
   @Output('exit') exit: EventEmitter<any> = new EventEmitter<any>();
 
   downloadElements;
@@ -73,6 +81,9 @@ export class WmDownloadPanelComponent implements OnChanges {
   gotoDownloads(): void {
     if (this.overlayUrls != null) {
       this._urlHandlerSvc.changeURL('profile');
+    } else if (this.boundingBox != null) {
+      this._store.dispatch(setEnableTilesDownload({enableTilesDownload: true}));
+      this.closeDownload.emit();
     } else {
       this._store.dispatch(goToHome());
       this._store.dispatch(openDownloads());
@@ -98,6 +109,12 @@ export class WmDownloadPanelComponent implements OnChanges {
           const properties = current.properties;
           downloadOverlay(current, this.overlayXYZ, this.updateStatus.bind(this));
         });
+    }
+    if (this.boundingBox != null) {
+      this.status = {finish: false, map: 0};
+      from(downloadTilesByBoundingBox(this.boundingBox, undefined, this.updateStatus.bind(this)))
+        .pipe(take(1))
+        .subscribe(() => this._store.dispatch(loadBoundingBoxes()));
     }
   }
 

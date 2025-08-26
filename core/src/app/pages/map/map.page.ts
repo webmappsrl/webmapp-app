@@ -19,7 +19,7 @@ import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {beforeInit, setTransition, setTranslate} from '../poi/utils';
 import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
 import {LangService} from '@wm-core/localization/lang.service';
-import {LineString, Point} from 'geojson';
+import {LineString, MultiPolygon, Point} from 'geojson';
 import {
   confAPP,
   confAUTHEnable,
@@ -51,6 +51,9 @@ import {
   inputTyped,
   mapDetailsStatus,
   ugcOpened,
+  enableTilesDownload,
+  wmMapTilesBoundingBox,
+  disableTilesDownloadButton,
 } from '@wm-core/store/user-activity/user-activity.selector';
 import {WmFeature} from '@wm-types/feature';
 import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
@@ -67,6 +70,7 @@ import {online} from '@wm-core/store/network/network.selector';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {
   backOfMapDetails,
+  setEnableTilesDownload,
   setMapDetailsStatus,
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
@@ -145,6 +149,8 @@ export class MapPage {
   currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
   dataLayerUrls$: Observable<IDATALAYER>;
   detailsIsOpen$: Observable<boolean>;
+  disableTilesDownloadButton$: Observable<boolean> = this._store.select(disableTilesDownloadButton);
+  enableTilesDownload$: Observable<boolean> = this._store.select(enableTilesDownload);
   enableTrackRecorderPanel$: Observable<boolean> = this._store.select(enableTrackRecorderPanel);
   enableRecorderPanel$: Observable<boolean> = this._store.select(enableRecorderPanel);
   enablePoiRecorderPanel$: Observable<boolean> = this._store.select(enablePoiRecorderPanel);
@@ -201,6 +207,8 @@ export class MapPage {
   );
   wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
   wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  wmMapTilesBoundingBox$: Observable<WmFeature<MultiPolygon> | null> =
+    this._store.select(wmMapTilesBoundingBox);
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
   constructor(
     private _store: Store,
@@ -325,6 +333,12 @@ export class MapPage {
     }, 300);
   }
 
+  downloadTiles(): void {
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
   }
@@ -377,6 +391,12 @@ export class MapPage {
     }
 
     this._urlHandlerSvc.updateURL(params);
+  }
+
+  toggleTilesDownload(): void {
+    this.enableTilesDownload$.pipe(take(1)).subscribe(enable => {
+      this._store.dispatch(setEnableTilesDownload({enableTilesDownload: !enable}));
+    });
   }
 
   async url(url) {

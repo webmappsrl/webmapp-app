@@ -12,8 +12,10 @@
       [overlayUrls]="overlayUrls"
       [overlayGeometry]="overlayGeometry"
       [overlayXYZ]="overlayXYZ"
+      [boundingBox]="boundingBox"
       (changeStatus)="downloadStatus($event)"
       (exit)="endDownload()"
+      (closeDownload)="closeEvt.emit()"
     ></wm-download-panel>
   </div>
 </div>
