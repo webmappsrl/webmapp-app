@@ -189,6 +189,7 @@ describe('Test wm-form field', () => {
       });
 
     // Inserisci un testo tutto in minuscolo
+    cy.wait(300);
     const testoMinuscolo = 'testo di esempio';
     cy.get('@titleInput').type(testoMinuscolo);
 

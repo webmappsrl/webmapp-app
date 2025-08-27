@@ -11,7 +11,7 @@ import {AlertController} from '@ionic/angular';
 import {LangService} from '@wm-core/localization/lang.service';
 import {downloadPanelStatus} from '@wm-core/types/downloadpanel.enum';
 import {WmFeature} from '@wm-types/feature';
-import {LineString} from 'geojson';
+import {LineString, MultiPolygon} from 'geojson';
 @Component({
   selector: 'wm-download',
   templateUrl: './download.component.html',
@@ -26,6 +26,7 @@ export class WmDownloadComponent implements OnInit {
   @Input() overlayUrls: {[featureName: string]: string};
   @Input() overlayGeometry: any;
   @Input() overlayXYZ: string;
+  @Input() boundingBox: WmFeature<MultiPolygon>;
   @Output() closeEvt: EventEmitter<void> = new EventEmitter<void>();
   @Output() goToEvt: EventEmitter<string> = new EventEmitter<string>();
 

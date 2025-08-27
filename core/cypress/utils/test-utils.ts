@@ -1,5 +1,6 @@
 import {environment} from 'src/environments/environment';
 import {clearUgcSynchronizedData, clearUgcDeviceData, removeAuth} from '@wm-core/utils/localForage';
+import {clearMapCoreData} from '@map-core/utils';
 
 /**
  * Clears the test state.
@@ -11,6 +12,7 @@ export function clearTestState(): void {
   cy.clearCookies();
   clearUgcSynchronizedData();
   clearUgcDeviceData();
+  clearMapCoreData();
   removeAuth();
 }
 

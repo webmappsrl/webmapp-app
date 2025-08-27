@@ -13,7 +13,9 @@
     class="webmapp-downloadpanel-status"
     >{{track?.properties.name | wmtrans}}</ion-label
   >
-  <ion-label *ngIf="isInit || isDownloading" class="webmapp-downloadpanel-title"
+  <ion-label
+    *ngIf="(isInit || isDownloading) && track?.properties.name"
+    class="webmapp-downloadpanel-title"
     >{{track?.properties.name | wmtrans}}
   </ion-label>
   <ion-label
