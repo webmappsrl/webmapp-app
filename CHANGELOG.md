@@ -6,9 +6,7 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
-* enrich changelog with commit descriptions ([650a2de](https://github.com/webmappsrl/webmapp-app/commit/650a2de08bae048e3b7bcca0432bbc0c5c0bd6ed))
 * enrich changelog with commit descriptions ([b5e0b32](https://github.com/webmappsrl/webmapp-app/commit/b5e0b32666e20e4e5448d9eb5c92b84ec24cb8d3))
-* enrich changelog with commit descriptions ([8858da1](https://github.com/webmappsrl/webmapp-app/commit/8858da10df0c7a15058cbf08c97a8beeada896f7))
 * **poi:** ✨ add Point of Interest (POI) recording functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/6003" target="_blank" rel="noopener noreferrer">OC[6003]</a> ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
 <!-- COMMIT_DESC -->
     
@@ -59,7 +57,6 @@
     Updated the SCSS to change the class name from `wm-recorder` to `wm-track-recorder` to better reflect its functionality. This change affects both `.onlyTitle` and `.open` sections for consistent naming conventions.
     
     * Updated submodule core/src/app/shared/wm-core
-* **wm-core:** changelog for bump to e0eb5e0 ([409e047](https://github.com/webmappsrl/webmapp-app/commit/409e047909d9a61c1451a6dc2e80a4ef7264a450))
 <!-- COMMIT_DESC -->
     
     - chore(map): 🗺️ add focus position and recording panel functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/5239" target="_blank" rel="noopener noreferrer">OC[5239]</a> (#130)
@@ -133,7 +130,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-
 * **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
 <!-- COMMIT_DESC -->
     
@@ -353,7 +349,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-
 ### Features
 
 * **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
@@ -631,7 +626,6 @@
     - Customize the pull request title and header for clarity and automation acknowledgment.
     
     Add test for tracks edges
-<!-- COMMIT_DESC -->
     
     * fix: Management of Map details status, added test e2e
     
@@ -929,7 +923,6 @@
     - Added a new map component
     - Updated the layout of the bottom buttons
     - Adjusted the position and style of the orientation button
-- Add geolocation service to home and map pages <a href="https://orchestrator.maphub.it/resources/customer-stories/4113" target="_blank" rel="noopener noreferrer">OC[4113]</a> ([37903a7](https://github.com/webmappsrl/webmapp-app/commit/37903a78f46f1a95f9ddccc1d370615609f11ab7))
 <!-- COMMIT_DESC -->
     
     This commit adds the GeolocationService to the home and map pages. The GeolocationService is used to retrieve the user's current location.
@@ -1170,7 +1163,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-
 - **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
 <!-- COMMIT_DESC -->
     
@@ -1212,7 +1204,6 @@
     - Added private property _backBtnSub$ of type Subscription
     - Added ionViewDidEnter() method to handle back button event and exit the app
     - Added ionViewWillLeave() method to unsubscribe from back button event
-<!-- COMMIT_DESC -->
     
     - Removed the `providers` property for `LangService` in the `SettingsComponent` and `ProfilePage` files.
     
