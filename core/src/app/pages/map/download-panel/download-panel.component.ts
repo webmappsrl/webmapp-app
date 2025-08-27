@@ -12,7 +12,7 @@ import {
 
 import {DownloadStatus} from 'src/app/types/download';
 import {downloadPanelStatus} from 'src/app/types/downloadpanel.enum';
-import {LineString} from 'geojson';
+import {LineString, MultiPolygon} from 'geojson';
 import {downloadEcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 import {Store} from '@ngrx/store';
@@ -41,7 +41,7 @@ export class WmDownloadPanelComponent implements OnChanges {
   @Input() overlayUrls: {[featureName: string]: string};
   @Input() overlayGeometry: any;
   @Input() overlayXYZ: string = `https://api.webmapp.it/tiles`;
-  @Input() boundingBox: any;
+  @Input() boundingBox: WmFeature<MultiPolygon>;
   @Output('changeStatus') changeStatus: EventEmitter<downloadPanelStatus> =
     new EventEmitter<downloadPanelStatus>();
   @Output('closeDownload') closeDownload: EventEmitter<any> = new EventEmitter<any>();

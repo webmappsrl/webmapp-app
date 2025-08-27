@@ -216,7 +216,7 @@
 
     <div class="wm-map-tiles-download-button" *ngIf="enableTilesDownload$|async">
       <ion-button (click)="downloadTiles()" [disabled]="disableTilesDownloadButton$|async"
-        >Download Tiles</ion-button
+        >{{"Download Tiles"|wmtrans}}</ion-button
       >
     </div>
   </wm-geobox-map>
