@@ -126,8 +126,10 @@ export class WmDownloadPanelComponent implements OnChanges {
       value: this.status[key],
     }));
 
-    // Verifica se tutti i valori di status (escluso finish) sono uguali a 1
-    const allComplete = statusKeys.every(key => this.status[key] === 1);
+    // Verifica se tutti i valori di status (escluso finish e size) sono uguali a 1
+    const allComplete = statusKeys
+      .filter(key => key !== 'size')
+      .every(key => this.status[key] === 1);
     if (allComplete) {
       this.status.finish = true;
       this.completeDownloads();
