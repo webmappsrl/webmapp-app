@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.1.4](https://github.com/webmappsrl/webmapp-app/compare/v3.1.3...v3.1.4) (2025-08-28)
+
+
+### Miscellaneous
+
+* **download-panel:** ✨ add download size display and translations oc:6133 ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
+* enrich changelog with commit descriptions ([b02262d](https://github.com/webmappsrl/webmapp-app/commit/b02262de3e51f3552a6ad466aaacd96febb36451))
+* enrich changelog with commit descriptions ([a848776](https://github.com/webmappsrl/webmapp-app/commit/a8487766ebcd62ca0f913d473ac47da93f72aaad))
+* enrich changelog with commit descriptions ([535c1f1](https://github.com/webmappsrl/webmapp-app/commit/535c1f12abc198b80c58feac7c014334abe25288))
+* enrich changelog with commit descriptions ([57e2175](https://github.com/webmappsrl/webmapp-app/commit/57e2175077ca02c525dbb2aa9603227bae5289f3))
+* **map-core:** changelog for bump to 37b1ed2 ([aba082e](https://github.com/webmappsrl/webmapp-app/commit/aba082ebb72595af461dfbe06678942e18a3abbd))
+* **map-core:** changelog for bump to c6896ee ([928bb58](https://github.com/webmappsrl/webmapp-app/commit/928bb58b0fbf84682523ea80532b2e78a6a8a681))
+* **map:** 🌍 implement tiles download feature oc:5578 ([#157](https://github.com/webmappsrl/webmapp-app/issues/157)) ([3aaa4ee](https://github.com/webmappsrl/webmapp-app/commit/3aaa4ee5ec907efd4fc4d0997729250182a254a9))
+* **wm-core:** changelog for bump to 8fccfea ([d827ae8](https://github.com/webmappsrl/webmapp-app/commit/d827ae86155a74d608012d49106b50a03e35aba7))
+* **wm-core:** changelog for bump to 96f1c84 ([2ed352b](https://github.com/webmappsrl/webmapp-app/commit/2ed352b2bfbd57fb5d286c914067e953e8211701))
+
 ## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-31)
 
 
