@@ -34,9 +34,16 @@
       <ion-label class="webmapp-downloadpanel-element-title"
         >{{'pages.route.downloadpanel.' + element.name | wmtrans}}
       </ion-label>
-      <ion-label class="webmapp-downloadpanel-element-value"
+      <ion-label
+        class="webmapp-downloadpanel-element-value"
+        *ngIf="element.name !== 'downsize'; else sizeValue"
         >{{element.value*100 | number : "0.0-0"}}%
       </ion-label>
+      <ng-template #sizeValue>
+        <ion-label class="webmapp-downloadpanel-element-value"
+          >{{element.value | wmToMb}}
+        </ion-label>
+      </ng-template>
       <ion-progress-bar
         class="webmapp-downloadpanel-element-progress"
         color="primary"
