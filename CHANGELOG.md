@@ -6,7 +6,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
-* enrich changelog with commit descriptions ([b5e0b32](https://github.com/webmappsrl/webmapp-app/commit/b5e0b32666e20e4e5448d9eb5c92b84ec24cb8d3))
 * **poi:** ✨ add Point of Interest (POI) recording functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/6003" target="_blank" rel="noopener noreferrer">OC[6003]</a> ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
 <!-- COMMIT_DESC -->
     
@@ -57,7 +56,6 @@
     Updated the SCSS to change the class name from `wm-recorder` to `wm-track-recorder` to better reflect its functionality. This change affects both `.onlyTitle` and `.open` sections for consistent naming conventions.
     
     * Updated submodule core/src/app/shared/wm-core
-<!-- COMMIT_DESC -->
     
     - chore(map): 🗺️ add focus position and recording panel functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/5239" target="_blank" rel="noopener noreferrer">OC[5239]</a> (#130)
     * chore(map): 🗺️ add focus position and recording panel functionality
@@ -130,7 +128,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-* **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
 <!-- COMMIT_DESC -->
     
     - Enhance changelog script to append commit body descriptions automatically
@@ -708,7 +705,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-### Features
 
 - add e2e test for orientation and location buttons <a href="https://orchestrator.maphub.it/resources/customer-stories/4989" target="_blank" rel="noopener noreferrer">OC[4989]</a> ([#94](https://github.com/webmappsrl/webmapp-app/issues/94)) ([fa100bb](https://github.com/webmappsrl/webmapp-app/commit/fa100bb1a533f29d7fff3e5f1b13668ba6440479))
 <!-- COMMIT_DESC -->
@@ -923,7 +919,6 @@
     - Added a new map component
     - Updated the layout of the bottom buttons
     - Adjusted the position and style of the orientation button
-<!-- COMMIT_DESC -->
     
     This commit adds the GeolocationService to the home and map pages. The GeolocationService is used to retrieve the user's current location.
     
@@ -1163,7 +1158,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-- **config:** add dynamic geohubAppId selection ([f4054da](https://github.com/webmappsrl/webmapp-app/commit/f4054da50b9fa48c85c8cf13e53950b9e2ed1166))
 <!-- COMMIT_DESC -->
     
     This commit adds functionality to dynamically select the geohubAppId based on the hostname. It checks for specific hostnames and assigns a corresponding geohubAppId. If no specific hostname is matched, it uses the numeric value from the hostname. This allows for more flexibility in configuring the geohubAppId for different environments.
