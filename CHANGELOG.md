@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.6](https://github.com/webmappsrl/webmapp-app/compare/v3.1.5...v3.1.6) (2025-09-02)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([de69637](https://github.com/webmappsrl/webmapp-app/commit/de69637d0881678470431858fcbbb4083e5d02cb))
+
 ## [3.1.5](https://github.com/webmappsrl/webmapp-app/compare/v3.1.4...v3.1.5) (2025-09-02)
 
 
