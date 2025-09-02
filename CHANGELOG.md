@@ -5,16 +5,43 @@
 
 ### Miscellaneous
 
-* **download-panel:** ✨ add download size display and translations oc:6133 ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
-* enrich changelog with commit descriptions ([b02262d](https://github.com/webmappsrl/webmapp-app/commit/b02262de3e51f3552a6ad466aaacd96febb36451))
+* **download-panel:** ✨ add download size display and translations <a href="https://orchestrator.maphub.it/resources/customer-stories/6133" target="_blank" rel="noopener noreferrer">OC[6133]</a> ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
+<!-- COMMIT_DESC -->
+    
+    * chore(download-panel): ✨ add download size display and translations
+    
+    Enhanced the download panel to display the download size. Updated the HTML to conditionally show the download size using a new template. Modified TypeScript logic to exclude 'size' from completion checks. Added translations for "Download size" in multiple languages including German, English, Spanish, French, Italian, Portuguese, and Albanian.
+    
+    * Updated submodule core/src/app/shared/map-core
 * enrich changelog with commit descriptions ([a848776](https://github.com/webmappsrl/webmapp-app/commit/a8487766ebcd62ca0f913d473ac47da93f72aaad))
-* enrich changelog with commit descriptions ([535c1f1](https://github.com/webmappsrl/webmapp-app/commit/535c1f12abc198b80c58feac7c014334abe25288))
 * enrich changelog with commit descriptions ([57e2175](https://github.com/webmappsrl/webmapp-app/commit/57e2175077ca02c525dbb2aa9603227bae5289f3))
-* **map-core:** changelog for bump to 37b1ed2 ([aba082e](https://github.com/webmappsrl/webmapp-app/commit/aba082ebb72595af461dfbe06678942e18a3abbd))
 * **map-core:** changelog for bump to c6896ee ([928bb58](https://github.com/webmappsrl/webmapp-app/commit/928bb58b0fbf84682523ea80532b2e78a6a8a681))
-* **map:** 🌍 implement tiles download feature oc:5578 ([#157](https://github.com/webmappsrl/webmapp-app/issues/157)) ([3aaa4ee](https://github.com/webmappsrl/webmapp-app/commit/3aaa4ee5ec907efd4fc4d0997729250182a254a9))
+<!-- COMMIT_DESC -->
+    
+    - chore(map): 🌟 add bounding box download and overlay management
+    Added new directive for managing tile downloads by bounding box. Implemented animation for bounding box delete button and new styles. Added ngrx effects to handle bounding box actions and updated the reducer to manage bounding box state. Enhanced localForage utility with functions for saving, deleting, and retrieving bounding boxes. Updated constants for tile download limits and introduced new actions for bounding box management.
+    
+    - Added `WmMapTilesDownloadDirective` for handling tile downloads.
+    - Integrated bounding box animation and styles.
+    - Incorporated ngrx effects for loading and deleting bounding boxes.
+    - Extended localForage utilities with bounding box operations.
+    - Updated map-core module to include new directive and effects.
+    - Modified map-core actions and reducer to accommodate bounding box state.
+    - Introduced new constants for bounding box functionality.
 * **wm-core:** changelog for bump to 8fccfea ([d827ae8](https://github.com/webmappsrl/webmapp-app/commit/d827ae86155a74d608012d49106b50a03e35aba7))
-* **wm-core:** changelog for bump to 96f1c84 ([2ed352b](https://github.com/webmappsrl/webmapp-app/commit/2ed352b2bfbd57fb5d286c914067e953e8211701))
+<!-- COMMIT_DESC -->
+    
+    - chore(map): 🌍 add tile download feature with bounding box management
+    This update introduces the ability to download map tiles by managing bounding boxes. Users can now select areas on the map for downloading tiles. The feature includes:
+    
+    - UI elements for enabling tile downloads and displaying bounding boxes.
+    - Functions for setting bounding boxes and disabling/enabling download buttons.
+    - A delete confirmation dialog for removing bounding boxes with multi-language support.
+    - State management for enabling and disabling tile downloads, handling bounding boxes, and related UI changes.
+    - Updated localization files to support new strings in multiple languages.
+    
+    - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
+    Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
 
 ## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-31)
 
@@ -22,7 +49,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
-* **poi:** ✨ add Point of Interest (POI) recording functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/6003" target="_blank" rel="noopener noreferrer">OC[6003]</a> ([#155](https://github.com/webmappsrl/webmapp-app/issues/155)) ([ddcfeed](https://github.com/webmappsrl/webmapp-app/commit/ddcfeed32ff2dd3b8a28a16f028d6f844fbfff1c))
 <!-- COMMIT_DESC -->
     
     * chore(poi): ✨ add Point of Interest (POI) recording functionality
@@ -144,7 +170,6 @@
     - Created `ugc.service.spec.ts` to implement tests for the `UgcService`.
     
     These additions enhance the project's testability by providing a framework and initial test cases for verifying the functionality of the UGC service.
-<!-- COMMIT_DESC -->
     
     - Enhance changelog script to append commit body descriptions automatically
     - Detect lines with commit hashes and retrieve their corresponding commit bodies
@@ -721,7 +746,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-
 - add e2e test for orientation and location buttons <a href="https://orchestrator.maphub.it/resources/customer-stories/4989" target="_blank" rel="noopener noreferrer">OC[4989]</a> ([#94](https://github.com/webmappsrl/webmapp-app/issues/94)) ([fa100bb](https://github.com/webmappsrl/webmapp-app/commit/fa100bb1a533f29d7fff3e5f1b13668ba6440479))
 <!-- COMMIT_DESC -->
     
@@ -1116,7 +1140,6 @@
     
     - Updated the paths for the deploy-to-web scripts in package.json to use relative paths instead of absolute paths.
     - Replaced the absolute file paths with "./www/*" and "./www/assets/*" to ensure correct deployment to the web server.
-- Add referrer field to login request ([e953006](https://github.com/webmappsrl/webmapp-app/commit/e95300641080b3e61a44c61373503ebd4844f971))
 <!-- COMMIT_DESC -->
     
     - Added a new field "referrer" to the login request in the AuthService class.
