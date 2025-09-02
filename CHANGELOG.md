@@ -6,11 +6,15 @@
 ### Miscellaneous
 
 * **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
-* enrich changelog with commit descriptions ([2f16ad4](https://github.com/webmappsrl/webmapp-app/commit/2f16ad4cac11298a1e8983e8e572d8d7ca7a064b))
+<!-- COMMIT_DESC -->
+    
+    Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
 * enrich changelog with commit descriptions ([5c677d8](https://github.com/webmappsrl/webmapp-app/commit/5c677d8a4f8b926fb58d70d00bd90c8ab20827f7))
-* **map:** ✨ add conditional display for download tiles button ([8baaf3e](https://github.com/webmappsrl/webmapp-app/commit/8baaf3e404d4568c825de79d8aa13d81b4c67bf1))
 * **wm-core:** changelog for bump to 67afcdf ([a404808](https://github.com/webmappsrl/webmapp-app/commit/a4048081d1a86812eda83d3826f42c55d3200ebe))
-
+<!-- COMMIT_DESC -->
+    
+    - chore(conf): ✨ add showDownloadTilesButton option
+    Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
 ## [3.1.4](https://github.com/webmappsrl/webmapp-app/compare/v3.1.3...v3.1.4) (2025-08-28)
 
 
@@ -24,7 +28,6 @@
     Enhanced the download panel to display the download size. Updated the HTML to conditionally show the download size using a new template. Modified TypeScript logic to exclude 'size' from completion checks. Added translations for "Download size" in multiple languages including German, English, Spanish, French, Italian, Portuguese, and Albanian.
     
     * Updated submodule core/src/app/shared/map-core
-* enrich changelog with commit descriptions ([57e2175](https://github.com/webmappsrl/webmapp-app/commit/57e2175077ca02c525dbb2aa9603227bae5289f3))
 <!-- COMMIT_DESC -->
     
     - chore(map): 🌟 add bounding box download and overlay management
@@ -51,7 +54,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-31)
 
 
 ### Miscellaneous
@@ -158,7 +160,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-## [3.1.2](https://github.com/webmappsrl/webmapp-app/compare/v3.1.1...v3.1.2) (2025-07-23)
 
 
 ### Miscellaneous
@@ -394,7 +395,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-
 * **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
 <!-- COMMIT_DESC -->
     
@@ -752,7 +752,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-<!-- COMMIT_DESC -->
     
     Added a new e2e test file to test the visualization of the orientation and location buttons. The test verifies that the buttons are displayed correctly on the map page.
     
