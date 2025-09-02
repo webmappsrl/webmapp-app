@@ -13,9 +13,7 @@
     Enhanced the download panel to display the download size. Updated the HTML to conditionally show the download size using a new template. Modified TypeScript logic to exclude 'size' from completion checks. Added translations for "Download size" in multiple languages including German, English, Spanish, French, Italian, Portuguese, and Albanian.
     
     * Updated submodule core/src/app/shared/map-core
-* enrich changelog with commit descriptions ([a848776](https://github.com/webmappsrl/webmapp-app/commit/a8487766ebcd62ca0f913d473ac47da93f72aaad))
 * enrich changelog with commit descriptions ([57e2175](https://github.com/webmappsrl/webmapp-app/commit/57e2175077ca02c525dbb2aa9603227bae5289f3))
-* **map-core:** changelog for bump to c6896ee ([928bb58](https://github.com/webmappsrl/webmapp-app/commit/928bb58b0fbf84682523ea80532b2e78a6a8a681))
 <!-- COMMIT_DESC -->
     
     - chore(map): 🌟 add bounding box download and overlay management
@@ -42,7 +40,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-
 ## [3.1.3](https://github.com/webmappsrl/webmapp-app/compare/v3.1.2...v3.1.3) (2025-07-31)
 
 
@@ -150,7 +147,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-
 ## [3.1.2](https://github.com/webmappsrl/webmapp-app/compare/v3.1.1...v3.1.2) (2025-07-23)
 
 
@@ -387,7 +383,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-### Features
 
 * **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
 <!-- COMMIT_DESC -->
@@ -746,7 +741,6 @@
     - The steps include checking out the repository, setting up Node.js, installing dependencies, installing Ionic CLI, creating a Cypress environment file, updating geohubId in environment.ts, running Cypress tests using Chrome browser with specific configurations, and uploading Cypress screenshots on failure.
     
     chore: Update PR test workflow configuration
-- add e2e test for orientation and location buttons <a href="https://orchestrator.maphub.it/resources/customer-stories/4989" target="_blank" rel="noopener noreferrer">OC[4989]</a> ([#94](https://github.com/webmappsrl/webmapp-app/issues/94)) ([fa100bb](https://github.com/webmappsrl/webmapp-app/commit/fa100bb1a533f29d7fff3e5f1b13668ba6440479))
 <!-- COMMIT_DESC -->
     
     Added a new e2e test file to test the visualization of the orientation and location buttons. The test verifies that the buttons are displayed correctly on the map page.
