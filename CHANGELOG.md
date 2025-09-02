@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.1.5](https://github.com/webmappsrl/webmapp-app/compare/v3.1.4...v3.1.5) (2025-09-02)
+
+
+### Miscellaneous
+
+* **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
+* enrich changelog with commit descriptions ([2f16ad4](https://github.com/webmappsrl/webmapp-app/commit/2f16ad4cac11298a1e8983e8e572d8d7ca7a064b))
+* enrich changelog with commit descriptions ([5c677d8](https://github.com/webmappsrl/webmapp-app/commit/5c677d8a4f8b926fb58d70d00bd90c8ab20827f7))
+* **map:** ✨ add conditional display for download tiles button ([8baaf3e](https://github.com/webmappsrl/webmapp-app/commit/8baaf3e404d4568c825de79d8aa13d81b4c67bf1))
+* **wm-core:** changelog for bump to 67afcdf ([a404808](https://github.com/webmappsrl/webmapp-app/commit/a4048081d1a86812eda83d3826f42c55d3200ebe))
+
 ## [3.1.4](https://github.com/webmappsrl/webmapp-app/compare/v3.1.3...v3.1.4) (2025-08-28)
 
 
