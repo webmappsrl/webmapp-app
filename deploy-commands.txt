@@ -9,7 +9,10 @@ gulp build -i ucvs -g 17
 gulp build -i gavorrano -g 19
 gulp build -i sicai -g 20
 gulp build -i portable -g 22
-gulp build -i stelvio -g 23
+// Nota: per stelvio presenti 2 SKU differenti (iOS e Android)
+// iOS: it.webmapp.pnstelvio
+// Anroid: it.webmapp.stelvio
+gulp build -i stelvio -g 23 (Oltre le tracce della storia)
 gulp build -i gasca -g 24
 gulp build -i valsabbia -g 25
 gulp build -i osm2cai -g 26 (app del sentierista)
@@ -34,6 +37,11 @@ gulp build -i apuane -g 62
 gulp build -i parcopan -g 63
 gulp build -i vdc -g 64
 gulp build -i pnab -g 65
+gulp build -i intelvi -g 79
+gulp build -i sgt -g 81
+gulp build -i outcropedia -g 82
+gulp build -i sanrossore -g 83
+
 
 gulp build -i camminiditalia -s camminiditalia -g 1
 
