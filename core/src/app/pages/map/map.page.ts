@@ -30,7 +30,6 @@ import {
   confOPTIONSShowDownloadTilesButton,
   confPOIS,
   confPOISFilter,
-  confPoisIcons,
   confRecordTrackShow,
 } from '@wm-core/store/conf/conf.selector';
 import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
@@ -125,7 +124,6 @@ export class MapPage {
       return p;
     }),
   );
-  confPoiIcons$: Observable<{[identifier: string]: any} | null> = this._store.select(confPoisIcons);
   currentEcImageGalleryIndex$ = this._store.select(currentEcImageGalleryIndex);
   currentEcPoiId$ = this._store.select(currentEcPoiId);
   currentEcTrackProperties$ = this._store.select(currentEcTrackProperties).pipe(
