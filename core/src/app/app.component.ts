@@ -1,14 +1,13 @@
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform, AlertController, ModalController} from '@ionic/angular';
 import {filter, take, switchMap, startWith} from 'rxjs/operators';
-import {from, BehaviorSubject} from 'rxjs';
+import {from, BehaviorSubject, Observable, of} from 'rxjs';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {select, Store} from '@ngrx/store';
 import {StatusService} from './services/status.service';
 import {DOCUMENT} from '@angular/common';
-import {Observable} from 'rxjs';
 import {
   confGEOLOCATION,
   confLANGUAGES,
@@ -20,7 +19,7 @@ import {
 import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {IGEOLOCATION, ILANGUAGES} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
-import {isLogged, needsPrivacyConsent} from '@wm-core/store/auth/auth.selectors';
+import {isLogged, needsDataConsent} from '@wm-core/store/auth/auth.selectors';
 import {loadAuths, loadSignOuts} from '@wm-core/store/auth/auth.actions';
 import {getImg} from '@wm-core/utils/localForage';
 import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
@@ -47,19 +46,17 @@ export class AppComponent {
 
   confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
-  needsPrivacyConsent$: Observable<boolean> = this._store.pipe(select(needsPrivacyConsent));
+  needsDataConsent$: Observable<boolean> = this._store.pipe(select(needsDataConsent));
   confPrivacy$: Observable<any> = this._store.select(confPRIVACY);
 
   // Subject to track localStorage changes
-  private privacyConsentSubject = new BehaviorSubject<boolean>(
-    this._hasPrivacyConsentInLocalStorage(),
-  );
+  private dataConsentSubject = new BehaviorSubject<boolean>(false);
 
-  // Track current privacy alert
-  private currentPrivacyAlert: HTMLIonAlertElement | null = null;
+  // Track current data consent alert
+  private currentDataConsentAlert: HTMLIonAlertElement | null = null;
 
   // Flag to prevent multiple alerts
-  private isShowingPrivacyAlert = false;
+  private isShowingDataConsentAlert = false;
 
   public image_gallery: any[];
   public photoIndex: number = 0;
@@ -85,34 +82,43 @@ export class AppComponent {
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
-    // Update privacy consent status when user logs in
+    // Update data consent status when user logs in
     this.isLogged$.pipe(filter(isLogged => isLogged)).subscribe(() => {
       // Reset flag when user logs in to allow new alert if needed
-      this.isShowingPrivacyAlert = false;
+      this.isShowingDataConsentAlert = false;
       // Update consent status after a small delay to ensure user is fully logged in
       setTimeout(() => {
-        this._updatePrivacyConsentStatus();
+        this._updateDataConsentStatus();
       }, 100);
     });
 
-    // Close privacy alert when user logs out (backup safety)
+    // Close data consent alert when user logs out (backup safety)
     this.isLogged$.pipe(filter(isLogged => !isLogged)).subscribe(() => {
-      // Force close any remaining privacy alerts
-      this._forceClosePrivacyAlert();
+      // Force close any remaining data consent alerts
+      this._forceCloseDataConsentAlert();
       // Reset flag to allow new alert on next login
-      this.isShowingPrivacyAlert = false;
+      this.isShowingDataConsentAlert = false;
     });
 
-    // Add privacy consent check ONLY after login
+    // Add data consent check ONLY after login
     this.isLogged$
       .pipe(
         filter(isLogged => isLogged),
-        switchMap(() =>
-          this.privacyConsentSubject.pipe(startWith(this._hasPrivacyConsentInLocalStorage())),
-        ),
-        filter(hasConsent => !hasConsent),
-        filter(() => !this.isShowingPrivacyAlert), // Only show if no alert is currently being shown
-        switchMap(() => this._showPrivacyConsentAlert()),
+        switchMap(() => {
+          // Always check localStorage directly when user logs in
+          const hasConsent = this._hasDataConsentInLocalStorage();
+          console.log('User logged in, hasConsent:', hasConsent);
+          this.dataConsentSubject.next(hasConsent);
+
+          // If no consent, show alert directly
+          if (!hasConsent && !this.isShowingDataConsentAlert) {
+            console.log('No consent found, showing alert');
+            return this._showDataConsentAlert();
+          }
+
+          // Return empty observable if consent exists
+          return [];
+        }),
       )
       .subscribe();
 
@@ -162,46 +168,42 @@ export class AppComponent {
     OfflineCallbackManager.setOfflineCallback(getImg);
   }
 
-  private _hasPrivacyConsentInLocalStorage(): boolean {
+  private _hasDataConsentInLocalStorage(): boolean {
     return localStorage.getItem('privacy_consent') === 'true';
   }
 
-  private _updatePrivacyConsentStatus(): void {
-    // Only update consent status if user is logged in
-    this.isLogged$.pipe(take(1)).subscribe(isLogged => {
-      if (isLogged) {
-        this.privacyConsentSubject.next(this._hasPrivacyConsentInLocalStorage());
-      }
-    });
+  private _updateDataConsentStatus(): void {
+    // Update consent status directly
+    this.dataConsentSubject.next(this._hasDataConsentInLocalStorage());
   }
 
-  private _closePrivacyAlert(): void {
-    if (this.currentPrivacyAlert) {
+  private _closeDataConsentAlert(): void {
+    if (this.currentDataConsentAlert) {
       try {
-        this.currentPrivacyAlert.dismiss();
+        this.currentDataConsentAlert.dismiss();
       } catch (error) {
-        console.log('Error dismissing privacy alert:', error);
+        console.log('Error dismissing data consent alert:', error);
       } finally {
-        this.currentPrivacyAlert = null;
-        this.isShowingPrivacyAlert = false;
+        this.currentDataConsentAlert = null;
+        this.isShowingDataConsentAlert = false;
       }
     }
   }
 
-  private _forceClosePrivacyAlert(): void {
-    if (this.currentPrivacyAlert) {
+  private _forceCloseDataConsentAlert(): void {
+    if (this.currentDataConsentAlert) {
       try {
         // Force dismiss with immediate effect
-        this.currentPrivacyAlert.dismiss();
-        this.currentPrivacyAlert = null;
+        this.currentDataConsentAlert.dismiss();
+        this.currentDataConsentAlert = null;
       } catch (error) {
-        console.log('Error force dismissing privacy alert:', error);
-        this.currentPrivacyAlert = null;
+        console.log('Error force dismissing data consent alert:', error);
+        this.currentDataConsentAlert = null;
       }
     }
 
     // Reset flag
-    this.isShowingPrivacyAlert = false;
+    this.isShowingDataConsentAlert = false;
 
     // Also try to dismiss any existing alerts in the DOM
     const existingAlerts = document.querySelectorAll('ion-alert');
@@ -216,34 +218,27 @@ export class AppComponent {
     });
   }
 
-  private async _showPrivacyConsentAlert(): Promise<void> {
+  private async _showDataConsentAlert(): Promise<Observable<any>> {
     // Prevent multiple alerts
-    if (this.isShowingPrivacyAlert) {
-      return;
+    if (this.isShowingDataConsentAlert) {
+      return of(null);
     }
 
     // Set flag to prevent duplicates
-    this.isShowingPrivacyAlert = true;
+    this.isShowingDataConsentAlert = true;
 
     // Close any existing alert first
-    this._closePrivacyAlert();
+    this._closeDataConsentAlert();
 
-    // Use hardcoded text as fallback if translations are not loaded
-    const title =
-      this._langSvc.instant('privacy.consent.title') || 'Trattamento dei Dati Personali';
-    const message =
-      this._langSvc.instant('privacy.consent.message') ||
-      "Per utilizzare l'applicazione, devi confermare il trattamento dei tuoi dati personali secondo la nostra Privacy Policy.";
-    const readPrivacy =
-      this._langSvc.instant('privacy.consent.read_privacy') || 'Leggi Privacy Policy';
-    const accept = this._langSvc.instant('privacy.consent.accept') || 'Accetta';
-    const reject = this._langSvc.instant('privacy.consent.reject') || 'Rifiuta';
-    const rejectTitle =
-      this._langSvc.instant('privacy.consent.reject_confirm.title') || 'Attenzione';
-    const rejectMessage =
-      this._langSvc.instant('privacy.consent.reject_confirm.message') ||
-      "Senza il consenso al trattamento dei dati non puoi utilizzare l'applicazione. Verrai disconnesso.";
-    const rejectOk = this._langSvc.instant('privacy.consent.reject_confirm.ok') || 'OK';
+    // Use translations only
+    const title = this._langSvc.instant('data.consent.title');
+    const message = this._langSvc.instant('data.consent.message');
+    const readPrivacy = this._langSvc.instant('data.consent.read_privacy');
+    const accept = this._langSvc.instant('data.consent.accept');
+    const reject = this._langSvc.instant('data.consent.reject');
+    const rejectTitle = this._langSvc.instant('data.consent.reject_confirm.title');
+    const rejectMessage = this._langSvc.instant('data.consent.reject_confirm.message');
+    const rejectOk = this._langSvc.instant('data.consent.reject_confirm.ok');
 
     const alert = await this._alertCtrl.create({
       header: title,
@@ -252,8 +247,8 @@ export class AppComponent {
         {
           text: readPrivacy,
           handler: () => {
-            this.openPrivacyPolicy();
-            return false; // Non chiudere l'alert
+            this.openPrivacyPolicy().subscribe();
+            return false;
           },
         },
         {
@@ -262,7 +257,7 @@ export class AppComponent {
             // Save consent immediately
             localStorage.setItem('privacy_consent', 'true');
             localStorage.setItem('privacy_consent_date', new Date().toISOString());
-            this._updatePrivacyConsentStatus();
+            this._updateDataConsentStatus();
 
             // Let the alert close naturally by returning true
             return true;
@@ -272,7 +267,7 @@ export class AppComponent {
           text: reject,
           role: 'cancel',
           handler: async () => {
-            // Mostra messaggio di conferma
+            // Show confirmation message
             const confirmAlert = await this._alertCtrl.create({
               header: rejectTitle,
               message: rejectMessage,
@@ -280,13 +275,13 @@ export class AppComponent {
                 {
                   text: rejectOk,
                   handler: async () => {
-                    // Force close the main privacy alert immediately
-                    this._forceClosePrivacyAlert();
+                    // Force close the main data consent alert immediately
+                    this._forceCloseDataConsentAlert();
 
-                    // Remove privacy consent from localStorage when user rejects
+                    // Remove data consent from localStorage when user rejects
                     localStorage.removeItem('privacy_consent');
                     localStorage.removeItem('privacy_consent_date');
-                    this._updatePrivacyConsentStatus();
+                    this._updateDataConsentStatus();
 
                     // Small delay to ensure alert is closed before logout
                     setTimeout(() => {
@@ -303,12 +298,12 @@ export class AppComponent {
     });
 
     // Save reference to current alert
-    this.currentPrivacyAlert = alert;
+    this.currentDataConsentAlert = alert;
 
     // Handle alert dismissal
     alert.onDidDismiss().then(() => {
-      this.currentPrivacyAlert = null;
-      this.isShowingPrivacyAlert = false;
+      this.currentDataConsentAlert = null;
+      this.isShowingDataConsentAlert = false;
     });
 
     // Handle alert will dismiss to update consent status
@@ -316,19 +311,22 @@ export class AppComponent {
       // If user accepted, update the consent status
       if (detail.role === 'ok' || detail.role === undefined) {
         // Check if consent was already saved (in case of accept button)
-        if (!this._hasPrivacyConsentInLocalStorage()) {
+        if (!this._hasDataConsentInLocalStorage()) {
           // If not saved yet, save it now
           localStorage.setItem('privacy_consent', 'true');
           localStorage.setItem('privacy_consent_date', new Date().toISOString());
-          this._updatePrivacyConsentStatus();
+          this._updateDataConsentStatus();
         }
       }
     });
 
     await alert.present();
+
+    // Return empty observable
+    return of(null);
   }
 
-  private openPrivacyPolicy(): void {
+  private openPrivacyPolicy(): Observable<any> {
     this.confPrivacy$
       .pipe(
         take(1),
@@ -352,6 +350,8 @@ export class AppComponent {
         }),
       )
       .subscribe(modal => modal?.present());
+
+    return of(null);
   }
 
   closePhoto() {

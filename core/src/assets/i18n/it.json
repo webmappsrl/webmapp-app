@@ -541,7 +541,6 @@
     "privacy": {
       "consent": {
         "title": "Trattamento dei Dati Personali",
-        "message": "Per utilizzare l'applicazione, devi confermare il trattamento dei tuoi dati personali secondo la nostra Privacy Policy.",
         "accept": "Accetta",
         "reject": "Rifiuta"
       }
@@ -605,12 +604,11 @@
   "Ti trovi qui": "Ti trovi qui",
   "Salva Waypoint": "Salva Waypoint",
   "Salva Traccia": "Salva Traccia",
-  "privacy": {
+  "data": {
     "consent": {
-      "title": "Trattamento dei Dati Personali",
-      "message": "Per utilizzare l'applicazione, devi confermare il trattamento dei tuoi dati personali secondo la nostra Privacy Policy.",
-      "privacy_link": "Privacy Policy",
-      "read_privacy": "Leggi Privacy Policy",
+      "title": "Trattamento dei dati",
+      "message": "Acconsento che i miei dati vengano pubblicati",
+      "read_privacy": "Leggi informativa sul trattamento dei dati",
       "accept": "Accetta",
       "reject": "Rifiuta",
       "reject_confirm": {
