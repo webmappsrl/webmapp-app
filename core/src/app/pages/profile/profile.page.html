@@ -70,6 +70,19 @@
 
 <ion-button
   *ngIf="isLogged$|async"
+  (click)="openDataConsentAlert()"
+  size="small"
+  expand="block"
+  fill="outline"
+  color="primary"
+  class="wm-profile-consent-button"
+>
+  <ion-icon name="shield-outline"></ion-icon>
+  {{'Modifica consenso dati'|wmtrans}}
+</ion-button>
+
+<ion-button
+  *ngIf="isLogged$|async"
   (click)="deleteUserAlert()"
   size="small"
   expand="block"
