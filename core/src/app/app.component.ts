@@ -28,7 +28,7 @@ import {getImg} from '@wm-core/utils/localForage';
 
 import {Observable} from 'rxjs';
 
-import {DataConsentService} from './services/data-consent.service';
+import {DataConsentService} from '@wm-core/services/data-consent.service';
 import {StatusService} from './services/status.service';
 import {filter, take} from 'rxjs/operators';
 

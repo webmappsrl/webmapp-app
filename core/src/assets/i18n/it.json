@@ -610,12 +610,7 @@
       "message": "Acconsento che i miei dati vengano pubblicati",
       "read_privacy": "Leggi informativa sul trattamento dei dati",
       "accept": "Accetta",
-      "reject": "Rifiuta",
-      "reject_confirm": {
-        "title": "Attenzione",
-        "message": "Senza il consenso al trattamento dei dati non puoi utilizzare l'applicazione. Verrai disconnesso.",
-        "ok": "OK"
-      }
+      "reject": "Rifiuta"
     }
   }
 }

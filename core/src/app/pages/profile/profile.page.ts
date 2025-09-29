@@ -15,7 +15,7 @@ import {WmFeature} from '@wm-types/feature';
 import {MultiPolygon} from 'geojson';
 import {getHitmapFeatures} from '@map-core/utils';
 import {WmHomeHitMapComponent} from '@wm-core/home/home-hitmap/home-hitmap.component';
-import {DataConsentService} from '../../services/data-consent.service';
+import {DataConsentService} from '@wm-core/services/data-consent.service';
 import {IAPP} from '@wm-core/types/config';
 
 @Component({
