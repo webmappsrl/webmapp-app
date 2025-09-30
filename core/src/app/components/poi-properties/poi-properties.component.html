@@ -1,3 +1,4 @@
+<!-- TODO: unire ugc-properties con poi-properties? -->
 <ng-container *ngIf="currentPoiProperties$|async as properties">
   <div class="wm-poi-properties-body">
     <ion-label *ngIf="distanceFromCurrentPoi$|async as distanceFromCurrentPoi">
@@ -24,6 +25,15 @@
       *ngIf="properties?.taxonomy?.poi_types as poiTypes"
       [poiTypes]="poiTypes"
     ></wm-poi-types-badges>
+    <ng-container *ngIf="properties?.form">
+      <wm-form
+        class="wm-ugc-poi-form-readonly"
+        [disabled]="true"
+        [confPOIFORMS]="confPOIFORMS$|async"
+        [init]="properties?.form"
+        (formGroupEvt)="formGroup = $event"
+      ></wm-form>
+    </ng-container>
     <ng-container *ngIf="properties?.info as info">
       <div class="wm-poi-properties-info" [innerHTML]="sanitize(info|wmtrans)"></div>
     </ng-container>
