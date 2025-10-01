@@ -1,16 +1,13 @@
-import {DOCUMENT} from '@angular/common';
 import {Component, Inject, ViewEncapsulation} from '@angular/core';
-import {Router} from '@angular/router';
-import {KeepAwake} from '@capacitor-community/keep-awake';
-import {SplashScreen} from '@capacitor/splash-screen';
 import {Platform} from '@ionic/angular';
-import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
-import {Store, select} from '@ngrx/store';
-import {LangService} from '@wm-core/localization/lang.service';
-import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
-import {loadAuths} from '@wm-core/store/auth/auth.actions';
-import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {loadConf} from '@wm-core/store/conf/conf.actions';
+import {filter, take} from 'rxjs/operators';
+import {KeepAwake} from '@capacitor-community/keep-awake';
+import {Router} from '@angular/router';
+import {SplashScreen} from '@capacitor/splash-screen';
+import {select, Store} from '@ngrx/store';
+import {StatusService} from './services/status.service';
+import {DOCUMENT} from '@angular/common';
+import {Observable} from 'rxjs';
 import {
   confGEOLOCATION,
   confLANGUAGES,
@@ -18,19 +15,20 @@ import {
   confMAPHitMapUrl,
   confTHEMEVariables,
 } from '@wm-core/store/conf/conf.selector';
-import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
-import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
-import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
-import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
-import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
+import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {IGEOLOCATION, ILANGUAGES} from '@wm-core/types/config';
+import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {loadAuths} from '@wm-core/store/auth/auth.actions';
 import {getImg} from '@wm-core/utils/localForage';
-
-import {Observable} from 'rxjs';
-
+import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
+import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
+import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
+import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
+import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
+import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
+import {LangService} from '@wm-core/localization/lang.service';
 import {DataConsentService} from '@wm-core/services/data-consent.service';
-import {StatusService} from './services/status.service';
-import {filter, take} from 'rxjs/operators';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -39,13 +37,14 @@ import {filter, take} from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent {
-  public confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
-  public confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
-  public confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
-  public confMap$: Observable<any> = this._store.select(confMAP);
-  public confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
+  confGEOLOCATION$: Observable<IGEOLOCATION> = this._store.select(confGEOLOCATION);
+  confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
+  confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
+  confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+
+  confMap$: Observable<any> = this._store.select(confMAP);
+  isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   public image_gallery: any[];
-  public isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   public photoIndex: number = 0;
   public showingPhotos = false;
 
@@ -117,11 +116,11 @@ export class AppComponent {
     OfflineCallbackManager.setOfflineCallback(getImg);
   }
 
-  public closePhoto() {
+  closePhoto() {
     this.showingPhotos = false;
   }
 
-  public isRecording() {}
+  isRecording() {}
 
   /**
    * @description
@@ -133,7 +132,7 @@ export class AppComponent {
    * @returns {*}
    * @memberof AppComponent
    */
-  public recBtnPosition() {
+  recBtnPosition() {
     const tree = this._router.parseUrl(this._router.url);
     if (tree?.root?.children && tree.root.children['primary']) {
       const url = tree.root.children['primary'].segments[0].path;
@@ -149,7 +148,7 @@ export class AppComponent {
     return 'low';
   }
 
-  public recordingClick(ev) {}
+  recordingClick(ev) {}
 
   private _setGlobalCSS(css: {[name: string]: string | number}) {
     const rootDocument = this._document.querySelector(':root');
