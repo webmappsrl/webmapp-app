@@ -27,8 +27,7 @@ import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
-import {LangService} from '@wm-core/localization/lang.service';
-import {DataConsentService} from '@wm-core/services/data-consent.service';
+import {PrivacyAgreeService} from '@wm-core/services/privacy-agree.service';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -54,8 +53,7 @@ export class AppComponent {
     private _statusSvc: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _langSvc: LangService,
-    private _dataConsentSvc: DataConsentService,
+    private _privacyAgreeSvc: PrivacyAgreeService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadAuths());
@@ -67,8 +65,8 @@ export class AppComponent {
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
-    // Initialize consent management through the service
-    this._dataConsentSvc.initializeConsentManagement();
+    // Initialize privacy agree management through the service
+    this._privacyAgreeSvc.initializePrivacyAgreeManagement();
 
     this.confMAPHitMapUrl$
       .pipe(

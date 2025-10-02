@@ -15,7 +15,7 @@ import {WmFeature} from '@wm-types/feature';
 import {MultiPolygon} from 'geojson';
 import {getHitmapFeatures} from '@map-core/utils';
 import {WmHomeHitMapComponent} from '@wm-core/home/home-hitmap/home-hitmap.component';
-import {DataConsentService} from '@wm-core/services/data-consent.service';
+import {PrivacyAgreeService} from '@wm-core/services/privacy-agree.service';
 import {IAPP} from '@wm-core/types/config';
 
 @Component({
@@ -41,7 +41,7 @@ export class ProfilePage implements OnDestroy {
     private _router: Router,
     private _alertCtrl: AlertController,
     private _langSvc: LangService,
-    private _dataConsentSvc: DataConsentService,
+    private _privacyAgreeSvc: PrivacyAgreeService,
   ) {
     this._isLoggedSub = this.isLogged$
       .pipe(
@@ -128,12 +128,12 @@ export class ProfilePage implements OnDestroy {
   }
 
   /**
-   * Open data consent alert to allow user to modify consent
+   * Open privacy agree alert to allow user to modify privacy agree
    */
-  openDataConsentAlert(): void {
+  openPrivacyAgreeAlert(): void {
     this.isLogged$.pipe(take(1)).subscribe(isLogged => {
-      this._dataConsentSvc.showDataConsentAlert(isLogged, this.confAPP$).subscribe(result => {
-        console.log('Data consent result:', result);
+      this._privacyAgreeSvc.showPrivacyAgreeAlert(isLogged, this.confAPP$).subscribe(result => {
+        console.log('Privacy agree result:', result);
         // Optionally show a success message or update UI
       });
     });
