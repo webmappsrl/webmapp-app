@@ -617,7 +617,14 @@
       "message": "I consent to my data being published",
       "read_privacy": "Read data processing information",
       "accept": "Accept",
-      "reject": "Reject"
+      "reject": "Reject",
+      "confirm": {
+        "title": "Confirm change",
+        "accept_message": "Are you sure you want to accept data processing?",
+        "reject_message": "Are you sure you want to reject data processing?",
+        "yes": "Yes, confirm",
+        "no": "Cancel"
+      }
     }
   }
 }

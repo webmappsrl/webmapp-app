@@ -610,7 +610,14 @@
       "message": "Acconsento che i miei dati vengano pubblicati",
       "read_privacy": "Leggi informativa sul trattamento dei dati",
       "accept": "Accetta",
-      "reject": "Rifiuta"
+      "reject": "Rifiuta",
+      "confirm": {
+        "title": "Conferma modifica",
+        "accept_message": "Sei sicuro di voler accettare il trattamento dei dati?",
+        "reject_message": "Sei sicuro di voler rifiutare il trattamento dei dati?",
+        "yes": "Sì, conferma",
+        "no": "Annulla"
+      }
     }
   }
 }
