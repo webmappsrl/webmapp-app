@@ -68,6 +68,13 @@
   </ng-container>
 </ion-content>
 
+<wm-privacy-agree-button
+  (consentResult)="onPrivacyConsentResult($event)"
+  class="wm-profile-privacy-button"
+>
+  {{'Modifica consenso dati'|wmtrans}}
+</wm-privacy-agree-button>
+
 <ion-button
   *ngIf="isLogged$|async"
   (click)="deleteUserAlert()"

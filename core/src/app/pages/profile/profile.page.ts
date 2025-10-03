@@ -3,19 +3,19 @@ import {ModalController} from '@ionic/angular';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
 import {select, Store} from '@ngrx/store';
-import {confAUTHEnable, confMAPHitMapUrl} from '@wm-core/store/conf/conf.selector';
+import {confAUTHEnable, confMAPHitMapUrl, confAPP} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Router} from '@angular/router';
-import {filter, skip} from 'rxjs/operators';
+import {filter, skip, take} from 'rxjs/operators';
 import {AlertController} from '@ionic/angular';
 import {from} from 'rxjs';
-import {take} from 'rxjs/operators';
 import {deleteUser} from '@wm-core/store/auth/auth.actions';
 import {LangService} from '@wm-core/localization/lang.service';
 import {WmFeature} from '@wm-types/feature';
 import {MultiPolygon} from 'geojson';
 import {getHitmapFeatures} from '@map-core/utils';
 import {WmHomeHitMapComponent} from '@wm-core/home/home-hitmap/home-hitmap.component';
+import {IAPP} from '@wm-core/types/config';
 
 @Component({
   selector: 'webmapp-page-profile',
@@ -30,8 +30,10 @@ export class ProfilePage implements OnDestroy {
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
   confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+  confAPP$: Observable<IAPP> = this._store.select(confAPP);
   hitmapFeatures$: Observable<WmFeature<MultiPolygon>[]> = from(getHitmapFeatures());
   @ViewChild(WmHomeHitMapComponent) hitmapComp: WmHomeHitMapComponent;
+
   constructor(
     private _modalController: ModalController,
     private _store: Store<any>,
@@ -121,5 +123,13 @@ export class ProfilePage implements OnDestroy {
       .subscribe(l => {
         l.present();
       });
+  }
+
+  /**
+   * Handle privacy consent result from the component
+   */
+  onPrivacyConsentResult(result: boolean): void {
+    console.log('Privacy consent result:', result);
+    // Optionally show a success message or update UI
   }
 }
