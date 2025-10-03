@@ -28,6 +28,7 @@ import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 import {PrivacyAgreeService} from '@wm-core/services/privacy-agree.service';
+import {loadIcons} from '@wm-core/store/icons/icons.actions';
 
 @Component({
   selector: 'webmapp-app-root',
@@ -58,6 +59,7 @@ export class AppComponent {
   ) {
     this._store.dispatch(loadAuths());
     this._store.dispatch(loadConf());
+    this._store.dispatch(loadIcons());
     this._store.dispatch(ecTracks({init: true}));
     this._store.dispatch(loadEcPois());
     this._store.dispatch(syncUgc());
