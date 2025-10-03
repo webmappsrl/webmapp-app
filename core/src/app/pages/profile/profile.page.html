@@ -68,18 +68,12 @@
   </ng-container>
 </ion-content>
 
-<ion-button
-  *ngIf="isLogged$|async"
-  (click)="openPrivacyAgreeAlert()"
-  size="small"
-  expand="block"
-  fill="outline"
-  color="primary"
-  class="wm-profile-consent-button"
+<wm-privacy-agree-button
+  (consentResult)="onPrivacyConsentResult($event)"
+  class="wm-profile-privacy-button"
 >
-  <ion-icon name="shield-outline"></ion-icon>
   {{'Modifica consenso dati'|wmtrans}}
-</ion-button>
+</wm-privacy-agree-button>
 
 <ion-button
   *ngIf="isLogged$|async"
