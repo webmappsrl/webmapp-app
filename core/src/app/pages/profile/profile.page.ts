@@ -124,12 +124,4 @@ export class ProfilePage implements OnDestroy {
         l.present();
       });
   }
-
-  /**
-   * Handle privacy consent result from the component
-   */
-  onPrivacyConsentResult(result: boolean): void {
-    console.log('Privacy consent result:', result);
-    // Optionally show a success message or update UI
-  }
 }
