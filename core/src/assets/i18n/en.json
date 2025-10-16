@@ -624,6 +624,12 @@
         "reject_message": "Are you sure you want to reject data processing?",
         "yes": "Yes, confirm",
         "no": "Cancel"
+      },
+      "final_confirm": {
+        "title": "Change completed",
+        "accept_message": "Data processing consent has been successfully accepted.",
+        "reject_message": "Data processing consent has been successfully rejected.",
+        "ok": "OK"
       }
     }
   }

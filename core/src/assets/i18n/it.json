@@ -617,6 +617,12 @@
         "reject_message": "Sei sicuro di voler rifiutare il trattamento dei dati?",
         "yes": "Sì, conferma",
         "no": "Annulla"
+      },
+      "final_confirm": {
+        "title": "Modifica completata",
+        "accept_message": "Il consenso al trattamento dei dati è stato accettato con successo.",
+        "reject_message": "Il consenso al trattamento dei dati è stato rifiutato con successo.",
+        "ok": "OK"
       }
     }
   }
