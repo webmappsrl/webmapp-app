@@ -596,5 +596,27 @@
   "La conferma non corrisponde. Digita \"delete account\" per procedere.": "Konfirmimi nuk përputhet. Shkruani \"delete account\" për të vazhduar.",
   "Ti trovi qui": "Je këtu",
   "Salva Waypoint": "Ruaj pikën e rrugës",
-  "Salva Traccia": "Ruaj gjurmën"
+  "Salva Traccia": "Ruaj gjurmën",
+  "privacy": {
+    "agree": {
+      "title": "Përpunimi i të dhënave",
+      "message": "Pranoj që të dhënat e mia të publikohen",
+      "read_privacy": "Lexo informacionin për përpunimin e të dhënave",
+      "accept": "Prano",
+      "reject": "Refuzo",
+      "confirm": {
+        "title": "Konfirmo ndryshimin",
+        "accept_message": "A jeni të sigurt që dëshironi të pranoni përpunimin e të dhënave?",
+        "reject_message": "A jeni të sigurt që dëshironi të refuzoni përpunimin e të dhënave?",
+        "yes": "Po, konfirmo",
+        "no": "Anulo"
+      },
+      "final_confirm": {
+        "title": "Ndryshimi u përfundua",
+        "accept_message": "Pëlqimi për përpunimin e të dhënave u pranua me sukses.",
+        "reject_message": "Pëlqimi për përpunimin e të dhënave u refuzua me sukses.",
+        "ok": "OK"
+      }
+    }
+  }
 }

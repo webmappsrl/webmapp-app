@@ -601,5 +601,27 @@
   "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La confirmation ne correspond pas. Tapez \"delete account\" pour continuer.",
   "Ti trovi qui": "Vous êtes ici",
   "Salva Waypoint": "Enregistrer le waypoint",
-  "Salva Traccia": "Enregistrer la trace"
+  "Salva Traccia": "Enregistrer la trace",
+  "privacy": {
+    "agree": {
+      "title": "Traitement des données",
+      "message": "J'accepte que mes données soient publiées",
+      "read_privacy": "Lire les informations sur le traitement des données",
+      "accept": "Accepter",
+      "reject": "Rejeter",
+      "confirm": {
+        "title": "Confirmer le changement",
+        "accept_message": "Êtes-vous sûr de vouloir accepter le traitement des données ?",
+        "reject_message": "Êtes-vous sûr de vouloir rejeter le traitement des données ?",
+        "yes": "Oui, confirmer",
+        "no": "Annuler"
+      },
+      "final_confirm": {
+        "title": "Changement terminé",
+        "accept_message": "Le consentement au traitement des données a été accepté avec succès.",
+        "reject_message": "Le consentement au traitement des données a été rejeté avec succès.",
+        "ok": "OK"
+      }
+    }
+  }
 }
