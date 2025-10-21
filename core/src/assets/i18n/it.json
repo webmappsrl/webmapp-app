@@ -537,6 +537,13 @@
     "disclaimer": {
       "title": "Disclaimer",
       "content": "L'escursionismo e, più in generale, l'attività all'aria aperta, è una attività potenzialmente rischiosa: prima di avventurarti in una escursione assicurati di avere le conoscenze e le competenze per farlo. Se non sei sicuro rivolgiti agli esperti locali che ti possono aiutare, suggerire e supportare nella pianificazione e nello svolgimento delle tue attività. I dati presentati su questa APP non possono garantire completamente la percorribilità senza rischi del percorso: potrebbero essersi verificati cambiamenti, anche importanti, dall’ultima verifica effettuata del percorso stesso. E’ fondamentale quindi che chi si appresta a svolgere attività valuti attentamente l’opportunità di proseguire in base ai suggerimenti e ai consigli contenuti in questa APP, in base alla propria esperienza, alle condizioni metereologiche (anche dei giorni precedenti) e di una valutazione effettuata sul campo all’inizio dello svolgimento della attività. La società Webmapp S.r.l. non fornisce garanzie sulla sicurezza dei luoghi descritti, e non si assume alcuna responsabilità per eventuali danni causati dallo svolgimento delle attività descritte."
+    },
+    "privacy": {
+      "agree": {
+        "title": "Trattamento dei Dati Personali",
+        "accept": "Accetta",
+        "reject": "Rifiuta"
+      }
     }
   },
   "services": {
@@ -596,5 +603,27 @@
   "La conferma non corrisponde. Digita \"delete account\" per procedere.": "La conferma non corrisponde. Digita \"delete account\" per procedere.",
   "Ti trovi qui": "Ti trovi qui",
   "Salva Waypoint": "Salva Waypoint",
-  "Salva Traccia": "Salva Traccia"
+  "Salva Traccia": "Salva Traccia",
+  "privacy": {
+    "agree": {
+      "title": "Trattamento dei dati",
+      "message": "Acconsento che i miei dati vengano pubblicati",
+      "read_privacy": "Leggi informativa sul trattamento dei dati",
+      "accept": "Accetta",
+      "reject": "Rifiuta",
+      "confirm": {
+        "title": "Conferma modifica",
+        "accept_message": "Sei sicuro di voler accettare il trattamento dei dati?",
+        "reject_message": "Sei sicuro di voler rifiutare il trattamento dei dati?",
+        "yes": "Sì, conferma",
+        "no": "Annulla"
+      },
+      "final_confirm": {
+        "title": "Modifica completata",
+        "accept_message": "Il consenso al trattamento dei dati è stato accettato con successo.",
+        "reject_message": "Il consenso al trattamento dei dati è stato rifiutato con successo.",
+        "ok": "OK"
+      }
+    }
+  }
 }

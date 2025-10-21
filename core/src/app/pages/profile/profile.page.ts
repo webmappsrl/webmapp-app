@@ -6,10 +6,9 @@ import {select, Store} from '@ngrx/store';
 import {confAUTHEnable, confMAPHitMapUrl} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Router} from '@angular/router';
-import {filter, skip} from 'rxjs/operators';
+import {filter, skip, take} from 'rxjs/operators';
 import {AlertController} from '@ionic/angular';
 import {from} from 'rxjs';
-import {take} from 'rxjs/operators';
 import {deleteUser} from '@wm-core/store/auth/auth.actions';
 import {LangService} from '@wm-core/localization/lang.service';
 import {WmFeature} from '@wm-types/feature';
@@ -32,6 +31,7 @@ export class ProfilePage implements OnDestroy {
   confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
   hitmapFeatures$: Observable<WmFeature<MultiPolygon>[]> = from(getHitmapFeatures());
   @ViewChild(WmHomeHitMapComponent) hitmapComp: WmHomeHitMapComponent;
+
   constructor(
     private _modalController: ModalController,
     private _store: Store<any>,
