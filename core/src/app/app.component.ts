@@ -27,7 +27,6 @@ import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
-import {PrivacyAgreeService} from '@wm-core/services/privacy-agree.service';
 import {loadIcons} from '@wm-core/store/icons/icons.actions';
 
 @Component({
@@ -54,7 +53,6 @@ export class AppComponent {
     private _statusSvc: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
-    private _privacyAgreeSvc: PrivacyAgreeService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadAuths());
@@ -66,9 +64,6 @@ export class AppComponent {
     this._store.dispatch(loadBoundingBoxes());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
-
-    // Initialize privacy agree management through the service
-    this._privacyAgreeSvc.initializePrivacyAgreeManagement();
 
     this.confMAPHitMapUrl$
       .pipe(
