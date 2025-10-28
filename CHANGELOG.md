@@ -9,13 +9,11 @@
 <!-- COMMIT_DESC -->
     
     Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
-* enrich changelog with commit descriptions ([5c677d8](https://github.com/webmappsrl/webmapp-app/commit/5c677d8a4f8b926fb58d70d00bd90c8ab20827f7))
 * **wm-core:** changelog for bump to 67afcdf ([a404808](https://github.com/webmappsrl/webmapp-app/commit/a4048081d1a86812eda83d3826f42c55d3200ebe))
 <!-- COMMIT_DESC -->
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-## [3.1.4](https://github.com/webmappsrl/webmapp-app/compare/v3.1.3...v3.1.4) (2025-08-28)
 
 
 ### Miscellaneous
@@ -28,7 +26,6 @@
     Enhanced the download panel to display the download size. Updated the HTML to conditionally show the download size using a new template. Modified TypeScript logic to exclude 'size' from completion checks. Added translations for "Download size" in multiple languages including German, English, Spanish, French, Italian, Portuguese, and Albanian.
     
     * Updated submodule core/src/app/shared/map-core
-<!-- COMMIT_DESC -->
     
     - chore(map): 🌟 add bounding box download and overlay management
     Added new directive for managing tile downloads by bounding box. Implemented animation for bounding box delete button and new styles. Added ngrx effects to handle bounding box actions and updated the reducer to manage bounding box state. Enhanced localForage utility with functions for saving, deleting, and retrieving bounding boxes. Updated constants for tile download limits and introduced new actions for bounding box management.
@@ -54,7 +51,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-
 
 ### Miscellaneous
 
@@ -160,7 +156,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-
 
 ### Miscellaneous
 
@@ -395,7 +390,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-* **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
 <!-- COMMIT_DESC -->
     
     - Created a new GitHub Actions workflow file `enrich-changelog.yml` to automate the process of enriching the changelog.
