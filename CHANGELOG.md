@@ -6,17 +6,79 @@
 ### Miscellaneous
 
 * **app:** ✨ load icons on app initialization ([#162](https://github.com/webmappsrl/webmapp-app/issues/162)) ([56f8c9c](https://github.com/webmappsrl/webmapp-app/commit/56f8c9cbedd3bbf30f4f423293fbdf58d7278102))
-* enrich changelog with commit descriptions ([3f12de2](https://github.com/webmappsrl/webmapp-app/commit/3f12de218112489034035f2cda740dba2e78b6c3))
+<!-- COMMIT_DESC -->
+    
+    Added the dispatch of `loadIcons()` action in the `AppComponent` constructor to ensure icons are loaded during the app's initialization phase.
+    
+    feat(poi-properties): ✨ integrate readonly form in poi properties
+    
+    Added a readonly form in the `poi-properties.component.html` to display POI form data if available. Updated the component to include necessary selectors and form group management.
+    
+    Added a TODO in the HTML to consider merging `ugc-properties` with `poi-properties`.
 * enrich changelog with commit descriptions ([de69637](https://github.com/webmappsrl/webmapp-app/commit/de69637d0881678470431858fcbbb4083e5d02cb))
-* update deployment commands ([ab091dc](https://github.com/webmappsrl/webmapp-app/commit/ab091dc962e63f58f014f1439270d442b5bf38dc))
 * **wm-core:** changelog for bump to 4f49516 ([20a84e0](https://github.com/webmappsrl/webmapp-app/commit/20a84e045ab7b4347e092bce8b683a7d342ceac1))
-* **wm-core:** changelog for bump to 6af94a3 ([9860d9e](https://github.com/webmappsrl/webmapp-app/commit/9860d9e78b7228abd51d49cba458ddf7d59b6ab9))
+<!-- COMMIT_DESC -->
+    
+    - refactor(auth): ♻️ simplify header logic and remove app_id from privacy
+    The auth interceptor has been updated to streamline the header setting logic. The 'Authorization' header is now conditionally added only if the 'idToken' is present. This change simplifies the code and improves readability.
+    
+    Additionally, the 'app_id' field has been removed from the 'Privacy' interface and related logic in the 'auth.service.ts' file. This reflects a change in how privacy agreements are managed, no longer requiring an 'app_id'.
 * **wm-core:** changelog for bump to e84d096 ([8584987](https://github.com/webmappsrl/webmapp-app/commit/85849876a6481fcf22a81c907fb0703af4ab5382))
-* **wm-types:** changelog for bump to 028fdef ([dba56dd](https://github.com/webmappsrl/webmapp-app/commit/dba56dda0ab83fe6ef07834b5bc31b72927e2935))
+<!-- COMMIT_DESC -->
+    
+    - style(poi-box): 💄 adjust position of top-right-content for better alignment
+    Reduced the right and top positioning from 10px to 5px for the `.top-right-content` in `poi-box.component.scss`.
+    
+    style(ugc-synchronized-badge): 💄 enhance badge icon appearance
+    
+    Added border-radius, padding, and background color to the `ion-icon` within `ugc-synchronized-badge.component.ts` to improve visual appearance.
+    
+    - refactor(icons): ♻️ convert svg rendering to wm-icon component <a href="https://orchestrator.maphub.it/resources/customer-stories/6351" target="_blank" rel="noopener noreferrer">OC[6351]</a> (#140)
+    * refactor(icons): ♻️ convert svg rendering to wm-icon component
+    
+    Replaced inline SVG rendering logic in multiple components with a reusable `wm-icon` component to streamline icon handling. This change affects several components including `search-box`, `filters`, `select-filter`, `status-filter`, `poi-types-badges`, `tab-howto`, and `track-related-poi`.
+    
+    - Introduced `wm-icon` component with logic to select and render icons based on data.
+    - Removed redundant SVG rendering logic from the affected components.
+    - Updated the respective HTML and SCSS files to accommodate the changes.
+    - Added `WmIconComponent` to `WmSharedModule`.
+    
+    These changes aim to reduce code duplication and improve maintainability by centralizing icon rendering logic.
+    
+    * refactor(conf): ♻️ remove redundant geohubId check and layer processing
+    
+    The code checking for `geohubId === 3` and processing map layers for edges and crossroads has been removed. This simplifies the reducer by eliminating unnecessary logic that was specific to a certain geohub configuration. Now, the MAP state update only merges the incoming configuration without additional processing.
 * **wm-types:** changelog for bump to 0e8cf6d ([af4855e](https://github.com/webmappsrl/webmapp-app/commit/af4855ed4af8b3d785c4b8f93e4a3f01acd11868))
-* **wm-types:** changelog for bump to 78effa2 ([5293a96](https://github.com/webmappsrl/webmapp-app/commit/5293a963cfdad5fc620be896eb132aa35624cec9))
+<!-- COMMIT_DESC -->
+    
+    - Merge pull request #9 from webmappsrl/oc_6255
+    Oc 6255
+    - fix(environment): 🔧 update AWS API URL to use HTTPS
+    Changed the `awsApi` URL from HTTP to HTTPS for improved security and to ensure data is transmitted over a secure connection. This change affects the `geohub-dev` shard configuration in the `environment.ts` file.
+    
+    - refactor(consent): update privacy agreement interface <a href="https://orchestrator.maphub.it/resources/customer-stories/6255" target="_blank" rel="noopener noreferrer">OC[6255]</a>
+    Replaces data consent interfaces with privacy agree interfaces
+    to better align with updated privacy policies. This refactor
+    includes changing various related interfaces and exports
+    to ensure consistency and clarity in handling privacy agreements.
+    
+    - chore: add SyncUgcTypes type <a href="https://orchestrator.maphub.it/resources/customer-stories/6255" target="_blank" rel="noopener noreferrer">OC[6255]</a>
+    Introduce SyncUgcTypes for specifying 'poi', 'track', or null.
+    Enhances the definition of UGC synchronization types.
+    
+    - chore: add data consent interfaces <a href="https://orchestrator.maphub.it/resources/customer-stories/6255" target="_blank" rel="noopener noreferrer">OC[6255]</a>
+    Introduce interfaces for managing data consent in compliance with GDPR and privacy regulations. This includes defining structures for tracking consent periods, consent history, and API responses related to user consent.
+    
+    Exported the new types to be accessible across the project.
+    
+    - ....
 * **wm-types:** changelog for bump to c6ea68f ([eeb0019](https://github.com/webmappsrl/webmapp-app/commit/eeb00197b1e673646b60cbfa02781d4ee965a9ee))
-
+<!-- COMMIT_DESC -->
+    
+    - add prod osm2cai
+    
+    - fix(environment): 🐛 update URLs for osm2caidev shard
+    Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
 ## [3.1.5](https://github.com/webmappsrl/webmapp-app/compare/v3.1.4...v3.1.5) (2025-09-02)
 
 
@@ -26,7 +88,6 @@
 <!-- COMMIT_DESC -->
     
     Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
-* **wm-core:** changelog for bump to 67afcdf ([a404808](https://github.com/webmappsrl/webmapp-app/commit/a4048081d1a86812eda83d3826f42c55d3200ebe))
 <!-- COMMIT_DESC -->
     
     - chore(conf): ✨ add showDownloadTilesButton option
@@ -54,7 +115,6 @@
     - Updated map-core module to include new directive and effects.
     - Modified map-core actions and reducer to accommodate bounding box state.
     - Introduced new constants for bounding box functionality.
-* **wm-core:** changelog for bump to 8fccfea ([d827ae8](https://github.com/webmappsrl/webmapp-app/commit/d827ae86155a74d608012d49106b50a03e35aba7))
 <!-- COMMIT_DESC -->
     
     - chore(map): 🌍 add tile download feature with bounding box management
@@ -173,7 +233,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([63a366e](https://github.com/webmappsrl/webmapp-app/commit/63a366e217b6759205cfd388cbab1e03ad6537ef))
@@ -407,7 +466,6 @@
     
     - feat(config): ✨ add ZoomFeaturesInViewport interface (#7)
     Introduce a new interface `ZoomFeaturesInViewport` to manage zoom levels for features in the viewport. The interface includes optional properties `minZoomFeaturesInViewport` and `maxZoomFeaturesInViewport`.
-<!-- COMMIT_DESC -->
     
     - Created a new GitHub Actions workflow file `enrich-changelog.yml` to automate the process of enriching the changelog.
     - Configured the workflow to trigger on push events to the `main` branch.
