@@ -72,15 +72,4 @@
   {{'Modifica consenso dati'|wmtrans}}
 </wm-privacy-agree-button>
 
-<ion-button
-  *ngIf="isLogged$|async"
-  (click)="deleteUserAlert()"
-  size="small"
-  expand="block"
-  fill="outline"
-  color="danger"
-  class="wm-profile-delete-button"
->
-  <ion-icon name="close-outline"></ion-icon>
-  {{'Elimina account'|wmtrans}}
-</ion-button>
+<wm-profile-delete-button *ngIf="isLogged$|async"></wm-profile-delete-button>

@@ -6,11 +6,8 @@ import {select, Store} from '@ngrx/store';
 import {confAUTHEnable, confMAPHitMapUrl} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Router} from '@angular/router';
-import {filter, skip, take} from 'rxjs/operators';
-import {AlertController} from '@ionic/angular';
+import {filter, skip} from 'rxjs/operators';
 import {from} from 'rxjs';
-import {deleteUser} from '@wm-core/store/auth/auth.actions';
-import {LangService} from '@wm-core/localization/lang.service';
 import {WmFeature} from '@wm-types/feature';
 import {MultiPolygon} from 'geojson';
 import {getHitmapFeatures} from '@map-core/utils';
@@ -36,8 +33,6 @@ export class ProfilePage implements OnDestroy {
     private _modalController: ModalController,
     private _store: Store<any>,
     private _router: Router,
-    private _alertCtrl: AlertController,
-    private _langSvc: LangService,
   ) {
     this._isLoggedSub = this.isLogged$
       .pipe(
@@ -74,52 +69,5 @@ export class ProfilePage implements OnDestroy {
     setTimeout(() => {
       this.hitmapComp?.refresh();
     }, 50);
-  }
-
-  deleteUserAlert(): void {
-    from(
-      this._alertCtrl.create({
-        header: this._langSvc.instant('Attenzione'),
-        subHeader: this._langSvc.instant('Azione irreversibile'),
-        message: this._langSvc.instant(
-          'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "delete account" per procedere.',
-        ),
-        inputs: [
-          {
-            name: 'confirmationInput',
-            type: 'text',
-            placeholder: this._langSvc.instant('Digita "delete account"'),
-          },
-        ],
-        buttons: [
-          {
-            text: this._langSvc.instant('Annulla'),
-            role: 'cancel',
-          },
-          {
-            text: this._langSvc.instant('Conferma'),
-            role: 'confirm',
-            handler: async alertData => {
-              if (alertData.confirmationInput === 'delete account') {
-                this._store.dispatch(deleteUser());
-              } else {
-                const errorAlert = await this._alertCtrl.create({
-                  header: this._langSvc.instant('Attenzione'),
-                  message: this._langSvc.instant(
-                    'La conferma non corrisponde. Digita "delete account" per procedere.',
-                  ),
-                  buttons: [this._langSvc.instant('generic.ok')],
-                });
-                await errorAlert.present();
-              }
-            },
-          },
-        ],
-      }),
-    )
-      .pipe(take(1))
-      .subscribe(l => {
-        l.present();
-      });
   }
 }
