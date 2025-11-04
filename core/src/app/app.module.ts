@@ -17,7 +17,6 @@ import {ModalCoinsModule} from './components/modal-coins/modal-coins.module';
 import {ModalGiftCoinsModule} from './components/modal-gift-coins/modal-gift-coin.module';
 import {ModalStoreSuccessModule} from './components/modal-store-success/modal-store-success.module';
 import {ModalSuccessModule} from './components/modal-success/modal-success.module';
-import {ModalUpdateAppModule} from './components/modal-update-app/modal-update-app.module';
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
@@ -62,7 +61,6 @@ export const langs: WmTranslations = {
     ModalCoinsModule,
     ModalStoreSuccessModule,
     ModalGiftCoinsModule,
-    ModalUpdateAppModule,
     WmCoreModule,
   ],
   providers: [
