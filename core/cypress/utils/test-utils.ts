@@ -214,3 +214,107 @@ export const data = {
     exampleOne: 'Poi example one',
   },
 };
+
+/**
+ * Mocks the configuration request with release update enabled.
+ * @param githubVersion - The version to return from GitHub package.json (default: '3.2.0')
+ * @param appVersion - The current app version for comparison (default: '3.1.0')
+ * @returns A Cypress chainable object.
+ */
+export function confWithReleaseUpdateEnabled(
+  githubVersion: string = '3.2.0',
+  appVersion: string = '3.1.0',
+): Cypress.Chainable {
+  return cy.intercept('GET', confURL, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        APP: {
+          ...res.body.APP,
+          forceToReleaseUpdate: true,
+          androidStore: 'https://play.google.com/store/apps/details?id=it.webmapp.app',
+          iosStore: 'https://apps.apple.com/it/app/webmapp/id123456789',
+        },
+      };
+      res.send(newRes);
+    });
+  });
+}
+
+/**
+ * Simulated app version for testing.
+ * This is the version that the app reports as its current version.
+ */
+export const MOCKED_APP_VERSION = '0.0.1';
+
+/**
+ * Simulated release update version for testing.
+ * This is the version that GitHub reports as the latest available version.
+ */
+export const MOCKED_RELEASE_UPDATE_VERSION = '1.0.0';
+
+/**
+ * Mocks the release update version request for testing.
+ * This function intercepts the HTTP request that the service makes and returns a simulated response.
+ * Uses simulated versions - NO real network calls are made.
+ * @param version - Optional version to return. Defaults to MOCKED_RELEASE_UPDATE_VERSION.
+ * @returns A Cypress chainable object that intercepts the request.
+ */
+export function mockReleaseUpdateVersion(
+  version: string = MOCKED_RELEASE_UPDATE_VERSION,
+): Cypress.Chainable {
+  // Intercept any package.json request and return simulated release update version
+  // No real URLs are referenced - only simulated version comparison
+  return cy.intercept('GET', '**/package.json', {
+    statusCode: 200,
+    body: {
+      version: version,
+    },
+  });
+}
+
+/**
+ * Mocks the configuration request with release update disabled.
+ * When disabled, the property should not be present in the config (or explicitly set to false).
+ * @returns A Cypress chainable object.
+ */
+export function confWithReleaseUpdateDisabled(): Cypress.Chainable {
+  return cy.intercept('GET', confURL, req => {
+    req.reply(res => {
+      const appConfig = {...res.body.APP};
+      // Remove forceToReleaseUpdate property if it exists, or set it to false
+      delete appConfig.forceToReleaseUpdate;
+      const newRes = {
+        ...res.body,
+        APP: appConfig,
+      };
+      res.send(newRes);
+    });
+  });
+}
+
+/**
+ * Mocks the configuration request with release update enabled and optional store URLs.
+ * @param storeUrl - Optional custom store URL to use for both Android and iOS stores. If not provided or undefined, store URLs will be undefined.
+ * @param githubVersion - The version to return from GitHub package.json (default: '3.2.0')
+ * @returns A Cypress chainable object.
+ */
+export function confWithReleaseUpdateEnabledCustomStoreUrl(
+  storeUrl?: string,
+  githubVersion: string = '3.2.0',
+): Cypress.Chainable {
+  return cy.intercept('GET', confURL, req => {
+    req.reply(res => {
+      const newRes = {
+        ...res.body,
+        APP: {
+          ...res.body.APP,
+          forceToReleaseUpdate: true,
+          androidStore: storeUrl,
+          iosStore: storeUrl,
+        },
+      };
+      res.send(newRes);
+    });
+  });
+}
