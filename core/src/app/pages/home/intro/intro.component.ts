@@ -3,7 +3,7 @@ import {MenuController, NavController} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {confAPP} from '@wm-core/store/conf/conf.selector';
-import {IAPP} from '@wm-core/types/config';
+import {APP} from '@wm-types/config';
 
 @Component({
   selector: 'webmapp-home-intro',
@@ -11,7 +11,7 @@ import {IAPP} from '@wm-core/types/config';
   styleUrls: ['./intro.component.scss'],
 })
 export class IntroComponent {
-  confAPP$: Observable<IAPP> = this._store.select(confAPP);
+  confAPP$: Observable<APP> = this._store.select(confAPP);
 
   constructor(
     private menu: MenuController,

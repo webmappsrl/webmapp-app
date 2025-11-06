@@ -41,6 +41,7 @@ export class AppComponent {
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
   confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
   confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+  isConfLoaded$: Observable<boolean> = this._store.select(isConfLoaded);
 
   confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
@@ -76,8 +77,7 @@ export class AppComponent {
       });
 
     // Verifica la versione dell'app dopo che la config è caricata
-    this._store
-      .select(isConfLoaded)
+    this.isConfLoaded$
       .pipe(
         filter(loaded => loaded === true),
         take(1),
