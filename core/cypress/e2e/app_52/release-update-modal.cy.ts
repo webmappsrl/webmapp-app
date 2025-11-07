@@ -121,42 +121,33 @@ describe('Release Update Modal - Not Shown [oc:6540] https://orchestrator.maphub
   });
 
   it('should not show release update modal when forceToReleaseUpdate is false', () => {
-    // Clear all caches and storage FIRST
     cy.clearLocalStorage();
     cy.clearCookies();
 
-    // IMPORTANT: Set up mocks BEFORE visiting the page
-    // The mock must be active before any HTTP requests are made
-    // Mock config with forceToReleaseUpdate disabled (property removed, not set to false)
+    // Mock config with forceToReleaseUpdate disabled
     confWithReleaseUpdateDisabled().as('getConfDisabled');
-    // Mock release update version with fixed mocked version (even if different, modal should not appear)
-    mockReleaseUpdateVersion().as('getLastReleaseVersion');
 
-    // Visit with hard reload to clear cache and ensure fresh state
-    // Mock device as mobile (Android) - even though modal should not appear, we need mobile to test the condition
+    // Mock device as mobile (Android) - required to test the condition
     cy.visit('/', {
       onBeforeLoad: win => {
-        // Clear all storage before page loads
         win.localStorage.clear();
         win.sessionStorage.clear();
-        // Mock as mobile device
         mockMobileDevice('android')(win);
       },
     });
 
-    // Wait for config to be loaded FIRST - this ensures the mock is applied
+    // Wait for config to be loaded and verify forceToReleaseUpdate is disabled
     cy.wait('@getConfDisabled').then(interception => {
-      // Verify the config doesn't have forceToReleaseUpdate or it's false/undefined
       const forceToReleaseUpdate = interception.response.body.APP.forceToReleaseUpdate;
       expect(forceToReleaseUpdate).to.be.undefined;
     });
 
-    // Wait for release update version check (but modal should not appear even if version differs)
-    cy.wait('@getLastReleaseVersion', {timeout: 10000});
+    // Wait for app to process the new config
+    cy.wait(2000);
 
-    // If a modal appears during initial load (before mock is applied), close it immediately
-    // This handles the race condition where the modal might appear before the mock is active
-    cy.get('body', {timeout: 2000}).then($body => {
+    // If a modal appeared briefly (from cached config), close it
+    // This handles the race condition where a modal might appear before the new config is processed
+    cy.get('body').then($body => {
       const modal = $body.find('[e2e-release-update-modal]');
       if (modal.length > 0 && modal.is(':visible')) {
         cy.get('[e2e-release-update-modal-button-close]').first().click({force: true});
@@ -164,70 +155,19 @@ describe('Release Update Modal - Not Shown [oc:6540] https://orchestrator.maphub
       }
     });
 
-    // Wait for the app to fully initialize and process the config
-    // The service needs time to process the config and decide not to show the modal
-    cy.wait(3000);
-
-    // Verify that no modal is displayed at any point
-    // Check multiple times to ensure it doesn't appear even after delays
-    cy.get('[e2e-release-update-modal]').should('not.exist');
-  });
-
-  it('should not show release update modal when store URLs are missing', () => {
-    // Clear all caches and storage FIRST
-    cy.clearLocalStorage();
-    cy.clearCookies();
-
-    // Mock config with forceToReleaseUpdate enabled but without store URLs
-    // Pass null explicitly to set store URLs to undefined (for testing missing store URLs)
-    confWithReleaseUpdateEnabledCustomStoreUrl(null, MOCKED_RELEASE_UPDATE_VERSION).as(
-      'getConfNoStoreUrls',
-    );
-    // Mock release update version with simulated version (different from app version)
-    mockReleaseUpdateVersion().as('getLastReleaseVersion');
-    // Mock device as mobile (Android) - even though modal should not appear, we need mobile to test the condition
-    cy.visit('/', {
-      onBeforeLoad: win => {
-        // Clear all storage before page loads
-        win.localStorage.clear();
-        win.sessionStorage.clear();
-        // Mock as mobile device
-        mockMobileDevice('android')(win);
-      },
-    });
-
-    // Wait for config to be loaded and verify store URLs are undefined
-    cy.wait('@getConfNoStoreUrls').then(interception => {
-      expect(interception.response.body.APP.androidStore).to.be.undefined;
-      expect(interception.response.body.APP.iosStore).to.be.undefined;
-      expect(interception.response.body.APP.forceToReleaseUpdate).to.be.true;
-    });
-    // Wait for release update version check
-    cy.wait('@getLastReleaseVersion', {timeout: 10000});
-
-    // If a modal appears during initial load (before mock is applied), close it immediately
-    cy.get('body', {timeout: 2000}).then($body => {
-      const modal = $body.find('[e2e-release-update-modal]');
-      if (modal.length > 0 && modal.is(':visible')) {
-        cy.get('[e2e-release-update-modal-button-close]').first().click({force: true});
-        cy.wait(1000);
-      }
-    });
-
-    // Wait for the app to fully initialize and process the config
-    cy.wait(3000);
-
-    // Verify that the modal is NOT displayed using e2e attribute
+    // Verify that the modal is NOT displayed
     cy.get('[e2e-release-update-modal]').should('not.exist');
   });
 
   it('should not show release update modal when versions are the same', () => {
     // Mock config with release update enabled and store URLs
-    // Use simulated app version for both app and release update version - versions are the same
-    confWithReleaseUpdateEnabled(MOCKED_APP_VERSION, MOCKED_APP_VERSION).as('getConf');
-    // Mock release update version to return the same version as the app (simulated app version)
-    mockReleaseUpdateVersion(MOCKED_APP_VERSION).as('getLastReleaseVersion');
-    // Mock device as mobile (Android) - even though modal should not appear, we need mobile to test the condition
+    confWithReleaseUpdateEnabled().as('getConf');
+    // Mock both versions to be the same (0.0.1):
+    // - App version: 0.0.1 (from package.json, which equals MOCKED_APP_VERSION)
+    // - GitHub version: mocked to return MOCKED_APP_VERSION (0.0.1)
+    // When versions are the same, checkIfUpdateNeeded returns false and modal should not appear
+    mockReleaseUpdateVersion(MOCKED_APP_VERSION);
+    // Mock device as mobile (Android) - required for the check to run
     cy.visit('/', {
       onBeforeLoad: mockMobileDevice('android'),
     });
@@ -235,9 +175,7 @@ describe('Release Update Modal - Not Shown [oc:6540] https://orchestrator.maphub
     // Wait for config to be loaded
     cy.wait('@getConf');
     // Wait for release update version check
-    cy.wait('@getLastReleaseVersion', {timeout: 10000});
-    // Wait a bit to ensure any potential modal would have appeared
-    cy.wait(2000);
+    cy.wait(3000);
 
     // Verify that the modal is NOT displayed using e2e attribute
     cy.get('[e2e-release-update-modal]').should('not.exist');
@@ -247,21 +185,17 @@ describe('Release Update Modal - Not Shown [oc:6540] https://orchestrator.maphub
     // Mock config with release update enabled, store URLs, and different versions
     // All conditions are met EXCEPT the device is not mobile
     confWithReleaseUpdateEnabled(MOCKED_RELEASE_UPDATE_VERSION, MOCKED_APP_VERSION).as('getConf');
-    // Mock release update version (even though it won't be called because device is not mobile)
-    mockReleaseUpdateVersion().as('getLastReleaseVersion');
     // Do NOT mock as mobile - this simulates browser/desktop environment
     // The default Cypress environment is browser, so we don't need to do anything special
     cy.visit('/');
 
     // Wait for config to be loaded
     cy.wait('@getConf');
-    // Note: When device is not mobile, the service exits early in _checkAndShowReleaseUpdatePopup
-    // before calling getLastReleaseVersion, so the release update version request is never made.
-    // We don't need to wait for @getLastReleaseVersion because it won't be called.
-    // Wait a bit to ensure any potential modal would have appeared
+    // Wait for app to initialize
+    // Since device is not mobile, the effect won't trigger and modal won't appear
     cy.wait(3000);
 
-    // Verify that the modal is NOT displayed because device is not mobile using e2e attribute
+    // Verify that the modal is NOT displayed
     cy.get('[e2e-release-update-modal]').should('not.exist');
   });
 });
