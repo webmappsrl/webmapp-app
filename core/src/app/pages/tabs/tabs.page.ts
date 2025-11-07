@@ -57,9 +57,10 @@ export class TabsPage {
       this._urlHandlerSvc.changeURL(tab);
     }
     if (tab === 'home') {
-      const {layer} = this._urlHandlerSvc.getCurrentQueryParams();
+      const {layer, search} = this._urlHandlerSvc.getCurrentQueryParams();
       const queryParams = {
         layer,
+        search,
       };
       this._store.dispatch(wmMapHitMapChangeFeatureById({id: null}));
       this._urlHandlerSvc.changeURL(tab, queryParams);
