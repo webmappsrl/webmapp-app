@@ -34,7 +34,7 @@ import {
 } from '@wm-core/store/conf/conf.selector';
 import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
 import {HomePage} from '../home/home.page';
-import {IAPP} from '@wm-core/types/config';
+import {APP} from '@wm-types/config';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {
   hitMapFeatureCollection,
@@ -101,7 +101,7 @@ export class MapPage {
   apiSearchInputTyped$: Observable<string> = this._store.select(inputTyped);
   authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
   centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
-  confAPP$: Observable<IAPP> = this._store.select(confAPP);
+  confAPP$: Observable<APP> = this._store.select(confAPP);
   confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
   confMap$: Observable<any> = this._store.select(confMAP);
   confOPTIONS$: Observable<any> = this._store.select(confOPTIONS);

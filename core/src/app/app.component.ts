@@ -14,8 +14,9 @@ import {
   confMAP,
   confMAPHitMapUrl,
   confTHEMEVariables,
+  isConfLoaded,
 } from '@wm-core/store/conf/conf.selector';
-import {loadConf} from '@wm-core/store/conf/conf.actions';
+import {loadConf, checkAppVersion} from '@wm-core/store/conf/conf.actions';
 import {IGEOLOCATION, ILANGUAGES} from '@wm-core/types/config';
 import {OfflineCallbackManager} from '@wm-core/shared/img/offlineCallBackManager';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
@@ -40,6 +41,7 @@ export class AppComponent {
   confTHEMEVariables$: Observable<any> = this._store.select(confTHEMEVariables);
   confLANGUAGES$: Observable<ILANGUAGES> = this._store.select(confLANGUAGES);
   confMAPHitMapUrl$: Observable<string | null> = this._store.select(confMAPHitMapUrl);
+  isConfLoaded$: Observable<boolean> = this._store.select(isConfLoaded);
 
   confMap$: Observable<any> = this._store.select(confMAP);
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
@@ -72,6 +74,16 @@ export class AppComponent {
       )
       .subscribe(hitMapUrl => {
         this._store.dispatch(loadHitmapFeatures({url: hitMapUrl}));
+      });
+
+    // Verifica la versione dell'app dopo che la config è caricata
+    this.isConfLoaded$
+      .pipe(
+        filter(loaded => loaded === true),
+        take(1),
+      )
+      .subscribe(() => {
+        this._store.dispatch(checkAppVersion());
       });
 
     this._platform.ready().then(
