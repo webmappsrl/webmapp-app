@@ -6,7 +6,7 @@ import {ActionSheetController, AlertController, IonContent, ModalController} fro
 import {Store} from '@ngrx/store';
 import {DeviceService} from '@wm-core/services/device.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
-import {generateUUID} from '@wm-core/utils/localForage';
+import {generateUUID, removeCurrentUgcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 import {switchMap, take} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
@@ -57,6 +57,8 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   }
 
   backToMap(): void {
+    removeCurrentUgcTrack();
+
     this._modalCtrl.dismiss({
       dismissed: false,
       save: false,

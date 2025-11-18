@@ -1,5 +1,10 @@
 import {environment} from 'src/environments/environment';
-import {clearUgcSynchronizedData, clearUgcDeviceData, removeAuth} from '@wm-core/utils/localForage';
+import {
+  clearUgcSynchronizedData,
+  clearUgcDeviceData,
+  removeAuth,
+  removeCurrentUgcTrack,
+} from '@wm-core/utils/localForage';
 import {clearMapCoreData} from '@map-core/utils';
 
 /**
@@ -14,6 +19,7 @@ export function clearTestState(): void {
   clearUgcDeviceData();
   clearMapCoreData();
   removeAuth();
+  removeCurrentUgcTrack();
 }
 
 /**
