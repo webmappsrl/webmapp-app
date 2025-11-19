@@ -27,7 +27,7 @@ import {
   confJIDOUPDATETIME,
   confMAP,
   confOPTIONS,
-  confOPTIONSShowDownloadTilesButton,
+  confOPTIONSShowDownloadTiles,
   confPOIS,
   confPOISFilter,
   confRecordTrackShow,
@@ -182,8 +182,8 @@ export class MapPage {
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  showDownloadTilesButton$: Observable<boolean> = this._store.select(
-    confOPTIONSShowDownloadTilesButton,
+  showDownloadTiles$: Observable<boolean> = this._store.select(
+    confOPTIONSShowDownloadTiles,
   );
   slideOptions = {
     on: {
