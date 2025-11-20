@@ -210,30 +210,29 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
     if (this.formGroup.invalid) {
       return;
     }
-
     const dateNow = new Date();
     const geometry: Point | LineString = this.isWaypoint
       ? {type: 'Point', coordinates: [this.position.longitude, this.position.latitude]}
       : {type: 'LineString', coordinates: this.recordedFeature.geometry.coordinates};
-
+    const properties = {...(this.recordedFeature?.properties ?? {})};
+    const additionalProperties = {
+      name: this.formGroup.value.title,
+      form: this.formGroup.value,
+      media: this.photos,
+      uuid: generateUUID(),
+      app_id: `${this._environmentSvc.appId}`,
+      createdAt: dateNow,
+      updatedAt: dateNow,
+      device: null, // TODO: Add device info in row 244 :  ugcFeature.properties.device = device;
+      ...(this.isWaypoint
+        ? {nominatim: this.nominatim}
+        : {distanceFilter: +localStorage.getItem('wm-distance-filter') || 10}),
+    };
     const ugcFeature: WmFeature<LineString | Point> = {
       type: 'Feature',
       geometry,
-      properties: {
-        name: this.formGroup.value.title,
-        form: this.formGroup.value,
-        media: this.photos,
-        uuid: generateUUID(),
-        app_id: `${this._environmentSvc.appId}`,
-        createdAt: dateNow,
-        updatedAt: dateNow,
-        device: null,
-        ...(this.isWaypoint
-          ? {nominatim: this.nominatim}
-          : {distanceFilter: +localStorage.getItem('wm-distance-filter') || 10}),
-      },
+      properties: {...properties, ...additionalProperties},
     };
-
     from(this._deviceSvc.getInfo())
       .pipe(
         take(1),
