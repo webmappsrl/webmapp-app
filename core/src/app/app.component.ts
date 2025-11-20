@@ -26,7 +26,10 @@ import {ecTracks, loadEcPois} from '@wm-core/store/features/ec/ec.actions';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {startNetworkMonitoring} from '@wm-core/store/network/network.actions';
 import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
-import {loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  checkCurrentUgcTrack,
+  loadHitmapFeatures,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 import {loadIcons} from '@wm-core/store/icons/icons.actions';
 
@@ -64,6 +67,7 @@ export class AppComponent {
     this._store.dispatch(loadEcPois());
     this._store.dispatch(syncUgc());
     this._store.dispatch(loadBoundingBoxes());
+    this._store.dispatch(checkCurrentUgcTrack());
     this.confTHEMEVariables$.pipe(take(2)).subscribe(css => this._setGlobalCSS(css));
     this._storeNetwork.dispatch(startNetworkMonitoring());
 
