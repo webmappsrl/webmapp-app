@@ -6,17 +6,180 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
-* enrich changelog with commit descriptions ([127352e](https://github.com/webmappsrl/webmapp-app/commit/127352e2a641b2f841152c91be268eb9d068e9b7))
 * enrich changelog with commit descriptions ([f9993df](https://github.com/webmappsrl/webmapp-app/commit/f9993df7caacbfd9bf3cd7840ffec54b8a29d6c9))
-* **map-core:** changelog for bump to 79dcac4 ([3326abe](https://github.com/webmappsrl/webmapp-app/commit/3326abefca9274604d3af47cb609d381b1373dbc))
 * **tabs:** ✨ add search parameter to URL query params for home tab ([20beed0](https://github.com/webmappsrl/webmapp-app/commit/20beed04a7c8919f895b8fabec8732079d1310aa))
-* **user-activity:** ✨ add check for current UGC track recording oc:6582 ([#168](https://github.com/webmappsrl/webmapp-app/issues/168)) ([63ce624](https://github.com/webmappsrl/webmapp-app/commit/63ce62427ab21afb7b57fdd1c20e120d3160711d))
+<!-- COMMIT_DESC -->
+    
+    Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
 * **wm-core:** changelog for bump to 0d92ab5 ([0a75fd6](https://github.com/webmappsrl/webmapp-app/commit/0a75fd632b4fae78db6400f72db92f9ca51cdcbf))
-* **wm-core:** changelog for bump to 93b3fa4 ([470452c](https://github.com/webmappsrl/webmapp-app/commit/470452c1a80f9181c90f5a0a8f34eee3d0b1dce2))
+<!-- COMMIT_DESC -->
+    
+    - chore(device): ✨ add isAppMobile property to enhance mobile detection
+    Introduced a new property `isAppMobile` in the `DeviceService` to better determine if the application is running on a mobile device but not in a browser. Updated the configuration effect and reducer to incorporate this new property.
+    
+    - Added `isAppMobile` getter in `DeviceService`.
+    - Updated `ConfEffects` to include `isAppMobile` in the configuration state.
+    - Modified the `conf.reducer.ts` to initialize `isAppMobile`.
+    - Extended the `ICONF` interface to define the `isAppMobile` property.
+    
+    This change improves the ability to differentiate between mobile app environments and browser-based environments, which can be critical for certain app behaviors and optimizations.
+    
+    - refactor(modal-release-update): ✨ rename productionVersion to gitVersion
+    The `productionVersion` input has been renamed to `gitVersion` across several components to better reflect its purpose. Updated the modal-release-update component and related service logic accordingly.
+    
+    fix(device.service): 🐛 modify checkIfUpdateNeeded to return boolean
+    
+    Changed the function `checkIfUpdateNeeded` to consistently return a boolean value, avoiding null returns and ensuring a more predictable flow.
+    
+    refactor(store): 🔥 remove unused APP_VERSION injection
+    
+    Cleaned up imports and removed the unused `APP_VERSION` injection from the conf effects. This streamlines the code and removes unnecessary dependencies.
+    
+    fix(browser.open): 🐛 simplify store URL opening logic
+    
+    Simplified logic for opening the store URL by directly using `window.open` and handling errors with `Browser.open`.
+    
+    refactor(conf.selector): 🔥 remove unused confReleaseUpdate selector
+    
+    The `confReleaseUpdate` selector was removed as it was not used in the application, streamlining the selector file.
+    
+    - chore: optimize selector imports <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Streamlines imports by consolidating selectors, removing unused
+    types, and enhancing import efficiency.
+    
+    Relates to oc_6540
+    
+    - chore: normalize version comparison logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Ensures both app and GitHub versions are prefixed with "1" before comparison. This guarantees consistency for version checks, especially for incorrect SKU versions.
+    
+    Relates to oc_6540
+    
+    - refactor: update APP type usage <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Replaces IAPP with APP for improved type consistency across services and components. Adjusts import statements and updates related type references to enhance code maintainability.
+    
+    Relates to oc_6540
+    - chore(device): add modal for release update notifications <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Introduces functionality to display a modal prompting users to update the app if needed, utilizing update logic previously found in the config effects. This refactoring centralizes the logic within the device service for better maintainability and separation of concerns.
+    
+    Relates to oc_6540
+    
+    - refactor: streamline update process and checks <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Refactors device handling by encapsulating URL opening logic within
+    the device service. Simplifies version retrieval by removing network
+    status checks and observable-based retries, transitioning to a simpler
+    promise-based approach. Adds effect for app version check using store
+    state. Removes obsolete conf effects file.
+    
+    Relates to oc_6540
+    - refactor: remove excessive logging from openStore <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Eliminates redundant logs to streamline the openStore method's
+    output. Reduces console noise and improves readability while
+    maintaining error-handling logic.
+    
+    Relates to #6540
+    
+    - refactor: update device handling logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Replaces direct Capacitor platform checks with DeviceService methods
+    to improve reliability and maintain better abstraction.
+    
+    Moves release update check logic to new ConfEffects to optimize
+    code structure and streamline update modal management.
+    
+    Modifies ConfEffects to include a new effect ensuring release update modal
+    is shown when required conditions are met.
+    
+    Relates to #6540
+    - fix: remove unnecessary fallback logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Removes fallback logic for app store URLs when the device is not
+    Android or iOS, returning null instead. Simplifies URL retrieval
+    logic and prevents possible misdirection.
+    
+    Relates to oc_6540
+    
+    - refactor: enhance e2e testability by adding attributes <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Adds E2E test attributes to modal components for better automation.
+    
+    Removes debug logs in the service to clean up console output.
+    Optimizes error handling by simplifying catch blocks.
+    
+    Refines logic to ensure modal checks and presentations
+    occur only on mobile devices.
+    
+    Relates to #oc_6540
+    
+    - chore(modal-release-update): add version update modal <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Introduces a new modal component for notifying users about app
+    version updates with options for immediate updates or dismissals.
+    Integrates browser capabilities for store navigation linked to
+    provided URLs.
+    
+    Relates to oc_6540
+    
+    - chore(localization): add notification for updates <a href="https://orchestrator.maphub.it/resources/customer-stories/6540" target="_blank" rel="noopener noreferrer">OC[6540]</a>
+    Introduces new translations for update-related messages across multiple languages. Implements a new device service to handle update notifications, including checks for the latest app version and network status. Aligns translations for clearer communication of update availability and actions.
+    
+    Relates to issue oc_6540
 * **wm-core:** changelog for bump to d70c95f ([0a43f27](https://github.com/webmappsrl/webmapp-app/commit/0a43f271cd0d12488e7b9c5203744301f14f3c04))
-* **wm-core:** changelog for bump to f59e69a ([2eb464f](https://github.com/webmappsrl/webmapp-app/commit/2eb464f2ca9e4a03a587d88796304125217a4211))
+<!-- COMMIT_DESC -->
+    
+    - refactor(conf): ♻️ streamline layer selection logic
+    Replaced the `confHOME` selector with `confMAP` for improved clarity and functionality. Simplified the logic by directly accessing the `map.layers` array. This change eliminates unnecessary filtering and mapping, allowing for a more efficient search for the layer with the corresponding ID. The refactor also removes unused imports and variables, resulting in cleaner, more maintainable code.
+    
+    - Oc 6528 (#143)
+    * chore(localization): add language selector component oc_6528
+    
+    Integrates a new language selector to enhance user localization options,
+    including a button that triggers a selection alert with available languages.
+    Simplifies UI by removing the form-based language selection.
+    Relates to oc_6528
+    
+    * chore: add "Language" translation to i18n files <a href="https://orchestrator.maphub.it/resources/customer-stories/6528" target="_blank" rel="noopener noreferrer">OC[6528]</a>
+    
+    Introduces a new "Language" translation entry across all supported languages
+    (i.e., German, English, Spanish, French, Italian, Portuguese, and Albanian).
+    Updates the language selector component to utilize this new translation.
+    
+    Related to oc_6528
+    
+    * chore(lang-selector): enhance language selector UI <a href="https://orchestrator.maphub.it/resources/customer-stories/6528" target="_blank" rel="noopener noreferrer">OC[6528]</a>
+    
+    Introduces display of selected language and label text in the UI.
+    Uses ChangeDetectorRef to ensure UI updates on language changes.
+    
+    Relates to oc_6528
+    
+    * chore(lang-selector): simplify UI logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6528" target="_blank" rel="noopener noreferrer">OC[6528]</a>
+    
+    Refactors language selector UI for cleaner layout management.
+    Removes obsolete inputs, consolidates logic for displaying
+    selected language and title. Enhances alignment using CSS
+    
+    Relates to oc_6528
+    
+    * style: reorder map components for better layout <a href="https://orchestrator.maphub.it/resources/customer-stories/6528" target="_blank" rel="noopener noreferrer">OC[6528]</a>
+    
+    Moves profile popup and language selector above filters to improve UI arrangement. Ensures the top-right elements maintain consistency in positioning and functionality.
+    
+    Relates to oc_6528
+    
+    ---------
+    
+    Co-authored-by: peppedeka <peppedeka@gmail.com>
+    - refactor(profile): 🔄 integrate delete account feature and enhance translations (#144)
+    This update includes the removal of the `WmPrivacyAgreeButtonComponent` from the box module and its integration into the profile module. The `WmPrivacyAgreeButtonComponent` and a newly added `WmProfileDeleteButtonComponent` are now part of the shared module, enabling broader use across the application.
+    
+    Additionally, new translations were added for multiple languages, enhancing the user interface's clarity, especially regarding the irreversible action of account deletion. This functionality requires users to type "delete account" to confirm the deletion, adding an extra layer of confirmation to prevent accidental account deletions.
+    - refactor(home): 🔄 remove deprecated layer handling logic (#142)
+    Simplified the subscription logic in `WmHomeComponent` by removing the deprecated layer handling code. The component now only processes filters, reducing potential errors and improving code maintainability.
+    
+    refactor(conf): ♻️ add `take` operator for single emission
+    
+    Introduced the `take` operator in `updateLayer$` effect to ensure the home state is only processed once per action emission. This change enhances the predictability and performance of the effect by preventing unnecessary emissions.
 * **wm-core:** changelog for bump to f9b0bbf ([7ac8b8f](https://github.com/webmappsrl/webmapp-app/commit/7ac8b8f79a889a3814d08b57ff4a26f232c1182c))
-* **wm-types:** changelog for bump to 79bef0c ([f0338ef](https://github.com/webmappsrl/webmapp-app/commit/f0338efc7c515114d2df571b820c6b318ef4e43e))
+<!-- COMMIT_DESC -->
+    
+    - refactor(geolocation-service): ♻️ improve location update handling
+    Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
 
 ## [3.1.6](https://github.com/webmappsrl/webmapp-app/compare/v3.1.5...v3.1.6) (2025-10-28)
 
@@ -61,7 +224,6 @@
     * refactor(conf): ♻️ remove redundant geohubId check and layer processing
     
     The code checking for `geohubId === 3` and processing map layers for edges and crossroads has been removed. This simplifies the reducer by eliminating unnecessary logic that was specific to a certain geohub configuration. Now, the MAP state update only merges the incoming configuration without additional processing.
-* **wm-types:** changelog for bump to 0e8cf6d ([af4855e](https://github.com/webmappsrl/webmapp-app/commit/af4855ed4af8b3d785c4b8f93e4a3f01acd11868))
 <!-- COMMIT_DESC -->
     
     - Merge pull request #9 from webmappsrl/oc_6255
@@ -100,7 +262,6 @@
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-
 * **download-panel:** ✨ add download size display and translations <a href="https://orchestrator.maphub.it/resources/customer-stories/6133" target="_blank" rel="noopener noreferrer">OC[6133]</a> ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
 <!-- COMMIT_DESC -->
     
@@ -132,7 +293,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-* enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
 <!-- COMMIT_DESC -->
     
     * chore(poi): ✨ add Point of Interest (POI) recording functionality
