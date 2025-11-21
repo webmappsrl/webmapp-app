@@ -20,7 +20,6 @@
     The auth interceptor has been updated to streamline the header setting logic. The 'Authorization' header is now conditionally added only if the 'idToken' is present. This change simplifies the code and improves readability.
     
     Additionally, the 'app_id' field has been removed from the 'Privacy' interface and related logic in the 'auth.service.ts' file. This reflects a change in how privacy agreements are managed, no longer requiring an 'app_id'.
-<!-- COMMIT_DESC -->
     
     - style(poi-box): 💄 adjust position of top-right-content for better alignment
     Reduced the right and top positioning from 10px to 5px for the `.top-right-content` in `poi-box.component.scss`.
@@ -74,7 +73,6 @@
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
 
-
 ### Miscellaneous
 
 * **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
@@ -84,7 +82,6 @@
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-### Miscellaneous
 
 * **download-panel:** ✨ add download size display and translations <a href="https://orchestrator.maphub.it/resources/customer-stories/6133" target="_blank" rel="noopener noreferrer">OC[6133]</a> ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
 <!-- COMMIT_DESC -->
@@ -117,7 +114,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
 <!-- COMMIT_DESC -->
     
@@ -220,7 +216,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-<!-- COMMIT_DESC -->
     
     - fix(localization): 🐛 correct typo in "downloads" across multiple translations <a href="https://orchestrator.maphub.it/resources/customer-stories/5967" target="_blank" rel="noopener noreferrer">OC[5967]</a>
     Corrected the typo "donwloads" to "downloads" in the Italian text and its translations in the HTML component and localization files for multiple languages including German, English, Spanish, French, Italian, Portuguese, and Albanian. This ensures consistency and accuracy in all related text translations.
