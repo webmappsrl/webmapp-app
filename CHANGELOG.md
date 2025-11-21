@@ -15,7 +15,6 @@
     Added a readonly form in the `poi-properties.component.html` to display POI form data if available. Updated the component to include necessary selectors and form group management.
     
     Added a TODO in the HTML to consider merging `ugc-properties` with `poi-properties`.
-* **wm-core:** changelog for bump to 4f49516 ([20a84e0](https://github.com/webmappsrl/webmapp-app/commit/20a84e045ab7b4347e092bce8b683a7d342ceac1))
 <!-- COMMIT_DESC -->
     
     - refactor(auth): ♻️ simplify header logic and remove app_id from privacy
@@ -70,7 +69,6 @@
     Exported the new types to be accessible across the project.
     
     - ....
-<!-- COMMIT_DESC -->
     
     - add prod osm2cai
     
@@ -88,7 +86,6 @@
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-
 
 ### Miscellaneous
 
@@ -123,7 +120,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([01ce677](https://github.com/webmappsrl/webmapp-app/commit/01ce677c3b8da8ad1b4e231f9fca395a8a288651))
@@ -228,7 +224,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-
 * enrich changelog with commit descriptions ([63a366e](https://github.com/webmappsrl/webmapp-app/commit/63a366e217b6759205cfd388cbab1e03ad6537ef))
 <!-- COMMIT_DESC -->
     
@@ -1263,7 +1258,6 @@
     
     - Added <ion-content> tag to wrap the form content
     - Improved formatting and indentation
-<!-- COMMIT_DESC -->
     
     This commit adds functionality to dynamically select the geohubAppId based on the hostname. It checks for specific hostnames and assigns a corresponding geohubAppId. If no specific hostname is matched, it uses the numeric value from the hostname. This allows for more flexibility in configuring the geohubAppId for different environments.
     
