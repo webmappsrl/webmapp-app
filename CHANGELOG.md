@@ -15,7 +15,6 @@
     Added a readonly form in the `poi-properties.component.html` to display POI form data if available. Updated the component to include necessary selectors and form group management.
     
     Added a TODO in the HTML to consider merging `ugc-properties` with `poi-properties`.
-* enrich changelog with commit descriptions ([de69637](https://github.com/webmappsrl/webmapp-app/commit/de69637d0881678470431858fcbbb4083e5d02cb))
 * **wm-core:** changelog for bump to 4f49516 ([20a84e0](https://github.com/webmappsrl/webmapp-app/commit/20a84e045ab7b4347e092bce8b683a7d342ceac1))
 <!-- COMMIT_DESC -->
     
@@ -23,7 +22,6 @@
     The auth interceptor has been updated to streamline the header setting logic. The 'Authorization' header is now conditionally added only if the 'idToken' is present. This change simplifies the code and improves readability.
     
     Additionally, the 'app_id' field has been removed from the 'Privacy' interface and related logic in the 'auth.service.ts' file. This reflects a change in how privacy agreements are managed, no longer requiring an 'app_id'.
-* **wm-core:** changelog for bump to e84d096 ([8584987](https://github.com/webmappsrl/webmapp-app/commit/85849876a6481fcf22a81c907fb0703af4ab5382))
 <!-- COMMIT_DESC -->
     
     - style(poi-box): 💄 adjust position of top-right-content for better alignment
@@ -72,7 +70,6 @@
     Exported the new types to be accessible across the project.
     
     - ....
-* **wm-types:** changelog for bump to c6ea68f ([eeb0019](https://github.com/webmappsrl/webmapp-app/commit/eeb00197b1e673646b60cbfa02781d4ee965a9ee))
 <!-- COMMIT_DESC -->
     
     - add prod osm2cai
@@ -88,7 +85,6 @@
 <!-- COMMIT_DESC -->
     
     Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
-<!-- COMMIT_DESC -->
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
@@ -115,7 +111,6 @@
     - Updated map-core module to include new directive and effects.
     - Modified map-core actions and reducer to accommodate bounding box state.
     - Introduced new constants for bounding box functionality.
-<!-- COMMIT_DESC -->
     
     - chore(map): 🌍 add tile download feature with bounding box management
     This update introduces the ability to download map tiles by managing bounding boxes. Users can now select areas on the map for downloading tiles. The feature includes:
@@ -233,7 +228,6 @@
     
     - refactor(ugc): ♻️ rename action to setCurrentUgcPoiDrawnSuccess
     Renamed `setCurrentUgcPoiDrawn` to `setCurrentUgcPoiDrawnSuccess` in `draw-ugc.component.ts` and `user-activity.effects.ts`. This change clarifies the purpose of the action by explicitly indicating success, improving code readability and maintainability. Updated corresponding imports and usages across the files to reflect this change.
-### Miscellaneous
 
 * enrich changelog with commit descriptions ([63a366e](https://github.com/webmappsrl/webmapp-app/commit/63a366e217b6759205cfd388cbab1e03ad6537ef))
 <!-- COMMIT_DESC -->
@@ -1213,7 +1207,6 @@
     
     - Updated the paths for the deploy-to-web scripts in package.json to use relative paths instead of absolute paths.
     - Replaced the absolute file paths with "./www/*" and "./www/assets/*" to ensure correct deployment to the web server.
-<!-- COMMIT_DESC -->
     
     - Added a new field "referrer" to the login request in the AuthService class.
     - Updated the geohubId value in the environment.ts file from 32 to 53.
