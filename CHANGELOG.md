@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
+* enrich changelog with commit descriptions ([127352e](https://github.com/webmappsrl/webmapp-app/commit/127352e2a641b2f841152c91be268eb9d068e9b7))
+* enrich changelog with commit descriptions ([f9993df](https://github.com/webmappsrl/webmapp-app/commit/f9993df7caacbfd9bf3cd7840ffec54b8a29d6c9))
+* **map-core:** changelog for bump to 79dcac4 ([3326abe](https://github.com/webmappsrl/webmapp-app/commit/3326abefca9274604d3af47cb609d381b1373dbc))
+* **tabs:** ✨ add search parameter to URL query params for home tab ([20beed0](https://github.com/webmappsrl/webmapp-app/commit/20beed04a7c8919f895b8fabec8732079d1310aa))
+* **user-activity:** ✨ add check for current UGC track recording oc:6582 ([#168](https://github.com/webmappsrl/webmapp-app/issues/168)) ([63ce624](https://github.com/webmappsrl/webmapp-app/commit/63ce62427ab21afb7b57fdd1c20e120d3160711d))
+* **wm-core:** changelog for bump to 0d92ab5 ([0a75fd6](https://github.com/webmappsrl/webmapp-app/commit/0a75fd632b4fae78db6400f72db92f9ca51cdcbf))
+* **wm-core:** changelog for bump to 93b3fa4 ([470452c](https://github.com/webmappsrl/webmapp-app/commit/470452c1a80f9181c90f5a0a8f34eee3d0b1dce2))
+* **wm-core:** changelog for bump to d70c95f ([0a43f27](https://github.com/webmappsrl/webmapp-app/commit/0a43f271cd0d12488e7b9c5203744301f14f3c04))
+* **wm-core:** changelog for bump to f59e69a ([2eb464f](https://github.com/webmappsrl/webmapp-app/commit/2eb464f2ca9e4a03a587d88796304125217a4211))
+* **wm-core:** changelog for bump to f9b0bbf ([7ac8b8f](https://github.com/webmappsrl/webmapp-app/commit/7ac8b8f79a889a3814d08b57ff4a26f232c1182c))
+* **wm-types:** changelog for bump to 79bef0c ([f0338ef](https://github.com/webmappsrl/webmapp-app/commit/f0338efc7c515114d2df571b820c6b318ef4e43e))
+
 ## [3.1.6](https://github.com/webmappsrl/webmapp-app/compare/v3.1.5...v3.1.6) (2025-10-28)
 
 
