@@ -6,12 +6,10 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
-* enrich changelog with commit descriptions ([f9993df](https://github.com/webmappsrl/webmapp-app/commit/f9993df7caacbfd9bf3cd7840ffec54b8a29d6c9))
 * **tabs:** ✨ add search parameter to URL query params for home tab ([20beed0](https://github.com/webmappsrl/webmapp-app/commit/20beed04a7c8919f895b8fabec8732079d1310aa))
 <!-- COMMIT_DESC -->
     
     Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
-* **wm-core:** changelog for bump to 0d92ab5 ([0a75fd6](https://github.com/webmappsrl/webmapp-app/commit/0a75fd632b4fae78db6400f72db92f9ca51cdcbf))
 <!-- COMMIT_DESC -->
     
     - chore(device): ✨ add isAppMobile property to enhance mobile detection
@@ -175,7 +173,6 @@
     refactor(conf): ♻️ add `take` operator for single emission
     
     Introduced the `take` operator in `updateLayer$` effect to ensure the home state is only processed once per action emission. This change enhances the predictability and performance of the effect by preventing unnecessary emissions.
-* **wm-core:** changelog for bump to f9b0bbf ([7ac8b8f](https://github.com/webmappsrl/webmapp-app/commit/7ac8b8f79a889a3814d08b57ff4a26f232c1182c))
 <!-- COMMIT_DESC -->
     
     - refactor(geolocation-service): ♻️ improve location update handling
@@ -224,7 +221,6 @@
     * refactor(conf): ♻️ remove redundant geohubId check and layer processing
     
     The code checking for `geohubId === 3` and processing map layers for edges and crossroads has been removed. This simplifies the reducer by eliminating unnecessary logic that was specific to a certain geohub configuration. Now, the MAP state update only merges the incoming configuration without additional processing.
-<!-- COMMIT_DESC -->
     
     - Merge pull request #9 from webmappsrl/oc_6255
     Oc 6255
@@ -262,7 +258,6 @@
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-* **download-panel:** ✨ add download size display and translations <a href="https://orchestrator.maphub.it/resources/customer-stories/6133" target="_blank" rel="noopener noreferrer">OC[6133]</a> ([#158](https://github.com/webmappsrl/webmapp-app/issues/158)) ([33acc3f](https://github.com/webmappsrl/webmapp-app/commit/33acc3fc273bcecc1b1d6a79b6633b68072bb98f))
 <!-- COMMIT_DESC -->
     
     * chore(download-panel): ✨ add download size display and translations
