@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2025-11-24)
+
+
+### Bug Fixes
+
+* **modal-save:** ✨ add logic to remove current track for new tracks oc:6582 ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([7576b1e](https://github.com/webmappsrl/webmapp-app/commit/7576b1e13c172e3950ecfb366a0efca9b917336a))
+* enrich changelog with commit descriptions ([33b2a58](https://github.com/webmappsrl/webmapp-app/commit/33b2a58add10eaaecae4e517f946c83e310103fa))
+
 ## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
 
 
