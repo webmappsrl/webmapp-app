@@ -44,6 +44,7 @@ gulp build -i sanrossore -g 83
 
 
 gulp build -i camminiditalia -s camminiditalia -g 1
+gulp build -i osm2cai -s osm2caiprod -g 1
 
 // per visualizzare con modifiche grafiche per Stelvio
 ionic serve -c stelvio

@@ -240,6 +240,13 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
           ugcFeature.properties.device = device;
           return from(saveUgc(ugcFeature));
         }),
+        switchMap(_ => {
+          // Rimuovi il current track se è un nuovo track (non waypoint e senza id)
+          if (!this.isWaypoint) {
+            return from(removeCurrentUgcTrack()).pipe(switchMap(() => of(null)));
+          }
+          return of(null);
+        }),
         switchMap(_ => this.backToSuccess()),
         switchMap(_ =>
           this.openModalSuccess(
