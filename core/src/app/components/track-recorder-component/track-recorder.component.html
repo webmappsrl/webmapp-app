@@ -17,7 +17,7 @@
 >
   <div class="wm-recorder-infopanel-buttons">
     <ion-button (click)="resume()" *ngIf="isPaused; else pauseButton" e2e-recorder-resume-btn>
-      <ion-icon name="play-outline"></ion-icon>
+      <ion-icon name="ellipse" class="rec"></ion-icon>
     </ion-button>
     <ng-template #pauseButton>
       <ion-button (click)="pause()" e2e-recorder-pause-btn>
@@ -25,7 +25,7 @@
       </ion-button>
     </ng-template>
     <ion-button (click)="stop()" e2e-recorder-stop-btn>
-      <ion-icon name="stop-outline"></ion-icon>
+      <ion-icon name="save-outline"></ion-icon>
     </ion-button>
     <ion-button (click)="waypoint()" e2e-recorder-waypoint-btn>
       <ion-icon name="pin-outline"></ion-icon>
