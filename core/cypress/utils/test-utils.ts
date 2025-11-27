@@ -3,7 +3,7 @@ import {
   clearUgcSynchronizedData,
   clearUgcDeviceData,
   removeAuth,
-  removeCurrentUgcTrack,
+  removeCurrentUgcTrackProperties,
 } from '@wm-core/utils/localForage';
 import {clearMapCoreData} from '@map-core/utils';
 
@@ -19,7 +19,7 @@ export function clearTestState(): void {
   clearUgcDeviceData();
   clearMapCoreData();
   removeAuth();
-  removeCurrentUgcTrack();
+  removeCurrentUgcTrackProperties();
 }
 
 /**

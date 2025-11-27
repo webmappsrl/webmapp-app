@@ -13,10 +13,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 import {ModalController, NavController} from '@ionic/angular';
 import {confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
-import {
-  currentUgcTrackRecording,
-  onRecord,
-} from '@wm-core/store/user-activity/user-activity.selector';
+import {onRecord} from '@wm-core/store/user-activity/user-activity.selector';
 import {take} from 'rxjs/operators';
 import {
   setEnablePoiRecorderPanel,
@@ -49,7 +46,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   onRecord$: Observable<boolean> = this._store.select(onRecord);
   currentUgcTrackRecording$: Observable<WmFeature<LineString>> =
-    this._store.select(currentUgcTrackRecording);
+    this._geolocationSvc.currentUgcTrackRecording$.asObservable();
 
   private _timerInterval: any;
 
