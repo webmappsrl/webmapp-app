@@ -182,9 +182,7 @@ export class MapPage {
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  showDownloadTiles$: Observable<boolean> = this._store.select(
-    confOPTIONSShowDownloadTiles,
-  );
+  showDownloadTiles$: Observable<boolean> = this._store.select(confOPTIONSShowDownloadTiles);
   slideOptions = {
     on: {
       beforeInit,
@@ -248,7 +246,7 @@ export class MapPage {
       slidesOffsetBefore: 15,
       slidesPerView: this._deviceSvc.width / 235,
     };
-    this.currentPosition$ = this._geolocationSvc.onLocationChange;
+    this.currentPosition$ = this._geolocationSvc.onLocationChange$;
   }
 
   close(): void {

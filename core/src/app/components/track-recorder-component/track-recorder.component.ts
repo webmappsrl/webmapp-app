@@ -45,8 +45,6 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   onRecord$: Observable<boolean> = this._store.select(onRecord);
-  currentUgcTrackRecording$: Observable<WmFeature<LineString>> =
-    this._geolocationSvc.currentUgcTrackRecording$.asObservable();
 
   private _timerInterval: any;
 
@@ -60,7 +58,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this._geolocationSvc.onLocationChange.subscribe(() => {
+    this._geolocationSvc.onLocationChange$.subscribe(() => {
       this.updateMap();
     });
     this.checkRecording();
