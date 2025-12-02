@@ -173,6 +173,12 @@ const argv = yargs(hideBin(process.argv))
         'Force the update of the instance reinstalling npm, plugins and the capacitor project',
       type: 'string',
     },
+    gpx: {
+      demandOption: false,
+      default: false,
+      describe: 'Copy GPX files to iOS project for Simulate Location feature in Xcode',
+      type: 'boolean',
+    },
   }).argv;
 
 const instancesDir = 'instances/',
@@ -1383,16 +1389,20 @@ function buildIos(instanceName, geohubInstanceId, shardName) {
         updateIosPlatform(instanceName, result.id, result.name).then(
           () => {
             updateResources(instanceName, 'ios');
-            copyGpxFilesToIos(instanceName).then(
-              () => {
-                resolve(result);
-              },
-              err => {
-                // Anche se la copia del GPX fallisce, completiamo la build
-                warn('Impossibile copiare il file GPX, ma la build continua');
-                resolve(result);
-              },
-            );
+            if (argv.gpx) {
+              copyGpxFilesToIos(instanceName).then(
+                () => {
+                  resolve(result);
+                },
+                err => {
+                  // Anche se la copia del GPX fallisce, completiamo la build
+                  warn('Impossibile copiare il file GPX, ma la build continua');
+                  resolve(result);
+                },
+              );
+            } else {
+              resolve(result);
+            }
           },
           err => {
             reject(err);
