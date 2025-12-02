@@ -1246,6 +1246,126 @@ function updateIosPlatform(instanceName, appId, appName) {
   });
 }
 
+function copyGpxFilesToIos(instanceName) {
+  return new Promise((resolve, reject) => {
+    const gpxSourceDir = 'gpx/';
+    const gpxDest = instancesDir + instanceName + '/ios/App/App/gpx/';
+    const pbxprojPath = instancesDir + instanceName + '/ios/App/App.xcodeproj/project.pbxproj';
+
+    if (!fs.existsSync(gpxSourceDir)) {
+      warn('Cartella GPX non trovata: ' + gpxSourceDir);
+      resolve();
+      return;
+    }
+
+    if (verbose) debug('Copiando tutti i file GPX in ' + gpxDest);
+
+    gulp
+      .src(gpxSourceDir + '**/*')
+      .pipe(gulp.dest(gpxDest))
+      .on('end', () => {
+        info('File GPX copiati con successo in ' + gpxDest);
+
+        // Aggiungi i file GPX al progetto Xcode
+        try {
+          addGpxFilesToXcodeProject(instanceName, gpxSourceDir, pbxprojPath);
+          info('File GPX aggiunti al progetto Xcode');
+        } catch (err) {
+          warn('Errore aggiungendo GPX al progetto Xcode: ' + err);
+        }
+
+        resolve();
+      })
+      .on('error', err => {
+        warn('Errore durante la copia dei file GPX: ' + err);
+        resolve();
+      });
+  });
+}
+
+function addGpxFilesToXcodeProject(instanceName, gpxSourceDir, pbxprojPath) {
+  if (!fs.existsSync(pbxprojPath)) {
+    warn('File project.pbxproj non trovato: ' + pbxprojPath);
+    return;
+  }
+
+  let pbxContent = fs.readFileSync(pbxprojPath, 'utf8');
+
+  // Leggi tutti i file GPX
+  const gpxFiles = fs.readdirSync(gpxSourceDir).filter(f => f.endsWith('.gpx'));
+
+  if (gpxFiles.length === 0) {
+    warn('Nessun file GPX trovato nella cartella');
+    return;
+  }
+
+  // Genera UUID univoci per ogni file (formato Xcode: 24 caratteri esadecimali)
+  function generateUUID() {
+    return (
+      'GPX' +
+      Math.random().toString(16).substring(2, 8).toUpperCase() +
+      Math.random().toString(16).substring(2, 8).toUpperCase() +
+      Math.random().toString(16).substring(2, 8).toUpperCase()
+    );
+  }
+
+  // Verifica se i file GPX sono già stati aggiunti
+  if (pbxContent.includes('/* gpx */')) {
+    if (verbose) debug('I file GPX sono già presenti nel progetto Xcode');
+    return;
+  }
+
+  const gpxGroupUUID = generateUUID();
+  const fileRefs = [];
+  const buildFileRefs = [];
+  const childrenRefs = [];
+
+  gpxFiles.forEach(gpxFile => {
+    const fileRefUUID = generateUUID();
+    const buildFileUUID = generateUUID();
+
+    fileRefs.push(
+      `		${fileRefUUID} /* ${gpxFile} */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "${gpxFile}"; sourceTree = "<group>"; };`,
+    );
+    buildFileRefs.push(
+      `		${buildFileUUID} /* ${gpxFile} in Resources */ = {isa = PBXBuildFile; fileRef = ${fileRefUUID} /* ${gpxFile} */; };`,
+    );
+    childrenRefs.push(`				${fileRefUUID} /* ${gpxFile} */,`);
+  });
+
+  // Aggiungi PBXFileReference per ogni file GPX
+  const fileRefSection = '/* Begin PBXFileReference section */';
+  pbxContent = pbxContent.replace(fileRefSection, fileRefSection + '\n' + fileRefs.join('\n'));
+
+  // Aggiungi PBXBuildFile per ogni file GPX
+  const buildFileSection = '/* Begin PBXBuildFile section */';
+  pbxContent = pbxContent.replace(
+    buildFileSection,
+    buildFileSection + '\n' + buildFileRefs.join('\n'),
+  );
+
+  // Crea il gruppo GPX e aggiungilo ai children del gruppo App
+  const gpxGroup = `		${gpxGroupUUID} /* gpx */ = {
+			isa = PBXGroup;
+			children = (
+${childrenRefs.join('\n')}
+			);
+			path = gpx;
+			sourceTree = "<group>";
+		};`;
+
+  const groupSection = '/* Begin PBXGroup section */';
+  pbxContent = pbxContent.replace(groupSection, groupSection + '\n' + gpxGroup);
+
+  // Aggiungi il gruppo GPX ai children del gruppo "App" (504EC2FB1FED79650016851F)
+  // Cerchiamo il gruppo App che contiene AppDelegate.swift
+  const appGroupRegex = /(isa = PBXGroup;\s*children = \(\s*(?:[^)]*\n)*?)(\s*\);\s*path = App;)/;
+  pbxContent = pbxContent.replace(appGroupRegex, `$1				${gpxGroupUUID} /* gpx */,\n$2`);
+
+  fs.writeFileSync(pbxprojPath, pbxContent);
+  if (verbose) debug('File project.pbxproj aggiornato con i file GPX');
+}
+
 function buildIos(instanceName, geohubInstanceId, shardName) {
   return new Promise((resolve, reject) => {
     //setAPI(instanceName);
@@ -1263,7 +1383,16 @@ function buildIos(instanceName, geohubInstanceId, shardName) {
         updateIosPlatform(instanceName, result.id, result.name).then(
           () => {
             updateResources(instanceName, 'ios');
-            resolve(result);
+            copyGpxFilesToIos(instanceName).then(
+              () => {
+                resolve(result);
+              },
+              err => {
+                // Anche se la copia del GPX fallisce, completiamo la build
+                warn('Impossibile copiare il file GPX, ma la build continua');
+                resolve(result);
+              },
+            );
           },
           err => {
             reject(err);
