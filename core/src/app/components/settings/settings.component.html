@@ -17,7 +17,6 @@
     <ion-item class="webmapp-settings-version" mode="md">
       <ion-label> {{ "modals.settings.version" | wmtrans }} {{ APP_VERSION }}</ion-label>
     </ion-item>
-    <wm-lang-selector></wm-lang-selector>
     <ion-item-group *ngIf="(confMap$|async)?.record_track_show">
       <ion-item-divider>
         <ion-label>GPS</ion-label>
