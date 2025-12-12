@@ -10,7 +10,6 @@ import {LangService} from '@wm-core/localization/lang.service';
 import {
   confCREDITS,
   confDISCLAIMER,
-  confLANGUAGES,
   confMAP,
   confPAGES,
   confPROJECT,
@@ -43,7 +42,6 @@ export class SettingsComponent {
     (localStorage.getItem('wm-keep-awake') != 'false' &&
       localStorage.getItem('wm-keep-awake') != null) ||
     false;
-  langs$ = this._store.select(confLANGUAGES);
 
   constructor(
     private _alertCtrl: AlertController,
