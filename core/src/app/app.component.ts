@@ -2,12 +2,13 @@ import {Component, Inject, ViewEncapsulation} from '@angular/core';
 import {Platform} from '@ionic/angular';
 import {filter, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
-import {Router} from '@angular/router';
+import {Router, NavigationEnd} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
 import {select, Store} from '@ngrx/store';
 import {StatusService} from './services/status.service';
 import {DOCUMENT} from '@angular/common';
 import {Observable} from 'rxjs';
+import {PosthogService} from '@wm-core/services/posthog.service';
 import {
   confGEOLOCATION,
   confLANGUAGES,
@@ -59,6 +60,7 @@ export class AppComponent {
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     @Inject(DOCUMENT) private _document: Document,
+    private _posthogSvc: PosthogService,
   ) {
     this._store.dispatch(loadAuths());
     this._store.dispatch(loadConf());
@@ -125,6 +127,17 @@ export class AppComponent {
         });
     }
     OfflineCallbackManager.setOfflineCallback(getImg);
+
+    // Traccia i cambiamenti di pagina con PostHog
+    this._router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        const pageName = event.urlAfterRedirects.split('?')[0].replace('/', '') || 'home';
+        this._posthogSvc.capture('page_view', {
+          page: pageName,
+          url: event.urlAfterRedirects,
+        });
+      });
   }
 
   closePhoto() {

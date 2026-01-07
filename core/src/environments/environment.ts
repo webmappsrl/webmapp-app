@@ -1,14 +1,10 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-
-import {Environment, shards, redirects} from '@wm-types/environment';
+import { Environment, redirects, shards } from "@wm-types/environment";
 
 export const environment: Environment = {
   production: false,
   debug: true,
-  appId: 52,
-  shardName: 'geohub',
+  appId: 1,
+  shardName: 'camminiditalia',
   shards,
   redirects,
 };
