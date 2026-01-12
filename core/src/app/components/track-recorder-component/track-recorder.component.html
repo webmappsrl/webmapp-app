@@ -71,6 +71,6 @@
   </div>
 </ion-card>
 
-<div class="wm-recorder-btnrec-container" *ngIf="!(currentUgcTrackRecording$|async)">
+<div class="wm-recorder-btnrec-container" *ngIf="!(onRecord$|async)">
   <wm-btn-rec (move)="recordMove($event)" (unlocked)="recordStart($event)"> </wm-btn-rec>
 </div>
