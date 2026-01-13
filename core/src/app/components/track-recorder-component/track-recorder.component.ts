@@ -85,7 +85,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   }
 
   checkRecording(): void {
-    this.onRecord$.pipe(take(1), takeUntil(this._destroy$)).subscribe(onRecord => {
+    this.onRecord$.pipe(take(1)).subscribe(onRecord => {
       if (onRecord) {
         this.isPaused = this._geolocationSvc.paused;
         this.opacity = 1;
@@ -101,7 +101,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   }
 
   updateMap(): void {
-    this.onRecord$.pipe(take(1), takeUntil(this._destroy$)).subscribe(onRecord => {
+    this.onRecord$.pipe(take(1)).subscribe(onRecord => {
       if (onRecord && this._geolocationSvc.recordedFeature) {
         this.length = this._geoutilsSvc.getLength(this._geolocationSvc.recordedFeature);
         this.actualSpeed =

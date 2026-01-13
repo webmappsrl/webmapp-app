@@ -30,19 +30,7 @@ export class PoiRecorderComponent implements OnDestroy {
     private _geolocationSvc: GeolocationService,
   ) {
     this.currentPositionSub$ = this.currentPosition$
-      .pipe(
-        throttleTime(5000), // Max 1 chiamata ogni 5 secondi per evitare rate limiting
-        distinctUntilChanged((prev, curr) => {
-          // Chiama API solo se spostamento > 50m
-          if (!prev || !curr) return false;
-          const distance = getDistance(
-            [prev.longitude, prev.latitude],
-            [curr.longitude, curr.latitude],
-          );
-          return distance < 50;
-        }),
-        switchMap(position => this._nominatimSvc.getFromPosition(position)),
-      )
+      .pipe(switchMap(position => this._nominatimSvc.getFromPosition(position)))
       .subscribe(nominatim => {
         this.nominatim$.next(nominatim);
       });
