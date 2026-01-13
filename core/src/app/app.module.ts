@@ -1,38 +1,43 @@
-import packageJson from "package.json";
-import posthogConfig from "posthog.json";
+import packageJson from 'package.json';
+import posthogConfig from 'posthog.json';
 
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { ModalCoinsModule } from "./components/modal-coins/modal-coins.module";
-import { ModalGiftCoinsModule } from "./components/modal-gift-coins/modal-gift-coin.module";
-import { ModalStoreSuccessModule } from "./components/modal-store-success/modal-store-success.module";
-import { ModalSuccessModule } from "./components/modal-success/modal-success.module";
-import { SettingsModule } from "./components/settings/settings.module";
-import { SharedModule } from "./components/shared/shared.module";
-import { PosthogHybridClient } from "./services/base/posthog-hybrid.client";
-import { registerLocaleData } from "@angular/common";
-import { HttpClientModule } from "@angular/common/http";
-import localeIt from "@angular/common/locales/it";
-import { APP_INITIALIZER, LOCALE_ID, NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { RouteReuseStrategy } from "@angular/router";
-import { Capacitor } from "@capacitor/core";
-import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
-import { IonicStorageModule } from "@ionic/storage-angular";
-import { EffectsModule } from "@ngrx/effects";
-import { StoreModule } from "@ngrx/store";
-import { StoreDevtoolsModule } from "@ngrx/store-devtools";
-import { MetaComponent } from "@wm-core/meta/meta.component";
-import { EnvironmentService } from "@wm-core/services/environment.service";
-import { PosthogService } from "@wm-core/services/posthog.service";
-import { APP_TRANSLATION, APP_VERSION, POSTHOG_CLIENT, POSTHOG_CONFIG } from "@wm-core/store/conf/conf.token";
-import { initializeConsoleOverride } from "@wm-core/utils/console-override";
-import { WmCoreModule } from "@wm-core/wm-core.module";
-import { WmPosthogConfig } from "@wm-types/posthog";
-import { appEN } from "src/assets/i18n/en";
-import { appFR } from "src/assets/i18n/fr";
-import { appIT } from "src/assets/i18n/it";
-import { environment } from "src/environments/environment";
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {ModalCoinsModule} from './components/modal-coins/modal-coins.module';
+import {ModalGiftCoinsModule} from './components/modal-gift-coins/modal-gift-coin.module';
+import {ModalStoreSuccessModule} from './components/modal-store-success/modal-store-success.module';
+import {ModalSuccessModule} from './components/modal-success/modal-success.module';
+import {SettingsModule} from './components/settings/settings.module';
+import {SharedModule} from './components/shared/shared.module';
+import {PosthogCapacitorClient} from './services/base/posthog-capacitor.client';
+import {registerLocaleData} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
+import localeIt from '@angular/common/locales/it';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {RouteReuseStrategy} from '@angular/router';
+import {Capacitor} from '@capacitor/core';
+import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
+import {IonicStorageModule} from '@ionic/storage-angular';
+import {EffectsModule} from '@ngrx/effects';
+import {StoreModule} from '@ngrx/store';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {MetaComponent} from '@wm-core/meta/meta.component';
+import {EnvironmentService} from '@wm-core/services/environment.service';
+import {PosthogService} from '@wm-core/services/posthog.service';
+import {
+  APP_TRANSLATION,
+  APP_VERSION,
+  POSTHOG_CLIENT,
+  POSTHOG_CONFIG,
+} from '@wm-core/store/conf/conf.token';
+import {initializeConsoleOverride} from '@wm-core/utils/console-override';
+import {WmCoreModule} from '@wm-core/wm-core.module';
+import {WmPosthogConfig} from '@wm-types/posthog';
+import {appEN} from 'src/assets/i18n/en';
+import {appFR} from 'src/assets/i18n/fr';
+import {appIT} from 'src/assets/i18n/it';
+import {environment} from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -95,14 +100,14 @@ import { environment } from "src/environments/environment";
         } satisfies WmPosthogConfig;
       })(),
     },
-    PosthogHybridClient,
-    {provide: POSTHOG_CLIENT, useExisting: PosthogHybridClient},
+    PosthogCapacitorClient,
+    {provide: POSTHOG_CLIENT, useExisting: PosthogCapacitorClient},
     {
       provide: APP_INITIALIZER,
       useFactory:
         (
           envSvc: EnvironmentService,
-          posthogClient: PosthogHybridClient,
+          posthogClient: PosthogCapacitorClient,
           posthogSvc: PosthogService,
         ) =>
         async () => {
@@ -205,7 +210,7 @@ import { environment } from "src/environments/environment";
             console.error('[PostHog] Failed to send test event:', error);
           }
         },
-      deps: [EnvironmentService, PosthogHybridClient, PosthogService],
+      deps: [EnvironmentService, PosthogCapacitorClient, PosthogService],
       multi: true,
     },
   ],
