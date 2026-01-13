@@ -41,13 +41,9 @@ describe('Open and close Map Details [oc:5500] [https://orchestrator.maphub.it/r
 });
 
 function checkTrackDetailsOpened(checkIsOpened: boolean) {
-  cy.get('wm-track-properties')
-    .should('exist')
-    .should($el => {
-      if (checkIsOpened) {
-        expect($el.children().length).to.be.greaterThan(0);
-      } else {
-        expect($el.children().length).to.be.equal(0);
-      }
-    });
+  if(checkIsOpened) {
+    cy.get('wm-track-properties').should('exist');
+  } else {
+    cy.get('wm-track-properties').should('not.exist');
+  }
 }

@@ -16,8 +16,9 @@ import {
   setMapDetailsStatus,
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs';
 import {skip} from 'rxjs/operators';
+import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 
 @Component({
   selector: 'wm-map-details',
@@ -123,7 +124,7 @@ export class MapDetailsComponent implements AfterViewInit {
 
       this._animationSwipe = this._animationCtrl
         .create()
-        .duration(250)
+        .duration(DETAILS_ANIMATION_DURATION)
         .addAnimation([animationSwipePanel]);
       await this._animationSwipe.play();
     }

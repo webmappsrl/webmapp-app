@@ -13,11 +13,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 import {ModalController, NavController} from '@ionic/angular';
 import {confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
-import {
-  currentUgcTrackRecording,
-  onRecord,
-} from '@wm-core/store/user-activity/user-activity.selector';
-import {take} from 'rxjs/operators';
+import {onRecord} from '@wm-core/store/user-activity/user-activity.selector';
+import {take, takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import {
   setEnablePoiRecorderPanel,
   setEnableTrackRecorderPanel,
@@ -48,10 +46,9 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   onRecord$: Observable<boolean> = this._store.select(onRecord);
-  currentUgcTrackRecording$: Observable<WmFeature<LineString>> =
-    this._store.select(currentUgcTrackRecording);
 
   private _timerInterval: any;
+  private readonly _destroy$ = new Subject<void>();
 
   constructor(
     private _store: Store,
@@ -63,7 +60,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this._geolocationSvc.onLocationChange.subscribe(() => {
+    this._geolocationSvc.onLocationChange$.pipe(takeUntil(this._destroy$)).subscribe(() => {
       this.updateMap();
     });
     this.checkRecording();
@@ -73,6 +70,8 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 
   recordMove(ev: number): void {

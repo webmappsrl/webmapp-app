@@ -1,14 +1,15 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {currentLocation} from '@wm-core/store/user-activity/user-activity.selector';
 import {Location} from '@wm-types/feature';
 import {BehaviorSubject, from, Observable, Subscription} from 'rxjs';
-import {switchMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, switchMap, take, throttleTime} from 'rxjs/operators';
 import {NominatimService} from 'src/app/services/nominatim.service';
 import {ModalController} from '@ionic/angular';
 import {confPOIFORMS} from '@wm-core/store/conf/conf.selector';
 import {setEnablePoiRecorderPanel} from '@wm-core/store/user-activity/user-activity.action';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
+import {getDistance} from 'ol/sphere';
 
 @Component({
   selector: 'wm-poi-recorder',
@@ -18,7 +19,7 @@ import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoiRecorderComponent implements OnDestroy {
-  currentPosition$: Observable<Location> = this._store.select(currentLocation);
+  currentPosition$: Observable<Location> = this._geolocationSvc.onLocationChange$;
   currentPositionSub$: Subscription;
   nominatim$: BehaviorSubject<any> = new BehaviorSubject(null);
   confPOIFORMS$: Observable<any[]> = this._store.select(confPOIFORMS);
@@ -26,6 +27,7 @@ export class PoiRecorderComponent implements OnDestroy {
     private _store: Store,
     private _nominatimSvc: NominatimService,
     private _modalCtrl: ModalController,
+    private _geolocationSvc: GeolocationService,
   ) {
     this.currentPositionSub$ = this.currentPosition$
       .pipe(switchMap(position => this._nominatimSvc.getFromPosition(position)))

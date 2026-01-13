@@ -44,3 +44,5 @@ export const TRACKMARKERLAYERZINDEX = 470;
 export const DEF_LINE_COLOR = 'green';
 export const CIRCULARTOLERANCE = 0.001;
 export const ALERT_POI_RADIUS = 100;
+
+export const DETAILS_ANIMATION_DURATION = 250;

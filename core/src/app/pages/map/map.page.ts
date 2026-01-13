@@ -10,8 +10,8 @@ import {IonFab, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
 import {Feature} from 'ol';
 import Geometry from 'ol/geom/Geometry';
-import {BehaviorSubject, Observable, from} from 'rxjs';
-import {filter, map, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, from, of, timer} from 'rxjs';
+import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
@@ -74,6 +74,7 @@ import {
   setMapDetailsStatus,
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
+import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -182,9 +183,7 @@ export class MapPage {
   resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  showDownloadTiles$: Observable<boolean> = this._store.select(
-    confOPTIONSShowDownloadTiles,
-  );
+  showDownloadTiles$: Observable<boolean> = this._store.select(confOPTIONSShowDownloadTiles);
   slideOptions = {
     on: {
       beforeInit,
@@ -212,6 +211,12 @@ export class MapPage {
   wmMapTilesBoundingBox$: Observable<WmFeature<MultiPolygon> | null> =
     this._store.select(wmMapTilesBoundingBox);
   overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
+  showMapDetailsContent$: Observable<boolean> = this._store.select(mapDetailsStatus).pipe(
+    map(status => status != 'background'),
+    distinctUntilChanged(),
+    switchMap(show => (show ? timer(DETAILS_ANIMATION_DURATION).pipe(map(() => true)) : of(false))),
+  );
+
   constructor(
     private _store: Store,
     private _storeNetwork: Store<INetworkRootState>,
@@ -248,7 +253,7 @@ export class MapPage {
       slidesOffsetBefore: 15,
       slidesPerView: this._deviceSvc.width / 235,
     };
-    this.currentPosition$ = this._geolocationSvc.onLocationChange;
+    this.currentPosition$ = this._geolocationSvc.onLocationChange$;
   }
 
   close(): void {
