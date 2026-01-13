@@ -1118,6 +1118,25 @@ function addIosPlatform(instanceName, force) {
       cwd: instancesDir + instanceName,
     });
     if (verbose) debug('Ios platform added successfully');
+
+    // Installa i pod subito dopo aver aggiunto la piattaforma iOS
+    const podfilePath = instancesDir + instanceName + '/ios/App/Podfile';
+    if (fs.existsSync(podfilePath)) {
+      if (verbose) debug('Installing CocoaPods dependencies after platform addition');
+      const podInstallResult = sh.exec('pod install' + outputRedirect, {
+        cwd: instancesDir + instanceName + '/ios/App',
+        silent: !verbose,
+      });
+      if (podInstallResult.code !== 0) {
+        warn(
+          'pod install potrebbe non essere riuscito, codice di uscita: ' + podInstallResult.code,
+        );
+      } else {
+        if (verbose) debug('CocoaPods dependencies installed successfully');
+      }
+    } else {
+      if (verbose) debug('Podfile non trovato dopo npx cap add ios in: ' + podfilePath);
+    }
   }
 }
 
@@ -1130,6 +1149,33 @@ function updateIosPlatform(instanceName, appId, appName) {
     sh.exec('npx cap copy ios' + outputRedirect, {
       cwd: instancesDir + instanceName,
     });
+
+    // Installa i pod per completare la struttura iOS dopo npx cap copy
+    const podfilePath = instancesDir + instanceName + '/ios/App/Podfile';
+    if (fs.existsSync(podfilePath)) {
+      if (verbose) debug('Installing CocoaPods dependencies after npx cap copy');
+      const podInstallResult = sh.exec('pod install' + outputRedirect, {
+        cwd: instancesDir + instanceName + '/ios/App',
+        silent: !verbose,
+      });
+      if (podInstallResult.code !== 0) {
+        warn(
+          'pod install potrebbe non essere riuscito dopo npx cap copy, codice di uscita: ' +
+            podInstallResult.code,
+        );
+        if (verbose)
+          debug('Output pod install: ' + podInstallResult.stdout + podInstallResult.stderr);
+      } else {
+        if (verbose) debug('CocoaPods dependencies installed successfully');
+      }
+    } else {
+      if (verbose)
+        debug(
+          'Podfile non trovato in: ' +
+            podfilePath +
+            ', potrebbe essere necessario eseguire npx cap add ios prima',
+        );
+    }
 
     var promises = [],
       plistKeysConcatValue = '';
@@ -1155,8 +1201,108 @@ function updateIosPlatform(instanceName, appId, appName) {
     // Info.plist
     promises.push(
       new Promise((resolve, reject) => {
+        const infoPlistPath = instancesDir + instanceName + '/ios/App/App/Info.plist';
+
+        // Verifica se il file esiste DOPO npx cap copy ios, altrimenti crealo con un template base
+        if (!fs.existsSync(infoPlistPath)) {
+          if (verbose)
+            debug('Info.plist non trovato dopo npx cap copy ios, creazione template base');
+          const infoPlistDir = instancesDir + instanceName + '/ios/App/App/';
+          if (!fs.existsSync(infoPlistDir)) {
+            if (verbose) debug('Creazione directory: ' + infoPlistDir);
+            try {
+              fs.mkdirSync(infoPlistDir, {recursive: true});
+            } catch (err) {
+              reject('Errore nella creazione della directory: ' + err.message);
+              return;
+            }
+          }
+
+          // Template base Info.plist minimo
+          const baseInfoPlist = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>${appName}</string>
+	<key>CFBundleExecutable</key>
+	<string>\$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>\$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>\$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>\$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${version.version}</string>
+	<key>CFBundleVersion</key>
+	<string>${argv.bundle || '1'}</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+		</dict>
+	</array>
+</dict>
+</plist>`;
+
+          try {
+            fs.writeFileSync(infoPlistPath, baseInfoPlist, 'utf8');
+            // Verifica che il file sia stato effettivamente creato
+            if (!fs.existsSync(infoPlistPath)) {
+              reject('Il file Info.plist non è stato creato correttamente in: ' + infoPlistPath);
+              return;
+            }
+            if (verbose) debug('Template Info.plist creato con successo in: ' + infoPlistPath);
+          } catch (err) {
+            const errorMsg =
+              'Errore nella creazione del template Info.plist: ' +
+              err.message +
+              ' (path: ' +
+              infoPlistPath +
+              ')';
+            if (verbose) debug(errorMsg);
+            reject(errorMsg);
+            return;
+          }
+        } else {
+          if (verbose) debug('Info.plist trovato, procedo con le modifiche');
+        }
+
+        // Verifica finale che il file esista prima di usare gulp.src
+        if (!fs.existsSync(infoPlistPath)) {
+          reject('Info.plist non esiste e non è stato possibile crearlo: ' + infoPlistPath);
+          return;
+        }
+
         var replacer = gulp
-          .src(instancesDir + instanceName + '/ios/App/App/Info.plist')
+          .src(infoPlistPath)
           .pipe(
             replace(
               /<key>CFBundleDisplayName<\/key>([^<]*)<string>[^<]*<\/string>/g,
