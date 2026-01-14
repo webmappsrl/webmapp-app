@@ -6,7 +6,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
-* **tabs:** ✨ add search parameter to URL query params for home tab ([20beed0](https://github.com/webmappsrl/webmapp-app/commit/20beed04a7c8919f895b8fabec8732079d1310aa))
 <!-- COMMIT_DESC -->
     
     Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
@@ -173,7 +172,6 @@
     refactor(conf): ♻️ add `take` operator for single emission
     
     Introduced the `take` operator in `updateLayer$` effect to ensure the home state is only processed once per action emission. This change enhances the predictability and performance of the effect by preventing unnecessary emissions.
-<!-- COMMIT_DESC -->
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
@@ -248,7 +246,6 @@
     
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
-
 ### Miscellaneous
 
 * **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
@@ -258,7 +255,6 @@
     
     - chore(conf): ✨ add showDownloadTilesButton option
     Added a new configuration option `showDownloadTilesButton` to the application's state management. This allows for toggling the visibility of the download tiles button in the user interface. The change includes updates to the reducer, selector, and configuration type definitions to support this new option.
-<!-- COMMIT_DESC -->
     
     * chore(download-panel): ✨ add download size display and translations
     
