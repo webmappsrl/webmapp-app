@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2026-01-14)
+
+
+### Bug Fixes
+
+* **modal-save:** ✨ add logic to remove current track for new tracks oc:6582 ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
+
+
+### Miscellaneous
+
+* **dependencies:** 🔄 update background-geolocation package to v1.2.26 ([39ab7dc](https://github.com/webmappsrl/webmapp-app/commit/39ab7dcc1076d6e2ca7f155ad1bbba79fc989069))
+* enrich changelog with commit descriptions ([c1bf42e](https://github.com/webmappsrl/webmapp-app/commit/c1bf42ef071306268ee0267199abf416132f33a7))
+* enrich changelog with commit descriptions ([7576b1e](https://github.com/webmappsrl/webmapp-app/commit/7576b1e13c172e3950ecfb366a0efca9b917336a))
+* enrich changelog with commit descriptions ([33b2a58](https://github.com/webmappsrl/webmapp-app/commit/33b2a58add10eaaecae4e517f946c83e310103fa))
+* **map-core:** changelog for bump to 234fbf1 ([55cf3a7](https://github.com/webmappsrl/webmapp-app/commit/55cf3a7398012c4e8e3be3ecabe2cc3a94976d57))
+* **map-core:** changelog for bump to 3701dce ([2aeb1ac](https://github.com/webmappsrl/webmapp-app/commit/2aeb1ace764164a7188b57bd22cf5bd9c7e28b61))
+* remove unused UGC track test and related functions oc:6672 ([#173](https://github.com/webmappsrl/webmapp-app/issues/173)) ([1104ed7](https://github.com/webmappsrl/webmapp-app/commit/1104ed729fd49f48cac9788fb20c3dfcd57e0545))
+* **ugc-track:** add e2e test for resuming UGC track recording oc: 6889 ([#174](https://github.com/webmappsrl/webmapp-app/issues/174)) ([cec8776](https://github.com/webmappsrl/webmapp-app/commit/cec8776d204cfa01558fb6ab77804e35069f147e))
+* **wm-core:** changelog for bump to 0c5ca30 ([61aa49b](https://github.com/webmappsrl/webmapp-app/commit/61aa49b3ea52b78b970d4061d1caadbcac492d3b))
+* **wm-core:** changelog for bump to 4bf49d9 ([f7eec72](https://github.com/webmappsrl/webmapp-app/commit/f7eec7277bef83b3551a5c9d468c673670047b7a))
+* **wm-core:** changelog for bump to 571c827 ([6b22e23](https://github.com/webmappsrl/webmapp-app/commit/6b22e23f020063925064747dfc5d8da07b544126))
+* **wm-core:** changelog for bump to b35e4d6 ([c4ba468](https://github.com/webmappsrl/webmapp-app/commit/c4ba4685f38d507c56881a68e8f62668a03517fd))
+* **wm-types:** changelog for bump to ec39ac9 ([e339305](https://github.com/webmappsrl/webmapp-app/commit/e339305f91217cf711d281154c5aec208512070e))
+* **wm-types:** changelog for bump to f9b7df9 ([3a01185](https://github.com/webmappsrl/webmapp-app/commit/3a011855e1ad5c6fd296f2f543f10f6a3ec4b2df))
+
 ## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
 
 
