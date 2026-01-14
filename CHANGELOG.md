@@ -5,25 +5,114 @@
 
 ### Bug Fixes
 
-* **modal-save:** ✨ add logic to remove current track for new tracks oc:6582 ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
-
+* **modal-save:** ✨ add logic to remove current track for new tracks <a href="https://orchestrator.maphub.it/resources/customer-stories/6582" target="_blank" rel="noopener noreferrer">OC[6582]</a> ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
+<!-- COMMIT_DESC -->
+    
+    - Introduced a switchMap to remove the current UGC track if it's a new track (not a waypoint and without an ID).
+    - Ensures that the current track is removed from the system when a new track is saved, maintaining a clean state.
+    - The logic bypasses removal if the track is a waypoint, thus preserving existing waypoint behavior.
+    
+    chore(deployment): 🔧 add build command for osm2cai
+    
+    - Introduced a new gulp build command for the osm2cai project with specific settings.
+    - Ensures compatibility with osm2caiprod environment.
+    - Aligns with existing build processes for other projects.
 
 ### Miscellaneous
 
 * **dependencies:** 🔄 update background-geolocation package to v1.2.26 ([39ab7dc](https://github.com/webmappsrl/webmapp-app/commit/39ab7dcc1076d6e2ca7f155ad1bbba79fc989069))
-* enrich changelog with commit descriptions ([c1bf42e](https://github.com/webmappsrl/webmapp-app/commit/c1bf42ef071306268ee0267199abf416132f33a7))
+<!-- COMMIT_DESC -->
+    
+    Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
 * enrich changelog with commit descriptions ([7576b1e](https://github.com/webmappsrl/webmapp-app/commit/7576b1e13c172e3950ecfb366a0efca9b917336a))
-* enrich changelog with commit descriptions ([33b2a58](https://github.com/webmappsrl/webmapp-app/commit/33b2a58add10eaaecae4e517f946c83e310103fa))
 * **map-core:** changelog for bump to 234fbf1 ([55cf3a7](https://github.com/webmappsrl/webmapp-app/commit/55cf3a7398012c4e8e3be3ecabe2cc3a94976d57))
-* **map-core:** changelog for bump to 3701dce ([2aeb1ac](https://github.com/webmappsrl/webmapp-app/commit/2aeb1ace764164a7188b57bd22cf5bd9c7e28b61))
-* remove unused UGC track test and related functions oc:6672 ([#173](https://github.com/webmappsrl/webmapp-app/issues/173)) ([1104ed7](https://github.com/webmappsrl/webmapp-app/commit/1104ed729fd49f48cac9788fb20c3dfcd57e0545))
-* **ugc-track:** add e2e test for resuming UGC track recording oc: 6889 ([#174](https://github.com/webmappsrl/webmapp-app/issues/174)) ([cec8776](https://github.com/webmappsrl/webmapp-app/commit/cec8776d204cfa01558fb6ab77804e35069f147e))
+<!-- COMMIT_DESC -->
+    
+    - feat(directive): ✨ add WmMapTrackRecordDirective for tracking locations on the map
+    - Introduced `WmMapTrackRecordDirective` to manage and visualize track records on the map.
+    - Implemented features for adding locations with optimizations for memory and rendering.
+    - Updated `map-core.module.ts` to include the new directive and modified the index export.
+    - Refactored `WmMapComponent` to use `OlMap` for better clarity and consistency.
+    - Added constants for rendering buffer and track record z-index to improve layer management.
+* remove unused UGC track test and related functions <a href="https://orchestrator.maphub.it/resources/customer-stories/6672" target="_blank" rel="noopener noreferrer">OC[6672]</a> ([#173](https://github.com/webmappsrl/webmapp-app/issues/173)) ([1104ed7](https://github.com/webmappsrl/webmapp-app/commit/1104ed729fd49f48cac9788fb20c3dfcd57e0545))
+<!-- COMMIT_DESC -->
+    
+    * chore: remove unused UGC track test and related functions
+    
+    - Deleted the `resume-record-ugc-track.cy.ts` test file as it is no longer needed.
+    - Removed references to `removeCurrentUgcTrack` from `test-utils.ts` and `modal-save.component.ts` to clean up unused code.
+    - Updated the `AppComponent` and `TrackRecorderComponent` to eliminate calls to `checkCurrentUgcTrack` and `currentUgcTrackRecording`, respectively, streamlining the codebase.
+    
+    Relates to <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    
+    Updated submodule core/src/app/shared/map-core
+    
+    Updated submodule core/src/app/shared/wm-core
+    
+    Updated submodule core/src/app/shared/wm-types
+    
+    * refactor: simplify track details check logic
+    
+    - Updated the `checkTrackDetailsOpened` function to streamline the logic for checking the existence of `wm-track-properties`. The function now directly asserts the existence or non-existence of the element based on the `checkIsOpened` parameter, improving readability and maintainability of the test code.
+    
+    * refactor: streamline observables in PoiRecorder and TrackRecorder components
+    
+    - Removed unnecessary operators from observables in `PoiRecorderComponent` and `TrackRecorderComponent` to simplify the code and improve performance. The changes enhance readability by reducing complexity in the subscription logic.
 * **wm-core:** changelog for bump to 0c5ca30 ([61aa49b](https://github.com/webmappsrl/webmapp-app/commit/61aa49b3ea52b78b970d4061d1caadbcac492d3b))
-* **wm-core:** changelog for bump to 4bf49d9 ([f7eec72](https://github.com/webmappsrl/webmapp-app/commit/f7eec7277bef83b3551a5c9d468c673670047b7a))
+<!-- COMMIT_DESC -->
+    
+    - fix(geolocation): 🐛 remove pause recording call and update UGC track recording state
+    Removed the call to `pauseRecording` in `GeolocationService` as it was unnecessary and could cause issues with the recording state. Additionally, ensured that the UGC track recording state is reset properly by dispatching `setCurrentUgcTrackRecording` with default values.
+    
+    Also, removed the call to `removeCurrentUgcTrack` in `localForage.ts` to prevent unintended removal of UGC track data after saving.
 * **wm-core:** changelog for bump to 571c827 ([6b22e23](https://github.com/webmappsrl/webmapp-app/commit/6b22e23f020063925064747dfc5d8da07b544126))
-* **wm-core:** changelog for bump to b35e4d6 ([c4ba468](https://github.com/webmappsrl/webmapp-app/commit/c4ba4685f38d507c56881a68e8f62668a03517fd))
+<!-- COMMIT_DESC -->
+    
+    - refactor: update import paths for better organization <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Revises import paths to improve module organization by moving
+    references from 'home-result-tab' to 'user-activity'. Adjusts
+    variable assignments to align with the new import paths for
+    consistency.
+    
+    Relates to oc_6780
+    
+    - chore(home): add e2e attributes to tabs <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Introduces e2e attributes to track and POIs tabs for enhanced
+    testability in end-to-end testing.
+    
+    Relates to #6780
+    
+    - refactor: standardize filter type usage <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Replaces specific string types with reusable `FilterType`
+    and `HomeResultTab` types for filter-related actions and
+    state throughout the codebase. This enhances consistency
+    and maintainability.
+    
+    Relates to oc_6780
+    
+    - chore(home): enhance tab selection logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Replaces logic to determine which tab to show based on available data,
+    prioritizing user preference and results availability.
+    
+    Removes redundant effects from user activity management, simplifying
+    code and reducing unnecessary updates.
+    
+    - chore(localization): 🌐 enhance language handling in LangService
+    Updated the LangService to utilize the device's language code as the default language if available. Integrated the DeviceService to fetch the device language and combined it with the existing language configuration. This improves user experience by ensuring the app defaults to the user's preferred language when available.
 * **wm-types:** changelog for bump to ec39ac9 ([e339305](https://github.com/webmappsrl/webmapp-app/commit/e339305f91217cf711d281154c5aec208512070e))
-* **wm-types:** changelog for bump to f9b7df9 ([3a01185](https://github.com/webmappsrl/webmapp-app/commit/3a011855e1ad5c6fd296f2f543f10f6a3ec4b2df))
+<!-- COMMIT_DESC -->
+    
+    - refactor: rename and update type definitions <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Renames module for improved clarity and updates type definitions
+    to allow null values, enhancing flexibility in data handling.
+    
+    Relates to oc_6780
+    
+    - chore: add new types for home result tab <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
+    Introduces new TypeScript types for home result tab and filter.
+    Exports the new types for external use.
+    
+    Relates to oc_6780
 
 ## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
 
@@ -34,7 +123,6 @@
 <!-- COMMIT_DESC -->
     
     Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
-<!-- COMMIT_DESC -->
     
     - chore(device): ✨ add isAppMobile property to enhance mobile detection
     Introduced a new property `isAppMobile` in the `DeviceService` to better determine if the application is running on a mobile device but not in a browser. Updated the configuration effect and reducer to incorporate this new property.
@@ -200,7 +288,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-
 ## [3.1.6](https://github.com/webmappsrl/webmapp-app/compare/v3.1.5...v3.1.6) (2025-10-28)
 
 
@@ -271,7 +358,6 @@
     
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
-### Miscellaneous
 
 * **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
 <!-- COMMIT_DESC -->
@@ -309,7 +395,6 @@
     
     - chore(track-properties): ✨ add wm-inner-component-html for excerpt display (#135)
     Added a new `wm-inner-component-html` element to display excerpts within the track properties component. This element is conditionally rendered based on the availability of the `excerpt` property from `ecTrackProperties`. The `enableDismiss` attribute is set to false to prevent dismissal, and the content is transformed using the `wmtrans` pipe.
-<!-- COMMIT_DESC -->
     
     * chore(poi): ✨ add Point of Interest (POI) recording functionality
     
