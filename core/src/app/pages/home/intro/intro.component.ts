@@ -6,6 +6,7 @@ import {confAPP} from '@wm-core/store/conf/conf.selector';
 import {APP} from '@wm-types/config';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-home-intro',
   templateUrl: './intro.component.html',
   styleUrls: ['./intro.component.scss'],

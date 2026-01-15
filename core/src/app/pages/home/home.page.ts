@@ -11,6 +11,7 @@ import {currentEcLayer, ugcOpened} from '@wm-core/store/user-activity/user-activ
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 
 @Component({
+  standalone: false,
   selector: 'wm-page-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],

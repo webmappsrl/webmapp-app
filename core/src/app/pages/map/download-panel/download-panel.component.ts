@@ -28,6 +28,7 @@ import {take} from 'rxjs/operators';
 import {from} from 'rxjs';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 @Component({
+  standalone: false,
   selector: 'wm-download-panel',
   templateUrl: './download-panel.component.html',
   styleUrls: ['./download-panel.component.scss'],

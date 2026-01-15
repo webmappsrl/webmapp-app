@@ -3,6 +3,7 @@ import {WmFeature, WmFeatureCollection} from '@wm-types/feature';
 import {LineString} from 'geojson';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-card-track',
   templateUrl: './card-track.component.html',
   styleUrls: ['./card-track.component.scss'],

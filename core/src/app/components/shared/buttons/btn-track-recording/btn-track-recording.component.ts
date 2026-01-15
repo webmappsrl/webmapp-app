@@ -21,6 +21,7 @@ import {
   styleUrls: ['./btn-track-recording.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class BtnTrackRecordingComponent {
   @Input() currentTrack: any;
@@ -33,7 +34,7 @@ export class BtnTrackRecordingComponent {
     this._modalController
       .create({
         component: LoginComponent,
-        swipeToClose: true,
+        canDismiss: true,
         mode: 'ios',
         id: 'webmapp-login-modal',
       })

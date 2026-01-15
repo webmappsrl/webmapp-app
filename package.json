@@ -6,12 +6,12 @@
   "license": "Check the license in the LICENSE.md",
   "private": true,
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.1",
-    "@angular-devkit/schematics": "16.2.1",
-    "@angular/compiler": "16.0.0",
-    "@angular/compiler-cli": "16.0.0",
-    "@capacitor/assets": "^2.0.4",
-    "@capacitor/cli": "^7.0.0",
+    "@angular-devkit/build-angular": "^20.3.14",
+    "@angular-devkit/schematics": "20.3.14",
+    "@angular/compiler": "20.3.16",
+    "@angular/compiler-cli": "20.3.16",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.4.5",
     "@types/dotenv": "^8.2.0",
     "color": "^4.2.0",
     "cordova-res": "0.15.4",
@@ -36,6 +36,6 @@
     "test": "cd core && npm run test"
   },
   "dependencies": {
-    "@capacitor/device": "^7.0.0"
+    "@capacitor/device": "^7.0.3"
   }
 }

@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {IonSlides, ModalController, NavController} from '@ionic/angular';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ModalController, NavController} from '@ionic/angular';
 import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {Observable} from 'rxjs';
@@ -14,6 +14,7 @@ import {
 import {Point, LineString} from 'geojson';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
+  standalone: false,
   selector: 'webmapp-modal-registersuccess',
   templateUrl: './modal-success.component.html',
   styleUrls: ['./modal-success.component.scss'],
@@ -27,7 +28,7 @@ export class ModalSuccessComponent implements OnInit {
   @Input() track: WmFeature<LineString, LineStringProperties>;
   @Input() type: ESuccessType;
   @Input() waypoint: WmFeature<Point, PointProperties>;
-  @ViewChild('slider') slider: IonSlides;
+  @ViewChild('slider', {read: ElementRef}) slider: ElementRef;
 
   confMap$: Observable<any> = this._store.select(confMAP);
   isPhotos = false;

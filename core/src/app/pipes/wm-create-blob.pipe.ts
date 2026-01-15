@@ -2,6 +2,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {IPhotoItem} from '@wm-core/services/camera.service';
 import {Feature} from 'geojson';
 @Pipe({
+  standalone: false,
   name: 'wmCreateBlob',
   pure: false,
 })

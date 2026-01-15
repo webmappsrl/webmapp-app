@@ -31,6 +31,7 @@ import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 import {loadIcons} from '@wm-core/store/icons/icons.actions';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],

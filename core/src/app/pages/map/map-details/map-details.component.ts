@@ -21,6 +21,7 @@ import {skip} from 'rxjs/operators';
 import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 
 @Component({
+  standalone: false,
   selector: 'wm-map-details',
   templateUrl: './map-details.component.html',
   styleUrls: ['./map-details.component.scss'],

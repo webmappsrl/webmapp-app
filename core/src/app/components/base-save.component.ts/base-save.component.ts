@@ -14,6 +14,7 @@ import {take, tap} from 'rxjs/operators';
  * @example
  * ```typescript
  * @Component({
+  standalone: false,
  *   selector: 'app-my-form',
  *   template: `
  *     <ion-content #ionContent>

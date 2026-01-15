@@ -3,6 +3,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {Animation, AnimationController, Platform} from '@ionic/angular';
 import {Feature, LineString} from 'geojson';
 @Component({
+  standalone: false,
   selector: 'webmapp-map-track-card',
   templateUrl: './map-track-card.component.html',
   styleUrls: ['./map-track-card.component.scss'],

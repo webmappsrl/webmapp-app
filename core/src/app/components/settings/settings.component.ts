@@ -21,6 +21,7 @@ import {loadSignOuts} from '@wm-core/store/auth/auth.actions';
 import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 
 @Component({
+  standalone: false,
   selector: 'wm-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
@@ -195,7 +196,7 @@ export class SettingsComponent {
             componentProps: {
               html: conf.html,
             },
-            swipeToClose: true,
+            canDismiss: true,
             mode: 'ios',
           });
         }),

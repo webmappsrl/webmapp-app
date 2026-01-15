@@ -18,6 +18,7 @@ import {Feature, LineString} from 'geojson';
 import {getEcTrack} from '@wm-core/utils/localForage';
 import {poi, track} from '@wm-core/store/features/features.selector';
 @Component({
+  standalone: false,
   selector: 'app-poi',
   templateUrl: './poi.page.html',
   styleUrls: ['./poi.page.scss'],

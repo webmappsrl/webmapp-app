@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 import {DeviceService} from '@wm-core/services/device.service';
 import {Feature, LineString} from 'geojson';
 @Component({
+  standalone: false,
   selector: 'webmapp-card-slider',
   templateUrl: './card-slider.component.html',
   styleUrls: ['./card-slider.component.scss'],

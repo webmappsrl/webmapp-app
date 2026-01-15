@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
+  standalone: false,
   selector: 'app-modal-gift-coins',
   templateUrl: './modal-gift-coins.component.html',
   styleUrls: ['./modal-gift-coins.component.scss'],

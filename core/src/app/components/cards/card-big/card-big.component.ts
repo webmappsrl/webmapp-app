@@ -7,6 +7,7 @@ import {StatusService} from 'src/app/services/status.service';
 import {iLocalString} from 'src/app/types/model';
 import {Feature, LineString} from 'geojson';
 @Component({
+  standalone: false,
   selector: 'webmapp-card-big',
   templateUrl: './card-big.component.html',
   styleUrls: ['./card-big.component.scss'],

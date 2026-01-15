@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { IonSlides } from '@ionic/angular';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {} from '@ionic/angular';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
@@ -13,7 +14,7 @@ export class GalleryComponent implements OnInit {
 
   public actualIndex = 1;
 
-  @ViewChild('slider') slider: IonSlides;
+  @ViewChild('slider', {read: ElementRef}) slider: ElementRef;
 
   @Output("closing") closing = new EventEmitter();
 
@@ -23,8 +24,9 @@ export class GalleryComponent implements OnInit {
 
   @Input("startImage") set setStart(imgIdx: number) {
     setTimeout(() => {
-      if (this.slider) {
-        this.slider.slideTo(imgIdx);
+      const swiper = this.slider?.nativeElement?.swiper;
+      if (swiper) {
+        swiper.slideTo(imgIdx);
         this.actualIndex = imgIdx + 1;
       }
       else {
@@ -56,8 +58,10 @@ export class GalleryComponent implements OnInit {
   }
 
   async changeIndex(ev) {
-    const idx = await this.slider.getActiveIndex();
-    this.actualIndex = idx + 1;
+    const swiper = this.slider?.nativeElement?.swiper;
+    if (swiper) {
+      this.actualIndex = swiper.activeIndex + 1;
+    }
   }
 
 }

@@ -13,6 +13,7 @@ import {downloadPanelStatus} from '@wm-core/types/downloadpanel.enum';
 import {WmFeature} from '@wm-types/feature';
 import {LineString, MultiPolygon} from 'geojson';
 @Component({
+  standalone: false,
   selector: 'wm-download',
   templateUrl: './download.component.html',
   styleUrls: ['./download.component.scss'],

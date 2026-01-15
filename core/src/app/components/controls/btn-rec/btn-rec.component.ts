@@ -2,6 +2,7 @@ import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'wm-btn-rec',
   templateUrl: './btn-rec.component.html',
   styleUrls: ['./btn-rec.component.scss'],

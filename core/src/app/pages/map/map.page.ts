@@ -81,6 +81,7 @@ export interface IDATALAYER {
 }
 
 @Component({
+  standalone: false,
   selector: 'webmapp-map-page',
   templateUrl: './map.page.html',
   styleUrls: ['./map.page.scss'],
