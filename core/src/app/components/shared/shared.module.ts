@@ -2,6 +2,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {BtnFilterComponent} from './btn-filter/btn-filter.component';
 import {CommonModule} from '@angular/common';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {FormFieldComponent} from './form-field/form-field.component';
 import {GalleryComponent} from './gallery/gallery.component';
 import {IonicModule} from '@ionic/angular';
@@ -36,5 +37,6 @@ const components = [
     WmCoreModule,
   ],
   exports: [...components, ButtonsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SharedModule {}

@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {IonicModule} from '@ionic/angular';
 import {CardBigComponent} from './card-big/card-big.component';
@@ -12,5 +12,6 @@ const cardComponents = [CardBigComponent, CardSliderComponent, CardTrackComponen
   declarations: cardComponents,
   imports: [CommonModule, IonicModule, WmPipeModule, WmSharedModule],
   exports: cardComponents,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CardsModule {}
