@@ -1,6 +1,13 @@
 <div class="webmapp-card-slider-container">
   <h3 class="webmapp-card-slider-header">{{ title }}</h3>
-  <swiper-container [config]="sliderOptions" class="webmapp-card-slider">
+  <swiper-container
+    [initialSlide]="sliderOptions.initialSlide"
+    [speed]="sliderOptions.speed"
+    [spaceBetween]="sliderOptions.spaceBetween"
+    [slidesOffsetAfter]="sliderOptions.slidesOffsetAfter"
+    [slidesOffsetBefore]="sliderOptions.slidesOffsetBefore"
+    [slidesPerView]="sliderOptions.slidesPerView"
+    class="webmapp-card-slider">
     <ng-container *ngIf="!data">
       <swiper-slide>
         <webmapp-card-big></webmapp-card-big>

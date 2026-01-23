@@ -3,7 +3,9 @@
 
   <swiper-container
     #slider
-    [config]="sliderOptions"
+    [initialSlide]="sliderOptions.initialSlide"
+    [slidesPerView]="sliderOptions.slidesPerView"
+    [preloadImages]="sliderOptions.preloadImages"
     class="webmapp-gallery-slider"
     (swiperslidechange)="changeIndex($event)"
   >

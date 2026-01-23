@@ -1,5 +1,5 @@
 import {HttpClientModule} from '@angular/common/http';
-import {NgModule} from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import {IonicModule, IonicRouteStrategy} from '@ionic/angular';
 import {WmCoreModule} from '@wm-core/wm-core.module';
 import {registerLocaleData} from '@angular/common';
@@ -73,6 +73,7 @@ export const langs: WmTranslations = {
     {provide: APP_TRANSLATION, useValue: langs},
   ],
   bootstrap: [AppComponent, MetaComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {
   constructor(private _environmentSvc: EnvironmentService) {
