@@ -10,22 +10,23 @@ export const appFR = {
     'onoff': 'Onoff',
     'real_dirt': 'Chemin de terre',
     'bar': 'Bar',
+    'real-dirt': 'Chemin de terre'
   },
   'sidemenu': {
     'project': 'Le projet',
     'offline': 'Hors ligne',
     'settings': 'Réglages',
     'credits': 'Crédits',
-    'disclaimer': 'Clause de non-responsabilité',
+    'disclaimer': 'Clause de non-responsabilité'
   },
   'components': {
     'cardtrack': {
       'delete': 'Effacer',
-      'remove': 'Supprimer',
+      'remove': 'Supprimer'
     },
     'map': {
       'btnrec': {
-        'slide': 'Faites glisser pour vous inscrire',
+        'slide': 'Faites glisser pour vous inscrire'
       },
       'register': {
         'cancel': 'Annuler',
@@ -33,8 +34,8 @@ export const appFR = {
         'title': 'Enregistrer',
         'track': 'Trace',
         'vocal': 'Note vocale',
-        'waypoint': 'Waypoint',
-      },
+        'waypoint': 'Waypoint'
+      }
     },
     'searchbar': {
       'filters': 'Filtrer par',
@@ -43,36 +44,36 @@ export const appFR = {
       'notracks': 'Aucun parcours ne correspond aux recherches effectuées',
       'placeholder': 'Chercher',
       'places': 'Endroits',
-      'tracks': 'Traces',
+      'tracks': 'Traces'
     },
     'slopechart': {
       'slope': {
-        'label': 'pente',
+        'label': 'pente'
       },
       'surfaces': {
         'asphalt': {
-          'label': 'asphalte',
+          'label': 'asphalte'
         },
         'concrete': {
-          'label': 'béton',
+          'label': 'béton'
         },
         'dirt': {
-          'label': 'terrain',
+          'label': 'terrain'
         },
         'grass': {
-          'label': 'herbe',
+          'label': 'herbe'
         },
         'gravel': {
-          'label': 'gravier',
+          'label': 'gravier'
         },
         'paved': {
-          'label': 'pavé',
+          'label': 'pavé'
         },
         'sand': {
-          'label': 'sable',
-        },
-      },
-    },
+          'label': 'sable'
+        }
+      }
+    }
   },
   'generic': {
     'cancel': 'Annuler',
@@ -83,7 +84,7 @@ export const appFR = {
     'minute': 'min',
     'ok': 'ok',
     'retry': 'Refaire',
-    'warning': 'Avertissement',
+    'warning': 'Avertissement'
   },
   'modals': {
     'coin': {
@@ -95,34 +96,31 @@ export const appFR = {
       'info3': 'Recevez des notifications de proximité',
       'subinfo1': 'Achetez une seule pièce pour 1 €',
       'subinfo2': 'Navigation précise même lorsque vous êtes hors ligne',
-      'subinfo3':
-        "Nous vous avertissons lorsque vous êtes à proximité de points d'intérêt le long du parcours",
+      'subinfo3': 'Nous vous avertissons lorsque vous êtes à proximité de points d\'intérêt le long du parcours'
     },
     'giftcoin': {
       'button': 'Commencez à explorer',
-      'info':
-        'Vous obtenez immédiatement 2 pièces webmapp en cadeau pour télécharger du contenu hors ligne !',
-      'title': 'Bienvenue sur Webmapp !',
+      'info': 'Vous obtenez immédiatement 2 pièces webmapp en cadeau pour télécharger du contenu hors ligne !',
+      'title': 'Bienvenue sur Webmapp !'
     },
     'login': {
       'email': 'E-mail',
       'errors': {
-        '401':
-          "Les informations d'identification que vous avez saisies sont incorrectes. Veuillez vérifier votre e-mail et votre mot de passe et réessayer",
+        '401': 'Les informations d\'identification que vous avez saisies sont incorrectes. Veuillez vérifier votre e-mail et votre mot de passe et réessayer',
         'form': {
           'emailInvalid': 'Vous avez entré un email invalide',
-          'emailRequired': "L'e-mail est requis",
-          'passwordRequired': 'Mot de passe requis',
+          'emailRequired': 'L\'e-mail est requis',
+          'passwordRequired': 'Mot de passe requis'
         },
-        'generic': "Oops! Quelque chose s'est mal passé ! Attendez quelques minutes et réessayez.",
+        'generic': 'Oops! Quelque chose s\'est mal passé ! Attendez quelques minutes et réessayez.'
       },
       'forgotPassword': 'Avez-vous oublié votre mot de passe?',
       'login': 'Connexion',
       'message': 'Connectez-vous avec vos identifiants pour continuer.',
       'password': 'Mot de passe',
-      'rememberLogin': "N'oubliez pas vos identifiants",
+      'rememberLogin': 'N\'oubliez pas vos identifiants',
       'title': 'Se connecter',
-      'welcome': 'Bienvenue!',
+      'welcome': 'Bienvenue!'
     },
     'photo': {
       'next': 'Next',
@@ -130,7 +128,7 @@ export const appFR = {
         'cancel': 'Annuler',
         'library': 'De la bibliothèque',
         'shot': 'Prendre une photo',
-        'title': "Origine de l'image",
+        'title': 'Origine de l\'image'
       },
       'save': {
         'addphoto': 'Ajouter des photos',
@@ -140,84 +138,78 @@ export const appFR = {
           'cancel': 'Annuler',
           'confirm': 'Oui, supprimer',
           'text': 'Si vous le supprimez, il ne sera pas ajouté à cet enregistrement',
-          'title': "Voulez-vous vraiment supprimer cette photo de l'enregistrement ?",
+          'title': 'Voulez-vous vraiment supprimer cette photo de l\'enregistrement ?'
         },
         'placeholder': 'Ici vous pouvez entrer un titre',
         'savebtn': 'Sauver',
-        'title': 'Enregistrer des photos',
+        'title': 'Enregistrer des photos'
       },
       'single': {
         'formphototitle': 'Titre',
         'placeholder': 'Ici vous pouvez entrer un titre',
         'savebtn': 'Fait',
-        'title': 'Modifier des photos',
-      },
+        'title': 'Modifier des photos'
+      }
     },
     'settings': {
       'alert': {
-        'logout': 'Voulez-vous vraiment déconnecter votre compte ?',
+        'logout': 'Voulez-vous vraiment déconnecter votre compte ?'
       },
       'logout': 'Se déconnecter',
       'title': 'Réglages',
-      'version': 'Version',
+      'version': 'Version'
     },
     'storesuccess': {
       'back': 'Retour à la recherche',
       'buttondownload': 'Télécharger maintenant',
       'continue': 'Vous souhaitez utiliser votre pièce immédiatement pour télécharger',
       'continue2': '?',
-      'info':
-        'Vous pouvez consulter le solde de vos pièces directement dans votre espace personnel !',
+      'info': 'Vous pouvez consulter le solde de vos pièces directement dans votre espace personnel !',
       'or': 'Ou',
-      'title': "Merci d'avoir acheté votre première pièce !",
+      'title': 'Merci d\'avoir acheté votre première pièce !'
     },
     'success': {
       'photos': {
-        'text':
-          'Vos photos ont été enregistrées avec succès. Vous pouvez les consulter en accédant à votre profil.',
-        'title': 'Photos enregistrées avec succès !',
+        'text': 'Vos photos ont été enregistrées avec succès. Vous pouvez les consulter en accédant à votre profil.',
+        'title': 'Photos enregistrées avec succès !'
       },
       'return': 'Retour à explorer',
       'track': {
         'avgspeed': 'Vitesse moyenne',
         'odo': 'Km parcourus',
         'slope': 'Pente',
-        'text':
-          'La trace a été enregistrée avec succès. Vous pouvez le consulter en vous connectant à votre profil.',
+        'text': 'La trace a été enregistrée avec succès. Vous pouvez le consulter en vous connectant à votre profil.',
         'time': 'Temps',
         'title': 'Activité enregistrée avec succès !',
-        'topspeed': 'Pleine vitesse',
+        'topspeed': 'Pleine vitesse'
       },
       'waypoint': {
-        'text':
-          'Vous avez enregistré avec succès votre waypoint. Vous pouvez le consulter en vous connectant à votre profil.',
-        'title': 'Waypoint enregistré avec succès !',
-      },
-    },
+        'text': 'Vous avez enregistré avec succès votre waypoint. Vous pouvez le consulter en vous connectant à votre profil.',
+        'title': 'Waypoint enregistré avec succès !'
+      }
+    }
   },
   'pages': {
     'downloadlist': {
       'cancel': 'Annuler',
       'deleteselected': 'Supprimer les éléments sélectionnés',
-      'nodata': "Vous n'avez pas encore téléchargé de trace",
-      'nodata2':
-        'Avec le contenu pour une utilisation hors ligne, vous pouvez naviguer en toute tranquillité même sans connexion !',
+      'nodata': 'Vous n\'avez pas encore téléchargé de trace',
+      'nodata2': 'Avec le contenu pour une utilisation hors ligne, vous pouvez naviguer en toute tranquillité même sans connexion !',
       'nodatabtn': 'Explorer',
       'select': 'Sélectionner',
-      'title': 'Téléchargements',
+      'title': 'Téléchargements'
     },
     'favourites': {
-      'nodata':
-        "Il n'y a pas de traces favorites, cliquez sur une icône de piste pour l'ajouter à cette liste",
-      'title': 'Favoris',
+      'nodata': 'Il n\'y a pas de traces favorites, cliquez sur une icône de piste pour l\'ajouter à cette liste',
+      'title': 'Favoris'
     },
     'home': {
       'button': 'Choisissez un point de départ',
       'closerTracks': 'Itinéraires à proximité',
       'intro': 'Planifions ensemble votre prochaine aventure',
       'mostViewedTracks': 'Itinéraires les plus consultés',
-      'nocloserTracks': "Il ne semble pas y avoir de chemin à proximité de l'emplacement actuel",
-      'welcome': 'Bienvenue!',
+      'nocloserTracks': 'Il ne semble pas y avoir de chemin à proximité de l\'emplacement actuel',
+      'welcome': 'Bienvenue!'
     },
     'itinerary': {
       'btnFullMapExpand': 'Développer',
@@ -228,7 +220,7 @@ export const appFR = {
       'btnshare': 'Partager',
       'description': {
         'description': 'Description',
-        'gallery': 'Galerie',
+        'gallery': 'Galerie'
       },
       'detail': {
         'from': 'Départ',
@@ -239,13 +231,13 @@ export const appFR = {
         'ele_from': 'Altitude de départ',
         'ele_max': 'Altitude maximale',
         'ele_min': 'Altitude minimale',
-        'ele_to': 'Altitude finale',
+        'ele_to': 'Altitude finale'
       },
       'directions': 'Obtenir des directions',
       'download': 'Télécharger',
       'downloadpanel': {
         'complete': 'Téléchargement terminé',
-        'dontclose': "Ne fermez pas l'application pendant la phase d'installation des données",
+        'dontclose': 'Ne fermez pas l\'application pendant la phase d\'installation des données',
         'downdata': 'Date de téléchargement',
         'downsize': 'Taille du téléchargement',
         'download': 'Télécharger',
@@ -255,22 +247,22 @@ export const appFR = {
         'downmedia': 'Téléchargements de médias',
         'downsetup': 'La configuration initiale',
         'gotobtn': 'Accéder à mes téléchargements',
-        'install': 'Installation',
+        'install': 'Installation'
       },
       'favbtn': {
         'isFavourite': 'Ajouté aux favoris !',
-        'isNotFavourite': 'Removed from favorites!',
+        'isNotFavourite': 'Removed from favorites!'
       },
       'modalconfirm': {
         'cancel': 'Annuler',
         'confirm': 'Quitter',
         'text': 'Quitter sans terminer le téléchargement du morceau ?',
-        'title': 'Arrêter le téléchargement ?',
+        'title': 'Arrêter le téléchargement ?'
       },
       'modalNotImpemented': {
         'text': 'Bientôt disponible',
         'title': 'Actuellement indisponible',
-        'confirm': 'ok',
+        'confirm': 'ok'
       },
       'navigate': 'Navigate',
       'share': 'Partager',
@@ -281,44 +273,44 @@ export const appFR = {
       'tabviability': 'Viabilité',
       'tabwalkable': 'Accessibilité',
       'viability': {
-        'info': "Plus d'informations",
-        'title': 'Praticabilité du parcours',
-      },
+        'info': 'Plus d\'informations',
+        'title': 'Praticabilité du parcours'
+      }
     },
     'map': {
       'loading': 'Recherche en cours...',
       'recordingbtn': 'Enregistrement en cours...',
-      'searchherebtn': 'Rechercher dans ce domaine',
+      'searchherebtn': 'Rechercher dans ce domaine'
     },
     'photodetail': {
-      'delete': "Supprimer l'inscription",
-      'edit': "Modifier l'inscription",
-      'title': 'Photo recorded',
+      'delete': 'Supprimer l\'inscription',
+      'edit': 'Modifier l\'inscription',
+      'title': 'Photo recorded'
     },
     'photolist': {
-      'noitem': "Il n'y a actuellement aucune photo enregistrée",
-      'title': 'Photos enregistrées',
+      'noitem': 'Il n\'y a actuellement aucune photo enregistrée',
+      'title': 'Photos enregistrées'
     },
     'profile': {
       'data': {
         'data': 'Utilisation de données',
         'downloads': 'Téléchargements',
-        'tracks': 'Traces téléchargées',
+        'tracks': 'Traces téléchargées'
       },
       'loggedOut': {
-        'login': "S'identifier",
-        'signup': "S'inscrire",
+        'login': 'S\'identifier',
+        'signup': 'S\'inscrire',
         'slides': {
           '0': 'Accédez et téléchargez vos itinéraires favoris',
-          '1': 'Vous pouvez également les partager avec vos compagnons de voyage',
-        },
+          '1': 'Vous pouvez également les partager avec vos compagnons de voyage'
+        }
       },
       'records': {
         'photos': 'Photos',
         'title': 'Archives',
         'tracks': 'Traces',
         'vocals': 'Notes vocales',
-        'waypoints': 'Waypoints',
+        'waypoints': 'Waypoints'
       },
       'title': 'Profil',
       'lang': 'Langue',
@@ -326,7 +318,7 @@ export const appFR = {
       'projectlink': 'Projet',
       'disclaimerlink': 'Clause de non-responsabilité',
       'creditslink': 'Crédits',
-      'privacylink': 'Privacy',
+      'privacylink': 'Privacy'
     },
     'register': {
       'averagespeed': 'Vitesse moyenne',
@@ -336,31 +328,30 @@ export const appFR = {
         'cancel': 'Annuler',
         'confirm': 'Confirm',
         'text': 'Une fois validé, vous ne pourrez plus reprendre cette navigation',
-        'title': "Confirmez-vous que vous souhaitez mettre fin à l'enregistrement ?",
+        'title': 'Confirmez-vous que vous souhaitez mettre fin à l\'enregistrement ?'
       },
       'modalexit': {
         'cancel': 'Annuler',
         'confirm': 'Effacer',
-        'text':
-          "En complétant l'action, la piste sera supprimée de votre profil et de Webmapp. L'opération ne peut pas être annulée.",
-        'title': 'Supprimer pour toujours?',
+        'text': 'En complétant l\'action, la piste sera supprimée de votre profil et de Webmapp. L\'opération ne peut pas être annulée.',
+        'title': 'Supprimer pour toujours?'
       },
       'modalphotos': {
         'deselectall': 'Décocher tout',
-        'noimages': "Il n'y a pas d'images prises lors de l'enregistrement de l'itinéraire",
+        'noimages': 'Il n\'y a pas d\'images prises lors de l\'enregistrement de l\'itinéraire',
         'savebtn': 'Charger',
         'selectall': 'Tout sélectionner',
-        'title': 'Télécharger des photos',
+        'title': 'Télécharger des photos'
       },
       'modalsave': {
         'closemodal': {
-          'back': "Retour à l'inscription",
+          'back': 'Retour à l\'inscription',
           'cancel': 'Annuler',
-          'delete': 'Delete registration',
+          'delete': 'Delete registration'
         },
         'deletebtn': 'QUITTER SANS SAUVEGARDER',
-        'formactivity': "Type d'activité",
-        'formactivityerror': "Le type d'entreprise est un champ obligatoire",
+        'formactivity': 'Type d\'activité',
+        'formactivityerror': 'Le type d\'entreprise est un champ obligatoire',
         'formactivityplaceholder': 'Sélectionner',
         'formdescription': 'Description',
         'formdescriptionplaceholder': 'Si vous le souhaitez, vous pouvez ajouter une description',
@@ -371,21 +362,20 @@ export const appFR = {
         'phototextshort': 'Photo',
         'savebtn': 'sauvegarder',
         'title': 'Enregistrer la trace',
-        'titleEdit': 'Modifier la trace',
+        'titleEdit': 'Modifier la trace'
       },
       'odo': 'Km parcourus',
       'pausebtn': 'Pause',
       'resumebtn': 'Reprendre',
       'stopbtn': 'Finir',
       'time': 'En mouvement',
-      'title': 'Enregistrer une trace',
+      'title': 'Enregistrer une trace'
     },
     'registeruser': {
       'cf': 'Code fiscal',
       'cfextra': 'Pourquoi vous demande-t-on le CF ?',
       'cfph': 'XXXXXXXXXXXXXXXX',
-      'cfpopovermessage':
-        'Si vous êtes membre CAI, inscrivez votre CF lors de votre inscription. Pour vous, le téléchargement des étapes du Sentiero Italia CAI sera automatiquement gratuit !',
+      'cfpopovermessage': 'Si vous êtes membre CAI, inscrivez votre CF lors de votre inscription. Pour vous, le téléchargement des étapes du Sentiero Italia CAI sera automatiquement gratuit !',
       'cfpopovertitle': 'Pourquoi vous demande-t-on le CF ?',
       'confirmPassword': 'Confirmez le mot de passe',
       'confirmPasswordph': 'Répétez le mot de passe',
@@ -393,17 +383,16 @@ export const appFR = {
       'emailph': 'example@email.com',
       'errors': {
         'form': {
-          'nameRequired': 'Un nom doit être saisi',
+          'nameRequired': 'Un nom doit être saisi'
         },
-        'form.cfInvalid': "Le code fiscal n'est pas valide",
-        'form.confirmPasswordInvalid':
-          'La confirmation ne correspond pas au mot de passe saisi ci-dessus',
+        'form.cfInvalid': 'Le code fiscal n\'est pas valide',
+        'form.confirmPasswordInvalid': 'La confirmation ne correspond pas au mot de passe saisi ci-dessus',
         'form.confirmPasswordRequired': 'La confirmation du mot de passe est requise',
-        'form.emailInvalid': "L'e-mail est invalide",
-        'form.emailRequired': "Il est nécessaire d'insérer un email",
-        'form.passwordRequired': 'Un mot de passe doit être saisi',
+        'form.emailInvalid': 'L\'e-mail est invalide',
+        'form.emailRequired': 'Il est nécessaire d\'insérer un email',
+        'form.passwordRequired': 'Un mot de passe doit être saisi'
       },
-      'genericError': "Erreur lors de l'enregistrement de l'utilisateur",
+      'genericError': 'Erreur lors de l\'enregistrement de l\'utilisateur',
       'loading': 'Inscription en cours',
       'name': 'Nom',
       'nameph': 'Insérez votre nom',
@@ -414,8 +403,8 @@ export const appFR = {
       'privacy3': '',
       'privacylink1': 'Politique de confidentialité',
       'privacylink2': 'Termes et conditions',
-      'registerbutton': "S'inscrire",
-      'title': 'Rejoignez la communauté de Webmapp !',
+      'registerbutton': 'S\'inscrire',
+      'title': 'Rejoignez la communauté de Webmapp !'
     },
     'route': {
       'btnFullMapExpand': 'Développer',
@@ -426,7 +415,7 @@ export const appFR = {
       'btnshare': 'Partager',
       'description': {
         'description': 'Description',
-        'gallery': 'Galerie',
+        'gallery': 'Galerie'
       },
       'detail': {
         'from': 'Départ',
@@ -439,14 +428,14 @@ export const appFR = {
         'ele_min': 'Élévation minimale',
         'ele_to': 'Élévation de finition',
         'difficulty': 'Difficulté',
-        'duration_forward': "durée d'aller",
-        'duration_backward': 'durée de retour',
+        'duration_forward': 'durée d\'aller',
+        'duration_backward': 'durée de retour'
       },
       'directions': 'Obtenir des directions',
       'download': 'Télécharger',
       'downloadpanel': {
         'complete': 'Téléchargement terminé',
-        'dontclose': "Ne fermez pas l'application pendant la phase d'installation des données",
+        'dontclose': 'Ne fermez pas l\'application pendant la phase d\'installation des données',
         'downdata': 'Téléchargement de données',
         'downsize': 'Taille du téléchargement',
         'download': 'Télécharger',
@@ -456,17 +445,17 @@ export const appFR = {
         'downmedia': 'Téléchargements de médias',
         'downsetup': 'La configuration initiale',
         'gotobtn': 'Accéder à mes téléchargements',
-        'install': 'Installation',
+        'install': 'Installation'
       },
       'favbtn': {
         'isFavourite': 'Ajouté aux favoris !',
-        'isNotFavourite': 'Supprimé des favoris !',
+        'isNotFavourite': 'Supprimé des favoris !'
       },
       'modalconfirm': {
         'cancel': 'Annuler',
         'confirm': 'Sortir',
         'text': 'Quitter sans terminer le téléchargement du morceau ?',
-        'title': 'Arrêter le téléchargement ?',
+        'title': 'Arrêter le téléchargement ?'
       },
       'navigate': 'Naviguer',
       'share': 'Partager',
@@ -478,8 +467,8 @@ export const appFR = {
       'tabwalkable': 'Accessibilité',
       'viability': {
         'info': 'Autre info',
-        'title': 'Praticabilité du parcours',
-      },
+        'title': 'Praticabilité du parcours'
+      }
     },
     'store': {
       'button1': 'Une pièce',
@@ -488,25 +477,24 @@ export const appFR = {
       'button50': 'Pack 50 Pièces',
       'main': 'Pièces Webmapp',
       'text': 'Vous pouvez acheter une seule pièce ou choisir parmi un ou plusieurs packages !',
-      'text2':
-        'Les pièces sont utilisées pour télécharger des itinéraires et du contenu hors ligne, et accéder à de nombreux avantages !',
-      'title': 'Magasin',
+      'text2': 'Les pièces sont utilisées pour télécharger des itinéraires et du contenu hors ligne, et accéder à de nombreux avantages !',
+      'title': 'Magasin'
     },
     'trackdetail': {
       'avgspeed': 'Vitesse moyenne',
-      'delete': "Supprimer l'inscription",
+      'delete': 'Supprimer l\'inscription',
       'details': 'Détails',
       'distance': 'Km parcourus',
-      'edit': "Modifier l'inscription",
+      'edit': 'Modifier l\'inscription',
       'photos': 'Photo',
       'slope': 'Pente',
       'time': 'Temps',
       'title': 'Trace enregistrée',
-      'topspeed': 'Pleine vitesse',
+      'topspeed': 'Pleine vitesse'
     },
     'tracklist': {
-      'noitem': "Il n'y a actuellement aucune trace enregistrée",
-      'title': 'Traces enregistrées',
+      'noitem': 'Il n\'y a actuellement aucune trace enregistrée',
+      'title': 'Traces enregistrées'
     },
     'waypoint': {
       'here': 'Tu es là:',
@@ -523,69 +511,67 @@ export const appFR = {
         'formtypeplaceholder': 'Sélectionner',
         'phototextshort': 'photo',
         'save': 'Sauvegarder ',
-        'title': 'Enregistrer un waypoint',
+        'title': 'Enregistrer un waypoint'
       },
       'save': 'Enregistrer le waypoint',
-      'title': 'Enregistrer un waypoint',
+      'title': 'Enregistrer un waypoint'
     },
     'waypointdetail': {
-      'delete': "Supprimer l'inscription",
-      'edit': "Modifier l'inscription",
-      'title': 'Waypoint enregistré',
+      'delete': 'Supprimer l\'inscription',
+      'edit': 'Modifier l\'inscription',
+      'title': 'Waypoint enregistré'
     },
     'waypointlist': {
-      'noitem': "Il n'y a actuellement aucun waypoint enregistré",
-      'title': 'Waypoints enregistrés',
+      'noitem': 'Il n\'y a actuellement aucun waypoint enregistré',
+      'title': 'Waypoints enregistrés'
     },
     'project': {
-      'title': 'The Project',
+      'title': 'The Project'
     },
     'credits': {
       'title': 'Crédits',
-      'webmappContent1':
-        "L'application {{appName}} est développée et maintenue par Webmapp.<br> Webmapp crée des cartes Web, mobiles et imprimées pour le tourisme de nature et d'aventure.<br>Pour plus d'informations, veuillez visiter notre site Web",
+      'webmappContent1': 'L\'application {{appName}} est développée et maintenue par Webmapp.<br> Webmapp crée des cartes Web, mobiles et imprimées pour le tourisme de nature et d\'aventure.<br>Pour plus d\'informations, veuillez visiter notre site Web',
       'webmappContent2': 'ou contactez-nous à <a href="mailto:info@webmapp.it">info@webmapp.it</a>',
       'map': 'Carte',
       'mapContent': '© Webmapp, distributed with licence CC BY-NC-SA',
       'cartographicData': 'Map Data',
-      'cartographicDataContent': '© OpenStreetMap Contributors',
+      'cartographicDataContent': '© OpenStreetMap Contributors'
     },
     'disclaimer': {
       'title': 'Clause de non-responsabilité',
-      'content':
-        "La pratique de la randonnée, et plus généralement des activités de plein air, est une activité potentiellement à risque : avant de partir en randonnée, assurez-vous d'avoir les connaissances et les compétences pour la pratiquer. En cas de doute, contactez des experts locaux qui pourront vous aider, vous suggérer et vous accompagner dans la planification et la réalisation de vos activités. Les données présentées sur cette APP ne peuvent pleinement garantir la praticabilité sans risque de l'itinéraire : des changements, même importants, peuvent être intervenus depuis la dernière vérification de l'itinéraire lui-même. Il est donc essentiel que ceux qui se préparent à réaliser des activités évaluent soigneusement l'opportunité de continuer sur la base des suggestions et des conseils contenus dans cette APP, en fonction de leur expérience, des conditions météorologiques (même les jours précédents) et des une évaluation sur le terrain au début de l'activité. Webmapp S.r.l. ne fournit aucune garantie sur la sécurité des lieux décrits et n'assume aucune responsabilité pour tout dommage causé par la réalisation des activités décrites.",
-    },
+      'content': 'La pratique de la randonnée, et plus généralement des activités de plein air, est une activité potentiellement à risque : avant de partir en randonnée, assurez-vous d\'avoir les connaissances et les compétences pour la pratiquer. En cas de doute, contactez des experts locaux qui pourront vous aider, vous suggérer et vous accompagner dans la planification et la réalisation de vos activités. Les données présentées sur cette APP ne peuvent pleinement garantir la praticabilité sans risque de l\'itinéraire : des changements, même importants, peuvent être intervenus depuis la dernière vérification de l\'itinéraire lui-même. Il est donc essentiel que ceux qui se préparent à réaliser des activités évaluent soigneusement l\'opportunité de continuer sur la base des suggestions et des conseils contenus dans cette APP, en fonction de leur expérience, des conditions météorologiques (même les jours précédents) et des une évaluation sur le terrain au début de l\'activité. Webmapp S.r.l. ne fournit aucune garantie sur la sécurité des lieux décrits et n\'assume aucune responsabilité pour tout dommage causé par la réalisation des activités décrites.'
+    }
   },
   'services': {
     'geolocation': {
       'notification': {
         'text': {
-          'newTrackRecord': "Appuyez sur la notification pour ouvrir l'application",
+          'newTrackRecord': 'Appuyez sur la notification pour ouvrir l\'application'
         },
         'title': {
-          'newTrackRecord': 'Inscription en cours',
-        },
-      },
+          'newTrackRecord': 'Inscription en cours'
+        }
+      }
     },
     'share': {
       'dialogTitle': 'Partage avec tes amis',
       'text': 'Voici un itinéraire Webmapp intéressant',
       'title': 'Avez-vous vu ce parcours ?',
-      'url': 'www.webmapp.it',
-    },
+      'url': 'www.webmapp.it'
+    }
   },
   'tabs': {
     'favourites': 'favoris',
     'home': 'home',
     'map': 'carte',
-    'profile': 'profil',
+    'profile': 'profil'
   },
   'Percorribilità': 'Viabilité',
-  'no-tracks': "Vous n'avez pas encore téléchargé de trace",
+  'no-tracks': 'Vous n\'avez pas encore téléchargé de trace',
   'I tuoi dati': 'Vos données',
   'Le tue registrazioni': 'vos enregistrements',
   'Descrizione Audio': 'Audiodescription',
-  'Punto di interesse nelle vicinanze': "Point d'intérêt à proximité",
+  'Punto di interesse nelle vicinanze': 'Point d\'intérêt à proximité',
   'elimina': 'effacer',
   'Attenzione': 'Attention',
   'Azione irreversibile': 'Action irréversible',
@@ -595,14 +581,10 @@ export const appFR = {
   'Il Progetto': 'Le projet',
   'Filtri': 'Filtrer',
   'Escursionismo': 'Randonnée',
-  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria':
-    'précision maximale tous les 5 mètres la position est détectée, consommation de batterie constante',
-  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria':
-    'précision moyenne tous les 10 mètres la position est détectée, consommation moyenne de la batterie',
-  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria':
-    'précision minimale tous les 20 mètres la position est détectée, consommation de batterie réduite',
-  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.':
-    'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
+  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria': 'précision maximale tous les 5 mètres la position est détectée, consommation de batterie constante',
+  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria': 'précision moyenne tous les 10 mètres la position est détectée, consommation moyenne de la batterie',
+  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria': 'précision minimale tous les 20 mètres la position est détectée, consommation de batterie réduite',
+  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.': 'la distance exprimée en mètres qui indique la cadence de détection de position, plus le filtre de distance est faible, plus la consommation de la batterie sera élevée.',
   'PAGINE': 'PAGES',
   'metri': 'mètres',
   'asphalt': 'Asphalte',
@@ -611,17 +593,40 @@ export const appFR = {
   'real_dirt': 'Chemin de terre',
   'bar': 'Bar',
   'Elimina account': 'Supprimer le compte',
-  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.':
-    'Êtes-vous sûr de vouloir supprimer votre compte? Vous devez taper "supprimer le compte" pour continuer.',
-  'Digita "elimina account"': 'Tapez "supprimer le compte"',
-  'La conferma non corrisponde. Digita "elimina account" per procedere.':
-    'La confirmation ne correspond pas. Tapez "supprimer le compte" pour continuer.',
+  "Digita \"elimina account\"": "Tapez \"supprimer le compte\"",
+  "La conferma non corrisponde. Digita \"elimina account\" per procedere.": "La confirmation ne correspond pas. Tapez \"supprimer le compte\" pour continuer.",
   'Conferma': 'Confirmer',
   'Link utili': 'Liens utiles',
-  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni":
-    "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
-  'Apri impostazioni App': "Ouvrir les paramètres de l'application",
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Pour enregistrer des traces et les afficher correctement, activez l'autorisation à la position dans les paramètres",
+  'Apri impostazioni App': 'Ouvrir les paramètres de l\'application',
   'Ti trovi qui': 'Vous êtes ici',
   'Salva Waypoint': 'Enregistrer le waypoint',
   'Salva Traccia': 'Enregistrer la trace',
+  'Scarica il tracciato GPX': 'Télécharger la trace GPX',
+  'Scarica il tracciato KML': 'Télécharger la trace KML',
+  'Scarica il tracciato GEOJSON': 'Télécharger la trace GEOJSON',
+  'real-dirt': 'Chemin de terre',
+  "Digita 'elimina account'": "Tapez 'supprimer le compte'",
+  'privacy': {
+    'agree': {
+      'title': 'Traitement des données',
+      'message': 'J\'accepte que mes données soient publiées',
+      'read_privacy': 'Lire les informations sur le traitement des données',
+      'accept': 'Accepter',
+      'reject': 'Rejeter',
+      'confirm': {
+        'title': 'Confirmer le changement',
+        'accept_message': 'Êtes-vous sûr de vouloir accepter le traitement des données ?',
+        'reject_message': 'Êtes-vous sûr de vouloir rejeter le traitement des données ?',
+        'yes': 'Oui, confirmer',
+        'no': 'Annuler'
+      },
+      'final_confirm': {
+        'title': 'Changement terminé',
+        'accept_message': 'Le consentement au traitement des données a été accepté avec succès.',
+        'reject_message': 'Le consentement au traitement des données a été rejeté avec succès.',
+        'ok': 'OK'
+      }
+    }
+  }
 };

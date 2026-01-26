@@ -10,22 +10,23 @@ export const appEN = {
     'onoff': 'Onoff',
     'real_dirt': 'Real dirt',
     'bar': 'Bar',
+    'real-dirt': 'Real dirt'
   },
   'sidemenu': {
     'project': 'The project',
     'offline': 'Offline',
     'settings': 'Settings',
     'credits': 'Credits',
-    'disclaimer': 'Disclaimer',
+    'disclaimer': 'Disclaimer'
   },
   'components': {
     'cardtrack': {
       'delete': 'Delete',
-      'remove': 'Remove',
+      'remove': 'Remove'
     },
     'map': {
       'btnrec': {
-        'slide': 'Swipe to register',
+        'slide': 'Swipe to register'
       },
       'register': {
         'cancel': 'Cancel',
@@ -33,8 +34,8 @@ export const appEN = {
         'title': 'Record',
         'track': 'Track',
         'vocal': 'Voice note',
-        'waypoint': 'Waypoint',
-      },
+        'waypoint': 'Waypoint'
+      }
     },
     'searchbar': {
       'filters': 'Filter by',
@@ -43,36 +44,36 @@ export const appEN = {
       'notracks': 'No paths matches to the research carried out',
       'placeholder': 'Search',
       'places': 'Places',
-      'tracks': 'Tracks',
+      'tracks': 'Tracks'
     },
     'slopechart': {
       'slope': {
-        'label': 'slope',
+        'label': 'slope'
       },
       'surfaces': {
         'asphalt': {
-          'label': 'asphalt',
+          'label': 'asphalt'
         },
         'concrete': {
-          'label': 'concrete',
+          'label': 'concrete'
         },
         'dirt': {
-          'label': 'land',
+          'label': 'land'
         },
         'grass': {
-          'label': 'grass',
+          'label': 'grass'
         },
         'gravel': {
-          'label': 'gravel',
+          'label': 'gravel'
         },
         'paved': {
-          'label': 'paved',
+          'label': 'paved'
         },
         'sand': {
-          'label': 'sand',
-        },
-      },
-    },
+          'label': 'sand'
+        }
+      }
+    }
   },
   'generic': {
     'cancel': 'Cancel',
@@ -83,7 +84,7 @@ export const appEN = {
     'minute': 'min',
     'ok': 'ok',
     'retry': 'Retry',
-    'warning': 'Warning',
+    'warning': 'Warning'
   },
   'modals': {
     'coin': {
@@ -95,24 +96,23 @@ export const appEN = {
       'info3': 'Receive proximity notifications',
       'subinfo1': 'Buy a single coin for € 1',
       'subinfo2': 'Precise navigation even when you are offline',
-      'subinfo3': 'We warn you when you are close to points of interest along the route',
+      'subinfo3': 'We warn you when you are close to points of interest along the route'
     },
     'giftcoin': {
       'button': 'Start exploring',
       'info': 'You immediately get 2 webmapp coins as a gift to download offline content!',
-      'title': 'Welcome to webmapp!',
+      'title': 'Welcome to webmapp!'
     },
     'login': {
       'email': 'E-mail',
       'errors': {
-        '401':
-          'The credentials you entered are incorrect. Please check your email and password and try again',
+        '401': 'The credentials you entered are incorrect. Please check your email and password and try again',
         'form': {
           'emailInvalid': 'You have entered an invalid email',
           'emailRequired': 'Email is required',
-          'passwordRequired': 'Password is required',
+          'passwordRequired': 'Password is required'
         },
-        'generic': 'Oops! Something went wrong! Wait a few minutes and try again.',
+        'generic': 'Oops! Something went wrong! Wait a few minutes and try again.'
       },
       'forgotPassword': 'Did you forget your password?',
       'login': 'Login',
@@ -120,7 +120,7 @@ export const appEN = {
       'password': 'Password',
       'rememberLogin': 'Remember your credentials',
       'title': 'Login',
-      'welcome': 'Welcome!',
+      'welcome': 'Welcome!'
     },
     'photo': {
       'next': 'Next',
@@ -128,7 +128,7 @@ export const appEN = {
         'cancel': 'Cancel',
         'library': 'From the library',
         'shot': 'Take a picture',
-        'title': 'Source of the image',
+        'title': 'Source of the image'
       },
       'save': {
         'addphoto': 'Add photos',
@@ -138,26 +138,26 @@ export const appEN = {
           'cancel': 'Cancel',
           'confirm': 'Yes, delete',
           'text': 'If you delete it it will not be added to this recording',
-          'title': 'Are you sure you want to delete this photo from the recording?',
+          'title': 'Are you sure you want to delete this photo from the recording?'
         },
         'placeholder': 'Here you can enter a title',
         'savebtn': 'Save',
-        'title': 'Record photos',
+        'title': 'Record photos'
       },
       'single': {
         'formphototitle': 'Title',
         'placeholder': 'Here you can enter a title',
         'savebtn': 'Done',
-        'title': 'Edit photos',
-      },
+        'title': 'Edit photos'
+      }
     },
     'settings': {
       'alert': {
-        'logout': 'Are you sure you want to disconnect your account?',
+        'logout': 'Are you sure you want to disconnect your account?'
       },
       'logout': 'Log out',
       'title': 'Settings',
-      'version': 'Version',
+      'version': 'Version'
     },
     'storesuccess': {
       'back': 'Back to search',
@@ -166,13 +166,12 @@ export const appEN = {
       'continue2': '?',
       'info': 'You can check the balance of your coins directly in your personal area!',
       'or': 'Or',
-      'title': 'Thank you for purchasing your first coin!',
+      'title': 'Thank you for purchasing your first coin!'
     },
     'success': {
       'photos': {
-        'text':
-          'Your photos have been successfully saved. You can view them by accessing your profile.',
-        'title': 'Photos successfully recorded!',
+        'text': 'Your photos have been successfully saved. You can view them by accessing your profile.',
+        'title': 'Photos successfully recorded!'
       },
       'return': 'Go back to explore',
       'track': {
@@ -182,29 +181,27 @@ export const appEN = {
         'text': 'The track was saved successfully. You can view it by logging into your profile.',
         'time': 'Time',
         'title': 'Successfully registered activity!',
-        'topspeed': 'Full speed',
+        'topspeed': 'Full speed'
       },
       'waypoint': {
-        'text':
-          'You have successfully saved your waypoint. You can view it by logging into your profile.',
-        'title': 'Waypoint successfully registered!',
-      },
-    },
+        'text': 'You have successfully saved your waypoint. You can view it by logging into your profile.',
+        'title': 'Waypoint successfully registered!'
+      }
+    }
   },
   'pages': {
     'downloadlist': {
       'cancel': 'Cancel',
       'deleteselected': 'Delete selected',
       'nodata': "You haven't downloaded any tracks yet",
-      'nodata2':
-        'With the contents for offline use you can browse in peace even without a connection!',
+      'nodata2': 'With the contents for offline use you can browse in peace even without a connection!',
       'nodatabtn': 'Explore',
       'select': 'Select',
-      'title': 'Downloads',
+      'title': 'Downloads'
     },
     'favourites': {
       'nodata': 'There are no favorite heart tracks, click on a track icon to add it to this list',
-      'title': 'Favourites',
+      'title': 'Favourites'
     },
     'home': {
       'button': 'Choose a starting point',
@@ -212,7 +209,7 @@ export const appEN = {
       'intro': "Let's plan your next adventure together",
       'mostViewedTracks': 'Most viewed routes',
       'nocloserTracks': 'There do not appear to be any paths near the current location',
-      'welcome': 'Welcome!',
+      'welcome': 'Welcome!'
     },
     'itinerary': {
       'btnFullMapExpand': 'Expand',
@@ -223,7 +220,7 @@ export const appEN = {
       'btnshare': 'Share',
       'description': {
         'description': 'Description',
-        'gallery': 'Gallery',
+        'gallery': 'Gallery'
       },
       'detail': {
         'from': 'Start',
@@ -234,7 +231,7 @@ export const appEN = {
         'ele_from': 'Starting altitude',
         'ele_max': 'Maximum altitude',
         'ele_min': 'Minimum altitude',
-        'ele_to': 'Ending altitude',
+        'ele_to': 'Ending altitude'
       },
       'directions': 'Get directions',
       'download': 'Download',
@@ -250,22 +247,22 @@ export const appEN = {
         'downmedia': 'Media downloads',
         'downsetup': 'Initial setup',
         'gotobtn': 'Go to my downloads',
-        'install': 'Installation',
+        'install': 'Installation'
       },
       'favbtn': {
         'isFavourite': 'Added to favorites!',
-        'isNotFavourite': 'Removed from favorites!',
+        'isNotFavourite': 'Removed from favorites!'
       },
       'modalconfirm': {
         'cancel': 'Cancel',
         'confirm': 'Exit',
         'text': 'Exit without finishing the track download?',
-        'title': 'Stop downloading?',
+        'title': 'Stop downloading?'
       },
       'modalNotImpemented': {
         'text': 'Comming soon',
         'title': 'Currently not available',
-        'confirm': 'ok',
+        'confirm': 'ok'
       },
       'navigate': 'Navigate',
       'share': 'Share',
@@ -277,22 +274,22 @@ export const appEN = {
       'tabwalkable': 'Accessibility',
       'viability': {
         'info': 'More info',
-        'title': 'Practicability of the route',
-      },
+        'title': 'Practicability of the route'
+      }
     },
     'map': {
       'loading': 'Research in progress...',
       'recordingbtn': 'Record in progress ...',
-      'searchherebtn': 'Search in this area',
+      'searchherebtn': 'Search in this area'
     },
     'photodetail': {
       'delete': 'Delete registration',
       'edit': 'Change registration',
-      'title': 'Photo recorded',
+      'title': 'Photo recorded'
     },
     'photolist': {
       'noitem': 'There are currently no recorded photos',
-      'title': 'Recorded photos',
+      'title': 'Recorded photos'
     },
     'profile': {
       'title': 'Profile',
@@ -305,23 +302,23 @@ export const appEN = {
       'data': {
         'data': 'Data usage',
         'downloads': 'Downloads',
-        'tracks': 'Downloaded tracks',
+        'tracks': 'Downloaded tracks'
       },
       'loggedOut': {
         'login': 'Sign in',
         'signup': 'Sign up',
         'slides': {
           '0': 'Access and download your favorite routes',
-          '1': 'You can also share them with your travel companions',
-        },
+          '1': 'You can also share them with your travel companions'
+        }
       },
       'records': {
         'photos': 'Photos',
         'title': 'Records',
         'tracks': 'Tracks',
         'vocals': 'voice notes',
-        'waypoints': 'Waypoints',
-      },
+        'waypoints': 'Waypoints'
+      }
     },
     'register': {
       'averagespeed': 'Average speed',
@@ -331,27 +328,26 @@ export const appEN = {
         'cancel': 'Cancel',
         'confirm': 'Confirm',
         'text': 'Once confirmed, you will no longer be able to resume this navigation',
-        'title': 'Do you confirm that you want to end the registration?',
+        'title': 'Do you confirm that you want to end the registration?'
       },
       'modalexit': {
         'cancel': 'Cancel',
         'confirm': 'Delete',
-        'text':
-          'By completing the action, the track will be deleted from your profile and from Webmapp. The operation cannot be canceled.',
-        'title': 'Delete forever?',
+        'text': 'By completing the action, the track will be deleted from your profile and from Webmapp. The operation cannot be canceled.',
+        'title': 'Delete forever?'
       },
       'modalphotos': {
         'deselectall': 'Uncheck all',
         'noimages': 'There are no images taken while recording the route',
         'savebtn': 'Load',
         'selectall': 'Select all',
-        'title': 'Upload photos',
+        'title': 'Upload photos'
       },
       'modalsave': {
         'closemodal': {
           'back': 'Back to registration',
           'cancel': 'Cancel',
-          'delete': 'Delete registration',
+          'delete': 'Delete registration'
         },
         'deletebtn': 'QUIT WITHOUT SAVING',
         'formactivity': 'Kind of activity',
@@ -366,21 +362,20 @@ export const appEN = {
         'phototextshort': 'Photo',
         'savebtn': 'Save',
         'title': 'Save track',
-        'titleEdit': 'Edit track',
+        'titleEdit': 'Edit track'
       },
       'odo': 'Km traveled',
       'pausebtn': 'Pause',
       'resumebtn': 'Resume',
       'stopbtn': 'Finish',
       'time': 'In movement',
-      'title': 'Record a track',
+      'title': 'Record a track'
     },
     'registeruser': {
       'cf': 'Fiscal Code',
       'cfextra': 'Why do we ask you for the CF?',
       'cfph': 'XXXXXXXXXXXXXXXX',
-      'cfpopovermessage':
-        'If you are a CAI Member, enter your CF when registering. For you, the download of the stages of the Sentiero Italia CAI will be automatically free!',
+      'cfpopovermessage': 'If you are a CAI Member, enter your CF when registering. For you, the download of the stages of the Sentiero Italia CAI will be automatically free!',
       'cfpopovertitle': 'Why do we ask you for the CF?',
       'confirmPassword': 'Confirm password',
       'confirmPasswordph': 'Repeat the password',
@@ -388,14 +383,14 @@ export const appEN = {
       'emailph': 'example@email.com',
       'errors': {
         'form': {
-          'nameRequired': 'A name must be entered',
+          'nameRequired': 'A name must be entered'
         },
         'form.cfInvalid': 'The fiscal code is not valid',
         'form.confirmPasswordInvalid': 'The confirmation does not match the password entered above',
         'form.confirmPasswordRequired': 'Password confirmation is required',
         'form.emailInvalid': 'The email is invalid',
         'form.emailRequired': 'It is necessary to insert an email',
-        'form.passwordRequired': 'A password must be entered',
+        'form.passwordRequired': 'A password must be entered'
       },
       'genericError': 'Error during user registration',
       'loading': 'Registration in progress',
@@ -403,13 +398,13 @@ export const appEN = {
       'nameph': 'Insert your name',
       'password': 'Password',
       'passwordph': 'enter password',
-      'privacy1': 'By clicking on "Register" you accept our ',
+      'privacy1': "By clicking on \"Register\" you accept our ",
       'privacy2': 'e i',
       'privacy3': '',
       'privacylink1': 'Privacy Policy',
       'privacylink2': 'Terms and conditions',
       'registerbutton': 'Register',
-      'title': 'Join the webmapp community!',
+      'title': 'Join the webmapp community!'
     },
     'route': {
       'btnFullMapExpand': 'Expand',
@@ -420,7 +415,7 @@ export const appEN = {
       'btnshare': 'Share',
       'description': {
         'description': 'Description',
-        'gallery': 'Gallery',
+        'gallery': 'Gallery'
       },
       'detail': {
         'from': 'Start',
@@ -434,7 +429,7 @@ export const appEN = {
         'ele_to': 'Finishing elevation',
         'difficulty': 'Difficulty',
         'duration_forward': 'outward duration',
-        'duration_backward': 'return duration',
+        'duration_backward': 'return duration'
       },
       'directions': 'Get directions',
       'download': 'Download',
@@ -450,17 +445,17 @@ export const appEN = {
         'downmedia': 'Media downloads',
         'downsetup': 'Initial setup',
         'gotobtn': 'Go to my downloads',
-        'install': 'Installation',
+        'install': 'Installation'
       },
       'favbtn': {
         'isFavourite': 'Added to favorites!',
-        'isNotFavourite': 'Removed from favorites!',
+        'isNotFavourite': 'Removed from favorites!'
       },
       'modalconfirm': {
         'cancel': 'Cancel',
         'confirm': 'Exit',
         'text': 'Exit without finishing the track download?',
-        'title': 'Stop downloading?',
+        'title': 'Stop downloading?'
       },
       'navigate': 'Navigate',
       'share': 'Share',
@@ -472,8 +467,8 @@ export const appEN = {
       'tabwalkable': 'Accessibility',
       'viability': {
         'info': 'Other info',
-        'title': 'Practicability of the route',
-      },
+        'title': 'Practicability of the route'
+      }
     },
     'store': {
       'button1': '1 Coin',
@@ -482,9 +477,8 @@ export const appEN = {
       'button50': 'Pack 50 coins',
       'main': 'Webmapp Coins',
       'text': 'You can buy a single Coin, or choose from one or more packages!',
-      'text2':
-        'Coins are used to download routes and offline content, and access numerous benefits!',
-      'title': 'Store',
+      'text2': 'Coins are used to download routes and offline content, and access numerous benefits!',
+      'title': 'Store'
     },
     'trackdetail': {
       'avgspeed': 'Average speed',
@@ -496,11 +490,11 @@ export const appEN = {
       'slope': 'Slope',
       'time': 'Time',
       'title': 'Track recorded',
-      'topspeed': 'Full speed',
+      'topspeed': 'Full speed'
     },
     'tracklist': {
       'noitem': 'There are currently no recorded tracks',
-      'title': 'Tracks recorded',
+      'title': 'Tracks recorded'
     },
     'waypoint': {
       'here': 'You are here',
@@ -517,62 +511,60 @@ export const appEN = {
         'formtypeplaceholder': 'Select',
         'phototextshort': 'photo',
         'save': 'Save ',
-        'title': 'Register a waypoint',
+        'title': 'Register a waypoint'
       },
       'save': 'Save waypoint',
-      'title': 'Register a waypoint',
+      'title': 'Register a waypoint'
     },
     'waypointdetail': {
       'delete': 'Delete registration',
       'edit': 'Change registration',
-      'title': 'Waypoint recorded',
+      'title': 'Waypoint recorded'
     },
     'waypointlist': {
       'noitem': 'There are currently no registered waypoints',
-      'title': 'Recorded waypoints',
+      'title': 'Recorded waypoints'
     },
     'project': {
-      'title': 'The Project',
+      'title': 'The Project'
     },
     'credits': {
       'title': 'Credits',
-      'webmappContent1':
-        'The app {{appName}} is developed and mantained by Webmapp.<br> Webmapp creates web, mobile and printed maps for Nature & Adventure Tourism.<br>For more information please visit our website ',
-      'webmappContent2': ' or contact us at <a href="mailto:info@webmapp.it">info@webmapp.it</a>',
+      'webmappContent1': 'The app {{appName}} is developed and mantained by Webmapp.<br> Webmapp creates web, mobile and printed maps for Nature & Adventure Tourism.<br>For more information please visit our website ',
+      'webmappContent2': " or contact us at <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
       'map': 'Map',
       'mapContent': '© Webmapp, distributed with licence CC BY-NC-SA',
       'cartographicData': 'Cartographic Data',
-      'cartographicDataContent': '© OpenStreetMap Contributors',
+      'cartographicDataContent': '© OpenStreetMap Contributors'
     },
     'disclaimer': {
       'title': 'Disclaimer',
-      'content':
-        'Hiking and, more generally, outdoor activity, is a potentially risky activity: before setting out on a hike, make sure you have the knowledge and skills to do it. If you are not sure, contact local experts who can help, suggest and support you in planning and carrying out your activities. The data presented on this APP cannot fully guarantee the risk-free practicability of the route: changes, even important ones, may have occurred since the last verification of the route itself. It is therefore essential that those who are preparing to carry out activities carefully evaluate the opportunity to continue on the basis of the suggestions and advice contained in this APP, based on their experience, on the weather conditions (even in the previous days) and on an evaluation in the field at the beginning of the activity. Webmapp S.r.l. does not provide guarantees on the safety of the places described and assumes no responsibility for any damage caused by carrying out the activities described.',
-    },
+      'content': 'Hiking and, more generally, outdoor activity, is a potentially risky activity: before setting out on a hike, make sure you have the knowledge and skills to do it. If you are not sure, contact local experts who can help, suggest and support you in planning and carrying out your activities. The data presented on this APP cannot fully guarantee the risk-free practicability of the route: changes, even important ones, may have occurred since the last verification of the route itself. It is therefore essential that those who are preparing to carry out activities carefully evaluate the opportunity to continue on the basis of the suggestions and advice contained in this APP, based on their experience, on the weather conditions (even in the previous days) and on an evaluation in the field at the beginning of the activity. Webmapp S.r.l. does not provide guarantees on the safety of the places described and assumes no responsibility for any damage caused by carrying out the activities described.'
+    }
   },
   'services': {
     'geolocation': {
       'notification': {
         'text': {
-          'newTrackRecord': 'Tap the notification to open the app',
+          'newTrackRecord': 'Tap the notification to open the app'
         },
         'title': {
-          'newTrackRecord': 'Registration in progress',
-        },
-      },
+          'newTrackRecord': 'Registration in progress'
+        }
+      }
     },
     'share': {
       'dialogTitle': 'Share with your friends',
       'text': 'Here is an interesting webmapp path',
       'title': 'Have you seen this path?',
-      'url': 'www.webmapp.it',
-    },
+      'url': 'www.webmapp.it'
+    }
   },
   'tabs': {
     'favourites': 'favorites',
     'home': 'home',
     'map': 'map',
-    'profile': 'profile',
+    'profile': 'profile'
   },
   'Percorribilità': 'Viability',
   'no-tracks': "You haven't downloaded any tracks yet",
@@ -585,18 +577,13 @@ export const appEN = {
   'Azione irreversibile': 'Irreversible action',
   'Vuoi veramente eliminare il tuo account?': 'Do you really want to delete your account?',
   'Annulla': 'Cancel',
-  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria':
-    'maximum precision every 5 meters the position is detected, consistent battery consumption',
-  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria':
-    'medium precision every 10 meters the position is detected, average battery consumption',
-  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria':
-    'minimum precision every 20 meters the position is detected, lower battery consumption',
-  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.':
-    'the distance expressed in meters which indicates the cadence of position detection, the lower the distance filter, the higher the battery consumption will be.',
+  'massima precisione ogni 5 metri viene rilevata la posizione, consumo consistente della batteria': 'maximum precision every 5 meters the position is detected, consistent battery consumption',
+  'media precisione ogni 10 metri viene rilevata la posizione, consumo medio della batteria': 'medium precision every 10 meters the position is detected, average battery consumption',
+  'minima precisione ogni 20 metri viene rilevata la posizione, consumo minore della batteria': 'minimum precision every 20 meters the position is detected, lower battery consumption',
+  'la distanza espressa in metri che indica la cadenza di rilevamento posizione, più il distance filter è minore piu il consumo della batteria sarà maggiore.': 'the distance expressed in meters which indicates the cadence of position detection, the lower the distance filter, the higher the battery consumption will be.',
   'PAGINE': 'PAGES',
   'metri': 'meters',
-  'precisione su mezzi di locomozione, consumo minimo della batteria':
-    'precision on means of transport, minimum battery consumption',
+  'precisione su mezzi di locomozione, consumo minimo della batteria': 'precision on means of transport, minimum battery consumption',
   'rimani acceso': 'stay lit',
   'forza il dispositivo a non spegnersi': 'forces the device not to turn off',
   'asphalt': 'Asphalt',
@@ -617,20 +604,47 @@ export const appEN = {
   'duration': 'Duration',
   'MEMORIA': 'MEMORY',
   'resetta la memoria': 'reset memory',
-  'sei sicuro di voler cancellare cache e dati  salvati?':
-    'are you sure you want to delete saved cache and data?',
+  'sei sicuro di voler cancellare cache e dati  salvati?': 'are you sure you want to delete saved cache and data?',
   'Elimina account': 'Delete account',
-  'Vuoi veramente eliminare il tuo account? È obbligatorio scrivere "elimina account" per procedere.':
-    'Are you sure you want to delete your account? You must type "delete account" to proceed.',
-  'Digita "elimina account"': 'Type "delete account"',
-  'La conferma non corrisponde. Digita "elimina account" per procedere.':
-    'The confirmation does not match. Type "delete account" to proceed.',
   'Conferma': 'Confirm',
   'Link utili': 'Useful links',
-  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni":
-    'To record tracks and display them correctly, enable the location permission in the settings',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": 'To record tracks and display them correctly, enable the location permission in the settings',
   'Apri impostazioni App': 'Open app settings',
   'Ti trovi qui': 'You are here',
   'Salva Waypoint': 'Save Waypoint',
   'Salva Traccia': 'Save track',
+  'Cancella': 'Delete',
+  'ATTENZIONE': 'WARNING',
+  'Foto correttamente cancellata': 'Photo successfully deleted',
+  'Traccia correttamente cancellata': 'Track successfully deleted',
+  'Waypoint correttamente cancellato': 'Waypoint successfully deleted',
+  'Sei sicuro di voler cancellare questa foto?': 'Are you sure you want to delete this photo?',
+  'Sei sicuro di voler cancellare questa traccia?': 'Are you sure you want to delete this track?',
+  'Sei sicuro di voler cancellare questo waypoint?': 'Are you sure you want to delete this waypoint?',
+  'Scarica il tracciato GPX': 'Download the GPX track',
+  'Scarica il tracciato KML': 'Download the KML track',
+  'Scarica il tracciato GEOJSON': 'Download the GEOJSON track',
+  'real-dirt': 'Real dirt',
+  'privacy': {
+    'agree': {
+      'title': 'Data Processing',
+      'message': 'I consent to my data being published',
+      'read_privacy': 'Read data processing information',
+      'accept': 'Accept',
+      'reject': 'Reject',
+      'confirm': {
+        'title': 'Confirm change',
+        'accept_message': 'Are you sure you want to accept data processing?',
+        'reject_message': 'Are you sure you want to reject data processing?',
+        'yes': 'Yes, confirm',
+        'no': 'Cancel'
+      },
+      'final_confirm': {
+        'title': 'Change completed',
+        'accept_message': 'Data processing consent has been successfully accepted.',
+        'reject_message': 'Data processing consent has been successfully rejected.',
+        'ok': 'OK'
+      }
+    }
+  }
 };

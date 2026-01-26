@@ -1,0 +1,618 @@
+export const appDE = {
+  'activities': {
+    'cycling': 'Radfahren',
+    'hiking': 'Wandern',
+    'running': 'Laufen',
+    'skitouring': 'Skitour',
+    'walking': 'Spazieren',
+    'asphalt': 'Asphalt',
+    'bitumenduro': 'Bitumenduro',
+    'onoff': 'On/Off',
+    'real-dirt': 'Echter Schmutz',
+    'bar': 'Bar'
+  },
+  'sidemenu': {
+    'project': 'Projekt',
+    'offline': 'Offline',
+    'settings': 'Einstellungen',
+    'credits': 'Credits',
+    'disclaimer': 'Haftungsausschluss'
+  },
+  'components': {
+    'cardtrack': {
+      'delete': 'Löschen',
+      'remove': 'Entfernen'
+    },
+    'map': {
+      'btnrec': {
+        'slide': 'Zum Aufnehmen wischen'
+      },
+      'register': {
+        'cancel': 'Abbrechen',
+        'photo': 'Foto',
+        'title': 'Aufzeichnen',
+        'track': 'Strecke',
+        'vocal': 'Sprachnotiz',
+        'waypoint': 'Wegpunkt'
+      }
+    },
+    'searchbar': {
+      'filters': 'Filtern nach',
+      'nofilters': 'Keine Filter entsprechen der durchgeführten Suche',
+      'noplaces': 'Keine Orte entsprechen der durchgeführten Suche',
+      'notracks': 'Keine Strecken entsprechen der durchgeführten Suche',
+      'placeholder': 'suchen',
+      'places': 'Orte',
+      'tracks': 'Strecken'
+    },
+    'slopechart': {
+      'slope': {
+        'label': 'Steigung'
+      },
+      'surfaces': {
+        'asphalt': {
+          'label': 'Asphalt'
+        },
+        'concrete': {
+          'label': 'Beton'
+        },
+        'dirt': {
+          'label': 'Erde'
+        },
+        'grass': {
+          'label': 'Gras'
+        },
+        'gravel': {
+          'label': 'Kies'
+        },
+        'paved': {
+          'label': 'Gepflastert'
+        },
+        'sand': {
+          'label': 'Sand'
+        }
+      }
+    }
+  },
+  'generic': {
+    'cancel': 'abbrechen',
+    'confirm': 'bestätigen',
+    'delete': 'löschen',
+    'error': 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut',
+    'hour': 'Stunde',
+    'minute': 'Min',
+    'ok': 'ok',
+    'retry': 'erneut versuchen',
+    'warning': 'Achtung'
+  },
+  'modals': {
+    'coin': {
+      'buttonall': 'Alle Münzpakete anzeigen',
+      'buttonone': '1 Münze kaufen / 1€',
+      'defaultmessage': 'Kaufen Sie Münzen, um Offline-Inhalte herunterzuladen',
+      'info1': 'Sie können eine einzelne Strecke kaufen',
+      'info2': 'Alles ist auch ohne Abdeckung verfügbar',
+      'info3': 'Erhalten Sie Benachrichtigungen bei Annäherung',
+      'subinfo1': 'Kaufen Sie eine einzelne Münze für 1€',
+      'subinfo2': 'Präzise Navigation auch offline',
+      'subinfo3': 'Wir benachrichtigen Sie in der Nähe von Interessenspunkten auf der Strecke'
+    },
+    'giftcoin': {
+      'button': 'Beginnen Sie zu erkunden',
+      'info': 'Sie erhalten sofort 2 Webmapp-Münzen als Geschenk, um Offline-Inhalte herunterzuladen!',
+      'title': 'Willkommen bei Webmapp!'
+    },
+    'login': {
+      'email': 'E-Mail',
+      'errors': {
+        '401': 'Die eingegebenen Anmeldedaten sind nicht korrekt. Bitte überprüfen Sie E-Mail und Passwort und versuchen Sie es erneut',
+        'form': {
+          'emailInvalid': 'Sie haben eine ungültige E-Mail-Adresse eingegeben',
+          'emailRequired': 'E-Mail ist erforderlich',
+          'passwordRequired': 'Passwort ist erforderlich'
+        },
+        'generic': 'Oops! Etwas ist schief gelaufen! Bitte warten Sie einige Minuten und versuchen Sie es erneut.'
+      },
+      'forgotPassword': 'Passwort vergessen?',
+      'login': 'Anmelden',
+      'message': 'Melden Sie sich mit Ihren Anmeldedaten an, um fortzufahren.',
+      'password': 'Passwort',
+      'rememberLogin': 'Anmeldedaten merken',
+      'title': 'Anmelden',
+      'welcome': 'Willkommen zurück!'
+    },
+    'photo': {
+      'next': 'Weiter',
+      'popover': {
+        'cancel': 'Abbrechen',
+        'library': 'Aus der Bibliothek',
+        'shot': 'Ein Foto machen',
+        'title': 'Bildquelle'
+      },
+      'save': {
+        'addphoto': 'Foto hinzufügen',
+        'formphototitle': 'Titel ',
+        'formtitle': 'Geben Sie Ihren Fotos einen Titel',
+        'modalconfirm': {
+          'cancel': 'Abbrechen',
+          'confirm': 'Ja, löschen',
+          'text': 'Wenn Sie es löschen, wird es nicht zu dieser Aufzeichnung hinzugefügt',
+          'title': 'Sind Sie sicher, dass Sie dieses Foto aus der Aufzeichnung löschen möchten?'
+        },
+        'placeholder': 'Hier können Sie einen Titel eingeben',
+        'savebtn': 'Speichern',
+        'title': 'Foto aufzeichnen'
+      },
+      'single': {
+        'formphototitle': 'Titel',
+        'placeholder': 'Hier können Sie einen Titel eingeben',
+        'savebtn': 'Fertig',
+        'title': 'Foto bearbeiten'
+      }
+    },
+    'settings': {
+      'alert': {
+        'logout': 'Sind Sie sicher, dass Sie sich von Ihrem Konto abmelden möchten?'
+      },
+      'logout': 'Abmelden',
+      'title': 'Einstellungen',
+      'version': 'Version'
+    },
+    'storesuccess': {
+      'back': 'Zurück zur Suche',
+      'buttondownload': 'Jetzt herunterladen',
+      'continue': 'Möchten Sie Ihre Münze sofort verwenden, um herunterzuladen ',
+      'continue2': '?',
+      'info': 'Sie können Ihr Münzguthaben direkt in Ihrem persönlichen Bereich überprüfen!',
+      'or': 'Oder',
+      'title': 'Vielen Dank für den Kauf Ihrer ersten Münze!'
+    },
+    'success': {
+      'photos': {
+        'text': 'Ihre Fotos wurden erfolgreich gespeichert. Sie können sie anzeigen, indem Sie Ihr Profil aufrufen.',
+        'title': 'Fotos erfolgreich aufgezeichnet!'
+      },
+      'return': 'Zurück zum Erkunden',
+      'track': {
+        'avgspeed': 'Durchschnittsgeschwindigkeit',
+        'odo': 'Zurückgelegte Km',
+        'slope': 'Höhenunterschied',
+        'text': 'Die Strecken wurden erfolgreich gespeichert. Sie können sie anzeigen, indem Sie Ihr Profil aufrufen.',
+        'time': 'Zeit',
+        'title': 'Aktivität erfolgreich aufgezeichnet!',
+        'topspeed': 'Höchstgeschwindigkeit'
+      },
+      'waypoint': {
+        'text': 'Sie haben Ihren Wegpunkt erfolgreich gespeichert. Sie können ihn anzeigen, indem Sie Ihr Profil aufrufen.',
+        'title': 'Wegpunkt erfolgreich aufgezeichnet!'
+      }
+    }
+  },
+  'pages': {
+    'downloadlist': {
+      'cancel': 'Abbrechen',
+      'deleteselected': 'Ausgewählte löschen',
+      'nodata': 'Sie haben noch keine Strecke heruntergeladen',
+      'nodata2': 'Mit Inhalten für die Offline-Nutzung navigieren Sie auch ohne Verbindung sicher!',
+      'nodatabtn': 'Erkunden',
+      'select': 'Auswählen',
+      'title': 'Downloads'
+    },
+    'favourites': {
+      'nodata': 'Es gibt keine Favoritenstrecken, klicken Sie auf das Herzsymbol einer Strecke, um sie zu dieser Liste hinzuzufügen',
+      'title': 'Favoriten'
+    },
+    'home': {
+      'button': 'Wählen Sie einen Startpunkt',
+      'closerTracks': 'Nahe Strecken',
+      'intro': 'Planen wir gemeinsam Ihr nächstes Abenteuer',
+      'mostViewedTracks': 'Meistgesehene Strecken',
+      'nocloserTracks': 'Es scheint, dass es keine Strecken in der Nähe Ihres aktuellen Standorts gibt',
+      'welcome': 'Willkommen!'
+    },
+    'itinerary': {
+      'btnFullMapExpand': 'Erweitern',
+      'btnFullMapReduce': 'Reduzieren',
+      'btndnavigate': 'Navigieren',
+      'btndownload': 'Herunterladen',
+      'btnfavourite': 'Favoriten',
+      'btnshare': 'Teilen',
+      'description': {
+        'description': 'Beschreibung',
+        'gallery': 'Galerie'
+      },
+      'detail': {
+        'ascent': 'Höhenunterschied +',
+        'descent': 'Höhenunterschied -',
+        'distance': 'Distanz',
+        'ele_from': 'Start-Höhe',
+        'ele_max': 'Maximale Höhe',
+        'ele_min': 'Minimale Höhe',
+        'ele_to': 'Ziel-Höhe'
+      },
+      'directions': 'Wegbeschreibung erhalten',
+      'download': 'Herunterladen',
+      'downloadpanel': {
+        'complete': 'Download abgeschlossen',
+        'dontclose': 'Schließen Sie die App nicht während der Dateninstallation',
+        'downdata': 'Daten werden heruntergeladen',
+        'downsize': 'Download-Größe',
+        'download': 'Herunterladen',
+        'downloadbtn': 'Herunterladen',
+        'downloading': 'Wird heruntergeladen',
+        'downmap': 'Karte wird heruntergeladen',
+        'downmedia': 'Medien werden heruntergeladen',
+        'downsetup': 'Erstkonfiguration',
+        'gotobtn': 'Zu meinen Downloads gehen',
+        'install': 'Installation'
+      },
+      'favbtn': {
+        'isFavourite': 'Zu Favoriten hinzugefügt!',
+        'isNotFavourite': 'Aus Favoriten entfernt!'
+      },
+      'modalconfirm': {
+        'cancel': 'Abbrechen',
+        'confirm': 'Beenden',
+        'text': 'Beenden, ohne den Streckendownload abzuschließen?',
+        'title': 'Download unterbrechen?'
+      },
+      'modalNotImpemented': {
+        'text': 'Bald verfügbar',
+        'title': 'Derzeit nicht verfügbar',
+        'confirm': 'ok'
+      },
+      'navigate': 'Navigieren',
+      'share': 'Teilen',
+      'tabdescription': 'Beschreibung',
+      'tabdetail': 'Details',
+      'tabeat': 'Wo essen',
+      'tabhowto': 'Wie man hinkommt',
+      'tabviability': 'Befahrbarkeit',
+      'tabwalkable': 'Zugänglichkeit',
+      'viability': {
+        'info': 'Weitere Informationen',
+        'title': 'Befahrbarkeit der Strecke'
+      }
+    },
+    'map': {
+      'loading': 'wird gesucht...',
+      'recordingbtn': 'Aufnahme läuft',
+      'searchherebtn': 'In diesem Bereich suchen'
+    },
+    'photodetail': {
+      'delete': 'Aufzeichnung löschen',
+      'edit': 'Aufzeichnung bearbeiten',
+      'title': 'Aufgezeichnetes Foto'
+    },
+    'photolist': {
+      'noitem': 'Derzeit sind keine Fotos aufgezeichnet',
+      'title': 'Aufgezeichnete Fotos'
+    },
+    'profile': {
+      'data': {
+        'data': 'Datennutzung',
+        'downloads': 'Downloads',
+        'tracks': 'Heruntergeladene Strecken'
+      },
+      'loggedOut': {
+        'login': 'Anmelden',
+        'signup': 'Registrieren',
+        'slides': {
+          '0': 'Melden Sie sich an und laden Sie Ihre Lieblingsstrecken herunter',
+          '1': 'Sie können sie auch mit Ihren Reisefreunden teilen'
+        }
+      },
+      'records': {
+        'photos': 'Fotos',
+        'title': 'Aufzeichnungen',
+        'tracks': 'Strecken',
+        'vocals': 'Sprachnotizen',
+        'waypoints': 'Wegpunkte'
+      },
+      'title': 'Profil',
+      'lang': 'Sprache',
+      'langPlaceholder': 'wählen',
+      'projectlink': 'Projekt',
+      'disclaimerlink': 'Haftungsausschluss',
+      'creditslink': 'Credits',
+      'privacylink': 'Datenschutz'
+    },
+    'register': {
+      'averagespeed': 'Durchschnittsgeschwindigkeit',
+      'backgroundbtn': 'Im Hintergrund aufzeichnen',
+      'currentspeed': 'Aktuelle Geschwindigkeit',
+      'modalconfirm': {
+        'cancel': 'Abbrechen',
+        'confirm': 'Bestätigen',
+        'text': 'Sobald bestätigt, können Sie diese Navigation nicht mehr neu starten',
+        'title': 'Bestätigen Sie, dass Sie die Aufzeichnung beenden möchten?'
+      },
+      'modalexit': {
+        'cancel': 'Abbrechen',
+        'confirm': 'Löschen',
+        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von Webmapp gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
+        'title': 'Dauerhaft löschen?'
+      },
+      'modalphotos': {
+        'deselectall': 'Alle abwählen',
+        'noimages': 'Keine Bilder während der Streckenaufzeichnung aufgenommen',
+        'savebtn': 'Hochladen',
+        'selectall': 'Alle auswählen',
+        'title': 'Fotos hochladen'
+      },
+      'modalsave': {
+        'closemodal': {
+          'back': 'Zurück zur Aufzeichnung',
+          'cancel': 'Abbrechen',
+          'delete': 'Aufzeichnung löschen'
+        },
+        'deletebtn': 'OHNE SPEICHERN BEENDEN',
+        'formactivity': 'Aktivitätstyp',
+        'formactivityerror': 'Der Aktivitätstyp ist ein Pflichtfeld',
+        'formactivityplaceholder': 'Wählen',
+        'formdescription': 'Beschreibung',
+        'formdescriptionplaceholder': 'Wenn Sie möchten, können Sie eine Beschreibung hinzufügen',
+        'formphotos': 'Fotos hinzufügen, die während der Strecke aufgenommen wurden',
+        'formtitle': 'Titel der Strecke',
+        'formtitleerror': 'Das Titelfeld ist erforderlich',
+        'formtitleplaceholder': 'Geben Sie einen Titel ein',
+        'phototextshort': 'Fotos',
+        'savebtn': 'Speichern',
+        'title': 'Strecke speichern',
+        'titleEdit': 'Strecke bearbeiten'
+      },
+      'odo': 'Zurückgelegte Km',
+      'pausebtn': 'Pause',
+      'resumebtn': 'Fortsetzen',
+      'stopbtn': 'Beenden',
+      'time': 'In Bewegung',
+      'title': 'Eine Strecke aufzeichnen'
+    },
+    'registeruser': {
+      'cf': 'Steuer-ID',
+      'cfextra': 'Warum fragen wir nach der Steuer-ID?',
+      'cfph': 'XXXXXXXXXXXXXXXX',
+      'cfpopovermessage': 'Wenn Sie CAI-Mitglied sind, geben Sie Ihre Steuer-ID während der Registrierung ein. Für Sie ist der Download der Etappen des Sentiero Italia CAI automatisch kostenlos!',
+      'cfpopovertitle': 'Warum fragen wir nach der Steuer-ID?',
+      'confirmPassword': 'Passwort bestätigen',
+      'confirmPasswordph': 'Passwort wiederholen',
+      'email': 'E-Mail',
+      'emailph': 'beispiel@email.com',
+      'errors': {
+        'form': {
+          'nameRequired': 'Es ist erforderlich, einen Namen einzugeben'
+        },
+        'form.cfInvalid': 'Die Steuer-ID ist ungültig',
+        'form.confirmPasswordInvalid': 'Die Bestätigung stimmt nicht mit dem oben eingegebenen Passwort überein',
+        'form.confirmPasswordRequired': 'Es ist erforderlich, das Passwort zu bestätigen',
+        'form.emailInvalid': 'E-Mail ist ungültig',
+        'form.emailRequired': 'Es ist erforderlich, eine E-Mail einzugeben',
+        'form.passwordRequired': 'Es ist erforderlich, ein Passwort einzugeben'
+      },
+      'genericError': 'Fehler bei der Benutzerregistrierung',
+      'loading': 'Registrierung läuft',
+      'name': 'Name',
+      'nameph': 'Geben Sie Ihren Namen ein',
+      'password': 'Passwort',
+      'passwordph': 'Geben Sie Ihr Passwort ein',
+      'privacy1': 'Durch Klicken auf "Registrieren" akzeptieren Sie unsere ',
+      'privacy2': 'und',
+      'privacy3': '',
+      'privacylink1': 'Datenschutzrichtlinie',
+      'privacylink2': 'Allgemeine Geschäftsbedingungen',
+      'registerbutton': 'Registrieren',
+      'title': 'Treten Sie der Webmapp-Community bei!'
+    },
+    'route': {
+      'btnFullMapExpand': 'Erweitern',
+      'btnFullMapReduce': 'Reduzieren',
+      'btndnavigate': 'Navigieren',
+      'btndownload': 'Herunterladen',
+      'btnfavourite': 'Favoriten',
+      'btnshare': 'Teilen',
+      'description': {
+        'description': 'Beschreibung',
+        'gallery': 'Galerie'
+      },
+      'detail': {
+        'from': 'Start',
+        'to': 'Ziel',
+        'ascent': 'Höhenunterschied +',
+        'descent': 'Höhenunterschied -',
+        'distance': 'Distanz',
+        'duration_forward': 'Dauer der Hinreise',
+        'duration_backward': 'Dauer der Rückreise',
+        'difficulty': 'Schwierigkeit',
+        'ele_from': 'Start-Höhe',
+        'ele_max': 'Maximale Höhe',
+        'ele_min': 'Minimale Höhe',
+        'ele_to': 'Ziel-Höhe'
+      },
+      'directions': 'Wegbeschreibung erhalten',
+      'download': 'Herunterladen',
+      'downloadpanel': {
+        'complete': 'Download abgeschlossen',
+        'dontclose': 'Schließen Sie die App nicht während der Dateninstallation',
+        'downdata': 'Daten werden heruntergeladen',
+        'downsize': 'Download-Größe',
+        'download': 'Herunterladen',
+        'downloadbtn': 'Herunterladen',
+        'downloading': 'Wird heruntergeladen',
+        'downmap': 'Karte wird heruntergeladen',
+        'downmedia': 'Medien werden heruntergeladen',
+        'downsetup': 'Erstkonfiguration',
+        'gotobtn': 'Zu meinen Downloads gehen',
+        'install': 'Installation'
+      },
+      'favbtn': {
+        'isFavourite': 'Zu Favoriten hinzugefügt!',
+        'isNotFavourite': 'Aus Favoriten entfernt!'
+      },
+      'modalconfirm': {
+        'cancel': 'Abbrechen',
+        'confirm': 'Beenden',
+        'text': 'Beenden, ohne den Streckendownload abzuschließen?',
+        'title': 'Download unterbrechen?'
+      },
+      'navigate': 'Navigieren',
+      'share': 'Teilen',
+      'tabdescription': 'Beschreibung',
+      'tabdetail': 'Details',
+      'tabeat': 'Wo essen',
+      'tabhowto': 'Wie man hinkommt',
+      'tabviability': 'Befahrbarkeit',
+      'tabwalkable': 'Zugänglichkeit',
+      'viability': {
+        'info': 'Weitere Informationen',
+        'title': 'Befahrbarkeit der Strecke'
+      }
+    },
+    'store': {
+      'button1': '1 Einzelmünze',
+      'button100': 'Paket mit 100 Münzen',
+      'button20': 'Paket mit 20 Münzen',
+      'button50': 'Paket mit 50 Münzen',
+      'main': 'Webmapp-Münzen',
+      'text': 'Sie können eine Einzelmünze kaufen oder zwischen einem oder mehreren Paketen wählen!',
+      'text2': 'Münzen dienen zum Herunterladen von Strecken und Offline-Inhalten und zum Zugriff auf viele Vorteile!',
+      'title': 'Shop'
+    },
+    'trackdetail': {
+      'avgspeed': 'Durchschnittsgeschwindigkeit',
+      'delete': 'Aufzeichnung löschen',
+      'details': 'Details',
+      'distance': 'Zurückgelegte Km',
+      'edit': 'Aufzeichnung bearbeiten',
+      'photos': 'Fotos',
+      'slope': 'Höhenunterschied',
+      'time': 'Zeit',
+      'title': 'Aufgezeichnete Strecke',
+      'topspeed': 'Höchstgeschwindigkeit'
+    },
+    'tracklist': {
+      'noitem': 'Derzeit sind keine Strecken aufgezeichnet',
+      'title': 'Aufgezeichnete Strecken'
+    },
+    'waypoint': {
+      'here': 'Sie sind hier:',
+      'modalsave': {
+        'formdescription': 'Beschreibung',
+        'formdescriptionplaceholder': 'Wenn Sie möchten, können Sie eine Beschreibung hinzufügen',
+        'formoptional': 'Optional',
+        'formphotos': 'Fotos des Wegpunkts hinzufügen',
+        'formtitle': 'Titel des Wegpunkts',
+        'formtitleerror': 'Der Titel des Wegpunkts ist erforderlich',
+        'formtitleplaceholder': 'Geben Sie einen Titel ein',
+        'formtype': 'Typ des Wegpunkts',
+        'formtypeerror': 'Der Typ des Wegpunkts ist erforderlich',
+        'formtypeplaceholder': 'Wählen',
+        'phototextshort': 'Fotos',
+        'save': 'Speichern ',
+        'title': 'Einen Wegpunkt aufzeichnen'
+      },
+      'save': 'Wegpunkt speichern',
+      'title': 'Einen Wegpunkt aufzeichnen'
+    },
+    'waypointdetail': {
+      'delete': 'Aufzeichnung löschen',
+      'edit': 'Aufzeichnung bearbeiten',
+      'title': 'Aufgezeichneter Wegpunkt'
+    },
+    'waypointlist': {
+      'noitem': 'Derzeit sind keine Wegpunkte aufgezeichnet',
+      'title': 'Aufgezeichnete Wegpunkte'
+    },
+    'project': {
+      'title': 'Projekt'
+    },
+    'credits': {
+      'title': 'Credits',
+      'webmappContent1': 'Die App {{appName}} wird von Webmapp entwickelt und gewartet.<br> Webmapp bietet kartografische Dienste im Internet, mobile Apps und gedruckte Karten für Natur- und Abenteuertourismus.<br>Für weitere Informationen besuchen Sie unsere Website ',
+      'webmappContent2': ' oder schreiben Sie uns an <a href="mailto:info@webmapp.it">info@webmapp.it</a>',
+      'map': 'Karte',
+      'mapContent': '© Webmapp, verteilt unter der Lizenz CC BY-NC-SA',
+      'cartographicData': 'Kartografische Daten',
+      'cartographicDataContent': '© OpenStreetMap-Mitwirkende'
+    },
+    'disclaimer': {
+      'title': 'Haftungsausschluss',
+      'content': 'Wandern in der Natur und allgemein Outdoor-Aktivitäten sind potenziell gefährliche Aktivitäten: Bevor Sie sich auf eine Exkursion begeben, stellen Sie sicher, dass Sie über das Wissen und die Fähigkeiten verfügen, dies zu tun. Wenn Sie sich nicht sicher sind, wenden Sie sich an lokale Experten, die Ihnen helfen, vorschlagen und unterstützen können, Ihre Aktivitäten zu planen und durchzuführen. Die in dieser APP präsentierten Daten können die risikofreie Befahrbarkeit der Strecke nicht vollständig garantieren: Seit der letzten Überprüfung der Strecke können sich Änderungen, auch wesentliche, ergeben haben. Daher ist es unerlässlich, dass diejenigen, die Aktivitäten entwickeln möchten, sorgfältig die Möglichkeit des Fortfahrens auf der Grundlage der in dieser APP enthaltenen Vorschläge und Ratschläge, ihrer Erfahrung, der Wetterbedingungen (auch der vorherigen Tage) und einer vor Ort durchgeführten Bewertung zu Beginn der Aktivität bewerten. Die Firma Webmapp S.r.l. bietet keine Garantie für die Sicherheit der beschriebenen Orte und übernimmt keine Verantwortung für mögliche Schäden, die durch die Durchführung der beschriebenen Aktivitäten entstehen.'
+    }
+  },
+  'services': {
+    'geolocation': {
+      'notification': {
+        'text': {
+          'newTrackRecord': 'Tippen Sie auf die Benachrichtigung, um die App zu öffnen'
+        },
+        'title': {
+          'newTrackRecord': 'Aufnahme läuft'
+        }
+      }
+    },
+    'share': {
+      'dialogTitle': 'Mit Ihren Freunden teilen',
+      'text': 'Hier ist eine interessante Strecke von Webmapp',
+      'title': 'Haben Sie diese Strecke gesehen?',
+      'url': 'www.webmapp.it'
+    }
+  },
+  'tabs': {
+    'favourites': 'Favoriten',
+    'home': 'Home',
+    'map': 'Karte',
+    'profile': 'Profil'
+  },
+  'no-tracks': 'Sie haben noch keine Strecke heruntergeladen',
+  'hiking': 'Wandern',
+  'skitouring': 'Skitour',
+  'walking': 'Spazieren',
+  'running': 'Laufen',
+  'asphalt': 'Asphalt',
+  'bitumenduro': 'Bitumenduro',
+  'onoff': 'On/Off',
+  'real-dirt': 'Echter Schmutz',
+  'bar': 'Bar',
+  'cycling': 'Radfahren',
+  'poi_type': 'Interessenspunkt',
+  'where': 'Orte',
+  'I tuoi dati': 'Ihre Daten',
+  'Scarica il tracciato GPX': 'GPX-Strecke herunterladen',
+  'Scarica il tracciato KML': 'KML-Strecke herunterladen',
+  'Scarica il tracciato GEOJSON': 'GEOJSON-Strecke herunterladen',
+  'Elimina account': 'Konto löschen',
+  'Digita \'elimina account\'': 'Geben Sie \'Konto löschen\' ein',
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "Die Bestätigung stimmt nicht überein. Es ist erforderlich, 'Konto löschen' zu schreiben, um fortzufahren.",
+  'Azione irreversibile': 'Unumkehrbare Aktion',
+  'Attenzione': 'Achtung',
+  'Annulla': 'Abbrechen',
+  'Conferma': 'Bestätigen',
+  'Link utili': 'Nützliche Links',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Um Strecken korrekt aufzuzeichnen und anzuzeigen, aktivieren Sie die Standortberechtigung in den Einstellungen",
+  'Apri impostazioni App': 'App-Einstellungen öffnen',
+  'Ti trovi qui': 'Sie sind hier',
+  'Salva Waypoint': 'Wegpunkt speichern',
+  'Salva Traccia': 'Strecke speichern',
+  'privacy': {
+    'agree': {
+      'title': 'Datenverarbeitung',
+      'message': 'Ich stimme zu, dass meine Daten veröffentlicht werden',
+      'read_privacy': 'Datenverarbeitungsinformationen lesen',
+      'accept': 'Akzeptieren',
+      'reject': 'Ablehnen',
+      'confirm': {
+        'title': 'Änderung bestätigen',
+        'accept_message': 'Sind Sie sicher, dass Sie die Datenverarbeitung akzeptieren möchten?',
+        'reject_message': 'Sind Sie sicher, dass Sie die Datenverarbeitung ablehnen möchten?',
+        'yes': 'Ja, bestätigen',
+        'no': 'Abbrechen'
+      },
+      'final_confirm': {
+        'title': 'Änderung abgeschlossen',
+        'accept_message': 'Die Einwilligung zur Datenverarbeitung wurde erfolgreich akzeptiert.',
+        'reject_message': 'Die Einwilligung zur Datenverarbeitung wurde erfolgreich abgelehnt.',
+        'ok': 'OK'
+      }
+    }
+  }
+};

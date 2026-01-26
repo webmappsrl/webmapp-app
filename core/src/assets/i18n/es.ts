@@ -1,0 +1,618 @@
+export const appES = {
+  'activities': {
+    'cycling': 'Ciclismo',
+    'hiking': 'Senderismo',
+    'running': 'Correr',
+    'skitouring': 'Esquí de travesía',
+    'walking': 'Caminar',
+    'asphalt': 'Asfalto',
+    'bitumenduro': 'Bitumenduro',
+    'onoff': 'On/Off',
+    'real-dirt': 'Tierra real',
+    'bar': 'Bar'
+  },
+  'sidemenu': {
+    'project': 'Proyecto',
+    'offline': 'Desconectado',
+    'settings': 'Configuraciones',
+    'credits': 'Créditos',
+    'disclaimer': 'Aviso legal'
+  },
+  'components': {
+    'cardtrack': {
+      'delete': 'Eliminar',
+      'remove': 'Quitar'
+    },
+    'map': {
+      'btnrec': {
+        'slide': 'Deslizar para grabar'
+      },
+      'register': {
+        'cancel': 'Cancelar',
+        'photo': 'Foto',
+        'title': 'Registrar',
+        'track': 'Ruta',
+        'vocal': 'Nota de voz',
+        'waypoint': 'Punto de referencia'
+      }
+    },
+    'searchbar': {
+      'filters': 'Filtrar por',
+      'nofilters': 'Ningún filtro coincide con la búsqueda realizada',
+      'noplaces': 'Ningún lugar coincide con la búsqueda realizada',
+      'notracks': 'Ninguna ruta coincide con la búsqueda realizada',
+      'placeholder': 'buscar',
+      'places': 'Lugares',
+      'tracks': 'Rutas'
+    },
+    'slopechart': {
+      'slope': {
+        'label': 'pendiente'
+      },
+      'surfaces': {
+        'asphalt': {
+          'label': 'asfalto'
+        },
+        'concrete': {
+          'label': 'hormigón'
+        },
+        'dirt': {
+          'label': 'tierra'
+        },
+        'grass': {
+          'label': 'césped'
+        },
+        'gravel': {
+          'label': 'grava'
+        },
+        'paved': {
+          'label': 'pavimentado'
+        },
+        'sand': {
+          'label': 'arena'
+        }
+      }
+    }
+  },
+  'generic': {
+    'cancel': 'cancelar',
+    'confirm': 'confirmar',
+    'delete': 'eliminar',
+    'error': 'Ocurrió un error. Inténtalo de nuevo más tarde',
+    'hour': 'hora',
+    'minute': 'min',
+    'ok': 'ok',
+    'retry': 'intentar de nuevo',
+    'warning': 'Atención'
+  },
+  'modals': {
+    'coin': {
+      'buttonall': 'Ver todos los paquetes de monedas',
+      'buttonone': 'Comprar 1 Moneda / 1€',
+      'defaultmessage': 'Compra monedas para descargar contenido offline',
+      'info1': 'Puedes comprar una sola ruta',
+      'info2': 'Todo está disponible incluso sin cobertura',
+      'info3': 'Recibe notificaciones de proximidad',
+      'subinfo1': 'Compra una sola moneda por 1€',
+      'subinfo2': 'Navegación precisa incluso cuando estás desconectado',
+      'subinfo3': 'Te notificamos cerca de puntos de interés en la ruta'
+    },
+    'giftcoin': {
+      'button': 'Comienza a explorar',
+      'info': '¡Recibes inmediatamente 2 monedas webmapp de regalo para descargar contenido offline!',
+      'title': '¡Bienvenido a webmapp!'
+    },
+    'login': {
+      'email': 'Correo electrónico',
+      'errors': {
+        '401': 'Las credenciales que ingresaste no son correctas. Verifica el correo electrónico y la contraseña e inténtalo de nuevo',
+        'form': {
+          'emailInvalid': 'Has ingresado un correo electrónico no válido',
+          'emailRequired': 'El correo electrónico es obligatorio',
+          'passwordRequired': 'La contraseña es obligatoria'
+        },
+        'generic': '¡Ups! Algo salió mal. Espera unos minutos e inténtalo de nuevo.'
+      },
+      'forgotPassword': '¿Olvidaste tu contraseña?',
+      'login': 'Iniciar sesión',
+      'message': 'Inicia sesión con tus credenciales para continuar.',
+      'password': 'Contraseña',
+      'rememberLogin': 'Recordar credenciales',
+      'title': 'Iniciar sesión',
+      'welcome': '¡Bienvenido de nuevo!'
+    },
+    'photo': {
+      'next': 'Siguiente',
+      'popover': {
+        'cancel': 'Cancelar',
+        'library': 'De la biblioteca',
+        'shot': 'Tomar una foto',
+        'title': 'Fuente de la imagen'
+      },
+      'save': {
+        'addphoto': 'Agregar foto',
+        'formphototitle': 'Título ',
+        'formtitle': 'Dale un título a tus fotos',
+        'modalconfirm': {
+          'cancel': 'Cancelar',
+          'confirm': 'Sí, eliminar',
+          'text': 'Si lo eliminas, no se añadirá a este registro',
+          'title': '¿Estás seguro de que deseas eliminar esta foto del registro?'
+        },
+        'placeholder': 'Aquí puedes ingresar un título',
+        'savebtn': 'Guardar',
+        'title': 'Registrar foto'
+      },
+      'single': {
+        'formphototitle': 'Título',
+        'placeholder': 'Aquí puedes ingresar un título',
+        'savebtn': 'Hecho',
+        'title': 'Modificar foto'
+      }
+    },
+    'settings': {
+      'alert': {
+        'logout': '¿Estás seguro de que deseas cerrar sesión en tu cuenta?'
+      },
+      'logout': 'Cerrar sesión',
+      'title': 'Configuraciones',
+      'version': 'Versión'
+    },
+    'storesuccess': {
+      'back': 'Volver a la búsqueda',
+      'buttondownload': 'Descargar ahora',
+      'continue': '¿Deseas usar tu moneda inmediatamente para descargar ',
+      'continue2': '?',
+      'info': '¡Puedes verificar el saldo de tus monedas directamente en tu área personal!',
+      'or': 'O',
+      'title': '¡Gracias por comprar tu primera moneda!'
+    },
+    'success': {
+      'photos': {
+        'text': 'Tus fotos se han guardado con éxito. Puedes verlas accediendo a tu perfil.',
+        'title': '¡Fotos registradas con éxito!'
+      },
+      'return': 'Volver a explorar',
+      'track': {
+        'avgspeed': 'Velocidad media',
+        'odo': 'Km recorridos',
+        'slope': 'Diferencia de altitud',
+        'text': 'Las rutas se han guardado con éxito. Puedes verlas accediendo a tu perfil.',
+        'time': 'Tiempo',
+        'title': '¡Actividad registrada con éxito!',
+        'topspeed': 'Velocidad máxima'
+      },
+      'waypoint': {
+        'text': 'Has guardado con éxito tu punto de referencia. Puedes verlo accediendo a tu perfil.',
+        'title': '¡Punto de referencia registrado con éxito!'
+      }
+    }
+  },
+  'pages': {
+    'downloadlist': {
+      'cancel': 'Cancelar',
+      'deleteselected': 'Eliminar seleccionados',
+      'nodata': 'Aún no has descargado ninguna ruta',
+      'nodata2': '¡Con contenido para uso offline, navegas con tranquilidad incluso sin conexión!',
+      'nodatabtn': 'Explorar',
+      'select': 'Seleccionar',
+      'title': 'Descargas'
+    },
+    'favourites': {
+      'nodata': 'No hay rutas favoritas, haz clic en el icono de corazón de una ruta para añadirla a esta lista',
+      'title': 'Favoritos'
+    },
+    'home': {
+      'button': 'Elige un punto de partida',
+      'closerTracks': 'Rutas cercanas',
+      'intro': 'Planificamos juntos tu próxima aventura',
+      'mostViewedTracks': 'Rutas más vistas',
+      'nocloserTracks': 'Parece que no hay rutas cerca de tu ubicación actual',
+      'welcome': '¡Bienvenido!'
+    },
+    'itinerary': {
+      'btnFullMapExpand': 'Expandir',
+      'btnFullMapReduce': 'Reducir',
+      'btndnavigate': 'Navegar',
+      'btndownload': 'Descargar',
+      'btnfavourite': 'Favoritos',
+      'btnshare': 'Compartir',
+      'description': {
+        'description': 'Descripción',
+        'gallery': 'Galería'
+      },
+      'detail': {
+        'ascent': 'Diferencia de altitud +',
+        'descent': 'Diferencia de altitud -',
+        'distance': 'Distancia',
+        'ele_from': 'Altitud de partida',
+        'ele_max': 'Altitud máxima',
+        'ele_min': 'Altitud mínima',
+        'ele_to': 'Altitud de llegada'
+      },
+      'directions': 'Obtener direcciones',
+      'download': 'Descargar',
+      'downloadpanel': {
+        'complete': 'Descarga completada',
+        'dontclose': 'No cierres la aplicación durante la fase de instalación de datos',
+        'downdata': 'Descargando datos',
+        'downsize': 'Tamaño de descarga',
+        'download': 'Descargar',
+        'downloadbtn': 'Descargar',
+        'downloading': 'Descargando',
+        'downmap': 'Descargando mapa',
+        'downmedia': 'Descargando medios',
+        'downsetup': 'Configuración inicial',
+        'gotobtn': 'Ir a mis descargas',
+        'install': 'Instalación'
+      },
+      'favbtn': {
+        'isFavourite': '¡Añadido a favoritos!',
+        'isNotFavourite': '¡Eliminado de favoritos!'
+      },
+      'modalconfirm': {
+        'cancel': 'Cancelar',
+        'confirm': 'Salir',
+        'text': '¿Salir sin completar la descarga de la ruta?',
+        'title': '¿Interrumpir la descarga?'
+      },
+      'modalNotImpemented': {
+        'text': 'Próximamente',
+        'title': 'Actualmente no disponible',
+        'confirm': 'ok'
+      },
+      'navigate': 'Navegar',
+      'share': 'Compartir',
+      'tabdescription': 'Descripción',
+      'tabdetail': 'Detalles',
+      'tabeat': 'Dónde comer',
+      'tabhowto': 'Cómo llegar',
+      'tabviability': 'Viabilidad',
+      'tabwalkable': 'Accesibilidad',
+      'viability': {
+        'info': 'Otras informaciones',
+        'title': 'Viabilidad de la ruta'
+      }
+    },
+    'map': {
+      'loading': 'buscando...',
+      'recordingbtn': 'Grabando',
+      'searchherebtn': 'Buscar en esta área'
+    },
+    'photodetail': {
+      'delete': 'Eliminar registro',
+      'edit': 'Modificar registro',
+      'title': 'Foto registrada'
+    },
+    'photolist': {
+      'noitem': 'Actualmente no hay fotos registradas',
+      'title': 'Fotos registradas'
+    },
+    'profile': {
+      'data': {
+        'data': 'Uso de datos',
+        'downloads': 'Descargas',
+        'tracks': 'Rutas descargadas'
+      },
+      'loggedOut': {
+        'login': 'Iniciar sesión',
+        'signup': 'Registrarse',
+        'slides': {
+          '0': 'Inicia sesión y descarga tus rutas favoritas',
+          '1': 'También puedes compartirlas con tus amigos de viaje'
+        }
+      },
+      'records': {
+        'photos': 'Fotos',
+        'title': 'Registros',
+        'tracks': 'Rutas',
+        'vocals': 'Notas de voz',
+        'waypoints': 'Puntos de referencia'
+      },
+      'title': 'Perfil',
+      'lang': 'idioma',
+      'langPlaceholder': 'elegir',
+      'projectlink': 'Proyecto',
+      'disclaimerlink': 'Aviso legal',
+      'creditslink': 'Créditos',
+      'privacylink': 'Privacidad'
+    },
+    'register': {
+      'averagespeed': 'Velocidad media',
+      'backgroundbtn': 'Grabar en segundo plano',
+      'currentspeed': 'Velocidad actual',
+      'modalconfirm': {
+        'cancel': 'Cancelar',
+        'confirm': 'Confirmar',
+        'text': 'Una vez confirmado, no podrás reiniciar esta navegación',
+        'title': '¿Confirmas que deseas finalizar la grabación?'
+      },
+      'modalexit': {
+        'cancel': 'Cancelar',
+        'confirm': 'Eliminar',
+        'text': 'Al finalizar la acción, la ruta se eliminará de tu perfil y de Webmapp. La operación no se puede deshacer.',
+        'title': '¿Eliminar permanentemente?'
+      },
+      'modalphotos': {
+        'deselectall': 'Deseleccionar todo',
+        'noimages': 'No hay imágenes capturadas durante el registro de la ruta',
+        'savebtn': 'Cargar',
+        'selectall': 'Seleccionar todo',
+        'title': 'Cargar fotos'
+      },
+      'modalsave': {
+        'closemodal': {
+          'back': 'Volver al registro',
+          'cancel': 'Cancelar',
+          'delete': 'Eliminar registro'
+        },
+        'deletebtn': 'SALIR SIN GUARDAR',
+        'formactivity': 'Tipo de actividad',
+        'formactivityerror': 'El tipo de actividad es un campo obligatorio',
+        'formactivityplaceholder': 'Elegir',
+        'formdescription': 'Descripción',
+        'formdescriptionplaceholder': 'Si lo deseas, puedes añadir una descripción',
+        'formphotos': 'Añadir fotos capturadas durante la ruta',
+        'formtitle': 'Título de la ruta',
+        'formtitleerror': 'El campo de título es obligatorio',
+        'formtitleplaceholder': 'Introduce un título',
+        'phototextshort': 'Fotos',
+        'savebtn': 'Guardar',
+        'title': 'Guardar ruta',
+        'titleEdit': 'Modificar ruta'
+      },
+      'odo': 'Km recorridos',
+      'pausebtn': 'Pausar',
+      'resumebtn': 'Continuar',
+      'stopbtn': 'Finalizar',
+      'time': 'En movimiento',
+      'title': 'Registrar una ruta'
+    },
+    'registeruser': {
+      'cf': 'Código Fiscal',
+      'cfextra': '¿Por qué pedimos el CF?',
+      'cfph': 'XXXXXXXXXXXXXXXX',
+      'cfpopovermessage': 'Si eres Miembro CAI, ingresa tu CF durante el registro. Para ti, la descarga de las etapas del Sentiero Italia CAI será automáticamente gratuita.',
+      'cfpopovertitle': '¿Por qué pedimos el Código Fiscal?',
+      'confirmPassword': 'Confirmar contraseña',
+      'confirmPasswordph': 'Repite la contraseña',
+      'email': 'Correo electrónico',
+      'emailph': 'ejemplo@email.com',
+      'errors': {
+        'form': {
+          'nameRequired': 'Es necesario ingresar un nombre'
+        },
+        'form.cfInvalid': 'El código fiscal no es válido',
+        'form.confirmPasswordInvalid': 'La confirmación no coincide con la contraseña ingresada arriba',
+        'form.confirmPasswordRequired': 'Es necesario confirmar la contraseña',
+        'form.emailInvalid': 'El correo electrónico no es válido',
+        'form.emailRequired': 'Es necesario ingresar un correo electrónico',
+        'form.passwordRequired': 'Es necesario ingresar una contraseña'
+      },
+      'genericError': 'Error al registrar el usuario',
+      'loading': 'Registro en proceso',
+      'name': 'Nombre',
+      'nameph': 'ingresa tu nombre',
+      'password': 'Contraseña',
+      'passwordph': 'ingresa tu contraseña',
+      'privacy1': "Al hacer clic en \"Registrarse\" aceptas nuestra ",
+      'privacy2': 'y',
+      'privacy3': '',
+      'privacylink1': 'Política de Privacidad',
+      'privacylink2': 'Términos y condiciones',
+      'registerbutton': 'Registrarse',
+      'title': '¡Únete a la comunidad de webmapp!'
+    },
+    'route': {
+      'btnFullMapExpand': 'Expandir',
+      'btnFullMapReduce': 'Reducir',
+      'btndnavigate': 'Navegar',
+      'btndownload': 'Descargar',
+      'btnfavourite': 'Favoritos',
+      'btnshare': 'Compartir',
+      'description': {
+        'description': 'Descripción',
+        'gallery': 'Galería'
+      },
+      'detail': {
+        'from': 'Salida',
+        'to': 'Llegada',
+        'ascent': 'Diferencia de altitud +',
+        'descent': 'Diferencia de altitud -',
+        'distance': 'Distancia',
+        'duration_forward': 'duración de ida',
+        'duration_backward': 'duración de vuelta',
+        'difficulty': 'Dificultad',
+        'ele_from': 'Altitud de salida',
+        'ele_max': 'Altitud máxima',
+        'ele_min': 'Altitud mínima',
+        'ele_to': 'Altitud de llegada'
+      },
+      'directions': 'Obtener direcciones',
+      'download': 'Descargar',
+      'downloadpanel': {
+        'complete': 'Descarga completada',
+        'dontclose': 'No cierres la aplicación durante la fase de instalación de datos',
+        'downdata': 'Descargando datos',
+        'downsize': 'Tamaño de descarga',
+        'download': 'Descargar',
+        'downloadbtn': 'Descargar',
+        'downloading': 'Descargando',
+        'downmap': 'Descargando mapa',
+        'downmedia': 'Descargando medios',
+        'downsetup': 'Configuración inicial',
+        'gotobtn': 'Ir a mis descargas',
+        'install': 'Instalación'
+      },
+      'favbtn': {
+        'isFavourite': '¡Añadido a favoritos!',
+        'isNotFavourite': '¡Eliminado de favoritos!'
+      },
+      'modalconfirm': {
+        'cancel': 'Cancelar',
+        'confirm': 'Salir',
+        'text': '¿Salir sin completar la descarga de la ruta?',
+        'title': '¿Interrumpir la descarga?'
+      },
+      'navigate': 'Navegar',
+      'share': 'Compartir',
+      'tabdescription': 'Descripción',
+      'tabdetail': 'Detalles',
+      'tabeat': 'Dónde comer',
+      'tabhowto': 'Cómo llegar',
+      'tabviability': 'Viabilidad',
+      'tabwalkable': 'Accesibilidad',
+      'viability': {
+        'info': 'Otras informaciones',
+        'title': 'Viabilidad de la ruta'
+      }
+    },
+    'store': {
+      'button1': '1 Moneda Única',
+      'button100': 'Paquete de 100 monedas',
+      'button20': 'Paquete de 20 Monedas',
+      'button50': 'Paquete de 50 monedas',
+      'main': 'Monedas Webmapp',
+      'text': '¡Puedes comprar una Moneda única, o elegir entre uno o más paquetes!',
+      'text2': '¡Las monedas sirven para descargar rutas y contenido offline, y para acceder a muchos beneficios!',
+      'title': 'Tienda'
+    },
+    'trackdetail': {
+      'avgspeed': 'Velocidad media',
+      'delete': 'Eliminar registro',
+      'details': 'Detalles',
+      'distance': 'Km recorridos',
+      'edit': 'Modificar registro',
+      'photos': 'Fotos',
+      'slope': 'Diferencia de altitud',
+      'time': 'Tiempo',
+      'title': 'Ruta registrada',
+      'topspeed': 'Velocidad máxima'
+    },
+    'tracklist': {
+      'noitem': 'Actualmente no hay rutas registradas',
+      'title': 'Rutas registradas'
+    },
+    'waypoint': {
+      'here': 'Estás aquí:',
+      'modalsave': {
+        'formdescription': 'Descripción',
+        'formdescriptionplaceholder': 'Si lo deseas, puedes añadir una descripción',
+        'formoptional': 'Opcional',
+        'formphotos': 'Añadir fotos del Punto de Referencia',
+        'formtitle': 'Título del punto de referencia',
+        'formtitleerror': 'El título del punto de referencia es obligatorio',
+        'formtitleplaceholder': 'Introduce un título',
+        'formtype': 'Tipo de Punto de Referencia',
+        'formtypeerror': 'El tipo de punto de referencia es obligatorio',
+        'formtypeplaceholder': 'Elegir',
+        'phototextshort': 'Fotos',
+        'save': 'Guardar ',
+        'title': 'Registrar un punto de referencia'
+      },
+      'save': 'Guardar punto de referencia',
+      'title': 'Registrar un punto de referencia'
+    },
+    'waypointdetail': {
+      'delete': 'Eliminar registro',
+      'edit': 'Modificar registro',
+      'title': 'Punto de referencia registrado'
+    },
+    'waypointlist': {
+      'noitem': 'Actualmente no hay puntos de referencia registrados',
+      'title': 'Puntos de referencia registrados'
+    },
+    'project': {
+      'title': 'Proyecto'
+    },
+    'credits': {
+      'title': 'Créditos',
+      'webmappContent1': 'La aplicación {{appName}} es desarrollada y mantenida por Webmapp.<br> Webmapp realiza servicios cartográficos en internet, aplicaciones móviles y cartografía impresa para Turismo de Naturaleza & Aventura.<br>Para más información, visita nuestro sitio web ',
+      'webmappContent2': " o escríbenos a <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
+      'map': 'Mapa',
+      'mapContent': '© Webmapp, distribuido bajo licencia CC BY-NC-SA',
+      'cartographicData': 'Datos cartográficos',
+      'cartographicDataContent': '© Contribuidores de OpenStreetMap'
+    },
+    'disclaimer': {
+      'title': 'Aviso legal',
+      'content': 'Caminar en la naturaleza y, en general, las actividades al aire libre, son actividades potencialmente peligrosas: antes de partir para una excursión, asegúrate de tener el conocimiento y las habilidades para hacerlo. Si no estás seguro, dirígete a expertos locales que puedan ayudarte, sugerir y apoyar en la planificación y desarrollo de tus actividades. Los datos presentados en esta APLICACIÓN no pueden garantizar completamente la viabilidad sin riesgos de la ruta: pueden haber ocurrido cambios, incluso significativos, desde la última verificación de la ruta. Por lo tanto, es esencial que aquellos que planean desarrollar actividades evalúen cuidadosamente la posibilidad de continuar basándose en las sugerencias y consejos contenidos en esta APLICACIÓN, basándose en su experiencia, las condiciones meteorológicas (incluso de los días anteriores) y una evaluación realizada en el terreno al inicio del desarrollo de la actividad. La empresa Webmapp S.r.l. no ofrece garantías para la seguridad de los lugares descritos y no asume ninguna responsabilidad por posibles daños causados por el desarrollo de las actividades descritas.'
+    }
+  },
+  'services': {
+    'geolocation': {
+      'notification': {
+        'text': {
+          'newTrackRecord': 'Toca la notificación para abrir la aplicación'
+        },
+        'title': {
+          'newTrackRecord': 'Grabación en proceso'
+        }
+      }
+    },
+    'share': {
+      'dialogTitle': 'Compartir con tus amigos',
+      'text': 'Aquí hay una ruta interesante de webmapp',
+      'title': '¿Has visto esta ruta?',
+      'url': 'www.webmapp.it'
+    }
+  },
+  'tabs': {
+    'favourites': 'favoritos',
+    'home': 'home',
+    'map': 'mapa',
+    'profile': 'perfil'
+  },
+  'no-tracks': 'Aún no has descargado ninguna ruta',
+  'hiking': 'Senderismo',
+  'skitouring': 'Esquí de travesía',
+  'walking': 'Caminar',
+  'running': 'Correr',
+  'asphalt': 'Asfalto',
+  'bitumenduro': 'Bitumenduro',
+  'onoff': 'On/Off',
+  'real-dirt': 'Tierra real',
+  'bar': 'Bar',
+  'cycling': 'Ciclismo',
+  'poi_type': 'punto de interés',
+  'where': 'lugares',
+  'I tuoi dati': 'Tus datos',
+  'Scarica il tracciato GPX': 'Descargar la ruta GPX',
+  'Scarica il tracciato KML': 'Descargar la ruta KML',
+  'Scarica il tracciato GEOJSON': 'Descargar la ruta GEOJSON',
+  'Elimina account': 'Eliminar cuenta',
+  "Digita 'elimina account'": "Escribe 'eliminar cuenta'",
+  "La conferma non corrisponde. È necessario scrivere 'elimina account' per procedere.": "La confirmación no coincide. Es necesario escribir 'eliminar cuenta' para proceder.",
+  'Azione irreversibile': 'Acción irreversible',
+  'Attenzione': 'Atención',
+  'Annulla': 'Cancelar',
+  'Conferma': 'Confirmar',
+  'Link utili': 'Enlaces útiles',
+  "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": 'Para registrar rutas y mostrarlas correctamente, activa el permiso de ubicación en configuraciones',
+  'Apri impostazioni App': 'Abrir configuraciones de la aplicación',
+  'Ti trovi qui': 'Estás aquí',
+  'Salva Waypoint': 'Guardar punto de referencia',
+  'Salva Traccia': 'Guardar ruta',
+  'privacy': {
+    'agree': {
+      'title': 'Procesamiento de datos',
+      'message': 'Consiento que mis datos sean publicados',
+      'read_privacy': 'Leer información sobre el procesamiento de datos',
+      'accept': 'Aceptar',
+      'reject': 'Rechazar',
+      'confirm': {
+        'title': 'Confirmar cambio',
+        'accept_message': '¿Está seguro de que desea aceptar el procesamiento de datos?',
+        'reject_message': '¿Está seguro de que desea rechazar el procesamiento de datos?',
+        'yes': 'Sí, confirmar',
+        'no': 'Cancelar'
+      },
+      'final_confirm': {
+        'title': 'Cambio completado',
+        'accept_message': 'El consentimiento para el procesamiento de datos ha sido aceptado exitosamente.',
+        'reject_message': 'El consentimiento para el procesamiento de datos ha sido rechazado exitosamente.',
+        'ok': 'OK'
+      }
+    }
+  }
+};
