@@ -4,7 +4,6 @@ import {BtnFilterComponent} from './btn-filter/btn-filter.component';
 import {CommonModule} from '@angular/common';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {FormFieldComponent} from './form-field/form-field.component';
-import {GalleryComponent} from './gallery/gallery.component';
 import {IonicModule} from '@ionic/angular';
 import {NgModule} from '@angular/core';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
@@ -17,7 +16,6 @@ import {ModalSaveComponent} from './modal-save/modal-save.component';
 import {WmCoreModule} from '@wm-core/wm-core.module';
 const components = [
   RecordingBtnComponent,
-  GalleryComponent,
   FormFieldComponent,
   BtnFilterComponent,
   getFormFieldIcnPipe,
