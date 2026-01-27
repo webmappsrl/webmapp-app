@@ -18,19 +18,19 @@
   <div class="webmapp-downloadlist-command-container">
     <ion-label
       class="webmapp-downloadlist-command"
-      [hidden]="isSelectedActive || !tracks?.length"
+      [class.ion-hide]="isSelectedActive || !tracks?.length"
       (click)="isSelectedActive = !isSelectedActive"
       >{{ 'pages.downloadlist.select' | wmtrans }}</ion-label
     >
     <ion-label
       class="webmapp-downloadlist-command webmapp-downloadlist-command-delete"
-      [hidden]="!isSelectedActive"
+      [class.ion-hide]="!isSelectedActive"
       (click)="deleteSelected()"
       >{{ 'pages.downloadlist.deleteselected' | wmtrans }}</ion-label
     >
     <ion-label
       class="webmapp-downloadlist-command"
-      [hidden]="!isSelectedActive"
+      [class.ion-hide]="!isSelectedActive"
       (click)="isSelectedActive = !isSelectedActive"
       >{{ 'pages.downloadlist.cancel' | wmtrans }}</ion-label
     >
@@ -48,7 +48,7 @@
     <div *ngFor="let track of tracks" class="webmapp-downloadlist-list-container">
       <ion-checkbox
         class="webmapp-downloadlist-list-checkbox"
-        [hidden]="!isSelectedActive"
+        [class.ion-hide]="!isSelectedActive"
         (ionChange)="select($event,track)"
       ></ion-checkbox>
       <webmapp-card-track
