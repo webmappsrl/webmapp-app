@@ -20,10 +20,8 @@ import {ModalSuccessModule} from './components/modal-success/modal-success.modul
 import {SettingsModule} from './components/settings/settings.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
-import {APP_TRANSLATION, APP_VERSION} from '@wm-core/store/conf/conf.token';
 import {StoreModule} from '@ngrx/store';
-import {EnvironmentService} from '@wm-core/services/environment.service';
-import {appDE} from 'src/assets/i18n/de'
+import {appDE} from 'src/assets/i18n/de';
 import {appEN} from 'src/assets/i18n/en';
 import {appES} from 'src/assets/i18n/es';
 import {appFR} from 'src/assets/i18n/fr';
@@ -32,7 +30,7 @@ import {appPR} from 'src/assets/i18n/pr';
 import {appSQ} from 'src/assets/i18n/sq';
 import {WmTranslations} from '@wm-types/language';
 import {MetaComponent} from '@wm-core/meta/meta.component';
-import {initializeConsoleOverride} from '@wm-core/utils/console-override';
+import posthogConfig from '../../../posthog.json';
 registerLocaleData(localeIt);
 export const langs: WmTranslations = {
   'de': appDE,
@@ -73,20 +71,19 @@ export const langs: WmTranslations = {
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'it'},
-    {
-      provide: APP_VERSION,
-      useValue: packageJson.version,
-    },
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
-    {provide: APP_TRANSLATION, useValue: langs},
+    ...WmCoreModule.forRoot({
+      appVersion: packageJson.version,
+      environment: environment,
+      translations: langs,
+      posthog: {
+        apiKey: posthogConfig.POSTHOG_KEY,
+        host: posthogConfig.POSTHOG_HOST,
+        enabled: true,
+      },
+    }).providers!,
   ],
   bootstrap: [AppComponent, MetaComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule {
-  constructor(private _environmentSvc: EnvironmentService) {
-    this._environmentSvc.init(environment);
-    // Inizializza l'override di console dopo aver inizializzato l'environment
-    initializeConsoleOverride(environment);
-  }
-}
+export class AppModule {}
