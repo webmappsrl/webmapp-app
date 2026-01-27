@@ -62,6 +62,7 @@
     "graphhopper-js-api-client": "^5.0.2",
     "ol": "7.1.0",
     "ol-ext": "^4.0.2",
+    "posthog-js": "^1.335.3",
     "rxjs": "^7.8.2",
     "swiper": "^12.0.3",
     "tokml": "0.4.0",
