@@ -19,6 +19,19 @@ interface CategoryConfig {
   items: BooleanConfigItem[];
 }
 
+// Mappatura delle label personalizzate per i toggle
+// Formato: 'category.key' => 'Label personalizzata'
+const CUSTOM_LABELS: {[key: string]: string} = {
+  'APP.forceToReleaseUpdate': 'Forza Aggiornamento Release',
+  'AUTH.enable': 'Mostra autenticazione',
+  'AUTH.showAtStartup': 'Mostra autenticazione all\'avvio',
+  'GEOLOCATION.record.enable': 'Abilita Registrazione Geolocalizzazione',
+  'MAP.pois.apppoisApiLayer': 'Livello API POI App',
+  'OPTIONS.download_track_enable': 'Mostra Download Tracce',
+  'OPTIONS.showDownloadTiles': 'Mostra Download Tiles',
+  // Aggiungi qui altre label personalizzate se necessario
+};
+
 @Component({
   standalone: false,
   selector: 'wm-conf-overrides-modal',
@@ -96,7 +109,7 @@ export class ConfOverridesModalComponent implements OnInit {
     prefix: string,
   ): void {
     if (!obj || typeof obj !== 'object') return;
-    
+
     Object.keys(obj).forEach(key => {
       const value = obj[key];
       const fullKey = prefix ? `${prefix}.${key}` : key;
@@ -122,6 +135,12 @@ export class ConfOverridesModalComponent implements OnInit {
   }
 
   private _getLabel(category: string, key: string): string {
+    // Controlla se esiste una label personalizzata
+    const customLabelKey = `${category}.${key}`;
+    if (CUSTOM_LABELS[customLabelKey]) {
+      return CUSTOM_LABELS[customLabelKey];
+    }
+
     // Genera un'etichetta leggibile dalla chiave
     // Gestisce chiavi annidate come "clustering.enable"
     const displayKey = key.includes('.') ? key.split('.').pop() || key : key;
@@ -151,7 +170,7 @@ export class ConfOverridesModalComponent implements OnInit {
       }
       current[keys[keys.length - 1]] = value;
     }
-    
+
     // Aggiorna il valore nel componente per riflettere immediatamente le modifiche
     const categoryConfig = this.categories.find(c => c.category === category);
     if (categoryConfig) {

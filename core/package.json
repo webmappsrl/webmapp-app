@@ -17,7 +17,8 @@
     "surge-sardegna-dev": "ionic build && surge --project ./www --domain http://32.dev-mobile-webmapp.surge.sh/",
     "surge-osm2cai": "ionic build && surge --project ./www --domain http://26.osm2cai.surge.sh/",
     "surge-ville-uat": "ionic build && surge ./www 75.geohub.ville.surge.sh",
-    "surge-ville-dev": "ionic build && surge ./www 75.geohub.ville-dev.surge.sh"
+    "surge-ville-dev": "ionic build && surge ./www 75.geohub.ville-dev.surge.sh",
+    "surge-camminiditalia-studioflu": "ionic build && surge ./www 1.camminiditalia.studioflu.surge.sh"
   },
   "private": true,
   "dependencies": {
