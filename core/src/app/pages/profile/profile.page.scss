@@ -74,4 +74,15 @@ webmapp-page-profile {
     left: 50%;
     transform: translateX(-50%);
   }
+
+  ion-fab {
+    margin-bottom: calc(var(--ion-safe-area-bottom, 0) + 16px);
+    margin-left: 16px;
+    
+    ion-fab-button {
+      ion-icon {
+        color: white;
+      }
+    }
+  }
 }

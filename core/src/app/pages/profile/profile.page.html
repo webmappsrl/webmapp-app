@@ -66,6 +66,12 @@
       [slide2]="'assets/images/profile/logged_out_slide_1.svg'"
     ></wm-profile-auth>
   </ng-container>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openConfOverrides()" aria-label="Override Configurazione">
+      <ion-icon name="diamond-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
 <wm-privacy-agree-button class="wm-profile-privacy-button">

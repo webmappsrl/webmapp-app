@@ -18,6 +18,7 @@ import {ModalGiftCoinsModule} from './components/modal-gift-coins/modal-gift-coi
 import {ModalStoreSuccessModule} from './components/modal-store-success/modal-store-success.module';
 import {ModalSuccessModule} from './components/modal-success/modal-success.module';
 import {SettingsModule} from './components/settings/settings.module';
+import {ConfOverridesModalModule} from './components/conf-overrides-modal/conf-overrides-modal.module';
 import {SharedModule} from './components/shared/shared.module';
 import packageJson from 'package.json';
 import {StoreModule} from '@ngrx/store';
@@ -63,6 +64,7 @@ export const langs: WmTranslations = {
     AppRoutingModule,
     SharedModule,
     SettingsModule,
+    ConfOverridesModalModule,
     ModalSuccessModule,
     ModalCoinsModule,
     ModalStoreSuccessModule,

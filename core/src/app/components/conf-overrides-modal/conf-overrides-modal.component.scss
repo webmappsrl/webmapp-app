@@ -1,0 +1,24 @@
+ion-content {
+  --padding-bottom: 80px;
+}
+
+ion-item-group {
+  margin-bottom: 16px;
+}
+
+ion-item-divider {
+  --background: var(--ion-color-light);
+  --color: var(--ion-color-dark);
+  font-weight: 600;
+}
+
+ion-item {
+  --padding-start: 16px;
+}
+
+ion-footer {
+  ion-toolbar {
+    --padding-start: 8px;
+    --padding-end: 8px;
+  }
+}

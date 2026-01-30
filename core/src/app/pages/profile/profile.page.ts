@@ -2,6 +2,7 @@ import {Component, OnDestroy, ViewChild, ViewEncapsulation} from '@angular/core'
 import {ModalController} from '@ionic/angular';
 import {Observable, Subject, Subscription} from 'rxjs';
 import {SettingsComponent} from 'src/app/components/settings/settings.component';
+import {ConfOverridesModalComponent} from 'src/app/components/conf-overrides-modal/conf-overrides-modal.component';
 import {select, Store} from '@ngrx/store';
 import {confAUTHEnable, confMAPHitMapUrl} from '@wm-core/store/conf/conf.selector';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
@@ -55,6 +56,19 @@ export class ProfilePage implements OnDestroy {
         canDismiss: true,
         mode: 'ios',
         id: 'webmapp-login-modal',
+      })
+      .then(modal => {
+        modal.present();
+      });
+  }
+
+  openConfOverrides(): void {
+    this._modalController
+      .create({
+        component: ConfOverridesModalComponent,
+        canDismiss: true,
+        mode: 'ios',
+        id: 'webmapp-conf-overrides-modal',
       })
       .then(modal => {
         modal.present();

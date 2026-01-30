@@ -1,0 +1,47 @@
+<wm-modal-header
+  [title]="'Override Configurazione' | wmtrans"
+  (dismiss)="dismiss()"
+></wm-modal-header>
+<ion-content>
+  <ion-list *ngIf="categories.length > 0">
+    <ion-item-group *ngFor="let category of categories">
+      <ion-item-divider>
+        <ion-label>{{ category.category }}</ion-label>
+      </ion-item-divider>
+      <ion-item *ngFor="let item of category.items">
+        <ion-label>
+          <h3>{{ item.label }}</h3>
+          <p>{{ item.key }}</p>
+        </ion-label>
+        <ion-toggle
+          [checked]="item.value"
+          (ionChange)="onToggleChange(category.category, item.key, $event.detail.checked)"
+        ></ion-toggle>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  <div *ngIf="categories.length === 0" class="empty-state">
+    <ion-item>
+      <ion-label>
+        <h3>{{ 'Nessuna configurazione disponibile' | wmtrans }}</h3>
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="reset()" color="danger">
+        <ion-label>{{ 'Reset' | wmtrans }}</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-label>{{ 'Annulla' | wmtrans }}</ion-label>
+      </ion-button>
+      <ion-button (click)="save()" color="primary">
+        <ion-label>{{ 'Salva' | wmtrans }}</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
