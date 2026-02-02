@@ -351,7 +351,7 @@ function update(instanceName, geohubInstanceId, shardName) {
       return;
     }
 
-    envJson.appId = geohubInstanceId;
+    envJson.appId = parseInt(geohubInstanceId, 10);
     envJson.shardName = shardName;
 
     var dir = instancesDir + instanceName,
@@ -487,8 +487,20 @@ function update(instanceName, geohubInstanceId, shardName) {
     }
     console.log(config);
 
-    const env = `export const environment = ${JSON.stringify(envJson)};`;
-    fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', env);
+    // Genera il file environment.ts con la struttura corretta
+    const finalEnvContent = `import {Environment, shards, redirects} from '@wm-types/environment';
+
+export const environment: Environment = {
+  production: ${envJson.production},
+  debug: ${envJson.debug},
+  appId: ${envJson.appId},
+  shardName: '${envJson.shardName}',
+  shards,
+  redirects,
+};
+`;
+    
+    fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', finalEnvContent);
   });
 }
 

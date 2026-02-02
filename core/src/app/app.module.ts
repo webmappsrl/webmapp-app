@@ -79,7 +79,7 @@ export const langs: WmTranslations = {
       posthog: {
         apiKey: posthogConfig.POSTHOG_KEY,
         host: posthogConfig.POSTHOG_HOST,
-        enabled: true,
+        enabled: false,
       },
     }).providers!,
   ],
