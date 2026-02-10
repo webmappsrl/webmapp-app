@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
+import {Inject, Injectable, Optional} from '@angular/core';
 import {Share} from '@capacitor/share';
-import {environment} from 'src/environments/environment';
 import {LangService} from '@wm-core/localization/lang.service';
-import {ConfService} from '@wm-core/store/conf/conf.service';
 import {Feature, LineString} from 'geojson';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {POSTHOG_CLIENT} from '@wm-core/store/conf/conf.token';
+import {WmPosthogClient} from '@wm-types/posthog';
 
 export interface ShareObject {
   dialogTitle?: string;
@@ -27,7 +27,11 @@ export class ShareService {
     dialogTitle: 'Share with buddies',
   };
 
-  constructor(private _translate: LangService, private _environmentSvc: EnvironmentService) {
+  constructor(
+    private _translate: LangService,
+    private _environmentSvc: EnvironmentService,
+    @Optional() @Inject(POSTHOG_CLIENT) private _posthogClient?: WmPosthogClient,
+  ) {
     this._baseLink = this._environmentSvc.shareLink;
 
     this._translate
@@ -54,18 +58,30 @@ export class ShareService {
   }
 
   public sharePoiByID(poiId: number): void {
+    this._posthogClient?.capture('contentShared', {
+      content_type: 'poi',
+      content_id: `${poiId}`,
+    });
     this.share({
       url: `https://${this._baseLink}/map?poi=${poiId}`,
     });
   }
 
   public async shareRoute(route: Feature<LineString>): Promise<void> {
+    this._posthogClient?.capture('contentShared', {
+      content_type: 'track',
+      content_id: `${route.properties.id}`,
+    });
     return this.share({
       url: `${this._environmentSvc.origin}/track/${route.properties.id}`,
     });
   }
 
   public shareTrackByID(trackId: number): void {
+    this._posthogClient?.capture('contentShared', {
+      content_type: 'track',
+      content_id: `${trackId}`,
+    });
     this.share({
       url: `https://${this._baseLink}/map?track=${trackId}`,
     });
