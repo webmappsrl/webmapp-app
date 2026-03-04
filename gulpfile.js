@@ -614,31 +614,69 @@ function runIonicBuild(instanceName) {
 }
 
 function addAndroidPlatform(instanceName, force) {
-  if (force) {
-    if (verbose) debug('Forcing android platform installation');
-    sh.exec('rm -rf android' + outputRedirect, {
-      cwd: instancesDir + instanceName,
-    });
-  }
-  if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
-  if (!fs.existsSync(instancesDir + instanceName + '/android')) {
-    if (verbose) debug('Adding android platform');
-    sh.exec('npx cap add android' + outputRedirect, {
-      cwd: instancesDir + instanceName,
-    });
-    if (verbose) debug('Android platform added successfully');
-  }
+  return new Promise((resolve, reject) => {
+    if (force) {
+      if (verbose) debug('Forcing android platform installation');
+      sh.exec('rm -rf android' + outputRedirect, {
+        cwd: instancesDir + instanceName,
+      });
+    }
+    if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
+    if (!fs.existsSync(instancesDir + instanceName + '/android')) {
+      if (verbose) debug('Adding android platform');
+      const result = sh.exec('npx cap add android' + outputRedirect, {
+        cwd: instancesDir + instanceName,
+        silent: !verbose,
+      });
+      if (result.code !== 0) {
+        reject(`Failed to add android platform: ${result.stderr}`);
+        return;
+      }
+      // Attendi che i file vengano creati
+      const checkInterval = setInterval(() => {
+        if (fs.existsSync(instancesDir + instanceName + '/android/build.gradle')) {
+          clearInterval(checkInterval);
+          if (verbose) debug('Android platform added successfully');
+          resolve();
+        }
+      }, 500);
+      // Timeout dopo 30 secondi
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        if (!fs.existsSync(instancesDir + instanceName + '/android/build.gradle')) {
+          reject('Timeout waiting for Android platform files to be created');
+        } else {
+          resolve();
+        }
+      }, 30000);
+    } else {
+      if (verbose) debug('Android platform already exists');
+      resolve();
+    }
+  });
 }
 
 function updateAndroidPlatform(instanceName, appId, appName) {
   return new Promise((resolve, reject) => {
     runIonicBuild(instanceName);
-    addAndroidPlatform(instanceName, argv.force);
+    addAndroidPlatform(instanceName, argv.force)
+      .then(() => {
+        if (verbose) debug('Updating android platform');
+        const result = sh.exec('npx cap copy android' + outputRedirect, {
+          cwd: instancesDir + instanceName,
+          silent: !verbose,
+        });
+        if (result.code !== 0) {
+          reject(`Failed to copy android platform: ${result.stderr}`);
+          return;
+        }
+        _updateAndroidFiles(instanceName, appId, appName, resolve, reject);
+      })
+      .catch(reject);
+  });
+}
 
-    if (verbose) debug('Updating android platform');
-    sh.exec('npx cap copy android' + outputRedirect, {
-      cwd: instancesDir + instanceName,
-    });
+function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
 
     var split = version.version.split('.'),
       versionCode = version.code;
@@ -648,8 +686,14 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     // build.gradle
     promises.push(
       new Promise((resolve, reject) => {
+        const buildGradlePath = instancesDir + instanceName + '/android/app/build.gradle';
+        if (!fs.existsSync(buildGradlePath)) {
+          if (verbose) debug('build.gradle not found, skipping update');
+          resolve();
+          return;
+        }
         gulp
-          .src(instancesDir + instanceName + '/android/app/build.gradle')
+          .src(buildGradlePath)
           .pipe(replace(/versionCode ([0-9]*)/g, 'versionCode ' + versionCode))
           .pipe(replace(/versionName "([0-9\.]*)"/g, 'versionName "' + version.version + '"'))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/app/'))
@@ -664,8 +708,14 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     // variables.gradle
     promises.push(
       new Promise((resolve, reject) => {
+        const variablesGradlePath = instancesDir + instanceName + '/android/variables.gradle';
+        if (!fs.existsSync(variablesGradlePath)) {
+          if (verbose) debug('variables.gradle not found, skipping update');
+          resolve();
+          return;
+        }
         gulp
-          .src(instancesDir + instanceName + '/android/variables.gradle')
+          .src(variablesGradlePath)
           .pipe(replace(/minSdkVersion = ([0-9]{2})/g, 'minSdkVersion = 28'))
           .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 35'))
           .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 35'))
@@ -681,8 +731,14 @@ function updateAndroidPlatform(instanceName, appId, appName) {
     // AndroidManifest.xml
     promises.push(
       new Promise((resolve, reject) => {
+        const manifestPath = instancesDir + instanceName + '/android/app/src/main/AndroidManifest.xml';
+        if (!fs.existsSync(manifestPath)) {
+          if (verbose) debug('AndroidManifest.xml not found, skipping update');
+          resolve();
+          return;
+        }
         gulp
-          .src(instancesDir + instanceName + '/android/app/src/main/AndroidManifest.xml')
+          .src(manifestPath)
           .pipe(
             replace(/<manifest ([^>]*) package="([^"]*)"/g, '<manifest $1 package="' + appId + '"'),
           )
@@ -735,31 +791,133 @@ function updateAndroidPlatform(instanceName, appId, appName) {
         reject(err);
       },
     );
-  });
 }
 function updateGradleVersion(instanceName, newVersion) {
   return new Promise((resolve, reject) => {
     const buildGradlePath = `${instancesDir}${instanceName}/android/build.gradle`;
 
-    if (fs.existsSync(buildGradlePath)) {
+    if (!fs.existsSync(buildGradlePath)) {
+      if (verbose) debug(`build.gradle not found for instance ${instanceName}, skipping update`);
+      resolve(); // Non è un errore critico se il file non esiste ancora
+      return;
+    }
+
+    gulp
+      .src(buildGradlePath)
+      .pipe(
+        replace(
+          /classpath\s+['"]com\.android\.tools\.build:gradle:[^'"]+['"]/g,
+          `classpath 'com.android.tools.build:gradle:${newVersion}'`,
+        ),
+      )
+      .pipe(gulp.dest(`${instancesDir}${instanceName}/android/`))
+      .on('end', () => {
+        if (verbose) debug(`build.gradle updated successfully to version ${newVersion}`);
+        resolve();
+      })
+      .on('error', err => {
+        reject(`Error updating build.gradle: ${err}`);
+      });
+  });
+}
+
+function updateGradleWrapperVersion(instanceName, gradleVersion) {
+  return new Promise((resolve, reject) => {
+    const wrapperPropertiesPath = `${instancesDir}${instanceName}/android/gradle/wrapper/gradle-wrapper.properties`;
+
+    if (fs.existsSync(wrapperPropertiesPath)) {
       gulp
-        .src(buildGradlePath)
+        .src(wrapperPropertiesPath)
         .pipe(
           replace(
-            /classpath\s+['"]com\.android\.tools\.build:gradle:[^'"]+['"]/g,
-            `classpath 'com.android.tools.build:gradle:${newVersion}'`,
+            /distributionUrl=.*gradle-([0-9.]+)-.*/g,
+            `distributionUrl=https\\://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip`,
           ),
         )
-        .pipe(gulp.dest(`${instancesDir}${instanceName}/android/`))
+        .pipe(gulp.dest(`${instancesDir}${instanceName}/android/gradle/wrapper/`))
         .on('end', () => {
-          if (verbose) debug(`build.gradle updated successfully to version ${newVersion}`);
+          if (verbose) debug(`gradle-wrapper.properties updated successfully to Gradle version ${gradleVersion}`);
           resolve();
         })
         .on('error', err => {
-          reject(`Error updating build.gradle: ${err}`);
+          reject(`Error updating gradle-wrapper.properties: ${err}`);
         });
     } else {
-      reject(`build.gradle not found for instance ${instanceName}`);
+      if (verbose) debug(`gradle-wrapper.properties not found, skipping wrapper update`);
+      resolve(); // Non è un errore critico se il file non esiste ancora
+    }
+  });
+}
+
+function configureGradleJdk(instanceName) {
+  return new Promise((resolve, reject) => {
+    const gradlePropertiesPath = `${instancesDir}${instanceName}/android/gradle.properties`;
+    
+    // Rileva il JAVA_HOME dall'ambiente o usa un comando per trovarlo
+    let javaHome = process.env.JAVA_HOME;
+    
+    if (!javaHome) {
+      // Prova a trovare Java usando il comando 'java -XshowSettings:properties -version'
+      try {
+        const javaVersionOutput = sh.exec('java -XshowSettings:properties -version 2>&1', { silent: true });
+        const javaHomeMatch = javaVersionOutput.match(/java\.home\s*=\s*(.+)/i);
+        if (javaHomeMatch) {
+          javaHome = javaHomeMatch[1].trim();
+        }
+      } catch (e) {
+        if (verbose) debug('Could not detect JAVA_HOME automatically');
+      }
+    }
+    
+    // Se ancora non trovato, prova percorsi comuni su macOS
+    if (!javaHome && process.platform === 'darwin') {
+      const commonPaths = [
+        '/Library/Java/JavaVirtualMachines',
+        '/usr/libexec/java_home',
+      ];
+      try {
+        const javaHomeOutput = sh.exec('/usr/libexec/java_home -v 21 2>/dev/null || /usr/libexec/java_home 2>/dev/null', { silent: true });
+        if (javaHomeOutput && javaHomeOutput.trim()) {
+          javaHome = javaHomeOutput.trim();
+        }
+      } catch (e) {
+        if (verbose) debug('Could not find Java using /usr/libexec/java_home');
+      }
+    }
+
+    if (!javaHome) {
+      if (verbose) warn('JAVA_HOME not found, Gradle will use the default JDK');
+      resolve(); // Non è un errore critico, Gradle userà il JDK di default
+      return;
+    }
+
+    if (verbose) debug(`Configuring Gradle JDK to: ${javaHome}`);
+
+    // Crea il file gradle.properties se non esiste
+    let gradlePropertiesContent = '';
+    if (fs.existsSync(gradlePropertiesPath)) {
+      gradlePropertiesContent = fs.readFileSync(gradlePropertiesPath, 'utf8');
+    }
+
+    // Rimuovi eventuali configurazioni JDK esistenti
+    gradlePropertiesContent = gradlePropertiesContent.replace(/org\.gradle\.java\.home\s*=.*/g, '');
+    
+    // Aggiungi la nuova configurazione JDK
+    const jdkConfig = `org.gradle.java.home=${javaHome}\n`;
+    
+    // Aggiungi alla fine del file, rimuovendo spazi vuoti finali
+    gradlePropertiesContent = gradlePropertiesContent.trim();
+    if (gradlePropertiesContent && !gradlePropertiesContent.endsWith('\n')) {
+      gradlePropertiesContent += '\n';
+    }
+    gradlePropertiesContent += jdkConfig;
+
+    try {
+      fs.writeFileSync(gradlePropertiesPath, gradlePropertiesContent);
+      if (verbose) debug(`gradle.properties updated successfully with JDK path: ${javaHome}`);
+      resolve();
+    } catch (err) {
+      reject(`Error updating gradle.properties: ${err}`);
     }
   });
 }
@@ -827,7 +985,16 @@ function buildAndroid(instanceName, geohubInstanceId, shardName) {
         updateAndroidPlatform(instanceName, result.id, result.name).then(
           () => {
             updateResources(instanceName, 'android');
-            updateGradleVersion(instanceName, '8.1.1')
+            // Aggiorna il plugin Gradle Android a 8.10.0 (supporta Java 21 e Gradle 8.11+)
+            updateGradleVersion(instanceName, '8.10.0')
+              .then(() => {
+                // Aggiorna il Gradle wrapper a 8.11.1 (versione minima richiesta)
+                return updateGradleWrapperVersion(instanceName, '8.11.1');
+              })
+              .then(() => {
+                // Configura il JDK per Gradle
+                return configureGradleJdk(instanceName);
+              })
               .then(() => {
                 resolve();
               })
