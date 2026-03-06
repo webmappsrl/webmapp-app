@@ -17,13 +17,11 @@
     - Introduced a new gulp build command for the osm2cai project with specific settings.
     - Ensures compatibility with osm2caiprod environment.
     - Aligns with existing build processes for other projects.
-### Miscellaneous
 
 * **dependencies:** 🔄 update background-geolocation package to v1.2.26 ([39ab7dc](https://github.com/webmappsrl/webmapp-app/commit/39ab7dcc1076d6e2ca7f155ad1bbba79fc989069))
 <!-- COMMIT_DESC -->
     
     Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
-* **map-core:** changelog for bump to 234fbf1 ([55cf3a7](https://github.com/webmappsrl/webmapp-app/commit/55cf3a7398012c4e8e3be3ecabe2cc3a94976d57))
 <!-- COMMIT_DESC -->
     
     - feat(directive): ✨ add WmMapTrackRecordDirective for tracking locations on the map
@@ -62,7 +60,6 @@
     Removed the call to `pauseRecording` in `GeolocationService` as it was unnecessary and could cause issues with the recording state. Additionally, ensured that the UGC track recording state is reset properly by dispatching `setCurrentUgcTrackRecording` with default values.
     
     Also, removed the call to `removeCurrentUgcTrack` in `localForage.ts` to prevent unintended removal of UGC track data after saving.
-<!-- COMMIT_DESC -->
     
     - refactor: update import paths for better organization <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
     Revises import paths to improve module organization by moving
@@ -109,7 +106,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
 
 
 ### Miscellaneous
@@ -224,7 +220,6 @@
     Introduces new translations for update-related messages across multiple languages. Implements a new device service to handle update notifications, including checks for the latest app version and network status. Aligns translations for clearer communication of update availability and actions.
     
     Relates to issue oc_6540
-<!-- COMMIT_DESC -->
     
     - refactor(conf): ♻️ streamline layer selection logic
     Replaced the `confHOME` selector with `confMAP` for improved clarity and functionality. Simplified the logic by directly accessing the `map.layers` array. This change eliminates unnecessary filtering and mapping, allowing for a more efficient search for the layer with the corresponding ID. The refactor also removes unused imports and variables, resulting in cleaner, more maintainable code.
@@ -352,7 +347,6 @@
     
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
-* **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
 <!-- COMMIT_DESC -->
     
     Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
