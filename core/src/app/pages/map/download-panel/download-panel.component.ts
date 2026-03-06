@@ -3,8 +3,10 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
+  Optional,
   Output,
   SimpleChanges,
   ViewEncapsulation,
@@ -16,6 +18,8 @@ import {LineString, MultiPolygon} from 'geojson';
 import {downloadEcTrack} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
 import {Store} from '@ngrx/store';
+import {POSTHOG_CLIENT} from '@wm-core/store/conf/conf.token';
+import {WmPosthogClient} from '@wm-types/posthog';
 import {
   goToHome,
   openDownloads,
@@ -58,6 +62,7 @@ export class WmDownloadPanelComponent implements OnChanges {
     private _cdr: ChangeDetectorRef,
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
+    @Optional() @Inject(POSTHOG_CLIENT) private _posthogClient?: WmPosthogClient,
   ) {
     this.changeStatus.emit(downloadPanelStatus.INITIALIZE);
   }
@@ -99,6 +104,12 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.status = {finish: false, map: 0, media: 0};
 
     if (this.track != null) {
+      // Traccia il download della traccia
+      if (this._posthogClient) {
+        this._posthogClient.capture('trackDownloaded', {
+          track_id: `${this.track.properties.id}`,
+        });
+      }
       downloadEcTrack(`${this.track.properties.id}`, this.track, this.updateStatus.bind(this));
     }
     if (this.overlayUrls != null || this.overlayGeometry != null) {

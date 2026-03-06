@@ -178,7 +178,7 @@ describe('Test wm-form field', () => {
 
   it('should select all text in the title input and capitalize the first letter', () => {
     // Seleziona l'input del titolo
-    cy.get('ion-input[ng-reflect-name="title"] input')
+    cy.get('[e2e-form-input="title"] input')
       .as('titleInput')
       .click()
       .then(input => {
