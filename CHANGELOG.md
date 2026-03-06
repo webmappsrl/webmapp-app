@@ -17,14 +17,12 @@
     - Introduced a new gulp build command for the osm2cai project with specific settings.
     - Ensures compatibility with osm2caiprod environment.
     - Aligns with existing build processes for other projects.
-
 ### Miscellaneous
 
 * **dependencies:** 🔄 update background-geolocation package to v1.2.26 ([39ab7dc](https://github.com/webmappsrl/webmapp-app/commit/39ab7dcc1076d6e2ca7f155ad1bbba79fc989069))
 <!-- COMMIT_DESC -->
     
     Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
-* enrich changelog with commit descriptions ([7576b1e](https://github.com/webmappsrl/webmapp-app/commit/7576b1e13c172e3950ecfb366a0efca9b917336a))
 * **map-core:** changelog for bump to 234fbf1 ([55cf3a7](https://github.com/webmappsrl/webmapp-app/commit/55cf3a7398012c4e8e3be3ecabe2cc3a94976d57))
 <!-- COMMIT_DESC -->
     
@@ -34,7 +32,6 @@
     - Updated `map-core.module.ts` to include the new directive and modified the index export.
     - Refactored `WmMapComponent` to use `OlMap` for better clarity and consistency.
     - Added constants for rendering buffer and track record z-index to improve layer management.
-* remove unused UGC track test and related functions <a href="https://orchestrator.maphub.it/resources/customer-stories/6672" target="_blank" rel="noopener noreferrer">OC[6672]</a> ([#173](https://github.com/webmappsrl/webmapp-app/issues/173)) ([1104ed7](https://github.com/webmappsrl/webmapp-app/commit/1104ed729fd49f48cac9788fb20c3dfcd57e0545))
 <!-- COMMIT_DESC -->
     
     * chore: remove unused UGC track test and related functions
@@ -65,7 +62,6 @@
     Removed the call to `pauseRecording` in `GeolocationService` as it was unnecessary and could cause issues with the recording state. Additionally, ensured that the UGC track recording state is reset properly by dispatching `setCurrentUgcTrackRecording` with default values.
     
     Also, removed the call to `removeCurrentUgcTrack` in `localForage.ts` to prevent unintended removal of UGC track data after saving.
-* **wm-core:** changelog for bump to 571c827 ([6b22e23](https://github.com/webmappsrl/webmapp-app/commit/6b22e23f020063925064747dfc5d8da07b544126))
 <!-- COMMIT_DESC -->
     
     - refactor: update import paths for better organization <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
@@ -113,7 +109,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-
 ## [3.1.7](https://github.com/webmappsrl/webmapp-app/compare/v3.1.6...v3.1.7) (2025-11-21)
 
 
@@ -229,7 +224,6 @@
     Introduces new translations for update-related messages across multiple languages. Implements a new device service to handle update notifications, including checks for the latest app version and network status. Aligns translations for clearer communication of update availability and actions.
     
     Relates to issue oc_6540
-* **wm-core:** changelog for bump to d70c95f ([0a43f27](https://github.com/webmappsrl/webmapp-app/commit/0a43f271cd0d12488e7b9c5203744301f14f3c04))
 <!-- COMMIT_DESC -->
     
     - refactor(conf): ♻️ streamline layer selection logic
@@ -358,7 +352,6 @@
     
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
-
 * **android:** 🔧 update SDK versions in variables.gradle ([c71dc5f](https://github.com/webmappsrl/webmapp-app/commit/c71dc5fc829d367ee4fcccc1d44c463fc0426adc))
 <!-- COMMIT_DESC -->
     
@@ -1655,7 +1648,6 @@
     
     - Updated the styling of the home page to include padding for safe areas on ion-content.
     - Added a new deployment command for project "oman".
-<!-- COMMIT_DESC -->
     
     This commit adds the ability to open a popup on the map page when a feature collection is clicked. The popup displays additional information about the selected feature.
     
