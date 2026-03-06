@@ -796,11 +796,11 @@ wm-features-in-viewport
   transform: translateY(-116px);
 }
 
-wm-image-gallery .webmapp-pagepoi-info-body-photoslider ion-slide ion-text {
+wm-image-gallery .webmapp-pagepoi-info-body-photoslider swiper-slide ion-text {
   font-family: var(--wm-75-font-family-title) !important;
   font-weight: 700 !important;
 }
-wm-image-gallery .webmapp-pagepoi-info-body-photoslider ion-slide {
+wm-image-gallery .webmapp-pagepoi-info-body-photoslider swiper-slide {
   width: 230px !important;
 }
 

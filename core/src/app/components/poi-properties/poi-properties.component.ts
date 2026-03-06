@@ -10,6 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {confOPTIONSShowEmbeddedHtml, confPOIFORMS} from '@wm-core/store/conf/conf.selector';
 import {UntypedFormGroup} from '@angular/forms';
 @Component({
+  standalone: false,
   selector: 'wm-poi-properties',
   templateUrl: './poi-properties.component.html',
   styleUrls: ['./poi-properties.component.scss'],

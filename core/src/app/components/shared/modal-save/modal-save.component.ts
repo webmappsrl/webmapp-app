@@ -21,6 +21,7 @@ import {syncUgcPois} from '@wm-core/store/features/ugc/ugc.actions';
 import {saveUgc} from '@wm-core/utils/localForage';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-modal-save',
   templateUrl: './modal-save.component.html',
   styleUrls: ['./modal-save.component.scss'],

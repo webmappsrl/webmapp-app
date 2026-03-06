@@ -3,6 +3,7 @@ import { ModalController, NavController } from '@ionic/angular';
 import { StoreService } from 'src/app/services/store.service';
 
 @Component({
+  standalone: false,
   selector: 'app-modal-coins',
   templateUrl: './modal-coins.component.html',
   styleUrls: ['./modal-coins.component.scss'],

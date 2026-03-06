@@ -25,6 +25,7 @@ import {WmFeature} from '@wm-types/feature';
 import {LineString} from 'geojson';
 
 @Component({
+  standalone: false,
   selector: 'wm-track-recorder',
   templateUrl: './track-recorder.component.html',
   styleUrls: ['./track-recorder.component.scss'],

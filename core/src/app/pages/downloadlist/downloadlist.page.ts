@@ -7,6 +7,7 @@ import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {WmFeature} from '@wm-types/feature';
 
 @Component({
+  standalone: false,
   selector: 'app-downloadlist',
   templateUrl: './downloadlist.page.html',
   styleUrls: ['./downloadlist.page.scss'],

@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {getEcTracks} from '@wm-core/utils/localForage';
 @Component({
+  standalone: false,
   selector: 'downloaded-tracks-box',
   templateUrl: './downloaded-tracks-box.component.html',
   styleUrls: ['./downloaded-tracks-box.component.scss'],

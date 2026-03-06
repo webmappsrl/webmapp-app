@@ -12,6 +12,7 @@ import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {getDistance} from 'ol/sphere';
 
 @Component({
+  standalone: false,
   selector: 'wm-poi-recorder',
   templateUrl: './poi-recorder.component.html',
   styleUrls: ['./poi-recorder.component.scss'],

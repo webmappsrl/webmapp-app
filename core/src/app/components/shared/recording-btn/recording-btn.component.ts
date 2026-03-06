@@ -3,6 +3,7 @@ import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-recording-btn',
   templateUrl: './recording-btn.component.html',
   styleUrls: ['./recording-btn.component.scss'],

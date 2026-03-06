@@ -5,6 +5,7 @@ import {StatusService} from 'src/app/services/status.service';
 import {LangService} from '@wm-core/localization/lang.service';
 
 @Component({
+  standalone: false,
   selector: 'app-modal-store-success',
   templateUrl: './modal-store-success.component.html',
   styleUrls: ['./modal-store-success.component.scss'],

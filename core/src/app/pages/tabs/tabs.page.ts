@@ -16,6 +16,7 @@ import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {enableRecorderPanel} from '@wm-core/store/user-activity/user-activity.selector';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-page-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],

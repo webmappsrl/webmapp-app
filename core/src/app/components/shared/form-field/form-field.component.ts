@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-form-field',
   templateUrl: './form-field.component.html',
   styleUrls: ['./form-field.component.scss'],

@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {confPROJECT} from '@wm-core/store/conf/conf.selector';
 
 @Component({
+  standalone: false,
   selector: 'app-project',
   templateUrl: './project.page.html',
   styleUrls: ['./project.page.scss'],

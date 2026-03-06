@@ -14,6 +14,7 @@ import {BehaviorSubject} from 'rxjs';
 import {IonModal} from '@ionic/angular';
 
 @Component({
+  standalone: false,
   selector: 'wm-btn-filter',
   templateUrl: './btn-filter.component.html',
   styleUrls: ['./btn-filter.component.scss'],

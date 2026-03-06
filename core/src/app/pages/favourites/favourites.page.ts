@@ -8,6 +8,7 @@ import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {Feature, LineString} from 'geojson';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
+  standalone: false,
   selector: 'webmapp-favourites',
   templateUrl: './favourites.page.html',
   styleUrls: ['./favourites.page.scss'],

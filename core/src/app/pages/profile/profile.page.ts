@@ -14,6 +14,7 @@ import {getHitmapFeatures} from '@map-core/utils';
 import {WmHomeHitMapComponent} from '@wm-core/home/home-hitmap/home-hitmap.component';
 
 @Component({
+  standalone: false,
   selector: 'webmapp-page-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
@@ -51,7 +52,7 @@ export class ProfilePage implements OnDestroy {
     this._modalController
       .create({
         component: SettingsComponent,
-        swipeToClose: true,
+        canDismiss: true,
         mode: 'ios',
         id: 'webmapp-login-modal',
       })
