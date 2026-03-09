@@ -17,12 +17,10 @@
     - Introduced a new gulp build command for the osm2cai project with specific settings.
     - Ensures compatibility with osm2caiprod environment.
     - Aligns with existing build processes for other projects.
-
 * **dependencies:** 🔄 update background-geolocation package to v1.2.26 ([39ab7dc](https://github.com/webmappsrl/webmapp-app/commit/39ab7dcc1076d6e2ca7f155ad1bbba79fc989069))
 <!-- COMMIT_DESC -->
     
     Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
-<!-- COMMIT_DESC -->
     
     - feat(directive): ✨ add WmMapTrackRecordDirective for tracking locations on the map
     - Introduced `WmMapTrackRecordDirective` to manage and visualize track records on the map.
@@ -92,7 +90,6 @@
     
     - chore(localization): 🌐 enhance language handling in LangService
     Updated the LangService to utilize the device's language code as the default language if available. Integrated the DeviceService to fetch the device language and combined it with the existing language configuration. This improves user experience by ensuring the app defaults to the user's preferred language when available.
-* **wm-types:** changelog for bump to ec39ac9 ([e339305](https://github.com/webmappsrl/webmapp-app/commit/e339305f91217cf711d281154c5aec208512070e))
 <!-- COMMIT_DESC -->
     
     - refactor: rename and update type definitions <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
@@ -277,7 +274,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-## [3.1.6](https://github.com/webmappsrl/webmapp-app/compare/v3.1.5...v3.1.6) (2025-10-28)
 
 
 ### Miscellaneous
@@ -347,7 +343,6 @@
     
     - fix(environment): 🐛 update URLs for osm2caidev shard
     Corrected the URLs for the osm2caidev shard to ensure proper connectivity and resource access. Updated the `origin`, `elasticApi`, and `awsApi` URLs to reflect the new domain structure.
-<!-- COMMIT_DESC -->
     
     Updated the compileSdkVersion and targetSdkVersion to 35 in the variables.gradle file for Android projects. This change ensures compatibility with the latest Android SDK requirements.
     
