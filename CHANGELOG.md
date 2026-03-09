@@ -6,22 +6,222 @@
 ### Bug Fixes
 
 * enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
-
+<!-- COMMIT_DESC -->
+    
+    - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
+    - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
 
 ### Miscellaneous
 
 * **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
-* enrich changelog with commit descriptions ([9926631](https://github.com/webmappsrl/webmapp-app/commit/992663101d3ba2234de10b62de038c8cfc80c94e))
+<!-- COMMIT_DESC -->
+    
+    - Updated Capacitor packages to version 7.0.0 in core/package.json and package.json to ensure compatibility with the latest features and bug fixes.
+    - Added automation for CocoaPods installation in `gulpfile.js`:
+      - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
+      - Creates a base `Info.plist` file if it doesn't exist after running `npx cap copy ios`.
+    - Improved error handling and logging for better build process visibility.
 * enrich changelog with commit descriptions ([54db03b](https://github.com/webmappsrl/webmapp-app/commit/54db03b9cc585edb40ca1c2a1857f975d316bec7))
-* enrich changelog with commit descriptions ([ff1f866](https://github.com/webmappsrl/webmapp-app/commit/ff1f8668570f08af46d73e7fb01d9fc4ffec8e63))
 * enrich changelog with commit descriptions ([0df44f9](https://github.com/webmappsrl/webmapp-app/commit/0df44f9f34bd7181d7dd74fc6e64a7c909adf440))
-* enrich changelog with commit descriptions ([704c8d9](https://github.com/webmappsrl/webmapp-app/commit/704c8d9bb95cc8b5079a8f3ca2864e6304f351b4))
 * update swiper integration and dependencies ([c8e0e12](https://github.com/webmappsrl/webmapp-app/commit/c8e0e12ffe2f3765885134206477d18245350724))
-* **wm-core:** changelog for bump to 0025f89 ([d340f34](https://github.com/webmappsrl/webmapp-app/commit/d340f3483d1de8a666a76f5595559f6672ac2aa8))
+<!-- COMMIT_DESC -->
+    
+    - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
+    - Replaced `ion-slides` and `ion-slide` components with `swiper-container` and `swiper-slide` in card-slider and gallery components to align with the new Swiper API.
+    - Registered Swiper custom elements in main.ts and added CUSTOM_ELEMENTS_SCHEMA to relevant modules for compatibility.
 * **wm-core:** changelog for bump to 8ce8a27 ([21df957](https://github.com/webmappsrl/webmapp-app/commit/21df957599d2f9528c6b928e535625fcbffa5888))
-* **wm-core:** changelog for bump to b79f2c7 ([5666a93](https://github.com/webmappsrl/webmapp-app/commit/5666a937d89c61b64f53f30ea9fe2d4d87a1552b))
+<!-- COMMIT_DESC -->
+    
+    - - chore(dependencies): 🔧 update dependencies to latest versions
+      - Updated Angular dependencies from version 16.2.x to 20.3.x.
+      - Updated Ionic and NgRx dependencies to their latest versions.
+      - Updated other dependencies like rxjs, zone.js, and typescript to the latest versions.
+      - Updated Capacitor and Angular Devkit dependencies as well.
+    
+    - fix(components): 🐛 set standalone flag to false for all components
+    
+      - Updated the `standalone` flag to false for all component, directive, and pipe decorators.
+      - Ensures compatibility with the latest Angular version changes.
+    
+    - refactor(swiper): ♻️ replace IonSlides with Swiper in image components
+    
+      - Replaced `IonSlides` with `Swiper` for better performance and compatibility.
+      - Updated all related HTML and TypeScript files to use Swiper components.
+      - Adjusted the logic to interact with Swiper's API instead of IonSlides.
+    
+    - fix(lang.service): 🐛 remove deprecated Angular TranslateService injections
+    
+      - Removed deprecated `USE_DEFAULT_LANG` and `USE_STORE` injections from `LangService`.
+      - Adjusted constructor to align with the latest `TranslateService` implementation.
+    refactor(components): ♻️ replace IonSlides with Swiper components
+    
+    Updated multiple components to replace `IonSlides` with `Swiper` for improved performance and compatibility. Adjusted HTML structure and styles accordingly, ensuring all related elements utilize `swiper-container` and `swiper-slide`. This change enhances the overall user experience and maintains consistency across the application.
+    
+    refactor(components): ♻️ enhance Swiper integration across various components
+    
+    Updated multiple components to improve Swiper integration by replacing `config` attributes with individual slide properties for better customization. Added `CUSTOM_ELEMENTS_SCHEMA` to module declarations to support custom elements. Adjusted HTML structures and styles to ensure consistency and enhance user experience across the application.
+    
+    fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
+    
+    Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
+    
+    chore(swiper): 🎉 introduce WmSwiperComponent for enhanced Swiper integration
+    
+    Added a new `WmSwiperComponent` to streamline Swiper usage across various components. Updated existing components to replace `swiper-container` with `wm-swiper`, improving code consistency and maintainability. Adjusted TypeScript logic to interact with the new component structure, ensuring a smoother user experience with Swiper functionalities.
+    refactor(swiper): ♻️ improve error handling and code style in swiper component
+    
+    - Added a try-catch block to the `init` method for better error handling when initializing the swiper element.
+    - Reformatted the styles array in the component decorator for improved readability.
+    - Simplified the `ngOnChanges` condition by removing unnecessary line breaks.
+    
+    refactor(localization): ♻️ streamline imports and add null check in translation service
+    
+    - Removed unused imports from `@ngx-translate/core` to improve code clarity and maintainability.
+    - Added a null check for the key parameter in the `instant` method to prevent potential errors and return an empty string when the key is null.
+    
+    feat(analytics): ✨ add PostHog integration with capacitor support
+    
+    - Implement `PosthogCapacitorClient` for capturing analytics events using PostHog with Capacitor support for native platforms.
+    - Add lazy initialization and session recording management to optimize performance and ensure accurate session tracking.
+    - Introduce error handling and validation for event properties to ensure robustness.
+    - Update `conf.token.ts` to include new injection tokens `POSTHOG_CLIENT` and `POSTHOG_CONFIG` for PostHog integration configuration.
+    
+    refactor(slider-filter, form): ♻️ improve slider filter and form component functionality
+    
+    - Updated the slider filter component to handle null values more gracefully and emit the correct filter values based on user input.
+    - Refactored the form component to change the event from `ionChange` to `ionInput` for better input handling and added an attribute for end-to-end testing.
+    - Enhanced the select all title text functionality to ensure proper selection of input text on the first click.
+    
+    feat(core): ✨ add swiper element registration in WmCoreModule
+    
+    - Import `register` from `swiper/element/bundle` to enable swiper functionality.
+    - Implement module constructor to invoke `register()`, ensuring swiper elements are properly initialized during module loading.
+    - This change allows for enhanced carousel and slider capabilities within the module.
+    
+    feat(initialization): ✨ enhance environment and posthog configuration
+    
+    - Replaced inline `EnvironmentConfig` interface with imported `Environment` type from `@wm-types/environment`.
+    - Introduced `ENVIRONMENT_CONFIG` token for dependency injection of environment configurations.
+    - Added initialization logic for `EnvironmentService` and `PosthogCapacitorClient` in `WmCoreModule`.
+    - Implemented thorough validation and logging for PostHog properties initialization.
+    - Introduced `forRoot` method to `WmCoreModule` for module configuration with `appVersion`, `environment`, `posthog`, and optional `translations`.
+    - Ensured app initialization robustness by handling errors gracefully during initialization.
+    
+    chore(swiper): ✨ enhance swiper component styles and functionality
+    
+    - Updated `profile-auth.component.scss` to improve bullet styles for Swiper pagination, enhancing visual feedback for active and inactive states.
+    - Introduced a new `swiper.component.scss` file to import Swiper styles directly from node_modules, ensuring compatibility and avoiding export issues.
+    - Refactored `swiper.component.ts` to utilize the new SCSS file and added a pagination element for improved user interaction.
+    
+    refactor(module): ♻️ streamline WmCoreModule initialization
+    
+    - Moved the `register()` call from the constructor to the `forRoot` method, ensuring swiper elements are registered during module configuration.
+    - This change enhances module flexibility and maintains proper initialization of swiper functionalities.
+    
+    chore(localization): ✨ enhance WmTransPipe with language change detection
+    
+    - Added ChangeDetectorRef and OnDestroy implementation to WmTransPipe for automatic component updates on language changes.
+    - Subscribed to language change events to trigger change detection, ensuring UI reflects the current language state.
+    - Implemented cleanup logic to unsubscribe from the language change observable on pipe destruction.
+    
+    refactor(pipe): ♻️ optimize WmTransPipe for language change handling
+    
+    - Replaced instance-based subscription with a static subscription to reduce memory usage and improve efficiency.
+    - Utilized a static Set to track ChangeDetectorRef instances, ensuring updates on language change without redundant subscriptions.
+    - Streamlined the `transform` method by introducing local variables for `currentLang` and `defaultLang` to enhance readability.
+    - Removed unnecessary subscription cleanup in `ngOnDestroy` by managing ChangeDetectorRef instances statically.
+    
+    fix(features-box): 🔧 update ViewChild reference and scroll methods
+    
+    - Changed the ViewChild reference from `tracks` to `features` to align with the component's functionality.
+    - Updated scroll methods to utilize the new `featuresContent` reference for correct scrolling behavior.
+    
+    chore(posthog): ✨ enhance PostHog initialization with observable configuration loading
+    
+    - Integrated observable pattern to wait for configuration loading before initializing PostHog.
+    - Updated `initAndRegister` method in `PosthogCapacitorClient` to accept an `enabled` parameter for conditional initialization.
+    - Added new selector `confPosthog` to retrieve PostHog configuration based on mobile state.
+    - Modified reducer to include `posthog` property in configuration state for better management.
+    
+    chore(posthog): ✨ enhance PostHog integration in UrlHandlerService
+    
+    - Injected PostHog client into UrlHandlerService for tracking URL changes.
+    - Implemented mobile-specific tracking for URL changes, sending `$pageview` events with relevant properties.
+    - Refactored PosthogCapacitorClient to improve initialization and event capturing logic.
+    - Added validation for properties before registration to ensure data integrity.
+    
+    ...
+    
+    chore(posthog): ✨ enhance PostHog configuration and integration <a href="https://orchestrator.maphub.it/resources/customer-stories/7090" target="_blank" rel="noopener noreferrer">OC[7090]</a> (#152)
+    
+    * chore(posthog): ✨ enhance PostHog configuration and integration
+    
+    - Updated Posthog initialization to utilize new analytics configuration options, including `analyticsEnabled` and `recordingProbability`.
+    - Refactored `PosthogCapacitorClient` to accept an options object for improved flexibility during initialization.
+    - Modified selectors to retrieve analytics configuration based on mobile state, ensuring accurate tracking settings.
+    - Adjusted various components to use the new `OPTIONS` type for consistency across the application.
+    
+    * chore(posthog): ✨ update analytics configuration handling
+    
+    - Refactored analytics configuration to include `recordingEnabled` and `recordingProbability` in the state.
+    - Updated `PosthogCapacitorClient` to utilize new configuration options for session recording.
+    - Modified selectors to streamline retrieval of analytics settings based on mobile state.
+    - Adjusted initialization logic in `wm-core.module.ts` to align with the new configuration structure.
+    
+    * chore(posthog): ✨ add debounceTime to configuration loading for PostHog
+    
+    - Introduced `debounceTime` in the observable pipeline to stabilize multiple emissions during configuration loading.
+    - Updated the initialization logic in `wm-core.module.ts` to ensure the latest configuration is used for analytics.
+    - Enhanced the subscription handling to improve the reliability of PostHog's configuration retrieval.
+    chore(posthog): ✨ integrate PostHog client into various components for enhanced tracking (#153)
+    
+    - Injected PostHog client into LayerBoxComponent, FiltersComponent, SliderFilterComponent, and WmHomeResultComponent for improved event tracking.
+    - Implemented event capturing for user interactions such as layer openings, filter usage, and search actions.
+    - Updated WmCoreModule to ensure PosthogCapacitorClient is provided correctly.
+    - Enhanced the EcEffects class to track user searches from the search bar, capturing relevant query data.
+    chore(posthog): ✨ add PosthogCapacitorClient tests and PosthogAdapter for improved testing and abstraction <a href="https://orchestrator.maphub.it/resources/customer-stories/7119" target="_blank" rel="noopener noreferrer">OC[7119]</a> (#154)
+    
+    * chore(posthog): ✨ add PosthogCapacitorClient tests and PosthogAdapter for improved testing and abstraction
+    
+    - Introduced unit tests for PosthogCapacitorClient to validate initialization and session recording logic based on configuration options.
+    - Created PosthogAdapter to abstract PostHog module interactions, enabling easier mocking and dependency injection in tests.
+    - Refactored PosthogCapacitorClient to utilize PosthogAdapter for method calls, enhancing testability and maintainability.
+    - Updated session recording logic to conditionally enable based on configuration parameters, improving flexibility in analytics tracking.
+    
+    * chore(posthog): ✨ refactor PosthogCapacitorClient and PosthogAdapter for improved platform handling
+    
+    - Updated PosthogCapacitorClient to utilize a dynamic getter for native platform detection, enhancing flexibility.
+    - Refactored PosthogAdapter to include a method for checking if the platform is native, streamlining platform-specific logic.
+    - Improved unit tests for PosthogCapacitorClient to validate behavior across different platforms, ensuring accurate registration handling.
+    - Enhanced mock adapter creation in tests to support platform-specific configurations, improving test reliability.
+    refactor(ec.service): ♻️ enhance track retrieval with local cache support <a href="https://orchestrator.maphub.it/resources/customer-stories/7222" target="_blank" rel="noopener noreferrer">OC[7222]</a> (#157)
+    
+    * refactor(ec.service): ♻️ enhance track retrieval with local cache support
+    
+    Updated the EcService to improve track retrieval by first checking localForage for cached track data before making an HTTP request. If cached data is available, it is emitted immediately, while the HTTP request fetches the latest version. This change optimizes performance and user experience by reducing unnecessary network calls and ensuring timely access to track information.
+    
+    * refactor(ec.service): ♻️ improve track retrieval with last-modified header support
+    
+    Enhanced the EcService to include the 'If-Modified-Since' header in HTTP requests for track data, allowing for more efficient caching. The service now checks local storage for the last modified timestamp and updates it upon successful retrieval of new track data, optimizing network usage and ensuring up-to-date information is provided to users.
 * **wm-types:** changelog for bump to 513a662 ([f4b9db9](https://github.com/webmappsrl/webmapp-app/commit/f4b9db97a99eaeac4d1ab8bb7ceac82abb84823f))
-* **wm-types:** changelog for bump to c529a2d ([26a8c26](https://github.com/webmappsrl/webmapp-app/commit/26a8c26394c839ee8fe54d20a4caf3051f0c1886))
+<!-- COMMIT_DESC -->
+    
+    - chore(config, posthog): ✨ expand configuration interfaces and enhance Posthog client <a href="https://orchestrator.maphub.it/resources/customer-stories/7090" target="_blank" rel="noopener noreferrer">OC[7090]</a> (#12)
+    * chore(config, posthog): ✨ expand configuration interfaces and enhance Posthog client
+    
+    - Removed `posthog` boolean from `APP` and `WEBAPP` interfaces.
+    - Introduced new `OPTIONS`, `CLUSTERING`, `DETAILSMAPBEHAVIOUR`, `MAPATTRIBUTION`, `APPDOWNLOADBUTTONS`, and `Analytics` interfaces for comprehensive configuration.
+    - Updated `initAndRegister` method in `WmPosthogClient` interface to accept an `options` parameter for improved initialization control.
+    
+    * chore(config, posthog): ✨ refine Analytics interface and update initialization options
+    
+    - Added `analytics` property to `APP` and `WEBAPP` interfaces for enhanced tracking capabilities.
+    - Simplified `Analytics` interface by consolidating properties into `enabled`, `recordingEnabled`, and an optional `recordingProbability`.
+    - Updated `WmPosthogInitOptions` to use `Partial<Analytics>` for improved flexibility in initialization settings.
+    - chore(config, environment, posthog): ✨ enhance configuration and Posthog client interface
+    - Added `posthog` boolean property to `APP` and `WEBAPP` interfaces for configuration.
+    - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
+    - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
 
 ## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2026-01-14)
 
@@ -40,7 +240,6 @@
     - Introduced a new gulp build command for the osm2cai project with specific settings.
     - Ensures compatibility with osm2caiprod environment.
     - Aligns with existing build processes for other projects.
-<!-- COMMIT_DESC -->
     
     Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
     
@@ -124,7 +323,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-
 
 ### Miscellaneous
 
@@ -295,7 +493,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-
 ### Miscellaneous
 
 * **app:** ✨ load icons on app initialization ([#162](https://github.com/webmappsrl/webmapp-app/issues/162)) ([56f8c9c](https://github.com/webmappsrl/webmapp-app/commit/56f8c9cbedd3bbf30f4f423293fbdf58d7278102))
@@ -1691,7 +1888,6 @@
     
     
     ...
-<!-- COMMIT_DESC -->
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
 
