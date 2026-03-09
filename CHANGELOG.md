@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.1.9](https://github.com/webmappsrl/webmapp-app/compare/v3.1.8...v3.1.9) (2026-03-09)
+
+
+### Bug Fixes
+
+* enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
+
+
+### Miscellaneous
+
+* **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
+* enrich changelog with commit descriptions ([9926631](https://github.com/webmappsrl/webmapp-app/commit/992663101d3ba2234de10b62de038c8cfc80c94e))
+* enrich changelog with commit descriptions ([54db03b](https://github.com/webmappsrl/webmapp-app/commit/54db03b9cc585edb40ca1c2a1857f975d316bec7))
+* enrich changelog with commit descriptions ([ff1f866](https://github.com/webmappsrl/webmapp-app/commit/ff1f8668570f08af46d73e7fb01d9fc4ffec8e63))
+* enrich changelog with commit descriptions ([0df44f9](https://github.com/webmappsrl/webmapp-app/commit/0df44f9f34bd7181d7dd74fc6e64a7c909adf440))
+* enrich changelog with commit descriptions ([704c8d9](https://github.com/webmappsrl/webmapp-app/commit/704c8d9bb95cc8b5079a8f3ca2864e6304f351b4))
+* update swiper integration and dependencies ([c8e0e12](https://github.com/webmappsrl/webmapp-app/commit/c8e0e12ffe2f3765885134206477d18245350724))
+* **wm-core:** changelog for bump to 0025f89 ([d340f34](https://github.com/webmappsrl/webmapp-app/commit/d340f3483d1de8a666a76f5595559f6672ac2aa8))
+* **wm-core:** changelog for bump to 8ce8a27 ([21df957](https://github.com/webmappsrl/webmapp-app/commit/21df957599d2f9528c6b928e535625fcbffa5888))
+* **wm-core:** changelog for bump to b79f2c7 ([5666a93](https://github.com/webmappsrl/webmapp-app/commit/5666a937d89c61b64f53f30ea9fe2d4d87a1552b))
+* **wm-types:** changelog for bump to 513a662 ([f4b9db9](https://github.com/webmappsrl/webmapp-app/commit/f4b9db97a99eaeac4d1ab8bb7ceac82abb84823f))
+* **wm-types:** changelog for bump to c529a2d ([26a8c26](https://github.com/webmappsrl/webmapp-app/commit/26a8c26394c839ee8fe54d20a4caf3051f0c1886))
+
 ## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2026-01-14)
 
 
