@@ -10,3 +10,4 @@ core/cypress/screenshots/*
 core/cypress/videos/*
 core/Cypress.env.json
 posthog.json
+.claude/settings.local.json
