@@ -120,6 +120,37 @@
 
 /*****************************************************/
 
+// Toast aggiornamento app (wm-update-toast)
+.wm-update-toast {
+  /* Host styles */
+  --background: var(--ion-color-light, #ffffff);
+  --color: var(--ion-color-dark, #222428);
+  --box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  --border-radius: 14px;
+  --max-width: 420px;
+  --width: calc(100% - 32px);
+  --border-color: var(--ion-color-danger, #eb445a);
+  --border-style: solid;
+  --border-width: 4px;
+  --button-color: var(--ion-color-danger, #eb445a);
+  --ion-color-step-100: var(--ion-color-medium, #92949c);
+  margin: 8px auto;
+
+  /* Shadow parts inside ion-toast */
+  &::part(icon) {
+    margin-top: 16px;
+  }
+
+  &::part(wrapper) {
+    padding: 10px 14px;
+  }
+
+  &::part(button) {
+    font-weight: 500;
+  }
+}
+
+
 // .ios.platform-mobile ion-menu.menu-enabled, .ios.platform-mobile ion-menu.menu-enabled, .ios.platform-mobile ion-modal.show-page {
 //   margin-top: constant(safe-area-inset-top); // for ios 11.1
 //   margin-top: env(safe-area-inset-top); // for ios 11.2 and onwards
