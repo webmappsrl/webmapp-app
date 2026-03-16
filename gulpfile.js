@@ -578,6 +578,14 @@ function updateResources(instanceName, platform) {
           },
         );
       }
+      // Crea anche la risorsa "base" notification_icon in drawable (richiesta da lint)
+      sh.exec(
+        'cp android/app/src/main/res/mipmap-mdpi/notification_icon.png android/app/src/main/res/drawable/notification_icon.png' +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        },
+      );
     }
 
     sh.exec(
@@ -2112,7 +2120,7 @@ function versionToBundleCode(versionString) {
   const major = parts[0].padStart(2, '0');
   const minor = parts[1].padStart(2, '0');
   const patch = parts[2].padStart(2, '0');
-  return parseInt(major + minor + patch, 10);
+  return parseInt(major + minor + patch + '0', 10);
 }
 
 function addPermissionsIfNotPresent() {
