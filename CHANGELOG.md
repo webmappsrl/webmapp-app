@@ -10,7 +10,6 @@
     
     - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
     - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-
 ### Miscellaneous
 
 * **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
@@ -21,9 +20,7 @@
       - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
       - Creates a base `Info.plist` file if it doesn't exist after running `npx cap copy ios`.
     - Improved error handling and logging for better build process visibility.
-* enrich changelog with commit descriptions ([54db03b](https://github.com/webmappsrl/webmapp-app/commit/54db03b9cc585edb40ca1c2a1857f975d316bec7))
 * enrich changelog with commit descriptions ([0df44f9](https://github.com/webmappsrl/webmapp-app/commit/0df44f9f34bd7181d7dd74fc6e64a7c909adf440))
-* update swiper integration and dependencies ([c8e0e12](https://github.com/webmappsrl/webmapp-app/commit/c8e0e12ffe2f3765885134206477d18245350724))
 <!-- COMMIT_DESC -->
     
     - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
@@ -203,7 +200,6 @@
     * refactor(ec.service): ♻️ improve track retrieval with last-modified header support
     
     Enhanced the EcService to include the 'If-Modified-Since' header in HTTP requests for track data, allowing for more efficient caching. The service now checks local storage for the last modified timestamp and updates it upon successful retrieval of new track data, optimizing network usage and ensuring up-to-date information is provided to users.
-* **wm-types:** changelog for bump to 513a662 ([f4b9db9](https://github.com/webmappsrl/webmapp-app/commit/f4b9db97a99eaeac4d1ab8bb7ceac82abb84823f))
 <!-- COMMIT_DESC -->
     
     - chore(config, posthog): ✨ expand configuration interfaces and enhance Posthog client <a href="https://orchestrator.maphub.it/resources/customer-stories/7090" target="_blank" rel="noopener noreferrer">OC[7090]</a> (#12)
@@ -249,7 +245,6 @@
     - Updated `map-core.module.ts` to include the new directive and modified the index export.
     - Refactored `WmMapComponent` to use `OlMap` for better clarity and consistency.
     - Added constants for rendering buffer and track record z-index to improve layer management.
-<!-- COMMIT_DESC -->
     
     * chore: remove unused UGC track test and related functions
     
@@ -323,7 +318,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
@@ -493,7 +487,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-### Miscellaneous
 
 * **app:** ✨ load icons on app initialization ([#162](https://github.com/webmappsrl/webmapp-app/issues/162)) ([56f8c9c](https://github.com/webmappsrl/webmapp-app/commit/56f8c9cbedd3bbf30f4f423293fbdf58d7278102))
 <!-- COMMIT_DESC -->
@@ -1890,7 +1883,6 @@
     ...
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
-
 - SICAI: **12.1.17**
 
 - UCVS: **12.1.28**
