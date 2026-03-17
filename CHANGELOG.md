@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.10](https://github.com/webmappsrl/webmapp-app/compare/v3.1.9...v3.1.10) (2026-03-17)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
+* enrich changelog with commit descriptions ([8d5d771](https://github.com/webmappsrl/webmapp-app/commit/8d5d7713d8aad2721fb6befd47c7f65cf3340f87))
+* enrich changelog with commit descriptions ([8564088](https://github.com/webmappsrl/webmapp-app/commit/8564088ce4e31eac2aba7d9bbfcacba3433bf8b6))
+* **wm-core:** changelog for bump to 6a3ee02 ([a88fd2b](https://github.com/webmappsrl/webmapp-app/commit/a88fd2b7c30dbfac90411d1bf1abe0b1dc402f1b))
+* **wm-core:** changelog for bump to d0145ac ([fa06486](https://github.com/webmappsrl/webmapp-app/commit/fa06486700a81913968543a6dc7720962c7b94c2))
+* **wm-types:** changelog for bump to a82daaf ([eb9eecf](https://github.com/webmappsrl/webmapp-app/commit/eb9eecf5b2f465422f69306b403553d727943b19))
+
 ## [3.1.9](https://github.com/webmappsrl/webmapp-app/compare/v3.1.8...v3.1.9) (2026-03-09)
 
 
