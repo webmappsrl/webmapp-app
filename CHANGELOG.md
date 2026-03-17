@@ -6,11 +6,13 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
-* enrich changelog with commit descriptions ([8d5d771](https://github.com/webmappsrl/webmapp-app/commit/8d5d7713d8aad2721fb6befd47c7f65cf3340f87))
 * enrich changelog with commit descriptions ([8564088](https://github.com/webmappsrl/webmapp-app/commit/8564088ce4e31eac2aba7d9bbfcacba3433bf8b6))
-* **wm-core:** changelog for bump to 6a3ee02 ([a88fd2b](https://github.com/webmappsrl/webmapp-app/commit/a88fd2b7c30dbfac90411d1bf1abe0b1dc402f1b))
 * **wm-core:** changelog for bump to d0145ac ([fa06486](https://github.com/webmappsrl/webmapp-app/commit/fa06486700a81913968543a6dc7720962c7b94c2))
-* **wm-types:** changelog for bump to a82daaf ([eb9eecf](https://github.com/webmappsrl/webmapp-app/commit/eb9eecf5b2f465422f69306b403553d727943b19))
+<!-- COMMIT_DESC -->
+    
+    - style(search-box): ✨ simplify padding and enhance SVG styling
+    - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
+    - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
 
 ## [3.1.9](https://github.com/webmappsrl/webmapp-app/compare/v3.1.8...v3.1.9) (2026-03-09)
 
@@ -22,7 +24,6 @@
     
     - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
     - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-
 * **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
 <!-- COMMIT_DESC -->
     
@@ -31,7 +32,6 @@
       - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
       - Creates a base `Info.plist` file if it doesn't exist after running `npx cap copy ios`.
     - Improved error handling and logging for better build process visibility.
-<!-- COMMIT_DESC -->
     
     - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
     - Replaced `ion-slides` and `ion-slide` components with `swiper-container` and `swiper-slide` in card-slider and gallery components to align with the new Swiper API.
@@ -227,7 +227,6 @@
     - Added `posthog` boolean property to `APP` and `WEBAPP` interfaces for configuration.
     - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
     - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
-
 ## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2026-01-14)
 
 
@@ -276,7 +275,6 @@
     * refactor: streamline observables in PoiRecorder and TrackRecorder components
     
     - Removed unnecessary operators from observables in `PoiRecorderComponent` and `TrackRecorderComponent` to simplify the code and improve performance. The changes enhance readability by reducing complexity in the subscription logic.
-<!-- COMMIT_DESC -->
     
     - fix(geolocation): 🐛 remove pause recording call and update UGC track recording state
     Removed the call to `pauseRecording` in `GeolocationService` as it was unnecessary and could cause issues with the recording state. Additionally, ensured that the UGC track recording state is reset properly by dispatching `setCurrentUgcTrackRecording` with default values.
@@ -495,7 +493,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-* **app:** ✨ load icons on app initialization ([#162](https://github.com/webmappsrl/webmapp-app/issues/162)) ([56f8c9c](https://github.com/webmappsrl/webmapp-app/commit/56f8c9cbedd3bbf30f4f423293fbdf58d7278102))
 <!-- COMMIT_DESC -->
     
     Added the dispatch of `loadIcons()` action in the `AppComponent` constructor to ensure icons are loaded during the app's initialization phase.
