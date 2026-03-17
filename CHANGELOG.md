@@ -10,7 +10,6 @@
     
     - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
     - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-### Miscellaneous
 
 * **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
 <!-- COMMIT_DESC -->
@@ -20,7 +19,6 @@
       - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
       - Creates a base `Info.plist` file if it doesn't exist after running `npx cap copy ios`.
     - Improved error handling and logging for better build process visibility.
-* enrich changelog with commit descriptions ([0df44f9](https://github.com/webmappsrl/webmapp-app/commit/0df44f9f34bd7181d7dd74fc6e64a7c909adf440))
 <!-- COMMIT_DESC -->
     
     - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
@@ -200,7 +198,6 @@
     * refactor(ec.service): ♻️ improve track retrieval with last-modified header support
     
     Enhanced the EcService to include the 'If-Modified-Since' header in HTTP requests for track data, allowing for more efficient caching. The service now checks local storage for the last modified timestamp and updates it upon successful retrieval of new track data, optimizing network usage and ensuring up-to-date information is provided to users.
-<!-- COMMIT_DESC -->
     
     - chore(config, posthog): ✨ expand configuration interfaces and enhance Posthog client <a href="https://orchestrator.maphub.it/resources/customer-stories/7090" target="_blank" rel="noopener noreferrer">OC[7090]</a> (#12)
     * chore(config, posthog): ✨ expand configuration interfaces and enhance Posthog client
@@ -267,7 +264,6 @@
     * refactor: streamline observables in PoiRecorder and TrackRecorder components
     
     - Removed unnecessary operators from observables in `PoiRecorderComponent` and `TrackRecorderComponent` to simplify the code and improve performance. The changes enhance readability by reducing complexity in the subscription logic.
-* **wm-core:** changelog for bump to 0c5ca30 ([61aa49b](https://github.com/webmappsrl/webmapp-app/commit/61aa49b3ea52b78b970d4061d1caadbcac492d3b))
 <!-- COMMIT_DESC -->
     
     - fix(geolocation): 🐛 remove pause recording call and update UGC track recording state
@@ -487,7 +483,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-
 * **app:** ✨ load icons on app initialization ([#162](https://github.com/webmappsrl/webmapp-app/issues/162)) ([56f8c9c](https://github.com/webmappsrl/webmapp-app/commit/56f8c9cbedd3bbf30f4f423293fbdf58d7278102))
 <!-- COMMIT_DESC -->
     
@@ -1883,7 +1878,6 @@
     ...
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
-- SICAI: **12.1.17**
 
 - UCVS: **12.1.28**
 
