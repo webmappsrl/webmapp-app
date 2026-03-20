@@ -17,6 +17,10 @@
       [imageGallery]="properties?.image_gallery"
     ></wm-tab-image-gallery>
     <wm-tab-detail *ngIf="showTechnicalDetails$|async" [properties]="properties"></wm-tab-detail>
+    <wm-where
+      *ngIf="properties?.taxonomy_where"
+      [taxonomyWheres]="properties?.taxonomy_where"
+    ></wm-where>
     <wm-tab-description
       *ngIf="properties?.description as description"
       [description]="description"
