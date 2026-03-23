@@ -18,8 +18,8 @@
     ></wm-tab-image-gallery>
     <wm-tab-detail *ngIf="showTechnicalDetails$|async" [properties]="properties"></wm-tab-detail>
     <wm-txn-where
-      *ngIf="properties?.taxonomy_where"
-      [taxonomyWheres]="properties?.taxonomy_where"
+      *ngIf="properties?.taxonomy_where as txnWhere"
+      [taxonomyWheres]="txnWhere"
     ></wm-txn-where>
     <wm-tab-description
       *ngIf="properties?.description as description"
