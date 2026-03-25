@@ -25,6 +25,12 @@ jobs:
         run: |
           echo '{ "email": "${{ secrets.TEST_EMAIL }}", "password": "${{ secrets.TEST_PASSWORD }}" }' > core/cypress.env.json
 
+      - name: Create posthog.json fallback
+        run: |
+          if [ ! -f posthog.json ]; then
+            echo '{ "POSTHOG_KEY": "", "POSTHOG_HOST": "" }' > posthog.json
+          fi
+
       - name: Update appId in environment.ts
         run: |
           sed -i '0,/appId: [0-9]\+/s//appId: 52/' core/src/environments/environment.ts

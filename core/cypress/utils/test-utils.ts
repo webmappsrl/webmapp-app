@@ -175,12 +175,62 @@ export function openUgcBox() {
  * @param poiTitle the title of the POI to open.
  */
 export function openPoi(poiTitle: string) {
-  cy.get('wm-poi-box').contains('.wm-box-name', poiTitle).as('poiBox');
+  cy.get('wm-poi-box').contains('ion-card-title', poiTitle).as('poiBox');
   cy.get('@poiBox')
     .should('be.visible')
     .then($poiBox => {
       cy.wrap($poiBox).click();
     });
+}
+
+/**
+ * Scrolls `wm-map-details ion-card-content` until the target element becomes visible.
+ * Useful when content is inside a scrollable container (not the window).
+ *
+ * @param target - A Cypress alias (e.g. '@searchBox') or a selector to the element to reveal.
+ * @param containerSelector - Optional container selector. Defaults to `wm-map-details ion-card-content`.
+ * @param stepPx - Scroll step size in pixels (default: 320).
+ * @param maxScrolls - Maximum number of scroll attempts (default: 20).
+ * @returns A Cypress chainable wrapping the target element.
+ */
+export function scrollMapDetailsCardContentUntilVisible(
+  target: string,
+  containerSelector: string = 'wm-map-details ion-card-content',
+  stepPx: number = 320,
+  maxScrolls: number = 20,
+): Cypress.Chainable<JQuery<HTMLElement>> {
+  const tryReveal = (attempt: number): Cypress.Chainable<JQuery<HTMLElement>> => {
+    return cy.get(containerSelector).should('exist').then($container => {
+      return cy.get(target).then($target => {
+        const targetEl = $target.get(0);
+        if (targetEl && Cypress.dom.isVisible(targetEl)) {
+          return cy.wrap($target);
+        }
+
+        if (attempt >= maxScrolls) {
+          return cy.wrap($target);
+        }
+
+        // First try: let Cypress pick the nearest scrollable ancestor.
+        if (attempt === 0) {
+          return cy
+            .wrap($target)
+            .scrollIntoView()
+            .wait(50)
+            .then(() => tryReveal(attempt + 1));
+        }
+
+        // Fallback: force scrolling the specific container in small steps.
+        return cy
+          .wrap($container)
+          .scrollTo(0, attempt * stepPx, {duration: 0, ensureScrollable: false})
+          .wait(50)
+          .then(() => tryReveal(attempt + 1));
+      });
+    });
+  };
+
+  return tryReveal(0);
 }
 
 /**
@@ -190,11 +240,9 @@ export function openPoi(poiTitle: string) {
 export function openTrack(trackTitle: string) {
   cy.get('wm-map-details wm-search-box').should('exist');
   cy.get('wm-map-details wm-search-box').contains('ion-card-title', trackTitle).as('searchBox');
-  cy.get('@searchBox')
+  scrollMapDetailsCardContentUntilVisible('@searchBox')
     .should('be.visible')
-    .then($searchBox => {
-      cy.wrap($searchBox).click();
-    });
+    .then($searchBox => cy.wrap($searchBox).click());
 }
 
 export const originUrl = environment.shards.geohub.origin;
