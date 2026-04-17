@@ -99,8 +99,8 @@ export const appPR = {
     },
     'giftcoin': {
       'button': 'Comece a explorar',
-      'info': 'Você ganha imediatamente 2 moedas webmapp de presente para baixar conteúdo offline!',
-      'title': 'Bem-vindo ao webmapp!'
+      'info': 'Você ganha imediatamente 2 moedas CAI de presente para baixar conteúdo offline!',
+      'title': 'Bem-vindo ao CAI!'
     },
     'login': {
       'email': 'E-mail',
@@ -330,7 +330,7 @@ export const appPR = {
       'modalexit': {
         'cancel': 'Cancelar',
         'confirm': 'Excluir',
-        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e do Webmapp. A operação não pode ser desfeita.',
+        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e do CAI. A operação não pode ser desfeita.',
         'title': 'Excluir permanentemente?'
       },
       'modalphotos': {
@@ -401,7 +401,7 @@ export const appPR = {
       'privacylink1': 'Política de Privacidade',
       'privacylink2': 'Termos e condições',
       'registerbutton': 'Registrar-se',
-      'title': 'Junte-se à comunidade webmapp!'
+      'title': 'Junte-se à comunidade CAI!'
     },
     'route': {
       'btnFullMapExpand': 'Expandir',
@@ -472,7 +472,7 @@ export const appPR = {
       'button100': 'Pacote de 100 moedas',
       'button20': 'Pacote de 20 Moedas',
       'button50': 'Pacote de 50 moedas',
-      'main': 'Moedas Webmapp',
+      'main': 'Moedas CAI',
       'text': 'Você pode comprar uma Moeda única, ou escolher entre um ou mais pacotes!',
       'text2': 'As moedas servem para baixar rotas e conteúdo offline, e para acessar muitos benefícios!',
       'title': 'Loja'
@@ -532,16 +532,16 @@ export const appPR = {
     },
     'credits': {
       'title': 'Créditos',
-      'webmappContent1': 'O aplicativo {{appName}} é desenvolvido e mantido pela Webmapp.<br> A Webmapp realiza serviços cartográficos na internet, aplicativos móveis e cartografia impressa para Turismo de Natureza & Aventura.<br>Para mais informações, visite nosso site ',
+      'webmappContent1': 'O aplicativo {{appName}} é desenvolvido e mantido pela CAI.<br> A CAI realiza serviços cartográficos na internet, aplicativos móveis e cartografia impressa para Turismo de Natureza & Aventura.<br>Para mais informações, visite nosso site ',
       'webmappContent2': " ou escreva para nós no endereço <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
       'map': 'Mapa',
-      'mapContent': '© Webmapp, distribuído sob licença CC BY-NC-SA',
+      'mapContent': '© CAI, distribuído sob licença CC BY-NC-SA',
       'cartographicData': 'Dados cartográficos',
       'cartographicDataContent': '© Contribuidores do OpenStreetMap'
     },
     'disclaimer': {
       'title': 'Aviso legal',
-      'content': 'Caminhar na natureza e, mais amplamente, atividades ao ar livre, são atividades potencialmente perigosas: antes de partir para uma excursão, certifique-se de que você tem o conhecimento e as habilidades para fazê-lo. Se você não tiver certeza, procure especialistas locais que possam ajudá-lo, sugerir e apoiar no planejamento e desenvolvimento de suas atividades. Os dados apresentados neste APLICATIVO não podem garantir totalmente a viabilidade sem riscos da rota: podem ter ocorrido mudanças, até mesmo significativas, desde a última verificação da rota. Portanto, é essencial que aqueles que pretendem desenvolver atividades avaliem cuidadosamente a possibilidade de prosseguir com base nas sugestões e conselhos contidos neste APLICATIVO, com base em sua experiência, condições meteorológicas (mesmo dos dias anteriores) e uma avaliação feita no local no início do desenvolvimento da atividade. A empresa Webmapp S.r.l. não oferece garantias para a segurança dos locais descritos e não assume qualquer responsabilidade por possíveis danos causados pelo desenvolvimento das atividades descritas.'
+      'content': 'Caminhar na natureza e, mais amplamente, atividades ao ar livre, são atividades potencialmente perigosas: antes de partir para uma excursão, certifique-se de que você tem o conhecimento e as habilidades para fazê-lo. Se você não tiver certeza, procure especialistas locais que possam ajudá-lo, sugerir e apoiar no planejamento e desenvolvimento de suas atividades. Os dados apresentados neste APLICATIVO não podem garantir totalmente a viabilidade sem riscos da rota: podem ter ocorrido mudanças, até mesmo significativas, desde a última verificação da rota. Portanto, é essencial que aqueles que pretendem desenvolver atividades avaliem cuidadosamente a possibilidade de prosseguir com base nas sugestões e conselhos contidos neste APLICATIVO, com base em sua experiência, condições meteorológicas (mesmo dos dias anteriores) e uma avaliação feita no local no início do desenvolvimento da atividade. A empresa CAI S.r.l. não oferece garantias para a segurança dos locais descritos e não assume qualquer responsabilidade por possíveis danos causados pelo desenvolvimento das atividades descritas.'
     }
   },
   'services': {
@@ -557,7 +557,7 @@ export const appPR = {
     },
     'share': {
       'dialogTitle': 'Compartilhar com seus amigos',
-      'text': 'Aqui está uma rota interessante do webmapp',
+      'text': 'Aqui está uma rota interessante do CAI',
       'title': 'Você viu esta rota?',
       'url': 'www.webmapp.it'
     }

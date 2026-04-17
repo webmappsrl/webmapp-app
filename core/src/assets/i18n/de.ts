@@ -99,8 +99,8 @@ export const appDE = {
     },
     'giftcoin': {
       'button': 'Beginnen Sie zu erkunden',
-      'info': 'Sie erhalten sofort 2 Webmapp-Münzen als Geschenk, um Offline-Inhalte herunterzuladen!',
-      'title': 'Willkommen bei Webmapp!'
+      'info': 'Sie erhalten sofort 2 CAI-Münzen als Geschenk, um Offline-Inhalte herunterzuladen!',
+      'title': 'Willkommen bei CAI!'
     },
     'login': {
       'email': 'E-Mail',
@@ -330,7 +330,7 @@ export const appDE = {
       'modalexit': {
         'cancel': 'Abbrechen',
         'confirm': 'Löschen',
-        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von Webmapp gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
+        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von CAI gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
         'title': 'Dauerhaft löschen?'
       },
       'modalphotos': {
@@ -401,7 +401,7 @@ export const appDE = {
       'privacylink1': 'Datenschutzrichtlinie',
       'privacylink2': 'Allgemeine Geschäftsbedingungen',
       'registerbutton': 'Registrieren',
-      'title': 'Treten Sie der Webmapp-Community bei!'
+      'title': 'Treten Sie der CAI-Community bei!'
     },
     'route': {
       'btnFullMapExpand': 'Erweitern',
@@ -472,7 +472,7 @@ export const appDE = {
       'button100': 'Paket mit 100 Münzen',
       'button20': 'Paket mit 20 Münzen',
       'button50': 'Paket mit 50 Münzen',
-      'main': 'Webmapp-Münzen',
+      'main': 'CAI-Münzen',
       'text': 'Sie können eine Einzelmünze kaufen oder zwischen einem oder mehreren Paketen wählen!',
       'text2': 'Münzen dienen zum Herunterladen von Strecken und Offline-Inhalten und zum Zugriff auf viele Vorteile!',
       'title': 'Shop'
@@ -527,16 +527,16 @@ export const appDE = {
     },
     'credits': {
       'title': 'Credits',
-      'webmappContent1': 'Die App {{appName}} wird von Webmapp entwickelt und gewartet.<br> Webmapp bietet kartografische Dienste im Internet, mobile Apps und gedruckte Karten für Natur- und Abenteuertourismus.<br>Für weitere Informationen besuchen Sie unsere Website ',
+      'webmappContent1': 'Die App {{appName}} wird von CAI entwickelt und gewartet.<br> CAI bietet kartografische Dienste im Internet, mobile Apps und gedruckte Karten für Natur- und Abenteuertourismus.<br>Für weitere Informationen besuchen Sie unsere Website ',
       'webmappContent2': ' oder schreiben Sie uns an <a href="mailto:info@webmapp.it">info@webmapp.it</a>',
       'map': 'Karte',
-      'mapContent': '© Webmapp, verteilt unter der Lizenz CC BY-NC-SA',
+      'mapContent': '© CAI, verteilt unter der Lizenz CC BY-NC-SA',
       'cartographicData': 'Kartografische Daten',
       'cartographicDataContent': '© OpenStreetMap-Mitwirkende'
     },
     'disclaimer': {
       'title': 'Haftungsausschluss',
-      'content': 'Wandern in der Natur und allgemein Outdoor-Aktivitäten sind potenziell gefährliche Aktivitäten: Bevor Sie sich auf eine Exkursion begeben, stellen Sie sicher, dass Sie über das Wissen und die Fähigkeiten verfügen, dies zu tun. Wenn Sie sich nicht sicher sind, wenden Sie sich an lokale Experten, die Ihnen helfen, vorschlagen und unterstützen können, Ihre Aktivitäten zu planen und durchzuführen. Die in dieser APP präsentierten Daten können die risikofreie Befahrbarkeit der Strecke nicht vollständig garantieren: Seit der letzten Überprüfung der Strecke können sich Änderungen, auch wesentliche, ergeben haben. Daher ist es unerlässlich, dass diejenigen, die Aktivitäten entwickeln möchten, sorgfältig die Möglichkeit des Fortfahrens auf der Grundlage der in dieser APP enthaltenen Vorschläge und Ratschläge, ihrer Erfahrung, der Wetterbedingungen (auch der vorherigen Tage) und einer vor Ort durchgeführten Bewertung zu Beginn der Aktivität bewerten. Die Firma Webmapp S.r.l. bietet keine Garantie für die Sicherheit der beschriebenen Orte und übernimmt keine Verantwortung für mögliche Schäden, die durch die Durchführung der beschriebenen Aktivitäten entstehen.'
+      'content': 'Wandern in der Natur und allgemein Outdoor-Aktivitäten sind potenziell gefährliche Aktivitäten: Bevor Sie sich auf eine Exkursion begeben, stellen Sie sicher, dass Sie über das Wissen und die Fähigkeiten verfügen, dies zu tun. Wenn Sie sich nicht sicher sind, wenden Sie sich an lokale Experten, die Ihnen helfen, vorschlagen und unterstützen können, Ihre Aktivitäten zu planen und durchzuführen. Die in dieser APP präsentierten Daten können die risikofreie Befahrbarkeit der Strecke nicht vollständig garantieren: Seit der letzten Überprüfung der Strecke können sich Änderungen, auch wesentliche, ergeben haben. Daher ist es unerlässlich, dass diejenigen, die Aktivitäten entwickeln möchten, sorgfältig die Möglichkeit des Fortfahrens auf der Grundlage der in dieser APP enthaltenen Vorschläge und Ratschläge, ihrer Erfahrung, der Wetterbedingungen (auch der vorherigen Tage) und einer vor Ort durchgeführten Bewertung zu Beginn der Aktivität bewerten. Die Firma CAI S.r.l. bietet keine Garantie für die Sicherheit der beschriebenen Orte und übernimmt keine Verantwortung für mögliche Schäden, die durch die Durchführung der beschriebenen Aktivitäten entstehen.'
     }
   },
   'services': {
@@ -552,9 +552,9 @@ export const appDE = {
     },
     'share': {
       'dialogTitle': 'Mit Ihren Freunden teilen',
-      'text': 'Hier ist eine interessante Strecke von Webmapp',
+      'text': 'Hier ist eine interessante Strecke von CAI',
       'title': 'Haben Sie diese Strecke gesehen?',
-      'url': 'www.webmapp.it'
+      'url': 'www.cai.it'
     }
   },
   'tabs': {

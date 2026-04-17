@@ -100,8 +100,8 @@ export const appEN = {
     },
     'giftcoin': {
       'button': 'Start exploring',
-      'info': 'You immediately get 2 webmapp coins as a gift to download offline content!',
-      'title': 'Welcome to webmapp!'
+      'info': 'You immediately get 2 CAI coins as a gift to download offline content!',
+      'title': 'Welcome to CAI!'
     },
     'login': {
       'email': 'E-mail',
@@ -333,7 +333,7 @@ export const appEN = {
       'modalexit': {
         'cancel': 'Cancel',
         'confirm': 'Delete',
-        'text': 'By completing the action, the track will be deleted from your profile and from Webmapp. The operation cannot be canceled.',
+        'text': 'By completing the action, the track will be deleted from your profile and from CAI. The operation cannot be canceled.',
         'title': 'Delete forever?'
       },
       'modalphotos': {
@@ -404,7 +404,7 @@ export const appEN = {
       'privacylink1': 'Privacy Policy',
       'privacylink2': 'Terms and conditions',
       'registerbutton': 'Register',
-      'title': 'Join the webmapp community!'
+      'title': 'Join the CAI community!'
     },
     'route': {
       'btnFullMapExpand': 'Expand',
@@ -475,7 +475,7 @@ export const appEN = {
       'button100': 'Pack 100 coins',
       'button20': ' Pack 20 Coins',
       'button50': 'Pack 50 coins',
-      'main': 'Webmapp Coins',
+      'main': 'CAI Coins',
       'text': 'You can buy a single Coin, or choose from one or more packages!',
       'text2': 'Coins are used to download routes and offline content, and access numerous benefits!',
       'title': 'Store'
@@ -530,16 +530,16 @@ export const appEN = {
     },
     'credits': {
       'title': 'Credits',
-      'webmappContent1': 'The app {{appName}} is developed and mantained by Webmapp.<br> Webmapp creates web, mobile and printed maps for Nature & Adventure Tourism.<br>For more information please visit our website ',
+      'webmappContent1': 'The app {{appName}} is developed and mantained by CAI.<br> CAI creates web, mobile and printed maps for Nature & Adventure Tourism.<br>For more information please visit our website ',
       'webmappContent2': " or contact us at <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
       'map': 'Map',
-      'mapContent': '© Webmapp, distributed with licence CC BY-NC-SA',
+      'mapContent': '© CAI, distributed with licence CC BY-NC-SA',
       'cartographicData': 'Cartographic Data',
       'cartographicDataContent': '© OpenStreetMap Contributors'
     },
     'disclaimer': {
       'title': 'Disclaimer',
-      'content': 'Hiking and, more generally, outdoor activity, is a potentially risky activity: before setting out on a hike, make sure you have the knowledge and skills to do it. If you are not sure, contact local experts who can help, suggest and support you in planning and carrying out your activities. The data presented on this APP cannot fully guarantee the risk-free practicability of the route: changes, even important ones, may have occurred since the last verification of the route itself. It is therefore essential that those who are preparing to carry out activities carefully evaluate the opportunity to continue on the basis of the suggestions and advice contained in this APP, based on their experience, on the weather conditions (even in the previous days) and on an evaluation in the field at the beginning of the activity. Webmapp S.r.l. does not provide guarantees on the safety of the places described and assumes no responsibility for any damage caused by carrying out the activities described.'
+      'content': 'Hiking and, more generally, outdoor activity, is a potentially risky activity: before setting out on a hike, make sure you have the knowledge and skills to do it. If you are not sure, contact local experts who can help, suggest and support you in planning and carrying out your activities. The data presented on this APP cannot fully guarantee the risk-free practicability of the route: changes, even important ones, may have occurred since the last verification of the route itself. It is therefore essential that those who are preparing to carry out activities carefully evaluate the opportunity to continue on the basis of the suggestions and advice contained in this APP, based on their experience, on the weather conditions (even in the previous days) and on an evaluation in the field at the beginning of the activity. CAI S.r.l. does not provide guarantees on the safety of the places described and assumes no responsibility for any damage caused by carrying out the activities described.'
     }
   },
   'services': {
@@ -555,7 +555,7 @@ export const appEN = {
     },
     'share': {
       'dialogTitle': 'Share with your friends',
-      'text': 'Here is an interesting webmapp path',
+      'text': 'Here is an interesting CAI path',
       'title': 'Have you seen this path?',
       'url': 'www.webmapp.it'
     }

@@ -23,7 +23,7 @@ export class ShareService {
   private defaultShareObj: ShareObject = {
     title: 'See cool stuff',
     text: '',
-    url: 'www.webmapp.it',
+    url: 'www.cai.it',
     dialogTitle: 'Share with buddies',
   };
 

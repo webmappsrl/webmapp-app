@@ -99,8 +99,8 @@ export const appSQ = {
     },
     'giftcoin': {
       'button': 'Fillo të eksplorosh',
-      'info': 'Ke menjëherë dhuratë 2 monedha webmapp për të shkarkuar përmbajtje jashtë linje!',
-      'title': 'Mirë se vjen në webmapp!'
+      'info': 'Ke menjëherë dhuratë 2 monedha CAI për të shkarkuar përmbajtje jashtë linje!',
+      'title': 'Mirë se vjen në CAI!'
     },
     'login': {
       'email': 'E-mail',
@@ -330,7 +330,7 @@ export const appSQ = {
       'modalexit': {
         'cancel': 'Anulo',
         'confirm': 'Fshi',
-        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga Webmapp. Operacioni nuk mund të anulohet.',
+        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga CAI. Operacioni nuk mund të anulohet.',
         'title': 'Fshi përgjithmonë?'
       },
       'modalphotos': {
@@ -401,7 +401,7 @@ export const appSQ = {
       'privacylink1': 'Politika e Privatësisë',
       'privacylink2': 'Kushtet dhe termat',
       'registerbutton': 'Regjistrohu',
-      'title': 'Bashkohu me komunitetin e webmapp!'
+      'title': 'Bashkohu me komunitetin e CAI!'
     },
     'route': {
       'btnFullMapExpand': 'Zgjero',
@@ -472,7 +472,7 @@ export const appSQ = {
       'button100': 'Pako 100 monedha',
       'button20': ' Pako 20 Monedha',
       'button50': 'Pako 50 monedha',
-      'main': 'Monedhat Webmapp',
+      'main': 'Monedhat CAI',
       'text': 'Mund të blesh një Monedhë të vetme, ose të zgjedhësh mes një ose më shumë pakove!',
       'text2': 'Monedhat shërbejnë për të shkarkuar gjurmë dhe përmbajtje jashtë linje, dhe për të aksesuar shumë përfitime!',
       'title': 'Dyqani'
@@ -527,16 +527,16 @@ export const appSQ = {
     },
     'credits': {
       'title': 'Kredite',
-      'webmappContent1': 'Aplikacioni {{appName}} është zhvilluar dhe mirëmbajtur nga Webmapp.<br> Webmapp realizon shërbime kartografike në internet, aplikacione mobile, dhe kartografi të shtypur për Turizmin e Natyrës & Aventurës.<br>Për më shumë informacion vizitoni faqen tonë të internetit ',
+      'webmappContent1': 'Aplikacioni {{appName}} është zhvilluar dhe mirëmbajtur nga CAI.<br> CAI realizon shërbime kartografike në internet, aplikacione mobile, dhe kartografi të shtypur për Turizmin e Natyrës & Aventurës.<br>Për më shumë informacion vizitoni faqen tonë të internetit ',
       'webmappContent2': " ose na shkruani në adresën <a href=\"mailto:info@webmapp.it\">info@webmapp.it</a>",
       'map': 'Harta',
-      'mapContent': '© Webmapp, shpërndarë me licencë CC BY-NC-SA',
+      'mapContent': '© CAI, shpërndarë me licencë CC BY-NC-SA',
       'cartographicData': 'Të dhënat kartografike',
       'cartographicDataContent': '© Kontribuesit e OpenStreetMap'
     },
     'disclaimer': {
       'title': 'Mohim',
-      'content': "Ecja në natyrë dhe, më gjerë, aktivitetet në natyrë, janë aktivitete potencialisht të rrezikshme: para se të niseni për një ekskursion sigurohuni që keni njohuritë dhe aftësitë për ta bërë këtë. Nëse nuk jeni të sigurt, drejtohuni tek ekspertët lokalë që mund t'ju ndihmojnë, sugjerojnë dhe mbështesin në planifikimin dhe zhvillimin e aktiviteteve tuaja. Të dhënat e paraqitura në këtë APLIKACION nuk mund të garantojnë plotësisht përshkueshmërinë pa rreziqe të rrugës: mund të kenë ndodhur ndryshime, edhe të rëndësishme, që nga verifikimi i fundit i rrugës. Prandaj është thelbësore që ata që synojnë të zhvillojnë aktivitete të vlerësojnë me kujdes mundësinë e vazhdimit bazuar në sugjerimet dhe këshillat e përmbajtura në këtë APLIKACION, bazuar në përvojën e tyre, kushtet meteorologjike (edhe të ditëve të mëparshme) dhe një vlerësim të bërë në terren në fillim të zhvillimit të aktivitetit. Shoqëria Webmapp S.r.l. nuk ofron garanci për sigurinë e vendeve të përshkruara, dhe nuk merr asnjë përgjegjësi për dëmet e mundshme të shkaktuara nga zhvillimi i aktiviteteve të përshkruara."
+      'content': "Ecja në natyrë dhe, më gjerë, aktivitetet në natyrë, janë aktivitete potencialisht të rrezikshme: para se të niseni për një ekskursion sigurohuni që keni njohuritë dhe aftësitë për ta bërë këtë. Nëse nuk jeni të sigurt, drejtohuni tek ekspertët lokalë që mund t'ju ndihmojnë, sugjerojnë dhe mbështesin në planifikimin dhe zhvillimin e aktiviteteve tuaja. Të dhënat e paraqitura në këtë APLIKACION nuk mund të garantojnë plotësisht përshkueshmërinë pa rreziqe të rrugës: mund të kenë ndodhur ndryshime, edhe të rëndësishme, që nga verifikimi i fundit i rrugës. Prandaj është thelbësore që ata që synojnë të zhvillojnë aktivitete të vlerësojnë me kujdes mundësinë e vazhdimit bazuar në sugjerimet dhe këshillat e përmbajtura në këtë APLIKACION, bazuar në përvojën e tyre, kushtet meteorologjike (edhe të ditëve të mëparshme) dhe një vlerësim të bërë në terren në fillim të zhvillimit të aktivitetit. Shoqëria CAI S.r.l. nuk ofron garanci për sigurinë e vendeve të përshkruara, dhe nuk merr asnjë përgjegjësi për dëmet e mundshme të shkaktuara nga zhvillimi i aktiviteteve të përshkruara."
     }
   },
   'services': {
@@ -552,7 +552,7 @@ export const appSQ = {
     },
     'share': {
       'dialogTitle': 'Ndaj me miqtë e tu',
-      'text': 'Ja një rrugë interesante nga webmapp',
+      'text': 'Ja një rrugë interesante nga CAI',
       'title': 'E ke parë këtë rrugë?',
       'url': 'www.webmapp.it'
     }
