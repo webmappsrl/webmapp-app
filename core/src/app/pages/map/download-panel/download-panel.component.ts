@@ -31,6 +31,7 @@ import {currentHitmapFeature} from '@wm-core/store/user-activity/user-activity.s
 import {take} from 'rxjs/operators';
 import {from} from 'rxjs';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
+import {confMAP} from '@wm-core/store/conf/conf.selector';
 @Component({
   standalone: false,
   selector: 'wm-download-panel',
@@ -103,31 +104,69 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.isDownloaded = false;
     this.status = {finish: false, map: 0, media: 0};
 
-    if (this.track != null) {
-      // Traccia il download della traccia
-      if (this._posthogClient) {
-        this._posthogClient.capture('trackDownloaded', {
-          track_id: `${this.track.properties.id}`,
-        });
-      }
-      downloadEcTrack(`${this.track.properties.id}`, this.track, this.updateStatus.bind(this));
-    }
-    if (this.overlayUrls != null || this.overlayGeometry != null) {
-      this.status = {finish: false, map: 0, data: 0};
-      this._store
-        .select(currentHitmapFeature)
-        .pipe(take(1))
-        .subscribe(current => {
-          const properties = current.properties;
-          downloadOverlay(current, this.overlayXYZ, this.updateStatus.bind(this));
-        });
-    }
-    if (this.boundingBox != null) {
-      this.status = {finish: false, map: 0};
-      from(downloadTilesByBoundingBox(this.boundingBox, undefined, this.updateStatus.bind(this)))
-        .pipe(take(1))
-        .subscribe(() => this._store.dispatch(loadBoundingBoxes()));
-    }
+    this._store
+      .select(confMAP)
+      .pipe(take(1))
+      .subscribe(map => {
+        const firstEntry = map?.tiles?.[0];
+        const firstEntryKey = firstEntry ? Object.keys(firstEntry)[0] : null;
+        // TODO: dovrà essere gestito per scaricare le tiles del tipo selezionato o eventualmente di poter scegliere quale scaricare
+        const tileUrlTemplate = firstEntry ? Object.values(firstEntry)[0] : null;
+        
+        // TODO: andrà gestita con un parametro delle tiles se è possibile o meno fare il download
+        if (firstEntryKey === 'satellite') {
+          console.error(
+            'downloadPanel: confMAP.tiles[0] is "satellite", download not allowed. Aborting.',
+          );
+          return;
+        }
+
+        if (this.track != null) {
+          if (!tileUrlTemplate) {
+            console.error('downloadPanel: confMAP.tiles[0] is missing, aborting track download');
+          } else {
+            if (this._posthogClient) {
+              this._posthogClient.capture('trackDownloaded', {
+                track_id: `${this.track.properties.id}`,
+              });
+            }
+            downloadEcTrack(
+              `${this.track.properties.id}`,
+              this.track,
+              this.updateStatus.bind(this),
+              tileUrlTemplate,
+            );
+          }
+        }
+        if (this.overlayUrls != null || this.overlayGeometry != null) {
+          this.status = {finish: false, map: 0, data: 0};
+          this._store
+            .select(currentHitmapFeature)
+            .pipe(take(1))
+            .subscribe(current => {
+              const properties = current.properties;
+              downloadOverlay(current, this.overlayXYZ, this.updateStatus.bind(this));
+            });
+        }
+        if (this.boundingBox != null) {
+          if (!tileUrlTemplate) {
+            console.error(
+              'downloadPanel: confMAP.tiles[0] is missing, aborting bounding box tiles download',
+            );
+            return;
+          }
+          this.status = {finish: false, map: 0};
+          from(
+            downloadTilesByBoundingBox(
+              this.boundingBox,
+              tileUrlTemplate,
+              this.updateStatus.bind(this),
+            ),
+          )
+            .pipe(take(1))
+            .subscribe(() => this._store.dispatch(loadBoundingBoxes()));
+        }
+      });
   }
 
   updateStatus(status: DownloadStatus): void {
