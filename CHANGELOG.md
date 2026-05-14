@@ -6,7 +6,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
-* **wm-core:** changelog for bump to d0145ac ([fa06486](https://github.com/webmappsrl/webmapp-app/commit/fa06486700a81913968543a6dc7720962c7b94c2))
 <!-- COMMIT_DESC -->
     
     - style(search-box): ✨ simplify padding and enhance SVG styling
@@ -22,7 +21,6 @@
     
     - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
     - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-<!-- COMMIT_DESC -->
     
     - Updated Capacitor packages to version 7.0.0 in core/package.json and package.json to ensure compatibility with the latest features and bug fixes.
     - Added automation for CocoaPods installation in `gulpfile.js`:
@@ -225,7 +223,6 @@
     - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
     - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
 
-
 ### Bug Fixes
 
 * **modal-save:** ✨ add logic to remove current track for new tracks <a href="https://orchestrator.maphub.it/resources/customer-stories/6582" target="_blank" rel="noopener noreferrer">OC[6582]</a> ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
@@ -320,7 +317,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
 <!-- COMMIT_DESC -->
     
@@ -1881,7 +1877,6 @@
     ...
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
-
 - UCVS: **12.1.28**
 
 - FUMAIOLOSENTIERI: **12.1.28**
