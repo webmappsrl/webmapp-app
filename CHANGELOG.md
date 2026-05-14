@@ -5,22 +5,70 @@
 
 ### Miscellaneous
 
-* add Cypress tests for tile download functionality oc:7803 ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
-* add e2e tests for map overlay feature collection ([5bd109d](https://github.com/webmappsrl/webmapp-app/commit/5bd109d480bfcd343366471e2fcfd6b522b40143))
-* add fallback for posthog.json in CI workflow oc:7407 ([8f2c6c9](https://github.com/webmappsrl/webmapp-app/commit/8f2c6c9f1ee77551fae610d7a9eeec0fdf2a4ce7))
-* add wm-where component to display taxonomy information in POI properties oc: 7313 ([#182](https://github.com/webmappsrl/webmapp-app/issues/182)) ([6eb463c](https://github.com/webmappsrl/webmapp-app/commit/6eb463cd2163ba493af74e10bad976faaa1cbe80))
+* add Cypress tests for tile download functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/7803" target="_blank" rel="noopener noreferrer">OC[7803]</a> ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
+<!-- COMMIT_DESC -->
+    
+    - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
+    - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
+    - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
+* add fallback for posthog.json in CI workflow <a href="https://orchestrator.maphub.it/resources/customer-stories/7407" target="_blank" rel="noopener noreferrer">OC[7407]</a> ([8f2c6c9](https://github.com/webmappsrl/webmapp-app/commit/8f2c6c9f1ee77551fae610d7a9eeec0fdf2a4ce7))
+<!-- COMMIT_DESC -->
+    
+    - Introduced a step to create a fallback posthog.json file if it does not exist, ensuring the CI workflow has the necessary configuration for PostHog integration.
+    
+    ...
+    
+    chore: enhance POI interaction and add scroll utility for map details
+    
+    - Updated the `openPoi` function to use a more specific selector for the POI title.
+    - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
+    - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
 * enrich changelog with commit descriptions ([37dab9e](https://github.com/webmappsrl/webmapp-app/commit/37dab9ec7c4fa6467cd93a843ec9d030345e366f))
-* enrich changelog with commit descriptions ([ce24c20](https://github.com/webmappsrl/webmapp-app/commit/ce24c203453a260b7c0db74e24f7aebeb8ee3402))
 * enrich changelog with commit descriptions ([e6be651](https://github.com/webmappsrl/webmapp-app/commit/e6be651c2d6b1a0478596f7bf0d8d174270c310b))
-* **map-core:** changelog for bump to 5a4749a ([ccc2b62](https://github.com/webmappsrl/webmapp-app/commit/ccc2b625b46ba5b110378fadf191b8751cf6d846))
 * **map-core:** changelog for bump to b0f8326 ([a897ae3](https://github.com/webmappsrl/webmapp-app/commit/a897ae3cd8e51c0c492ea73d7851379a22df84da))
-* **tests:** add Cypress test for UGC when auth is disabled oc:7839 ([788f868](https://github.com/webmappsrl/webmapp-app/commit/788f868fe0a7c2ea80459095f790310eda938299))
+<!-- COMMIT_DESC -->
+    
+    - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
+    * refactor(styles): improve stroke style caching for routing OC: 7727
+    
+    Introduced a utility function to cache and retrieve stroke styles by color key. This enhances performance by avoiding repeated creation of stroke styles during rendering.
+    
+    * refactor(styles): enhance stroke style caching OC:7727
+    
+    Refactored to centralize stroke style caching logic in `getCachedStrokeStyle`, reducing code duplication and improving maintainability.
 * **wm-core:** changelog for bump to 70c2f42 ([0d87b7c](https://github.com/webmappsrl/webmapp-app/commit/0d87b7cdb626fe24e3a8be6aa19685a040a6762c))
-* **wm-core:** changelog for bump to a2b55a9 ([a597f63](https://github.com/webmappsrl/webmapp-app/commit/a597f6342d7bc44bb4c0a862e9ae50b067e30bf5))
+<!-- COMMIT_DESC -->
+    
+    - chore(ugc.effects, localForage): ✨ enhance UGC management with synchronized image handling (#163)
+    - Updated `UgcEffects` to include new actions for removing synchronized UGC POIs and tracks, improving error handling and success action management.
+    - Refactored alert messages for deletion and update failures to provide clearer feedback to users.
+    - Introduced `removeSynchronizedImgsInsideProperties` function in `localForage` to handle image removal for synchronized UGC, ensuring proper cleanup during UGC operations.
+    - Enhanced `saveUgcImagesByStorage` function to streamline image saving logic based on synchronization status, improving overall UGC management efficiency.
+    
+    feat(ugc.effects, localForage): ✨ add comprehensive tests for UGC effects and localForage utilities
+    
+    - Introduced unit tests for `UgcEffects`, covering various scenarios for deleting UGC POIs and tracks, including success and failure cases.
+    - Added tests for alert handling in response to deletion failures, ensuring users receive appropriate feedback.
+    - Implemented tests for `localForage` utility functions, validating the behavior of image removal and UGC saving logic.
+    - Enhanced overall test coverage for UGC management functionalities, improving reliability and maintainability of the codebase.
+    - refactor(ugc, taxonomy-where): ♻️ enhance taxonomy handling and UI components <a href="https://orchestrator.maphub.it/resources/customer-stories/7377" target="_blank" rel="noopener noreferrer">OC[7377]</a>
+    - Updated `ugc.reducer.ts` to populate `taxonomyWheres` and `feature_image` from feature properties, improving data integrity.
+    - Refactored `taxonomy-where.component.html` to use a more structured layout with updated class names for better styling and readability.
+    - Enhanced SCSS for `taxonomy-where` to improve the visual presentation of taxonomy items.
+    - Integrated `wm-txn-where` component into `ugc-poi-properties` and `ugc-track-properties` templates to display taxonomy information consistently across components.
 * **wm-types:** changelog for bump to 534fc7a ([c1ae918](https://github.com/webmappsrl/webmapp-app/commit/c1ae9184f77681d5bede272de28b5881b7f023c7))
-* **wm-types:** changelog for bump to 9b00d70 ([48e2ecf](https://github.com/webmappsrl/webmapp-app/commit/48e2ecf922c6baff4e5265adaac7f782362052e2))
+<!-- COMMIT_DESC -->
+    
+    - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
+    - Changed the awsApi URL in the shards configuration to a new storage location.
+    - Ensured consistency in API endpoint management across the environment settings.
 * **wm-types:** changelog for bump to e233b3f ([0e0abd7](https://github.com/webmappsrl/webmapp-app/commit/0e0abd775a926399288f56ffff28a269e24fa214))
-
+<!-- COMMIT_DESC -->
+    
+    - chore(language, feature): ✨ introduce taxonomy types and enhance language handling <a href="https://orchestrator.maphub.it/resources/customer-stories/7313" target="_blank" rel="noopener noreferrer">OC[7313]</a>
+    - Added `Language` type definition using a constant array for better type safety.
+    - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
+    - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
 ## [3.1.10](https://github.com/webmappsrl/webmapp-app/compare/v3.1.9...v3.1.10) (2026-03-17)
 
 
@@ -32,7 +80,6 @@
     - style(search-box): ✨ simplify padding and enhance SVG styling
     - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
     - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-## [3.1.9](https://github.com/webmappsrl/webmapp-app/compare/v3.1.8...v3.1.9) (2026-03-09)
 
 
 ### Bug Fixes
@@ -52,7 +99,6 @@
     - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
     - Replaced `ion-slides` and `ion-slide` components with `swiper-container` and `swiper-slide` in card-slider and gallery components to align with the new Swiper API.
     - Registered Swiper custom elements in main.ts and added CUSTOM_ELEMENTS_SCHEMA to relevant modules for compatibility.
-* **wm-core:** changelog for bump to 8ce8a27 ([21df957](https://github.com/webmappsrl/webmapp-app/commit/21df957599d2f9528c6b928e535625fcbffa5888))
 <!-- COMMIT_DESC -->
     
     - - chore(dependencies): 🔧 update dependencies to latest versions
@@ -338,7 +384,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-* enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
 <!-- COMMIT_DESC -->
     
     Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
