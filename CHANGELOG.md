@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.1.11](https://github.com/webmappsrl/webmapp-app/compare/v3.1.10...v3.1.11) (2026-05-14)
+
+
+### Miscellaneous
+
+* add Cypress tests for tile download functionality oc:7803 ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
+* add e2e tests for map overlay feature collection ([5bd109d](https://github.com/webmappsrl/webmapp-app/commit/5bd109d480bfcd343366471e2fcfd6b522b40143))
+* add fallback for posthog.json in CI workflow oc:7407 ([8f2c6c9](https://github.com/webmappsrl/webmapp-app/commit/8f2c6c9f1ee77551fae610d7a9eeec0fdf2a4ce7))
+* add wm-where component to display taxonomy information in POI properties oc: 7313 ([#182](https://github.com/webmappsrl/webmapp-app/issues/182)) ([6eb463c](https://github.com/webmappsrl/webmapp-app/commit/6eb463cd2163ba493af74e10bad976faaa1cbe80))
+* enrich changelog with commit descriptions ([37dab9e](https://github.com/webmappsrl/webmapp-app/commit/37dab9ec7c4fa6467cd93a843ec9d030345e366f))
+* enrich changelog with commit descriptions ([ce24c20](https://github.com/webmappsrl/webmapp-app/commit/ce24c203453a260b7c0db74e24f7aebeb8ee3402))
+* enrich changelog with commit descriptions ([e6be651](https://github.com/webmappsrl/webmapp-app/commit/e6be651c2d6b1a0478596f7bf0d8d174270c310b))
+* **map-core:** changelog for bump to 5a4749a ([ccc2b62](https://github.com/webmappsrl/webmapp-app/commit/ccc2b625b46ba5b110378fadf191b8751cf6d846))
+* **map-core:** changelog for bump to b0f8326 ([a897ae3](https://github.com/webmappsrl/webmapp-app/commit/a897ae3cd8e51c0c492ea73d7851379a22df84da))
+* **tests:** add Cypress test for UGC when auth is disabled oc:7839 ([788f868](https://github.com/webmappsrl/webmapp-app/commit/788f868fe0a7c2ea80459095f790310eda938299))
+* **wm-core:** changelog for bump to 70c2f42 ([0d87b7c](https://github.com/webmappsrl/webmapp-app/commit/0d87b7cdb626fe24e3a8be6aa19685a040a6762c))
+* **wm-core:** changelog for bump to a2b55a9 ([a597f63](https://github.com/webmappsrl/webmapp-app/commit/a597f6342d7bc44bb4c0a862e9ae50b067e30bf5))
+* **wm-types:** changelog for bump to 534fc7a ([c1ae918](https://github.com/webmappsrl/webmapp-app/commit/c1ae9184f77681d5bede272de28b5881b7f023c7))
+* **wm-types:** changelog for bump to 9b00d70 ([48e2ecf](https://github.com/webmappsrl/webmapp-app/commit/48e2ecf922c6baff4e5265adaac7f782362052e2))
+* **wm-types:** changelog for bump to e233b3f ([0e0abd7](https://github.com/webmappsrl/webmapp-app/commit/0e0abd775a926399288f56ffff28a269e24fa214))
+
 ## [3.1.10](https://github.com/webmappsrl/webmapp-app/compare/v3.1.9...v3.1.10) (2026-03-17)
 
 
