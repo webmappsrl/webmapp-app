@@ -6,14 +6,12 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
-* enrich changelog with commit descriptions ([8564088](https://github.com/webmappsrl/webmapp-app/commit/8564088ce4e31eac2aba7d9bbfcacba3433bf8b6))
 * **wm-core:** changelog for bump to d0145ac ([fa06486](https://github.com/webmappsrl/webmapp-app/commit/fa06486700a81913968543a6dc7720962c7b94c2))
 <!-- COMMIT_DESC -->
     
     - style(search-box): ✨ simplify padding and enhance SVG styling
     - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
     - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-
 ## [3.1.9](https://github.com/webmappsrl/webmapp-app/compare/v3.1.8...v3.1.9) (2026-03-09)
 
 
@@ -24,7 +22,6 @@
     
     - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
     - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-* **dependencies:** 🔧 update Capacitor dependencies to latest versions ([c62f27e](https://github.com/webmappsrl/webmapp-app/commit/c62f27e7cf75ea56b03319e59a8d8cb816195bb9))
 <!-- COMMIT_DESC -->
     
     - Updated Capacitor packages to version 7.0.0 in core/package.json and package.json to ensure compatibility with the latest features and bug fixes.
@@ -227,7 +224,6 @@
     - Added `posthog` boolean property to `APP` and `WEBAPP` interfaces for configuration.
     - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
     - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
-## [3.1.8](https://github.com/webmappsrl/webmapp-app/compare/v3.1.7...v3.1.8) (2026-01-14)
 
 
 ### Bug Fixes
@@ -324,7 +320,6 @@
     Exports the new types for external use.
     
     Relates to oc_6780
-### Miscellaneous
 
 * enrich changelog with commit descriptions ([427711f](https://github.com/webmappsrl/webmapp-app/commit/427711f0226e7a06ba493e726b7c054c0016f564))
 <!-- COMMIT_DESC -->
@@ -493,7 +488,6 @@
     
     - refactor(geolocation-service): ♻️ improve location update handling
     Refactored the `_startWebWatcher` method in the `GeolocationService` to enhance clarity and maintainability. Introduced a `location` constant to hold the geolocation data before passing it to the `_onLocationUpdate` method. Additionally, updated the `properties` of `_recordedFeature` to include the new location object, ensuring the `locations` array is correctly populated.
-<!-- COMMIT_DESC -->
     
     Added the dispatch of `loadIcons()` action in the `AppComponent` constructor to ensure icons are loaded during the app's initialization phase.
     
