@@ -13,6 +13,7 @@
     "postinstall": "npx jetifier",
     "deploy-to-web": "ionic build && rsync -av --exclude 'assets' ./www/* server:/var/www/html/mobile.webmapp.it/",
     "deploy-cai-to-web": "ionic build && scp -r ./www/* cai.osm2cai:/var/www/html/mobile/",
+    "deploy-newcai-to-web": "ionic build && scp -r ./www/* newcai.osm2cai:/var/www/html/mobile/",
     "deploy-to-web-verbose": "ionic build && scp -r ./www/* server:/var/www/html/mobile.webmapp.it/",
     "deploy-to-web-assets": "ionic build &&  scp -r ./www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
     "surge-sardegna-dev": "ionic build && surge --project ./www --domain http://32.dev-mobile-webmapp.surge.sh/",
