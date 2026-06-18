@@ -2,14 +2,16 @@ import {ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation} from '
 import {Store} from '@ngrx/store';
 import {Location} from '@wm-types/feature';
 import {BehaviorSubject, from, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, switchMap, take, throttleTime} from 'rxjs/operators';
+import {switchMap, take} from 'rxjs/operators';
 import {NominatimService} from 'src/app/services/nominatim.service';
 import {ModalController} from '@ionic/angular';
 import {confPOIFORMS} from '@wm-core/store/conf/conf.selector';
-import {setEnablePoiRecorderPanel} from '@wm-core/store/user-activity/user-activity.action';
+import {
+  refreshMapFeaturesInLocationRange,
+  setEnablePoiRecorderPanel,
+} from '@wm-core/store/user-activity/user-activity.action';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
-import {getDistance} from 'ol/sphere';
 
 @Component({
   standalone: false,
@@ -46,6 +48,7 @@ export class PoiRecorderComponent implements OnDestroy {
       .pipe(
         take(1),
         switchMap(position => {
+          this._store.dispatch(refreshMapFeaturesInLocationRange({location: position}));
           return from(
             this._modalCtrl.create({
               component: ModalSaveComponent,
@@ -61,7 +64,9 @@ export class PoiRecorderComponent implements OnDestroy {
       )
       .subscribe(modal => {
         modal.present();
-        this._store.dispatch(setEnablePoiRecorderPanel({enable: false}));
+        modal.onDidDismiss().then(() => {
+          this._store.dispatch(setEnablePoiRecorderPanel({enable: false}));
+        });
       });
   }
 
