@@ -30,7 +30,7 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
   @ViewChild(IonContent, {static: false}) ionContent: IonContent;
   @ViewChild('formContainer', {static: false}) formContainer: ElementRef;
 
-  acquisitionFORM$: Observable<any[]>;
+  acquisitionFORM$: Observable<any[]> = of([]);
   public activities = activities;
   public activity: string;
   public description: string;
@@ -219,6 +219,7 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
     const additionalProperties = {
       name: this.formGroup.value.title,
       form: this.formGroup.value,
+      ...(this.formGroup.value?.layer_id != null && {layer_id: this.formGroup.value.layer_id}),
       media: this.photos,
       uuid: generateUUID(),
       app_id: `${this._environmentSvc.appId}`,
