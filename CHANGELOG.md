@@ -5,15 +5,26 @@
 
 ### Features
 
-* **oc:7639:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
-
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a>:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
+<!-- COMMIT_DESC -->
+    
+    - poi-recorder: dispatch refreshMapFeaturesInLocationRange before opening modal to pre-populate nearby layer; move setEnablePoiRecorderPanel to onDidDismiss
+    - modal-save: add layer_id top-level in properties (POI recorder save flow)
+    - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
+    - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
-* enrich changelog with commit descriptions ([6ec14fa](https://github.com/webmappsrl/webmapp-app/commit/6ec14fadc7e4e210a7f6546a6b6e720137931974))
 * **wm-types:** changelog for bump to db34ebc ([6e8b67b](https://github.com/webmappsrl/webmapp-app/commit/6e8b67bd2e471da75a8e3e868f0361b3594c7a31))
-* **wm-types:** changelog for bump to dc2ba26 ([ea3242b](https://github.com/webmappsrl/webmapp-app/commit/ea3242bb510fd96a2afff462fab47df1b37a1c01))
+<!-- COMMIT_DESC -->
+    
+    - chore(environment): ✨ add 'maphubdev' shard configuration
+    - Updated ShardName type to include 'maphubdev'.
+    - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
+    - Enhanced the shards object to support the new shard entry for improved service management.
 
 ## [3.1.11](https://github.com/webmappsrl/webmapp-app/compare/v3.1.10...v3.1.11) (2026-05-14)
 
@@ -26,7 +37,6 @@
     - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
     - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
     - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
-<!-- COMMIT_DESC -->
     
     - Introduced a step to create a fallback posthog.json file if it does not exist, ensuring the CI workflow has the necessary configuration for PostHog integration.
     
@@ -38,7 +48,6 @@
     - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
     - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
 * enrich changelog with commit descriptions ([37dab9e](https://github.com/webmappsrl/webmapp-app/commit/37dab9ec7c4fa6467cd93a843ec9d030345e366f))
-* **map-core:** changelog for bump to b0f8326 ([a897ae3](https://github.com/webmappsrl/webmapp-app/commit/a897ae3cd8e51c0c492ea73d7851379a22df84da))
 <!-- COMMIT_DESC -->
     
     - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
@@ -74,7 +83,6 @@
     - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
     - Changed the awsApi URL in the shards configuration to a new storage location.
     - Ensured consistency in API endpoint management across the environment settings.
-<!-- COMMIT_DESC -->
     
     - chore(language, feature): ✨ introduce taxonomy types and enhance language handling <a href="https://orchestrator.maphub.it/resources/customer-stories/7313" target="_blank" rel="noopener noreferrer">OC[7313]</a>
     - Added `Language` type definition using a constant array for better type safety.
@@ -91,7 +99,6 @@
     - style(search-box): ✨ simplify padding and enhance SVG styling
     - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
     - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-
 ### Bug Fixes
 
 * enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
@@ -298,7 +305,6 @@
     - Added `posthog` boolean property to `APP` and `WEBAPP` interfaces for configuration.
     - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
     - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
-
 ### Bug Fixes
 
 * **modal-save:** ✨ add logic to remove current track for new tracks <a href="https://orchestrator.maphub.it/resources/customer-stories/6582" target="_blank" rel="noopener noreferrer">OC[6582]</a> ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
@@ -1951,7 +1957,6 @@
     ...
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
-- UCVS: **12.1.28**
 
 - FUMAIOLOSENTIERI: **12.1.28**
 
