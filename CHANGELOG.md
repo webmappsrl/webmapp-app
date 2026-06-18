@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.2.0](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.2.0) (2026-06-18)
+## [3.1.12](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.1.12) (2026-06-18)
 
 
 ### Features
