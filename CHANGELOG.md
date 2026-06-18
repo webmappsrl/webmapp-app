@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.12](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.1.12) (2026-06-18)
+
+
+### Features
+
+* **oc:7639:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
+* enrich changelog with commit descriptions ([6ec14fa](https://github.com/webmappsrl/webmapp-app/commit/6ec14fadc7e4e210a7f6546a6b6e720137931974))
+* **wm-types:** changelog for bump to db34ebc ([6e8b67b](https://github.com/webmappsrl/webmapp-app/commit/6e8b67bd2e471da75a8e3e868f0361b3594c7a31))
+* **wm-types:** changelog for bump to dc2ba26 ([ea3242b](https://github.com/webmappsrl/webmapp-app/commit/ea3242bb510fd96a2afff462fab47df1b37a1c01))
+
 ## [3.1.11](https://github.com/webmappsrl/webmapp-app/compare/v3.1.10...v3.1.11) (2026-05-14)
 
 
