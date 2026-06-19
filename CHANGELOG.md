@@ -15,7 +15,6 @@
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
         - Enhanced the shards object to support the new shard entry for improved service management.
-<!-- COMMIT_DESC -->
         - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
         - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
         - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
@@ -83,7 +82,6 @@
           - Updated Ionic and NgRx dependencies to their latest versions.
           - Updated other dependencies like rxjs, zone.js, and typescript to the latest versions.
           - Updated Capacitor and Angular Devkit dependencies as well.
-
         - fix(components): 🐛 set standalone flag to false for all components
 
           - Updated the `standalone` flag to false for all component, directive, and pipe decorators.
@@ -288,7 +286,6 @@
         - Removed references to `removeCurrentUgcTrack` from `test-utils.ts` and `modal-save.component.ts` to clean up unused code.
         - Updated the `AppComponent` and `TrackRecorderComponent` to eliminate calls to `checkCurrentUgcTrack` and `currentUgcTrackRecording`, respectively, streamlining the codebase.
         Relates to <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
-
         Updated submodule core/src/app/shared/map-core
 
         Updated submodule core/src/app/shared/wm-core
