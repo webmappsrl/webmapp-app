@@ -106,6 +106,52 @@ Required for all functions and methods (enforced by ESLint).
 - **Releases:** Automated via Release Please on push to `main`
 - **Changelog:** Auto-enriched with commit descriptions on push to `main`/`develop`
 
+## Release Please — Gestione problemi di versione
+
+Il workflow usa `google-github-actions/release-please-action@v3` in **simple mode** (`release-type: node`). Lo stato è tracciato tramite tag git `v{version}` e GitHub Releases.
+
+### Diagnosi quando release-please propone la versione sbagliata
+
+```bash
+# 1. Controlla le release GitHub (la "Latest" è il punto di partenza)
+gh release list --repo webmappsrl/webmapp-app --limit 10
+
+# 2. Controlla se ci sono PR aperte di release-please
+gh pr list --repo webmappsrl/webmapp-app
+
+# 3. Controlla i commit feat/fix dall'ultimo tag
+git log v3.1.13..HEAD --oneline | grep -E "^[a-f0-9]+ (feat|fix)"
+```
+
+### Causa più comune
+
+La PR di release-please viene mergiata manualmente e poi la versione viene rollbackata. Release-please considera la versione della PR mergiata come "ultima release" e calcola da lì.
+
+### Fix: forzare una versione specifica
+
+Aggiungere temporaneamente `release-as` nel workflow (`.github/workflows/release_please.yml`):
+
+```yaml
+- uses: google-github-actions/release-please-action@v3
+  with:
+    release-type: node
+    package-name: webmapp-app
+    release-as: 3.1.14   # ← aggiungere, poi rimuovere dopo il merge
+    ...
+```
+
+Procedura:
+1. Chiudere la PR sbagliata: `gh pr close <N> --repo webmappsrl/webmapp-app`
+2. Cancellare il branch: `gh api repos/webmappsrl/webmapp-app/git/refs/heads/release-please--branches--main--components--webmapp-app -X DELETE`
+3. Aggiungere `release-as: X.Y.Z` al workflow e pushare
+4. Aspettare che release-please apra la PR corretta
+5. Mergiarla
+6. **Subito dopo il merge**: rimuovere `release-as` dal workflow e pushare
+
+### Regola fondamentale
+
+Non fare mai rollback manuale della versione dopo che una PR di release-please è stata mergiata. Se serve cambiare versione, usare `release-as` nel workflow.
+
 ## Technology Stack
 
 Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translate · Swiper 12 · PostHog · Cypress 14
