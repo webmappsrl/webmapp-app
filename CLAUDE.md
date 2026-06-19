@@ -155,3 +155,16 @@ Non fare mai rollback manuale della versione dopo che una PR di release-please �
 ## Technology Stack
 
 Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translate · Swiper 12 · PostHog · Cypress 14
+
+## Feature disponibili
+
+| Feature | Ticket | Moduli toccati | Note |
+|---|---|---|---|
+| Validazione posthog.json prima della build | oc:8105 | `gulpfile.js` | Valida esistenza, JSON valido e chiavi POSTHOG_KEY/POSTHOG_HOST non vuote; copia il file nell'istanza dopo create() |
+
+## Decisioni architetturali
+
+### Validazione posthog.json (oc:8105)
+- `validatePosthogConfig()` usa `throw new Error()` invece di `process.exit(1)`: il throw dentro un Promise executor viene catturato automaticamente da Node come rejection, permettendo il teardown di Gulp
+- `fs.copyFileSync` in `build()` è wrappato in try/catch con `reject()` per evitare che eccezioni sincrone dentro `.then()` diventino unhandled Promise rejection con la Promise esterna bloccata in pending
+- `instances/posthog.json` è gitignored — in CI va creato esplicitamente via secrets prima di invocare gulp
