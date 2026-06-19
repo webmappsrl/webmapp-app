@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.2.0](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.2.0) (2026-06-19)
+
+
+### Features
+
+* **github-actions:** ✨ add workflow to enrich changelog with commit descriptions ([e0c3101](https://github.com/webmappsrl/webmapp-app/commit/e0c3101fe8a06631b60ac16916cc4f483c0b1908))
+* new minor 3.1 ([db7a193](https://github.com/webmappsrl/webmapp-app/commit/db7a1935a635ed182a86c73d7a03b954dd36fb24))
+* **oc:7639:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
+* **wm-types:** bump to 858fd88 ([2b73a94](https://github.com/webmappsrl/webmapp-app/commit/2b73a94214fc7158572677b5d13f4179e3d29320))
+
+
+### Bug Fixes
+
+* **changelog:** ✨ enrich changelog with commit body descriptions ([f99dbf4](https://github.com/webmappsrl/webmapp-app/commit/f99dbf4475e16bb7da33ec954ffe5db559dd7ae5))
+* check all complete by filter values ([2dfed99](https://github.com/webmappsrl/webmapp-app/commit/2dfed9993369bc45bf27ae752643c2791a3d0609))
+* correct hitmap dispatch ([61806ae](https://github.com/webmappsrl/webmapp-app/commit/61806ae163a5fc498883c4f187442a34ad4fda3f))
+* correct hitmap sho ([36b3e25](https://github.com/webmappsrl/webmapp-app/commit/36b3e25ac7fec49647f74ac2efb36c717eaa0e25))
+* **download:** 🖼️ update logo image path and style adjustments ([fb69b8b](https://github.com/webmappsrl/webmapp-app/commit/fb69b8bd763836a9215c29f3c04c554c8097f2a6))
+* enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
+* **environment:** 🔧 update origin URLs and shard name ([1418268](https://github.com/webmappsrl/webmapp-app/commit/1418268bb1c6959be010573bc622a383e9bcd632))
+* **modal-save:** ✨ add logic to remove current track for new tracks oc:6582 ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
+* test anchor button by attribute ([cd630b8](https://github.com/webmappsrl/webmapp-app/commit/cd630b88ac6e77b051dcf181ccf9463c7ec84216))
+
 ## [3.1.12](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.1.12) (2026-06-18)
 
 ### Features
@@ -11,6 +34,7 @@
         - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
         - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
         Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+- enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
 <!-- COMMIT_DESC -->
         - chore(environment): ✨ add 'maphubdev' shard configuration
         - Updated ShardName type to include 'maphubdev'.
@@ -27,6 +51,7 @@
         - Updated the `openPoi` function to use a more specific selector for the POI title.
         - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
         - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
+
     <!-- COMMIT_DESC -->
 
         - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
@@ -67,6 +92,7 @@
         - Added `Language` type definition using a constant array for better type safety.
         - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
         - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
+- enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
 <!-- COMMIT_DESC -->
         - style(search-box): ✨ simplify padding and enhance SVG styling
         - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
@@ -288,6 +314,7 @@
         - Updated `map-core.module.ts` to include the new directive and modified the index export.
         - Refactored `WmMapComponent` to use `OlMap` for better clarity and consistency.
         - Added constants for rendering buffer and track record z-index to improve layer management.
+
         * chore: remove unused UGC track test and related functions
 
         - Deleted the `resume-record-ugc-track.cy.ts` test file as it is no longer needed.
