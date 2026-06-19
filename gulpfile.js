@@ -517,6 +517,41 @@ function abort(err) {
   error('------------------------- Aborting -------------------------');
 }
 
+const ABORTING_BANNER = '------------------------- Aborting -------------------------';
+
+function validatePosthogConfig() {
+  const posthogPath = instancesDir + 'posthog.json';
+
+  let posthogConfig;
+  try {
+    posthogConfig = JSON.parse(fs.readFileSync(posthogPath, 'utf8'));
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      error('PostHog validation failed: file not found at ' + posthogPath);
+      error('Fix: create ' + posthogPath + ' with POSTHOG_KEY and POSTHOG_HOST');
+    } else {
+      error('PostHog validation failed: invalid JSON in ' + posthogPath);
+      error('Parse error: ' + err.message);
+      error('Fix: ensure ' + posthogPath + ' contains valid JSON');
+    }
+    error(ABORTING_BANNER);
+    throw new Error('PostHog config validation failed');
+  }
+
+  const requiredKeys = ['POSTHOG_KEY', 'POSTHOG_HOST'];
+  for (const key of requiredKeys) {
+    const val = posthogConfig[key];
+    if (!val || typeof val !== 'string' || !val.trim()) {
+      error('PostHog validation failed: ' + key + ' is missing or empty in ' + posthogPath);
+      error('Fix: add a valid string value for ' + key + ' in ' + posthogPath);
+      error(ABORTING_BANNER);
+      throw new Error('PostHog config validation failed: ' + key);
+    }
+  }
+
+  if (verbose) success('PostHog config validated successfully');
+}
+
 function checkBuildsFolder() {
   if (!fs.existsSync('builds/')) {
     if (verbose) debug('Creating builds folder...');
@@ -947,6 +982,8 @@ function build(instanceName, geohubInstanceId, shardName = 'geohub') {
       return;
     }
 
+    validatePosthogConfig();
+
     if (verbose) debug('Starting `build(' + instanceName + ',' + geohubInstanceId + ')`');
     if (verbose) debug('`build()`- running `create()`');
     var force = false;
@@ -954,6 +991,13 @@ function build(instanceName, geohubInstanceId, shardName = 'geohub') {
     create(instanceName, force).then(
       function () {
         if (verbose) debug('`build()` - create completed');
+        try {
+          fs.copyFileSync(instancesDir + 'posthog.json', instancesDir + instanceName + '/posthog.json');
+          if (verbose) debug('posthog.json copied to instance');
+        } catch (err) {
+          reject(new Error('Failed to copy posthog.json to instance: ' + err.message));
+          return;
+        }
         if (verbose) debug('`build()`- running `update()`');
         update(instanceName, geohubInstanceId, shardName).then(
           result => {
