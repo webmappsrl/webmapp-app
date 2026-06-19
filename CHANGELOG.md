@@ -28,7 +28,6 @@
         - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
         * refactor(styles): improve stroke style caching for routing OC: 7727
         Introduced a utility function to cache and retrieve stroke styles by color key. This enhances performance by avoiding repeated creation of stroke styles during rendering.
-
         * refactor(styles): enhance stroke style caching OC:7727
 
         Refactored to centralize stroke style caching logic in `getCachedStrokeStyle`, reducing code duplication and improving maintainability.
@@ -84,7 +83,6 @@
         - fix(components): 🐛 set standalone flag to false for all components
           - Updated the `standalone` flag to false for all component, directive, and pipe decorators.
           - Ensures compatibility with the latest Angular version changes.
-
         - refactor(swiper): ♻️ replace IonSlides with Swiper in image components
 
           - Replaced `IonSlides` with `Swiper` for better performance and compatibility.
@@ -286,7 +284,6 @@
         Relates to <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Updated submodule core/src/app/shared/map-core
         Updated submodule core/src/app/shared/wm-core
-
         Updated submodule core/src/app/shared/wm-types
 
         * refactor: simplify track details check logic
