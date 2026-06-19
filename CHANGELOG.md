@@ -5,27 +5,24 @@
 ### Features
 
 - **<a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a>:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
-  <!-- COMMIT_DESC -->
+<!-- COMMIT_DESC -->
         - poi-recorder: dispatch refreshMapFeaturesInLocationRange before opening modal to pre-populate nearby layer; move setEnablePoiRecorderPanel to onDidDismiss.
         - modal-save: add layer_id top-level in properties (POI recorder save flow)
         - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
         - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
         Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 ### Miscellaneous
 
 - enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
-  <!-- COMMIT_DESC -->
+<!-- COMMIT_DESC -->
         - chore(environment): ✨ add 'maphubdev' shard configuration
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
         - Enhanced the shards object to support the new shard entry for improved service management.
-
 ### Miscellaneous
 
 - add Cypress tests for tile download functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/7803" target="_blank" rel="noopener noreferrer">OC[7803]</a> ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
-  <!-- COMMIT_DESC -->
-
+<!-- COMMIT_DESC -->
         - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
         - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
         - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
@@ -70,7 +67,7 @@
         - Integrated `wm-txn-where` component into `ugc-poi-properties` and `ugc-track-properties` templates to display taxonomy information consistently across components.
 
 - **wm-types:** changelog for bump to 534fc7a ([c1ae918](https://github.com/webmappsrl/webmapp-app/commit/c1ae9184f77681d5bede272de28b5881b7f023c7))
-  <!-- COMMIT_DESC -->
+<!-- COMMIT_DESC -->
         - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
         - Changed the awsApi URL in the shards configuration to a new storage location.
         - Ensured consistency in API endpoint management across the environment settings.
@@ -78,15 +75,13 @@
         - Added `Language` type definition using a constant array for better type safety.
         - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
         - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-
 ### Miscellaneous
 
 - enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
-  <!-- COMMIT_DESC -->
+<!-- COMMIT_DESC -->
         - style(search-box): ✨ simplify padding and enhance SVG styling
         - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
         - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-- enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
   <!-- COMMIT_DESC -->
 
         - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
@@ -291,8 +286,7 @@
         - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
 
 - **modal-save:** ✨ add logic to remove current track for new tracks <a href="https://orchestrator.maphub.it/resources/customer-stories/6582" target="_blank" rel="noopener noreferrer">OC[6582]</a> ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
-  <!-- COMMIT_DESC -->
-
+<!-- COMMIT_DESC -->
         - Introduced a switchMap to remove the current UGC track if it's a new track (not a waypoint and without an ID).
         - Ensures that the current track is removed from the system when a new track is saved, maintaining a clean state.
         - The logic bypasses removal if the track is a waypoint, thus preserving existing waypoint behavior.
