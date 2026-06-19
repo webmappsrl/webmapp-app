@@ -11,7 +11,6 @@
       - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
       - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
       Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 ### Miscellaneous
 
 - enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
@@ -20,7 +19,6 @@
       - Updated ShardName type to include 'maphubdev'.
       - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
       - Enhanced the shards object to support the new shard entry for improved service management.
-## [3.1.11](https://github.com/webmappsrl/webmapp-app/compare/v3.1.10...v3.1.11) (2026-05-14)
 
 ### Miscellaneous
 
@@ -30,7 +28,6 @@
       - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
       - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
       - Introduced a step to create a fallback posthog.json file if it does not exist, ensuring the CI workflow has the necessary configuration for PostHog integration.
-
       ...
 
       chore: enhance POI interaction and add scroll utility for map details
@@ -74,7 +71,6 @@
       - Added `Language` type definition using a constant array for better type safety.
       - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
       - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-
 ### Miscellaneous
 
 - enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
@@ -82,12 +78,10 @@
       - style(search-box): ✨ simplify padding and enhance SVG styling
       - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
       - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-
 - enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
 <!-- COMMIT_DESC -->
       - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
       - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
-
       - Updated Capacitor packages to version 7.0.0 in core/package.json and package.json to ensure compatibility with the latest features and bug fixes.
       - Added automation for CocoaPods installation in `gulpfile.js`:
         - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
@@ -293,7 +287,6 @@
       - Ensures that the current track is removed from the system when a new track is saved, maintaining a clean state.
       - The logic bypasses removal if the track is a waypoint, thus preserving existing waypoint behavior.
       chore(deployment): 🔧 add build command for osm2cai
-
       - Introduced a new gulp build command for the osm2cai project with specific settings.
       - Ensures compatibility with osm2caiprod environment.
       - Aligns with existing build processes for other projects.
