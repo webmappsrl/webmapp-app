@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.13](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.1.13) (2026-06-19)
+
+
+### Bug Fixes
+
+* trigger release 3.1.13 ([d9e5a6a](https://github.com/webmappsrl/webmapp-app/commit/d9e5a6a3d6ef88894a3934f9ea146dc7b0080e88))
+
 ## [3.1.12](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.1.12) (2026-06-18)
 
 ### Features
@@ -15,6 +22,7 @@
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
         - Enhanced the shards object to support the new shard entry for improved service management.
+- add Cypress tests for tile download functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/7803" target="_blank" rel="noopener noreferrer">OC[7803]</a> ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
 <!-- COMMIT_DESC -->
         - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
         - Implemented checks for console errors when attempting to download tiles with 'satellite' configuration or when `confMAP.tiles` is empty.
@@ -78,6 +86,7 @@
         - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
         - Replaced `ion-slides` and `ion-slide` components with `swiper-container` and `swiper-slide` in card-slider and gallery components to align with the new Swiper API.
         - Registered Swiper custom elements in main.ts and added CUSTOM_ELEMENTS_SCHEMA to relevant modules for compatibility.
+
         - - chore(dependencies): 🔧 update dependencies to latest versions
           - Updated Angular dependencies from version 16.2.x to 20.3.x.
           - Updated Ionic and NgRx dependencies to their latest versions.
@@ -287,6 +296,7 @@
         - Deleted the `resume-record-ugc-track.cy.ts` test file as it is no longer needed.
         - Removed references to `removeCurrentUgcTrack` from `test-utils.ts` and `modal-save.component.ts` to clean up unused code.
         - Updated the `AppComponent` and `TrackRecorderComponent` to eliminate calls to `checkCurrentUgcTrack` and `currentUgcTrackRecording`, respectively, streamlining the codebase.
+
         Relates to <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
 
         Updated submodule core/src/app/shared/map-core
