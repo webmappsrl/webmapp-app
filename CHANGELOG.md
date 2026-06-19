@@ -6,7 +6,6 @@
 ### Bug Fixes
 
 * trigger release 3.1.13 ([d9e5a6a](https://github.com/webmappsrl/webmapp-app/commit/d9e5a6a3d6ef88894a3934f9ea146dc7b0080e88))
-## [3.1.12](https://github.com/webmappsrl/webmapp-app/compare/v3.1.11...v3.1.12) (2026-06-18)
 
 ### Features
 
@@ -36,7 +35,6 @@
         Introduced a utility function to cache and retrieve stroke styles by color key. This enhances performance by avoiding repeated creation of stroke styles during rendering.
         * refactor(styles): enhance stroke style caching OC:7727
         Refactored to centralize stroke style caching logic in `getCachedStrokeStyle`, reducing code duplication and improving maintainability.
-
     <!-- COMMIT_DESC -->
 
         - chore(ugc.effects, localForage): ✨ enhance UGC management with synchronized image handling (#163)
@@ -92,7 +90,6 @@
           - Replaced `IonSlides` with `Swiper` for better performance and compatibility.
           - Updated all related HTML and TypeScript files to use Swiper components.
           - Adjusted the logic to interact with Swiper's API instead of IonSlides.
-
         - fix(lang.service): 🐛 remove deprecated Angular TranslateService injections
 
           - Removed deprecated `USE_DEFAULT_LANG` and `USE_STORE` injections from `LangService`.
@@ -290,7 +287,6 @@
         Updated submodule core/src/app/shared/wm-core
         Updated submodule core/src/app/shared/wm-types
         * refactor: simplify track details check logic
-
         - Updated the `checkTrackDetailsOpened` function to streamline the logic for checking the existence of `wm-track-properties`. The function now directly asserts the existence or non-existence of the element based on the `checkIsOpened` parameter, improving readability and maintainability of the test code.
 
         * refactor: streamline observables in PoiRecorder and TrackRecorder components
