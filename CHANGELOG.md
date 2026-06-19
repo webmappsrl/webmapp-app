@@ -11,7 +11,6 @@
         - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
         - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
         Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
         - chore(environment): ✨ add 'maphubdev' shard configuration
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
@@ -28,7 +27,6 @@
         - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
         - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
     <!-- COMMIT_DESC -->
-
         - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
         * refactor(styles): improve stroke style caching for routing OC: 7727
 
@@ -67,7 +65,6 @@
         - Added `Language` type definition using a constant array for better type safety.
         - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
         - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-<!-- COMMIT_DESC -->
         - style(search-box): ✨ simplify padding and enhance SVG styling
         - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
         - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
@@ -289,7 +286,6 @@
         - Refactored `WmMapComponent` to use `OlMap` for better clarity and consistency.
         - Added constants for rendering buffer and track record z-index to improve layer management.
         * chore: remove unused UGC track test and related functions
-
         - Deleted the `resume-record-ugc-track.cy.ts` test file as it is no longer needed.
         - Removed references to `removeCurrentUgcTrack` from `test-utils.ts` and `modal-save.component.ts` to clean up unused code.
         - Updated the `AppComponent` and `TrackRecorderComponent` to eliminate calls to `checkCurrentUgcTrack` and `currentUgcTrackRecording`, respectively, streamlining the codebase.
