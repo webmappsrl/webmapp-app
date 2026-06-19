@@ -14,11 +14,9 @@
     - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
     
     Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
-* **wm-types:** changelog for bump to db34ebc ([6e8b67b](https://github.com/webmappsrl/webmapp-app/commit/6e8b67bd2e471da75a8e3e868f0361b3594c7a31))
 <!-- COMMIT_DESC -->
     
     - chore(environment): ✨ add 'maphubdev' shard configuration
@@ -47,7 +45,6 @@
     - Updated the `openPoi` function to use a more specific selector for the POI title.
     - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
     - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
-* enrich changelog with commit descriptions ([37dab9e](https://github.com/webmappsrl/webmapp-app/commit/37dab9ec7c4fa6467cd93a843ec9d030345e366f))
 <!-- COMMIT_DESC -->
     
     - refactor(styles): improve stroke style caching for routing OC: 7727 (#56)
@@ -88,7 +85,6 @@
     - Added `Language` type definition using a constant array for better type safety.
     - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
     - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-## [3.1.10](https://github.com/webmappsrl/webmapp-app/compare/v3.1.9...v3.1.10) (2026-03-17)
 
 
 ### Miscellaneous
@@ -99,7 +95,6 @@
     - style(search-box): ✨ simplify padding and enhance SVG styling
     - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
     - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
-### Bug Fixes
 
 * enhance swiper integration in card-slider and gallery components ([c716608](https://github.com/webmappsrl/webmapp-app/commit/c716608e898d1c37881cf16e11391e5bc9a34851))
 <!-- COMMIT_DESC -->
@@ -305,7 +300,6 @@
     - Added `posthog` boolean property to `APP` and `WEBAPP` interfaces for configuration.
     - Updated local `origin` and `awsApi` URLs in the `shards` object for improved service connectivity.
     - Modified `initAndRegister` method in `WmPosthogClient` interface to accept an optional `enabled` parameter for better control over initialization.
-### Bug Fixes
 
 * **modal-save:** ✨ add logic to remove current track for new tracks <a href="https://orchestrator.maphub.it/resources/customer-stories/6582" target="_blank" rel="noopener noreferrer">OC[6582]</a> ([33d4520](https://github.com/webmappsrl/webmapp-app/commit/33d4520fac6da5bfe97b84e710e82591315022a2))
 <!-- COMMIT_DESC -->
@@ -1957,7 +1951,6 @@
     ...
     
     This commit updates the package.json file, specifically the "version" field, from 0.0.1 to 2.1.51 in accordance with semantic versioning guidelines.
-
 - FUMAIOLOSENTIERI: **12.1.28**
 
 - GAVORRANO:**12.1.15**
