@@ -29,7 +29,6 @@
         * refactor(styles): improve stroke style caching for routing OC: 7727
         Introduced a utility function to cache and retrieve stroke styles by color key. This enhances performance by avoiding repeated creation of stroke styles during rendering.
         * refactor(styles): enhance stroke style caching OC:7727
-
         Refactored to centralize stroke style caching logic in `getCachedStrokeStyle`, reducing code duplication and improving maintainability.
 
     <!-- COMMIT_DESC -->
@@ -84,7 +83,6 @@
           - Updated the `standalone` flag to false for all component, directive, and pipe decorators.
           - Ensures compatibility with the latest Angular version changes.
         - refactor(swiper): ♻️ replace IonSlides with Swiper in image components
-
           - Replaced `IonSlides` with `Swiper` for better performance and compatibility.
           - Updated all related HTML and TypeScript files to use Swiper components.
           - Adjusted the logic to interact with Swiper's API instead of IonSlides.
@@ -285,7 +283,6 @@
         Updated submodule core/src/app/shared/map-core
         Updated submodule core/src/app/shared/wm-core
         Updated submodule core/src/app/shared/wm-types
-
         * refactor: simplify track details check logic
 
         - Updated the `checkTrackDetailsOpened` function to streamline the logic for checking the existence of `wm-track-properties`. The function now directly asserts the existence or non-existence of the element based on the `checkIsOpened` parameter, improving readability and maintainability of the test code.
