@@ -8,6 +8,8 @@
   ],
   "pull-request-title-pattern": "release ${component} ${version}",
   "packages": {
-    ".": {}
+    ".": {
+      "release-as": "3.1.13"
+    }
   }
 }
