@@ -11,14 +11,12 @@
         - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
         - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
         Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 - enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
 <!-- COMMIT_DESC -->
         - chore(environment): ✨ add 'maphubdev' shard configuration
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
         - Enhanced the shards object to support the new shard entry for improved service management.
-
 - add Cypress tests for tile download functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/7803" target="_blank" rel="noopener noreferrer">OC[7803]</a> ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
 <!-- COMMIT_DESC -->
         - Introduced tests for downloading tiles with different configurations in `tiles-download-conf.cy.ts`.
@@ -27,7 +25,6 @@
         - Introduced a step to create a fallback posthog.json file if it does not exist, ensuring the CI workflow has the necessary configuration for PostHog integration.
         ...
         chore: enhance POI interaction and add scroll utility for map details
-
         - Updated the `openPoi` function to use a more specific selector for the POI title.
         - Introduced a new utility function `scrollMapDetailsCardContentUntilVisible` to handle scrolling within a specific container until a target element is visible, improving interaction reliability in scrollable contexts.
         - Updated the `openTrack` function to utilize the new scrolling utility for better visibility handling of the search box.
@@ -72,7 +69,6 @@
         - Added `Language` type definition using a constant array for better type safety.
         - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
         - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-
 - enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
 <!-- COMMIT_DESC -->
         - style(search-box): ✨ simplify padding and enhance SVG styling
@@ -86,7 +82,6 @@
           - Automatically installs CocoaPods dependencies after adding or updating the iOS platform.
           - Creates a base `Info.plist` file if it doesn't exist after running `npx cap copy ios`.
         - Improved error handling and logging for better build process visibility.
-
         - Upgraded Swiper from version 8.2.5 to 12.0.3 in package.json and package-lock.json for improved performance and features.
         - Replaced `ion-slides` and `ion-slide` components with `swiper-container` and `swiper-slide` in card-slider and gallery components to align with the new Swiper API.
         - Registered Swiper custom elements in main.ts and added CUSTOM_ELEMENTS_SCHEMA to relevant modules for compatibility.
@@ -290,7 +285,6 @@
         - Ensures compatibility with osm2caiprod environment.
         - Aligns with existing build processes for other projects.
         Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
-
         - feat(directive): ✨ add WmMapTrackRecordDirective for tracking locations on the map
         - Introduced `WmMapTrackRecordDirective` to manage and visualize track records on the map.
         - Implemented features for adding locations with optimizations for memory and rendering.
