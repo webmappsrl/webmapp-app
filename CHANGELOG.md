@@ -11,7 +11,6 @@
         - cypress: add E2E tests for layer selection feature (4 tests, fixture-based)
         - submodules: bump map-core and wm-core to <a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a> implementation
         Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-### Miscellaneous
 
 - enrich changelog with commit descriptions ([ff12498](https://github.com/webmappsrl/webmapp-app/commit/ff12498f517046279092849048104e3635c949ed))
 <!-- COMMIT_DESC -->
@@ -19,7 +18,6 @@
         - Updated ShardName type to include 'maphubdev'.
         - Added configuration for 'maphubdev' shard with its respective API endpoints and hosts.
         - Enhanced the shards object to support the new shard entry for improved service management.
-### Miscellaneous
 
 - add Cypress tests for tile download functionality <a href="https://orchestrator.maphub.it/resources/customer-stories/7803" target="_blank" rel="noopener noreferrer">OC[7803]</a> ([c5704e2](https://github.com/webmappsrl/webmapp-app/commit/c5704e2674b23b6f34fbbab43026b45451e9c8df))
 <!-- COMMIT_DESC -->
@@ -28,7 +26,6 @@
         - Updated `download-panel.component.ts` to handle tile download logic based on the configuration from `confMAP`, including error handling for unsupported tile types.
         - Introduced a step to create a fallback posthog.json file if it does not exist, ensuring the CI workflow has the necessary configuration for PostHog integration.
         ...
-
         chore: enhance POI interaction and add scroll utility for map details
 
         - Updated the `openPoi` function to use a more specific selector for the POI title.
@@ -75,7 +72,6 @@
         - Added `Language` type definition using a constant array for better type safety.
         - Introduced `taxonomy_where` property in `WmProperties` interface to map taxonomic locations.
         - Defined `TaxonomyWhereEntry` and `TaxonomyWhereMap` types for structured taxonomy data management.
-### Miscellaneous
 
 - enrich changelog with commit descriptions ([d52c135](https://github.com/webmappsrl/webmapp-app/commit/d52c1350489766c8515a211b0e6911c6404a8fcd))
 <!-- COMMIT_DESC -->
@@ -83,7 +79,6 @@
         - Updated `search-box.component.scss` to streamline padding by setting a uniform value of 6px.
         - Refactored SVG styling within the `div[appBuildSvg]` selector for improved organization and clarity, ensuring consistent styling for icons.
   <!-- COMMIT_DESC -->
-
         - Updated swiper-container attributes in card-slider and gallery components to align with the new Swiper API, improving configuration options for better performance.
         - Added CUSTOM_ELEMENTS_SCHEMA to AppModule to support the use of custom elements in the application.
         - Updated Capacitor packages to version 7.0.0 in core/package.json and package.json to ensure compatibility with the latest features and bug fixes.
@@ -294,7 +289,6 @@
         - Introduced a new gulp build command for the osm2cai project with specific settings.
         - Ensures compatibility with osm2caiprod environment.
         - Aligns with existing build processes for other projects.
-
         Updated the `@capacitor-community/background-geolocation` package from version 1.2.19 to 1.2.26 in both `package-lock.json` and `package.json`. This update includes changes to the package version, resolved URL, and integrity hash to ensure the latest version is used.
 
         - feat(directive): ✨ add WmMapTrackRecordDirective for tracking locations on the map
