@@ -6,7 +6,6 @@
 ### Bug Fixes
 
 * trigger release 3.1.13 ([d9e5a6a](https://github.com/webmappsrl/webmapp-app/commit/d9e5a6a3d6ef88894a3934f9ea146dc7b0080e88))
-
 ### Features
 
 - **<a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a>:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
@@ -36,7 +35,6 @@
         * refactor(styles): enhance stroke style caching OC:7727
         Refactored to centralize stroke style caching logic in `getCachedStrokeStyle`, reducing code duplication and improving maintainability.
     <!-- COMMIT_DESC -->
-
         - chore(ugc.effects, localForage): ✨ enhance UGC management with synchronized image handling (#163)
         - Updated `UgcEffects` to include new actions for removing synchronized UGC POIs and tracks, improving error handling and success action management.
         - Refactored alert messages for deletion and update failures to provide clearer feedback to users.
@@ -91,7 +89,6 @@
           - Updated all related HTML and TypeScript files to use Swiper components.
           - Adjusted the logic to interact with Swiper's API instead of IonSlides.
         - fix(lang.service): 🐛 remove deprecated Angular TranslateService injections
-
           - Removed deprecated `USE_DEFAULT_LANG` and `USE_STORE` injections from `LangService`.
           - Adjusted constructor to align with the latest `TranslateService` implementation.
         refactor(components): ♻️ replace IonSlides with Swiper components
@@ -288,7 +285,6 @@
         Updated submodule core/src/app/shared/wm-types
         * refactor: simplify track details check logic
         - Updated the `checkTrackDetailsOpened` function to streamline the logic for checking the existence of `wm-track-properties`. The function now directly asserts the existence or non-existence of the element based on the `checkIsOpened` parameter, improving readability and maintainability of the test code.
-
         * refactor: streamline observables in PoiRecorder and TrackRecorder components
 
         - Removed unnecessary operators from observables in `PoiRecorderComponent` and `TrackRecorderComponent` to simplify the code and improve performance. The changes enhance readability by reducing complexity in the subscription logic.
