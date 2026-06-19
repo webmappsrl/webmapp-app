@@ -6,7 +6,6 @@
 ### Bug Fixes
 
 * trigger release 3.1.13 ([d9e5a6a](https://github.com/webmappsrl/webmapp-app/commit/d9e5a6a3d6ef88894a3934f9ea146dc7b0080e88))
-### Features
 
 - **<a href="https://orchestrator.maphub.it/resources/customer-stories/7639" target="_blank" rel="noopener noreferrer">OC[7639]</a>:** add layer selection to UGC segnalazione form ([2b0b099](https://github.com/webmappsrl/webmapp-app/commit/2b0b09997699c6f7a9f143a5e399eb3bc3ac75eb))
 <!-- COMMIT_DESC -->
@@ -40,7 +39,6 @@
         - Refactored alert messages for deletion and update failures to provide clearer feedback to users.
         - Introduced `removeSynchronizedImgsInsideProperties` function in `localForage` to handle image removal for synchronized UGC, ensuring proper cleanup during UGC operations.
         - Enhanced `saveUgcImagesByStorage` function to streamline image saving logic based on synchronization status, improving overall UGC management efficiency.
-
         chore(ugc.effects, localForage): ✨ add comprehensive tests for UGC effects and localForage utilities
 
         - Introduced unit tests for `UgcEffects`, covering various scenarios for deleting UGC POIs and tracks, including success and failure cases.
@@ -92,7 +90,6 @@
           - Removed deprecated `USE_DEFAULT_LANG` and `USE_STORE` injections from `LangService`.
           - Adjusted constructor to align with the latest `TranslateService` implementation.
         refactor(components): ♻️ replace IonSlides with Swiper components
-
         Updated multiple components to replace `IonSlides` with `Swiper` for improved performance and compatibility. Adjusted HTML structure and styles accordingly, ensuring all related elements utilize `swiper-container` and `swiper-slide`. This change enhances the overall user experience and maintains consistency across the application.
 
         refactor(components): ♻️ enhance Swiper integration across various components
@@ -286,7 +283,6 @@
         * refactor: simplify track details check logic
         - Updated the `checkTrackDetailsOpened` function to streamline the logic for checking the existence of `wm-track-properties`. The function now directly asserts the existence or non-existence of the element based on the `checkIsOpened` parameter, improving readability and maintainability of the test code.
         * refactor: streamline observables in PoiRecorder and TrackRecorder components
-
         - Removed unnecessary operators from observables in `PoiRecorderComponent` and `TrackRecorderComponent` to simplify the code and improve performance. The changes enhance readability by reducing complexity in the subscription logic.
 
         - fix(geolocation): 🐛 remove pause recording call and update UGC track recording state
