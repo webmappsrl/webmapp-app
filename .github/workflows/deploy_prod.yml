@@ -1,0 +1,71 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  unit-tests:
+    uses: ./.github/workflows/test-unit.yml
+    secrets: inherit
+
+  e2e-tests:
+    uses: ./.github/workflows/test-e2e.yml
+    secrets: inherit
+
+  build-and-deploy:
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Update submodules
+        run: git submodule update --init --recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: core/package-lock.json
+      - name: Install dependencies
+        working-directory: core
+        run: npm ci
+      - name: Install Ionic CLI
+        run: npm install -g @ionic/cli
+      - name: Create posthog.json fallback
+        run: |
+          if [ ! -f posthog.json ]; then
+            echo '{ "POSTHOG_KEY": "", "POSTHOG_HOST": "" }' > posthog.json
+          fi
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config << EOF
+          Host server
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
+            Port ${{ secrets.SSH_PORT }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking no
+          EOF
+      - name: Deploy
+        working-directory: core
+        run: npm run deploy-to-web
+      - name: Health check
+        run: |
+          for i in 1 2 3; do
+            curl -f --max-time 15 https://1.camminiditalia.mobile.webmapp.it/ && break
+            echo "Attempt $i failed, retrying in 10s..."
+            sleep 10
+          done

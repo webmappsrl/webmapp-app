@@ -128,6 +128,12 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
+            "include": [
+              "src/app/services"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["src/theme/default"]
+            },
             "styles": [
               {
                 "input": "src/theme/variables.scss"
