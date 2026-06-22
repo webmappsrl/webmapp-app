@@ -1,8 +1,9 @@
-import {goHome, openLayer, openPoi, openTrack, data} from 'cypress/utils/test-utils';
+import {goHome, openLayer, openPoi, openTrack, data, mapReadyTimeout} from 'cypress/utils/test-utils';
 
 describe('Share track and poi [oc:4740] [https://orchestrator.maphub.it/resources/developer-stories/4740]', () => {
   before(() => {
     cy.visit('/');
+    cy.get('wm-layer-box', {timeout: mapReadyTimeout}).should('exist');
   });
 
   it('Should correctly display share button when select track', () => {
