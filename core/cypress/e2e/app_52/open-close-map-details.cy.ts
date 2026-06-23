@@ -1,6 +1,6 @@
 import {clearTestState, goMap, mapReadyTimeout} from 'cypress/utils/test-utils';
 
-const waitTime = 800;
+const waitTime = 1200;
 const zoom_coordinates = [8.229458808898698, 280.25369262695403];
 const track_coordinates = [208.15484619140534, 412.5570373535229];
 const empty_click_coordinates = [400.04718017578125, 77.72578430175781];

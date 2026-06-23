@@ -1,0 +1,72 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  unit-tests:
+    uses: ./.github/workflows/test-unit.yml
+    secrets: inherit
+
+  e2e-tests:
+    uses: ./.github/workflows/test-e2e.yml
+    secrets: inherit
+
+  build-and-deploy:
+    needs: [unit-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    name: Build and Deploy
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Update submodules
+        run: git submodule update --init --recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: core/package-lock.json
+      - name: Install dependencies
+        working-directory: core
+        run: npm ci
+      - name: Install Ionic CLI
+        run: npm install -g @ionic/cli
+      - name: Create posthog.json fallback
+        run: |
+          if [ ! -f posthog.json ]; then
+            echo '{ "POSTHOG_KEY": "", "POSTHOG_HOST": "" }' > posthog.json
+          fi
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+      - name: Setup SSH config
+        run: |
+          mkdir -p ~/.ssh
+          cat >> ~/.ssh/config << EOF
+          Host server
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
+            Port ${{ secrets.SSH_PORT }}
+            StrictHostKeyChecking no
+          EOF
+      - name: Deploy
+        working-directory: core
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          RSYNC_RSH: sshpass -e ssh
+        run: npm run deploy-to-web
+      - name: Health check
+        run: |
+          for i in 1 2 3; do
+            curl -f --max-time 15 https://1.camminiditalia.mobile.webmapp.it/ && break
+            echo "Attempt $i failed, retrying in 10s..."
+            sleep 10
+          done

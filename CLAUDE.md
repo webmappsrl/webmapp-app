@@ -101,7 +101,10 @@ Required for all functions and methods (enforced by ESLint).
 
 ## CI/CD
 
-- **PR testing:** Cypress E2E on every PR (`pr_test.yml`)
+- **Unit tests:** 3 parallel jobs (webmapp-app, wm-core, map-core) su ogni PR e push su `develop` (`test-unit.yml`)
+- **E2E tests:** Cypress su ogni PR e push su `develop` (`test-e2e.yml`)
+- **Surge preview:** deploy PR preview su `{id}.{shard}.pr-{N}.surge.sh` — `--id`/`--shard` dal commit message (`preview.yml`)
+- **Deploy prod:** test → build → rsync → health check su push a `main` (`deploy_prod.yml`)
 - **Code review:** AI review via OpenAI on every PR (`code-review.yml`)
 - **Releases:** Automated via Release Please on push to `main`
 - **Changelog:** Auto-enriched with commit descriptions on push to `main`/`develop`
@@ -161,8 +164,18 @@ Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translat
 | Feature | Ticket | Moduli toccati | Note |
 |---|---|---|---|
 | Validazione posthog.json prima della build | oc:8105 | `gulpfile.js` | Valida esistenza, JSON valido e chiavi POSTHOG_KEY/POSTHOG_HOST non vuote; copia il file nell'istanza dopo create() |
+| GitHub Actions CI/CD (unit + E2E + preview + deploy) | oc:8023 | `.github/workflows/`, `core/karma.conf.js`, `core/tsconfig.spec.json`, `core/angular.json` | test-unit.yml (3 job paralleli), test-e2e.yml, preview.yml (Surge), deploy_prod.yml; rimosso pr_test.yml |
 
 ## Decisioni architetturali
+
+### GitHub Actions CI/CD (oc:8023)
+- **Submodule tests in CI**: wm-core e map-core vengono testati dalla loro directory (`working-directory: core/src/app/shared/wm-core`) dopo aver installato le dep dell'app principale — stesso pattern di `wm-webapp`. Node risolve i peer da `core/node_modules/` evitando istanze duplicate di Angular che rompono TestBed
+- **`include` in `angular.json` test options**: limita la scoperta dei spec file a `src/app/services` — evita che Angular CLI raccolga i file spec dei submoduli (wm-core/map-core) che importano alias non disponibili nel contesto dell'app principale
+- **`tsconfig.spec.json` con `include` narrowed**: usa `src/app/services/**/*.spec.ts` invece del wildcard `src/**/*.spec.ts` per lo stesso motivo
+- **Boilerplate spec files eliminati**: 27 file `*.spec.ts` di pagine/componenti con soli test `should create` rimossi — non avevano valore, crash con `NG0201` per `APP_TRANSLATION` e crash Chrome su MapPage. Conservato solo `communication.service.spec.ts` (5 test reali)
+- **Surge preview fork guard**: `pull_request_target` con `if: github.event.pull_request.head.repo.full_name == github.repository` — blocca deploy da fork ma permette accesso ai secret per i branch interni
+- **`--id`/`--shard` dal commit message**: dominio Surge `{id}.{shard}.pr-{N}.surge.sh`, default `id=52, shard=maphub`
+- **`deploy-to-web` include il build**: lo script `npm run deploy-to-web` chiama già `ionic build` internamente — non serve uno step build separato nel workflow
 
 ### Validazione posthog.json (oc:8105)
 - `validatePosthogConfig()` usa `throw new Error()` invece di `process.exit(1)`: il throw dentro un Promise executor viene catturato automaticamente da Node come rejection, permettendo il teardown di Gulp

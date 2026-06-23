@@ -43,6 +43,8 @@ describe('Map overlay → feature collection layer [wmMapFeatureCollection]', ()
       expect(fc.features[0].properties.layer_id).to.eq(E2E_FC_LAYER_ID);
     });
 
+    // Attendi che OpenLayers renderizzi il GeoJSON sul canvas prima di cliccare.
+    cy.wait(2000);
     // Click sulla mappa sopra il MultiPolygon (area blu) per aprire il dettaglio layer.
     cy.get('.ol-viewport .ol-layer canvas').click(
       featureCollectionClick[0],
