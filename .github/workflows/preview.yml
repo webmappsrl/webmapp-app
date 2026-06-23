@@ -35,7 +35,7 @@ jobs:
             SHARD="${{ github.event.inputs.shard }}"
             PR_NUMBER=""
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
-            COMMIT_MSG=$(git show -s --format=%B ${{ github.event.pull_request.head.sha }})
+            COMMIT_MSG=$(gh api repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }} --jq '.commit.message')
             PR_NUMBER="${{ github.event.pull_request.number }}"
             ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
             SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
@@ -103,8 +103,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Compute domain to teardown
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          COMMIT_MSG=$(git show -s --format=%B ${{ github.event.pull_request.head.sha }})
+          COMMIT_MSG=$(gh api repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }} --jq '.commit.message')
           ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
           SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
           ID=${ID:-52}
