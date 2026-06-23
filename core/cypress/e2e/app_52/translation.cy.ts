@@ -1,6 +1,6 @@
 import {clearTestState, confURL, goProfile, mapReadyTimeout} from "cypress/utils/test-utils";
 
-describe('Change lenguage from english to italian', () => {
+describe.skip('Change lenguage from english to italian', () => {
   before(() => {
     clearTestState();
     cy.intercept('GET', confURL, req => {

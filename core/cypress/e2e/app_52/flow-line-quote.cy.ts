@@ -9,6 +9,7 @@ const flowLineQuoteConfig = {
 describe('Flow line quote [oc:4727] [https://orchestrator.maphub.it/resources/developer-stories/4727]', () => {
   beforeEach(() => {
     cy.clearLocalStorage();
+    cy.intercept('GET', '**/tracks/*.json', {fixture: 'trackFlowLineQuotes.json'}).as('getTrack');
     cy.intercept('GET', confURL, req => {
       req.reply(res => {
         const newRes = {
@@ -28,6 +29,7 @@ describe('Flow line quote [oc:4727] [https://orchestrator.maphub.it/resources/de
     cy.wait('@getConf');
     openLayer(data.layers.ecTrack);
     openTrack(data.tracks.exampleOne);
+    cy.wait('@getTrack');
 
     cy.get('.wm-flowline').should('exist').as('flowline');
 
