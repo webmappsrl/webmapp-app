@@ -45,22 +45,23 @@ jobs:
           if [ ! -f posthog.json ]; then
             echo '{ "POSTHOG_KEY": "", "POSTHOG_HOST": "" }' > posthog.json
           fi
-      - name: Setup SSH
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+      - name: Setup SSH config
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
           cat >> ~/.ssh/config << EOF
           Host server
             HostName ${{ secrets.SSH_HOST }}
             User ${{ secrets.SSH_USER }}
             Port ${{ secrets.SSH_PORT }}
-            IdentityFile ~/.ssh/id_rsa
             StrictHostKeyChecking no
           EOF
       - name: Deploy
         working-directory: core
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          RSYNC_RSH: sshpass -e ssh
         run: npm run deploy-to-web
       - name: Health check
         run: |
