@@ -10,7 +10,7 @@ on:
     inputs:
       app_id:
         description: '--id (app ID)'
-        default: '52'
+        default: '1'
       shard:
         description: '--shard'
         default: 'maphub'
@@ -39,14 +39,14 @@ jobs:
             PR_NUMBER="${{ github.event.pull_request.number }}"
             ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
             SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
-            ID=${ID:-52}
+            ID=${ID:-1}
             SHARD=${SHARD:-maphub}
           else
             COMMIT_MSG=$(git show -s --format=%B ${{ github.sha }})
             PR_NUMBER=$(gh pr list --head "${{ github.ref_name }}" --json number --jq '.[0].number' 2>/dev/null || echo "")
             ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
             SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
-            ID=${ID:-52}
+            ID=${ID:-1}
             SHARD=${SHARD:-maphub}
           fi
 
@@ -109,7 +109,7 @@ jobs:
           COMMIT_MSG=$(gh api repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }} --jq '.commit.message')
           ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
           SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
-          ID=${ID:-52}
+          ID=${ID:-1}
           SHARD=${SHARD:-maphub}
           echo "SURGE_DOMAIN=${ID}.${SHARD}.pr-${{ github.event.pull_request.number }}.surge.sh" >> $GITHUB_ENV
       - uses: actions/setup-node@v4
