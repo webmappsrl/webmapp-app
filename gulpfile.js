@@ -238,6 +238,34 @@ function getUrlFile(file, src, dest) {
   });
 }
 
+function downloadProfileImage(url, destPath) {
+  return new Promise(resolve => {
+    if (verbose) debug('Downloading profile image from ' + url + ' to ' + destPath);
+    const chunks = [];
+    request({url, headers: {'User-Agent': 'request'}})
+      .on('data', chunk => chunks.push(chunk))
+      .on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        const sharp = require('sharp');
+        sharp(buffer)
+          .webp()
+          .toFile(destPath)
+          .then(() => {
+            if (verbose) success('Profile image saved to ' + destPath);
+            resolve();
+          })
+          .catch(err => {
+            warn('Failed to convert profile image: ' + err.message + ' — keeping default');
+            resolve();
+          });
+      })
+      .on('error', err => {
+        warn('Failed to download profile image from ' + url + ': ' + err.message + ' — keeping default');
+        resolve();
+      });
+  });
+}
+
 function abort(err) {
   error(err);
   error('------------------------- Aborting -------------------------');
@@ -467,6 +495,24 @@ function update(instanceName, geohubInstanceId, shardName) {
                 updateCapacitorConfigJson(instanceName, configJson.APP.sku, configJson.APP.name),
                 updateIndex(instanceName, configJson.APP.name),
               ];
+
+              if (configJson.APP.my_paths) {
+                promises.push(
+                  downloadProfileImage(
+                    configJson.APP.my_paths,
+                    dir + '/src/assets/images/profile/my-path.webp',
+                  ),
+                );
+              }
+
+              if (configJson.APP.my_downloads) {
+                promises.push(
+                  downloadProfileImage(
+                    configJson.APP.my_downloads,
+                    dir + '/src/assets/images/profile/downloads.webp',
+                  ),
+                );
+              }
 
               Promise.all(promises).then(() => {
                 resolve({
