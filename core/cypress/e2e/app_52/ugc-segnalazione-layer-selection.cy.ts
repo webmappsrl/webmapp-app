@@ -1,7 +1,6 @@
-import {goMap, mapReadyTimeout} from 'cypress/utils/test-utils';
+import {goMap, mapReadyTimeout, confURL} from 'cypress/utils/test-utils';
 
-const CONF_URL = '**/config.json';
-const ELASTIC_URL = '**/api/v2/elasticsearch*';
+const ELASTIC_URL = '**/v2/search/**';
 
 const fakeUser = {
   id: 1,
@@ -20,7 +19,7 @@ const layerInput = '[e2e-form-input="layer"] input';
  * Fixture catturate una tantum (vedi wm-core/CLAUDE.md).
  */
 function setupIntercepts() {
-  cy.intercept('GET', CONF_URL, {fixture: 'conf-camminiditalia-1.json'}).as('conf');
+  cy.intercept('GET', confURL, {fixture: 'conf-camminiditalia-1.json'}).as('conf');
   cy.intercept('GET', ELASTIC_URL, {fixture: 'elastic-init.json'}).as('elastic');
 
   cy.intercept('POST', '**/api/auth/login', {
@@ -39,6 +38,22 @@ function visitWithPrivacy() {
     onBeforeLoad(win) {
       win.localStorage.clear();
       win.localStorage.setItem('privacy-accepted', 'true');
+      // Mock geolocation before Angular/Ionic initializes — navigator.geolocation.watchPosition
+      // is a non-configurable native property and cannot be stubbed post-load with cy.stub.
+      Object.defineProperty(win.navigator, 'geolocation', {
+        configurable: true,
+        writable: true,
+        value: {
+          watchPosition(success: PositionCallback) {
+            success({coords: {latitude: 37.5, longitude: 15, accuracy: 1}} as GeolocationPosition);
+            return 1;
+          },
+          clearWatch() {},
+          getCurrentPosition(success: PositionCallback) {
+            success({coords: {latitude: 37.5, longitude: 15, accuracy: 1}} as GeolocationPosition);
+          },
+        },
+      });
     },
   });
 }
@@ -90,11 +105,6 @@ describe('UGC Segnalazione: selezione layer [oc:7639]', () => {
     setupIntercepts();
     visitWithPrivacy();
     waitForApp();
-    cy.window().then(win => {
-      cy.stub(win.navigator.geolocation, 'watchPosition').callsFake(success => {
-        success({coords: {latitude: 37.5, longitude: 15}});
-      });
-    });
     goMap();
     cy.get('body', {timeout: mapReadyTimeout}).should('have.attr', 'e2e-map-ready', 'true');
     loginAndGoMap();
