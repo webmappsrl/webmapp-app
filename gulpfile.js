@@ -496,19 +496,19 @@ function update(instanceName, geohubInstanceId, shardName) {
                 updateIndex(instanceName, configJson.APP.name),
               ];
 
-              if (configJson.APP.my_paths) {
+              if (configJson.APP.myPaths) {
                 promises.push(
                   downloadProfileImage(
-                    configJson.APP.my_paths,
+                    configJson.APP.myPaths,
                     dir + '/src/assets/images/profile/my-path.webp',
                   ),
                 );
               }
 
-              if (configJson.APP.my_downloads) {
+              if (configJson.APP.myDownloads) {
                 promises.push(
                   downloadProfileImage(
-                    configJson.APP.my_downloads,
+                    configJson.APP.myDownloads,
                     dir + '/src/assets/images/profile/downloads.webp',
                   ),
                 );
