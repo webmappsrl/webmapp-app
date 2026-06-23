@@ -1,19 +1,23 @@
 name: Surge Preview
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened, closed]
   push:
     branches:
       - develop
+  workflow_dispatch:
+    inputs:
+      app_id:
+        description: '--id (app ID)'
+        default: '52'
+      shard:
+        description: '--shard'
+        default: 'maphub'
 
 jobs:
   preview:
-    if: >
-      (github.event_name == 'push') ||
-      (github.event_name == 'pull_request_target' &&
-       github.event.action != 'closed' &&
-       github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: Deploy Surge preview
     timeout-minutes: 15
@@ -22,23 +26,29 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Update submodules
         run: git submodule update --init --recursive
-      - name: Extract --id and --shard from commit message
+      - name: Extract --id and --shard
         run: |
-          if [ "${{ github.event_name }}" == "pull_request_target" ]; then
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ID="${{ github.event.inputs.app_id }}"
+            SHARD="${{ github.event.inputs.shard }}"
+            PR_NUMBER=""
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
             COMMIT_MSG=$(git show -s --format=%B ${{ github.event.pull_request.head.sha }})
             PR_NUMBER="${{ github.event.pull_request.number }}"
+            ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
+            SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
+            ID=${ID:-52}
+            SHARD=${SHARD:-maphub}
           else
             COMMIT_MSG=$(git show -s --format=%B ${{ github.sha }})
             PR_NUMBER=$(gh pr list --head "${{ github.ref_name }}" --json number --jq '.[0].number' 2>/dev/null || echo "")
+            ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
+            SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
+            ID=${ID:-52}
+            SHARD=${SHARD:-maphub}
           fi
-
-          ID=$(echo "$COMMIT_MSG" | grep -oP '(?<=--id )\d+' | head -1) || true
-          SHARD=$(echo "$COMMIT_MSG" | grep -oP '(?<=--shard )[a-zA-Z0-9-]+' | head -1) || true
-          ID=${ID:-52}
-          SHARD=${SHARD:-maphub}
 
           if [ -n "$PR_NUMBER" ]; then
             DOMAIN="${ID}.${SHARD}.pr-${PR_NUMBER}.surge.sh"
@@ -67,8 +77,8 @@ jobs:
           fi
       - name: Inject appId
         run: |
-          sed -i "0,/appId: [0-9]\+/s//appId: ${{ env.APP_ID }}/" core/src/environments/environment.ts
-          grep -q "appId: ${{ env.APP_ID }}" core/src/environments/environment.ts || (echo "ERROR: appId injection failed" && exit 1)
+          sed -i "0,/appId: [0-9]\+/s//appId: ${APP_ID}/" core/src/environments/environment.ts
+          grep -q "appId: ${APP_ID}" core/src/environments/environment.ts || (echo "ERROR: appId injection failed" && exit 1)
       - name: Build
         working-directory: core
         run: ionic build
@@ -86,17 +96,12 @@ jobs:
           echo "[${{ env.SURGE_DOMAIN }}](http://${{ env.SURGE_DOMAIN }})" >> $GITHUB_STEP_SUMMARY
 
   teardown:
-    if: >
-      github.event_name == 'pull_request_target' &&
-      github.event.action == 'closed' &&
-      github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Teardown Surge preview
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: Compute domain to teardown
         run: |
           COMMIT_MSG=$(git show -s --format=%B ${{ github.event.pull_request.head.sha }})
