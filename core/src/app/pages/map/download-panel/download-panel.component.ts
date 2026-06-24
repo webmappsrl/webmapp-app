@@ -126,9 +126,7 @@ export class WmDownloadPanelComponent implements OnChanges {
             console.error('downloadPanel: confMAP.tiles[0] is missing, aborting track download');
           } else {
             if (this._posthogClient) {
-              this._posthogClient.capture('trackDownloaded', {
-                track_id: `${this.track.properties.id}`,
-              });
+              this._posthogClient.capture('trackDownloaded');
             }
             downloadEcTrack(
               `${this.track.properties.id}`,
