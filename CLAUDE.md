@@ -165,6 +165,8 @@ Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translat
 |---|---|---|---|
 | Validazione posthog.json prima della build | oc:8105 | `gulpfile.js` | Valida esistenza, JSON valido e chiavi POSTHOG_KEY/POSTHOG_HOST non vuote; copia il file nell'istanza dopo create() |
 | GitHub Actions CI/CD (unit + E2E + preview + deploy) | oc:8023 | `.github/workflows/`, `core/karma.conf.js`, `core/tsconfig.spec.json`, `core/angular.json` | test-unit.yml (3 job paralleli), test-e2e.yml, preview.yml (Surge), deploy_prod.yml; rimosso pr_test.yml |
+| Download immagini profilo my_paths/my_downloads nel gulp | oc:7480 | `gulpfile.js`, `core/src/assets/images/profile/` | Scarica da URL S3 in config.json (APP.myPaths/APP.myDownloads), converte in WebP reale via sharp (transitiva di cordova-res), warn+resolve su errore; rimossi file legacy cammini-* |
+| Gestione permessi Android nel manifest | oc:7294 | `gulpfile.js` | READ_MEDIA_IMAGES sempre rimosso; READ/WRITE_EXTERNAL_STORAGE aggiunti solo se MAP.record_track_show===true (letto da dir/config.json); addPermissionsIfNotPresent() sostituita da manageAndroidPermissions(hasUgc) |
 
 ## Decisioni architetturali
 
@@ -176,6 +178,17 @@ Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translat
 - **Surge preview fork guard**: `pull_request_target` con `if: github.event.pull_request.head.repo.full_name == github.repository` — blocca deploy da fork ma permette accesso ai secret per i branch interni
 - **`--id`/`--shard` dal commit message**: dominio Surge `{id}.{shard}.pr-{N}.surge.sh`, default `id=52, shard=maphub`
 - **`deploy-to-web` include il build**: lo script `npm run deploy-to-web` chiama già `ionic build` internamente — non serve uno step build separato nel workflow
+
+### Gestione permessi Android (oc:7294)
+- `manageAndroidPermissions(hasUgc)` sostituisce integralmente `addPermissionsIfNotPresent()` — le due non devono coesistere o si contraddicono (una rimuove, l'altra ri-aggiunge)
+- La chiave UGC è `MAP.record_track_show` (non `APP.record_track_show`) — letta da `dir/config.json` su disco in `_updateAndroidFiles()`, che viene chiamata solo dopo che `build()` ha completato il download del config
+- Default conservativo: se config.json non leggibile → `hasUgc = false` → nessun permesso di storage (meglio meno permessi che troppi lato Play Store)
+
+### Download immagini profilo (oc:7480)
+- `sharp` è una transitiva di `cordova-res` e `@capacitor/assets` — già in `node_modules`, non va aggiunto a `package.json`. Se questi tool venissero rimossi, aggiungere `sharp` come devDependency esplicita
+- I file default `my-path.webp` e `downloads.webp` sono WebP reali (VP8) — salvare PNG/JPG con estensione `.webp` causerebbe failure su iOS (WKWebView riceve Content-Type: image/webp ma bytes PNG); la conversione via sharp è obbligatoria
+- URL S3 usato direttamente da `configJson.APP.myPaths` — non la route API (`/{app}/resources/my_paths.png`) per evitare hop aggiuntivo
+- **Chiave config.json in camelCase**: il backend espone `APP.myPaths`/`APP.myDownloads` (sia gulp che `wm-ugc-box` in wm-core e l'interfaccia `APP` in wm-types le leggono in camelCase); la route API e i nomi file restano snake_case (`/resources/my_paths.png`, `my-path.webp`)
 
 ### Validazione posthog.json (oc:8105)
 - `validatePosthogConfig()` usa `throw new Error()` invece di `process.exit(1)`: il throw dentro un Promise executor viene catturato automaticamente da Node come rejection, permettendo il teardown di Gulp

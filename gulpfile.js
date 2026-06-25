@@ -238,6 +238,34 @@ function getUrlFile(file, src, dest) {
   });
 }
 
+function downloadProfileImage(url, destPath) {
+  return new Promise(resolve => {
+    if (verbose) debug('Downloading profile image from ' + url + ' to ' + destPath);
+    const chunks = [];
+    request({url, headers: {'User-Agent': 'request'}})
+      .on('data', chunk => chunks.push(chunk))
+      .on('end', () => {
+        const buffer = Buffer.concat(chunks);
+        const sharp = require('sharp');
+        sharp(buffer)
+          .webp()
+          .toFile(destPath)
+          .then(() => {
+            if (verbose) success('Profile image saved to ' + destPath);
+            resolve();
+          })
+          .catch(err => {
+            warn('Failed to convert profile image: ' + err.message + ' — keeping default');
+            resolve();
+          });
+      })
+      .on('error', err => {
+        warn('Failed to download profile image from ' + url + ': ' + err.message + ' — keeping default');
+        resolve();
+      });
+  });
+}
+
 function abort(err) {
   error(err);
   error('------------------------- Aborting -------------------------');
@@ -467,6 +495,24 @@ function update(instanceName, geohubInstanceId, shardName) {
                 updateCapacitorConfigJson(instanceName, configJson.APP.sku, configJson.APP.name),
                 updateIndex(instanceName, configJson.APP.name),
               ];
+
+              if (configJson.APP.myPaths) {
+                promises.push(
+                  downloadProfileImage(
+                    configJson.APP.myPaths,
+                    dir + '/src/assets/images/profile/my-path.webp',
+                  ),
+                );
+              }
+
+              if (configJson.APP.myDownloads) {
+                promises.push(
+                  downloadProfileImage(
+                    configJson.APP.myDownloads,
+                    dir + '/src/assets/images/profile/downloads.webp',
+                  ),
+                );
+              }
 
               Promise.all(promises).then(() => {
                 resolve({
@@ -724,6 +770,17 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
     var split = version.version.split('.'),
       versionCode = version.code;
 
+    let hasUgc = false;
+    try {
+      const instanceConfig = JSON.parse(
+        fs.readFileSync(instancesDir + instanceName + '/config.json', 'utf8'),
+      );
+      hasUgc = instanceConfig?.MAP?.record_track_show === true;
+      if (verbose) debug('UGC enabled for ' + instanceName + ': ' + hasUgc);
+    } catch (err) {
+      warn('Could not read config.json for ' + instanceName + ' — defaulting to no UGC permissions');
+    }
+
     var promises = [];
 
     // build.gradle
@@ -791,7 +848,7 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
               'android:name="' + appId + '.MainActivity"',
             ),
           )
-          .pipe(addPermissionsIfNotPresent())
+          .pipe(manageAndroidPermissions(hasUgc))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/app/src/main/'))
           .on('end', () => {
             if (verbose) debug('AndroidManifest.xml updated successfully');
@@ -2167,22 +2224,40 @@ function versionToBundleCode(versionString) {
   return parseInt(major + minor + patch + '0', 10);
 }
 
-function addPermissionsIfNotPresent() {
-  const permissions = [
-    'android.permission.READ_MEDIA_IMAGES',
-    'android.permission.READ_EXTERNAL_STORAGE',
-    'android.permission.WRITE_EXTERNAL_STORAGE',
+function manageAndroidPermissions(hasUgc) {
+  const alwaysRemove = ['android.permission.READ_MEDIA_IMAGES'];
+
+  const ugcPermissions = [
+    {
+      name: 'android.permission.READ_EXTERNAL_STORAGE',
+      tag: '<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>',
+    },
+    {
+      name: 'android.permission.WRITE_EXTERNAL_STORAGE',
+      tag: '<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>',
+    },
   ];
+
+  const removePermission = (content, permissionName) =>
+    content.replace(
+      new RegExp(`\\s*<uses-permission[^>]*android:name="${permissionName.replace(/\./g, '\\.')}"[^>]*/>`, 'g'),
+      '',
+    );
 
   return through.obj(function (file, encoding, callback) {
     let content = file.contents.toString();
-    const permissionsToAdd = permissions
-      .filter(permission => !content.includes(permission))
-      .map(permission => `<uses-permission android:name="${permission}"/>`)
-      .join('\n    ');
-    if (permissionsToAdd) {
-      // Aggiunge i permessi prima del tag di chiusura </manifest>
-      content = content.replace(/<\/manifest>/, `    ${permissionsToAdd}\n</manifest>`);
+
+    alwaysRemove.forEach(permission => {
+      content = removePermission(content, permission);
+    });
+
+    ugcPermissions.forEach(p => {
+      content = removePermission(content, p.name);
+    });
+
+    if (hasUgc) {
+      const toAdd = ugcPermissions.map(p => p.tag).join('\n    ');
+      content = content.replace(/<\/manifest>/, `    ${toAdd}\n</manifest>`);
     }
 
     file.contents = Buffer.from(content, encoding);
