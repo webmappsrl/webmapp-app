@@ -6,21 +6,87 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
-* enrich changelog with commit descriptions ([2600b1e](https://github.com/webmappsrl/webmapp-app/commit/2600b1e8204db2cb47e01c1a4954e3c4b202c809))
 * enrich changelog with commit descriptions ([3b097ea](https://github.com/webmappsrl/webmapp-app/commit/3b097ead84bd2ce2ca3b8990d5eef8eef6067de1))
-* enrich changelog with commit descriptions ([c6275b8](https://github.com/webmappsrl/webmapp-app/commit/c6275b83d9d02ef9c8f3ff0648a30c9c045c12cb))
 * enrich changelog with commit descriptions ([94166fd](https://github.com/webmappsrl/webmapp-app/commit/94166fd5b4f5cc122bc48433e9a56288ecfc7f26))
-* enrich changelog with commit descriptions ([bc8892d](https://github.com/webmappsrl/webmapp-app/commit/bc8892d20c202a9da38902fb98ad7c5751a7b9e4))
 * **map-core:** changelog for bump to 9094ff2 ([ed9f81e](https://github.com/webmappsrl/webmapp-app/commit/ed9f81e14b1f25d4bfff0d84aa6450f2c9fd917b))
-* **oc:8023:** add CI/CD workflows (unit tests, E2E, Surge preview, deploy) ([#196](https://github.com/webmappsrl/webmapp-app/issues/196)) ([0bafb7b](https://github.com/webmappsrl/webmapp-app/commit/0bafb7b4da4547f3b120b2739f0a3d950cf5da89))
-* **oc:8105:** validate posthog.json before gulp build ([#195](https://github.com/webmappsrl/webmapp-app/issues/195)) ([2e43c04](https://github.com/webmappsrl/webmapp-app/commit/2e43c046966ac35fe43bd416e7dd7252f447943b))
-* **oc:8115:** enrich PostHog events with GPS and store context via PosthogContextService ([#198](https://github.com/webmappsrl/webmapp-app/issues/198)) ([4f1d799](https://github.com/webmappsrl/webmapp-app/commit/4f1d799219e5a53c964cfc06187f1fb0a66e3b99))
+<!-- COMMIT_DESC -->
+    
+    - Merge remote-tracking branch 'origin/develop'
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8114" target="_blank" rel="noopener noreferrer">OC[8114]</a>): rimuovi flash visivo ECPOI impostando visible:false all'init (#59)
+    Il layer _poisClusterLayer partiva con visible:true (default OL), poi
+    _checkZoom lo nascondeva, ma setVisible(!disabled) lo ri-mostrava
+    sovrascrivendo il risultato. Al primo moveend _checkZoom lo nascondeva
+    di nuovo causando il flash.
+    
+    Fix: layer parte visible:false, _checkZoom è l'unica fonte di verità
+    sulla visibilità. Aggiunto rendercomplete safeguard per il caso in cui
+    wmMapConf fosse null al primo check.
+    
+    Co-authored-by: bongiu <peppedeka@gmail.com>
+    Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8105" target="_blank" rel="noopener noreferrer">OC[8105]</a>:** validate posthog.json before gulp build ([#195](https://github.com/webmappsrl/webmapp-app/issues/195)) ([2e43c04](https://github.com/webmappsrl/webmapp-app/commit/2e43c046966ac35fe43bd416e7dd7252f447943b))
+<!-- COMMIT_DESC -->
+    
+    Adds validatePosthogConfig() to gulpfile.js: checks file existence,
+    valid JSON, and non-empty POSTHOG_KEY/POSTHOG_HOST (with .trim()).
+    Copies instances/posthog.json into the instance folder after create().
+    Uses throw instead of process.exit(1) for clean Promise rejection,
+    and wraps copyFileSync in try/catch to avoid unhandled rejections.
+    
+    Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
 * remove release-as override ([bf83d47](https://github.com/webmappsrl/webmapp-app/commit/bf83d47c9d6822173c45805894d3493fb5548d96))
-* revert to simple mode with release-as 3.1.13 ([10cd71a](https://github.com/webmappsrl/webmapp-app/commit/10cd71a24d05519262f395507fa7ed68f7c26d2d))
 * **wm-core:** changelog for bump to 2fe4204 ([359cc5c](https://github.com/webmappsrl/webmapp-app/commit/359cc5c5abb464b56777ae24904437c8d7d018cc))
-* **wm-core:** changelog for bump to 5a5ff31 ([e6dede4](https://github.com/webmappsrl/webmapp-app/commit/e6dede46670aa7f950390a9dfefad78f43eae746))
+<!-- COMMIT_DESC -->
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>): add PosthogContextService to auto-enrich PostHog events with context
+    - New PosthogContextService: transparent wrapper on PosthogCapacitorClient
+      - Injects user_location (GPS), layer_id, poi_id, track_id, ugc_* on every capture()
+      - GeolocationService injected lazily via Injector to break circular dependency
+      - Provided as POSTHOG_CLIENT via useExisting in WmCoreModule.forRoot()
+      - implements WmPosthogClient, uses takeUntilDestroyed for subscription cleanup
+    - navigationStarted/navigationStopped events in geobox-map.component.ts (focus toggle)
+    - recordingStarted/recordingStopped events in geolocation.service.ts (onModeChange)
+    - layer-box: remove redundant layer_id from layerOpened (now auto-injected)
+    - layer-box: resolve iLocalString title to Italian string for layer_name prop
+    - docs: overview.md, plan.md, notes.md for <a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 * **wm-types:** changelog for bump to 232cabb ([55d49c3](https://github.com/webmappsrl/webmapp-app/commit/55d49c319c723f1779a46bf4daa95c3d9608296b))
-* **wm-types:** changelog for bump to a5f9afd ([907b04c](https://github.com/webmappsrl/webmapp-app/commit/907b04c1aed420422652036750b52c2c2b0f2512))
+<!-- COMMIT_DESC -->
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): add mode field to WmPosthogProps (#16)
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): add mode field to WmPosthogProps
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): extract GeolocationMode type, use in WmPosthogProps [C1]
+    
+    Adds GeolocationMode = 'navigation' | 'recording' | 'stopped' to
+    user-activity.ts. WmPosthogProps.mode now uses the shared type
+    instead of an inline union literal.
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): update CLAUDE.md with GeolocationMode entry
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
+    - Oc 7480 (#14)
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/7480" target="_blank" rel="noopener noreferrer">OC[7480]</a>): add my_paths and my_downloads to APP interface OC:7480
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    * chore(config): rename properties for camelCase consistency OC:7480
+    
+    Renamed `my_downloads` to `myDownloads` and `my_paths` to `myPaths` in the APP interface to follow camelCase naming conventions for improved consistency and readability.
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
 
 ## [3.1.13](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.1.13) (2026-06-19)
 
@@ -69,7 +135,6 @@
         - Refactored `taxonomy-where.component.html` to use a more structured layout with updated class names for better styling and readability.
         - Enhanced SCSS for `taxonomy-where` to improve the visual presentation of taxonomy items.
         - Integrated `wm-txn-where` component into `ugc-poi-properties` and `ugc-track-properties` templates to display taxonomy information consistently across components.
-
 - **wm-types:** changelog for bump to 534fc7a ([c1ae918](https://github.com/webmappsrl/webmapp-app/commit/c1ae9184f77681d5bede272de28b5881b7f023c7))
 <!-- COMMIT_DESC -->
         - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
@@ -112,7 +177,6 @@
         Updated multiple components to replace `IonSlides` with `Swiper` for improved performance and compatibility. Adjusted HTML structure and styles accordingly, ensuring all related elements utilize `swiper-container` and `swiper-slide`. This change enhances the overall user experience and maintains consistency across the application.
         refactor(components): ♻️ enhance Swiper integration across various components
         Updated multiple components to improve Swiper integration by replacing `config` attributes with individual slide properties for better customization. Added `CUSTOM_ELEMENTS_SCHEMA` to module declarations to support custom elements. Adjusted HTML structures and styles to ensure consistency and enhance user experience across the application.
-
         fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
 
         Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
@@ -304,7 +368,6 @@
         - fix(geolocation): 🐛 remove pause recording call and update UGC track recording state
         Removed the call to `pauseRecording` in `GeolocationService` as it was unnecessary and could cause issues with the recording state. Additionally, ensured that the UGC track recording state is reset properly by dispatching `setCurrentUgcTrackRecording` with default values.
         Also, removed the call to `removeCurrentUgcTrack` in `localForage.ts` to prevent unintended removal of UGC track data after saving.
-
         - refactor: update import paths for better organization <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Revises import paths to improve module organization by moving
         references from 'home-result-tab' to 'user-activity'. Adjusts
