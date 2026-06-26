@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
+* enrich changelog with commit descriptions ([2600b1e](https://github.com/webmappsrl/webmapp-app/commit/2600b1e8204db2cb47e01c1a4954e3c4b202c809))
+* enrich changelog with commit descriptions ([3b097ea](https://github.com/webmappsrl/webmapp-app/commit/3b097ead84bd2ce2ca3b8990d5eef8eef6067de1))
+* enrich changelog with commit descriptions ([c6275b8](https://github.com/webmappsrl/webmapp-app/commit/c6275b83d9d02ef9c8f3ff0648a30c9c045c12cb))
+* enrich changelog with commit descriptions ([94166fd](https://github.com/webmappsrl/webmapp-app/commit/94166fd5b4f5cc122bc48433e9a56288ecfc7f26))
+* enrich changelog with commit descriptions ([bc8892d](https://github.com/webmappsrl/webmapp-app/commit/bc8892d20c202a9da38902fb98ad7c5751a7b9e4))
+* **map-core:** changelog for bump to 9094ff2 ([ed9f81e](https://github.com/webmappsrl/webmapp-app/commit/ed9f81e14b1f25d4bfff0d84aa6450f2c9fd917b))
+* **oc:8023:** add CI/CD workflows (unit tests, E2E, Surge preview, deploy) ([#196](https://github.com/webmappsrl/webmapp-app/issues/196)) ([0bafb7b](https://github.com/webmappsrl/webmapp-app/commit/0bafb7b4da4547f3b120b2739f0a3d950cf5da89))
+* **oc:8105:** validate posthog.json before gulp build ([#195](https://github.com/webmappsrl/webmapp-app/issues/195)) ([2e43c04](https://github.com/webmappsrl/webmapp-app/commit/2e43c046966ac35fe43bd416e7dd7252f447943b))
+* **oc:8115:** enrich PostHog events with GPS and store context via PosthogContextService ([#198](https://github.com/webmappsrl/webmapp-app/issues/198)) ([4f1d799](https://github.com/webmappsrl/webmapp-app/commit/4f1d799219e5a53c964cfc06187f1fb0a66e3b99))
+* remove release-as override ([bf83d47](https://github.com/webmappsrl/webmapp-app/commit/bf83d47c9d6822173c45805894d3493fb5548d96))
+* revert to simple mode with release-as 3.1.13 ([10cd71a](https://github.com/webmappsrl/webmapp-app/commit/10cd71a24d05519262f395507fa7ed68f7c26d2d))
+* **wm-core:** changelog for bump to 2fe4204 ([359cc5c](https://github.com/webmappsrl/webmapp-app/commit/359cc5c5abb464b56777ae24904437c8d7d018cc))
+* **wm-core:** changelog for bump to 5a5ff31 ([e6dede4](https://github.com/webmappsrl/webmapp-app/commit/e6dede46670aa7f950390a9dfefad78f43eae746))
+* **wm-types:** changelog for bump to 232cabb ([55d49c3](https://github.com/webmappsrl/webmapp-app/commit/55d49c319c723f1779a46bf4daa95c3d9608296b))
+* **wm-types:** changelog for bump to a5f9afd ([907b04c](https://github.com/webmappsrl/webmapp-app/commit/907b04c1aed420422652036750b52c2c2b0f2512))
+
 ## [3.1.13](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.1.13) (2026-06-19)
 
 
