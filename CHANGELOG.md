@@ -6,9 +6,7 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
-* enrich changelog with commit descriptions ([3b097ea](https://github.com/webmappsrl/webmapp-app/commit/3b097ead84bd2ce2ca3b8990d5eef8eef6067de1))
 * enrich changelog with commit descriptions ([94166fd](https://github.com/webmappsrl/webmapp-app/commit/94166fd5b4f5cc122bc48433e9a56288ecfc7f26))
-* **map-core:** changelog for bump to 9094ff2 ([ed9f81e](https://github.com/webmappsrl/webmapp-app/commit/ed9f81e14b1f25d4bfff0d84aa6450f2c9fd917b))
 <!-- COMMIT_DESC -->
     
     - Merge remote-tracking branch 'origin/develop'
@@ -35,7 +33,6 @@
     and wraps copyFileSync in try/catch to avoid unhandled rejections.
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-* remove release-as override ([bf83d47](https://github.com/webmappsrl/webmapp-app/commit/bf83d47c9d6822173c45805894d3493fb5548d96))
 * **wm-core:** changelog for bump to 2fe4204 ([359cc5c](https://github.com/webmappsrl/webmapp-app/commit/359cc5c5abb464b56777ae24904437c8d7d018cc))
 <!-- COMMIT_DESC -->
     
@@ -52,7 +49,6 @@
     - docs: overview.md, plan.md, notes.md for <a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>
     
     Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-* **wm-types:** changelog for bump to 232cabb ([55d49c3](https://github.com/webmappsrl/webmapp-app/commit/55d49c319c723f1779a46bf4daa95c3d9608296b))
 <!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): add mode field to WmPosthogProps (#16)
@@ -135,7 +131,6 @@
         - Refactored `taxonomy-where.component.html` to use a more structured layout with updated class names for better styling and readability.
         - Enhanced SCSS for `taxonomy-where` to improve the visual presentation of taxonomy items.
         - Integrated `wm-txn-where` component into `ugc-poi-properties` and `ugc-track-properties` templates to display taxonomy information consistently across components.
-- **wm-types:** changelog for bump to 534fc7a ([c1ae918](https://github.com/webmappsrl/webmapp-app/commit/c1ae9184f77681d5bede272de28b5881b7f023c7))
 <!-- COMMIT_DESC -->
         - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
         - Changed the awsApi URL in the shards configuration to a new storage location.
@@ -373,7 +368,6 @@
         references from 'home-result-tab' to 'user-activity'. Adjusts
         variable assignments to align with the new import paths for
         consistency.
-
         Relates to oc_6780
 
         - chore(home): add e2e attributes to tabs <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
