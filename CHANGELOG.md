@@ -6,9 +6,38 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([89c3d3a](https://github.com/webmappsrl/webmapp-app/commit/89c3d3ac081bde63875159cd6c83b4679dab08c4))
-* enrich changelog with commit descriptions ([ac3e7a2](https://github.com/webmappsrl/webmapp-app/commit/ac3e7a2238aebd18fe21bb4c62c96efd6e700b47))
 * **wm-core:** changelog for bump to 363617c ([ae7479b](https://github.com/webmappsrl/webmapp-app/commit/ae7479b72621db4c6657df277128507f91110976))
-* **wm-types:** changelog for bump to 89f8e99 ([fb523f7](https://github.com/webmappsrl/webmapp-app/commit/fb523f78dc5306f62c7b69e73496cf23e3b56d6b))
+<!-- COMMIT_DESC -->
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8147" target="_blank" rel="noopener noreferrer">OC[8147]</a>): filtrare i POI per layer ID nella home (#170)
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8147" target="_blank" rel="noopener noreferrer">OC[8147]</a>): add layer ID filtering utils for POI
+    
+    Add hasLayerIdData() (collection-level detection of properties.layers),
+    filterFeaturesByLayerId() (filters POIs by numeric layer ID with NaN guard),
+    and refactor calculateLayerFeaturesCount() to use layer IDs when available,
+    falling back to taxonomy for legacy servers.
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8147" target="_blank" rel="noopener noreferrer">OC[8147]</a>): filter POIs by layer ID in poisWhereFeatures selector
+    
+    Add two-stage filtering to poisWhereFeatures: taxonomy filter (stage 1,
+    unchanged) followed by layer ID filter (stage 2, only when the POI
+    collection exposes properties.layers). Legacy servers without
+    properties.layers receive the existing taxonomy-only result.
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8147" target="_blank" rel="noopener noreferrer">OC[8147]</a>): add feature docs for POI layer ID filtering
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
+    - fix: update Karma configuration and improve PosthogCapacitorClient tests
+    - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
+    - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
 
 ## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
 
@@ -16,7 +45,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
-* enrich changelog with commit descriptions ([94166fd](https://github.com/webmappsrl/webmapp-app/commit/94166fd5b4f5cc122bc48433e9a56288ecfc7f26))
 <!-- COMMIT_DESC -->
     
     - Merge remote-tracking branch 'origin/develop'
@@ -43,7 +71,6 @@
     and wraps copyFileSync in try/catch to avoid unhandled rejections.
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-* **wm-core:** changelog for bump to 2fe4204 ([359cc5c](https://github.com/webmappsrl/webmapp-app/commit/359cc5c5abb464b56777ae24904437c8d7d018cc))
 <!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>): add PosthogContextService to auto-enrich PostHog events with context
@@ -141,7 +168,6 @@
         - Refactored `taxonomy-where.component.html` to use a more structured layout with updated class names for better styling and readability.
         - Enhanced SCSS for `taxonomy-where` to improve the visual presentation of taxonomy items.
         - Integrated `wm-txn-where` component into `ugc-poi-properties` and `ugc-track-properties` templates to display taxonomy information consistently across components.
-<!-- COMMIT_DESC -->
         - chore(environment): 🔄 update awsApi endpoint for improved service connectivity
         - Changed the awsApi URL in the shards configuration to a new storage location.
         - Ensured consistency in API endpoint management across the environment settings.
@@ -379,7 +405,6 @@
         variable assignments to align with the new import paths for
         consistency.
         Relates to oc_6780
-
         - chore(home): add e2e attributes to tabs <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Introduces e2e attributes to track and POIs tabs for enhanced
         testability in end-to-end testing.
