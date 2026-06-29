@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.1.15](https://github.com/webmappsrl/webmapp-app/compare/v3.1.14...v3.1.15) (2026-06-29)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([89c3d3a](https://github.com/webmappsrl/webmapp-app/commit/89c3d3ac081bde63875159cd6c83b4679dab08c4))
+* enrich changelog with commit descriptions ([ac3e7a2](https://github.com/webmappsrl/webmapp-app/commit/ac3e7a2238aebd18fe21bb4c62c96efd6e700b47))
+* **wm-core:** changelog for bump to 363617c ([ae7479b](https://github.com/webmappsrl/webmapp-app/commit/ae7479b72621db4c6657df277128507f91110976))
+* **wm-types:** changelog for bump to 89f8e99 ([fb523f7](https://github.com/webmappsrl/webmapp-app/commit/fb523f78dc5306f62c7b69e73496cf23e3b56d6b))
+
 ## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
 
 
