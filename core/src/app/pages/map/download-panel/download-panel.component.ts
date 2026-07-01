@@ -136,6 +136,9 @@ export class WmDownloadPanelComponent implements OnChanges {
             );
           }
         }
+
+        // overlayUrls/overlayGeometry sono valorizzati solo se il backend espone hitMapUrl:
+        // questo branch esegue di fatto solo per carg
         if (this.overlayUrls != null || this.overlayGeometry != null) {
           this.status = {finish: false, map: 0, data: 0};
           this._store
