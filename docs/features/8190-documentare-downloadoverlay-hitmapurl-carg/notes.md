@@ -21,3 +21,7 @@
 
 - Le due interfacce `IMAP` divergenti tra `wm-core` e `map-core` (invece di un'unica fonte di verità in `wm-types`) sono un'inconsistenza architetturale nota, segnalata in CLAUDE.md ma non risolta — possibile ticket futuro di consolidamento tipi.
 - Nessun test copre l'area downloadOverlay/hitMapUrl (assenza confermata durante la Fase: challenge). Non in scope per questo ticket di sola documentazione.
+
+## Post-implementazione (2026-07-07)
+
+- `overlayXYZ` in `map.page.html:209` è stato aggiornato da `https://tiles.webmapp.it/carg` a `https://carg.geosciences-ir.it/storage/cargmap/`, allineandosi alla stessa origine tile già usata dal basemap geologico in `hit-map.directive.ts:134`. La documentazione in `CLAUDE.md` e nei file di questo ticket è stata aggiornata di conseguenza: non esistono più due endpoint distinti per i tile CARG, ma restano due percorsi di codice separati (visualizzazione OL vs download offline).

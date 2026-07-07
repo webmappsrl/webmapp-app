@@ -7,8 +7,8 @@ import {Environment, shards, redirects} from '@wm-types/environment';
 export const environment: Environment = {
   production: false,
   debug: true,
-  appId: 32,
-  shardName: 'geohub',
+  appId: 1,
+  shardName: 'carg',
   shards,
   redirects,
 };

@@ -25,8 +25,8 @@ File: `CLAUDE.md` (root repo)
 Aggiungere in cima alla sezione `## Decisioni architetturali` (le decisioni più recenti vanno in cima) un nuovo blocco `### Documentazione downloadOverlay e hitMapUrl per shard carg (oc:8190)` che copra, in prosa italiana coerente con lo stile dei blocchi esistenti, tutti i punti della sezione "Requisiti" di `overview.md`:
 
 1. Flusso: `wm-download` (wrapper) → `wm-download-panel` (`download-panel.component.ts`) → funzione `downloadOverlay()` da `@map-core/utils`, invocata in `start()` (`download-panel.component.ts:139-148`)
-2. Hardcoding `[overlayXYZ]="'https://tiles.webmapp.it/carg'"` in `map.page.html:209` — sovrascrive il default `https://api.webmapp.it/tiles` di `download-panel.component.ts:49`
-3. Secondo hardcoding distinto: tile layer basemap geologico in `map-core/src/directives/hit-map.directive.ts:106` (`https://carg.geosciences-ir.it/storage/cargmap/{z}/{x}/{y}.png`) — meccanismo diverso (basemap vs download), non collegato al primo
+2. Hardcoding `[overlayXYZ]="'https://carg.geosciences-ir.it/storage/cargmap/'"` in `map.page.html:209` — sovrascrive il default `https://api.webmapp.it/tiles` di `download-panel.component.ts:49`
+3. Stessa origine tile, meccanismi distinti: download overlay e basemap geologico condividono `carg.geosciences-ir.it/storage/cargmap/` — layer OL in `hit-map.directive.ts:134` (visualizzazione) vs `overlayXYZ` propagato a `downloadOverlay()` in `localForage.ts:282` (download offline)
 4. Campo `IMAP.hitMapUrl` — path corretto: `wm-core/projects/wm-core/src/types/config.ts:254` (**non** wm-types); generico nel tipo, letto da `confMAPHitMapUrl` (wm-core) e dispatchato in `app.component.ts`, ma oggi valorizzato solo dal backend carg
 5. Distinzione tra i due `downloadOverlay` omonimi: il metodo in `map.page.ts:336-338` è uno stub inerte (`console.log` + apertura pannello); la funzione reale eseguita è quella in `download-panel.component.ts:139-148`, gated su `overlayUrls`/`overlayGeometry` non nulli — condizione vera solo per carg
 6. Effetto collaterale di `hitMapUrl`: controlla anche la visibilità della searchbar home (`wm-core/.../home/home.component.html:12`)
