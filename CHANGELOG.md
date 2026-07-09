@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.1.16](https://github.com/webmappsrl/webmapp-app/compare/v3.1.15...v3.1.16) (2026-07-09)
+
+
+### Bug Fixes
+
+* align overlayXYZ URL to CARG origin ([bbb20b4](https://github.com/webmappsrl/webmapp-app/commit/bbb20b4325245de85c6b01dd13d656f545ebc5af))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
+* enrich changelog with commit descriptions ([dc07808](https://github.com/webmappsrl/webmapp-app/commit/dc07808fec503f20209373c280111aa2d0489300))
+* **map-core:** changelog for bump to 15c4f21 ([663fcab](https://github.com/webmappsrl/webmapp-app/commit/663fcab23612e4be8e3921138a18f1058728bc19))
+* **map-core:** changelog for bump to 2a1c0c0 ([0231b45](https://github.com/webmappsrl/webmapp-app/commit/0231b452b3e7918701eb900069cc844532c191ac))
+* **map-core:** changelog for bump to 58d48d9 ([fa00409](https://github.com/webmappsrl/webmapp-app/commit/fa00409d1249e5392a588106fc85a9975ca1308d))
+* **wm-core:** changelog for bump to 162da88 ([4ace69e](https://github.com/webmappsrl/webmapp-app/commit/4ace69e330e46545e3953a9be0c10258386f148c))
+* **wm-core:** changelog for bump to 2c03728 ([9f3c054](https://github.com/webmappsrl/webmapp-app/commit/9f3c05479293a6c8b73f22542028f9ed5231534a))
+* **wm-core:** changelog for bump to d68ec5b ([2d23e34](https://github.com/webmappsrl/webmapp-app/commit/2d23e347b6a7bf6b4c22b74b65a16a00bb59dd89))
+
 ## [3.1.15](https://github.com/webmappsrl/webmapp-app/compare/v3.1.14...v3.1.15) (2026-06-29)
 
 
