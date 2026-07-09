@@ -6,7 +6,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([89c3d3a](https://github.com/webmappsrl/webmapp-app/commit/89c3d3ac081bde63875159cd6c83b4679dab08c4))
-* **wm-core:** changelog for bump to 363617c ([ae7479b](https://github.com/webmappsrl/webmapp-app/commit/ae7479b72621db4c6657df277128507f91110976))
 <!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8147" target="_blank" rel="noopener noreferrer">OC[8147]</a>): filtrare i POI per layer ID nella home (#170)
@@ -61,7 +60,6 @@
     
     Co-authored-by: bongiu <peppedeka@gmail.com>
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8105" target="_blank" rel="noopener noreferrer">OC[8105]</a>:** validate posthog.json before gulp build ([#195](https://github.com/webmappsrl/webmapp-app/issues/195)) ([2e43c04](https://github.com/webmappsrl/webmapp-app/commit/2e43c046966ac35fe43bd416e7dd7252f447943b))
 <!-- COMMIT_DESC -->
     
     Adds validatePosthogConfig() to gulpfile.js: checks file existence,
@@ -209,7 +207,6 @@
         refactor(components): ♻️ enhance Swiper integration across various components
         Updated multiple components to improve Swiper integration by replacing `config` attributes with individual slide properties for better customization. Added `CUSTOM_ELEMENTS_SCHEMA` to module declarations to support custom elements. Adjusted HTML structures and styles to ensure consistency and enhance user experience across the application.
         fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
-
         Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
 
         chore(swiper): 🎉 introduce WmSwiperComponent for enhanced Swiper integration
@@ -408,7 +405,6 @@
         - chore(home): add e2e attributes to tabs <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Introduces e2e attributes to track and POIs tabs for enhanced
         testability in end-to-end testing.
-
         Relates to #6780
 
         - refactor: standardize filter type usage <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
