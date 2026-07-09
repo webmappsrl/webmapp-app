@@ -11,4 +11,3 @@ core/cypress/videos/*
 core/Cypress.env.json
 posthog.json
 .claude/settings.local.json
-TESTING-oc7980.md
