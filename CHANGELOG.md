@@ -6,18 +6,61 @@
 ### Bug Fixes
 
 * align overlayXYZ URL to CARG origin ([bbb20b4](https://github.com/webmappsrl/webmapp-app/commit/bbb20b4325245de85c6b01dd13d656f545ebc5af))
-
+<!-- COMMIT_DESC -->
+    
+    Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
 
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
-* enrich changelog with commit descriptions ([dc07808](https://github.com/webmappsrl/webmapp-app/commit/dc07808fec503f20209373c280111aa2d0489300))
 * **map-core:** changelog for bump to 15c4f21 ([663fcab](https://github.com/webmappsrl/webmapp-app/commit/663fcab23612e4be8e3921138a18f1058728bc19))
-* **map-core:** changelog for bump to 2a1c0c0 ([0231b45](https://github.com/webmappsrl/webmapp-app/commit/0231b452b3e7918701eb900069cc844532c191ac))
+<!-- COMMIT_DESC -->
+    
+    - fix: CARG tile URL alignment with overlayXYZ
+    Align CARG tile layer URL with `overlayXYZ` to ensure consistent tile display and downloads across offline scenarios.
 * **map-core:** changelog for bump to 58d48d9 ([fa00409](https://github.com/webmappsrl/webmapp-app/commit/fa00409d1249e5392a588106fc85a9975ca1308d))
-* **wm-core:** changelog for bump to 162da88 ([4ace69e](https://github.com/webmappsrl/webmapp-app/commit/4ace69e330e46545e3953a9be0c10258386f148c))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): fallback locale offline per confini fogli CARG e icone controlli mappa (#61)
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): fallback locale offline per confini fogli CARG e icone controlli mappa
+    
+    Il layer di hit-test dei fogli CARG e le icone dei controlli mappa (tiles/data/overlays)
+    dipendevano da un fetch remoto one-shot senza fallback: se l'app veniva riaperta offline
+    dopo aver scaricato un foglio, il click sulla mappa non produceva alcun effetto.
+    
+    Aggiunge cache locale dedicata (nuove istanze localForage) con validazione del payload
+    prima della scrittura, un operatore RxJS condiviso (withCacheFallback) per il pattern
+    fetch->valida->salva->fallback, distinctUntilChanged sulle icone per evitare re-fetch
+    ad ogni riconnessione di rete, e una guardia contro il crash quando il componente mappa
+    viene distrutto mentre un cache-lookup è ancora pendente.
+    
+    * test(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): unit test per il fallback offline di hitmap e icone controlli mappa
+    
+    button.controls.map.spec.ts copre fetch riuscito/fallito+cache/fallito+cache assente
+    e la revoca degli object URL; verificato in CI headless (31/31 SUCCESS).
+    
+    hit-map.directive.spec.ts copre gli stessi scenari sul layer dei confini fogli, il
+    payload non valido, la cache corrotta, e la distruzione del componente durante un
+    cache-lookup pendente. Richiede un browser con GPU (nvm use 22 && npx ng test map-core)
+    per l'esecuzione locale, come gli altri directive spec del repo.
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): overview, piano e note wm-plan per il fix offline CARG
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): aggiorna CLAUDE.md con feature e decisioni architetturali
 * **wm-core:** changelog for bump to 2c03728 ([9f3c054](https://github.com/webmappsrl/webmapp-app/commit/9f3c05479293a6c8b73f22542028f9ed5231534a))
-* **wm-core:** changelog for bump to d68ec5b ([2d23e34](https://github.com/webmappsrl/webmapp-app/commit/2d23e347b6a7bf6b4c22b74b65a16a00bb59dd89))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map (#173)
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map
+    
+    Now that map-core respects wmMapPadding on the geojson fit, bind it
+    on the track preview map to keep the uploaded track away from the
+    container edges.
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add feature docs for map padding fix
+    
+    overview.md, notes.md documenting the wmMapPadding binding added to
+    modal-ugc-uploader as part of the map-core padding fix.
 
 ## [3.1.15](https://github.com/webmappsrl/webmapp-app/compare/v3.1.14...v3.1.15) (2026-06-29)
 
@@ -56,7 +99,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-
 ## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
 
 
@@ -79,7 +121,6 @@
     
     Co-authored-by: bongiu <peppedeka@gmail.com>
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     Adds validatePosthogConfig() to gulpfile.js: checks file existence,
     valid JSON, and non-empty POSTHOG_KEY/POSTHOG_HOST (with .trim()).
@@ -227,7 +268,6 @@
         Updated multiple components to improve Swiper integration by replacing `config` attributes with individual slide properties for better customization. Added `CUSTOM_ELEMENTS_SCHEMA` to module declarations to support custom elements. Adjusted HTML structures and styles to ensure consistency and enhance user experience across the application.
         fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
         Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
-
         chore(swiper): 🎉 introduce WmSwiperComponent for enhanced Swiper integration
 
         Added a new `WmSwiperComponent` to streamline Swiper usage across various components. Updated existing components to replace `swiper-container` with `wm-swiper`, improving code consistency and maintainability. Adjusted TypeScript logic to interact with the new component structure, ensuring a smoother user experience with Swiper functionalities.
@@ -425,7 +465,6 @@
         Introduces e2e attributes to track and POIs tabs for enhanced
         testability in end-to-end testing.
         Relates to #6780
-
         - refactor: standardize filter type usage <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Replaces specific string types with reusable `FilterType`
         and `HomeResultTab` types for filter-related actions and
