@@ -173,6 +173,13 @@ const argv = yargs(hideBin(process.argv))
         'Force the update of the instance reinstalling npm, plugins and the capacitor project',
       type: 'string',
     },
+    skipResourceValidation: {
+      demandOption: false,
+      default: false,
+      describe:
+        'Bypassa la validazione dimensioni di icone e splash screen (usare solo in emergenza)',
+      type: 'boolean',
+    },
   }).argv;
 
 const instancesDir = 'instances/',
@@ -263,6 +270,105 @@ function downloadProfileImage(url, destPath) {
         warn('Failed to download profile image from ' + url + ': ' + err.message + ' — keeping default');
         resolve();
       });
+  });
+}
+
+/**
+ * Legge le dimensioni di un'immagine con sharp, distinguendo un file corrotto/non-immagine
+ * (es. pagina di errore HTML scaricata al posto del PNG atteso) da un file valido.
+ */
+function readImageMetadata(filePath, label) {
+  const sharp = require('sharp');
+  return sharp(filePath)
+    .metadata()
+    .catch(err => {
+      throw new Error(
+        label +
+          ": il file scaricato non è un'immagine valida (possibile errore backend/404) — " +
+          filePath +
+          ': ' +
+          err.message,
+      );
+    });
+}
+
+/**
+ * Chiede conferma da terminale se continuare la build senza una risorsa (icona o splash) valida.
+ * In assenza di un terminale interattivo (stdin non TTY) abortisce automaticamente per
+ * sicurezza, senza attendere input.
+ */
+function promptContinueWithoutValidResource(label) {
+  if (!process.stdin.isTTY) {
+    warn('Nessun terminale interattivo disponibile: interrompo la build (' + label + ' non valido)');
+    return Promise.resolve(false);
+  }
+
+  const readline = require('readline');
+  const rl = readline.createInterface({input: process.stdin, output: process.stdout});
+
+  return new Promise(resolve => {
+    rl.question('Continuare la build senza un ' + label + ' valido? (y/N) ', answer => {
+      rl.close();
+      const proceed = /^y(es)?$/i.test(answer.trim());
+      if (proceed) warn('Prosegue la build senza ' + label + ' valido (scelta esplicita)');
+      resolve(proceed);
+    });
+  });
+}
+
+/**
+ * Valida le dimensioni minime di una risorsa immagine (icon.png / notification_icon.png /
+ * splash.png). Non blocca mai la build in automatico: sotto soglia -> warning + conferma
+ * interattiva se continuare comunque senza quella risorsa; aspect ratio non 1:1 (ma sopra
+ * soglia) -> solo warning. Restituisce {proceed, usable}: `proceed` false significa abortire
+ * l'intera build; `usable` false significa proseguire ma senza tentare la generazione di
+ * QUESTA risorsa (le altre vengono comunque generate — vedi updateResources: cordova-res fa
+ * fallire l'intera invocazione se anche una sola risorsa richiesta non è valida, quindi ogni
+ * risorsa va generata con una chiamata cordova-res dedicata e pienamente indipendente).
+ */
+function validateResourceDimensions(filePath, label, minSize) {
+  if (argv.skipResourceValidation) {
+    warn('Validazione ' + label + ' saltata (--skip-resource-validation)');
+    return Promise.resolve({proceed: true, usable: true});
+  }
+  return readImageMetadata(filePath, label).then(({width, height}) => {
+    const belowThreshold = !width || !height || width < minSize || height < minSize;
+    const aspectMismatch = !!width && !!height && width !== height;
+
+    if (aspectMismatch && !belowThreshold) {
+      warn(
+        label +
+          ' non ha aspect ratio 1:1 (' +
+          width +
+          'x' +
+          height +
+          ') — proseguo, cordova-res non lo richiede',
+      );
+    }
+
+    if (!belowThreshold) {
+      if (verbose) success(label + ' validato: ' + width + 'x' + height + 'px');
+      return {proceed: true, usable: true};
+    }
+
+    warn(
+      label +
+        ' sotto le dimensioni minime richieste: ' +
+        minSize +
+        'x' +
+        minSize +
+        'px (trovato ' +
+        width +
+        'x' +
+        height +
+        ')',
+    );
+    return promptContinueWithoutValidResource(label).then(proceed => {
+      if (proceed) {
+        warn(label + ' non verrà generato (rimane quello esistente/di default): le altre risorse vengono generate comunque');
+      }
+      return {proceed, usable: false};
+    });
   });
 }
 
@@ -605,74 +711,115 @@ function checkBuildsFolder() {
   }
 }
 
-function updateResources(instanceName, platform) {
-  if (platform === 'ios' || platform === 'android') {
-    info('Generating splash screen and icon for platform ' + platform);
+/**
+ * Genera splash screen e icone per la piattaforma indicata invocando cordova-res, previa
+ * validazione delle dimensioni delle immagini sorgente (vedi validateResourceDimensions).
+ * icon.png, notification_icon.png e splash.png sono validati e generati in modo pienamente
+ * indipendente l'uno dall'altro: ognuno ha una propria chiamata cordova-res dedicata
+ * (--type icon / --type splash), perché cordova-res fa fallire l'INTERA invocazione se anche
+ * una sola risorsa richiesta non è valida — senza invocazioni separate, una singola risorsa
+ * sotto soglia impedirebbe la generazione anche delle altre, valide.
+ */
+async function updateResources(instanceName, platform) {
+  if (platform !== 'ios' && platform !== 'android') {
+    warn('No platform specified for resource regeneration, skipping');
+    return;
+  }
 
-    if (platform === 'android') {
-      sh.exec(
+  info('Generating splash screen and icon for platform ' + platform);
+  var dir = instancesDir + instanceName;
+  var iconMinSize = 1024;
+  var splashMinSize = platform === 'android' ? 1920 : 2732;
+
+  var notifResult = {usable: true};
+  if (platform === 'android') {
+    notifResult = await validateResourceDimensions(
+      dir + '/resources/notification_icon.png',
+      'notification_icon.png',
+      iconMinSize,
+    );
+    if (notifResult.proceed === false) {
+      throw new Error('Build interrotta: notification_icon.png non valido');
+    }
+  }
+
+  var iconResult = await validateResourceDimensions(
+    dir + '/resources/icon.png',
+    'icon.png',
+    iconMinSize,
+  );
+  if (iconResult.proceed === false) {
+    throw new Error('Build interrotta: icon.png non valido');
+  }
+
+  var splashResult = await validateResourceDimensions(
+    dir + '/resources/splash.png',
+    'splash.png',
+    splashMinSize,
+  );
+  if (splashResult.proceed === false) {
+    throw new Error('Build interrotta: splash.png non valido');
+  }
+
+  if (platform === 'android') {
+    if (notifResult.usable) {
+      var notifExec = sh.exec(
         'cordova-res ' +
           platform +
-          ' --skip-config --copy --icon-source resources/notification_icon.png' +
-          (platform === 'android'
-            ? ' --icon-foreground-source resources/notification_icon.png --icon-background-source resources/notification_icon.png'
-            : '') +
+          ' --skip-config --copy --type icon --icon-source resources/notification_icon.png' +
+          ' --icon-foreground-source resources/notification_icon.png --icon-background-source resources/notification_icon.png' +
           outputRedirect,
         {
           cwd: instancesDir + instanceName,
         },
       );
-
-      var sizes = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
-      for (let size of sizes) {
-        // sh.exec(
-        //   "cp android/app/src/main/res/mipmap-" +
-        //     size +
-        //     "/ic_launcher.png android/app/src/main/res/drawable-port-" +
-        //     size +
-        //     "/ic_launcher.png" +
-        //     outputRedirect,
-        //   {
-        //     cwd: instancesDir + instanceName,
-        //   }
-        // );
+      if (notifExec.code !== 0) {
+        warn('Generazione notification_icon.png fallita (cordova-res exit code ' + notifExec.code + ')');
+      } else {
+        var sizes = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+        for (let size of sizes) {
+          sh.exec(
+            'mv android/app/src/main/res/mipmap-' +
+              size +
+              '/ic_launcher.png android/app/src/main/res/mipmap-' +
+              size +
+              '/notification_icon.png' +
+              outputRedirect,
+            {
+              cwd: instancesDir + instanceName,
+            },
+          );
+          sh.exec(
+            'cp android/app/src/main/res/mipmap-' +
+              size +
+              '/notification_icon.png android/app/src/main/res/drawable-port-' +
+              size +
+              '/notification_icon.png' +
+              outputRedirect,
+            {
+              cwd: instancesDir + instanceName,
+            },
+          );
+        }
+        // Crea anche la risorsa "base" notification_icon in drawable (richiesta da lint)
         sh.exec(
-          'mv android/app/src/main/res/mipmap-' +
-            size +
-            '/ic_launcher.png android/app/src/main/res/mipmap-' +
-            size +
-            '/notification_icon.png' +
-            outputRedirect,
-          {
-            cwd: instancesDir + instanceName,
-          },
-        );
-        sh.exec(
-          'cp android/app/src/main/res/mipmap-' +
-            size +
-            '/notification_icon.png android/app/src/main/res/drawable-port-' +
-            size +
-            '/notification_icon.png' +
+          'cp android/app/src/main/res/mipmap-mdpi/notification_icon.png android/app/src/main/res/drawable/notification_icon.png' +
             outputRedirect,
           {
             cwd: instancesDir + instanceName,
           },
         );
       }
-      // Crea anche la risorsa "base" notification_icon in drawable (richiesta da lint)
-      sh.exec(
-        'cp android/app/src/main/res/mipmap-mdpi/notification_icon.png android/app/src/main/res/drawable/notification_icon.png' +
-          outputRedirect,
-        {
-          cwd: instancesDir + instanceName,
-        },
-      );
+    } else {
+      warn('Generazione notification_icon.png saltata: rimane quella esistente/di default');
     }
+  }
 
-    sh.exec(
+  if (iconResult.usable) {
+    var iconExec = sh.exec(
       'cordova-res ' +
         platform +
-        ' --skip-config --copy' +
+        ' --skip-config --copy --type icon' +
         (platform === 'android'
           ? ' --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png'
           : '') +
@@ -681,9 +828,28 @@ function updateResources(instanceName, platform) {
         cwd: instancesDir + instanceName,
       },
     );
+    if (iconExec.code !== 0) {
+      warn('Generazione icon.png fallita (cordova-res exit code ' + iconExec.code + ')');
+    }
+  } else {
+    warn('Generazione icon.png saltata: rimane quella esistente/di default');
+  }
 
-    info('Splash screen and icon generation completed');
-  } else warning('No platform specified for resource regeneration, skipping');
+  if (splashResult.usable) {
+    var splashExec = sh.exec(
+      'cordova-res ' + platform + ' --skip-config --copy --type splash' + outputRedirect,
+      {
+        cwd: instancesDir + instanceName,
+      },
+    );
+    if (splashExec.code !== 0) {
+      warn('Generazione splash.png fallita (cordova-res exit code ' + splashExec.code + ')');
+    }
+  } else {
+    warn('Generazione splash.png saltata: rimane lo splash screen esistente/di default');
+  }
+
+  info('Splash screen and icon generation completed');
 }
 
 function initCapacitor(instanceName, id, name) {
@@ -1093,24 +1259,30 @@ function buildAndroid(instanceName, geohubInstanceId, shardName) {
         initCapacitor(instanceName, result.id, result.name);
         updateAndroidPlatform(instanceName, result.id, result.name).then(
           () => {
-            updateResources(instanceName, 'android');
-            // Aggiorna il plugin Gradle Android a 8.10.0 (supporta Java 21 e Gradle 8.11+)
-            updateGradleVersion(instanceName, '8.10.0')
-              .then(() => {
-                // Aggiorna il Gradle wrapper a 8.11.1 (versione minima richiesta)
-                return updateGradleWrapperVersion(instanceName, '8.11.1');
-              })
-              .then(() => {
-                // Configura il JDK per Gradle
-                return configureGradleJdk(instanceName);
-              })
-              .then(() => {
-                resolve();
-              })
-              .catch(err => {
-                abort(err);
-                done();
-              });
+            updateResources(instanceName, 'android').then(
+              () => {
+                // Aggiorna il plugin Gradle Android a 8.10.0 (supporta Java 21 e Gradle 8.11+)
+                updateGradleVersion(instanceName, '8.10.0')
+                  .then(() => {
+                    // Aggiorna il Gradle wrapper a 8.11.1 (versione minima richiesta)
+                    return updateGradleWrapperVersion(instanceName, '8.11.1');
+                  })
+                  .then(() => {
+                    // Configura il JDK per Gradle
+                    return configureGradleJdk(instanceName);
+                  })
+                  .then(() => {
+                    resolve();
+                  })
+                  .catch(err => {
+                    abort(err);
+                    reject(err);
+                  });
+              },
+              err => {
+                reject(err);
+              },
+            );
           },
           err => {
             reject(err);
@@ -1696,8 +1868,10 @@ function buildIos(instanceName, geohubInstanceId, shardName) {
         initCapacitor(instanceName, result.id, result.name);
         updateIosPlatform(instanceName, result.id, result.name).then(
           () => {
-            updateResources(instanceName, 'ios');
-            resolve(result);
+            updateResources(instanceName, 'ios').then(
+              () => resolve(result),
+              err => reject(err),
+            );
           },
           err => {
             reject(err);
@@ -1946,6 +2120,7 @@ gulp.task('build-android', function (done) {
       done();
     },
     err => {
+      abort(err);
       done();
     },
   );
