@@ -99,7 +99,9 @@
               <wm-ugc-track-properties
                 *ngIf="(ugcTrack$|async) as ugcTrack"
                 [track]="ugcTrack"
+                [shareResult]="shareResult$|async"
                 (poi-click)="setCurrentRelatedPoi($event)"
+                (share-track)="onShareTrack($event)"
               ></wm-ugc-track-properties>
             </ng-template>
           </ng-template>
