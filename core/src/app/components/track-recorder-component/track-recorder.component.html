@@ -17,7 +17,7 @@
 >
   <div class="wm-recorder-infopanel-buttons">
     <ion-button
-      class="wm-recorder-action-btn wm-recorder-action-btn-resume"
+      class="wm-recorder-action-btn"
       (click)="resume()"
       *ngIf="isPaused; else pauseButton"
       e2e-recorder-resume-btn
@@ -25,56 +25,54 @@
       <ion-icon name="ellipse"></ion-icon>
     </ion-button>
     <ng-template #pauseButton>
-      <ion-button
-        class="wm-recorder-action-btn wm-recorder-action-btn-pause"
-        (click)="pause()"
-        e2e-recorder-pause-btn
-      >
+      <ion-button class="wm-recorder-action-btn" (click)="pause()" e2e-recorder-pause-btn>
         <ion-icon name="pause-outline"></ion-icon>
       </ion-button>
     </ng-template>
-    <ion-button
-      class="wm-recorder-action-btn wm-recorder-action-btn-stop"
-      (click)="stop()"
-      e2e-recorder-stop-btn
-    >
+    <ion-button class="wm-recorder-action-btn" (click)="stop()" e2e-recorder-stop-btn>
       <ion-icon name="save-outline"></ion-icon>
     </ion-button>
-    <ion-button
-      class="wm-recorder-action-btn wm-recorder-action-btn-waypoint"
-      (click)="waypoint()"
-      e2e-recorder-waypoint-btn
-    >
+    <ion-button class="wm-recorder-action-btn" (click)="waypoint()" e2e-recorder-waypoint-btn>
       <ion-icon name="pin-outline"></ion-icon>
     </ion-button>
   </div>
-  <div class="wm-recorder-infopanel-top" *ngIf="trackLiveDistanceVm$|async as liveDistance">
-    <div class="wm-recorder-infopanel-top-side">
-      <ng-container *ngIf="liveDistance.distanceCovered != null">
-        <div class="wm-recorder-infopanel-top-side-title">{{'from' | wmtrans}}</div>
-        <wm-track-live-distance-badge
-          [distanceMeters]="liveDistance.distanceCovered"
-          [stale]="liveDistance.stale"
-          [showSuffix]="false"
-        ></wm-track-live-distance-badge>
-      </ng-container>
-    </div>
+  <div class="wm-recorder-infopanel-top">
+    <!--
+      Le etichette "from"/"to" sono chiavi i18n globali (non "pages.register.*" come il resto
+      del box) perché condivise deliberatamente con tab-detail.component.html (oc:8177) tramite
+      trackLiveDistanceVm — stessa traduzione "Partenza"/"Arrivo" in entrambe le schermate.
+      Introdurre chiavi scoped duplicherebbe la traduzione invece di riusarla.
+    -->
+    <ng-container *ngIf="trackLiveDistanceVm$|async as liveDistance">
+      <div class="wm-recorder-infopanel-top-side">
+        <ng-container *ngIf="liveDistance.distanceCovered != null">
+          <div class="wm-recorder-infopanel-top-side-title">{{'from' | wmtrans}}</div>
+          <wm-track-live-distance-badge
+            [distanceMeters]="liveDistance.distanceCovered"
+            [stale]="liveDistance.stale"
+            [showSuffix]="false"
+          ></wm-track-live-distance-badge>
+        </ng-container>
+      </div>
+    </ng-container>
     <div class="wm-recorder-infopanel-top-center">
       <div class="wm-recorder-infopanel-top-data">
         {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
           number : '2.0-0'}}
       </div>
     </div>
-    <div class="wm-recorder-infopanel-top-side">
-      <ng-container *ngIf="liveDistance.remainingDistance != null">
-        <div class="wm-recorder-infopanel-top-side-title">{{'to' | wmtrans}}</div>
-        <wm-track-live-distance-badge
-          [distanceMeters]="liveDistance.remainingDistance"
-          [stale]="liveDistance.stale"
-          [showSuffix]="false"
-        ></wm-track-live-distance-badge>
-      </ng-container>
-    </div>
+    <ng-container *ngIf="trackLiveDistanceVm$|async as liveDistance">
+      <div class="wm-recorder-infopanel-top-side">
+        <ng-container *ngIf="liveDistance.remainingDistance != null">
+          <div class="wm-recorder-infopanel-top-side-title">{{'to' | wmtrans}}</div>
+          <wm-track-live-distance-badge
+            [distanceMeters]="liveDistance.remainingDistance"
+            [stale]="liveDistance.stale"
+            [showSuffix]="false"
+          ></wm-track-live-distance-badge>
+        </ng-container>
+      </div>
+    </ng-container>
   </div>
   <div class="wm-recorder-infopanel-bottom">
     <div class="wm-recorder-infopanel-bottom-title">
