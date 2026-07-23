@@ -365,7 +365,6 @@ export const appES = {
       'pausebtn': 'Pausar',
       'resumebtn': 'Continuar',
       'stopbtn': 'Finalizar',
-      'time': 'En movimiento',
       'title': 'Registrar una ruta'
     },
     'registeruser': {

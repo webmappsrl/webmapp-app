@@ -365,7 +365,6 @@ export const appSQ = {
       'pausebtn': 'Pauzë',
       'resumebtn': 'Vazhdo',
       'stopbtn': 'Përfundo',
-      'time': 'Në lëvizje',
       'title': 'Regjistro një gjurmë'
     },
     'registeruser': {

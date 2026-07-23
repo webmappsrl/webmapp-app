@@ -368,7 +368,6 @@ export const appFR = {
       'pausebtn': 'Pause',
       'resumebtn': 'Reprendre',
       'stopbtn': 'Finir',
-      'time': 'En mouvement',
       'title': 'Enregistrer une trace'
     },
     'registeruser': {

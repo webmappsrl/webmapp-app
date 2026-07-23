@@ -371,7 +371,6 @@ export const appIT = {
       'pausebtn': 'Pausa',
       'resumebtn': 'Riprendi',
       'stopbtn': 'Termina',
-      'time': 'In movimento',
       'title': 'Registra una traccia',
     },
     'registeruser': {
