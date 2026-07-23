@@ -16,11 +16,23 @@
 
 ## Decisioni
 
-- Icone dei pulsanti azione (pausa/resume/stop/waypoint) lasciate invariate (`pause-outline`, `save-outline`, `pin-outline`, `ellipse`) — cambiato solo il trattamento visivo (sfondo circolare colorato), non il significato/icona, per non introdurre un cambio di semantica non discusso esplicitamente (es. l'icona "save" per lo stop è corretta: fermare la registrazione apre sempre un dialogo di salvataggio).
-- Icona a bandiera (`flag-outline`/`flag`) aggiunta accanto alle etichette, non dentro `<wm-track-live-distance-badge>` — componente condiviso con `tab-detail.component.html` (oc:8177), non modificato per non allargare il raggio d'azione a un'altra schermata già in produzione.
+- Icone dei pulsanti azione (pausa/resume/stop/waypoint) lasciate invariate (`pause-outline`, `save-outline`, `pin-outline`, `ellipse`) in tutte le iterazioni — cambiato solo il trattamento visivo del contenitore (forma circolare 38×38px; il colore per-azione introdotto nella seconda iterazione è stato poi rimosso nella terza, vedi "Deviazioni"), mai il significato/icona, per non introdurre un cambio di semantica non discusso esplicitamente (es. l'icona "save" per lo stop resta corretta: fermare la registrazione apre sempre un dialogo di salvataggio).
+- Icona a bandiera accanto alle etichette "PARTENZA"/"ARRIVO": introdotta nella prima iterazione, **poi rimossa nella seconda** (vedi "Deviazioni" — questa voce è rimasta erroneamente non aggiornata in una revisione precedente di questo file). Stato finale: nessuna icona, solo testo (`from`/`to` via `wmtrans`).
+- `WmTrackLiveDistanceBadgeComponent` (wm-core) non modificato nel markup interno per l'icona a bandiera — la label resta fuori dal componente condiviso con `tab-detail.component.html` (oc:8177), per non allargare il raggio d'azione a un'altra schermata già in produzione.
+
+## Fix applicati dopo la review formale (wm-review-ticket)
+
+- **`resume()` non ripristinava `setMapDetailsStatus({status:'onlyTitle'})`** dopo una pausa in cui l'utente avesse riaperto un pannello di dettaglio (che `map-details.component.ts` forza sempre a `'open'`) — aggiunto lo stesso dispatch già presente in `recordStart()`.
+- **Logica del view-model duplicata tra `track-recorder.component.ts` e `tab-detail.component.ts`** — estratta in un nuovo selettore condiviso `trackLiveDistanceVm` (con l'interfaccia `TrackLiveDistanceVm`) in `user-activity.selector.ts` (wm-core); entrambi i componenti ora si limitano a `this._store.select(trackLiveDistanceVm)`.
+- **Classi CSS morte** (`wm-recorder-action-btn-resume/pause/stop/waypoint`, residuo della colorazione poi annullata) rimosse dal template — resta solo `wm-recorder-action-btn`.
+- **`*ngIf="trackLiveDistanceVm$|async as liveDistance"` non avvolge più il cronometro centrale** — ristretto alle sole due colonne laterali, così il timer di registrazione (funzionalità sempre presente) non dipende più dall'emissione dei 4 selettori usati per i badge (funzionalità secondaria/gated).
+- **Chiave i18n orfana `pages.register.time`** rimossa da tutti i 7 file di lingua (non più referenziata da nessun componente dopo la rimozione dell'etichetta "IN MOVIMENTO").
+- Aggiunto un commento in `track-recorder.component.html` che spiega esplicitamente perché le chiavi i18n `from`/`to` (globali) convivono con le chiavi scoped `pages.register.*` nello stesso file — scelta deliberata di riuso, non un'incoerenza involontaria.
+- **Non modificato**: l'`@Input() showSuffix: boolean` su `WmTrackLiveDistanceBadgeComponent` resta booleano (non generalizzato a `suffix: string|null`) — la review lo segnalava come debito silente accettabile per due soli consumer attuali, non un problema da risolvere in questo ciclo.
 
 ## Follow-up
 
 - Isolare e correggere alla radice il bug `averageSpeed → Infinity` in `GeoutilsService` (ticket separato).
 - Verificare se `--wm-color-danger`/`--wm-color-warning` sono referenziate altrove nel codice come variabili mai definite (audit da fare, non eseguito in questo ciclo).
 - Verifica visiva manuale su device reale a 412×832 e su schermo più grande resta a carico dello sviluppatore (non eseguibile in autonomia in questa sessione) — build/type-check automatici verdi, ma nessuna verifica automatica sostituisce l'occhio umano per il redesign.
+- Se in futuro un terzo consumer di `WmTrackLiveDistanceBadgeComponent` necessitasse di un suffisso diverso da "da te" (non solo assente/presente), generalizzare `showSuffix: boolean` a `suffix: string|null`.
