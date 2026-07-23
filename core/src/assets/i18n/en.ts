@@ -368,7 +368,6 @@ export const appEN = {
       'pausebtn': 'Pause',
       'resumebtn': 'Resume',
       'stopbtn': 'Finish',
-      'time': 'In movement',
       'title': 'Record a track'
     },
     'registeruser': {

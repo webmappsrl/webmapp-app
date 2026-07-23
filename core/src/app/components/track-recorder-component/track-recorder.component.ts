@@ -13,12 +13,17 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {ModalSaveComponent} from '../shared/modal-save/modal-save.component';
 import {ModalController, NavController} from '@ionic/angular';
 import {confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
-import {onRecord} from '@wm-core/store/user-activity/user-activity.selector';
+import {
+  onRecord,
+  trackLiveDistanceVm,
+  TrackLiveDistanceVm,
+} from '@wm-core/store/user-activity/user-activity.selector';
 import {take, takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {
   setEnablePoiRecorderPanel,
   setEnableTrackRecorderPanel,
+  setMapDetailsStatus,
   setOnRecord,
 } from '@wm-core/store/user-activity/user-activity.action';
 import {WmFeature} from '@wm-types/feature';
@@ -35,7 +40,10 @@ import {LineString} from 'geojson';
 export class TrackRecorderComponent implements OnInit, OnDestroy {
   //TODO: Gestire il flusso della registrazione dallo store creando action, effect, selector e reducer necessari
   actualSpeed: number = 0;
-  averageSpeed: number = 0;
+  // null quando non calcolabile (es. tempo trascorso troppo breve) — il template mostra "—"
+  // invece del valore grezzo, che altrimenti può risultare Infinity/NaN (bug preesistente in
+  // GeoutilsService.getAverageSpeed, non risolto qui: solo la visualizzazione viene messa in sicurezza).
+  averageSpeed: number | null = 0;
   isPaused = false;
   length: number = 0;
   opacity: number = 0;
@@ -47,6 +55,10 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   confTRACKFORMS$: Observable<any[]> = this._store.select(confTRACKFORMS);
   focusPosition$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   onRecord$: Observable<boolean> = this._store.select(onRecord);
+  // Selettore condiviso con tab-detail.component.ts (oc:8177) — vedi commento su
+  // trackLiveDistanceVm in user-activity.selector.ts per il gate su
+  // OPTIONS.showTrackRemainingDistance.
+  trackLiveDistanceVm$: Observable<TrackLiveDistanceVm> = this._store.select(trackLiveDistanceVm);
 
   private _timerInterval: any;
   private readonly _destroy$ = new Subject<void>();
@@ -82,6 +94,11 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   recordStart(event: boolean): void {
     this.isPaused = false;
     this._geolocationSvc.startRecording();
+    // Riduce il pannello di dettaglio (es. traccia aperta) a solo titolo all'avvio della
+    // registrazione, così la mappa resta visibile durante il movimento — non azzera
+    // currentEcTrack (a differenza della chiusura esplicita del pannello), quindi le
+    // distanze inizio/fine restano disponibili nel box (vedi trackLiveDistanceVm$).
+    this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
     this.checkRecording();
   }
 
@@ -108,7 +125,8 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
         this.actualSpeed =
           this._geolocationSvc.location.speed ??
           this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
-        this.averageSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
+        const avgSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
+        this.averageSpeed = Number.isFinite(avgSpeed) ? avgSpeed : null;
       }
     });
   }
@@ -140,6 +158,10 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     await this._geolocationSvc.resumeRecording();
     this.focusPosition$.next(true);
     this.isPaused = false;
+    // Stesso motivo di recordStart(): se durante la pausa l'utente ha riaperto un pannello di
+    // dettaglio (map-details.component.ts lo forza sempre a 'open' all'apertura di una
+    // feature), riprendere la registrazione deve tornare a liberare la mappa.
+    this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
   }
 
   async stop(): Promise<void> {

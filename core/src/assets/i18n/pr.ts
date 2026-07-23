@@ -365,7 +365,6 @@ export const appPR = {
       'pausebtn': 'Pausar',
       'resumebtn': 'Continuar',
       'stopbtn': 'Finalizar',
-      'time': 'Em movimento',
       'title': 'Registrar uma rota'
     },
     'registeruser': {

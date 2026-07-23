@@ -365,7 +365,6 @@ export const appDE = {
       'pausebtn': 'Pause',
       'resumebtn': 'Fortsetzen',
       'stopbtn': 'Beenden',
-      'time': 'In Bewegung',
       'title': 'Eine Strecke aufzeichnen'
     },
     'registeruser': {
