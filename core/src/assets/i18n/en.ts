@@ -201,7 +201,12 @@ export const appEN = {
     },
     'favourites': {
       'nodata': 'There are no favorite heart tracks, click on a track icon to add it to this list',
-      'title': 'Favourites'
+      'title': 'Favourites',
+      'tabs': {
+        'tracks': 'Trails',
+        'layers': 'Layers'
+      },
+      'nodataLayers': 'There are no favorite paths, click on the heart icon of a path to add it to this list'
     },
     'home': {
       'button': 'Choose a starting point',
@@ -612,6 +617,8 @@ export const appEN = {
   'Ti trovi qui': 'You are here',
   'Salva Waypoint': 'Save Waypoint',
   'Salva Traccia': 'Save track',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Unable to load favorite paths, please try again',
   'Cancella': 'Delete',
   'ATTENZIONE': 'WARNING',
   'Foto correttamente cancellata': 'Photo successfully deleted',

@@ -200,7 +200,12 @@ export const appPR = {
     },
     'favourites': {
       'nodata': 'Não há rotas favoritas, clique no ícone de coração de uma rota para adicioná-la a esta lista',
-      'title': 'Favoritos'
+      'title': 'Favoritos',
+      'tabs': {
+        'tracks': 'Trilhas',
+        'layers': 'Layers'
+      },
+      'nodataLayers': 'Não há caminhos favoritos, clique no ícone de coração de um caminho para adicioná-lo a esta lista'
     },
     'home': {
       'button': 'Escolha um ponto de partida',
@@ -597,6 +602,8 @@ export const appPR = {
   'Ti trovi qui': 'Você está aqui',
   'Salva Waypoint': 'Salvar ponto de referência',
   'Salva Traccia': 'Salvar rota',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Não foi possível carregar os caminhos favoritos, tente novamente',
   'privacy': {
     'agree': {
       'title': 'Processamento de dados',

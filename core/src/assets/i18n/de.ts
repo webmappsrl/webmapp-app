@@ -200,7 +200,12 @@ export const appDE = {
     },
     'favourites': {
       'nodata': 'Es gibt keine Favoritenstrecken, klicken Sie auf das Herzsymbol einer Strecke, um sie zu dieser Liste hinzuzufügen',
-      'title': 'Favoriten'
+      'title': 'Favoriten',
+      'tabs': {
+        'tracks': 'Wanderwege',
+        'layers': 'Layers'
+      },
+      'nodataLayers': 'Es gibt keine Favoritenwege, klicken Sie auf das Herzsymbol eines Weges, um ihn zu dieser Liste hinzuzufügen'
     },
     'home': {
       'button': 'Wählen Sie einen Startpunkt',
@@ -592,6 +597,8 @@ export const appDE = {
   'Ti trovi qui': 'Sie sind hier',
   'Salva Waypoint': 'Wegpunkt speichern',
   'Salva Traccia': 'Strecke speichern',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Die Favoritenwege konnten nicht geladen werden, versuchen Sie es erneut',
   'privacy': {
     'agree': {
       'title': 'Datenverarbeitung',

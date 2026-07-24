@@ -206,6 +206,12 @@ export const appIT = {
       'nodata':
         "Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
       'title': 'Preferiti',
+      'tabs': {
+        'tracks': 'Sentieri',
+        'layers': 'Layers',
+      },
+      'nodataLayers':
+        "Non ci sono cammini preferiti, clicca sull'icona cuore di un cammino per aggiungerlo a questa lista",
     },
     'home': {
       'button': 'Scegli un punto di partenza',
@@ -630,6 +636,8 @@ export const appIT = {
   'Ti trovi qui': 'Ti trovi qui',
   'Salva Waypoint': 'Salva Waypoint',
   'Salva Traccia': 'Salva Traccia',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Impossibile caricare i cammini preferiti, riprova',
   'privacy': {
     'agree': {
       'title': 'Trattamento dei dati',

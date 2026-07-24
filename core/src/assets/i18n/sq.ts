@@ -200,7 +200,12 @@ export const appSQ = {
     },
     'favourites': {
       'nodata': 'Nuk ka gjurmë të preferuara, kliko mbi ikonën e zemrës së një gjurme për ta shtuar në këtë listë',
-      'title': 'Të preferuarat'
+      'title': 'Të preferuarat',
+      'tabs': {
+        'tracks': 'Shtigjet',
+        'layers': 'Layers'
+      },
+      'nodataLayers': 'Nuk ka shtigje të preferuara, kliko mbi ikonën e zemrës së një shtegu për ta shtuar në këtë listë'
     },
     'home': {
       'button': 'Zgjidh një pikë nisjeje',
@@ -592,6 +597,8 @@ export const appSQ = {
   'Ti trovi qui': 'Je këtu',
   'Salva Waypoint': 'Ruaj pikën e rrugës',
   'Salva Traccia': 'Ruaj gjurmën',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Nuk u arrit të ngarkoheshin shtigjet e preferuara, provo përsëri',
   'privacy': {
     'agree': {
       'title': 'Përpunimi i të dhënave',

@@ -201,7 +201,12 @@ export const appFR = {
     },
     'favourites': {
       'nodata': 'Il n\'y a pas de traces favorites, cliquez sur une icône de piste pour l\'ajouter à cette liste',
-      'title': 'Favoris'
+      'title': 'Favoris',
+      'tabs': {
+        'tracks': 'Sentiers',
+        'layers': 'Layers'
+      },
+      'nodataLayers': 'Il n\'y a pas de chemins favoris, cliquez sur l\'icône de cœur d\'un chemin pour l\'ajouter à cette liste'
     },
     'home': {
       'button': 'Choisissez un point de départ',
@@ -601,6 +606,8 @@ export const appFR = {
   'Ti trovi qui': 'Vous êtes ici',
   'Salva Waypoint': 'Enregistrer le waypoint',
   'Salva Traccia': 'Enregistrer la trace',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Impossible de charger les chemins favoris, veuillez réessayer',
   'Scarica il tracciato GPX': 'Télécharger la trace GPX',
   'Scarica il tracciato KML': 'Télécharger la trace KML',
   'Scarica il tracciato GEOJSON': 'Télécharger la trace GEOJSON',

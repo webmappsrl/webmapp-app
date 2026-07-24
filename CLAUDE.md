@@ -169,8 +169,16 @@ Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translat
 | Gestione permessi Android nel manifest | oc:7294 | `gulpfile.js` | READ_MEDIA_IMAGES sempre rimosso; READ/WRITE_EXTERNAL_STORAGE aggiunti solo se MAP.record_track_show===true (letto da dir/config.json); addPermissionsIfNotPresent() sostituita da manageAndroidPermissions(hasUgc) |
 | Documentazione downloadOverlay e hitMapUrl per shard carg | oc:8190 | `core/src/app/pages/map/map.page.html`, `core/src/app/pages/map/download-panel/download-panel.component.ts` | Documenta il meccanismo di download overlay hitmap e il campo hitMapUrl, oggi attivi solo per carg |
 | Validazione dimensioni icon/notification_icon/splash prima di cordova-res | oc:8246 | `gulpfile.js` | Valida dimensioni (platform-specific) prima di ogni cordova-res; sotto soglia chiede conferma interattiva (mai blocco automatico), flag `--skip-resource-validation` come escape hatch |
+| Salva cammino nei preferiti | oc:8176 | `core/src/app/pages/favourites/*`, `core/tsconfig.spec.json`, `core/angular.json`, `core/src/assets/i18n/*` | Tab "Layers"/"Sentieri" in `FavouritesPage` (ordine invertito su richiesta post-hoc), riusa `wm-layer-box`/`LayerFavoriteService` da wm-core. Dettagli in `docs/features/8176-salva-cammino-nei-preferiti/notes.md` |
 
 ## Decisioni architetturali
+
+### Salva cammino nei preferiti (oc:8176)
+- **Il ticket originale descriveva erroneamente i preferiti-tracce come "non implementati"**: il tab Favourites (tracce) era già in produzione (`FavouritesPage`, `map-track-card`, endpoint `EcTrackController`) — il lavoro reale è stata l'estensione a un secondo tab "Layers", non la costruzione da zero
+- **`ion-segment` invece di `ion-tabs` annidati** per il cambio Layers/Sentieri dentro `FavouritesPage` — evita di generare voci di navigazione/history per un semplice cambio di vista in-page
+- **Ordine e naming tab decisi post-hoc dal developer dopo verifica visiva**: "Layers" (stessa parola in tutte le 7 lingue, scelta deliberata) prima di "Sentieri" (ex "Cammini"/"Tracce"), diverso da quanto originariamente pianificato
+- **`UrlHandlerService.setLayer()` (wm-core) usa `changeURL()` non `updateURL()`**: `updateURL()` naviga solo se i query param cambiano — se lo stesso layer era già in URL da una navigazione precedente (es. aperto dalla Home) il click dal tab Preferiti non avrebbe navigato affatto verso `/map`. Bug trovato e corretto in review formale prima del merge
+- **`tsconfig.spec.json`/`angular.json` estesi con `src/app/pages/favourites`** (oltre al preesistente `src/app/services`, oc:8023) per includere i nuovi test in CI — scoping minimale, non riapre la discovery a `src/**`
 
 ### Validazione dimensioni icon/notification_icon/splash prima di cordova-res (oc:8246)
 - **Soglie platform-specific, non universali**: verificate nel sorgente reale di `cordova-res` (`core/node_modules/cordova-res/dist/resources.js`, `getRasterResourceSchema`), non nel solo README (che riporta 2732×2732 come raccomandazione "universale" per un source che copra tutte le piattaforme, fuorviante se letto come requisito Android). Requisiti reali: Android icon/notification_icon ≥512×512 (usiamo 1024×1024 come margine), Android splash ≥1920×1920, iOS icon ≥1024×1024, iOS splash ≥2732×2732. `validateRasterResource` in quel file non impone aspect ratio 1:1, solo dimensioni minime

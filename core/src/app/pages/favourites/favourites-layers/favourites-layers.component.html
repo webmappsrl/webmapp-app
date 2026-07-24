@@ -1,0 +1,19 @@
+<ion-label class="webmapp-favourites-nodata" *ngIf="loadError">
+  {{'Impossibile caricare i cammini preferiti, riprova' | wmtrans}}
+</ion-label>
+
+<ng-container *ngIf="!loadError">
+  <ng-container *ngIf="layerBoxes$|async as boxes">
+    <ion-label class="webmapp-favourites-nodata" *ngIf="!loading && !boxes.length">
+      {{'pages.favourites.nodataLayers' | wmtrans}}
+    </ion-label>
+    <ion-list>
+      <wm-layer-box
+        *ngFor="let box of boxes; trackBy: trackByLayerId"
+        [data]="box"
+        [favoriteInteractive]="true"
+        (clickEVT)="openLayer(box.layer)"
+      ></wm-layer-box>
+    </ion-list>
+  </ng-container>
+</ng-container>
