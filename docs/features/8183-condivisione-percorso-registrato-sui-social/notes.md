@@ -193,3 +193,77 @@ Verificato riga per riga contro `core/src/app/shared/wm-core/docs/features/8183-
    sincronizzata col backend (nessun `uuid` assegnato). Non specificato esplicitamente
    nell'overview, aggiunto per difesa perché il backend altrimenti risponderebbe 404 con un
    messaggio meno chiaro per l'utente.
+
+## Revisione: secondo punto di ingresso (schermata di successo) + fix reale del punto 4
+
+Richiesta esplicita del developer: aggiungere la condivisione anche nella schermata
+"Attività registrata con successo" (`ModalSuccessComponent`), mostrata subito dopo aver
+terminato una registrazione GPS — non solo nel pannello proprietà traccia già esistente.
+
+### `ModalSuccessComponent` — chip di condivisione
+
+- **Design esplorato con 3 opzioni** (mockup HTML pubblicato come Artifact, non nel repo):
+  A) pulsante Condividi come CTA primario (stile Strava, "Torna ad esplorare" retrocesso a
+  link), B) due pulsanti affiancati pari peso, C) chip icona circolare agganciato all'angolo
+  della card statistiche. **Scelta finale: opzione C**, dopo aver scartato la A in un giro
+  successivo ("non mi sta piacendo molto").
+- **Stessa state machine di `ugc-track-properties`** (wm-core): `EUgcTrackShareState`,
+  `AlertController` per l'errore, nessun banner di successo. Qui però l'orchestrazione
+  (`ShareService.shareTrackToStories`) è chiamata **direttamente** dal componente (non via
+  `@Output`/`@Input` come in wm-core) perché `ModalSuccessComponent` vive nel repo principale,
+  stesso repo di `ShareService` — nessun bisogno del contratto cross-submodule.
+- **Bug reale trovato e corretto durante l'iterazione visiva**: il chip usava `[disabled]`
+  nativo di Ionic per lo stato `GENERATING` — ma essendo sovrapposto (posizionamento assoluto)
+  all'angolo della card bianca sottostante, l'opacità che Ionic applica ai bottoni disabilitati
+  faceva trasparire il bordo bianco della card, un artefatto visivo chiaramente rotto su
+  device reale. Fix: nessun `[disabled]` nativo sul chip, guardia di re-entrancy solo lato TS;
+  lo stato "in attesa" (sia `GENERATING` sia, in un secondo momento, "non sincronizzato") usa
+  invece uno swap di colore di sfondo piatto via classe CSS custom (mai opacità).
+- **Bug di markup trovato durante lo sviluppo**: un `</ng-container>` di troppo, rimasto da
+  una modifica precedente, ha fatto crashare l'app a runtime ("Unexpected closing tag") **pur
+  con `ng build --configuration=ci` verde** — quella configurazione di build non cattura
+  questo tipo di errore di template (motivo non isolato). Da quel momento in poi, verificato
+  anche il bilanciamento dei tag (`grep -c` su apertura/chiusura) prima di dichiarare una
+  modifica al template pronta, non solo l'esito della build.
+
+### Fix reale del punto aperto 4: il sync non partiva nemmeno in tempo
+
+Il guard "uuid mancante" del giro precedente copriva solo il caso limite (nessun uuid
+assegnato), ma il developer ha confermato un caso più comune e reale: **quando l'utente è
+sulla schermata di successo, la traccia non è ancora stata inviata al backend affatto** — non
+solo "in corso di sincronizzazione", proprio non ancora iniziata.
+
+- **Causa radice**: `ModalSaveComponent.save()` dispatchava `syncUgcTracks()`/`syncUgcPois()`
+  solo nel `.subscribe()` finale della pipeline, che si risolve solo **dopo** che
+  `ModalSuccessComponent` viene chiuso (`await modaSuccess.onDidDismiss()` blocca la catena
+  fino a quel momento). Quindi il sync non partiva proprio finché l'utente restava su quella
+  schermata — un pulsante di condivisione gated sulla sincronizzazione non si sarebbe MAI
+  abilitato lì, un vicolo cieco.
+- **Fix**: il dispatch è stato anticipato a un `tap()` subito dopo `saveUgc()` (salvataggio
+  locale), prima di `removeCurrentUgcTrackLocations()`/`backToSuccess()`/apertura del modal di
+  successo — così la sincronizzazione ha davvero la possibilità di completarsi (o essere in
+  corso) mentre l'utente guarda la schermata con il pulsante.
+- **Segnale di "sincronizzato" per una traccia specifica**: nessun campo/azione dedicato
+  esiste per questo nel sistema — il segnale corretto, già usato altrove
+  (`UgcSynchronizedBadgeComponent`, wm-core), è la presenza di `properties.id` (assegnato dal
+  server) accanto a `properties.uuid` (locale), verificato contro il selettore
+  `ugcTracksFeatures` (wm-core), che fonde tracce locali e sincronizzate.
+- **Bug preesistente scoperto per strada, non toccato**: `UgcState.syncing` diventa `true` al
+  dispatch di sync ma non torna mai `false` su successo (`ugc.reducer.ts`, solo
+  `syncUgcFailure` lo resetta) — quindi `syncing` da solo non è un segnale affidabile di "sync
+  in corso adesso" oltre il primo ciclo. Non usato per questo gating proprio per questo motivo
+  (si usa invece la presenza dell'`id` sulla traccia, un segnale positivo e stabile).
+- **Stessa logica di gating applicata anche al primo punto di ingresso**
+  (`ugc-track-properties`, wm-core) per coerenza — vedi il `notes.md` di quel repo per il
+  dettaglio specifico di quel componente (lì il `[disabled]` nativo è sicuro da usare, nessuna
+  card sovrapposta).
+
+### Ricreazione dei branch
+
+Le PR #206 (webmapp-app) e #178 (wm-core) della revisione precedente sono state **mergiate**
+in `RDO_ass_cammini_italia_2026_2` e i branch remoti cancellati (comportamento di default di
+GitHub dopo merge). Per continuare il lavoro con lo stesso nome di branch, ricreato
+`feature/oc-8183-condivisione-percorso-registrato-sui-social` dalla punta aggiornata di
+`RDO_ass_cammini_italia_2026_2` in entrambi i repo, recuperando via `git stash` solo le
+modifiche pertinenti a questo giro (escluse tarature locali dell'ambiente di sviluppo e lavoro
+non correlato di altri ticket presenti nel working tree al momento).
