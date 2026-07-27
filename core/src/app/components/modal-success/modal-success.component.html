@@ -73,12 +73,12 @@
               (click)="triggerShare()"
             >
               <ion-spinner
-                *ngIf="shareState === EUgcTrackShareState.GENERATING"
+                *ngIf="shareState === EUgcTrackShareState.GENERATING || !isTrackSynced"
                 name="crescent"
                 slot="icon-only"
               ></ion-spinner>
               <ion-icon
-                *ngIf="shareState !== EUgcTrackShareState.GENERATING"
+                *ngIf="shareState !== EUgcTrackShareState.GENERATING && isTrackSynced"
                 name="share-social-outline"
                 slot="icon-only"
               ></ion-icon>
