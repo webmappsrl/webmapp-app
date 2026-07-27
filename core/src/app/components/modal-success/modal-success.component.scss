@@ -285,6 +285,29 @@
         padding: 4px;
       }
     }
+
+    .webmapp-modalsuccess-card-wrap {
+      position: relative;
+    }
+
+    .webmapp-modalsuccess-share-chip {
+      position: absolute;
+      // negative offset so the chip overlaps the card's own top-right corner rather than
+      // sitting flush inside it
+      top: -16px;
+      right: 2px;
+      margin: 0;
+      width: 46px;
+      height: 46px;
+      --border-radius: 50%;
+      --padding-start: 0;
+      --padding-end: 0;
+      --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+      // ring in the modal's own dark background color, so the circle reads as "cut out" of
+      // the black backdrop rather than touching the white card edge-to-edge
+      border: 3px solid var(--wm-color-dark);
+      border-radius: 50%;
+    }
   }
 
   .webmapp-modalsuccess-footer {
