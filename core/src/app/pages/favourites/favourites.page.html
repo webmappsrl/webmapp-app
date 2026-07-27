@@ -7,10 +7,10 @@
   <ion-toolbar *ngIf="showLayersSegment$|async">
     <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event.detail.value)">
       <ion-segment-button value="layers">
-        <ion-label>{{'pages.favourites.tabs.layers' | wmtrans}}</ion-label>
+        <ion-label>{{'Layers' | wmtrans}}</ion-label>
       </ion-segment-button>
       <ion-segment-button value="tracks">
-        <ion-label>{{'pages.favourites.tabs.tracks' | wmtrans}}</ion-label>
+        <ion-label>{{'Sentieri' | wmtrans}}</ion-label>
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>

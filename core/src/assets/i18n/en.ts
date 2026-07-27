@@ -201,12 +201,7 @@ export const appEN = {
     },
     'favourites': {
       'nodata': 'There are no favorite heart tracks, click on a track icon to add it to this list',
-      'title': 'Favourites',
-      'tabs': {
-        'tracks': 'Trails',
-        'layers': 'Layers'
-      },
-      'nodataLayers': 'There are no favorite paths, click on the heart icon of a path to add it to this list'
+      'title': 'Favourites'
     },
     'home': {
       'button': 'Choose a starting point',
@@ -546,6 +541,10 @@ export const appEN = {
       'content': 'Hiking and, more generally, outdoor activity, is a potentially risky activity: before setting out on a hike, make sure you have the knowledge and skills to do it. If you are not sure, contact local experts who can help, suggest and support you in planning and carrying out your activities. The data presented on this APP cannot fully guarantee the risk-free practicability of the route: changes, even important ones, may have occurred since the last verification of the route itself. It is therefore essential that those who are preparing to carry out activities carefully evaluate the opportunity to continue on the basis of the suggestions and advice contained in this APP, based on their experience, on the weather conditions (even in the previous days) and on an evaluation in the field at the beginning of the activity. Webmapp S.r.l. does not provide guarantees on the safety of the places described and assumes no responsibility for any damage caused by carrying out the activities described.'
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Trails',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'There are no favorite paths, click on the heart icon of a path to add it to this list',
   'services': {
     'geolocation': {
       'notification': {

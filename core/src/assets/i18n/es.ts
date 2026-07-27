@@ -200,12 +200,7 @@ export const appES = {
     },
     'favourites': {
       'nodata': 'No hay rutas favoritas, haz clic en el icono de corazón de una ruta para añadirla a esta lista',
-      'title': 'Favoritos',
-      'tabs': {
-        'tracks': 'Senderos',
-        'layers': 'Layers'
-      },
-      'nodataLayers': 'No hay caminos favoritos, haz clic en el icono de corazón de un camino para añadirlo a esta lista'
+      'title': 'Favoritos'
     },
     'home': {
       'button': 'Elige un punto de partida',
@@ -543,6 +538,10 @@ export const appES = {
       'content': 'Caminar en la naturaleza y, en general, las actividades al aire libre, son actividades potencialmente peligrosas: antes de partir para una excursión, asegúrate de tener el conocimiento y las habilidades para hacerlo. Si no estás seguro, dirígete a expertos locales que puedan ayudarte, sugerir y apoyar en la planificación y desarrollo de tus actividades. Los datos presentados en esta APLICACIÓN no pueden garantizar completamente la viabilidad sin riesgos de la ruta: pueden haber ocurrido cambios, incluso significativos, desde la última verificación de la ruta. Por lo tanto, es esencial que aquellos que planean desarrollar actividades evalúen cuidadosamente la posibilidad de continuar basándose en las sugerencias y consejos contenidos en esta APLICACIÓN, basándose en su experiencia, las condiciones meteorológicas (incluso de los días anteriores) y una evaluación realizada en el terreno al inicio del desarrollo de la actividad. La empresa Webmapp S.r.l. no ofrece garantías para la seguridad de los lugares descritos y no asume ninguna responsabilidad por posibles daños causados por el desarrollo de las actividades descritas.'
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Senderos',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'No hay caminos favoritos, haz clic en el icono de corazón de un camino para añadirlo a esta lista',
   'services': {
     'geolocation': {
       'notification': {

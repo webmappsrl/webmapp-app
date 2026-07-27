@@ -201,12 +201,7 @@ export const appFR = {
     },
     'favourites': {
       'nodata': 'Il n\'y a pas de traces favorites, cliquez sur une icône de piste pour l\'ajouter à cette liste',
-      'title': 'Favoris',
-      'tabs': {
-        'tracks': 'Sentiers',
-        'layers': 'Layers'
-      },
-      'nodataLayers': 'Il n\'y a pas de chemins favoris, cliquez sur l\'icône de cœur d\'un chemin pour l\'ajouter à cette liste'
+      'title': 'Favoris'
     },
     'home': {
       'button': 'Choisissez un point de départ',
@@ -546,6 +541,10 @@ export const appFR = {
       'content': 'La pratique de la randonnée, et plus généralement des activités de plein air, est une activité potentiellement à risque : avant de partir en randonnée, assurez-vous d\'avoir les connaissances et les compétences pour la pratiquer. En cas de doute, contactez des experts locaux qui pourront vous aider, vous suggérer et vous accompagner dans la planification et la réalisation de vos activités. Les données présentées sur cette APP ne peuvent pleinement garantir la praticabilité sans risque de l\'itinéraire : des changements, même importants, peuvent être intervenus depuis la dernière vérification de l\'itinéraire lui-même. Il est donc essentiel que ceux qui se préparent à réaliser des activités évaluent soigneusement l\'opportunité de continuer sur la base des suggestions et des conseils contenus dans cette APP, en fonction de leur expérience, des conditions météorologiques (même les jours précédents) et des une évaluation sur le terrain au début de l\'activité. Webmapp S.r.l. ne fournit aucune garantie sur la sécurité des lieux décrits et n\'assume aucune responsabilité pour tout dommage causé par la réalisation des activités décrites.'
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Sentiers',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Il n\'y a pas de chemins favoris, cliquez sur l\'icône de cœur d\'un chemin pour l\'ajouter à cette liste',
   'services': {
     'geolocation': {
       'notification': {

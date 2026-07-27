@@ -200,12 +200,7 @@ export const appDE = {
     },
     'favourites': {
       'nodata': 'Es gibt keine Favoritenstrecken, klicken Sie auf das Herzsymbol einer Strecke, um sie zu dieser Liste hinzuzufügen',
-      'title': 'Favoriten',
-      'tabs': {
-        'tracks': 'Wanderwege',
-        'layers': 'Layers'
-      },
-      'nodataLayers': 'Es gibt keine Favoritenwege, klicken Sie auf das Herzsymbol eines Weges, um ihn zu dieser Liste hinzuzufügen'
+      'title': 'Favoriten'
     },
     'home': {
       'button': 'Wählen Sie einen Startpunkt',
@@ -543,6 +538,10 @@ export const appDE = {
       'content': 'Wandern in der Natur und allgemein Outdoor-Aktivitäten sind potenziell gefährliche Aktivitäten: Bevor Sie sich auf eine Exkursion begeben, stellen Sie sicher, dass Sie über das Wissen und die Fähigkeiten verfügen, dies zu tun. Wenn Sie sich nicht sicher sind, wenden Sie sich an lokale Experten, die Ihnen helfen, vorschlagen und unterstützen können, Ihre Aktivitäten zu planen und durchzuführen. Die in dieser APP präsentierten Daten können die risikofreie Befahrbarkeit der Strecke nicht vollständig garantieren: Seit der letzten Überprüfung der Strecke können sich Änderungen, auch wesentliche, ergeben haben. Daher ist es unerlässlich, dass diejenigen, die Aktivitäten entwickeln möchten, sorgfältig die Möglichkeit des Fortfahrens auf der Grundlage der in dieser APP enthaltenen Vorschläge und Ratschläge, ihrer Erfahrung, der Wetterbedingungen (auch der vorherigen Tage) und einer vor Ort durchgeführten Bewertung zu Beginn der Aktivität bewerten. Die Firma Webmapp S.r.l. bietet keine Garantie für die Sicherheit der beschriebenen Orte und übernimmt keine Verantwortung für mögliche Schäden, die durch die Durchführung der beschriebenen Aktivitäten entstehen.'
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Wanderwege',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Es gibt keine Favoritenwege, klicken Sie auf das Herzsymbol eines Weges, um ihn zu dieser Liste hinzuzufügen',
   'services': {
     'geolocation': {
       'notification': {

@@ -206,12 +206,6 @@ export const appIT = {
       'nodata':
         "Non ci sono tracce preferite, clicca sull'icona cuore di una traccia per aggiungerla a questa lista",
       'title': 'Preferiti',
-      'tabs': {
-        'tracks': 'Sentieri',
-        'layers': 'Layers',
-      },
-      'nodataLayers':
-        "Non ci sono cammini preferiti, clicca sull'icona cuore di un cammino per aggiungerlo a questa lista",
     },
     'home': {
       'button': 'Scegli un punto di partenza',
@@ -563,6 +557,10 @@ export const appIT = {
       },
     },
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Sentieri',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista',
   'services': {
     'geolocation': {
       'notification': {

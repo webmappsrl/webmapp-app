@@ -23,6 +23,10 @@ Vedi `wm-core/docs/features/8176-salva-cammino-nei-preferiti/notes.md`: le class
 - **Rinominate le etichette**: "Cammini" → "Layers" (stessa parola in tutte le 7 lingue, scelta deliberata del developer, non tradotta) e "Tracce" → "Sentieri"/equivalente per lingua (riusati gli stessi termini già usati per il badge conteggio "Sentiero"/"Sentieri" in wm-core, per coerenza terminologica nell'app).
 - **Aggiunto `trackBy`** su `FavouritesLayersComponent` (vedi wm-core/notes.md per il dettaglio).
 
+## Terza revisione — convenzione i18n corretta a mano dal developer
+
+Il developer ha modificato `favourites.page.html` sostituendo le chiavi "a percorso" (`pages.favourites.tabs.tracks`/`.layers`) con chiavi flat testo-semplice (`'Layers'`, `'Sentieri'`) — convenzione corretta del progetto (il testo italiano stesso è la chiave), non quella nidificata usata per errore in questa feature. Ho trovato e corretto lo stesso problema in `favourites-layers.component.html` (`pages.favourites.nodataLayers` → chiave flat col testo completo del messaggio). Rimosse le chiavi nidificate `tabs`/`nodataLayers` da `pages.favourites` in tutti i 7 file i18n, aggiunte le corrispondenti chiavi flat a livello root (`'Layers'`, `'Sentieri'`, e il messaggio di stato vuoto) con gli stessi valori tradotti già presenti. Le chiavi pre-esistenti `pages.favourites.title`/`pages.favourites.nodata` (non introdotte da questa feature) sono state lasciate invariate, fuori scope.
+
 ## Follow-up
 
 - Nessuno specifico a questo repo oltre a quanto già tracciato in wm-core.
