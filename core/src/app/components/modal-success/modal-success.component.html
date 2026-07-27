@@ -70,15 +70,16 @@
           <ng-container *ngIf="shareState$|async as shareState">
             <ion-button
               class="webmapp-modalsuccess-share-chip"
+              [class.webmapp-modalsuccess-share-chip--pending]="!isTrackSynced"
               (click)="triggerShare()"
             >
               <ion-spinner
-                *ngIf="shareState === EUgcTrackShareState.GENERATING || !isTrackSynced"
+                *ngIf="shareState === EUgcTrackShareState.GENERATING"
                 name="crescent"
                 slot="icon-only"
               ></ion-spinner>
               <ion-icon
-                *ngIf="shareState !== EUgcTrackShareState.GENERATING && isTrackSynced"
+                *ngIf="shareState !== EUgcTrackShareState.GENERATING"
                 name="share-social-outline"
                 slot="icon-only"
               ></ion-icon>

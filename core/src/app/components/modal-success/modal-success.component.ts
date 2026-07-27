@@ -148,6 +148,9 @@ export class ModalSuccessComponent implements OnInit, OnDestroy {
    * bleed through the circular chip (it overlaps the card's corner) — looked broken on
    * device. The guard below is enough on its own to prevent double-invocation; only the
    * native `disabled` semantics/opacity are skipped, not the re-entrancy protection itself.
+   * The "not yet synced" pending look is a flat grey `--background` swap instead (see
+   * `.webmapp-modalsuccess-share-chip--pending` in the stylesheet) — same reasoning, no
+   * opacity involved, so no bleed-through either.
    */
   async triggerShare(): Promise<void> {
     if (this.shareState$.value === EUgcTrackShareState.GENERATING) {

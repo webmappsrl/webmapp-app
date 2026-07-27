@@ -307,6 +307,16 @@
       // the black backdrop rather than touching the white card edge-to-edge
       border: 3px solid var(--wm-color-dark);
       border-radius: 50%;
+
+      // Looks like a classic disabled button (flat grey) while the track hasn't reached the
+      // backend yet - NOT via opacity/[disabled] (Ionic's own disabled state dims the whole
+      // button including this border, letting the white card underneath bleed through, see
+      // triggerShare()'s docblock) - a solid grey --background swap has no such side effect.
+      &--pending {
+        --background: var(--wm-color-medium, #989aa2);
+        --background-activated: var(--wm-color-medium, #989aa2);
+        --background-hover: var(--wm-color-medium, #989aa2);
+      }
     }
   }
 
