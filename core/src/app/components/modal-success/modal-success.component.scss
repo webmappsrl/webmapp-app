@@ -285,6 +285,27 @@
         padding: 4px;
       }
     }
+
+    .webmapp-modalsuccess-share-button {
+      // matches ion-card's own default horizontal inset (margin-inline: 16px) so the button
+      // lines up with the card above instead of running edge-to-edge
+      margin: 16px 16px 0;
+      // fixed height so the button doesn't resize between the icon and spinner states
+      --min-height: 48px;
+
+      ion-icon,
+      ion-spinner {
+        margin-inline-end: 8px;
+      }
+
+      // ion-spinner's default box is bigger than ion-icon's — pin it to the same size so
+      // swapping between "Condividi" (icon) and "Condivisione in corso" (spinner) doesn't
+      // change the button's height
+      ion-spinner {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 
   .webmapp-modalsuccess-footer {

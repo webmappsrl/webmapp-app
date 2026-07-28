@@ -8,6 +8,8 @@
 - **Nessuna generazione mappa lato client**: `map-core` non è più coinvolto in questa feature (il componente mini-map isolato, con tutti i problemi di `crossOrigin`/WKWebView incontrati, è stato eliminato insieme a questo approccio).
 - **Nessuna configurazione Facebook App ID**: non essendoci più un intent nativo Meta da invocare, questo prerequisito esterno (registrazione Meta Business, coordinamento bundle ID) non serve più.
 - L'app riceve dal backend `{image, shareUrl}` e invoca `Share.share({url: shareUrl, files: [image scaricata su cache locale], text})` — ogni app di destinazione (Instagram, Facebook, WhatsApp, ecc.) usa quello che sa gestire: le app "Stories" tendono a usare l'immagine allegata, i canali di messaggistica il link con anteprima OG (vedi overview `wm-package` per la pagina pubblica).
+- **Secondo punto di ingresso, aggiunto in un giro successivo**: oltre al pannello proprietà traccia (wm-core), il pulsante di condivisione compare anche in `ModalSuccessComponent`, la schermata "Attività registrata con successo" mostrata subito dopo aver terminato una registrazione GPS — chip icona circolare sulla card statistiche, stessa orchestrazione (`ShareService.shareTrackToStories`), chiamata qui direttamente (stesso repo, nessun bisogno del contratto `@Output`/`@Input` verso wm-core).
+- **Gating sulla sincronizzazione, aggiunto dopo test reale su device**: entrambi i punti di ingresso disabilitano il pulsante finché la traccia (per `uuid`) non risulta sincronizzata col backend (`properties.id` assegnato). Prerequisito: `ModalSaveComponent.save()` ora dispatcha `syncUgcTracks()`/`syncUgcPois()` subito dopo il salvataggio locale, non più solo dopo la chiusura della schermata di successo — vedi `notes.md` per il dettaglio completo.
 
 ## Perché
 Il cliente vuole condividere un percorso "come fa Strava". Il primo approccio (plugin nativo custom per l'intent diretto Instagram/Facebook Stories) si è rivelato bloccato da un problema di WKWebView su iOS (fallimento del caricamento tile anche dopo aver eliminato la dipendenza da `crossOrigin`, causa non completamente isolata nonostante diversi tentativi di fix mirati). Il developer ha scelto di **ridurre drasticamente la complessità tecnica**: usare il meccanismo di condivisione generico già esistente e affidabile (`@capacitor/share`), accettando un'esperienza leggermente meno "one-tap" su iOS (l'utente potrebbe dover scegliere manualmente "Aggiungi alla storia" dentro Instagram) in cambio di eliminare interamente il codice nativo custom e la sua superficie di bug.
@@ -18,6 +20,8 @@ Il cliente vuole condividere un percorso "come fa Strava". Il primo approccio (p
 - [ ] Chiamata a `Share.share({url: shareUrl, files: [uri locale], text})`
 - [ ] Errore chiaro con retry esplicito — molto più semplice da gestire ora che c'è una sola chiamata di rete, non tre step indipendenti
 - [ ] Wiring `(share-track)`/`[shareResult]` su `<wm-ugc-track-properties>` in `map.page.ts`/`.html` — il contratto verso wm-core resta lo stesso (vedi overview `wm-core`), cambia solo cosa succede internamente a `share.service.ts`
+- [ ] Pulsante di condivisione anche in `ModalSuccessComponent` (schermata di successo post-registrazione), stessa `ShareService`
+- [ ] Entrambi i pulsanti disabilitati finché la traccia non risulta sincronizzata col backend (`properties.id` presente) — evita un 404 su tracce appena registrate
 
 ## Rischi
 - **Esperienza meno diretta su iOS**: `Share.share()` generico su iOS non apre sempre Instagram/Facebook direttamente nel composer Stories — l'utente potrebbe dover fare un passaggio manuale in più dentro l'app scelta. Rischio accettato esplicitamente per eliminare la complessità/fragilità del plugin nativo custom.
@@ -33,3 +37,5 @@ Il cliente vuole condividere un percorso "come fa Strava". Il primo approccio (p
 ## Moduli toccati
 - `core/src/app/services/share.service.ts`
 - `core/src/app/pages/map/map.page.ts` / `.html` (wiring invariato nello spirito)
+- `core/src/app/components/modal-success/modal-success.component.ts` / `.html` / `.scss` (secondo punto di ingresso)
+- `core/src/app/components/shared/modal-save/modal-save.component.ts` (dispatch di sync anticipato, per il gating)
