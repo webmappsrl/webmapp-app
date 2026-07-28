@@ -129,7 +129,8 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "include": [
-              "src/app/services"
+              "src/app/services",
+              "src/app/pages/favourites"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/theme/default"]

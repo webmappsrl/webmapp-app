@@ -7,8 +7,10 @@ import {IonicModule} from '@ionic/angular';
 import {FavouritesPageRoutingModule} from './favourites-routing.module';
 
 import {FavouritesPage} from './favourites.page';
+import {FavouritesLayersComponent} from './favourites-layers/favourites-layers.component';
 import {CardsModule} from 'src/app/components/cards/cards.module';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
+import {BoxModule} from 'src/app/components/box/box.module';
 
 @NgModule({
   imports: [
@@ -18,7 +20,8 @@ import {WmPipeModule} from '@wm-core/pipes/pipe.module';
     FavouritesPageRoutingModule,
     WmPipeModule,
     CardsModule,
+    BoxModule,
   ],
-  declarations: [FavouritesPage],
+  declarations: [FavouritesPage, FavouritesLayersComponent],
 })
 export class FavouritesPageModule {}

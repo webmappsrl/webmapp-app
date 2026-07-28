@@ -5,6 +5,7 @@ import {NavigationExtras, Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {confOPTIONSShowFavorites} from '@wm-core/store/conf/conf.selector';
 import {Feature, LineString} from 'geojson';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 @Component({
@@ -19,6 +20,8 @@ export class FavouritesPage implements OnInit {
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   isLogged$: Observable<boolean> = this._store.pipe(select(isLogged));
+  showLayersSegment$: Observable<boolean> = this._store.select(confOPTIONSShowFavorites);
+  selectedSegment: 'tracks' | 'layers' = 'tracks';
   tracks$: BehaviorSubject<Feature<LineString>[]> = new BehaviorSubject<Feature<LineString>[]>(
     null,
   );
@@ -31,6 +34,10 @@ export class FavouritesPage implements OnInit {
 
   async ngOnInit() {
     this.doRefresh(null);
+  }
+
+  onSegmentChange(segment: 'tracks' | 'layers'): void {
+    this.selectedSegment = segment;
   }
 
   async doRefresh(event) {

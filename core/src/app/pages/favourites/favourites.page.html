@@ -4,26 +4,40 @@
       {{'pages.favourites.title' | wmtrans}}
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar *ngIf="showLayersSegment$|async">
+    <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event.detail.value)">
+      <ion-segment-button value="layers">
+        <ion-label>{{'Layers' | wmtrans}}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="tracks">
+        <ion-label>{{'Sentieri' | wmtrans}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" *ngIf="selectedSegment === 'tracks'">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ng-container *ngIf="isLogged$|async;else nologged">
-    <ng-container *ngIf="tracks$|async as tracks">
-      <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
-        >{{'pages.favourites.nodata' | wmtrans}}</ion-label
-      >
-      <ion-list>
-        <webmapp-card-track
-          *ngFor="let track of tracks"
-          [track]="track"
-          (open)="open($event)"
-          (remove)="remove($event)"
+    <ng-container *ngIf="selectedSegment === 'tracks'">
+      <ng-container *ngIf="tracks$|async as tracks">
+        <ion-label class="webmapp-favourites-nodata" *ngIf="!tracks || !tracks.length"
+          >{{'pages.favourites.nodata' | wmtrans}}</ion-label
         >
-        </webmapp-card-track> </ion-list
-    ></ng-container>
+        <ion-list>
+          <webmapp-card-track
+            *ngFor="let track of tracks"
+            [track]="track"
+            (open)="open($event)"
+            (remove)="remove($event)"
+          >
+          </webmapp-card-track> </ion-list
+      ></ng-container>
+    </ng-container>
+
+    <webmapp-favourites-layers *ngIf="selectedSegment === 'layers'"></webmapp-favourites-layers>
   </ng-container>
   <ng-template #nologged>
     <ion-label class="webmapp-favourites-nodata">
@@ -32,7 +46,11 @@
     >
   </ng-template>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+  <ion-infinite-scroll
+    *ngIf="selectedSegment === 'tracks'"
+    threshold="100px"
+    (ionInfinite)="loadData($event)"
+  >
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
