@@ -286,36 +286,24 @@
       }
     }
 
-    .webmapp-modalsuccess-card-wrap {
-      position: relative;
-    }
+    .webmapp-modalsuccess-share-button {
+      // matches ion-card's own default horizontal inset (margin-inline: 16px) so the button
+      // lines up with the card above instead of running edge-to-edge
+      margin: 16px 16px 0;
+      // fixed height so the button doesn't resize between the icon and spinner states
+      --min-height: 48px;
 
-    .webmapp-modalsuccess-share-chip {
-      position: absolute;
-      // negative offset so the chip overlaps the card's own top-right corner rather than
-      // sitting flush inside it
-      top: -16px;
-      right: 2px;
-      margin: 0;
-      width: 46px;
-      height: 46px;
-      --border-radius: 50%;
-      --padding-start: 0;
-      --padding-end: 0;
-      --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-      // ring in the modal's own dark background color, so the circle reads as "cut out" of
-      // the black backdrop rather than touching the white card edge-to-edge
-      border: 3px solid var(--wm-color-dark);
-      border-radius: 50%;
+      ion-icon,
+      ion-spinner {
+        margin-inline-end: 8px;
+      }
 
-      // Looks like a classic disabled button (flat grey) while the track hasn't reached the
-      // backend yet - NOT via opacity/[disabled] (Ionic's own disabled state dims the whole
-      // button including this border, letting the white card underneath bleed through, see
-      // triggerShare()'s docblock) - a solid grey --background swap has no such side effect.
-      &--pending {
-        --background: var(--wm-color-medium, #989aa2);
-        --background-activated: var(--wm-color-medium, #989aa2);
-        --background-hover: var(--wm-color-medium, #989aa2);
+      // ion-spinner's default box is bigger than ion-icon's — pin it to the same size so
+      // swapping between "Condividi" (icon) and "Condivisione in corso" (spinner) doesn't
+      // change the button's height
+      ion-spinner {
+        width: 20px;
+        height: 20px;
       }
     }
   }

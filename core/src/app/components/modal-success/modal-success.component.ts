@@ -143,14 +143,10 @@ export class ModalSuccessComponent implements OnInit, OnDestroy {
    * while `GENERATING`, error reported via a native alert (not an in-template banner), no
    * dedicated success UI beyond the native share sheet itself closing.
    *
-   * The template deliberately does NOT bind `[disabled]` on the share button: Ionic's
-   * built-in disabled state dims the button's opacity, which let the white card underneath
-   * bleed through the circular chip (it overlaps the card's corner) — looked broken on
-   * device. The guard below is enough on its own to prevent double-invocation; only the
-   * native `disabled` semantics/opacity are skipped, not the re-entrancy protection itself.
-   * The "not yet synced" pending look is a flat grey `--background` swap instead (see
-   * `.webmapp-modalsuccess-share-chip--pending` in the stylesheet) — same reasoning, no
-   * opacity involved, so no bleed-through either.
+   * The button is a full-width block sibling below the stats card (not overlapping it), so
+   * the template safely uses Ionic's native `[disabled]` for both the `GENERATING` and
+   * "not yet synced" states — no opacity/bleed-through risk here, unlike the chip layout
+   * used in wm-core's `ugc-track-properties`.
    */
   async triggerShare(): Promise<void> {
     if (this.shareState$.value === EUgcTrackShareState.GENERATING) {
@@ -187,7 +183,7 @@ export class ModalSuccessComponent implements OnInit, OnDestroy {
   /**
    * Explicit feedback instead of a silent no-op or a confusing 404 from the backend (which
    * doesn't know about this track's uuid yet): tells the user why the tap did nothing right
-   * now. No "Riprova" handler needed here — the chip re-enables itself automatically the
+   * now. No "Riprova" handler needed here — the button re-enables itself automatically the
    * moment `_watchTrackSyncStatus()` sees the sync land, no manual retry required.
    */
   private async _presentNotSyncedAlert(): Promise<void> {
