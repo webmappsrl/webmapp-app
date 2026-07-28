@@ -2,11 +2,11 @@
   display: block;
 
   wm-layer-box {
-    // Senza un'altezza esplicita, .wm-box (height:100%) non ha un containing block
-    // definito dentro ion-list e collassa all'altezza del solo contenuto in flow —
-    // stessa altezza usata dalla griglia Home.
+    // `.wm-box` (wm-core) ha ora un'altezza fissa propria (180px, non più
+    // height:100%) — non serve più darle un containing block qui, l'altezza
+    // arriva già definita dal componente stesso (oc:8305). Nessun numero da
+    // sincronizzare qui: se cambia in wm-core, questo file resta corretto.
     display: block;
-    height: 176px;
   }
 
   // .webmapp-favourites-nodata vive in favourites.page.scss, ma l'encapsulation
