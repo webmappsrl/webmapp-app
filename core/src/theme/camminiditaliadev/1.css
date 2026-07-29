@@ -64,14 +64,14 @@ wm-home-layer > wm-img:has(> wm-img.wm-home-layer-logo-overlay) > .wm-box-title:
   content: '';
   position: absolute;
   left: 0;
-  top: 12px;
-  bottom: 12px;
+  top: 30px;
+  bottom: 30px;
   width: 2px;
-  /* --wm-color-primary è impostata a runtime da THEME.primary_color del
-     config.json (theme.ts) — per camminiditalia oggi è #ef7821, molto vicino
-     alla stima iniziale (#f5821f). Usare la variabile invece del valore fisso
-     mantiene il divisore allineato al brand se il colore cambia. */
-  background-color: var(--wm-color-primary);
+  /* Valore hardcoded invece di var(--wm-color-primary) di proposito: questo
+     file carica solo per camminiditalia (nessun altro shard lo riusa), quindi
+     l'indirezione tramite la variabile del tema non aggiunge nessuna
+     flessibilità reale qui — scelta del developer dopo revisione. */
+  background-color: #ef7821;
 }
 
 wm-map-details wm-status-filter {

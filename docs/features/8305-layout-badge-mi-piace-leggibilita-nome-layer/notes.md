@@ -20,11 +20,10 @@ Nessuno.
 ## Decisioni
 
 - Rimozione (non aggiornamento) dell'altezza hardcoded in `favourites-layers.component.scss` — vedi `plan.md` → Architecture.
-- **Colore del divisore**: dalla review formale, sostituito il valore hex stimato (`#f5821f`) con `var(--wm-color-primary)` — la CSS custom property è impostata a runtime da `THEME.primary_color` del `config.json` (`theme.ts`, wm-core), oggi `#ef7821` per camminiditalia (quasi identico alla stima iniziale). Resta allineato al brand anche se il colore cambia in futuro, senza bisogno di aggiornare questo file.
+- **Colore del divisore — decisione cambiata dopo il commit/PR iniziale**: la review formale aveva sostituito il valore hex stimato (`#f5821f`) con `var(--wm-color-primary)` per restare allineati al brand automaticamente. Il developer ha poi cambiato idea: **tornato a un valore hardcoded** (`#ef7821`, il valore reale di `THEME.primary_color` per camminiditalia) — motivazione: questo file carica solo per camminiditalia (nessun altro shard lo riusa), quindi l'indirezione tramite la variabile del tema non aggiunge flessibilità reale in questo caso specifico. Applicato in sincronia su entrambe le copie (`camminiditalia/1.css` e `camminiditaliadev/1.css`, tenute identiche per tutta la sessione).
 
 ## Follow-up
 
-- Promuovere `core/src/theme/camminiditaliadev/1.css` → `core/src/theme/camminiditalia/1.css` prima del merge (rinomina cartella, azione dello sviluppatore, non ancora eseguita).
 - Confermare col cliente Cammini d'Italia se il troncamento a 3 righe con ellipsis (deroga introdotta in wm-core, vedi notes.md di quel repo) è accettabile, dato che il `customer_request` originale chiedeva testo sempre completamente leggibile.
 - Segnalare a chi gestisce il `config.json` di camminiditalia l'override di traduzione "Sentieri"→"Tappe" (fuori scope per questo repo).
 - Valutare con chi ha aperto oc:8164 se impostarlo a "testing" una volta completato e verificato tutto il lavoro di oc:8305.
