@@ -4,7 +4,7 @@
   </ion-fab-button>
 </ng-container>
 <ion-card [class.open]="isOpen$|async">
-  <ion-card-header class="wm-drag">
+  <ion-card-header class="wm-drag" #cardHeader>
     <div class="wm-drag-btn" #dragHandleIcon>
       <div class="wm-drag-handle"></div>
     </div>
@@ -18,6 +18,8 @@
     <ng-content select="[header]"> </ng-content>
   </ion-card-header>
   <ion-card-content>
-    <ng-content></ng-content>
+    <div class="wm-content-wrapper" #contentWrapper>
+      <ng-content></ng-content>
+    </div>
   </ion-card-content>
 </ion-card>

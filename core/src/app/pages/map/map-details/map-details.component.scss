@@ -50,7 +50,6 @@ wm-map-details {
     margin: 0;
     padding: 10px;
     height: inherit;
-    padding-bottom: 15%;
     border-radius: 16px 16px 0 0;
     position: relative;
     background: white;
@@ -96,6 +95,19 @@ wm-map-details {
       overflow-x: hidden;
       padding: 0 !important;
       margin: 0 !important;
+
+      .wm-content-wrapper {
+        display: block;
+
+        // wm-image-detail (galleria a schermo intero) ha bisogno di un'altezza
+        // esplicita sul wrapper per risolvere la propria catena di altezze in
+        // percentuale (.gallery{height:calc(100% - 55px)}) — senza questa regola
+        // il wrapper resterebbe height:auto e la galleria collasserebbe al
+        // contenuto naturale invece di riempire il pannello.
+        &:has(> wm-image-detail) {
+          height: 100%;
+        }
+      }
 
       wm-image-detail {
         display: block;
