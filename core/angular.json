@@ -130,7 +130,8 @@
             "karmaConfig": "karma.conf.js",
             "include": [
               "src/app/services",
-              "src/app/pages/favourites"
+              "src/app/pages/favourites",
+              "src/app/pages/map/map-details"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/theme/default"]
