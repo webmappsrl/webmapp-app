@@ -187,7 +187,7 @@ wm-layer-box .wm-box .wm-box-title {
 }
 
 /* Track */
-wm-map-details ion-card ion-card-content:has(> wm-track-properties) {
+wm-map-details ion-card ion-card-content:has(wm-track-properties) {
   height: calc(100% + 24px) !important;
 }
 
@@ -453,7 +453,7 @@ wm-map-details wm-status-filter ion-chip {
   margin-left: 0px;
 }
 
-wm-map-details ion-card ion-card-content:has(> wm-home-layer) {
+wm-map-details ion-card ion-card-content:has(wm-home-layer) {
   height: calc(100% + 70px) !important;
 }
 wm-map-details wm-home-layer wm-img {
@@ -571,10 +571,10 @@ wm-poi-box > ion-card > .wm-box-name {
 }
 
 /* POI */
-wm-map-details ion-card ion-card-content:has(> wm-poi-properties) {
+wm-map-details ion-card ion-card-content:has(wm-poi-properties) {
   height: calc(100% + 14px) !important;
 }
-wm-map-details ion-card ion-card-content:has(> wm-image-detail) {
+wm-map-details ion-card ion-card-content:has(wm-image-detail) {
   height: calc(100% + 70px) !important;
 }
 
