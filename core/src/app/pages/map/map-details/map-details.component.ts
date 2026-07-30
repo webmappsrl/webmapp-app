@@ -241,15 +241,18 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Reagisce a una variazione di altezza del contenuto rilevata dal ResizeObserver
-   * (debounced). Non fa nulla mentre una gesture è in corso o se lo stato corrente
-   * non è "open"/"full" (unico caso in cui l'altezza dipende dal contenuto).
+   * (debounced). Non fa nulla mentre una gesture è in corso, o se lo stato corrente
+   * non è "full" — "open" ha floor e tetto massimo coincidenti (minInfoheight), quindi
+   * il suo target non dipende mai dal contenuto: rieseguire l'animazione per "open"
+   * sarebbe un'operazione ridondante (nessun cambio di target) il cui solo effetto
+   * visibile è un restart superfluo dell'animazione in corso o appena conclusa.
    */
   private _applyContentResize(): void {
     if (this._gestureActive) {
       return;
     }
-    if (this._currentStatus === 'open' || this._currentStatus === 'full') {
-      this._applyHeightForStatus(this._currentStatus, this._prefersReducedMotion());
+    if (this._currentStatus === 'full') {
+      this._applyHeightForStatus('full', this._prefersReducedMotion());
     }
   }
 

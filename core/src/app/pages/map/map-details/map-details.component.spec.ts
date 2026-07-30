@@ -193,8 +193,19 @@ describe('MapDetailsComponent (oc:8313)', () => {
     expect(applySpy).not.toHaveBeenCalled();
   });
 
-  it('_applyContentResize non chiama _applyHeightForStatus se lo stato non è "open"/"full"', () => {
+  it('_applyContentResize non chiama _applyHeightForStatus se lo stato è "onlyTitle"', () => {
     component = createComponent(of('onlyTitle'));
+    (component as any).dragHandleIcon = {nativeElement: document.createElement('div')};
+    component.ngAfterViewInit();
+    const applySpy = spyOn(component as any, '_applyHeightForStatus');
+
+    (component as any)._applyContentResize();
+
+    expect(applySpy).not.toHaveBeenCalled();
+  });
+
+  it('_applyContentResize non chiama _applyHeightForStatus se lo stato è "open" (target invariante: floor == tetto massimo, il ricalcolo sarebbe un restart superfluo dell\'animazione)', () => {
+    component = createComponent(of('open'));
     (component as any).dragHandleIcon = {nativeElement: document.createElement('div')};
     component.ngAfterViewInit();
     const applySpy = spyOn(component as any, '_applyHeightForStatus');
