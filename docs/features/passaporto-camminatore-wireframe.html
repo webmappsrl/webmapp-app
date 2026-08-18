@@ -487,10 +487,64 @@
         </div>
 
         <!-- Card 3: cammino non iniziato — nuovo, oc:8166: entry point verso il flusso di validazione cartacea -->
-        <div class="wf-photo wf-tappable" onclick="wfGoTo('phone-7')" style="height:150px; margin:10px; background-image:url(assets/celestino.jpg); background-size:cover; background-position:center;">
+        <div class="wf-photo wf-tappable" onclick="wfGoTo('phone-1c')" style="height:150px; margin:10px; background-image:url(assets/celestino.jpg); background-size:cover; background-position:center;">
           <div class="logo-tl" style="background:transparent url(assets/logo-celestino.webp) center/contain no-repeat; border-radius:50%;"></div>
           <div class="count-tr">12 Tappe</div>
           <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Cammino Grande di Celestino</div>
+        </div>
+      </div>      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">V0b · Home del layer — Cammino di Celestino, nessuna tappa percorsa (duplicata da vista 1)</p>
+    <div class="wf-phone" id="phone-1c">
+      <!-- header mappa (esistente) -->
+      <div class="wf-block" style="display:flex;align-items:center;justify-content:space-between; flex-shrink:0;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">←</div>
+        <div style="height:22px;background:#f2f0ea;border-radius:14px;width:70px;"></div>
+      </div>
+      <!-- foto cammino (esistente) -->
+      <div class="wf-block wf-photo" style="height:120px; flex-shrink:0; background-image:url(assets/celestino.jpg); background-size:cover; background-position:center;"></div>
+      <!-- fascia bianca: logo · titolo (esistente, oc:8305) + anello di progresso attorno al logo, qui a 0% -->
+      <div class="wf-block" style="display:flex;align-items:center;gap:10px; flex-shrink:0;">
+        <div style="width:34px; height:34px; border-radius:50%; background:conic-gradient(#e0ddd6 0deg 360deg); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:26px;height:26px;border-radius:50%;background:#fff url(assets/logo-celestino.webp) center/contain no-repeat;"></div>
+        </div>
+        <div style="width:1px;height:22px;background:#ccc;flex-shrink:0;"></div>
+        <div style="font-size:13px;font-weight:800;color:#333;line-height:1.2">Cammino Grande<br/>di Celestino</div>
+      </div>
+      <!-- riepilogo avanzamento passaporto — nuovo, oc:8166: qui rimanda al dettaglio con CTA di certificazione invece che alla vista 2 -->
+      <div class="wf-block wf-new wf-tappable" onclick="wfGoTo('phone-7')" style="flex-shrink:0; display:block; padding:8px 10px;">
+        <div style="font-size:12px;font-weight:800;color:#1d6b30;">0% completato</div>
+        <div style="font-size:10px;color:#3d7a4a;margin-top:2px;">0/12 tappe percorse · tocca per i dettagli</div>
+      </div>
+      <!-- tab tappe/luoghi (esistente) -->
+      <div class="wf-block wf-tabs" style="flex-shrink:0;"><span class="tab active">TAPPE 12</span><span class="tab">LUOGHI 180</span></div>
+      <div class="wf-scroll">
+        <div class="wf-track-card">
+          <div class="photo" style="background-image:url(assets/celestino.jpg)"></div>
+          <div class="body">
+            <div class="place">TAPPA 01</div>
+            <div class="title">Cammino Grande di Celestino - Tappa 01</div>
+            <div class="km">Lunghezza 18.2 Km</div>
+          </div>
+          <div class="wf-chip-row" style="padding:0 10px 8px;"><span class="wf-chip todo">○ non ancora percorsa</span></div>
+        </div>
+        <div class="wf-track-card">
+          <div class="photo" style="background-image:url(assets/celestino.jpg)"></div>
+          <div class="body">
+            <div class="place">TAPPA 02</div>
+            <div class="title">Cammino Grande di Celestino - Tappa 02</div>
+            <div class="km">Lunghezza 14.6 Km</div>
+          </div>
+          <div class="wf-chip-row" style="padding:0 10px 8px;"><span class="wf-chip todo">○ non ancora percorsa</span></div>
         </div>
       </div>      <div class="wf-tabbar">
         <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
