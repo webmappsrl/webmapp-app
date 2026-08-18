@@ -1,0 +1,611 @@
+<meta charset="utf-8">
+<div style="background:#f3f1eb;color:#222;padding:20px;border-radius:8px;font-family:system-ui,sans-serif">
+<h2 style="color:#1a1a1a">Wireframe — Feature Passaporto del camminatore</h2>
+<p style="color:#555;font-size:13px;max-width:70ch">Struttura a blocchi (bassa fedeltà, nessun CSS reale replicato). <strong style="color:#888">Grigio</strong> = già nell'app oggi. <strong style="color:#2F9E44">Verde</strong> = nuovo, introdotto per questa feature.</p>
+
+<style>
+  .wf-grid { display:flex; flex-wrap:wrap; gap:28px; justify-content:center; margin:20px 0; }
+  .wf-unit { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .wf-cap { font-size:12px; font-weight:700; color:#333; text-align:center; max-width:300px; }
+  .wf-phone { width:300px; height:600px; border:2px solid #333; border-radius:16px; overflow:hidden; background:#fff; display:flex; flex-direction:column; transition:box-shadow .25s, border-color .25s; }
+  .wf-phone.wf-flash, .wf-share-card.wf-flash { border-color:#2874a6; box-shadow:0 0 0 6px rgba(40,116,166,.35); }
+  .wf-tappable { cursor:pointer; }
+  .wf-tappable:hover { filter:brightness(0.97); }
+  .wf-phone .wf-scroll { overflow-y:auto; flex:1; min-height:0; }
+  .wf-tabbar { flex-shrink:0; margin-top:auto; display:flex; justify-content:space-around; align-items:center; padding:8px 0; border-top:1px solid #ddd; background:#fff; }
+  .wf-tabbar .item { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:#999; }
+  .wf-tabbar .item.active { color:#2F9E44; font-weight:700; }
+  .wf-tabbar .ic { width:18px; height:18px; }
+  .wf-block { border-bottom:1px solid #999; padding:9px 10px; position:relative; }
+  .wf-label { font-size:9px; color:#999; text-transform:uppercase; position:absolute; top:4px; right:8px; }
+  .wf-new-label { font-size:9px; color:#2F9E44; font-weight:800; text-transform:uppercase; position:absolute; top:4px; right:8px; }
+
+  .wf-photo { height:110px; background:repeating-linear-gradient(45deg,#e2e2e2,#e2e2e2 8px,#ececec 8px,#ececec 16px); position:relative; }
+  .wf-photo .logo-tl { position:absolute; top:8px; left:8px; width:44px; height:44px; background:#ccc; border-radius:4px; z-index:2; }
+  .wf-photo .wf-progress-ring { position:absolute; top:2px; left:2px; width:56px; height:56px; border-radius:50%; background:conic-gradient(#2F9E44 0deg 234deg, transparent 234deg 360deg); z-index:1; }
+  .wf-photo .count-tr { position:absolute; top:16px; right:16px; background:#fff; border-radius:15px; padding:4px 12px; font-size:9px; color:#333; font-weight:700; box-shadow:0 0 4px rgba(0,0,0,.15); }
+  .wf-photo .title-bl { position:absolute; bottom:8px; left:8px; right:8px; height:14px; background:#ccc; border-radius:2px; width:70%; }
+
+  .wf-new { border:2px dashed #2F9E44; background:#eaf7ee; padding:10px; display:flex; align-items:center; gap:10px; }
+  .wf-new .circle { width:32px; height:32px; border-radius:50%; border:2px solid #2F9E44; flex-shrink:0; }
+  .wf-new .lines { flex:1; display:flex; flex-direction:column; gap:5px; }
+  .wf-new .line { height:8px; background:#8fce9f; border-radius:2px; }
+  .wf-new .line.short { width:60%; }
+
+  .wf-tabs { display:flex; gap:16px; padding:10px 10px 0; }
+  .wf-tabs .tab { font-size:10px; color:#999; padding-bottom:6px; }
+  .wf-tabs .tab.active { color:#333; border-bottom:2px solid #333; }
+
+  .wf-list-item { display:flex; gap:8px; padding:8px 10px; }
+  .wf-list-item .thumb { width:44px; height:44px; background:#ddd; border-radius:6px; flex-shrink:0; }
+  .wf-list-item .lines { flex:1; display:flex; flex-direction:column; gap:5px; justify-content:center; }
+  .wf-list-item .line { height:7px; background:#ddd; border-radius:2px; }
+  .wf-list-item .line.short { width:50%; }
+
+  .wf-track-card { margin:10px; border-radius:12px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,.08); background:#fff; }
+  .wf-track-card .photo { height:110px; background-size:cover; background-position:center; }
+  .wf-track-card .body { padding:8px 10px 10px; }
+  .wf-track-card .place { font-size:9.5px; font-weight:700; color:#2874a6; text-transform:uppercase; }
+  .wf-track-card .title { font-size:11px; font-weight:700; color:#333; margin:4px 0 2px; line-height:1.3; }
+  .wf-track-card .km { font-size:9px; color:#999; }
+
+  .wf-chip-row { display:flex; align-items:center; justify-content:space-between; padding:8px 10px 0; }
+  .wf-chip { font-size:9px; font-weight:700; padding:3px 8px; border-radius:12px; }
+  .wf-chip.done { background:#eaf7ee; color:#1d6b30; }
+  .wf-chip.todo { background:#eee; color:#888; }
+
+  .wf-header-back { display:flex; align-items:center; gap:8px; padding:10px; }
+  .wf-header-back .back { font-size:14px; }
+  .wf-header-back .title-line { height:10px; background:#ccc; border-radius:2px; flex:1; max-width:70%; }
+
+  .wf-big-ring { display:flex; flex-direction:column; align-items:center; gap:6px; padding:16px 10px; border-bottom:1px solid #999; }
+  .wf-big-ring .ring { width:56px; height:56px; border-radius:50%; border:6px solid #2F9E44; }
+  .wf-big-ring .head { font-size:11px; font-weight:700; color:#333; }
+  .wf-big-ring .sub { font-size:9px; color:#888; text-align:center; }
+
+  .wf-stats { display:flex; border-bottom:1px solid #999; }
+  .wf-stat { flex:1; text-align:center; padding:8px 4px; border-right:1px solid #999; }
+  .wf-stat:last-child { border-right:none; }
+  .wf-stat .num { font-size:12px; font-weight:800; color:#333; }
+  .wf-stat .lbl { font-size:7.5px; color:#999; text-transform:uppercase; }
+
+  .wf-check-row { display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid #eee; }
+  .wf-check-row .icon { width:16px; height:16px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:9px; }
+  .wf-check-row .icon.done { background:#2F9E44; color:#fff; }
+  .wf-check-row .icon.todo { border:1.5px solid #ccc; color:#bbb; font-size:7px; }
+  .wf-check-row .line { height:7px; background:#ddd; border-radius:2px; flex:1; }
+  .wf-check-row .date { font-size:8px; color:#999; }
+
+  .wf-passport-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:10px; }
+  .wf-p-stamp { width:100%; aspect-ratio:1; border-radius:50%; }
+  .wf-p-stamp.empty { border:2px dashed #ccc; }
+  .wf-p-stamp.filled { background:#2F9E44; }
+  .wf-p-stamp.partial { background:conic-gradient(#2F9E44 0deg 130deg, #ddd 130deg 360deg); }
+
+  .wf-cammino-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid #eee; }
+  .wf-cammino-row .stamp-sm { width:32px; height:32px; border-radius:50%; flex-shrink:0; }
+  .wf-cammino-row .info { flex:1; display:flex; flex-direction:column; gap:3px; }
+  .wf-cammino-row .info .nm { height:9px; background:#ccc; border-radius:2px; width:70%; }
+  .wf-cammino-row .bar { height:4px; border-radius:2px; background:#eee; overflow:hidden; }
+  .wf-cammino-row .bar .fill { height:100%; background:#2F9E44; }
+  .wf-cammino-row .info .km { height:7px; background:#eee; border-radius:2px; width:50%; }
+
+  .wf-actions { padding:10px; display:flex; flex-direction:column; gap:6px; }
+  .wf-btn { border:1.5px solid #333; border-radius:8px; padding:8px; text-align:center; font-size:10px; font-weight:700; color:#333; }
+  .wf-btn.filled { background:#2F9E44; border-color:#2F9E44; color:#fff; }
+  .wf-hint { font-size:8px; color:#999; text-align:center; padding:0 12px 10px; }
+
+  .wf-share-card {
+    width:300px; height:600px; border-radius:22px; border:4px solid #ef7821;
+    background:#fbe9de; display:flex; flex-direction:column; align-items:center;
+    padding:22px 18px; box-sizing:border-box; overflow:hidden;
+  }
+  .wf-share-card .logo {
+    width:56px; height:56px; border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.1);
+    margin-bottom:12px;
+  }
+  .wf-share-card .logo img { width:44px; height:44px; border-radius:50%; object-fit:contain; }
+  .wf-share-card .cammino-title { font-size:19px; font-weight:800; color:#222; text-align:center; line-height:1.2; margin-bottom:14px; }
+  .wf-share-card .map-box { width:100%; height:190px; border-radius:14px; border:3px solid #ef7821; overflow:hidden; background-size:cover; background-position:center; margin-bottom:14px; }
+  .wf-share-card .tappa-label { font-size:15px; font-weight:800; color:#222; margin-bottom:14px; }
+  .wf-share-card .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; width:100%; margin-bottom:auto; }
+  .wf-share-card .stat-item { display:flex; align-items:flex-start; gap:8px; }
+  .wf-share-card .stat-item .ic { font-size:14px; margin-top:1px; color:#a8a29a; }
+  .wf-share-card .stat-item .lbl { font-size:9px; color:#a8a29a; text-transform:uppercase; letter-spacing:.02em; }
+  .wf-share-card .stat-item .val { font-size:12px; font-weight:800; color:#222; }
+  .wf-share-card .brand-badge { width:32px; height:32px; border-radius:50%; background:conic-gradient(#ef7821,#c0392b); }
+</style>
+
+<h3 style="color:#1a1a1a;margin:10px 0 4px;">Flusso Home → Mappa → Traccia</h3>
+<div class="wf-grid">
+
+  <div class="wf-unit">
+    <p class="wf-cap">0 · Home generale — lista cammini (wm-layer-box)</p>
+    <div class="wf-phone" id="phone-0">
+      <div class="wf-block" style="flex-shrink:0; padding:0; overflow:hidden;">
+        <img src="assets/home-hero-reale.png" style="width:100%;display:block" />
+      </div>
+      <div class="wf-block" style="padding:10px; flex-shrink:0;">
+        <div style="height:34px;background:#f2f0ea;border-radius:20px"></div>
+      </div>
+
+      <div class="wf-scroll">
+        <!-- Card 1: cammino in corso, con progresso passaporto -->
+        <div class="wf-photo wf-tappable" onclick="wfGoTo('phone-1')" style="height:150px; margin:10px; background-image:url(assets/cammino-minerario.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-cmsb.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="wf-progress-ring"></div>
+          <div class="count-tr">30 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Cammino Minerario di Santa Barbara</div>
+        </div>
+
+        <!-- Card 2: cammino completato -->
+        <div class="wf-photo" style="height:150px; margin:10px; background-image:url(assets/bologna-montana.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-bologna.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="wf-progress-ring" style="background:#2F9E44"></div>
+          <div class="count-tr">6 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Bologna Montana Art Trail</div>
+        </div>
+
+        <!-- Card 3: cammino non iniziato -->
+        <div class="wf-photo" style="height:150px; margin:10px; background-image:url(assets/celestino.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-celestino.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="count-tr">12 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Cammino Grande di Celestino</div>
+        </div>
+      </div>      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">1 · Home del layer — badge, logo con progresso e stato tappe</p>
+    <div class="wf-phone" id="phone-1">
+      <!-- header mappa (esistente) -->
+      <div class="wf-block" style="display:flex;align-items:center;justify-content:space-between; flex-shrink:0;">
+        <div style="width:28px;height:28px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;">←</div>
+        <div style="height:22px;background:#f2f0ea;border-radius:14px;width:70px;"></div>
+      </div>
+      <!-- foto cammino (esistente) -->
+      <div class="wf-block wf-photo" style="height:120px; flex-shrink:0; background-image:url(assets/cammino-minerario.jpg); background-size:cover; background-position:center;"></div>
+      <!-- fascia bianca: logo · titolo (esistente, oc:8305) + nuovo: anello di progresso attorno al logo -->
+      <div class="wf-block" style="display:flex;align-items:center;gap:10px; flex-shrink:0;">
+        <div style="width:34px; height:34px; border-radius:50%; background:conic-gradient(#2F9E44 0deg 234deg, #e0ddd6 234deg 360deg); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <div style="width:26px;height:26px;border-radius:50%;background:#fff url(assets/logo-cmsb.webp) center/contain no-repeat;"></div>
+        </div>
+        <div style="width:1px;height:22px;background:#ccc;flex-shrink:0;"></div>
+        <div style="font-size:13px;font-weight:800;color:#333;line-height:1.2">Cammino Minerario di<br/>Santa Barbara</div>
+      </div>
+      <!-- nuovo: riepilogo avanzamento passaporto -->
+      <div class="wf-block wf-new wf-tappable" onclick="wfGoTo('phone-2')" style="flex-shrink:0; display:block; padding:8px 10px;">
+        <div style="font-size:12px;font-weight:800;color:#1d6b30;">64% completato</div>
+        <div style="font-size:10px;color:#3d7a4a;margin-top:2px;">19/30 tappe percorse · tocca per i dettagli</div>
+      </div>
+      <!-- tab tappe/luoghi (esistente) -->
+      <div class="wf-block wf-tabs" style="flex-shrink:0;"><span class="tab active">TAPPE 30</span><span class="tab">LUOGHI 454</span></div>
+      <!-- box tappa (esistente) + nuovo: chip di stato passaporto -->
+      <div class="wf-scroll">
+        <div class="wf-track-card wf-tappable" onclick="wfGoTo('phone-5')">
+          <div class="photo" style="background-image:url(assets/cammino-minerario.jpg)"></div>
+          <div class="body">
+            <div class="place">GONNESA</div>
+            <div class="title">Cammino Minerario di Santa Barbara - Tappa 01: Iglesias - Nebida</div>
+            <div class="km">Lunghezza 20.4 Km</div>
+          </div>
+          <div class="wf-chip-row" style="padding:0 10px 8px;"><span class="wf-chip done">✓ percorsa il 12 mag</span></div>
+        </div>
+        <div class="wf-track-card">
+          <div class="photo" style="background-image:url(assets/cammino-minerario.jpg)"></div>
+          <div class="body">
+            <div class="place">IGLESIAS</div>
+            <div class="title">Cammino Minerario di Santa Barbara - Tappa 02: Nebida a Masua</div>
+            <div class="km">Lunghezza 9.3 Km</div>
+          </div>
+          <div class="wf-chip-row" style="padding:0 10px 8px;"><span class="wf-chip todo">○ non ancora percorsa</span></div>
+        </div>
+      </div>      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">2 · Dettaglio — tap sul badge</p>
+    <div class="wf-phone" id="phone-2">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Cammino Minerario di S. Barbara</div></div>
+      <div class="wf-big-ring" style="background:linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),url(assets/cammino-minerario.jpg); background-size:cover; background-position:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(#2F9E44 0deg 228deg,#e0ddd6 228deg 360deg);display:flex;align-items:center;justify-content:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:#fff url(assets/logo-cmsb.webp) center/contain no-repeat;"></div>
+        </div>
+        <div class="head">19 di 30 tappe</div>
+        <div class="sub">Completa le restanti 11 per sbloccare il timbro</div>
+      </div>
+      <div class="wf-scroll">
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 01: Iglesias - Nebida</div><div class="date">12 mag</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 02: Nebida - Masua</div><div class="date">12 mag</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 03: Masua - Portixeddu</div><div class="date">19 mag</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 04: Portixeddu - Fluminimaggiore</div><div class="date">19 mag</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 05: Fluminimaggiore - Buggerru</div><div class="date">2 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 06: Buggerru - Gonnesa</div><div class="date">2 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 07: Gonnesa - Carbonia</div><div class="date">9 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 08: Carbonia - Villamassargia</div><div class="date">9 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 09: Villamassargia - Domusnovas</div><div class="date">16 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 10: Domusnovas - Iglesias</div><div class="date">16 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 11: Iglesias - Monteponi</div><div class="date">23 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 12: Monteponi - Nebida</div><div class="date">23 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 13: Masua - Buggerru</div><div class="date">30 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 14: Buggerru - Fluminimaggiore</div><div class="date">30 giu</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 15: Fluminimaggiore - Gonnesa</div><div class="date">7 lug</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 16: Gonnesa - Carbonia (bis)</div><div class="date">7 lug</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 17: Carbonia - Narcao</div><div class="date">14 lug</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 18: Narcao - Nuxis</div><div class="date">14 lug</div></div>
+      <div class="wf-check-row"><div class="icon done">✓</div><div style="font-size:10px;color:#333;flex:1">Tappa 19: Nuxis - Santadi</div><div class="date">21 lug</div></div>
+      <div class="wf-check-row"><div class="icon" style="background:conic-gradient(#2F9E44 0deg 216deg,#eee 216deg 360deg);color:#fff;font-size:6px;">60%</div><div style="font-size:10px;color:#333;flex:1">Tappa 20: Santadi - Villaperuccio</div><div class="date" style="color:#2F9E44;font-weight:700;">60%</div></div>
+      <div class="wf-check-row"><div class="icon todo">21</div><div style="font-size:10px;color:#999;flex:1">Tappa 21: Villaperuccio - Tratalias</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">22</div><div style="font-size:10px;color:#999;flex:1">Tappa 22: Tratalias - Giba</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">23</div><div style="font-size:10px;color:#999;flex:1">Tappa 23: Giba - Masainas</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">24</div><div style="font-size:10px;color:#999;flex:1">Tappa 24: Masainas - S. Anna Arresi</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">25</div><div style="font-size:10px;color:#999;flex:1">Tappa 25: S. Anna Arresi - Sant'Antioco</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">26</div><div style="font-size:10px;color:#999;flex:1">Tappa 26: Sant'Antioco - Calasetta</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">27</div><div style="font-size:10px;color:#999;flex:1">Tappa 27: Calasetta - Carloforte</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">28</div><div style="font-size:10px;color:#999;flex:1">Tappa 28: Carloforte - Portoscuso</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">29</div><div style="font-size:10px;color:#999;flex:1">Tappa 29: Portoscuso - Gonnesa</div><div class="date">—</div></div>
+      <div class="wf-check-row"><div class="icon todo">30</div><div style="font-size:10px;color:#999;flex:1">Tappa 30: Gonnesa - Iglesias (arrivo)</div><div class="date">—</div></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">3 · Singola traccia — stato passaporto</p>
+    <div class="wf-phone" id="phone-5">
+      <div class="wf-block wf-header-back" style="flex-shrink:0;"><span class="back">←</span><span style="margin-left:auto;font-size:16px;color:#999">⤴ ⬇</span></div>
+      <div class="wf-block wf-photo" style="height:130px; flex-shrink:0; background-image:url(assets/cammino-minerario.jpg); background-size:cover; background-position:center;"></div>
+      <div class="wf-block" style="font-size:12px;font-weight:700;color:#333;flex-shrink:0;">Cammino Minerario di Santa Barbara - Tappa 01: Iglesias - Nebida</div>
+      <!-- nuovo: chip stato passaporto + CTA condivisione -->
+      <div class="wf-block" style="flex-shrink:0; display:flex; align-items:center; justify-content:space-between;">
+        <span class="wf-chip done">✓ percorsa il 12 mag</span>
+        <span class="wf-tappable" onclick="wfGoTo('phone-6')" style="font-size:9.5px; font-weight:700; color:#2874a6;">Condividi ↗</span>
+      </div>
+      <!-- dettagli tecnici (esistenti) -->
+      <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #eee;font-size:10.5px;flex-shrink:0;"><span style="color:#999">Distanza</span><span style="font-weight:700;color:#333">20.4 Km</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #eee;font-size:10.5px;flex-shrink:0;"><span style="color:#999">Dislivello positivo</span><span style="font-weight:700;color:#333">290m</span></div>
+      <div style="display:flex;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #eee;font-size:10.5px;flex-shrink:0;"><span style="color:#999">Dislivello negativo</span><span style="font-weight:700;color:#333">284m</span></div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">4 · Condivisione — tappa sbloccata (nuovo)</p>
+    <div class="wf-share-card" id="phone-6">
+      <div class="logo"><img src="assets/logo-cmsb.webp" /></div>
+      <div class="cammino-title">Cammino Minerario<br/>di Santa Barbara</div>
+      <div class="map-box" style="background-image:url(assets/mappa-cmsb-tappa01.png); background-color:#fff;"></div>
+      <div class="tappa-label">Tappa 01</div>
+      <div class="stats-grid">
+        <div class="stat-item"><span class="ic">🏁</span><div><div class="lbl">Arrivo</div><div class="val">NEBIDA</div></div></div>
+        <div class="stat-item"><span class="ic">📍</span><div><div class="lbl">Partenza</div><div class="val">IGLESIAS</div></div></div>
+        <div class="stat-item"><span class="ic">⏱</span><div><div class="lbl">Tempo</div><div class="val">05h 30m</div></div></div>
+        <div class="stat-item"><span class="ic">↗</span><div><div class="lbl">Lunghezza</div><div class="val">20,4 km</div></div></div>
+      </div>
+      <div class="brand-badge"></div>
+    </div>
+  </div>
+
+</div>
+
+<h3 style="color:#1a1a1a;margin:24px 0 4px;">Flusso Profilo &amp; condivisione</h3>
+<div class="wf-grid">
+
+  <div class="wf-unit">
+    <p class="wf-cap">5 · Profilo — tab "I tuoi dati" (esistente)</p>
+    <div class="wf-phone">
+      <div class="wf-block" style="display:flex;align-items:center;justify-content:space-between; flex-shrink:0;">
+        <div style="font-size:17px;font-weight:800;color:#333;">Profilo</div>
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid #2874a6;"></div>
+      </div>
+      <div class="wf-block" style="display:flex;align-items:center;gap:10px; flex-shrink:0;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#2874a6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">G</div>
+        <div><div style="font-size:12px;font-weight:700;color:#333;">giuseppe</div><div style="font-size:9px;color:#999;">giuseppebonfanti@webmapp.it</div></div>
+      </div>
+      <div class="wf-block" style="display:flex; gap:20px; flex-shrink:0;">
+        <span style="font-size:10px;font-weight:700;color:#2874a6;border-bottom:2px solid #2874a6;padding-bottom:8px;">I TUOI DATI</span>
+        <span class="wf-tappable" onclick="wfGoTo('phone-3')" style="font-size:10px;font-weight:700;color:#999;padding-bottom:8px;">PASSAPORTO</span>
+      </div>
+      <div class="wf-scroll">
+        <!-- esistente: Downloads -->
+        <div style="font-size:15px;font-weight:800;color:#333;padding:14px 10px 4px;">Downloads</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border-bottom:1px solid #eee;">
+          <span style="font-size:12px;color:#333;">Tracce scaricate</span><span style="color:#ccc">›</span>
+        </div>
+
+        <div style="padding:24px 10px; display:flex; flex-direction:column; gap:10px;">
+          <div style="border:1.5px solid #2874a6; color:#2874a6; border-radius:8px; padding:9px; text-align:center; font-size:10.5px; font-weight:700;">MODIFICA CONSENSO DATI</div>
+          <div style="border:1.5px solid #c0392b; color:#c0392b; border-radius:8px; padding:9px; text-align:center; font-size:10.5px; font-weight:700;">✕ ELIMINA ACCOUNT</div>
+        </div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">5b · Profilo — tab "Passaporto" (nuovo)</p>
+    <div class="wf-phone" id="phone-3">
+      <!-- header (esistente) -->
+      <div class="wf-block" style="display:flex;align-items:center;justify-content:space-between; flex-shrink:0;">
+        <div style="font-size:17px;font-weight:800;color:#333;">Profilo</div>
+        <div style="width:20px;height:20px;border-radius:50%;border:2px solid #2874a6;"></div>
+      </div>
+      <!-- avatar + nome/email (esistente) -->
+      <div class="wf-block" style="display:flex;align-items:center;gap:10px; flex-shrink:0;">
+        <div style="width:40px;height:40px;border-radius:50%;background:#2874a6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">G</div>
+        <div><div style="font-size:12px;font-weight:700;color:#333;">giuseppe</div><div style="font-size:9px;color:#999;">giuseppebonfanti@webmapp.it</div></div>
+      </div>
+      <!-- tab "I TUOI DATI" (esistente) + nuovo tab "PASSAPORTO" -->
+      <div class="wf-block" style="display:flex; gap:20px; flex-shrink:0;">
+        <span style="font-size:10px;font-weight:700;color:#999;padding-bottom:8px;">I TUOI DATI</span>
+        <span style="font-size:10px;font-weight:700;color:#2F9E44;border-bottom:2px solid #2F9E44;padding-bottom:8px;">PASSAPORTO</span>
+      </div>
+
+      <div class="wf-scroll">
+        <!-- nuovo: contenuto del tab Passaporto -->
+        <div style="font-size:9px;color:#999;font-weight:700;text-transform:uppercase;padding:10px 10px 4px;">Completati</div>
+        <div style="display:flex; gap:16px; padding:0 10px 12px; overflow-x:auto;">
+          <div class="wf-tappable" onclick="wfGoTo('phone-4')" style="display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0;">
+            <div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(#2F9E44 0deg 360deg);display:flex;align-items:center;justify-content:center;">
+              <div style="width:46px;height:46px;border-radius:50%;background:#fff url(assets/logo-bologna.webp) center/contain no-repeat;"></div>
+            </div>
+            <div style="font-size:8.5px;font-weight:700;color:#333;text-align:center;max-width:70px;">Bologna Montana Art Trail</div>
+          </div>
+        </div>
+
+        <div style="font-size:9px;color:#999;font-weight:700;text-transform:uppercase;padding:8px 10px 0;">In corso</div>
+        <div class="wf-cammino-row">
+          <div class="stamp-sm" style="background:conic-gradient(#2F9E44 0deg 234deg,#ddd 234deg 360deg);display:flex;align-items:center;justify-content:center;">
+            <div style="width:24px;height:24px;border-radius:50%;background:#fff url(assets/logo-cmsb.webp) center/contain no-repeat;"></div>
+          </div>
+          <div class="info"><div style="font-size:11px;font-weight:700;color:#333">Cammino Minerario di S. Barbara</div><div class="bar"><div class="fill" style="width:64%"></div></div><div style="font-size:9px;color:#999">320/500 km · 19/30 tappe</div></div>
+        </div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">6 · Completamento — celebrazione + condivisione</p>
+    <div class="wf-phone" id="phone-4">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Bologna Montana Art Trail</div></div>
+      <div class="wf-big-ring" style="background:linear-gradient(rgba(255,248,242,.9),rgba(255,248,242,.9)),url(assets/bologna-montana.jpg); background-size:cover; background-position:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(#2F9E44 0deg 360deg);display:flex;align-items:center;justify-content:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:#fff url(assets/logo-bologna.webp) center/contain no-repeat;"></div>
+        </div>
+        <div class="head">Cammino completato! 🎉</div>
+        <div class="sub">6 tappe tra il 3 marzo e il 12 aprile 2026</div>
+      </div>
+      <div class="wf-stats">
+        <div class="wf-stat"><div class="num">100</div><div class="lbl">km</div></div>
+        <div class="wf-stat"><div class="num">6/6</div><div class="lbl">tappe</div></div>
+        <div class="wf-stat"><div class="num">4</div><div class="lbl">uscite</div></div>
+      </div>
+      <div class="wf-actions">
+        <div class="wf-btn filled">Condividi il traguardo</div>
+        <div class="wf-btn">Racconta la tua esperienza</div>
+      </div>
+      <p class="wf-hint">Credenziale digitale automatica — nessuna validazione manuale richiesta</p>      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+
+  <div class="wf-unit">
+    <p class="wf-cap">7 · Condivisione — cammino completato (nuovo)</p>
+    <div class="wf-share-card">
+      <div class="logo"><img src="assets/logo-bologna.webp" /></div>
+      <div class="cammino-title">Bologna Montana<br/>Art Trail</div>
+      <div class="map-box" style="background-image:url(assets/mappa-bologna-completa.png); background-color:#fff;"></div>
+      <div class="tappa-label">Cammino completato 🎉</div>
+      <div class="stats-grid">
+        <div class="stat-item"><span class="ic">📅</span><div><div class="lbl">Completato il</div><div class="val">12 apr 2026</div></div></div>
+        <div class="stat-item"><span class="ic">🥾</span><div><div class="lbl">Tappe</div><div class="val">6/6</div></div></div>
+        <div class="stat-item"><span class="ic">↗</span><div><div class="lbl">Lunghezza totale</div><div class="val">100 km</div></div></div>
+        <div class="stat-item"><span class="ic">🗓</span><div><div class="lbl">Uscite</div><div class="val">4</div></div></div>
+      </div>
+      <div class="brand-badge"></div>
+    </div>
+  </div>
+
+</div>
+
+<h3 style="color:#1a1a1a;margin:24px 0 4px;">Flusso Validazione credenziale cartacea (oc:8166)</h3>
+<div class="wf-grid">
+
+  <div class="wf-unit">
+    <p class="wf-cap">V0 · Home generale — lista cammini (duplicata da vista 0)</p>
+    <div class="wf-phone" id="phone-0b">
+      <div class="wf-block" style="flex-shrink:0; padding:0; overflow:hidden;">
+        <img src="assets/home-hero-reale.png" style="width:100%;display:block" />
+      </div>
+      <div class="wf-block" style="padding:10px; flex-shrink:0;">
+        <div style="height:34px;background:#f2f0ea;border-radius:20px"></div>
+      </div>
+
+      <div class="wf-scroll">
+        <!-- Card 1: cammino in corso, con progresso passaporto -->
+        <div class="wf-photo" style="height:150px; margin:10px; background-image:url(assets/cammino-minerario.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-cmsb.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="wf-progress-ring"></div>
+          <div class="count-tr">30 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Cammino Minerario di Santa Barbara</div>
+        </div>
+
+        <!-- Card 2: cammino completato -->
+        <div class="wf-photo" style="height:150px; margin:10px; background-image:url(assets/bologna-montana.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-bologna.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="wf-progress-ring" style="background:#2F9E44"></div>
+          <div class="count-tr">6 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Bologna Montana Art Trail</div>
+        </div>
+
+        <!-- Card 3: cammino non iniziato — nuovo, oc:8166: entry point verso il flusso di validazione cartacea -->
+        <div class="wf-photo wf-tappable" onclick="wfGoTo('phone-7')" style="height:150px; margin:10px; background-image:url(assets/celestino.jpg); background-size:cover; background-position:center;">
+          <div class="logo-tl" style="background:transparent url(assets/logo-celestino.webp) center/contain no-repeat; border-radius:50%;"></div>
+          <div class="count-tr">12 Tappe</div>
+          <div class="title-bl" style="background:none; color:#fff; font-size:13px; font-weight:800; text-shadow:0 1px 3px rgba(0,0,0,.5); display:flex; align-items:flex-end;">Cammino Grande di Celestino</div>
+        </div>
+      </div>      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">V1 · Dettaglio — richiesta certificazione cartacea (nuovo, oc:8166)</p>
+    <div class="wf-phone" id="phone-7">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Cammino Grande di Celestino</div></div>
+      <div class="wf-big-ring" style="background:linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),url(assets/celestino.jpg); background-size:cover; background-position:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(#2F9E44 0deg 0deg,#e0ddd6 0deg 360deg);display:flex;align-items:center;justify-content:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:#fff url(assets/logo-celestino.webp) center/contain no-repeat;"></div>
+        </div>
+        <div class="head">0 di 12 tappe</div>
+        <div class="sub">Nessuna tappa registrata via GPS</div>
+      </div>
+      <!-- nuovo, oc:8166: entry point richiesta certificazione cartacea, solo utente loggato — fuori da .wf-scroll: deve restare visibile senza scroll anche con molte tappe -->
+      <div class="wf-new wf-tappable" onclick="wfGoTo('phone-8')" style="margin:10px; flex-shrink:0; display:block; padding:10px;">
+        <div style="font-size:11px;font-weight:800;color:#1d6b30;">📷 Richiedi certificazione</div>
+        <div style="font-size:9px;color:#3d7a4a;margin-top:2px;">Hai timbrato la credenziale cartacea? Carica la foto per validare il cammino</div>
+      </div>
+      <div class="wf-scroll">
+        <div class="wf-check-row"><div class="icon todo">1</div><div style="font-size:10px;color:#999;flex:1">Tappa 01</div><div class="date">—</div></div>
+        <div class="wf-check-row"><div class="icon todo">2</div><div style="font-size:10px;color:#999;flex:1">Tappa 02</div><div class="date">—</div></div>
+        <div class="wf-check-row"><div class="icon todo">3</div><div style="font-size:10px;color:#999;flex:1">Tappa 03</div><div class="date">—</div></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">V2 · Form richiesta certificazione — upload foto + seriale (nuovo, oc:8166)</p>
+    <div class="wf-phone" id="phone-8">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Richiedi certificazione</div></div>
+      <div class="wf-scroll">
+        <div style="padding:12px 12px 4px;font-size:9.5px;color:#666;line-height:1.4;">Carica una foto della credenziale cartacea timbrata alle tappe percorse. La richiesta verrà revisionata dal gestore del cammino.</div>
+        <div style="margin:10px 12px 4px; font-size:9px;font-weight:700;color:#999;text-transform:uppercase;">Foto credenziale</div>
+        <div style="margin:0 12px; height:140px; border:2px dashed #2F9E44; border-radius:10px; background:#eaf7ee; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;">
+          <div style="font-size:22px;">📷</div>
+          <div style="font-size:9.5px;color:#1d6b30;font-weight:700;">Scatta foto o scegli dalla galleria</div>
+        </div>
+        <div style="margin:16px 12px 4px; font-size:9px;font-weight:700;color:#999;text-transform:uppercase;">Numero seriale <span style="color:#c0392b;font-weight:800;">*</span></div>
+        <div style="margin:0 12px; height:34px; border:1.5px solid #ccc; border-radius:8px; display:flex; align-items:center; padding:0 10px; font-size:10px; color:#999;">es. CG-2026-00341</div>
+        <div style="margin:4px 12px 0; font-size:8px;color:#999;">Obbligatorio solo per le credenziali dei nuovi cammini</div>
+      </div>
+      <div class="wf-actions">
+        <div class="wf-btn filled wf-tappable" onclick="wfGoTo('phone-9')">Invia richiesta</div>
+        <div class="wf-hint" style="padding:0;">Richiede login — mostrato solo a utenti autenticati</div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">V3 · Dettaglio — richiesta in revisione (nuovo, oc:8166)</p>
+    <div class="wf-phone" id="phone-9">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Cammino Grande di Celestino</div></div>
+      <div class="wf-big-ring" style="background:linear-gradient(rgba(255,255,255,.88),rgba(255,255,255,.88)),url(assets/celestino.jpg); background-size:cover; background-position:center;">
+        <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(#2F9E44 0deg 0deg,#e0ddd6 0deg 360deg);display:flex;align-items:center;justify-content:center;">
+          <div style="width:52px;height:52px;border-radius:50%;background:#fff url(assets/logo-celestino.webp) center/contain no-repeat;"></div>
+        </div>
+        <div class="head">0 di 12 tappe</div>
+        <div class="sub">Nessuna tappa registrata via GPS</div>
+      </div>
+      <!-- nuovo, oc:8166: CTA sostituita da chip neutro per evitare invii duplicati mentre la richiesta è pending — fuori da .wf-scroll, stessa posizione della CTA che sostituisce -->
+      <div class="wf-new" style="margin:10px; flex-shrink:0; display:flex; align-items:center; gap:8px; border-color:#c99b3f; background:#fdf3e0;">
+        <span class="wf-chip" style="background:#fbe4b0;color:#8a6412;">⏳ In revisione</span>
+        <span style="font-size:9px;color:#8a6412;">Inviata il 18 ago — riceverai un esito via email</span>
+      </div>
+      <div class="wf-scroll">
+        <div class="wf-check-row"><div class="icon todo">1</div><div style="font-size:10px;color:#999;flex:1">Tappa 01</div><div class="date">—</div></div>
+        <div class="wf-check-row"><div class="icon todo">2</div><div style="font-size:10px;color:#999;flex:1">Tappa 02</div><div class="date">—</div></div>
+        <div class="wf-check-row"><div class="icon todo">3</div><div style="font-size:10px;color:#999;flex:1">Tappa 03</div><div class="date">—</div></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Home</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div style="background:#fff;border-radius:10px;padding:14px 16px;margin-top:10px;max-width:600px">
+  <p style="font-size:11px;color:#2874a6;margin:0">Gli elementi con il cursore a manina sono cliccabili: aprono la schermata collegata evidenziandola con un bordo blu.</p>
+</div>
+</div>
+
+<script>
+function wfGoTo(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
+  el.classList.add('wf-flash');
+  setTimeout(function () { el.classList.remove('wf-flash'); }, 1400);
+}
+</script>
