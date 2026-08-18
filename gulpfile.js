@@ -860,9 +860,44 @@ function initCapacitor(instanceName, id, name) {
   info('Capacitor project initialized');
 }
 
+/**
+ * Legge lo shardName dall'environment.ts già scritto nell'istanza (da update())
+ * e restituisce, se esiste, il nome della build configuration corrispondente
+ * in angular.json — match esatto o "shardName inizia per <configuration>" per
+ * coprire varianti dev/prod dello stesso shard (es. "camminiditaliadev" →
+ * "camminiditalia"). Stessa logica di core/scripts/serve.js, qui applicata
+ * alla pipeline di build reale invece che a `ng serve` in locale.
+ */
+function matchBuildConfiguration(instanceName) {
+  const envPath = instancesDir + instanceName + '/src/environments/environment.ts';
+  const angularJsonPath = instancesDir + instanceName + '/angular.json';
+  if (!fs.existsSync(envPath) || !fs.existsSync(angularJsonPath)) return null;
+
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  const shardMatch = envContent.match(/shardName:\s*['"]([^'"]+)['"]/);
+  if (!shardMatch) return null;
+  const shardName = shardMatch[1];
+
+  const angularJson = JSON.parse(fs.readFileSync(angularJsonPath, 'utf8'));
+  const availableConfigurations = Object.keys(
+    angularJson.projects?.app?.architect?.build?.configurations ?? {},
+  );
+
+  if (availableConfigurations.includes(shardName)) return shardName;
+  const prefixMatches = availableConfigurations
+    .filter(name => shardName.startsWith(name))
+    .sort((a, b) => b.length - a.length);
+  return prefixMatches[0] ?? null;
+}
+
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
-  sh.exec('ionic build' + outputRedirect, {
+  const matchedConfiguration = matchBuildConfiguration(instanceName);
+  const configFlag = matchedConfiguration ? ' --configuration=' + matchedConfiguration : '';
+  if (matchedConfiguration && verbose) {
+    debug('Using build configuration "' + matchedConfiguration + '" for instance ' + instanceName);
+  }
+  sh.exec('ionic build' + configFlag + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
   if (verbose) debug('Ionic build completed');
