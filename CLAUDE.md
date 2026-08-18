@@ -159,6 +159,42 @@ Non fare mai rollback manuale della versione dopo che una PR di release-please �
 
 Angular 20 · Ionic 8 · Capacitor 7 · NgRx 20 · OpenLayers 7 · @ngx-translate · Swiper 12 · PostHog · Cypress 14
 
+## Personalizzazioni per-shard via fileReplacements
+
+Quando una feature richiede una UI strutturalmente diversa (non solo CSS) per un singolo shard/cliente (es. camminiditalia), **non modificare il file condiviso usato da tutti gli shard**. Usare invece il pattern `fileReplacements` di Angular, già esistente in `core/angular.json` per `environment.prod.ts` e per lo shard `stelvio`.
+
+### Come funziona
+
+1. **`fileReplacements` accetta solo `.ts`/`.js`/`.json`, mai `.html` direttamente** — vincolo di schema di Angular, verificato empiricamente (errore `Schema validation failed ... must match pattern`). Per sostituire un template, si sostituisce il file `.ts` del componente (che referenzia il template via `templateUrl`), non l'`.html` da solo.
+2. Creare un file gemello `<nome>.<shard>.ts` (stesso identico contenuto/logica del componente, `templateUrl` che punta a `<nome>.<shard>.html`) e il relativo `<nome>.<shard>.html`.
+3. **Il file originale non va mai modificato, nemmeno per farlo estendere da una classe base condivisa.** La variante `.<shard>.ts` duplica per intero la logica del file originale (stato, costruttore, metodi) — la duplicazione è il costo accettato per garantire che il file condiviso da tutti gli shard resti visivamente e strutturalmente identico a prima, senza introdurre dipendenze nuove (classi base, file aggiuntivi) che tutti gli altri shard si troverebbero comunque nel bundle. **Non estrarre una classe base in un terzo file**: è stato provato due volte in sessioni diverse (su `home.component.ts` e su `profile.page.ts`) e in entrambi i casi la scelta è stata scartata esplicitamente dal developer dopo revisione — preferenza confermata, non provvisoria.
+   - **Nota tecnica, utile solo se in futuro si tornasse a valutare l'estrazione**: la variante `.<shard>.ts` non può comunque importare la classe dal file originale (`import {X} from './x.component'`) per estenderla direttamente — `fileReplacements` reindirizza *qualsiasi* riferimento a quel path, quindi l'import diventerebbe circolare (punterebbe di nuovo a se stesso, errore TS2506 verificato empiricamente). Un'eventuale base condivisa richiederebbe comunque un terzo file mai soggetto a `fileReplacements` — ma la duplicazione resta l'opzione preferita per questo repo.
+4. Aggiungere una configuration in `core/angular.json` (sia su `architect.build.configurations` che su `architect.serve.configurations`):
+   ```json
+   "camminiditalia": {
+     "fileReplacements": [
+       {"replace": "src/app/pages/profile/profile.page.ts", "with": "src/app/pages/profile/profile.page.camminiditalia.ts"}
+     ]
+   }
+   ```
+5. Più `fileReplacements` per shard diversi convivono senza conflitto se toccano file diversi; più configuration si possono anche combinare con la virgola (`--configuration=production,camminiditalia`) se toccano file diversi tra loro.
+
+### Selezione automatica della configuration
+
+- **Dev locale**: `core/scripts/serve.js` (invocato da `npm start`) legge `shardName` da `src/environments/environment.ts` e sceglie automaticamente `--configuration` se esiste una configuration con match esatto o "shardName inizia per \<configuration\>" (copre `camminiditaliadev` → `camminiditalia`). Nessun flag da ricordare.
+- **Build native (app store)**: `gulpfile.js` → `runIonicBuild()` fa lo stesso match, leggendo lo `shardName` scritto da `update()` nell'`environment.ts` dell'istanza copiata (`instances/<nome>/`).
+- **Deploy web**: vedi vincolo sotto — non è automatico, richiede uno script/target di deploy dedicato.
+
+### Vincolo critico: il deploy web è condiviso multi-tenant
+
+`EnvironmentService.init()` (wm-core) decide lo shard **a runtime leggendo `window.location.hostname`** — l'`environment.ts` statico conta solo per `localhost`. Questo significa che **il deploy web (`mobile.webmapp.it`) è un solo bundle condiviso da tutti i clienti**: buildarlo con `--configuration=camminiditalia` pubblicherebbe il template dedicato a **tutti**, non solo a chi ha l'hostname di camminiditalia.
+
+Soluzione adottata: **deploy web dedicato e separato** per camminiditalia, con la propria build e il proprio target rsync (`core/scripts/deploy-to-web-camminiditalia.js`, output in `www-camminiditalia/` per non sovrascrivere `www/` del deploy generico). Vedi `## Feature disponibili` → riga "Deploy web dedicato camminiditalia".
+
+### Debito tecnico noto, scoperto testando questo pattern
+
+**`--configuration=production` non è applicabile oggi in nessuna build della pipeline** (native o web) — verificato empiricamente che la build fallisce con 19 errori di compilazione preesistenti (AOT/template type checking più stretto, mai eseguito finora perché `angular.json` ha `"defaultConfiguration": ""` sul target `build` e nessuno script della pipeline passa mai `--configuration=production`/`--prod`). Errori concentrati in `poi.page.html`, `favourites.page.html`, `downloaded-tracks-box.component.html` — non correlati a questo pattern, ma bloccanti se si prova ad abilitare `production`. Da affrontare in un ticket dedicato prima di poter accendere le ottimizzazioni di produzione (minify, AOT, `environment.prod.ts`) sia sul deploy condiviso che su quello dedicato.
+
 ## Feature disponibili
 
 | Feature | Ticket | Moduli toccati | Note |
