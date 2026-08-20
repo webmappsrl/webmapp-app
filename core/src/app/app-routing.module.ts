@@ -13,10 +13,6 @@ const routes: Routes = [
       import('./pages/favourites/favourites.module').then(m => m.FavouritesPageModule),
   },
   {
-    path: 'poi',
-    loadChildren: () => import('./pages/poi/poi.module').then(m => m.PoiPageModule),
-  },
-  {
     path: 'downloadlist',
     loadChildren: () =>
       import('./pages/downloadlist/downloadlist.module').then(m => m.DownloadlistPageModule),
