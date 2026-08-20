@@ -16,7 +16,7 @@ import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-import {beforeInit, setTransition, setTranslate} from '../poi/utils';
+import {beforeInit, setTransition, setTranslate} from './utils';
 import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
 import {LangService} from '@wm-core/localization/lang.service';
 import {LineString, MultiPolygon, Point} from 'geojson';
