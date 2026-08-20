@@ -4,6 +4,7 @@ import {from, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NavigationExtras} from '@angular/router';
 import {getEcTracks} from '@wm-core/utils/localForage';
+import {Hit} from '@wm-types/elastic';
 @Component({
   standalone: false,
   selector: 'downloaded-tracks-box',
@@ -13,15 +14,15 @@ import {getEcTracks} from '@wm-core/utils/localForage';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadedTracksBoxComponent {
-  tracks$: Observable<IHIT[]>;
+  tracks$: Observable<Hit[]>;
 
   constructor(private _navCtrl: NavController) {
     this.tracks$ = from(getEcTracks()).pipe(
-      map(t => t.map(track => track.properties as unknown as IHIT)),
+      map(t => t.map(track => track.properties as unknown as Hit)),
     );
   }
 
-  open(id: number): void {
+  open(id: number | string): void {
     if (id != null) {
       let navigationExtras: NavigationExtras = {
         queryParams: {
