@@ -112,5 +112,10 @@
     "ts-node": "~10.9.0",
     "typescript": "~5.8.0"
   },
-  "description": "The Webmapp App"
+  "description": "The Webmapp App",
+  "overrides": {
+    "@capacitor/assets": {
+      "node-html-parser": "^9.0.1"
+    }
+  }
 }
