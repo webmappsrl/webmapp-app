@@ -25,6 +25,9 @@
       *ngIf="properties?.description as description"
       [description]="description"
     ></wm-tab-description>
+
+    <wm-config-detail [groups]="properties?.config_detail"></wm-config-detail>
+
     <wm-poi-types-badges
       *ngIf="properties?.taxonomy?.poi_types as poiTypes"
       [poiTypes]="poiTypes"
