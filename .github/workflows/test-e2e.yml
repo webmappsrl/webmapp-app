@@ -36,12 +36,14 @@ jobs:
           if [ ! -f posthog.json ]; then
             echo '{ "POSTHOG_KEY": "", "POSTHOG_HOST": "" }' > posthog.json
           fi
-      - name: Inject appId in environment.ts
+      - name: Inject appId and shardName in environment.ts
         run: |
           sed -i '0,/appId: [0-9]\+/s//appId: 52/' core/src/environments/environment.ts
-      - name: Verify appId injection
+          sed -i "0,/shardName: '[a-zA-Z0-9]\+'/s//shardName: 'geohub'/" core/src/environments/environment.ts
+      - name: Verify appId and shardName injection
         run: |
           grep -q 'appId: 52' core/src/environments/environment.ts || (echo "ERROR: appId injection failed" && exit 1)
+          grep -q "shardName: 'geohub'" core/src/environments/environment.ts || (echo "ERROR: shardName injection failed" && exit 1)
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
       - name: Run Cypress E2E
