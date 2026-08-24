@@ -334,7 +334,7 @@ export class MapPage {
   }
 
   downloadOverlay(): void {
-    console.log('downloadOverlay');
+    // DEBUG: console.log('downloadOverlay');
     this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     setTimeout(() => {
       this.showDownload$.next(true);
@@ -380,7 +380,6 @@ export class MapPage {
         this.togglePoisDirective$.next(data.toggle);
         break;
     }
-    console.log(data);
   }
 
   togglePreviewTrack(): void {
