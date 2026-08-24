@@ -27,12 +27,6 @@
 <ion-content scrollY="false" class="webmapp-profile-container">
   <!-- Prova tecnica (POC): sostituisce integralmente profile.page.html a build-time
      per la build configuration "camminiditalia" (angular.json, fileReplacements). -->
-  <div
-    style="padding:16px;background:#eaf7ee;border:2px dashed #2F9E44;border-radius:8px;margin:10px;"
-  >
-    <strong>🥾 Profile dedicata camminiditalia (fileReplacements POC)</strong>
-    <p>Questo template sostituisce interamente profile.page.html a build-time.</p>
-  </div>
   <wm-profile-user></wm-profile-user>
   <ng-container *ngIf="confMAPHitMapUrl$|async;else nohitmap">
     <ng-container *ngIf="hitmapFeatures$|async as hitmapFeatures;">
