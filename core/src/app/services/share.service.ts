@@ -51,10 +51,6 @@ export class ShareService {
   public async share(shareObj: ShareObject) {
     const so = Object.assign(this.defaultShareObj, shareObj);
     let shareRet = await Share.share(so);
-    console.log(
-      '------- ~ file: share.service.ts ~ line 20 ~ ShareService ~ share ~ shareRet',
-      shareRet,
-    );
   }
 
   public sharePoiByID(poiId: number): void {

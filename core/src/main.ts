@@ -14,13 +14,14 @@ if (environment.production) {
   })();
 }
 
-console.log('🚀 Starting Angular app...');
+// DEBUG: console.log('🚀 Starting Angular app...');
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
-  .then(() => console.log('✅ Angular app bootstrapped successfully'))
+  .then(() => {
+    // DEBUG: console.log('✅ Angular app bootstrapped successfully');
+  })
   .catch(err => {
     console.error('❌ Error bootstrapping Angular app:', err);
-    console.log(err);
   });
 
 // Call the element loader after the platform has been bootstrapped
