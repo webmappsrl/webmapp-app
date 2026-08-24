@@ -179,6 +179,17 @@ Quando una feature richiede una UI strutturalmente diversa (non solo CSS) per un
    ```
 5. Più `fileReplacements` per shard diversi convivono senza conflitto se toccano file diversi; più configuration si possono anche combinare con la virgola (`--configuration=production,camminiditalia`) se toccano file diversi tra loro.
 
+### Criterio di scelta: a quale componente applicare il replace (foglia vs genitore)
+
+Quando il componente da personalizzare vive in un albero con più antenati candidati (es. un componente foglia dentro un componente contenitore dentro una pagina), **il numero di entry in `angular.json` non è il criterio decisionale**: costa 2 righe di JSON per entry, è greppabile, non ha un costo di manutenzione reale nemmeno con 10-20 entry accumulate. Il costo reale di ogni replace è **quanta logica non correlata alla personalizzazione finisce duplicata** nella variante — quella logica deve essere mantenuta manualmente sincronizzata con l'originale per tutta la vita del progetto, e più è grande il componente sostituito più cresce la superficie a rischio di disallineamento silenzioso.
+
+Regola pratica (confermata su oc:8391):
+
+1. **Mappa tutti i punti di montaggio** del componente target nell'albero, prima di scegliere il livello.
+2. **Se il target è montato in più punti "fratelli"** (nessun antenato comune se non il target stesso o la radice dell'app) **e la personalizzazione deve valere su tutti**: l'unico punto di sostituzione che li coprirà tutti è il componente target stesso (o il più basso antenato comune, se esiste) — salire più in alto in questo caso non riduce le entry, le moltiplica (una per ciascun punto di montaggio da coprire separatamente, dato che i genitori sono diversi e non condividono codice).
+3. **Se il target è montato in un solo punto** (quindi esiste una scelta reale tra foglia e genitore), preferisci di default la **foglia**: il genitore quasi sempre porta con sé responsabilità estranee alla personalizzazione (routing, stato, altri figli non toccati) che finiscono comunque duplicate e sincronizzate a mano. Sali di livello solo se: (a) la personalizzazione richiede di cambiare anche il template/logica del genitore stesso, non solo di un suo figlio, oppure (b) più personalizzazioni coordinate su più figli fratelli per lo stesso shard sarebbero più incoerenti gestite come replace indipendenti che come un unico genitore duplicato.
+4. **Segnale d'allarme**: se la motivazione per salire di livello è "così ho meno righe in `angular.json`" o "faccio prima", è quasi sempre la scelta sbagliata — si scambia un costo piccolo e visibile (poche righe di config) con un costo invisibile e crescente (superficie di codice duplicato).
+
 ### Selezione automatica della configuration
 
 - **Dev locale**: `core/scripts/serve.js` (invocato da `npm start`) legge `shardName` da `src/environments/environment.ts` e sceglie automaticamente `--configuration` se esiste una configuration con match esatto o "shardName inizia per \<configuration\>" (copre `camminiditaliadev` → `camminiditalia`). Nessun flag da ricordare.
