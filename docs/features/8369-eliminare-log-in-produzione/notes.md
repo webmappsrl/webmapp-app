@@ -4,7 +4,9 @@
 
 ## Deviazioni dal piano
 
-Nessuna deviazione — tutte le modifiche seguono esattamente le tabelle di classificazione di `plan.md`, verificate riga per riga dopo l'esecuzione.
+Tutte le modifiche seguono esattamente le tabelle di classificazione di `plan.md`, verificate riga per riga dopo l'esecuzione.
+
+Deviazione post-review (`wm-skills:wm-review-ticket`, confermata dal developer): `main.ts:25` (`console.log(err)` duplicato del `console.error` alla riga precedente, stesso `catch`) — cancellato su richiesta esplicita del developer, nonostante la regola generale ("qualsiasi console.* in catch resta intatto") lo avrebbe lasciato invariato. Nessun impatto sul comportamento in produzione (era già silenziato dall'override di `main.ts`).
 
 ## Bug trovati
 
