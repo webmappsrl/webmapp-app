@@ -4,15 +4,13 @@
  * con lo stesso bundle — EnvironmentService decide lo shard a runtime leggendo
  * l'hostname (vedi wm-core/projects/wm-core/src/services/environment.service.ts).
  *
- * NOTA: --configuration=production NON è applicabile oggi — verificato che la
- * build fallisce con 19 errori di compilazione preesistenti (AOT/template type
- * checking più stretto, mai eseguito finora su questo repo perché nessuna build
- * ha mai usato --configuration=production). Va risolto come lavoro a parte,
- * prima di riprovare ad abilitarlo.
+ * --configuration=production: gli errori di compilazione che bloccavano questa
+ * configuration sono stati risolti da oc:8382 (dead code PoiPage, tipo IHIT,
+ * collisione dipendenze domhandler); build verificata pulita su questo branch.
  */
 const {run} = require('./lib/run');
 
 const RSYNC_ARGS = ['-av', '--exclude', 'assets'];
 
-run('ionic', ['build']);
+run('ionic', ['build', '--configuration=production']);
 run('rsync', [...RSYNC_ARGS, './www/*', 'server:/var/www/html/mobile.webmapp.it/']);

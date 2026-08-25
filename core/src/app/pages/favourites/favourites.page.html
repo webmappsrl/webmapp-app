@@ -5,7 +5,7 @@
     </ion-title>
   </ion-toolbar>
   <ion-toolbar *ngIf="showLayersSegment$|async">
-    <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($event.detail.value)">
+    <ion-segment [value]="selectedSegment" (ionChange)="onSegmentChange($any($event.detail.value))">
       <ion-segment-button value="layers">
         <ion-label>{{'Layers' | wmtrans}}</ion-label>
       </ion-segment-button>

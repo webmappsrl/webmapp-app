@@ -10,12 +10,21 @@
  * --output-path=www-camminiditalia: cartella separata da www/ per non
  * sovrascrivere l'output della build generica quando i due script girano
  * in sequenza (vedi deploy-to-web.js).
+ *
+ * --configuration=production,camminiditalia: combinazione mai testata prima
+ * di oc:8382 (che aveva verificato solo "production" da solo); build
+ * verificata pulita su questo branch dopo il merge del fix.
  */
 const {run} = require('./lib/run');
 
 const RSYNC_ARGS = ['-av', '--exclude', 'assets'];
 
-run('ionic', ['build', '--configuration=camminiditalia', '--', '--output-path=www-camminiditalia']);
+run('ionic', [
+  'build',
+  '--configuration=production,camminiditalia',
+  '--',
+  '--output-path=www-camminiditalia',
+]);
 run('rsync', [
   ...RSYNC_ARGS,
   './www-camminiditalia/*',
