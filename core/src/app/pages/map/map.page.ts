@@ -17,7 +17,7 @@ import {ShareService} from 'src/app/services/share.service';
 import {UgcTrackShareResult} from '@wm-core/ugc-track-properties/ugc-track-properties.component';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
-import {beforeInit, setTransition, setTranslate} from '../poi/utils';
+import {beforeInit, setTransition, setTranslate} from './utils';
 import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
 import {LangService} from '@wm-core/localization/lang.service';
 import {LineString, MultiPolygon, Point} from 'geojson';
@@ -344,7 +344,7 @@ export class MapPage {
   }
 
   downloadOverlay(): void {
-    console.log('downloadOverlay');
+    // DEBUG: console.log('downloadOverlay');
     this._store.dispatch(setMapDetailsStatus({status: 'background'}));
     setTimeout(() => {
       this.showDownload$.next(true);
@@ -408,7 +408,6 @@ export class MapPage {
         this.togglePoisDirective$.next(data.toggle);
         break;
     }
-    console.log(data);
   }
 
   togglePreviewTrack(): void {

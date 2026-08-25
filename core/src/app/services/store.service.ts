@@ -32,7 +32,6 @@ export class StoreService {
   ) { }
 
   async buy(coinQuantity: number): Promise<boolean> {
-    console.log("------- ~ StoreService ~ buy ~ coinQuantity", coinQuantity);
     let success = false;
 
     // TODO buy coins

@@ -1018,8 +1018,8 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
         gulp
           .src(variablesGradlePath)
           .pipe(replace(/minSdkVersion = ([0-9]{2})/g, 'minSdkVersion = 28'))
-          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 35'))
-          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 35'))
+          .pipe(replace(/compileSdkVersion = ([0-9]{2})/g, 'compileSdkVersion = 36'))
+          .pipe(replace(/targetSdkVersion = ([0-9]{2})/g, 'targetSdkVersion = 36'))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/'))
           .on('end', () => {
             if (verbose) debug('variables.gradle updated successfully');

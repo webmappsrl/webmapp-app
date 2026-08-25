@@ -102,18 +102,18 @@ export class SettingsComponent {
     try {
       // Cancella Local Storage
       localStorage.clear();
-      console.log('Local storage cleared');
+      // DEBUG: console.log('Local storage cleared');
 
       // Cancella Session Storage
       sessionStorage.clear();
-      console.log('Session storage cleared');
+      // DEBUG: console.log('Session storage cleared');
 
       // Cancella IndexedDB
       const dbs = await window.indexedDB.databases();
       for (const db of dbs) {
         if (db.name) {
           window.indexedDB.deleteDatabase(db.name);
-          console.log(`IndexedDB ${db.name} deleted`);
+          // DEBUG: console.log(`IndexedDB ${db.name} deleted`);
         }
       }
 
@@ -122,7 +122,7 @@ export class SettingsComponent {
         const keys = await caches.keys();
         for (const key of keys) {
           await caches.delete(key);
-          console.log(`Cache ${key} deleted`);
+          // DEBUG: console.log(`Cache ${key} deleted`);
         }
       }
 
@@ -131,10 +131,10 @@ export class SettingsComponent {
         const eqPos = cookie.indexOf('=');
         const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-        console.log(`Cookie ${name} deleted`);
+        // DEBUG: console.log(`Cookie ${name} deleted`);
       });
 
-      console.log('WebView data cleared');
+      // DEBUG: console.log('WebView data cleared');
     } catch (error) {
       console.error('Error clearing WebView data', error);
     }
