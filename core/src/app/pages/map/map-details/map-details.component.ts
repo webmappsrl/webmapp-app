@@ -18,11 +18,12 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {mapDetailsStatus as TMapDetailsStatus} from '@wm-core/store/user-activity/user-activity.reducer';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {debounceTime, skip} from 'rxjs/operators';
-import {DETAILS_ANIMATION_DURATION, MAP_DETAILS_CONTENT_RESIZE_DEBOUNCE_MS} from 'src/app/constants/map';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {skip} from 'rxjs/operators';
+import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 
 import {computeTargetHeight} from './map-details-height.util';
+import {ConfigDetailToggleEvent} from '@wm-types/config';
 
 @Component({
   standalone: false,
@@ -39,10 +40,20 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   private _initialStep: number = 1;
   private _started: boolean = false;
   private _currentStatus: TMapDetailsStatus = 'background';
-  private _gestureActive: boolean = false;
-  private _resizeObserver: ResizeObserver;
-  private _contentResize$ = new Subject<void>();
-  private _contentResizeSub: Subscription;
+  private _subscriptions = new Subscription();
+  /**
+   * Catena di promise su cui si accoda OGNI animazione di altezza del pannello — sia il resize
+   * content-fit di `_applyHeightForStatus()` sia le transizioni di stato esplicite di
+   * `background()`/`onlyTitle()` — per non chiamare mai `Animation.destroy()` (dentro
+   * `setAnimations()`) su un'animazione ancora `.play()`-ata da un'altra chiamata in corso.
+   * `Animation.destroy()` non chiama mai `stop()` (verificato nel sorgente Ionic): se questo
+   * accadesse, la Promise di quel `play()` non si risolverebbe più, `_runPendingResize()`
+   * resterebbe sospeso per sempre, e con esso l'intera catena — ogni `open()`/`full()` successivo
+   * per il resto della sessione resterebbe accodato dietro una Promise mai risolta. Vedi
+   * `_enqueueAnimation()` (oc:8427, review: bug reale trovato e corretto qui).
+   */
+  private _resizeChain: Promise<void> = Promise.resolve();
+  private _pendingResizeRequest: {status: 'open' | 'full'; instant: boolean} | null = null;
 
   @Output() closeEVT: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('dragHandleIcon') dragHandleIcon: ElementRef;
@@ -67,39 +78,46 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.setAnimations();
     this._setGesture();
-    this._contentResizeSub = this._contentResize$
-      .pipe(debounceTime(MAP_DETAILS_CONTENT_RESIZE_DEBOUNCE_MS))
-      .subscribe(() => this._applyContentResize());
-    this._resizeObserver = new ResizeObserver(() => this._contentResize$.next());
-    if (this.contentWrapperRef?.nativeElement != null) {
-      this._resizeObserver.observe(this.contentWrapperRef.nativeElement);
-    }
-    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
-      if (featureopened) {
-        this._store.dispatch(setMapDetailsStatus({status: 'open'}));
-      }
-    });
-    this._store.select(mapDetailsStatus).subscribe(status => {
-      this._currentStatus = status;
-      switch (status) {
-        case 'open':
-          this.open();
-          break;
-        case 'onlyTitle':
-          this.onlyTitle();
-          break;
-        case 'background':
-          this.background();
-          break;
-        case 'full':
-          this.full();
-          break;
-      }
-    });
+    this._subscriptions.add(
+      this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
+        if (featureopened) {
+          this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+        }
+      }),
+    );
+    this._subscriptions.add(
+      this._store.select(mapDetailsStatus).subscribe(status => {
+        this._currentStatus = status;
+        switch (status) {
+          case 'open':
+            this.open();
+            break;
+          case 'onlyTitle':
+            this.onlyTitle();
+            break;
+          case 'background':
+            this.background();
+            break;
+          case 'full':
+            this.full();
+            break;
+        }
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
   }
 
   background(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '0px');
+    // Transizione di stato esplicita: annulla un eventuale resize di contenuto ancora solo
+    // accodato (non avrebbe più senso una volta nascosto il pannello), ma va comunque accodata
+    // sulla stessa `_resizeChain` — mai chiamare `setAnimations()` direttamente qui: se un resize
+    // precedente sta ancora animando, chiamarla in parallelo distruggerebbe la sua animazione in
+    // corso e bloccherebbe la catena per sempre (vedi commento su `_resizeChain`, oc:8427).
+    this._pendingResizeRequest = null;
+    this._enqueueAnimation(() => this.setAnimations(`${this._getCurrentHeight()}px`, '0px'));
     this.isOpen$.next(false);
   }
 
@@ -119,7 +137,10 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   }
 
   onlyTitle(): void {
-    this.setAnimations(`${this._getCurrentHeight()}px`, '60px');
+    // Stesso motivo di `background()`: transizione di stato esplicita, non content-fit — ma
+    // sempre accodata su `_resizeChain`, mai un `setAnimations()` diretto (oc:8427).
+    this._pendingResizeRequest = null;
+    this._enqueueAnimation(() => this.setAnimations(`${this._getCurrentHeight()}px`, '60px'));
     this.isOpen$.next(true);
   }
 
@@ -129,9 +150,37 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Anima l'altezza dell'host da `from` a `to`. Se `instant` è true (usato solo dal
-   * ridimensionamento automatico via ResizeObserver quando prefers-reduced-motion è
-   * attivo), la transizione avviene senza animazione (durata 0).
+   * Riceve `configDetailSettled` — un evento DOM nativo dispacciato da `wm-config-detail`
+   * (bubbling attraverso il contenuto proiettato di questo pannello: `wm-home-layer`/
+   * `wm-track-properties`/`wm-poi-properties`, un solo binding su questo stesso tag in
+   * `map.page.html` copre tutti e 3 i consumer, nessun pass-through intermedio necessario).
+   *
+   * Il pannello NON si ridimensiona più in risposta a questo evento (né a nessun altro cambio di
+   * dimensione del contenuto proiettato): una volta raggiunto uno stato (`'open'`/`'full'`), la sua
+   * altezza resta quella calcolata all'ingresso in quello stato finché non se ne cambia
+   * esplicitamente un altro — decisione del developer per eliminare alla radice lo scatto
+   * su/giù percepibile quando il contenuto cambia dimensione mentre il pannello è già aperto
+   * (qualunque elemento animato al suo interno, non solo l'accordion di `wm-config-detail`,
+   * oc:8427). Qui resta solo lo scroll (solo in apertura, con il minimo movimento necessario —
+   * `block: 'nearest'` — e solo se l'header non è già interamente visibile, vedi
+   * `_isFullyInView()`).
+   *
+   * @param event Evento nativo dispacciato da `wm-config-detail`. Tipizzato `Event` (non
+   *   `ConfigDetailToggleEvent`) perché Angular non riconosce un nome-evento custom come un
+   *   `@Output()` reale sotto `strictTemplates` — il vero payload è nel `.detail`.
+   */
+  onConfigDetailSettled(event: Event): void {
+    const {opening, headerElement} = (event as CustomEvent<ConfigDetailToggleEvent>).detail;
+
+    if (opening && headerElement && !this._isFullyInView(headerElement)) {
+      headerElement.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+    }
+  }
+
+  /**
+   * Anima l'altezza dell'host da `from` a `to`. `instant` (durata 0, nessuna animazione visibile)
+   * non è oggi usato da alcun chiamante di questo repo, ma resta supportato per compatibilità con
+   * `_runPendingResize()`, che lo inoltra.
    */
   async setAnimations(from = '0px', to = '0px', instant = false) {
     await this._platform.ready();
@@ -174,16 +223,63 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Calcola e applica l'altezza target del pannello in base al contenuto reale
-   * misurato, per lo stato "open" o "full". La galleria immagini (wm-image-detail)
-   * è esclusa dal content-fit: è un visualizzatore a schermo intero che deve sempre
-   * riempire lo spazio disponibile (tetto massimo), non adattarsi al contenuto —
-   * misurarla comunque reintrodurrebbe il rischio di loop del ResizeObserver, dato
-   * che la sua altezza CSS è percentuale e quindi già agganciata all'altezza animata
-   * del pannello (vedi map-details.component.scss).
+   * Calcola e applica l'altezza target del pannello in base al contenuto reale misurato AL
+   * MOMENTO DELL'INGRESSO nello stato "open" o "full" — chiamato solo da `open()`/`full()`, mai
+   * automaticamente in risposta a un cambio successivo del contenuto proiettato (oc:8427): una
+   * volta calcolata, l'altezza resta quella finché non si cambia esplicitamente stato. La galleria
+   * immagini (wm-image-detail) è esclusa dal content-fit: è un visualizzatore a schermo intero che
+   * deve sempre riempire lo spazio disponibile (tetto massimo), non adattarsi al contenuto — la
+   * sua altezza CSS è percentuale, agganciata all'altezza animata del pannello (vedi
+   * map-details.component.scss).
+   *
+   * Se un resize di questo tipo è già in corso, la nuova richiesta viene accodata sulla stessa
+   * catena di promise (`_resizeChain`, vedi `_enqueueAnimation()`) invece di interrompere quello
+   * in corso — mai chiamare `Animation.destroy()` su un'animazione ancora in corso generata da
+   * questo metodo.
+   *
+   * Più richieste ravvicinate si "coalescono": `_pendingResizeRequest` tiene solo l'ultima, quindi
+   * se ne arrivano diverse prima che la catena arrivi a eseguirle, verrà applicata solo la più
+   * recente (con una misura fresca del contenuto al momento dell'esecuzione, non quella — ormai
+   * stale — del momento della richiesta). La Promise restituita a OGNI chiamante si risolve solo
+   * quando il resize realmente eseguito (il proprio, o quello più recente che l'ha soppiantato) è
+   * concluso — mai prima, per non risolvere un eventuale chiamante in attesa prima che il resize
+   * sia davvero completato.
    */
-  private _applyHeightForStatus(status: 'open' | 'full', instant = false): void {
-    const ceiling = this._resizeCeilingForStatus(status);
+  private _applyHeightForStatus(status: 'open' | 'full', instant = false): Promise<void> {
+    this._pendingResizeRequest = {status, instant};
+    return this._enqueueAnimation(() => this._runPendingResize());
+  }
+
+  /**
+   * Accoda `work` sulla stessa `_resizeChain` usata da `_applyHeightForStatus()`, così qualunque
+   * animazione di altezza del pannello (resize content-fit o transizione di stato esplicita da
+   * `background()`/`onlyTitle()`) è sempre serializzata rispetto alle altre — mai eseguita mentre
+   * un'altra sta ancora animando (vedi commento su `_resizeChain`). Un eventuale errore in `work`
+   * viene loggato e non propagato: senza questo `.catch()`, un solo reject "avvelenerebbe" la
+   * catena per il resto della sessione, bloccando silenziosamente ogni richiesta di resize
+   * successiva (stesso sintomo del bug corretto qui, per una causa diversa).
+   *
+   * @param work Funzione che esegue l'animazione e ne restituisce la Promise di completamento.
+   * @returns Promise che si risolve quando `work` (o quello più recente che l'ha soppiantato in
+   *   coda) è concluso.
+   */
+  private _enqueueAnimation(work: () => Promise<void>): Promise<void> {
+    this._resizeChain = this._resizeChain.then(work).catch(err => {
+      console.error('[MapDetailsComponent] animazione di resize del pannello fallita', err);
+    });
+    return this._resizeChain;
+  }
+
+  /**
+   * Esegue l'ultima richiesta di resize accodata (`_pendingResizeRequest`), se ce n'è ancora una
+   * da eseguire — un link della catena successivo a uno che l'ha già consumata e soppiantata
+   * (coalescenza, vedi `_applyHeightForStatus()`) non fa nulla.
+   */
+  private async _runPendingResize(): Promise<void> {
+    const request = this._pendingResizeRequest;
+    if (request == null) return;
+    this._pendingResizeRequest = null;
+    const ceiling = this._resizeCeilingForStatus(request.status);
     const target = this._isGalleryContentActive()
       ? ceiling
       : computeTargetHeight(
@@ -192,7 +288,7 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
           this.minInfoheight,
           ceiling,
         );
-    this.setAnimations(`${this._getCurrentHeight()}px`, `${target}px`, instant);
+    await this.setAnimations(`${this._getCurrentHeight()}px`, `${target}px`, request.instant);
   }
 
   /** true se il contenuto proiettato è la galleria immagini a schermo intero. */
@@ -226,34 +322,30 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
     return parseFloat(raw) || 0;
   }
 
-  /** true se l'utente ha richiesto animazioni ridotte a livello di sistema operativo. */
-  private _prefersReducedMotion(): boolean {
-    return (
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true
-    );
-  }
-
-  ngOnDestroy(): void {
-    this._resizeObserver?.disconnect();
-    this._contentResizeSub?.unsubscribe();
-  }
-
   /**
-   * Reagisce a una variazione di altezza del contenuto rilevata dal ResizeObserver
-   * (debounced). Non fa nulla mentre una gesture è in corso, o se lo stato corrente
-   * non è "full" — "open" ha floor e tetto massimo coincidenti (minInfoheight), quindi
-   * il suo target non dipende mai dal contenuto: rieseguire l'animazione per "open"
-   * sarebbe un'operazione ridondante (nessun cambio di target) il cui solo effetto
-   * visibile è un restart superfluo dell'animazione in corso o appena conclusa.
+   * Verifica se `el` è già interamente visibile all'interno del proprio antenato scrollabile più
+   * vicino — evita uno scroll percepito come superfluo quando l'item appena aperto è già in vista
+   * (oc:8427).
+   *
+   * Copia identica in `wm-core/projects/wm-core/src/home/home.component.ts` (stesso scopo, per il
+   * contesto Home invece che per il pannello Mappa): se correggi un edge-case qui, applica lo
+   * stesso fix anche là.
+   *
+   * @param el Elemento da verificare.
+   * @returns `true` se `el` è già completamente contenuto nel viewport del proprio scroll parent.
    */
-  private _applyContentResize(): void {
-    if (this._gestureActive) {
-      return;
+  private _isFullyInView(el: HTMLElement): boolean {
+    let parent: HTMLElement | null = el.parentElement;
+    while (parent && parent !== document.body) {
+      const style = getComputedStyle(parent);
+      if (/(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight) {
+        break;
+      }
+      parent = parent.parentElement;
     }
-    if (this._currentStatus === 'full') {
-      this._applyHeightForStatus('full', this._prefersReducedMotion());
-    }
+    const containerRect = (parent ?? document.documentElement).getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    return elRect.top >= containerRect.top && elRect.bottom <= containerRect.bottom;
   }
 
   private _getCurrentHeight(): number {
@@ -269,7 +361,6 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
       passive: false,
       onStart: ev => {
         ev.event?.preventDefault();
-        this._gestureActive = true;
         // Solo da 'full' si torna a 'open' (collassa dall'espanso al normale).
         // Da qualunque altro stato — inclusi 'background' (es. dopo backOfMapDetails$/
         // goToHome$) e 'onlyTitle' — si espande a 'full', fedele al comportamento
@@ -282,7 +373,6 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
       },
       onEnd: ev => {
         ev.event?.preventDefault();
-        this._gestureActive = false;
       },
     });
 
