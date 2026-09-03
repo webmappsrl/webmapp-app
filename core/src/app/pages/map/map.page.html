@@ -5,11 +5,7 @@
   [class.register-panel-enabled]="enableRecorderPanel$|async"
 >
   <wm-geobox-map #geoboxMap (openPopupEVT)="openPopup($event)">
-    <wm-map-details
-      #details
-      (closeEVT)="close()"
-      (configDetailSettled)="details.onConfigDetailSettled($event)"
-    >
+    <wm-map-details #details (closeEVT)="close()">
       <ng-container *ngIf="showMapDetailsContent$|async">
         <div header *ngIf="(currentEcImageGalleryIndex$|async) == null">
           <div class="webmapp-info-header-container">
