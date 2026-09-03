@@ -178,6 +178,37 @@ describe('config_detail boxes are rendered on Layer, EcTrack and EcPoi details (
       .and('contain.html', configDetailGroups[0].items[0].content.en);
   });
 
+  it('keeps multiple config_detail items open at the same time (oc:8458)', () => {
+    clearTestState();
+    mockGetTrack('86095', ec_track_properties_with_config_detail).as('getApiTrack');
+    cy.visit('/');
+    goHome(false);
+
+    openLayer(data.layers.ecTrack);
+    openTrack(data.tracks.exampleOne);
+    cy.wait('@getApiTrack');
+
+    cy.get('wm-map-details wm-track-properties wm-config-detail .wm-config-detail-item')
+      .eq(0)
+      .find('.wm-config-detail-header')
+      .click();
+    cy.get('wm-map-details wm-track-properties wm-config-detail .wm-config-detail-item')
+      .eq(1)
+      .find('.wm-config-detail-header')
+      .click();
+
+    cy.get('wm-map-details wm-track-properties wm-config-detail .wm-config-detail-content')
+      .should('have.length', 2);
+    cy.get('wm-map-details wm-track-properties wm-config-detail .wm-config-detail-item')
+      .eq(0)
+      .find('.wm-config-detail-content')
+      .should('contain.html', configDetailGroups[0].items[0].content.en);
+    cy.get('wm-map-details wm-track-properties wm-config-detail .wm-config-detail-item')
+      .eq(1)
+      .find('.wm-config-detail-content')
+      .should('contain.html', configDetailGroups[0].items[1].content.en);
+  });
+
   it('renders config_detail as a closed-by-default accordion on the EcPoi detail', () => {
     clearTestState();
     mockGetPoi(ec_poi_with_config_detail).as('getPoi');

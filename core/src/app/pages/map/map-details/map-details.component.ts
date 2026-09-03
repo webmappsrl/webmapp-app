@@ -23,7 +23,6 @@ import {skip} from 'rxjs/operators';
 import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 
 import {computeTargetHeight} from './map-details-height.util';
-import {ConfigDetailToggleEvent} from '@wm-types/config';
 
 @Component({
   standalone: false,
@@ -147,34 +146,6 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
   open(): void {
     this._applyHeightForStatus('open');
     this.isOpen$.next(true);
-  }
-
-  /**
-   * Riceve `configDetailSettled` — un evento DOM nativo dispacciato da `wm-config-detail`
-   * (bubbling attraverso il contenuto proiettato di questo pannello: `wm-home-layer`/
-   * `wm-track-properties`/`wm-poi-properties`, un solo binding su questo stesso tag in
-   * `map.page.html` copre tutti e 3 i consumer, nessun pass-through intermedio necessario).
-   *
-   * Il pannello NON si ridimensiona più in risposta a questo evento (né a nessun altro cambio di
-   * dimensione del contenuto proiettato): una volta raggiunto uno stato (`'open'`/`'full'`), la sua
-   * altezza resta quella calcolata all'ingresso in quello stato finché non se ne cambia
-   * esplicitamente un altro — decisione del developer per eliminare alla radice lo scatto
-   * su/giù percepibile quando il contenuto cambia dimensione mentre il pannello è già aperto
-   * (qualunque elemento animato al suo interno, non solo l'accordion di `wm-config-detail`,
-   * oc:8427). Qui resta solo lo scroll (solo in apertura, con il minimo movimento necessario —
-   * `block: 'nearest'` — e solo se l'header non è già interamente visibile, vedi
-   * `_isFullyInView()`).
-   *
-   * @param event Evento nativo dispacciato da `wm-config-detail`. Tipizzato `Event` (non
-   *   `ConfigDetailToggleEvent`) perché Angular non riconosce un nome-evento custom come un
-   *   `@Output()` reale sotto `strictTemplates` — il vero payload è nel `.detail`.
-   */
-  onConfigDetailSettled(event: Event): void {
-    const {opening, headerElement} = (event as CustomEvent<ConfigDetailToggleEvent>).detail;
-
-    if (opening && headerElement && !this._isFullyInView(headerElement)) {
-      headerElement.scrollIntoView({block: 'nearest', behavior: 'smooth'});
-    }
   }
 
   /**
@@ -320,32 +291,6 @@ export class MapDetailsComponent implements AfterViewInit, OnDestroy {
       .getPropertyValue('--ion-safe-area-top')
       .trim();
     return parseFloat(raw) || 0;
-  }
-
-  /**
-   * Verifica se `el` è già interamente visibile all'interno del proprio antenato scrollabile più
-   * vicino — evita uno scroll percepito come superfluo quando l'item appena aperto è già in vista
-   * (oc:8427).
-   *
-   * Copia identica in `wm-core/projects/wm-core/src/home/home.component.ts` (stesso scopo, per il
-   * contesto Home invece che per il pannello Mappa): se correggi un edge-case qui, applica lo
-   * stesso fix anche là.
-   *
-   * @param el Elemento da verificare.
-   * @returns `true` se `el` è già completamente contenuto nel viewport del proprio scroll parent.
-   */
-  private _isFullyInView(el: HTMLElement): boolean {
-    let parent: HTMLElement | null = el.parentElement;
-    while (parent && parent !== document.body) {
-      const style = getComputedStyle(parent);
-      if (/(auto|scroll)/.test(style.overflowY) && parent.scrollHeight > parent.clientHeight) {
-        break;
-      }
-      parent = parent.parentElement;
-    }
-    const containerRect = (parent ?? document.documentElement).getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    return elRect.top >= containerRect.top && elRect.bottom <= containerRect.bottom;
   }
 
   private _getCurrentHeight(): number {
