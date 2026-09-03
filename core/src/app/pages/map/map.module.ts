@@ -3,7 +3,6 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
 
-import {PoiPropetiesModule} from 'src/app/components/poi-properties/poi-properties.module';
 import {ButtonsModule} from 'src/app/components/shared/buttons/buttons.module';
 import {SharedModule} from 'src/app/components/shared/shared.module';
 import {WmMapModule} from 'src/app/shared/map-core/src/map-core.module';
@@ -29,7 +28,6 @@ import {PoiRecorderModule} from 'src/app/components/poi-recorder-component/poi-r
     SharedModule,
     WmMapModule,
     ButtonsModule,
-    PoiPropetiesModule,
     TrackRecorderModule,
     PoiRecorderModule,
     WmCoreModule,
