@@ -150,6 +150,7 @@
             "include": [
               "src/app/services",
               "src/app/pages/favourites",
+              "src/app/pages/home",
               "src/app/pages/map/map-details"
             ],
             "stylePreprocessorOptions": {
