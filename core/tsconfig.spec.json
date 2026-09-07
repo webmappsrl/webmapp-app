@@ -13,6 +13,8 @@
   ],
   "include": [
     "src/app/services/**/*.spec.ts",
+    "src/app/pages/home/**/*.spec.ts",
+    "src/app/pages/map/map-details/**/*.spec.ts",
     "src/**/*.d.ts"
   ]
 }
