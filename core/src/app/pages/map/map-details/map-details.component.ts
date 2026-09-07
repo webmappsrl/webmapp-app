@@ -17,7 +17,6 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus} from '@wm-core/store/user-activity/user-activity.selector';
 import {BehaviorSubject} from 'rxjs';
-import {skip} from 'rxjs/operators';
 import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
 
 @Component({
@@ -56,7 +55,11 @@ export class MapDetailsComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.setAnimations();
     this._setGesture();
-    this._featureOpened$.pipe(skip(1)).subscribe(featureopened => {
+    // Niente skip(1): se il feature (poi/track) è già "aperto" nello store al momento
+    // del mount — es. selezionato da un deep-link/query-param iniziale, prima che questo
+    // componente esistesse — il pannello deve aprirsi comunque, non solo su una
+    // transizione false->true osservata *dopo* la subscription (oc:8470).
+    this._featureOpened$.subscribe(featureopened => {
       if (featureopened) {
         this._store.dispatch(setMapDetailsStatus({status: 'open'}));
       }
