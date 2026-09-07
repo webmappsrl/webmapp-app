@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {IonInfiniteScroll} from '@ionic/angular';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {NavigationExtras, Router} from '@angular/router';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {confOPTIONSShowFavorites} from '@wm-core/store/conf/conf.selector';
@@ -14,8 +15,10 @@ import {UrlHandlerService} from '@wm-core/services/url-handler.service';
   templateUrl: './favourites.page.html',
   styleUrls: ['./favourites.page.scss'],
 })
-export class FavouritesPage implements OnInit {
+export class FavouritesPage implements OnInit, OnDestroy {
   private page: number = 0;
+  private _userSelectedSegmentManually = false;
+  private _destroy$: Subject<void> = new Subject<void>();
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -32,11 +35,36 @@ export class FavouritesPage implements OnInit {
     private _urlHandlerSvc: UrlHandlerService,
   ) {}
 
+  /**
+   * Tiene selectedSegment sincronizzato con showLayersSegment$ finché l'utente
+   * non sceglie un tab manualmente (onSegmentChange). Non usa un gate "conf
+   * caricata" a parte: showLayersSegment$ è già `false` finché la config reale
+   * non arriva (default OPTIONS senza showFavorites, oc:8465), quindi seguire
+   * direttamente il suo valore copre sia il cold start sia la doppia emissione
+   * cache+fresh di getConf() (un "loaded=true" latch si fermerebbe alla prima
+   * emissione, anche se dalla cache stale) — e riporta a 'tracks' se il flag
+   * torna false, evitando un vicolo cieco senza switch per tornare indietro.
+   */
+  private _syncDefaultSegment(): void {
+    this.showLayersSegment$.pipe(takeUntil(this._destroy$)).subscribe(showLayers => {
+      if (!this._userSelectedSegmentManually) {
+        this.selectedSegment = showLayers ? 'layers' : 'tracks';
+      }
+    });
+  }
+
   async ngOnInit() {
+    this._syncDefaultSegment();
     this.doRefresh(null);
   }
 
+  ngOnDestroy(): void {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
+
   onSegmentChange(segment: 'tracks' | 'layers'): void {
+    this._userSelectedSegmentManually = true;
     this.selectedSegment = segment;
   }
 
