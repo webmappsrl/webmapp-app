@@ -9,6 +9,9 @@ import {loadConf} from '@wm-core/store/conf/conf.actions';
 import {online} from '@wm-core/store/network/network.selector';
 import {currentEcLayer, ugcOpened} from '@wm-core/store/user-activity/user-activity.selector';
 import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {currentEcTrack, currentEcPoi} from '@wm-core/store/features/ec/ec.selector';
+
+const isNotNull = <T>(value: T): boolean => value != null;
 
 @Component({
   standalone: false,
@@ -21,6 +24,8 @@ import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 export class HomePage {
   private _backBtnSub$: Subscription = Subscription.EMPTY;
   private _currentLayer$ = this._store.select(currentEcLayer);
+  private _currentTrack$ = this._store.select(currentEcTrack);
+  private _currentPoi$ = this._store.select(currentEcPoi);
   private _ugcOpened$ = this._store.select(ugcOpened);
 
   online$: Observable<boolean> = this._store.select(online).pipe(
@@ -39,7 +44,9 @@ export class HomePage {
   ) {
     // TODO: creare uno store della app e gestire questo caso come effect del repo app
     merge(
-      this._currentLayer$.pipe(filter(l => l != null)),
+      this._currentLayer$.pipe(filter(isNotNull)),
+      this._currentTrack$.pipe(filter(isNotNull)),
+      this._currentPoi$.pipe(filter(isNotNull)),
       this._ugcOpened$.pipe(filter(ugcOpened => ugcOpened != null && ugcOpened)),
     ).subscribe(_ => {
       this._urlHandlerSvc.changeURL('map');
