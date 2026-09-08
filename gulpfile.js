@@ -232,12 +232,23 @@ function getUrlFile(file, src, dest) {
   // console.log(file, src, dest);
   return new Promise((resolve, reject) => {
     if (verbose) debug('Downloading ' + src + ' to ' + dest + file);
-    request({
+    const req = request({
       url: src,
       headers: {
         'User-Agent': 'request',
       },
-    })
+    });
+    // Senza questo controllo, una risposta di errore (es. 404 con body JSON) veniva comunque
+    // scritta su disco come se fosse il file atteso — nessun rifiuto della Promise, quindi
+    // l'eventuale fallback del chiamante (es. notification_icon.png -> icon.png) non scattava
+    // mai. Interrompe subito lo stream su status non-2xx invece di lasciarlo proseguire.
+    req.on('response', response => {
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        req.abort();
+        reject(new Error('HTTP ' + response.statusCode + ' scaricando ' + src));
+      }
+    });
+    req
       .pipe(source(file))
       .pipe(gulp.dest(dest))
       .on('end', resolve)
@@ -574,7 +585,13 @@ function update(instanceName, geohubInstanceId, shardName) {
                   'homepage-logo.svg',
                   resources + 'logo_homepage.svg',
                   dir + '/src/assets/images/',
-                ),
+                ).catch(err => {
+                  // Asset di branding opzionale: se l'app non l'ha caricato su Nova (404) o il
+                  // download fallisce per qualunque altro motivo, tiene il default già copiato da
+                  // core/ invece di far fallire l'intera build — non giustifica un blocco come
+                  // icon/splash, che hanno una validazione dedicata e più severa.
+                  warn('logo_homepage.svg non scaricato (' + err.message + ') — mantengo il default');
+                }),
                 new Promise((resolve, reject) => {
                   getUrlFile(
                     'notification_icon.png',
@@ -585,7 +602,15 @@ function update(instanceName, geohubInstanceId, shardName) {
                       resolve();
                     },
                     () => {
-                      getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/').then(
+                      // Bug preesistente corretto: salvava il fallback come "icon.png" (sovrascrivendo
+                      // l'icon.png già scaricato altrove) invece che come "notification_icon.png" —
+                      // il fallback "riusciva" senza mai creare il file che la validazione successiva
+                      // si aspetta di trovare.
+                      getUrlFile(
+                        'notification_icon.png',
+                        resources + 'icon.png',
+                        dir + '/resources/',
+                      ).then(
                         () => {
                           resolve();
                         },
@@ -817,19 +842,42 @@ async function updateResources(instanceName, platform) {
 
   if (iconResult.usable) {
     var iconExec = sh.exec(
-      'cordova-res ' +
-        platform +
-        ' --skip-config --copy --type icon' +
-        (platform === 'android'
-          ? ' --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png'
-          : '') +
-        outputRedirect,
+      'cordova-res ' + platform + ' --skip-config --copy --type icon' + outputRedirect,
       {
         cwd: instancesDir + instanceName,
       },
     );
     if (iconExec.code !== 0) {
       warn('Generazione icon.png fallita (cordova-res exit code ' + iconExec.code + ')');
+    }
+
+    // Su cordova-res 'icon' e 'adaptive-icon' sono due resource type indipendenti: i flag
+    // --icon-foreground-source/--icon-background-source vengono letti solo quando il type è
+    // 'adaptive-icon' (verificato nel sorgente installato, dist/cli.js: generateRunOptions
+    // valorizza 'foreground'/'background' solo se types.includes('adaptive-icon')). Passarli
+    // insieme a --type icon non genera un errore: vengono semplicemente ignorati in silenzio,
+    // lasciando ic_launcher_foreground.png/ic_launcher_background.png mai aggiornati — da qui
+    // i WARN "Error occurred while copying resources/android/icon/<density>-foreground.png"
+    // (il passo di copia si aspettava file adaptive-icon che la generazione non aveva mai
+    // prodotto). Serve quindi una seconda invocazione dedicata, solo per Android.
+    if (platform === 'android') {
+      var adaptiveIconExec = sh.exec(
+        'cordova-res ' +
+          platform +
+          ' --skip-config --copy --type adaptive-icon' +
+          ' --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png' +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        },
+      );
+      if (adaptiveIconExec.code !== 0) {
+        warn(
+          'Generazione adaptive icon (foreground/background) fallita (cordova-res exit code ' +
+            adaptiveIconExec.code +
+            ')',
+        );
+      }
     }
   } else {
     warn('Generazione icon.png saltata: rimane quella esistente/di default');
@@ -860,44 +908,41 @@ function initCapacitor(instanceName, id, name) {
   info('Capacitor project initialized');
 }
 
-/**
- * Legge lo shardName dall'environment.ts già scritto nell'istanza (da update())
- * e restituisce, se esiste, il nome della build configuration corrispondente
- * in angular.json — match esatto o "shardName inizia per <configuration>" per
- * coprire varianti dev/prod dello stesso shard (es. "camminiditaliadev" →
- * "camminiditalia"). Stessa logica di core/scripts/serve.js, qui applicata
- * alla pipeline di build reale invece che a `ng serve` in locale.
- */
-function matchBuildConfiguration(instanceName) {
+function resolveBuildConfiguration(instanceName) {
   const envPath = instancesDir + instanceName + '/src/environments/environment.ts';
   const angularJsonPath = instancesDir + instanceName + '/angular.json';
-  if (!fs.existsSync(envPath) || !fs.existsSync(angularJsonPath)) return null;
+  if (!fs.existsSync(envPath) || !fs.existsSync(angularJsonPath)) return 'production';
 
   const envContent = fs.readFileSync(envPath, 'utf8');
   const shardMatch = envContent.match(/shardName:\s*['"]([^'"]+)['"]/);
-  if (!shardMatch) return null;
-  const shardName = shardMatch[1];
+  const shardName = shardMatch ? shardMatch[1] : null;
+  if (!shardName) return 'production';
 
   const angularJson = JSON.parse(fs.readFileSync(angularJsonPath, 'utf8'));
-  const availableConfigurations = Object.keys(
-    angularJson.projects?.app?.architect?.build?.configurations ?? {},
-  );
+  const configurations = Object.keys(
+    angularJson.projects?.app?.architect?.build?.configurations || {},
+  ).filter(name => name !== 'production' && name !== 'ci');
 
-  if (availableConfigurations.includes(shardName)) return shardName;
-  const prefixMatches = availableConfigurations
-    .filter(name => shardName.startsWith(name))
-    .sort((a, b) => b.length - a.length);
-  return prefixMatches[0] ?? null;
+  // Match esatto prima, poi "shardName inizia per <configuration>" — stesso algoritmo di
+  // core/scripts/serve.js, per coprire varianti dev/prod dello stesso shard.
+  let shardConfiguration = null;
+  if (configurations.includes(shardName)) {
+    shardConfiguration = shardName;
+  } else {
+    const prefixMatches = configurations
+      .filter(name => shardName.startsWith(name))
+      .sort((a, b) => b.length - a.length);
+    shardConfiguration = prefixMatches[0] ?? null;
+  }
+
+  return shardConfiguration ? 'production,' + shardConfiguration : 'production';
 }
 
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
-  const matchedConfiguration = matchBuildConfiguration(instanceName);
-  const configFlag = matchedConfiguration ? ' --configuration=' + matchedConfiguration : '';
-  if (matchedConfiguration && verbose) {
-    debug('Using build configuration "' + matchedConfiguration + '" for instance ' + instanceName);
-  }
-  sh.exec('ionic build' + configFlag + outputRedirect, {
+  const configuration = resolveBuildConfiguration(instanceName);
+  if (verbose) debug('Using build configuration: ' + configuration);
+  sh.exec('ionic build --configuration=' + configuration + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
   if (verbose) debug('Ionic build completed');
