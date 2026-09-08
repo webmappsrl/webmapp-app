@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.1.17](https://github.com/webmappsrl/webmapp-app/compare/v3.1.16...v3.1.17) (2026-09-08)
+
+
+### Bug Fixes
+
+* inject shardName alongside appId for E2E CI environment ([#214](https://github.com/webmappsrl/webmapp-app/issues/214)) ([a1eba3d](https://github.com/webmappsrl/webmapp-app/commit/a1eba3d62b39f7c8b58f3c2e9a8e2511740b30d7))
+* **oc:8246:** valida dimensioni icon/notification_icon/splash prima di cordova-res ([#205](https://github.com/webmappsrl/webmapp-app/issues/205)) ([2ec98d5](https://github.com/webmappsrl/webmapp-app/commit/2ec98d59d7623c3e257c9b53baba1894309a1cbf))
+* **oc:8369:** triage console log per policy niente log in produzione ([#215](https://github.com/webmappsrl/webmapp-app/issues/215)) ([24d2fa9](https://github.com/webmappsrl/webmapp-app/commit/24d2fa9718f3c2d530c57d1e8aac7f8995ada617))
+* **oc:8382:** fix build --prod per deploy e deploy-to-web ([#213](https://github.com/webmappsrl/webmapp-app/issues/213)) ([c52df26](https://github.com/webmappsrl/webmapp-app/commit/c52df268400385c8e6c6e5d0a6902d86c1a0e3c9))
+* **oc:8470:** naviga su map e apri il pannello dettaglio per link con track/poi ([#220](https://github.com/webmappsrl/webmapp-app/issues/220)) ([610f490](https://github.com/webmappsrl/webmapp-app/commit/610f4907f33ba5880be445d38e389502c101a3f3))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
+* enrich changelog with commit descriptions ([7ddef3c](https://github.com/webmappsrl/webmapp-app/commit/7ddef3ccaa6aa1efcd3cf988a4ae4c8cb7e6cde1))
+* **map-core:** changelog for bump to 2339f9b ([0a58554](https://github.com/webmappsrl/webmapp-app/commit/0a585547468e8a8c12ca2a607fc008686ad3b4d9))
+* **map-core:** changelog for bump to 6325149 ([f1f0d40](https://github.com/webmappsrl/webmapp-app/commit/f1f0d40a66916feafe875eb982b2a9c0c6951610))
+* **oc:8277:** bump target/compile SDK Android a 36 ([3d6ed92](https://github.com/webmappsrl/webmapp-app/commit/3d6ed92146968b12026844f17cc884e1430c759d))
+* **wm-core:** changelog for bump to 0fa0067 ([88451e6](https://github.com/webmappsrl/webmapp-app/commit/88451e6a24fa2560c91796dc8b6e6ae7b00dd416))
+* **wm-core:** changelog for bump to 92011de ([f7798a6](https://github.com/webmappsrl/webmapp-app/commit/f7798a623bd193521cd28a1b7bf49065bacaff7a))
+* **wm-core:** changelog for bump to bb0fe54 ([c31be4e](https://github.com/webmappsrl/webmapp-app/commit/c31be4e3e387bfafdd79db01d04e0883e96f2726))
+* **wm-core:** changelog for bump to f804d24 ([48c1ba6](https://github.com/webmappsrl/webmapp-app/commit/48c1ba6c719278296ed709a20d4001085133db47))
+* **wm-types:** changelog for bump to d0feec6 ([c559e64](https://github.com/webmappsrl/webmapp-app/commit/c559e64ecda3f6796c6d29b8625aef60dcdcfcaf))
+
 ## [3.1.16](https://github.com/webmappsrl/webmapp-app/compare/v3.1.15...v3.1.16) (2026-07-09)
 
 
