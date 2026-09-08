@@ -9,11 +9,9 @@
 <!-- COMMIT_DESC -->
     
     Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
-* **map-core:** changelog for bump to 15c4f21 ([663fcab](https://github.com/webmappsrl/webmapp-app/commit/663fcab23612e4be8e3921138a18f1058728bc19))
 <!-- COMMIT_DESC -->
     
     - fix: CARG tile URL alignment with overlayXYZ
@@ -47,7 +45,6 @@
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): overview, piano e note wm-plan per il fix offline CARG
     
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): aggiorna CLAUDE.md con feature e decisioni architetturali
-* **wm-core:** changelog for bump to 2c03728 ([9f3c054](https://github.com/webmappsrl/webmapp-app/commit/9f3c05479293a6c8b73f22542028f9ed5231534a))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map (#173)
@@ -99,7 +96,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
 
 
 ### Miscellaneous
@@ -129,7 +125,6 @@
     and wraps copyFileSync in try/catch to avoid unhandled rejections.
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>): add PosthogContextService to auto-enrich PostHog events with context
     - New PosthogContextService: transparent wrapper on PosthogCapacitorClient
@@ -269,7 +264,6 @@
         fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
         Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
         chore(swiper): 🎉 introduce WmSwiperComponent for enhanced Swiper integration
-
         Added a new `WmSwiperComponent` to streamline Swiper usage across various components. Updated existing components to replace `swiper-container` with `wm-swiper`, improving code consistency and maintainability. Adjusted TypeScript logic to interact with the new component structure, ensuring a smoother user experience with Swiper functionalities.
         refactor(swiper): ♻️ improve error handling and code style in swiper component
 
@@ -470,7 +464,6 @@
         and `HomeResultTab` types for filter-related actions and
         state throughout the codebase. This enhances consistency
         and maintainability.
-
         Relates to oc_6780
 
         - chore(home): enhance tab selection logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
