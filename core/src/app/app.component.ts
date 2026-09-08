@@ -4,6 +4,7 @@ import {filter, take} from 'rxjs/operators';
 import {KeepAwake} from '@capacitor-community/keep-awake';
 import {Router} from '@angular/router';
 import {SplashScreen} from '@capacitor/splash-screen';
+import {App, URLOpenListenerEvent} from '@capacitor/app';
 import {select, Store} from '@ngrx/store';
 import {StatusService} from './services/status.service';
 import {DOCUMENT} from '@angular/common';
@@ -29,6 +30,7 @@ import {syncUgc} from '@wm-core/store/features/ugc/ugc.actions';
 import {checkCurrentUgcTrack, loadHitmapFeatures} from '@wm-core/store/user-activity/user-activity.action';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 import {loadIcons} from '@wm-core/store/icons/icons.actions';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 
 @Component({
   standalone: false,
@@ -56,6 +58,7 @@ export class AppComponent {
     private _statusSvc: StatusService,
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
+    private _urlHandlerSvc: UrlHandlerService,
     @Inject(DOCUMENT) private _document: Document,
   ) {
     this._store.dispatch(loadAuths());
@@ -87,6 +90,11 @@ export class AppComponent {
       .subscribe(() => {
         this._store.dispatch(checkAppVersion());
       });
+
+    // Deep link nativo (Universal Links iOS / App Links Android) — oc:7980
+    App.addListener('appUrlOpen', (data: URLOpenListenerEvent) => {
+      this._handleDeepLinkUrl(data.url);
+    });
 
     this._platform.ready().then(
       () => {
@@ -158,6 +166,22 @@ export class AppComponent {
   }
 
   recordingClick(ev) {}
+
+  /**
+   * Inoltra l'URL di un deep link nativo a UrlHandlerService, aspettando che la
+   * configurazione sia caricata (copre sia cold start che warm start: se isConfLoaded$
+   * è già true, il subscribe emette immediatamente).
+   */
+  private _handleDeepLinkUrl(url: string): void {
+    this.isConfLoaded$
+      .pipe(
+        filter(loaded => loaded === true),
+        take(1),
+      )
+      .subscribe(() => {
+        this._urlHandlerSvc.handleDeepLink(url);
+      });
+  }
 
   private _setGlobalCSS(css: {[name: string]: string | number}) {
     const rootDocument = this._document.querySelector(':root');

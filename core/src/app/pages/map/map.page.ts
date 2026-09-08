@@ -14,6 +14,7 @@ import {BehaviorSubject, Observable, from, of, timer} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
 import {GeohubService} from 'src/app/services/geohub.service';
 import {ShareService} from 'src/app/services/share.service';
+import {UgcTrackShareResult} from '@wm-core/ugc-track-properties/ugc-track-properties.component';
 import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
 import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
 import {beforeInit, setTransition, setTranslate} from './utils';
@@ -204,6 +205,15 @@ export class MapPage {
   };
   ugcOpened$: Observable<boolean> = this._store.select(ugcOpened);
   ugcTrack$: Observable<WmFeature<LineString> | null> = this._store.select(currentUgcTrack);
+  /**
+   * Result fed back into `<wm-ugc-track-properties>`'s `[shareResult]` input (oc:8183). `null` is
+   * the documented no-op initial value for that Input (see `UgcTrackShareResult` contract notes
+   * in wm-core) — it must NOT be reset to `null` before/during a retry, only ever pushed a real
+   * `{success, errorMessage?}` once `onShareTrack()` settles, so the component's own `GENERATING`
+   * state (driven locally by its `triggerShare()`) is never second-guessed from here.
+   */
+  shareResult$: BehaviorSubject<UgcTrackShareResult | null> =
+    new BehaviorSubject<UgcTrackShareResult | null>(null);
   wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
     null,
   );
@@ -349,6 +359,24 @@ export class MapPage {
 
   openTrackShare(trackId: number): void {
     this._shareSvc.shareTrackByID(trackId);
+  }
+
+  /**
+   * @description
+   * Handles `(share-track)` from `<wm-ugc-track-properties>` (oc:8183) — both the initial tap and
+   * every "Riprova" retry re-emit this same event with the same track, so this handler is called
+   * fresh each time with no special-casing needed for retries: `ShareService.shareTrackToStories`
+   * itself guarantees a clean run per call. The whole orchestration (screenshot, stats, backend
+   * compositing call, native share) lives in `ShareService`; this method only wires the result
+   * back into `shareResult$`, which `[shareResult]` in the template is bound to.
+   *
+   * @param track The recorded track to share, as emitted by `(share-track)`.
+   * @returns void
+   */
+  onShareTrack(track: WmFeature<LineString>): void {
+    this._shareSvc.shareTrackToStories(track).then(result => {
+      this.shareResult$.next(result);
+    });
   }
 
   closeDetails(): void {

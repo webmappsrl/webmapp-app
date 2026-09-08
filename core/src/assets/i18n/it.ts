@@ -371,7 +371,6 @@ export const appIT = {
       'pausebtn': 'Pausa',
       'resumebtn': 'Riprendi',
       'stopbtn': 'Termina',
-      'time': 'In movimento',
       'title': 'Registra una traccia',
     },
     'registeruser': {
@@ -558,6 +557,10 @@ export const appIT = {
       },
     },
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Sentieri',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista',
   'services': {
     'geolocation': {
       'notification': {
@@ -631,6 +634,8 @@ export const appIT = {
   'Ti trovi qui': 'Ti trovi qui',
   'Salva Waypoint': 'Salva Waypoint',
   'Salva Traccia': 'Salva Traccia',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Impossibile caricare i cammini preferiti, riprova',
   'privacy': {
     'agree': {
       'title': 'Trattamento dei dati',

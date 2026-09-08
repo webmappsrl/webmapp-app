@@ -35,7 +35,22 @@ wm-layer-box {
       display: none;
     }
     div.wm-box-title {
-      top: 20%;
+      // `top:20%` non ha più effetto da oc:8305: il componente non imposta
+      // più position:absolute su .wm-box-title (ora è un item della grid a
+      // cella condivisa, position:static di default), e top/bottom/left/right
+      // sono ignorati su elementi position:static. Equivalente nel nuovo
+      // sistema: ancorare in alto (align-self, vince sull'align-self:end del
+      // componente per specificità) e scendere di un margine fisso.
+      // NON un margin-top in percentuale: le percentuali su margin-top/bottom
+      // si risolvono sempre sulla LARGHEZZA del containing block (stessa
+      // regola del trick padding-top:56.25% per gli aspect-ratio box), non
+      // sull'altezza — un primo tentativo con `margin-top:20%` sembrava
+      // corretto ma avrebbe reso la posizione del titolo dipendente dalla
+      // larghezza della card (diversa tra home-landing/ricerca/preferiti)
+      // invece che dall'altezza fissa del box (180px, uguale ovunque). Bug
+      // trovato in review formale prima del commit — vedi notes.md.
+      align-self: start;
+      margin-top: 36px; // 20% di 180px (altezza fissa di .wm-box, oc:8305)
       width: 100%;
       text-align: center;
 

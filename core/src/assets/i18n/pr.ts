@@ -365,7 +365,6 @@ export const appPR = {
       'pausebtn': 'Pausar',
       'resumebtn': 'Continuar',
       'stopbtn': 'Finalizar',
-      'time': 'Em movimento',
       'title': 'Registrar uma rota'
     },
     'registeruser': {
@@ -544,6 +543,10 @@ export const appPR = {
       'content': 'Caminhar na natureza e, mais amplamente, atividades ao ar livre, são atividades potencialmente perigosas: antes de partir para uma excursão, certifique-se de que você tem o conhecimento e as habilidades para fazê-lo. Se você não tiver certeza, procure especialistas locais que possam ajudá-lo, sugerir e apoiar no planejamento e desenvolvimento de suas atividades. Os dados apresentados neste APLICATIVO não podem garantir totalmente a viabilidade sem riscos da rota: podem ter ocorrido mudanças, até mesmo significativas, desde a última verificação da rota. Portanto, é essencial que aqueles que pretendem desenvolver atividades avaliem cuidadosamente a possibilidade de prosseguir com base nas sugestões e conselhos contidos neste APLICATIVO, com base em sua experiência, condições meteorológicas (mesmo dos dias anteriores) e uma avaliação feita no local no início do desenvolvimento da atividade. A empresa Webmapp S.r.l. não oferece garantias para a segurança dos locais descritos e não assume qualquer responsabilidade por possíveis danos causados pelo desenvolvimento das atividades descritas.'
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Trilhas',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Não há caminhos favoritos, clique no ícone de coração de um caminho para adicioná-lo a esta lista',
   'services': {
     'geolocation': {
       'notification': {
@@ -598,6 +601,8 @@ export const appPR = {
   'Ti trovi qui': 'Você está aqui',
   'Salva Waypoint': 'Salvar ponto de referência',
   'Salva Traccia': 'Salvar rota',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Não foi possível carregar os caminhos favoritos, tente novamente',
   'privacy': {
     'agree': {
       'title': 'Processamento de dados',

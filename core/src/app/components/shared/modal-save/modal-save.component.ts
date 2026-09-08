@@ -8,7 +8,7 @@ import {DeviceService} from '@wm-core/services/device.service';
 import {syncUgcTracks} from '@wm-core/store/features/ugc/ugc.actions';
 import {generateUUID, removeCurrentUgcTrackLocations} from '@wm-core/utils/localForage';
 import {WmFeature} from '@wm-types/feature';
-import {switchMap, take} from 'rxjs/operators';
+import {switchMap, take, tap} from 'rxjs/operators';
 import {ModalSuccessComponent} from 'src/app/components/modal-success/modal-success.component';
 import {activities} from 'src/app/constants/activities';
 import {ESuccessType} from 'src/app/types/esuccess.enum';
@@ -242,6 +242,14 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
           ugcFeature.properties.device = device;
           return from(saveUgc(ugcFeature));
         }),
+        // Dispatched here (right after the local save), NOT after the success modal closes as
+        // before (oc:8183): ModalSuccessComponent now offers a "share" action that needs to
+        // know whether this exact track has already reached the backend, so the sync must be
+        // in flight (or already done, for a short recording) by the time that screen opens —
+        // not only after the user has already left it.
+        tap(() => {
+          this._store.dispatch(this.isWaypoint ? syncUgcPois() : syncUgcTracks());
+        }),
         switchMap(_ => {
           // Rimuovi il current track se è un nuovo track (non waypoint e senza id)
           if (!this.isWaypoint) {
@@ -269,9 +277,7 @@ export class ModalSaveComponent extends BaseSaveComponent implements OnInit {
           ),
         ),
       )
-      .subscribe(() => {
-        this._store.dispatch(this.isWaypoint ? syncUgcPois() : syncUgcTracks());
-      });
+      .subscribe();
   }
 
   setIsValid(idx: number, isValid: boolean): void {

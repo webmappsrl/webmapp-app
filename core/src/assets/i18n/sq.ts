@@ -365,7 +365,6 @@ export const appSQ = {
       'pausebtn': 'Pauzë',
       'resumebtn': 'Vazhdo',
       'stopbtn': 'Përfundo',
-      'time': 'Në lëvizje',
       'title': 'Regjistro një gjurmë'
     },
     'registeruser': {
@@ -539,6 +538,10 @@ export const appSQ = {
       'content': "Ecja në natyrë dhe, më gjerë, aktivitetet në natyrë, janë aktivitete potencialisht të rrezikshme: para se të niseni për një ekskursion sigurohuni që keni njohuritë dhe aftësitë për ta bërë këtë. Nëse nuk jeni të sigurt, drejtohuni tek ekspertët lokalë që mund t'ju ndihmojnë, sugjerojnë dhe mbështesin në planifikimin dhe zhvillimin e aktiviteteve tuaja. Të dhënat e paraqitura në këtë APLIKACION nuk mund të garantojnë plotësisht përshkueshmërinë pa rreziqe të rrugës: mund të kenë ndodhur ndryshime, edhe të rëndësishme, që nga verifikimi i fundit i rrugës. Prandaj është thelbësore që ata që synojnë të zhvillojnë aktivitete të vlerësojnë me kujdes mundësinë e vazhdimit bazuar në sugjerimet dhe këshillat e përmbajtura në këtë APLIKACION, bazuar në përvojën e tyre, kushtet meteorologjike (edhe të ditëve të mëparshme) dhe një vlerësim të bërë në terren në fillim të zhvillimit të aktivitetit. Shoqëria Webmapp S.r.l. nuk ofron garanci për sigurinë e vendeve të përshkruara, dhe nuk merr asnjë përgjegjësi për dëmet e mundshme të shkaktuara nga zhvillimi i aktiviteteve të përshkruara."
     }
   },
+  'Layers': 'Layers',
+  'Sentieri': 'Shtigjet',
+  'Non ci sono cammini preferiti, clicca sull\'icona cuore di un cammino per aggiungerlo a questa lista':
+    'Nuk ka shtigje të preferuara, kliko mbi ikonën e zemrës së një shtegu për ta shtuar në këtë listë',
   'services': {
     'geolocation': {
       'notification': {
@@ -593,6 +596,8 @@ export const appSQ = {
   'Ti trovi qui': 'Je këtu',
   'Salva Waypoint': 'Ruaj pikën e rrugës',
   'Salva Traccia': 'Ruaj gjurmën',
+  'Impossibile caricare i cammini preferiti, riprova':
+    'Nuk u arrit të ngarkoheshin shtigjet e preferuara, provo përsëri',
   'privacy': {
     'agree': {
       'title': 'Përpunimi i të dhënave',

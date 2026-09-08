@@ -177,6 +177,7 @@ export function openUgcBox() {
 export function openPoi(poiTitle: string) {
   cy.get('wm-poi-box').contains('ion-card-title', poiTitle).as('poiBox');
   cy.get('@poiBox')
+    .scrollIntoView()
     .should('be.visible')
     .then($poiBox => {
       cy.wrap($poiBox).click();

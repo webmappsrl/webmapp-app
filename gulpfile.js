@@ -232,12 +232,23 @@ function getUrlFile(file, src, dest) {
   // console.log(file, src, dest);
   return new Promise((resolve, reject) => {
     if (verbose) debug('Downloading ' + src + ' to ' + dest + file);
-    request({
+    const req = request({
       url: src,
       headers: {
         'User-Agent': 'request',
       },
-    })
+    });
+    // Senza questo controllo, una risposta di errore (es. 404 con body JSON) veniva comunque
+    // scritta su disco come se fosse il file atteso — nessun rifiuto della Promise, quindi
+    // l'eventuale fallback del chiamante (es. notification_icon.png -> icon.png) non scattava
+    // mai. Interrompe subito lo stream su status non-2xx invece di lasciarlo proseguire.
+    req.on('response', response => {
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        req.abort();
+        reject(new Error('HTTP ' + response.statusCode + ' scaricando ' + src));
+      }
+    });
+    req
       .pipe(source(file))
       .pipe(gulp.dest(dest))
       .on('end', resolve)
@@ -574,7 +585,13 @@ function update(instanceName, geohubInstanceId, shardName) {
                   'homepage-logo.svg',
                   resources + 'logo_homepage.svg',
                   dir + '/src/assets/images/',
-                ),
+                ).catch(err => {
+                  // Asset di branding opzionale: se l'app non l'ha caricato su Nova (404) o il
+                  // download fallisce per qualunque altro motivo, tiene il default già copiato da
+                  // core/ invece di far fallire l'intera build — non giustifica un blocco come
+                  // icon/splash, che hanno una validazione dedicata e più severa.
+                  warn('logo_homepage.svg non scaricato (' + err.message + ') — mantengo il default');
+                }),
                 new Promise((resolve, reject) => {
                   getUrlFile(
                     'notification_icon.png',
@@ -585,7 +602,15 @@ function update(instanceName, geohubInstanceId, shardName) {
                       resolve();
                     },
                     () => {
-                      getUrlFile('icon.png', resources + 'icon.png', dir + '/resources/').then(
+                      // Bug preesistente corretto: salvava il fallback come "icon.png" (sovrascrivendo
+                      // l'icon.png già scaricato altrove) invece che come "notification_icon.png" —
+                      // il fallback "riusciva" senza mai creare il file che la validazione successiva
+                      // si aspetta di trovare.
+                      getUrlFile(
+                        'notification_icon.png',
+                        resources + 'icon.png',
+                        dir + '/resources/',
+                      ).then(
                         () => {
                           resolve();
                         },
@@ -817,19 +842,42 @@ async function updateResources(instanceName, platform) {
 
   if (iconResult.usable) {
     var iconExec = sh.exec(
-      'cordova-res ' +
-        platform +
-        ' --skip-config --copy --type icon' +
-        (platform === 'android'
-          ? ' --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png'
-          : '') +
-        outputRedirect,
+      'cordova-res ' + platform + ' --skip-config --copy --type icon' + outputRedirect,
       {
         cwd: instancesDir + instanceName,
       },
     );
     if (iconExec.code !== 0) {
       warn('Generazione icon.png fallita (cordova-res exit code ' + iconExec.code + ')');
+    }
+
+    // Su cordova-res 'icon' e 'adaptive-icon' sono due resource type indipendenti: i flag
+    // --icon-foreground-source/--icon-background-source vengono letti solo quando il type è
+    // 'adaptive-icon' (verificato nel sorgente installato, dist/cli.js: generateRunOptions
+    // valorizza 'foreground'/'background' solo se types.includes('adaptive-icon')). Passarli
+    // insieme a --type icon non genera un errore: vengono semplicemente ignorati in silenzio,
+    // lasciando ic_launcher_foreground.png/ic_launcher_background.png mai aggiornati — da qui
+    // i WARN "Error occurred while copying resources/android/icon/<density>-foreground.png"
+    // (il passo di copia si aspettava file adaptive-icon che la generazione non aveva mai
+    // prodotto). Serve quindi una seconda invocazione dedicata, solo per Android.
+    if (platform === 'android') {
+      var adaptiveIconExec = sh.exec(
+        'cordova-res ' +
+          platform +
+          ' --skip-config --copy --type adaptive-icon' +
+          ' --icon-foreground-source resources/icon.png --icon-background-source resources/icon.png' +
+          outputRedirect,
+        {
+          cwd: instancesDir + instanceName,
+        },
+      );
+      if (adaptiveIconExec.code !== 0) {
+        warn(
+          'Generazione adaptive icon (foreground/background) fallita (cordova-res exit code ' +
+            adaptiveIconExec.code +
+            ')',
+        );
+      }
     }
   } else {
     warn('Generazione icon.png saltata: rimane quella esistente/di default');
@@ -860,9 +908,41 @@ function initCapacitor(instanceName, id, name) {
   info('Capacitor project initialized');
 }
 
+function resolveBuildConfiguration(instanceName) {
+  const envPath = instancesDir + instanceName + '/src/environments/environment.ts';
+  const angularJsonPath = instancesDir + instanceName + '/angular.json';
+  if (!fs.existsSync(envPath) || !fs.existsSync(angularJsonPath)) return 'production';
+
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  const shardMatch = envContent.match(/shardName:\s*['"]([^'"]+)['"]/);
+  const shardName = shardMatch ? shardMatch[1] : null;
+  if (!shardName) return 'production';
+
+  const angularJson = JSON.parse(fs.readFileSync(angularJsonPath, 'utf8'));
+  const configurations = Object.keys(
+    angularJson.projects?.app?.architect?.build?.configurations || {},
+  ).filter(name => name !== 'production' && name !== 'ci');
+
+  // Match esatto prima, poi "shardName inizia per <configuration>" — stesso algoritmo di
+  // core/scripts/serve.js, per coprire varianti dev/prod dello stesso shard.
+  let shardConfiguration = null;
+  if (configurations.includes(shardName)) {
+    shardConfiguration = shardName;
+  } else {
+    const prefixMatches = configurations
+      .filter(name => shardName.startsWith(name))
+      .sort((a, b) => b.length - a.length);
+    shardConfiguration = prefixMatches[0] ?? null;
+  }
+
+  return shardConfiguration ? 'production,' + shardConfiguration : 'production';
+}
+
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
-  sh.exec('ionic build' + outputRedirect, {
+  const configuration = resolveBuildConfiguration(instanceName);
+  if (verbose) debug('Using build configuration: ' + configuration);
+  sh.exec('ionic build --configuration=' + configuration + outputRedirect, {
     cwd: instancesDir + instanceName,
   });
   if (verbose) debug('Ionic build completed');
@@ -1003,6 +1083,7 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
           resolve();
           return;
         }
+        const domain = resolveInstanceDomain(instanceName);
         gulp
           .src(manifestPath)
           .pipe(
@@ -1015,6 +1096,7 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
             ),
           )
           .pipe(manageAndroidPermissions(hasUgc))
+          .pipe(manageDeepLinkIntentFilter(domain))
           .pipe(gulp.dest(instancesDir + instanceName + '/android/app/src/main/'))
           .on('end', () => {
             if (verbose) debug('AndroidManifest.xml updated successfully');
@@ -1840,6 +1922,60 @@ function updateIosPlatform(instanceName, appId, appName) {
       }),
     );
 
+    // App.entitlements — Associated Domains per Universal Links (oc:7980)
+    promises.push(
+      new Promise((resolve, reject) => {
+        const domain = resolveInstanceDomain(instanceName);
+        const entitlementsPath = instancesDir + instanceName + '/ios/App/App/App.entitlements';
+        const entitlementsContent = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:${domain}</string>
+	</array>
+</dict>
+</plist>
+`;
+        try {
+          fs.writeFileSync(entitlementsPath, entitlementsContent, 'utf8');
+          if (verbose) debug('App.entitlements creato/aggiornato con dominio: ' + domain);
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      }),
+    );
+
+    // Collega App.entitlements al target Xcode tramite CODE_SIGN_ENTITLEMENTS
+    promises.push(
+      new Promise((resolve, reject) => {
+        const pbxprojPath =
+          instancesDir + instanceName + '/ios/App/App.xcodeproj/project.pbxproj';
+        if (!fs.existsSync(pbxprojPath)) {
+          reject(`project.pbxproj non trovato in ${pbxprojPath}`);
+          return;
+        }
+        let content = fs.readFileSync(pbxprojPath, 'utf8');
+
+        // remove-then-add per idempotenza su build ripetute
+        content = content.replace(/\s*CODE_SIGN_ENTITLEMENTS = [^;]+;/g, '');
+        content = content.replace(
+          /(PRODUCT_BUNDLE_IDENTIFIER = [^;]+;)/g,
+          '$1\n\t\t\t\tCODE_SIGN_ENTITLEMENTS = App/App.entitlements;',
+        );
+
+        try {
+          fs.writeFileSync(pbxprojPath, content, 'utf8');
+          if (verbose) debug('CODE_SIGN_ENTITLEMENTS collegato in project.pbxproj');
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      }),
+    );
+
     Promise.all(promises).then(
       res => {
         if (verbose) debug('Ios platform updated successfully');
@@ -2441,6 +2577,35 @@ function manageAndroidPermissions(hasUgc) {
   });
 }
 
+function manageDeepLinkIntentFilter(domain) {
+  const removeMarker = content =>
+    content.replace(
+      /\s*<!-- BEGIN deep-link-intent-filter -->[\s\S]*?<!-- END deep-link-intent-filter -->/g,
+      '',
+    );
+
+  return through.obj(function (file, encoding, callback) {
+    let content = file.contents.toString();
+    content = removeMarker(content);
+
+    const intentFilter = `
+        <!-- BEGIN deep-link-intent-filter -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" android:host="${domain}" />
+        </intent-filter>
+        <!-- END deep-link-intent-filter -->`;
+
+    content = content.replace(/(<\/activity>)/, `${intentFilter}\n        $1`);
+
+    file.contents = Buffer.from(content, encoding);
+    this.push(file);
+    callback();
+  });
+}
+
 function getJsonEnvironment() {
   const envPath = 'core/src/environments/environment.ts';
   if (!fs.existsSync(envPath)) {
@@ -2497,3 +2662,105 @@ function getJsonEnvironment() {
 
   return environment;
 }
+
+/**
+ * Calcola il dominio pubblico di condivisione di un'istanza, con la stessa
+ * logica di EnvironmentService._assignShareLink() (wm-core), alimentata dagli
+ * stessi dati (shards/redirects letti da wm-types tramite getJsonEnvironment()).
+ * Necessario per generare .well-known e per l'intent-filter/entitlements nativi.
+ */
+function resolveInstanceDomain(instanceName) {
+  const envPath = instancesDir + instanceName + '/src/environments/environment.ts';
+  if (!fs.existsSync(envPath)) {
+    throw new Error(`File ${envPath} non trovato. Eseguire update() prima di questa funzione.`);
+  }
+  const envContent = fs.readFileSync(envPath, 'utf8');
+
+  const appIdMatch = envContent.match(/appId:\s*(\d+)/);
+  const shardNameMatch = envContent.match(/shardName:\s*'([^']+)'/);
+  if (!appIdMatch || !shardNameMatch) {
+    throw new Error(`Impossibile determinare appId/shardName da ${envPath}`);
+  }
+  const appId = parseInt(appIdMatch[1], 10);
+  const shardName = shardNameMatch[1];
+
+  const {redirects} = getJsonEnvironment();
+  const redirectEntry = Object.entries(redirects).find(
+    ([, val]) => val.appId === appId && val.shardName === shardName,
+  );
+  if (redirectEntry) {
+    return redirectEntry[0];
+  }
+
+  const subdomain = shardName === 'geohub' ? 'app' : shardName;
+  return `${appId}.${subdomain}.webmapp.it`;
+}
+
+const DEEP_LINK_TEAM_ID = 'BSTW6XXE23';
+
+/**
+ * Genera i file .well-known/apple-app-site-association e assetlinks.json aggregando
+ * TUTTE le istanze elencate in deep-links.json. Necessario perché tutte le istanze
+ * condividono lo stesso dominio wildcard *.webmapp.it (stesso deploy wm-webapp) — il
+ * file .well-known è fisicamente unico, non uno per istanza.
+ */
+function generateWellKnown() {
+  const registry = JSON.parse(fs.readFileSync('deep-links.json', 'utf8'));
+
+  const placeholderEntries = Object.entries(registry).filter(([, entry]) =>
+    entry.androidSha256Fingerprints.some(fp => fp.includes('REPLACE_WITH')),
+  );
+  if (placeholderEntries.length > 0) {
+    abort(
+      'deep-links.json contiene fingerprint placeholder per: ' +
+        placeholderEntries.map(([name]) => name).join(', ') +
+        ' — sostituirli con valori reali prima di generare i file.',
+    );
+    return;
+  }
+
+  const appleAppSiteAssociation = {
+    applinks: {
+      apps: [],
+      details: Object.values(registry).map(entry => ({
+        appID: `${DEEP_LINK_TEAM_ID}.${entry.bundleId}`,
+        // "*" = tutti i path del dominio (formato Apple per "gestisci l'intero dominio")
+        paths: ['*'],
+      })),
+    },
+  };
+
+  const assetlinks = Object.values(registry).map(entry => ({
+    relation: ['delegate_permission/common.handle_all_urls'],
+    target: {
+      namespace: 'android_app',
+      // packageName è opzionale: se assente (caso comune con Capacitor, che usa
+      // lo stesso appId per iOS e Android), si riusa bundleId anche per Android
+      package_name: entry.packageName ?? entry.bundleId,
+      sha256_cert_fingerprints: entry.androidSha256Fingerprints,
+    },
+  }));
+
+  const outDir = 'builds/well-known/';
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, {recursive: true});
+  fs.writeFileSync(
+    outDir + 'apple-app-site-association',
+    JSON.stringify(appleAppSiteAssociation, null, 2),
+  );
+  fs.writeFileSync(outDir + 'assetlinks.json', JSON.stringify(assetlinks, null, 2));
+
+  success('File generati in ' + outDir + ' — upload manuale su server:/var/www/html/app.geohub.webmapp.it/.well-known/');
+}
+
+/**
+ * Genera i file .well-known aggregando tutte le istanze in deep-links.json.
+ * Da eseguire manualmente quando il registro cambia, poi upload manuale via scp.
+ */
+gulp.task('generateWellKnown', function (done) {
+  try {
+    generateWellKnown();
+  } catch (err) {
+    abort(err.message || err);
+  }
+  done();
+});
