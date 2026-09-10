@@ -1,5 +1,236 @@
 # Changelog
 
+## [3.1.17](https://github.com/webmappsrl/webmapp-app/compare/v3.1.16...v3.1.17) (2026-09-08)
+
+
+### Bug Fixes
+
+* inject shardName alongside appId for E2E CI environment ([#214](https://github.com/webmappsrl/webmapp-app/issues/214)) ([a1eba3d](https://github.com/webmappsrl/webmapp-app/commit/a1eba3d62b39f7c8b58f3c2e9a8e2511740b30d7))
+<!-- COMMIT_DESC -->
+    
+    test-e2e.yml only overwrote appId (to 52) while leaving shardName
+    untouched. Since commit bbb20b43 changed the local dev default
+    shardName from 'geohub' to 'carg' (for local CARG feature work),
+    CI has been testing with the invalid pairing shardName:'carg' +
+    appId:52 (52 doesn't exist under carg's storage) — causing 404s on
+    config/icons/pois and a 401 on login, and breaking every E2E run on
+    develop and every PR since 2026-07-07.
+    
+    Inject shardName:'geohub' explicitly (the last known-good pairing
+    with appId 52), decoupling the CI test target from whatever shard
+    developers set as their local default.
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>:** triage console log per policy niente log in produzione ([#215](https://github.com/webmappsrl/webmapp-app/issues/215)) ([24d2fa9](https://github.com/webmappsrl/webmapp-app/commit/24d2fa9718f3c2d530c57d1e8aac7f8995ada617))
+<!-- COMMIT_DESC -->
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): triage console log per policy niente log in produzione
+    
+    Cancellati i console.log di puro rumore/debug, commentati con marker
+    // DEBUG: quelli con valore diagnostico per sviluppo futuro. I
+    console.error/console.warn restano intatti e visibili anche in
+    produzione. Aggiornati i puntatori submodule wm-core e map-core con
+    lo stesso triage applicato al loro interno.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): pulizia post-review su main.ts + bump puntatori submodule
+    
+    main.ts: rimosso console.log(err) duplicato del console.error nello
+    stesso catch, senza valore diagnostico aggiuntivo. Aggiornati i
+    puntatori wm-core/map-core con le rispettive correzioni di cleanup
+    post wm-review-ticket.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>:** naviga su map e apri il pannello dettaglio per link con track/poi ([#220](https://github.com/webmappsrl/webmapp-app/issues/220)) ([610f490](https://github.com/webmappsrl/webmapp-app/commit/610f4907f33ba5880be445d38e389502c101a3f3))
+<!-- COMMIT_DESC -->
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>): naviga su map anche per track/poi da Home (non solo layer)
+    
+    Il merge() reattivo in HomePage navigava su map solo quando
+    currentEcLayer/ugcOpened diventavano non-null. Un link con solo
+    track/poi (es. ?track=89812&search=borello) non faceva mai scattare
+    la navigazione: la traccia veniva caricata nello store ma nessuna UI
+    la mostrava restando su Home.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>): apri il pannello dettaglio se il feature è già selezionato al mount
+    
+    MapDetailsComponent scartava con skip(1) il primo valore di
+    featureOpened$, assumendo che il componente fosse sempre montato
+    prima che un feature venisse selezionato (vero per il click su un
+    risultato di ricerca, falso per un deep-link/query-param iniziale:
+    il feature è già "aperto" nello store quando il componente monta,
+    quindi quel primo valore va gestito, non scartato).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
+* **map-core:** changelog for bump to 2339f9b ([0a58554](https://github.com/webmappsrl/webmapp-app/commit/0a585547468e8a8c12ca2a607fc008686ad3b4d9))
+<!-- COMMIT_DESC -->
+    
+    - RDO Cammini d'Italia 2026 — map-core (#65)
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
+    
+    ngOnChanges saltava la chiamata di pulizia quando trackElevationChartElements
+    tornava null, lasciando pallino e segmento evidenziato visibili sulla mappa
+    indefinitamente dopo il tocco sul grafico altimetrico.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): fix crash ol_key in WmMapLayerDirective (#64)
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
+    
+    ngOnChanges saltava la chiamata di pulizia quando trackElevationChartElements
+    tornava null, lasciando pallino e segmento evidenziato visibili sulla mappa
+    indefinitamente dopo il tocco sul grafico altimetrico.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): guard against undefined listener and leak in WmMapLayerDirective
+    
+    _removeMoveEndListenerIfExists() called map.un('moveend', listener) even
+    when the listener had never been assigned, throwing "Cannot read
+    properties of undefined (reading 'ol_key')" inside OpenLayers. Guard the
+    call with a _moveEndListenerRegistered flag.
+    
+    Also fixes a listener/subscription leak: wmMapLayerEnableFeaturesInViewport
+    re-created the moveend listener and RxJS subscription on every activation
+    without tearing down the previous ones, orphaning listeners on the map
+    across NgRx re-emits (e.g. network reconnect). The listener closure only
+    ever closes over a stable field, so it's now created once and never
+    recreated, avoiding both the leak and a re-registration gap.
+    
+    Also switches the WmMapBaseDirective import from the '@map-core/directives'
+    barrel to a direct path, since the barrel also re-exports
+    custom-tracks.draw.directive -> graphhopper-js-api-client, whose UMD build
+    breaks Karma test execution for any file importing the barrel.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): add wm-plan artifacts and update CLAUDE.md
+    
+    Adds overview.md, plan.md, notes.md under docs/features/ for this fix,
+    and updates CLAUDE.md's "Feature disponibili" table and "Decisioni
+    architetturali" section with the root cause, the design decision behind
+    the single-listener fix, and technical debt discovered along the way
+    (5 pre-existing spec files already broken by the same barrel/graphhopper
+    issue, map.component.spec.ts broken by a missing ActivatedRoute provider,
+    and the enable=false-not-sticky pre-existing behavior).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): record manual verification result in notes.md
+    
+    Confirmed on localhost:4200/map: 5 real zoom changes with the feature
+    in its default (disabled) config produce no ol_key warning and no
+    other console errors, with the fix applied.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): fix crash ol_key in WmMapLayerDirective (#64)
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
+    
+    ngOnChanges saltava la chiamata di pulizia quando trackElevationChartElements
+    tornava null, lasciando pallino e segmento evidenziato visibili sulla mappa
+    indefinitamente dopo il tocco sul grafico altimetrico.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): guard against undefined listener and leak in WmMapLayerDirective
+    
+    _removeMoveEndListenerIfExists() called map.un('moveend', listener) even
+    when the listener had never been assigned, throwing "Cannot read
+    properties of undefined (reading 'ol_key')" inside OpenLayers. Guard the
+    call with a _moveEndListenerRegistered flag.
+    
+    Also fixes a listener/subscription leak: wmMapLayerEnableFeaturesInViewport
+    re-created the moveend listener and RxJS subscription on every activation
+    without tearing down the previous ones, orphaning listeners on the map
+    across NgRx re-emits (e.g. network reconnect). The listener closure only
+    ever closes over a stable field, so it's now created once and never
+    recreated, avoiding both the leak and a re-registration gap.
+    
+    Also switches the WmMapBaseDirective import from the '@map-core/directives'
+    barrel to a direct path, since the barrel also re-exports
+    custom-tracks.draw.directive -> graphhopper-js-api-client, whose UMD build
+    breaks Karma test execution for any file importing the barrel.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): add wm-plan artifacts and update CLAUDE.md
+    
+    Adds overview.md, plan.md, notes.md under docs/features/ for this fix,
+    and updates CLAUDE.md's "Feature disponibili" table and "Decisioni
+    architetturali" section with the root cause, the design decision behind
+    the single-listener fix, and technical debt discovered along the way
+    (5 pre-existing spec files already broken by the same barrel/graphhopper
+    issue, map.component.spec.ts broken by a missing ActivatedRoute provider,
+    and the enable=false-not-sticky pre-existing behavior).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): record manual verification result in notes.md
+    
+    Confirmed on localhost:4200/map: 5 real zoom changes with the feature
+    in its default (disabled) config produce no ol_key warning and no
+    other console errors, with the fix applied.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8277" target="_blank" rel="noopener noreferrer">OC[8277]</a>:** bump target/compile SDK Android a 36 ([3d6ed92](https://github.com/webmappsrl/webmapp-app/commit/3d6ed92146968b12026844f17cc884e1430c759d))
+<!-- COMMIT_DESC -->
+    
+    Aggiorna compileSdkVersion e targetSdkVersion da 35 a 36 in gulpfile.js
+    per soddisfare il requisito Google Play (targetSdk >= API 36 dal
+    31/08/2026). Capacitor resta invariato a 7.4.5, minSdkVersion invariato
+    a 28. Nessun fix difensivo per i nuovi behavior Android 16 in questo
+    ciclo (vedi docs/features/8277-android-target-sdk-36/).
+* **wm-core:** changelog for bump to 92011de ([f7798a6](https://github.com/webmappsrl/webmapp-app/commit/f7798a623bd193521cd28a1b7bf49065bacaff7a))
+<!-- COMMIT_DESC -->
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8174" target="_blank" rel="noopener noreferrer">OC[8174]</a>): add foreground version check on app resume
+    Registers App.addListener('appStateChange') in UpdateService.startForegroundWatcher.
+    The checkAppVersion$ effect calls watcher + update flow in concat on first dispatch.
+    _isUpdateInProgress flag prevents concurrent double-invocation on rapid foreground events.
+    
+    Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+* **wm-core:** changelog for bump to f804d24 ([48c1ba6](https://github.com/webmappsrl/webmapp-app/commit/48c1ba6c719278296ed709a20d4001085133db47))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): pulizia post-review di 2 log a valore diagnostico nullo
+    conf.reducer.ts: rimosso console.log('error') dentro catch (stringa
+    statica senza contesto). storage.service.ts: init() aveva corpo vuoto
+    residuo dopo la rimozione del log — normalizzato a {}. Deviazione
+    rispetto alla regola generale "console.* in catch resta intatto",
+    confermata dal developer in sede di review (wm-review-ticket).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): triage console log per policy niente log in produzione
+    Cancellati i console.log di puro rumore/debug, commentati con marker
+    // DEBUG: quelli con valore diagnostico per sviluppo futuro (init
+    wm-core.module, sync UGC, cache EC/API). I console.error/console.warn
+    restano intatti e visibili anche in produzione. Esclusi dal triage
+    services/posthog-capacitor.client.ts e store/features/ec/utils.ts
+    (asseriti da test unitari).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
 ## [3.1.16](https://github.com/webmappsrl/webmapp-app/compare/v3.1.15...v3.1.16) (2026-07-09)
 
 
@@ -10,15 +241,11 @@
     
     Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
 
-### Miscellaneous
-
 * enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
-* **map-core:** changelog for bump to 15c4f21 ([663fcab](https://github.com/webmappsrl/webmapp-app/commit/663fcab23612e4be8e3921138a18f1058728bc19))
 <!-- COMMIT_DESC -->
     
     - fix: CARG tile URL alignment with overlayXYZ
     Align CARG tile layer URL with `overlayXYZ` to ensure consistent tile display and downloads across offline scenarios.
-* **map-core:** changelog for bump to 58d48d9 ([fa00409](https://github.com/webmappsrl/webmapp-app/commit/fa00409d1249e5392a588106fc85a9975ca1308d))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): fallback locale offline per confini fogli CARG e icone controlli mappa (#61)
@@ -47,7 +274,6 @@
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): overview, piano e note wm-plan per il fix offline CARG
     
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): aggiorna CLAUDE.md con feature e decisioni architetturali
-* **wm-core:** changelog for bump to 2c03728 ([9f3c054](https://github.com/webmappsrl/webmapp-app/commit/9f3c05479293a6c8b73f22542028f9ed5231534a))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map (#173)
@@ -99,8 +325,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-## [3.1.14](https://github.com/webmappsrl/webmapp-app/compare/v3.1.13...v3.1.14) (2026-06-26)
-
 
 ### Miscellaneous
 
@@ -129,7 +353,6 @@
     and wraps copyFileSync in try/catch to avoid unhandled rejections.
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>): add PosthogContextService to auto-enrich PostHog events with context
     - New PosthogContextService: transparent wrapper on PosthogCapacitorClient
@@ -144,7 +367,6 @@
     - docs: overview.md, plan.md, notes.md for <a href="https://orchestrator.maphub.it/resources/customer-stories/8115" target="_blank" rel="noopener noreferrer">OC[8115]</a>
     
     Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): add mode field to WmPosthogProps (#16)
     * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8127" target="_blank" rel="noopener noreferrer">OC[8127]</a>): add mode field to WmPosthogProps
@@ -269,10 +491,8 @@
         fix(localization): 🐛 update account deletion prompts to use "delete account" across multiple languages
         Revised localization files for German, English, Spanish, French, Italian, Portuguese, and Albanian to standardize the phrasing for account deletion prompts. Changed instances of "elimina account" and "eliminar cuenta" to "delete account" to ensure consistency and clarity in user instructions.
         chore(swiper): 🎉 introduce WmSwiperComponent for enhanced Swiper integration
-
         Added a new `WmSwiperComponent` to streamline Swiper usage across various components. Updated existing components to replace `swiper-container` with `wm-swiper`, improving code consistency and maintainability. Adjusted TypeScript logic to interact with the new component structure, ensuring a smoother user experience with Swiper functionalities.
         refactor(swiper): ♻️ improve error handling and code style in swiper component
-
         - Added a try-catch block to the `init` method for better error handling when initializing the swiper element.
         - Reformatted the styles array in the component decorator for improved readability.
         - Simplified the `ngOnChanges` condition by removing unnecessary line breaks.
@@ -470,9 +690,7 @@
         and `HomeResultTab` types for filter-related actions and
         state throughout the codebase. This enhances consistency
         and maintainability.
-
         Relates to oc_6780
-
         - chore(home): enhance tab selection logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Replaces logic to determine which tab to show based on available data,
         prioritizing user preference and results availability.
