@@ -10,6 +10,8 @@
 > spostamento dell'intestazione e due decisioni di team del 04/09 hanno cambiato ordine ed
 > etichette — vedi [notes.md](notes.md#deviazioni-dal-piano). In particolare
 > `map.page.html` **non** è rimasto invariato: le righe 12-32 sono state rimosse.
+> Etichetta finale del gruppo contatti/link: **«Informazioni»** (non «Contatti»).
+> `address_link` non esiste più — solo `address` (vedi overview § Stato raggiunto).
 
 **Architecture:** `map.page.html` resta invariato (`<wm-poi-properties>`). Si elimina `PoiPropetiesModule` e la cartella `components/poi-properties/`. Il gitlink `core/src/app/shared/wm-core` punta al commit che contiene la promozione.
 
@@ -92,9 +94,9 @@ Expected: exit 0. Se fallisce per `SharedModule`/export, fix minimo (ri-export o
 
 - [ ] **Step 2: QA manuale (3 casi)**
 
-1. POI con indirizzo e senza quota → indirizzo sotto **Contatti** (icona + testo); **non** blocco tecnici; «Link utili» assente senza `related_url`  
+1. POI con indirizzo e senza quota → indirizzo sotto **Informazioni** (icona + testo); **non** blocco tecnici  
 2. POI con `contact_phone` CSV → N link `tel:`  
-3. POI con `config_detail` → accordion presente  
+3. POI con `config_detail` → accordion presente (solo se lo shard lo espone; su geohub spesso assente)
 
 - [ ] **Step 3: Aggiornare Cypress `ec-poi-details.cy.ts` se gli assert su `wm-phone` vanno aggiornati per multi-numero** (solo se falliscono)
 
