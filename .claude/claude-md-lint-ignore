@@ -1,0 +1,6 @@
+# Rilievi del lint accettati come falsi positivi. Restano nell'output come `suppressed`,
+# quindi si vedono ancora, ma non vanno rispiegati a ogni passata.
+#
+# registrazione-traccia.md:15 — «il default resta true per non toccare l'uso esistente» è
+# descrittivo: racconta una scelta fatta, non dà un'istruzione a chi scrive codice.
+trap-in-page:docs/knowledge/registrazione-traccia.md:15
