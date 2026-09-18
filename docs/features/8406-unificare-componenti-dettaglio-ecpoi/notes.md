@@ -8,10 +8,28 @@ riguarda l'app.
 
 ## Deviazioni dal piano
 
-- **Nessuna sul contenuto**: il lavoro è quello previsto — rimozione del componente
-  locale, ri-consumo da `WmCoreModule`, markup di `map.page.html:70` invariato.
+- **Il perimetro si è allargato in corsa.** La parte prevista dall'overview — rimozione del
+  componente locale e ri-consumo da `WmCoreModule` — è andata come scritta e senza attriti.
+  Si è poi aggiunto lo spostamento dell'intestazione, e due decisioni di team hanno cambiato
+  ordine ed etichette: sotto i due punti che seguono.
 - **`PoiPropetiesModule` aveva un solo importatore**, `map.module.ts:6`. La rimozione è
   risultata più netta del previsto: nessuna catena di import da sbrogliare.
+
+- **Rimossa anche l'intestazione dal pannello, non prevista dall'overview iniziale.** Il
+  piano si fermava al consumo del componente promosso. Titolo, località e
+  `wm-related-pois-navigator` sono stati spostati in `wm-poi-properties` in un secondo
+  momento, quando è emerso che erano markup duplicato con il popup di `wm-webapp` e che le
+  due rese erano divergenti. Qui restano il pulsante di chiusura (su `wm-map-details`, mai
+  stato dentro il blocco rimosso), il ramo UGC con `wm-updated-at` e il ramo traccia.
+
+- **Due decisioni di team hanno superato scelte prese in questo cantiere.** Vengono dalle
+  trascrizioni degli scrum, call del 04/09/2026, e non erano nel ticket né nei piani:
+  le tassonomie vanno **subito sotto il titolo** e non in fondo (stavano in fondo in
+  entrambi i prodotti, quindi promuovendo la mobile in libreria era stato riprodotto
+  fedelmente un ordine già bocciato); le etichette che separano i gruppi vanno tolte.
+  Lo split «Contatti» / «Link utili» chiesto durante il QA del 03/09 è stato quindi
+  sostituito da un elenco unico, oggi intitolato «Informazioni». Chi rilegge la cronologia
+  di questo file troverà le due cose in contraddizione: la seconda è posteriore e prevale.
 
 ## Bug trovati
 
@@ -57,6 +75,12 @@ riguarda l'app.
   parte della feature e non deve entrare nella PR.
 
 ## Follow-up
+
+- **Il criterio di QA su `config_detail` non è stato eseguito, e non era eseguibile**: il
+  campo esiste solo sullo shard dev di Cammini d'Italia (POI «Santa Barbara», due blocchi
+  popolati). Su geohub e sulle app FIE, dove è stato fatto il QA, la lista è vuota e
+  l'accordion non compare. Era uno dei tre casi manuali approvati dal dev: resta scoperto,
+  non superato.
 
 - Ripristinare `environment.ts`.
 - Riallineare `node_modules` all'`overrides` di `package.json` e ripetere la build di

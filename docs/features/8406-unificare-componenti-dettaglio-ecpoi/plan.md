@@ -6,6 +6,11 @@
 
 **Goal:** Rimuovere il `PoiPropertiesComponent` locale e consumare quello di wm-core via `WmCoreModule`, con pin submodule aggiornato e verifica build production.
 
+> ⚠️ L'implementazione ha deviato da questo piano: il perimetro si è allargato allo
+> spostamento dell'intestazione e due decisioni di team del 04/09 hanno cambiato ordine ed
+> etichette — vedi [notes.md](notes.md#deviazioni-dal-piano). In particolare
+> `map.page.html` **non** è rimasto invariato: le righe 12-32 sono state rimosse.
+
 **Architecture:** `map.page.html` resta invariato (`<wm-poi-properties>`). Si elimina `PoiPropetiesModule` e la cartella `components/poi-properties/`. Il gitlink `core/src/app/shared/wm-core` punta al commit che contiene la promozione.
 
 **Tech Stack:** Angular 20 / Ionic 8, submodule wm-core.

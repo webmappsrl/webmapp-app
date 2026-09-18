@@ -26,14 +26,20 @@ consumatore nuovo non distingerebbe spostamento vs integrazione popup.
 
 - [ ] `core/src/app/components/poi-properties/` rimosso (4 file)
 - [ ] `PoiPropetiesModule` rimosso da `map.module.ts`
-- [ ] `map.page.html:70` invariato nel markup, via `WmCoreModule`
+- [ ] `<wm-poi-properties>` risolto da `WmCoreModule` invece che dal modulo locale
+- [ ] Intestazione rimossa dall'header del pannello — località, titolo e
+      `wm-related-pois-navigator` li rende ora il componente condiviso. Il pulsante di
+      chiusura, il ramo UGC e il ramo traccia restano al pannello
 - [ ] Pin wm-core (ordine wm-types → wm-core → pin)
 - [ ] Verifica build `--configuration production`
 - [ ] Verifica manuale:
-  - POI con indirizzo e **senza** quota — indirizzo sotto **Contatti** (icona + testo),
-    **non** blocco tecnici per il solo address; «Link utili» assente se non c’è `related_url`
-  - POI con `contact_phone` multiplo — N `tel:`
-  - POI con `config_detail` — accordion presente
+  - POI con indirizzo e **senza** quota — indirizzo nel gruppo «Informazioni» (icona +
+    testo), **non** nel blocco dei dettagli tecnici
+  - POI con `contact_phone` multiplo — N `tel:` distinti, nessuna etichetta del backend
+  - POI qualsiasi — località sopra il titolo, tassonomie subito sotto, titolo **non**
+    duplicato
+  - ~~POI con `config_detail` — accordion presente~~ **non verificabile**: il campo esiste
+    solo sullo shard dev di Cammini d'Italia (vedi notes.md)
 - [ ] Nessuna regressione sul branching dei quattro fratelli in `map.page.html`
 
 ## Rischi
