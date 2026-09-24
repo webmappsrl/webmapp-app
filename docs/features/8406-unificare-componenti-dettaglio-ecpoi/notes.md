@@ -76,6 +76,41 @@ riguarda l'app.
 
 ## Follow-up
 
+- **I temi per-shard si sono scollegati dal componente promosso, e nessuno se ne accorge.**
+  **Risolto sotto oc:8613**, con sole modifiche al tema; il perché sta in
+  [docs/knowledge/temi-e-varianti-di-shard.md](../../knowledge/temi-e-varianti-di-shard.md).
+  `core/src/theme/geohub/75.css` riordina le sezioni del dettaglio POI con `order:` flexbox.
+  Rinominando gli elementi, quattro suoi selettori sono rimasti orfani — in flexbox un figlio
+  senza `order` vale 0 e finisce **in cima**, quindi il blocco dei contatti è comparso sotto
+  il nome invece che in fondo, e ha perso anche i propri stili. Un selettore CSS che non
+  corrisponde a nulla non è un errore per nessuno strumento: né build, né test, né lint.
+  **Quando si rinomina un elemento del dettaglio, i temi per-shard vanno controllati a mano.**
+  Il comando che elenca gli orfani:
+
+  ```bash
+  grep -rhoE "selector: *'[^']+'" core/src/app --include="*.ts" | sed "s/selector: *'//;s/'$//" \
+    | tr ',' '\n' | sed 's/^ *//;s/ *$//' | grep -E "^(wm|webmapp)-" | sort -u > /tmp/sel.txt
+  grep -ohE "(^|[ ,>~+])(wm|webmapp)-[a-z0-9-]+" core/src/theme/*/*.css | sed 's/^[ ,>~+]//' \
+    | sort -u | comm -23 - /tmp/sel.txt
+  ```
+
+- **Da valutare: temi per-shard condivisi fra i due prodotti.** Oggi mobile e webapp hanno
+  cartelle `theme/` separate, una per repo, con **nove file e nessuna sovrapposizione**: la
+  mobile ha `camminiditalia/1.css`, `camminiditaliadev/1.css` e `geohub/75.css`; la webapp ha
+  `forestas/1.css` (più le varianti dev e uat, identiche) e `geohub/{29,32,33}.css`.
+  Nessuna app è customizzata su entrambi, quindi oggi non esiste drift — ma per l'app 75 la
+  webapp risponde **404** su `/theme/geohub/75.css`, e questa è la vera ragione per cui i due
+  prodotti rendono il dettaglio in ordine diverso, non una differenza del codice condiviso.
+
+  La condivisione sarebbe fattibile e il precedente esiste già: entrambi gli `angular.json`
+  copiano già asset da dentro un submodule (`map-core/src/assets` → `map-core/assets`), e
+  `meta.component.ts:50` che costruisce l'URL del tema **è già in wm-core**, quindi condiviso.
+  Servirebbe una cartella di temi in wm-core e una riga di `assets` per prodotto.
+  **Non è stato fatto in questo ciclo**: un file unico non renderebbe identici i due prodotti
+  finché il contenitore della webapp non è allineato, perché l'`order` agisce sul contenitore
+  flex e lì è diverso. Il dev ha deciso di valutarlo più avanti, eventualmente con un ticket
+  dedicato.
+
 - **Il criterio di QA su `config_detail` non è stato eseguito, e non era eseguibile**: il
   campo esiste solo sullo shard dev di Cammini d'Italia (POI «Santa Barbara», due blocchi
   popolati). Su geohub e sulle app FIE, dove è stato fatto il QA, la lista è vuota e

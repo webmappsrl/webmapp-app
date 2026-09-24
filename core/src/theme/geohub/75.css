@@ -253,7 +253,7 @@ wm-track-properties wm-tab-image-gallery {
 wm-track-properties .wm-track-details-track-related-poi {
   order: 12 !important;
 }
-wm-track-properties wm-tab-audio {
+wm-track-properties wm-track-audio {
   order: 13 !important;
 }
 wm-track-properties .wm-track-details-download {
@@ -280,7 +280,7 @@ wm-tab-image-gallery,
 wm-track-related-poi {
   position: relative;
 }
-wm-feature-useful-urls::after,
+.wm-poi-properties-contacts::after,
 wm-tab-howto::after,
 wm-tab-description::after,
 wm-get-directions::after,
@@ -636,21 +636,28 @@ wm-poi-properties > .wm-poi-properties-body .wm-poi-properties-info {
 wm-poi-properties > .wm-poi-properties-body wm-get-directions {
   order: 6;
 }
-wm-poi-properties > .wm-poi-properties-body wm-excerpt {
+wm-poi-properties > .wm-poi-properties-body .wm-excerpt {
   order: 7;
 }
 wm-poi-properties > .wm-poi-properties-body wm-tab-detail {
   order: 8;
 }
-wm-poi-properties > .wm-poi-properties-body wm-feature-useful-urls {
+wm-poi-properties > .wm-poi-properties-body .wm-poi-properties-contacts {
   order: 9;
   position: relative;
 }
-wm-poi-properties > .wm-poi-properties-body wm-tab-audio {
+wm-poi-properties > .wm-poi-properties-body wm-track-audio {
   order: 10;
 }
 wm-poi-properties > .wm-poi-properties-body wm-inner-component-html {
   order: 11;
+  /* Su questa app `--wm-feature-details-margin` vale `0px !important` (riga 26): la spaziatura
+     la dà il padding di ciascun blocco, non il margine comune. Da oc:8406 wm-core azzera il
+     padding proprio dell'HTML incorporato e sposta lo spazio su quel margine — qui inesistente,
+     quindi il riquadro si attaccava alla linea di separazione dei contatti.
+     `!important` perché la regola del componente ha la stessa specificità di questa ed è
+     iniettata dopo il foglio statico, quindi vincerebbe. (oc:8613) */
+  padding: 24px 16px !important;
 }
 wm-poi-properties > .wm-poi-properties-body wm-tab-description::after,
 wm-poi-properties > .wm-poi-properties-body wm-tab-image-gallery::after,
@@ -725,15 +732,15 @@ wm-poi-properties > .wm-poi-properties-body wm-inner-component-html ion-label {
 wm-tab-image-gallery ion-label {
   font-size: var(--wm-font-size-xl) !important;
 }
-wm-feature-useful-urls .webmapp-title,
+.wm-poi-properties-contacts .webmapp-title,
 wm-tab-howto .webmapp-title {
   font-size: var(--wm-font-size-xl) !important;
   font-family: var(--wm-75-font-family-title) !important;
 }
-wm-feature-useful-urls ion-item {
+.wm-poi-properties-contacts ion-item {
   --inner-border-width: 0px;
 }
-wm-feature-useful-urls ion-item ion-label {
+.wm-poi-properties-contacts ion-item ion-label {
   font-family: var(--wm-75-font-family-utility) !important;
   font-size: var(--wm-font-size-sm) !important;
 }
