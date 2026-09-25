@@ -9,8 +9,14 @@
 
 Le personalizzazioni per singolo shard hanno **due strade**, e la scelta non è libera.
 
-**CSS, quando basta lo stile**: un tema in `core/src/theme/<shard>/`, caricato a runtime da
-`MetaComponent` (`wm-core`) solo per quello shard.
+**CSS, quando basta lo stile**: un foglio per app, caricato a runtime da `MetaComponent`
+(`wm-core`) solo per quello shard. **Da oc:8613 questi file non stanno più qui**: vivono in
+`core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/<shard>/<appId>.css`, dentro il
+submodule, così la stessa app si vede uguale sull'app e sulla webapp — prima i due prodotti ne
+tenevano insiemi disgiunti. `core/src/theme/` esiste ancora ma contiene **solo** gli SCSS di
+shard (`default/`, `stelvio/`) usati a compile-time da `stylePreprocessorOptions`: è un'altra
+cosa. Il meccanismo è documentato in
+[`assets/theme/README.md`](../../core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/README.md).
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Oggi lo
@@ -78,7 +84,8 @@ elencano così:
 ```bash
 grep -rhoE "selector: *'[^']+'" core/src/app --include="*.ts" | sed "s/selector: *'//;s/'$//" \
   | tr ',' '\n' | sed 's/^ *//;s/ *$//' | grep -E "^(wm|webmapp)-" | sort -u > /tmp/sel.txt
-grep -ohE "(^|[ ,>~+])(wm|webmapp)-[a-z0-9-]+" core/src/theme/*/*.css | sed 's/^[ ,>~+]//' \
+grep -ohE "(^|[ ,>~+])(wm|webmapp)-[a-z0-9-]+" \
+  core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/*/*.css | sed 's/^[ ,>~+]//' \
   | sort -u | comm -23 - /tmp/sel.txt
 ```
 

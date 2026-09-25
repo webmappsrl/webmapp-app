@@ -126,8 +126,37 @@ margini, `display: none`, dimensione e famiglia del titolo arrivano tutti al ber
 `!important` aggiuntivi** — i due rami hanno la stessa lunghezza di catena, quindi la specificità
 non cambia.
 
-Restano fuori le **cinque strutturali** (`> ion-card`, un `::after`, tre `:has(...)`): il dettaglio
-della webapp è un `div` senza `ion-card`, quindi vanno tradotte, non estese.
+## Le sei strutturali restano solo mobile
+
+Erano cinque nel conteggio iniziale: mi era sfuggita `ion-card-content:has(wm-image-detail)`. Sono
+`wm-map-details > ion-card`, `wm-map-details::after` e i **quattro** `ion-card-content:has(...)`
+(`wm-track-properties`, `wm-home-layer`, `wm-poi-properties`, `wm-image-detail`).
+
+Nessuna è stata tradotta, e la decisione è sul contenuto, non sul nome:
+
+- **`> ion-card`** ha `padding-bottom: 90px` per la tab bar, che la webapp non ha, e azzera i
+  padding laterali di `ion-card`, che sulla webapp non esiste.
+- **`::after`** disegna la linguetta bianca arrotondata *sopra* il pannello, a `top: -10px`. Il
+  contenitore della webapp è a `top: 0` e si apre in larghezza invece di scorrere dal basso: non
+  esiste un «sopra il pannello» dove disegnarla. Non è una scelta estetica, è inapplicabile.
+- **I quattro `:has(...)`** compensano l'altezza di `ion-card-content` a seconda di cosa contiene
+  (`+24px`, `+70px`, `+14px`, `+70px`): sono correzioni al padding di Ionic. Il contenitore della
+  webapp ha un'altezza propria da `--wm-poi-popup-top`, quindi sommarci quei valori darebbe
+  overflow.
+
+Verificato che tutti e quattro i `:has(...)` sono vivi sulla mobile: `:has(wm-track-properties)`
+vale 1 col percorso aperto, `:has(wm-poi-properties)` 1 col POI, e così gli altri.
+
+## Dove stanno i temi, dopo questo lavoro
+
+I nove file sono passati da `core/src/theme/<shard>/` a
+`wm-core/projects/wm-core/src/assets/theme/<shard>/`, pubblicati da entrambi i prodotti con una
+voce di `assets` in `angular.json`. Di conseguenza sono state riallineate le indicazioni che
+puntavano al percorso vecchio: la riga del `CLAUDE.md`, la pagina
+[temi-e-varianti-di-shard](../../knowledge/temi-e-varianti-di-shard.md) — dove anche la ricetta
+per cercare i selettori orfani cercava in una cartella ormai vuota, quindi restituiva zero — e in
+`wm-core` la pagina `varianti-per-shard`, che diceva ancora «il file non sta qui» contraddicendo
+il README messo accanto ai file.
 
 ## Follow-up
 

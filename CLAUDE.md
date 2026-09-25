@@ -19,9 +19,11 @@ proprio `CLAUDE.md`, la conoscenza in `docs/knowledge/` e le trappole in `.claud
 
 ## Regole del repo
 
-- **Non modificare un file condiviso per personalizzare un singolo shard.** Se basta lo stile, un
-  tema in `core/src/theme/<shard>/`; se la UI è strutturalmente diversa, `fileReplacements` — con i
-  vincoli che stanno fra le trappole, non sono ovvi.
+- **Non modificare un file condiviso per personalizzare un singolo shard.** Se basta lo stile, il
+  foglio per app in `wm-core`, sotto `projects/wm-core/src/assets/theme/<shard>/<appId>.css` — non
+  più in `core/src/theme/`, che oggi tiene solo gli SCSS di shard per `stylePreprocessorOptions`;
+  se la UI è strutturalmente diversa, `fileReplacements` — con i vincoli che stanno fra le
+  trappole, non sono ovvi.
 - **Non buildare il deploy web generico con `--configuration=<shard>`.** `EnvironmentService.init()`
   sceglie lo shard a runtime dall'hostname, quindi il bundle su `mobile.webmapp.it` è **uno solo,
   condiviso da tutti i clienti**: quella build pubblicherebbe il template di un cliente a tutti gli
