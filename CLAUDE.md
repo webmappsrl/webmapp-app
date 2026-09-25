@@ -99,4 +99,6 @@ Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` ch
 si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, più il deploy web
 multi-tenant), `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per
 tipo, la chiave dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
-`downloadOverlay` omonimi, gli import di `pages/poi/`) e `template-wm-map` (l'ordine degli attributi su `<wm-map>`).
+`downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
+su `<wm-map>`) e `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
+mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire).
