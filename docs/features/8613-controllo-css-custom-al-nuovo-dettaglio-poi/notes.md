@@ -66,6 +66,69 @@ aggiunti accanto a quello di oc:8305. Qui resta la cronaca.
   pannello alto 0, e solo dopo qualche secondo il contenuto. **Misurare il DOM del pannello senza
   attendere il mount produce falsi negativi.**
 
+## La misura dei selettori del tema 75
+
+Prima di riscrivere le regole prefissate con `wm-map-details` serviva sapere quali agganciano
+davvero qualcosa. Misurato il 25/09/2026 sulla mobile in locale, app 75, tema servito
+(26.771 byte), percorrendo **16 stati distinti** dell'interfaccia: home landing, lista dei layer,
+vista layer nel pannello, schede Percorsi e Luoghi, dettaglio POI (chiuso ed espanso), galleria
+immagini aperta, pannello filtri, filtro selezionato, dettaglio percorso, profilo, feature nel
+viewport.
+
+| | |
+|---|---|
+| Selettori distinti nel tema | 209 |
+| Raggiungibili sulla mobile | 168 |
+| Rami `.details-container`, inerti qui per costruzione | 9 |
+| Non raggiungibili sulla mobile | 32 |
+
+Dei 32: in **27 casi il contenitore esiste** e a non trovare riscontro è solo la parte finale del
+selettore — sono regole scritte su una struttura che il componente non ha più. In **5 casi il
+componente non compare mai** (`wm-related-pois-navigator`, `.wm-poi-properties-info`,
+`.sketchfab-embed-wrapper`).
+
+Casi che vale la pena nominare:
+
+- **`ion-chip.ion-color-success` nei filtri, 4 regole.** Il chip selezionato oggi prende la classe
+  `wm-active-filter`; `ion-color-success` non esiste più nel componente. Sono morte per un
+  rename, non per il ticket.
+- **`.webmapp-pagepoi-info-header-pre-title` e `-title`, più i due `.webmapp-info-header-container
+  > ion-label`.** Sono le quattro regole del titolo delle Ville, congelate in attesa della
+  decisione del dev: il contenitore `wm-map-details ion-card` c'è, la catena interna no.
+- **`.sketchfab-embed-wrapper`** riguarda gli embed 3D: nessun POI dell'app li ha, quindi non è
+  detto sia morta — è senza dato.
+
+### Due errori di metodo, entrambi corretti durante la misura
+
+- **`querySelectorAll` non aggancia mai uno pseudo-elemento.** Prova di controllo:
+  `document.querySelectorAll('body::after')` restituisce `0` mentre `body` esiste. Le 14 regole con
+  `::after`/`::before` risultavano tutte morte per artefatto dello strumento; rimisurate
+  sull'elemento host, **12 su 14 sono vive**. Senza questo controllo il numero dei morti sarebbe
+  stato gonfiato di un terzo.
+- **Le tab di Ionic tengono montate più pagine insieme.** Un `wm-home-layer` trovato con una query
+  globale può stare dentro `wm-home` (Esplora) e non dentro `wm-map-details`: verificato con
+  `closest()`. Nello stato «layer aperto» i due mount point sono **vivi nello stesso momento** —
+  ed è la prova diretta che il prefisso `wm-map-details` è portante e non decorativo.
+
+Una terza premessa era sbagliata a monte: avevo dato l'app 75 per priva di layer. Ne ha **cinque**,
+letti dalla `config.json` servita all'app in esecuzione. Il numero precedente dei non raggiungibili
+si appoggiava a quella deduzione ed è stato buttato.
+
+## Le 8 regole di contenuto rese condivise
+
+Commit `492c4ea` in `wm-core`. Nove selettori (dieci occorrenze) hanno ora un secondo ramo
+`.details-container`, il contenitore del dettaglio sulla webapp. La forma è **additiva**: il ramo
+mobile resta identico al byte, e `.details-container` non è prodotta da nessun template della
+mobile, quindi qui il nuovo ramo è inerte per costruzione.
+
+Controprova dell'agente sulla webapp, app 75, `/map?layer=502`, con `getComputedStyle`: padding,
+margini, `display: none`, dimensione e famiglia del titolo arrivano tutti al bersaglio, **senza
+`!important` aggiuntivi** — i due rami hanno la stessa lunghezza di catena, quindi la specificità
+non cambia.
+
+Restano fuori le **cinque strutturali** (`> ion-card`, un `::after`, tre `:has(...)`): il dettaglio
+della webapp è un `div` senza `ion-card`, quindi vanno tradotte, non estese.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
