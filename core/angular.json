@@ -34,6 +34,11 @@
                 "output": "map-core/assets"
               },
               {
+                "glob": "**/*.css",
+                "input": "src/app/shared/wm-core/projects/wm-core/src/assets/theme",
+                "output": "theme"
+              },
+              {
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"

@@ -82,30 +82,6 @@ webmapp-map-page {
       text-overflow: ellipsis;
       margin: 6px;
     }
-    .webmapp-pagepoi-info-header {
-      width: 100%;
-      position: relative;
-      color: black;
-      text-align: left;
-
-      .webmapp-pagepoi-info-header-pre-title {
-        color: var(--wm-color-primary);
-        font-size: var(--wm-font-lg);
-        font-weight: var(--wm-font-weight-bold);
-        text-transform: uppercase;
-      }
-      .webmapp-pagepoi-info-header-title {
-        font-size: var(--wm-font-lg);
-        font-weight: var(--wm-font-weight-bold);
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-
-        > div {
-          flex: 1;
-        }
-      }
-    }
   }
 
   .wm-map-tiles-download-button {

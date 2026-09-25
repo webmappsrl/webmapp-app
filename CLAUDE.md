@@ -19,9 +19,11 @@ proprio `CLAUDE.md`, la conoscenza in `docs/knowledge/` e le trappole in `.claud
 
 ## Regole del repo
 
-- **Non modificare un file condiviso per personalizzare un singolo shard.** Se basta lo stile, un
-  tema in `core/src/theme/<shard>/`; se la UI è strutturalmente diversa, `fileReplacements` — con i
-  vincoli che stanno fra le trappole, non sono ovvi.
+- **Non modificare un file condiviso per personalizzare un singolo shard.** Se basta lo stile, il
+  foglio per app in `wm-core`, sotto `projects/wm-core/src/assets/theme/<shard>/<appId>.css` — non
+  più in `core/src/theme/`, che oggi tiene solo gli SCSS di shard per `stylePreprocessorOptions`;
+  se la UI è strutturalmente diversa, `fileReplacements` — con i vincoli che stanno fra le
+  trappole, non sono ovvi.
 - **Non buildare il deploy web generico con `--configuration=<shard>`.** `EnvironmentService.init()`
   sceglie lo shard a runtime dall'hostname, quindi il bundle su `mobile.webmapp.it` è **uno solo,
   condiviso da tutti i clienti**: quella build pubblicherebbe il template di un cliente a tutti gli
@@ -88,10 +90,10 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Download offline e `hitMapUrl` | Il flusso per lo shard carg, l'invariante con `map-core` | oc:8190 | [docs/knowledge/download-offline-carg.md](docs/knowledge/download-offline-carg.md) |
 | Gulp, risorse native e permessi | Validazione delle dimensioni, permessi Android, immagini di profilo, posthog | oc:8246, oc:7294, oc:7480, oc:8105, oc:8277 | [docs/knowledge/gulp-e-build-native.md](docs/knowledge/gulp-e-build-native.md) |
 | Log in produzione | Il criterio di triage a due assi, cosa resta e perché | oc:8369 | [docs/knowledge/log-in-produzione.md](docs/knowledge/log-in-produzione.md) |
-| Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi | oc:8313, oc:8458, oc:8427, oc:8181 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
+| Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi; dettaglio POI in wm-core | oc:8313, oc:8458, oc:8427, oc:8181, oc:8406 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
 | Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato | oc:8284 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
-| Temi e varianti di shard | CSS o `fileReplacements`, la searchbar camminiditalia, gli override che si rompono | oc:8305, oc:8391, oc:8414 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
+| Temi e varianti di shard | CSS o `fileReplacements`, la searchbar camminiditalia, gli override che si rompono | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
 ## Trappole
 
@@ -99,4 +101,6 @@ Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` ch
 si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, più il deploy web
 multi-tenant), `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per
 tipo, la chiave dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
-`downloadOverlay` omonimi, gli import di `pages/poi/`) e `template-wm-map` (l'ordine degli attributi su `<wm-map>`).
+`downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
+su `<wm-map>`) e `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
+mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire).

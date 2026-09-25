@@ -9,8 +9,14 @@
 
 Le personalizzazioni per singolo shard hanno **due strade**, e la scelta non è libera.
 
-**CSS, quando basta lo stile**: un tema in `core/src/theme/<shard>/`, caricato a runtime da
-`MetaComponent` (`wm-core`) solo per quello shard.
+**CSS, quando basta lo stile**: un foglio per app, caricato a runtime da `MetaComponent`
+(`wm-core`) solo per quello shard. **Da oc:8613 questi file non stanno più qui**: vivono in
+`core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/<shard>/<appId>.css`, dentro il
+submodule, così la stessa app si vede uguale sull'app e sulla webapp — prima i due prodotti ne
+tenevano insiemi disgiunti. `core/src/theme/` esiste ancora ma contiene **solo** gli SCSS di
+shard (`default/`, `stelvio/`) usati a compile-time da `stylePreprocessorOptions`: è un'altra
+cosa. Il meccanismo è documentato in
+[`assets/theme/README.md`](../../core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/README.md).
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Oggi lo
@@ -54,6 +60,40 @@ sono ignorate, senza alcun errore. È già successo (oc:8305): la migrazione a C
 inerte una personalizzazione di `stelvio` (`top:20%`), corretta con l'approvazione esplicita del
 developer pur essendo fuori dallo scope del ticket — **le personalizzazioni per-shard devono
 restare funzionanti anche quando cambia la tecnica di base del componente condiviso**.
+
+Lo stesso schema si è ripetuto due volte con oc:8406, su `geohub/75.css` — l'unico tema che
+riordina il dettaglio di un POI, con `order:` su `.wm-poi-properties-body`:
+
+- **Rinominare un elemento scollega i selettori che lo prendono di mira** (oc:8406 → oc:8613):
+  promuovendo il componente in `wm-core`, `wm-feature-useful-urls` è diventato
+  `.wm-poi-properties-contacts`, e l'`excerpt` e l'audio hanno cambiato nome. In flexbox un
+  figlio **senza** `order` vale 0, e lo 0 viene **prima** di qualunque valore positivo: il blocco
+  dei contatti, che doveva stare al nono posto, è salito sotto il titolo — e aveva perso anche
+  i propri stili, perché altre quattro regole puntavano allo stesso wrapper.
+- **Spostare una spaziatura dal padding al margine la cancella, se un tema azzera quel margine**
+  (oc:8406 → oc:8613): `75.css` dichiara `--wm-feature-details-margin: 0px !important`, perché
+  lì lo spazio lo dà il `padding` di ciascun blocco. Quando `wm-core` ha tolto il padding proprio
+  all'HTML incorporato spostando lo spazio su quel margine, su questa app il padding è sparito
+  senza nulla a sostituirlo, e il riquadro si è attaccato alla linea di separazione.
+
+**Niente segnala nessuno dei due casi**: un selettore che non corrisponde a nulla non è un errore
+per build, test o lint, e un `var()` che risolve a `0px` è un valore legittimo. Dopo un refactor
+che rinomina o rispazia gli elementi del dettaglio, i temi vanno controllati a mano. Gli orfani si
+elencano così:
+
+```bash
+grep -rhoE "selector: *'[^']+'" core/src/app --include="*.ts" | sed "s/selector: *'//;s/'$//" \
+  | tr ',' '\n' | sed 's/^ *//;s/ *$//' | grep -E "^(wm|webmapp)-" | sort -u > /tmp/sel.txt
+grep -ohE "(^|[ ,>~+])(wm|webmapp)-[a-z0-9-]+" \
+  core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/*/*.css | sed 's/^[ ,>~+]//' \
+  | sort -u | comm -23 - /tmp/sel.txt
+```
+
+Attenzione a due cose usandolo: `\s` non funziona in ERE POSIX, e con la regex sbagliata
+l'estrazione dei selettori restituisce zero, quindi **tutto** risulta orfano — un numero fuori
+scala vuol dire strumento rotto, non codice rotto. E un `!important` può servire davvero: la
+regola del tema e quella del componente hanno spesso la **stessa** specificità, e il CSS del
+componente Angular è iniettato dopo il foglio statico, quindi a parità vince lui.
 
 ## Debito noto
 
