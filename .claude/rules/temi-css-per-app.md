@@ -38,3 +38,15 @@ Il perché di questi file sta in
   cambiare. Le regole che dipendono dalla forma della card (`> ion-card`, `wm-map-details::after`,
   i quattro `ion-card-content:has(...)`) restano solo mobile: il dettaglio della webapp è un `div`
   senza `ion-card` e senza tab bar.
+
+- **Una glob che non trova niente non protesta.** I temi sono pubblicati da una voce di `assets`
+  in `core/angular.json` e nessuno li referenzia a compile-time: se il submodule è a un commit che
+  precede oc:8613, la cartella non c'è, la build **riesce** e l'app esce senza i CSS dei clienti.
+  Per questo `npm run build`, i sette script che invocano `ionic build` direttamente, i due deploy
+  web, `preview.yml` e `runIonicBuild` nel `gulpfile` passano tutti da
+  `node src/app/shared/wm-core/scripts/check-themes.js`. Vale la regola generale: in una
+  scansione, *zero risultati* e *zero problemi* si leggono uguale — serve un'aspettativa
+  dichiarata (qui, almeno un `.css`) perché il vuoto diventi un errore.
+
+- **`abort()` nel `gulpfile` non interrompe**, logga soltanto. Per fermare davvero una build si usa
+  `throw new Error('Build interrotta: …')`, come fanno le validazioni di `icon.png` e `splash.png`.
