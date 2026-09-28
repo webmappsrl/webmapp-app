@@ -1002,18 +1002,26 @@ function checkBuiltThemes(instanceName) {
   const dir = instancesDir + instanceName;
   const manifest = dir + '/theme-manifest.json';
   if (!fs.existsSync(manifest)) return; // gia' segnalato da checkInstanceThemes()
-  const attesi = JSON.parse(fs.readFileSync(manifest, 'utf8'));
-  const mancanti = attesi.filter(tema => !fs.existsSync(dir + '/www/theme/' + tema));
-  if (mancanti.length > 0) {
+  let expected;
+  try {
+    expected = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  } catch (err) {
+    throw new Error('Build interrotta: ' + manifest + ' non e\' JSON valido — ' + err.message);
+  }
+  if (!Array.isArray(expected)) {
+    throw new Error('Build interrotta: ' + manifest + ' deve contenere un array di temi.');
+  }
+  const missing = expected.filter(theme => !fs.existsSync(dir + '/www/theme/' + theme));
+  if (missing.length > 0) {
     throw new Error(
       'Build interrotta: la `www/` di ' +
         instanceName +
         ' e\' vecchia — mancano ' +
-        mancanti.length +
+        missing.length +
         ' temi su ' +
-        attesi.length +
+        expected.length +
         ' (' +
-        mancanti.join(', ') +
+        missing.join(', ') +
         '). Cancellala per farla ribuildare.',
     );
   }

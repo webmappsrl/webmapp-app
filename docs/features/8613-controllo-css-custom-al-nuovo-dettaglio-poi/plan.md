@@ -46,6 +46,22 @@ grep -ohE "(^|[ ,>~+])(wm|webmapp)-[a-z0-9-]+" core/src/theme/*/*.css | sed 's/^
 
 ## Task 3 — Riallineamento dei selettori del dettaglio POI
 
+> **Rettifica, 28/09/2026 — tre di queste rinomine sono state annullate.**
+>
+> `wm-core` le ha disfatte con `4f1ce25` e `a18eb9a`, perché il nome **vecchio** non agganciava
+> niente nemmeno prima: non erano ripristini ma **attivazioni**, e spostavano blocchi sulla scheda
+> di Ville rispetto alla produzione. Annullate:
+>
+> - `wm-excerpt` → `.wm-excerpt`
+> - `wm-tab-audio` → `wm-track-audio` (sia nel POI sia nel dettaglio traccia)
+>
+> Resta valida **solo** `wm-feature-useful-urls` → `.wm-poi-properties-contacts`, perché quell'
+> elemento esisteva davvero. Cade con loro il «zero orfani» più sotto: quello zero contava come
+> riagganciati anche i tre selettori che non dovevano esserlo.
+>
+> **Non rieseguire le caselle spuntate qui sotto senza aver letto
+> [notes.md](notes.md#tre-rinomine-del-piano-sono-state-annullate--28092026).**
+
 - [x] `wm-feature-useful-urls` → `.wm-poi-properties-contacts` (`order: 9`, il difetto principale)
 - [x] `wm-excerpt` → `.wm-excerpt` (`order: 7`)
 - [x] `wm-tab-audio` → `wm-track-audio` (`order: 10`)

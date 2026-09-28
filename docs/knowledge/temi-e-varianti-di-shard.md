@@ -98,7 +98,8 @@ icone dichiara **due** nomi, `'webmapp'` e l'alias `'wm'` usato dalla webapp
 (`core/src/assets/icons/webmapp-icons/style.css`): una `font-family` sconosciuta non è un errore,
 il browser ricade sulla font di sistema e il glifo sparisce in silenzio.
 
-**Il controllo che ferma la build è invocato da dodici punti**, non da uno. I fogli sono pubblicati
+**Il controllo che ferma la build è invocato da dodici punti**, non da uno, e tutti passano da
+`npm run check-themes`, definito una volta in `core/package.json`. I fogli sono pubblicati
 da una glob di `assets` in `core/angular.json` e nessuno li referenzia a compile-time: se il
 submodule è a un commit che li precede, la build **riesce** e l'app esce senza le
 personalizzazioni. Il controllo è `scripts/check-themes.js` in `wm-core`, condiviso con la webapp,
@@ -112,10 +113,16 @@ e va chiamato ovunque si builda:
 - il passo prima di `Build` in `.github/workflows/preview.yml`;
 - `runIonicBuild()` nel `gulpfile.js`.
 
-**Aggiungere o togliere un cliente tocca tre posti**, e nessuno dei tre segnala se ne dimentichi
-un altro: il file del tema in `wm-core`, il conteggio atteso nella CI di `wm-core`, e il
-`theme-manifest.json` di **ciascun** prodotto — qui `core/theme-manifest.json`. Il gate si ferma
-proprio quando i tre non coincidono, ed è il suo scopo.
+**Il percorso dello script resta scritto per esteso in due soli punti**, `preview.yml` e
+`checkInstanceThemes()` nel `gulpfile`, e per lo stesso motivo: entrambi devono distinguere «lo
+script non c'è» — submodule a un commit che precede oc:8613 — da «i temi non ci sono», e quella
+distinzione richiede di guardare il file prima di lanciarlo.
+
+**Aggiungere o togliere un cliente tocca tre posti**: il file del tema in `wm-core`, l'elenco
+atteso nella CI di `wm-core`, e il `theme-manifest.json` di **ciascun** prodotto — qui
+`core/theme-manifest.json`. Nessuno dei tre avvisa che ne stai dimenticando un altro **nel momento
+in cui lo modifichi**: te ne accorgi dopo, quando il gate si ferma perché non coincidono. È il suo
+scopo, ma è una rete a valle, non un controllo a monte.
 
 E **togliere un tema dal repo non lo toglie dalla produzione**: gli script di deploy usano `rsync`
 senza `--delete`, quindi il file resta sul server. Disattivare un cliente sono due operazioni —

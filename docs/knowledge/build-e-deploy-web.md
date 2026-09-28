@@ -34,8 +34,12 @@ Riguarda soprattutto i fogli per app, perché sono serviti come file statici e c
 operazioni, il repo e il server, e farne una sola lascia il CSS vivo per chi ha ancora quell'URL.
 
 Il flag non è stato aggiunto di proposito (oc:8613): su un percorso sbagliato `--delete` cancella
-quello che trova, quindi va introdotto e provato per conto suo, non di passaggio. Lo stesso vale
-per `wm-webapp`, che ha la stessa riga.
+quello che trova, quindi va introdotto e provato per conto suo, non di passaggio.
+
+**La conclusione vale anche per `wm-webapp`, ma il meccanismo è diverso**: lì solo
+`deploy-camminiditalia.js` usa `rsync` con gli stessi `RSYNC_ARGS`, mentre `deploy-default.js`
+copia con `scp -r`. Nessuno dei due cancella, quindi l'esito è identico — ma non è «la stessa
+riga», e chi ci andasse a cercare `RSYNC_ARGS` non lo troverebbe.
 
 ## Trappole e debito
 
