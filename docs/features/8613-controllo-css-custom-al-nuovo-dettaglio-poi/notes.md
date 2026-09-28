@@ -226,6 +226,54 @@ La morale conta più del numero: quei cinque erano stati classificati percorrend
 dell'interfaccia, ma nessuno di quegli stati aveva il dato giusto. Percorrere gli stati non basta
 se il contenuto non li popola — e «non l'ho mai visto» non è «non esiste».
 
+## Il numero dei raggiungibili è un limite superiore — 28/09/2026
+
+L'audit classificava i 209 selettori in «raggiungibili» e «non raggiungibili» contando i bersagli
+con `querySelectorAll`. **Quel conteggio dice se il selettore trova qualcosa, non se la
+dichiarazione vince.** Le categorie sono tre, non due:
+
+| | |
+|---|---|
+| nessun bersaglio | il selettore non corrisponde a niente nel DOM |
+| aggancia e **applica** | `.sketchfab-embed-wrapper`: `height: 480px` dichiarata e resa |
+| aggancia e **perde** | `wm-tab-detail` nel tema 33: `margin-top: 15px` dichiarati, 24px resi |
+
+Quindi **168 è un limite superiore dei selettori con bersaglio**, non un conteggio di regole
+efficaci. Quante altre siano nel terzo stato non è noto senza rimisurare confrontando, per ogni
+selettore, il valore dichiarato con `getComputedStyle` sulla proprietà dichiarata.
+
+## Una regressione silenziosa durata quattordici mesi — 28/09/2026
+
+Il caso che ha fatto emergere la terza categoria, trovato durante il controllo visivo sull'app 33
+e datato insieme all'agente della webapp. Il tema dichiara `wm-tab-detail { margin-top: 15px }`; il
+valore reso è 24px.
+
+    tema 33      wm-tab-detail   margin-top: 15px                          (0,0,1)
+    componente   wm-tab-detail   margin: var(--wm-feature-details-margin)  (0,0,1)
+
+Stessa specificità, e il CSS del componente Angular è iniettato **dopo** il foglio statico del
+tema: a parità vince l'ultimo. La variabile vale `24px 6px 24px 6px`, quindi lo shorthand riscrive
+anche `margin-top`.
+
+La cronologia, verificata sui due repo:
+
+    18/10/2024   21d1296c   il tema insegue la rinomina del componente,
+                            `webmapp-track-technical-data` → `wm-tab-detail`.
+                            Lo stesso commit cancella quel componente (226 righe).
+                            Da qui il selettore aggancia e i 15px si vedono.
+    06/02/2025   a111219d   oc:4837 aggiunge in wm-core
+                            `wm-tab-detail { margin: var(--wm-feature-details-margin) }`.
+                            Da qui i 15px smettono di vedersi.
+    25/09/2026   5d27b56    il tema si sposta in wm-core.
+
+**Quattordici mesi, e nessuno se n'è accorto.** Non è una regressione di oc:8406 — l'audit lo
+conferma — ma è la dimostrazione migliore che abbiamo del perché questi fogli vanno ricontrollati
+a mano dopo un refactor: meglio dei due casi di Ville, perché qui il danno è durato un anno.
+
+Nota per chi rifà la verifica: nell'ottobre 2024 il tema stava in `src/theme/33.css`, **senza** la
+cartella dello shard. Cercando `21d1296c` nel percorso di oggi non risulta, e sembra che il commit
+non c'entri.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che

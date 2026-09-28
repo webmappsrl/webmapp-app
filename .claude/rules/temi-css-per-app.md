@@ -63,3 +63,13 @@ Il perché di questi file sta in
 
 - **`abort()` nel `gulpfile` non interrompe**, logga soltanto. Per fermare davvero una build si usa
   `throw new Error('Build interrotta: …')`, come fanno le validazioni di `icon.png` e `splash.png`.
+
+- **`querySelectorAll` dice se il selettore trova, non se la dichiarazione vince.** È lo stesso
+  strumento della prima trappola e sbaglia dall'altro lato: per **difetto** sugli pseudo-elementi,
+  per **eccesso** qui. Un selettore con un bersaglio può essere perfettamente inerte se un'altra
+  regola lo sovrascrive — succede spesso perché tema e componente hanno la **stessa** specificità e
+  il CSS del componente Angular è iniettato **dopo** il foglio statico, quindi a parità vince lui.
+  Caso reale: `wm-tab-detail { margin-top: 15px }` nel tema 33 è battuto da
+  `margin: var(--wm-feature-details-margin)` del componente, ed è rimasto inerte **quattordici
+  mesi** senza che nessuno se ne accorgesse. Il controllo giusto non è contare i bersagli ma
+  confrontare il valore dichiarato con `getComputedStyle` sulla proprietà dichiarata.
