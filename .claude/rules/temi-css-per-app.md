@@ -111,3 +111,19 @@ Il perché di questi file sta in
   pseudo-elementi, «aggancia ma perde», `document.fonts.check()`). Questa dice che può mentire
   anche **l'ambiente**: su un componente animato e dipendente dal viewport la verifica è un occhio
   su un dispositivo reale, e una misura da browser pilotato vale come indizio, mai come prova.
+
+- **`npm run` non preserva la cwd: la porta alla radice del pacchetto.** Risale al `package.json`
+  più vicino e gira lì. Misurato:
+
+      npm run <script> dalla radice        → cwd = radice
+      npm run <script> da una sottocartella → cwd = radice, non la sottocartella
+      node <script>    da una sottocartella → cwd = la sottocartella
+
+  Conta perché `check-themes.js` cerca `theme-manifest.json` in `process.cwd()`. Oggi il gate
+  funziona da ogni punto di innesto — `core/` e ogni `instances/<nome>` — ma **non perché `npm run`
+  conservi la directory**: perché ognuna di quelle cartelle ha il proprio `package.json` e il
+  manifest sta lì accanto. Radice del pacchetto e manifest coincidono per costruzione.
+
+  Se un domani il manifest si spostasse in una sottocartella, il gate **non lo troverebbe** pur
+  essendo lanciato da lì. Il commit `625a4e13` dice «`npm run` preserva la cwd»: è sbagliato, e la
+  conclusione che ne trae è giusta per un'altra ragione.

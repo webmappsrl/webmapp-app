@@ -346,6 +346,24 @@ sotto questo ticket: `core/cypress/e2e/app_52/releted-poi.cy.ts` e
 `core/cypress/e2e/app_52/ec-poi-details.cy.ts`. Cercavano markup rimosso dalla Fase B, e
 `deploy_prod.yml` è gated sulla e2e.
 
+## Una ragione sbagliata nel messaggio di `625a4e13` — 28/09/2026
+
+Quel commit sostiene che `npm run` «preserva la cwd», e che è questo a far funzionare il gate dal
+gulpfile. **Non è vero**: `npm run` risale al `package.json` più vicino e gira nella radice del
+pacchetto — lanciato da una sottocartella, la cwd diventa comunque la radice.
+
+La conclusione resta giusta, ma per una ragione più solida: `core/` e ogni `instances/<nome>` hanno
+**ciascuno il proprio `package.json`**, e il manifest sta in quella stessa cartella. Radice del
+pacchetto e posizione del manifest coincidono per costruzione, non per una proprietà di `npm run`.
+
+La differenza non è accademica: se il manifest si spostasse in una sottocartella, la versione
+sbagliata farebbe credere che il gate continui a trovarlo. Trovata dall'agente della webapp, che ha
+rifatto la prova con uno script che stampa `process.cwd()` da una sottocartella.
+
+Resta valida invece la verifica sul caso reale — ricostruire una cwd che imita `instances/<nome>` e
+vedere il gate trovare i nove temi e fallirne uno tolto. **Vale più del meccanismo**, ed è quella da
+tenere: misura il comportamento invece di dedurlo da come si crede funzioni lo strumento.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
