@@ -96,3 +96,17 @@ Il perché di questi file sta in
   dichiarato: una `width: 103%` si risolve sul **content box** del genitore, che non è ciò che
   restituisce `getComputedStyle().width`, e con una scrollbar di mezzo i conti a mente non tornano
   mai. La terza categoria va cercata, non inventata.
+
+- **Su `wm-map-details` la misura automatica non è affidabile, nemmeno via screenshot.** L'altezza
+  del pannello dipende da tre cose che chi pilota un browser non controlla: l'animazione in corso,
+  lo stato logico (`open` / `onlyTitle` / `full`) e la **larghezza della finestra** — quel pannello
+  è disegnato per un telefono e a larghezza desktop rende diversamente. Sotto oc:8613 due sessioni
+  hanno misurato lo stesso pannello nello stesso stato ottenendo numeri **diversi fra loro**
+  (227/157 da una parte, 320/234 dall'altra) e nessuno dei due corrispondeva a ciò che il
+  developer vedeva su uno schermo vero: le due schermate erano identiche e il difetto non
+  esisteva. Ne è nata mezza giornata di indagine su un bug inesistente.
+
+  Le altre trappole di misura qui dicono che **lo strumento** può mentire (`querySelectorAll` sugli
+  pseudo-elementi, «aggancia ma perde», `document.fonts.check()`). Questa dice che può mentire
+  anche **l'ambiente**: su un componente animato e dipendente dal viewport la verifica è un occhio
+  su un dispositivo reale, e una misura da browser pilotato vale come indizio, mai come prova.
