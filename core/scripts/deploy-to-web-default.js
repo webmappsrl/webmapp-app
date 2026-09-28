@@ -12,5 +12,9 @@ const {run} = require('./lib/run');
 
 const RSYNC_ARGS = ['-av', '--exclude', 'assets'];
 
+// `ionic build` non passa da `npm run build`, quindi il `prebuild` del package.json non
+// scatta qui: il controllo sui temi va invocato a mano (oc:8613).
+run('node', ['src/app/shared/wm-core/scripts/check-themes.js']);
+
 run('ionic', ['build', '--configuration=production']);
 run('rsync', [...RSYNC_ARGS, './www/*', 'server:/var/www/html/mobile.webmapp.it/']);

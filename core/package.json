@@ -6,6 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node scripts/serve.js",
+    "prebuild": "node src/app/shared/wm-core/scripts/check-themes.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -14,13 +15,13 @@
     "deploy-to-web": "node scripts/deploy-to-web.js",
     "deploy-to-web-default": "node scripts/deploy-to-web-default.js",
     "deploy-to-web-camminiditalia": "node scripts/deploy-to-web-camminiditalia.js",
-    "deploy-cai-to-web": "ionic build --configuration production && scp -r ./www/* cai.osm2cai:/var/www/html/mobile/",
-    "deploy-to-web-verbose": "ionic build --configuration production && scp -r ./www/* server:/var/www/html/mobile.webmapp.it/",
-    "deploy-to-web-assets": "ionic build --configuration production &&  scp -r ./www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
-    "surge-sardegna-dev": "ionic build && surge --project ./www --domain http://32.dev-mobile-webmapp.surge.sh/",
-    "surge-osm2cai": "ionic build && surge --project ./www --domain http://26.osm2cai.surge.sh/",
-    "surge-ville-uat": "ionic build && surge ./www 75.geohub.ville.surge.sh",
-    "surge-ville-dev": "ionic build && surge ./www 75.geohub.ville-dev.surge.sh"
+    "deploy-cai-to-web": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build --configuration production && scp -r ./www/* cai.osm2cai:/var/www/html/mobile/",
+    "deploy-to-web-verbose": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build --configuration production && scp -r ./www/* server:/var/www/html/mobile.webmapp.it/",
+    "deploy-to-web-assets": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build --configuration production &&  scp -r ./www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
+    "surge-sardegna-dev": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build && surge --project ./www --domain http://32.dev-mobile-webmapp.surge.sh/",
+    "surge-osm2cai": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build && surge --project ./www --domain http://26.osm2cai.surge.sh/",
+    "surge-ville-uat": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build && surge ./www 75.geohub.ville.surge.sh",
+    "surge-ville-dev": "node src/app/shared/wm-core/scripts/check-themes.js && ionic build && surge ./www 75.geohub.ville-dev.surge.sh"
   },
   "private": true,
   "dependencies": {

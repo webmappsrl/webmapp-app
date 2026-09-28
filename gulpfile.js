@@ -678,6 +678,24 @@ export const environment: Environment = {
 `;
     
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', finalEnvContent);
+
+    // ionic build --configuration=production sostituisce environment.ts con environment.prod.ts
+    // (vedi angular.json). Senza questo file allineato all'id CLI, il bundle nativo resta
+    // con l'appId hardcoded del template core (52).
+    const finalProdEnvContent = `import {Environment, shards, redirects} from '@wm-types/environment';
+
+export const environment: Environment = {
+  production: true,
+  appId: ${envJson.appId},
+  shardName: '${envJson.shardName}',
+  shards,
+  redirects,
+};
+`;
+    fs.writeFileSync(
+      instancesDir + instanceName + '/src/environments/environment.prod.ts',
+      finalProdEnvContent,
+    );
   });
 }
 
@@ -940,6 +958,17 @@ function resolveBuildConfiguration(instanceName) {
 
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
+  // I CSS per istanza vivono in wm-core e nessuno li referenzia a compile-time: se mancano, la
+  // glob di `assets` non trova nulla e la build riesce comunque, producendo un binario nativo
+  // senza le personalizzazioni dei clienti. Qui il controllo pesa più che altrove, perché da qui
+  // si va agli store. Il check gira nella copia dell'istanza, che è ciò che viene davvero
+  // buildato, non in `core/` (oc:8613).
+  const check = sh.exec('node src/app/shared/wm-core/scripts/check-themes.js', {
+    cwd: instancesDir + instanceName,
+  });
+  if (check.code !== 0) {
+    throw new Error('Build interrotta: temi per istanza mancanti in ' + instanceName);
+  }
   const configuration = resolveBuildConfiguration(instanceName);
   if (verbose) debug('Using build configuration: ' + configuration);
   sh.exec('ionic build --configuration=' + configuration + outputRedirect, {

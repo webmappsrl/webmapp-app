@@ -79,6 +79,9 @@ jobs:
         run: |
           sed -i "0,/appId: [0-9]\+/s//appId: ${APP_ID}/" core/src/environments/environment.ts
           grep -q "appId: ${APP_ID}" core/src/environments/environment.ts || (echo "ERROR: appId injection failed" && exit 1)
+      - name: Check instance themes
+        working-directory: core
+        run: node src/app/shared/wm-core/scripts/check-themes.js
       - name: Build
         working-directory: core
         run: ionic build
