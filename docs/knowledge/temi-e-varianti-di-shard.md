@@ -112,6 +112,15 @@ e va chiamato ovunque si builda:
 - il passo prima di `Build` in `.github/workflows/preview.yml`;
 - `runIonicBuild()` nel `gulpfile.js`.
 
+**Aggiungere o togliere un cliente tocca tre posti**, e nessuno dei tre segnala se ne dimentichi
+un altro: il file del tema in `wm-core`, il conteggio atteso nella CI di `wm-core`, e il
+`theme-manifest.json` di **ciascun** prodotto — qui `core/theme-manifest.json`. Il gate si ferma
+proprio quando i tre non coincidono, ed è il suo scopo.
+
+E **togliere un tema dal repo non lo toglie dalla produzione**: gli script di deploy usano `rsync`
+senza `--delete`, quindi il file resta sul server. Disattivare un cliente sono due operazioni —
+vedi [build-e-deploy-web](build-e-deploy-web.md).
+
 **Il gulpfile è il punto che pesa di più, e non esiste nella webapp**: da lì si arriva ai binari
 nativi e agli store, dove un tema mancante non si corregge con un redeploy. Il controllo gira con
 `cwd` **dentro la copia dell'istanza**, che è ciò che viene davvero buildato — farlo in `core/`

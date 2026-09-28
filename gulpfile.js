@@ -968,6 +968,10 @@ function resolveBuildConfiguration(instanceName) {
  * `core/` passerebbe anche se la copia avesse perso gli asset del submodule.
  */
 function checkInstanceThemes(instanceName) {
+  // Uno dei due soli punti in cui il percorso dello script resta scritto per esteso — l'altro e'
+  // `preview.yml` — e per lo stesso motivo: qui serve distinguere «lo script non c'e'» da «i temi
+  // non ci sono», e quella distinzione richiede di guardare il file. Altrove si usa
+  // `npm run check-themes`, definito una volta in `core/package.json`.
   const script = 'src/app/shared/wm-core/scripts/check-themes.js';
   // Due guasti diversi che il solo exit code confonderebbe: lo script assente vuol dire istanza
   // creata prima di oc:8613 e mai rigenerata, e si risolve rigenerandola, non cercando i temi.

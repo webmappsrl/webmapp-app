@@ -23,6 +23,20 @@ Il fix per la collisione è stato un `overrides` scoped in `core/package.json`, 
 
 Sul branch RDO è poi emerso un errore in più (`ion-segment`/`SegmentValue` in `favourites.page.html`), mai visto prima perché nessuna build production era mai stata tentata lì.
 
+## Il deploy aggiunge e sovrascrive, non cancella
+
+`RSYNC_ARGS` è `['-av', '--exclude', 'assets']` in entrambi gli script di deploy: **non c'è
+`--delete`**. Un file tolto dal repo resta quindi sul server finché qualcuno non lo cancella a
+mano.
+
+Riguarda soprattutto i fogli per app, perché sono serviti come file statici e caricati a runtime:
+**cancellare un tema dal repo non lo toglie dalla produzione.** Disattivare un cliente è due
+operazioni, il repo e il server, e farne una sola lascia il CSS vivo per chi ha ancora quell'URL.
+
+Il flag non è stato aggiunto di proposito (oc:8613): su un percorso sbagliato `--delete` cancella
+quello che trova, quindi va introdotto e provato per conto suo, non di passaggio. Lo stesso vale
+per `wm-webapp`, che ha la stessa riga.
+
 ## Trappole e debito
 
 - **`pages/poi/utils.ts` non era dead code** (oc:8382) pur vivendo in quella cartella: lo importava `map.page.ts`, che è viva. È stato spostato in `pages/map/utils.ts`. L'obbligo che ne discende — controllare gli import relativi e non solo il nome della cartella — sta in [.claude/rules/download-offline.md](../../.claude/rules/download-offline.md).
