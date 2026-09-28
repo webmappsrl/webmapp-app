@@ -73,3 +73,9 @@ Il perché di questi file sta in
   `margin: var(--wm-feature-details-margin)` del componente, ed è rimasto inerte **quattordici
   mesi** senza che nessuno se ne accorgesse. Il controllo giusto non è contare i bersagli ma
   confrontare il valore dichiarato con `getComputedStyle` sulla proprietà dichiarata.
+
+  **Ma quel confronto va fatto sul riferimento giusto, o inventa falsi positivi.** Per i valori
+  relativi — percentuali, `em`, `vh` — il valore calcolato non è confrontabile con quello
+  dichiarato: una `width: 103%` si risolve sul **content box** del genitore, che non è ciò che
+  restituisce `getComputedStyle().width`, e con una scrollbar di mezzo i conti a mente non tornano
+  mai. La terza categoria va cercata, non inventata.

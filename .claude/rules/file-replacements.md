@@ -37,3 +37,23 @@ perché delle scelte in
   `--configuration=<shard>` pubblicherebbe il template dedicato **a tutti**. Serve un deploy web
   separato, con la propria build e il proprio target rsync. È il vincolo più costoso da scoprire
   tardi.
+
+- **`serve.js` legge lo `shardName` una volta sola, all'avvio.** Cambiare `environment.ts` a server
+  acceso ricompila il bundle ma **non** rilegge la configuration: i `fileReplacements` restano
+  quelli del lancio. Si ottiene così uno stato incoerente e convincente — il tema del nuovo shard
+  si carica, il titolo della pagina è giusto, e le varianti compilate sono quelle vecchie. Per
+  passare a uno shard con configuration propria il riavvio è **obbligatorio**, e l'ordine è
+  vincolato: prima `environment.ts`, poi il riavvio.
+
+- **Il tema che risponde 200 non prova che la build sia giusta**, perché è un asset statico servito
+  comunque. L'unica prova è contare la variante compilata:
+
+      curl -s http://localhost:<porta>/main.js | grep -c wm-searchbar-camminiditalia-panel
+
+  Diverso da zero significa configuration attiva; zero significa build generica. Misurato in
+  diretta sotto oc:8613: prima del riavvio tema `200` e variante `0`, dopo il riavvio variante `6`.
+
+- **`lsof -ti tcp:<porta> | head -1` non identifica il server**: elenca anche i **client**
+  connessi, browser compreso, e `head -1` può restituire uno di quelli — si termina un processo a
+  caso credendo di fermare il server. Va filtrato per chi ascolta (`lsof -ti -sTCP:LISTEN
+  tcp:<porta>`) oppure identificato per comando (`pgrep -f "ng serve --port <porta>"`).
