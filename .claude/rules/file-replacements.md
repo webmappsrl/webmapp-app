@@ -55,5 +55,12 @@ perché delle scelte in
 
 - **`lsof -ti tcp:<porta> | head -1` non identifica il server**: elenca anche i **client**
   connessi, browser compreso, e `head -1` può restituire uno di quelli — si termina un processo a
-  caso credendo di fermare il server. Va filtrato per chi ascolta (`lsof -ti -sTCP:LISTEN
-  tcp:<porta>`) oppure identificato per comando (`pgrep -f "ng serve --port <porta>"`).
+  caso credendo di fermare il server. **E nemmeno `pgrep` sul comando è affidabile**: la
+  configuration si infila in mezzo, quindi il processo è `ng serve --configuration=<shard> --port
+  <porta>` e un pattern `"ng serve --port <porta>"` non lo trova — `kill` non fa niente, sembra
+  riuscito, e il server vecchio resta in piedi. L'unico modo robusto è chiedere chi **ascolta**:
+
+      lsof -ti -sTCP:LISTEN -a -i tcp:<porta>
+
+  e attendere che quella query torni vuota prima di rilanciare, perché `curl` può fallire un
+  istante senza che la porta sia stata liberata.
