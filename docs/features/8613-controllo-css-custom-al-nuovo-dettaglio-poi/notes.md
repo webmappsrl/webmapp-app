@@ -158,6 +158,39 @@ per cercare i selettori orfani cercava in una cartella ormai vuota, quindi resti
 `wm-core` la pagina `varianti-per-shard`, che diceva ancora «il file non sta qui» contraddicendo
 il README messo accanto ai file.
 
+## Rettifiche all'overview — 28/09/2026
+
+`docs/features/` è immutabile, quindi l'`overview.md` resta com'era: queste righe dicono dove non
+corrisponde più al lavoro concluso. Sono emerse dal confronto fra i due cantieri, che si
+contraddicevano a vicenda.
+
+**«Solo modifiche CSS: nessun file di `wm-core` o dell'app toccato» (`overview.md:32`) è falso.**
+Era vero quando è stato spuntato, non alla fine. Sotto oc:8613 in `wm-core` sono stati modificati
+`projects/wm-core/src/track-properties/track-properties.component.scss` (l'`order: 100` sullo slot
+`[bottom]`, commit `623bc318`) e aggiunto `scripts/check-themes.js`; in questo repo `core/angular.json`,
+`core/package.json`, i due `deploy-to-web-*.js`, `.github/workflows/preview.yml`, `gulpfile.js` e
+`core/src/assets/icons/webmapp-icons/style.css`. **Conseguenza pratica**: chi legge l'overview per
+stimare il raggio d'impatto conclude che nessun componente condiviso è stato toccato e salta la
+verifica di regressione su `wm-track-properties`, che invece serve.
+
+**«Condividere i temi fra i due prodotti: rimandata dal dev» (`overview.md:51-53`) è stato poi
+fatto**, durante questo stesso ticket. I nove file vivono ora in `wm-core`. Per lo stesso motivo la
+voce nei Follow-up qui sotto che li dava ancora «rimandati» è superata dalla sezione «Dove stanno i
+temi, dopo questo lavoro».
+
+**«Moduli toccati» (`overview.md:57-61`) elenca un solo file**, `core/src/theme/geohub/75.css`, a un
+percorso che non esiste più. L'elenco completo è quello del primo punto. **Conseguenza pratica**: un
+rollback guidato da quella tabella lascerebbe `core/angular.json` a puntare a una cartella vuota e
+il `prebuild` a invocare uno script assente, cioè una build che si ferma senza un motivo leggibile.
+
+**Le regole del titolo delle Ville sono cinque, non quattro.** Il conteggio a `notes.md:95` ne
+elencava quattro perché ne mancava una scritta su più righe. Precisamente: **cinque blocchi, quattro
+selettori distinti** — `.webmapp-info-header-container > ion-label` compare due volte con lo stesso
+selettore, e la quinta è
+`wm-map-details ion-card:has(wm-poi-properties) ion-card-header .webmapp-info-header-container > ion-label`.
+Restano inerti e **restano in attesa della decisione del dev**: le due baseline — il codice prima di
+oc:8406 e la produzione — divergono, e non è una cosa che la misura possa decidere.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
