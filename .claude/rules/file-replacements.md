@@ -53,14 +53,21 @@ perché delle scelte in
   Diverso da zero significa configuration attiva; zero significa build generica. Misurato in
   diretta sotto oc:8613: prima del riavvio tema `200` e variante `0`, dopo il riavvio variante `6`.
 
-- **`lsof -ti tcp:<porta> | head -1` non identifica il server**: elenca anche i **client**
-  connessi, browser compreso, e `head -1` può restituire uno di quelli — si termina un processo a
-  caso credendo di fermare il server. **E nemmeno `pgrep` sul comando è affidabile**: la
-  configuration si infila in mezzo, quindi il processo è `ng serve --configuration=<shard> --port
-  <porta>` e un pattern `"ng serve --port <porta>"` non lo trova — `kill` non fa niente, sembra
-  riuscito, e il server vecchio resta in piedi. L'unico modo robusto è chiedere chi **ascolta**:
+- **Fermare un processo non dà conferma di averlo fermato.** `kill` non protesta se il PID è
+  sbagliato, e non protesta se il PID non esiste: in entrambi i casi il comando **sembra
+  riuscito**. Sotto oc:8613 questo è successo due volte in mezz'ora, dai due lati opposti:
 
-      lsof -ti -sTCP:LISTEN -a -i tcp:<porta>
+      lsof -ti tcp:<porta> | head -1     elenca anche i CLIENT connessi, browser compreso
+                                         → si termina un processo a caso (a me: un figlio di Chrome)
+      pgrep -f "ng serve --port <porta>" la configuration si infila in mezzo al comando, che e'
+                                         `ng serve --configuration=<shard> --port <porta>`
+                                         → non trova niente, e il server vecchio resta in piedi
 
-  e attendere che quella query torni vuota prima di rilanciare, perché `curl` può fallire un
-  istante senza che la porta sia stata liberata.
+  Il modo robusto per identificarlo è chiedere chi **ascolta** — `lsof -ti -sTCP:LISTEN -a -i
+  tcp:<porta>` — e attendere che quella query torni vuota prima di rilanciare, perché un `curl`
+  può fallire un istante senza che la porta sia libera.
+
+  **Ma la regola generale non è la formula, è la verifica**: l'unica prova che un processo sia
+  stato davvero sostituito è che qualcosa **dopo** cambi. Qui la prova è il conteggio della
+  variante compilata descritto sopra — la seconda volta è stato quello, e solo quello, ad
+  accorgersi che il server vecchio non era mai morto.
