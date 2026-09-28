@@ -127,3 +127,14 @@ Il perché di questi file sta in
   Se un domani il manifest si spostasse in una sottocartella, il gate **non lo troverebbe** pur
   essendo lanciato da lì. Il commit `625a4e13` dice «`npm run` preserva la cwd»: è sbagliato, e la
   conclusione che ne trae è giusta per un'altra ragione.
+
+- **Prima di correggere un documento che ne contraddice un altro, chiedersi se parlino della stessa
+  cosa.** In oc:8613 due testi dicevano che il riquadro bianco del chip si vedeva uno sull'app e
+  uno sulla webapp: erano **entrambi veri**, su contenitori diversi — `wm-status-filter` monta sia
+  nel pannello della mappa, dove il fondo è bianco, sia nella home, dove è grigio. Correggerne uno
+  avrebbe introdotto un errore al posto di una mezza verità.
+
+  È la forma di errore più cara del ticket, ed è la stessa del pannello collassato: **una frase
+  vera in un contesto, scritta come se valesse sempre.** Non si riconosce rileggendo il documento
+  che la contiene, perché lì è vera — si vede solo quando due documenti divergono, ed è lì che va
+  usata come segnale invece che come lite da arbitrare.

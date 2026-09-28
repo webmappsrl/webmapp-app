@@ -364,6 +364,36 @@ Resta valida invece la verifica sul caso reale — ricostruire una cwd che imita
 vedere il gate trovare i nove temi e fallirne uno tolto. **Vale più del meccanismo**, ed è quella da
 tenere: misura il comportamento invece di dedurlo da come si crede funzioni lo strumento.
 
+## Il riquadro del chip: due mezze verità — 28/09/2026
+
+La tabella più sopra diceva che il riquadro bianco attorno a «Torna alla home» si vedeva
+**sull'app**; il commento scritto nei quattro temi lo metteva **sulla webapp**. Sembrava che uno
+dei due fosse sbagliato. Nessuno dei due lo era.
+
+`wm-status-filter` monta in due punti, con sfondi diversi, e il tema non ne tocca nessuno: nel
+pannello della mappa il fondo è **bianco** (`map-details.component.scss` sull'app,
+`.details-container` sulla webapp), nella home è **grigio** — `#f2f2f2` sull'app da
+`--wm-color-greybackground`, `#f4f5f8` sulla webapp. Il riquadro attorno a «Torna alla home» si
+vedeva quindi **nella home**, non nel pannello: è lì che è stato osservato e misurato.
+
+I riferimenti verificati: `map-details.component.scss:17,44,55,68` dichiarano `background-color:
+white`; `home.page.scss:29` usa `--wm-color-greybackground`, che `variables.scss:28` definisce
+`#f2f2f2`; i due mount point sono `map.page.html:41` e `home.component.html:38`; e `geohub/32.css`
+non tocca `wm-page-home`, `.webmapp-home-content`, `wm-home` né `ion-content` — zero occorrenze.
+
+**Perché vale la pena scriverlo.** Le due mezze verità erano finite in due documenti diversi, e
+ciascuna letta da sola induceva a correggere l'altra. È la stessa forma di errore che in questo
+ticket è già costata mezza giornata sul pannello collassato: **un'affermazione vera in un contesto,
+scritta come se valesse sempre.** Non si riconosce rileggendo il documento che la contiene, perché
+lì è vera; si riconosce solo quando due documenti si contraddicono — e a quel punto la tentazione
+è decidere chi ha torto invece di chiedersi se parlino della stessa cosa.
+
+C'è anche un contrappunto metodologico che vale la pena registrare. Questa si è sciolta **leggendo
+due fogli di stile**, non misurando: l'ambiente del dev era occupato e non serviva. È il rovescio
+della lezione del pannello collassato, dove misurare batteva dedurre. La differenza non è di
+metodo ma di oggetto: là il dato dipendeva da animazioni, stato e viewport, qui era una costante
+scritta in un file.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
