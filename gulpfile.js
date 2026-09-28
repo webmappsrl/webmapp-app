@@ -956,19 +956,39 @@ function resolveBuildConfiguration(instanceName) {
   return shardConfiguration ? 'production,' + shardConfiguration : 'production';
 }
 
-function runIonicBuild(instanceName) {
-  if (verbose) debug('Running ionic build');
-  // I CSS per istanza vivono in wm-core e nessuno li referenzia a compile-time: se mancano, la
-  // glob di `assets` non trova nulla e la build riesce comunque, producendo un binario nativo
-  // senza le personalizzazioni dei clienti. Qui il controllo pesa più che altrove, perché da qui
-  // si va agli store. Il check gira nella copia dell'istanza, che è ciò che viene davvero
-  // buildato, non in `core/` (oc:8613).
-  const check = sh.exec('node src/app/shared/wm-core/scripts/check-themes.js', {
-    cwd: instancesDir + instanceName,
-  });
+/**
+ * Ferma la lavorazione di un'istanza se i CSS per istanza non ci sono (oc:8613).
+ *
+ * Quei fogli vivono in wm-core e nessuno li referenzia a compile-time: se mancano, la glob di
+ * `assets` non trova nulla e la build riesce comunque, producendo un binario nativo senza le
+ * personalizzazioni dei clienti. Qui il controllo pesa piu' che altrove, perche' da qui si va
+ * agli store, dove un tema mancante non si corregge con un redeploy.
+ *
+ * Gira con `cwd` nella **copia dell'istanza**, che e' cio' che viene davvero buildato: farlo in
+ * `core/` passerebbe anche se la copia avesse perso gli asset del submodule.
+ */
+function checkInstanceThemes(instanceName) {
+  const script = 'src/app/shared/wm-core/scripts/check-themes.js';
+  // Due guasti diversi che il solo exit code confonderebbe: lo script assente vuol dire istanza
+  // creata prima di oc:8613 e mai rigenerata, e si risolve rigenerandola, non cercando i temi.
+  if (!fs.existsSync(instancesDir + instanceName + '/' + script)) {
+    throw new Error(
+      'Build interrotta: in ' +
+        instanceName +
+        ' manca ' +
+        script +
+        ". L'istanza e' stata creata prima di oc:8613: rigenerala invece di cercare i temi.",
+    );
+  }
+  const check = sh.exec('node ' + script, {cwd: instancesDir + instanceName});
   if (check.code !== 0) {
     throw new Error('Build interrotta: temi per istanza mancanti in ' + instanceName);
   }
+}
+
+function runIonicBuild(instanceName) {
+  if (verbose) debug('Running ionic build');
+  checkInstanceThemes(instanceName);
   const configuration = resolveBuildConfiguration(instanceName);
   if (verbose) debug('Using build configuration: ' + configuration);
   sh.exec('ionic build --configuration=' + configuration + outputRedirect, {
@@ -985,7 +1005,11 @@ function addAndroidPlatform(instanceName, force) {
         cwd: instancesDir + instanceName,
       });
     }
+    // `runIonicBuild` porta con se' il controllo sui temi, ma qui viene saltato quando esiste
+    // gia' una `www/`: una copia stantia passerebbe agli store senza i CSS dei clienti.
+    // Il gate va quindi eseguito comunque (oc:8613).
     if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
+    else checkInstanceThemes(instanceName);
     if (!fs.existsSync(instancesDir + instanceName + '/android')) {
       if (verbose) debug('Adding android platform');
       const result = sh.exec('npx cap add android' + outputRedirect, {
@@ -1682,7 +1706,9 @@ function addIosPlatform(instanceName, force) {
       cwd: instancesDir + instanceName,
     });
   }
+  // Stesso motivo del ramo android: con una `www/` gia' presente il gate verrebbe saltato.
   if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
+  else checkInstanceThemes(instanceName);
   if (!fs.existsSync(instancesDir + instanceName + '/ios')) {
     if (verbose) debug('Adding ios platform');
     sh.exec('npx cap add ios' + outputRedirect, {

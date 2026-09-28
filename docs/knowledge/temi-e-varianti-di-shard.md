@@ -17,9 +17,10 @@ Le personalizzazioni per singolo shard hanno **due strade**, e la scelta non è 
 
 **CSS, quando basta lo stile**: un foglio per app, servito da `wm-core` e caricato a runtime.
 Da oc:8613 questi file **non stanno più in questo repo** — vedi il rimando qui sopra.
-`core/src/theme/` esiste ancora ma contiene **solo** gli SCSS di shard (`default/`, `stelvio/`)
-usati a compile-time da `stylePreprocessorOptions`: è un'altra cosa, e non va confusa con i fogli
-per app.
+`core/src/theme/` esiste ancora ma non contiene più fogli per app: ci sono gli SCSS globali
+(`variables.scss`, `typography.scss`, `mixins.scss`, `fonts.scss`) e i `global_env.scss` di shard
+(`default/`, `stelvio/`) usati a compile-time da `stylePreprocessorOptions`. È un'altra cosa, e
+non va confusa con i fogli per app.
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Oggi lo
@@ -97,7 +98,7 @@ icone dichiara **due** nomi, `'webmapp'` e l'alias `'wm'` usato dalla webapp
 (`core/src/assets/icons/webmapp-icons/style.css`): una `font-family` sconosciuta non è un errore,
 il browser ricade sulla font di sistema e il glifo sparisce in silenzio.
 
-**Il controllo che ferma la build è invocato da dieci punti**, non da uno. I fogli sono pubblicati
+**Il controllo che ferma la build è invocato da dodici punti**, non da uno. I fogli sono pubblicati
 da una glob di `assets` in `core/angular.json` e nessuno li referenzia a compile-time: se il
 submodule è a un commit che li precede, la build **riesce** e l'app esce senza le
 personalizzazioni. Il controllo è `scripts/check-themes.js` in `wm-core`, condiviso con la webapp,

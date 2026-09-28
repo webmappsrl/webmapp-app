@@ -21,7 +21,8 @@ proprio `CLAUDE.md`, la conoscenza in `docs/knowledge/` e le trappole in `.claud
 
 - **Non modificare un file condiviso per personalizzare un singolo shard.** Se basta lo stile, il
   foglio per app in `wm-core`, sotto `projects/wm-core/src/assets/theme/<shard>/<appId>.css` — non
-  più in `core/src/theme/`, che oggi tiene solo gli SCSS di shard per `stylePreprocessorOptions`;
+  più in `core/src/theme/`, che oggi tiene gli SCSS globali (`variables.scss`, `typography.scss`,
+  `mixins.scss`, `fonts.scss`) e i `global_env.scss` di shard per `stylePreprocessorOptions`;
   se la UI è strutturalmente diversa, `fileReplacements` — con i vincoli che stanno fra le
   trappole, non sono ovvi.
 - **Non buildare il deploy web generico con `--configuration=<shard>`.** `EnvironmentService.init()`
@@ -93,7 +94,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi; dettaglio POI in wm-core | oc:8313, oc:8458, oc:8427, oc:8181, oc:8406 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
 | Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato | oc:8284 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
-| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dieci punti che invocano il controllo sui temi, il gulpfile | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
+| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
 ## Trappole
 

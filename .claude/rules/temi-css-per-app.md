@@ -29,7 +29,8 @@ Il perché di questi file sta in
 
 - **Un tema si misura percorrendo gli stati dell'interfaccia, non deducendoli dalla `config.json`.**
   Una schermata sola copre una frazione dei selettori: sul tema del 75 sono serviti 16 stati per
-  arrivare a 168 selettori vivi su 209. E un layer non si apre con la query string: su mobile
+  arrivare a 170 selettori **con bersaglio** su 209 — non «vivi»: quel conteggio dice se il
+  selettore trova qualcosa, non se la dichiarazione vince, ed è quindi un limite superiore. E un layer non si apre con la query string: su mobile
   `?layer=<id>` non seleziona niente, il layer va scelto dalla lista in Esplora.
 
 - **Le regole prefissate `.details-container` sono il ramo della webapp** e su mobile sono inerte

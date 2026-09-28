@@ -274,6 +274,38 @@ Nota per chi rifà la verifica: nell'ottobre 2024 il tema stava in `src/theme/33
 cartella dello shard. Cercando `21d1296c` nel percorso di oggi non risulta, e sembra che il commit
 non c'entri.
 
+## Un fix del gulpfile finito nel commit sbagliato — 28/09/2026
+
+`9015fa06`, il cui messaggio parla solo del gate sui temi, contiene anche la generazione di
+`instances/<istanza>/src/environments/environment.prod.ts` nel `gulpfile`. **Non l'ho scritta io**:
+era una modifica già presente nel working tree, e l'ho inghiottita facendo `git add gulpfile.js`
+senza guardare cos'altro conteneva quel file.
+
+Il fix è reale e importante, quindi va registrato qui visto che il commit non lo nomina:
+`ionic build --configuration=production` sostituisce `environment.ts` con `environment.prod.ts`, e
+senza quel file allineato all'id passato al CLI **ogni istanza nativa buildata via gulp usciva con
+l'`appId: 52` del template**. Chi un domani indagasse su un appId sbagliato, con
+`git log gulpfile.js` arriverebbe a un commit che parla d'altro.
+
+La lezione operativa: mettere in staging *file per file* non basta se il file ha dentro altre
+modifiche pendenti. Prima di `git add <file>`, `git diff <file>`.
+
+## Numeri da correggere — 28/09/2026
+
+Quattro, tutti miei, trovati dalla review dell'agente della webapp:
+
+| dove | diceva | è |
+|---|---|---|
+| `plan.md:22` | «26 `order`» nel tema 75 | **25** — il ventiseiesimo era un `border:` |
+| `notes.md:117` | «Le 8 regole di contenuto» | **9** selettori, come dicono la riga sotto e `492c4ea` |
+| `notes.md:73` | tema servito «26.771 byte» | **26.777** |
+| knowledge + `CLAUDE.md` | «dieci punti» invocano il gate | **12** (corretto sul posto) |
+
+Il primo e il secondo restano com'erano nei documenti, che sono immutabili; il quarto stava in file
+vivi ed è stato corretto lì. Il conteggio «168 selettori vivi» nella trappola era sbagliato **due
+volte** — categoria e denominatore — ed è ora «170 con bersaglio su 209, limite superiore»: quella
+è l'unica copia che si carica davvero quando qualcuno tocca i temi.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
