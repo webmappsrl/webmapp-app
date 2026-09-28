@@ -48,7 +48,24 @@ Il perché di questi file sta in
 
   Sulla webapp la copertina è davvero `display: none`; su mobile resta `block` e non si vede solo
   perché il contenitore è alto 0. Un tema che volesse vincere anche qui deve prendere di mira la
-  **classe**, come fa già `forestasuat/1.css` con `.wm-img-image`. Le regole che dipendono dalla forma della card (`> ion-card`, `wm-map-details::after`,
+  **classe**, come fa già `forestasuat/1.css` con `.wm-img-image`.
+
+- **`.details-container X` sulla webapp aggancia ciò che qui `wm-map-details X` esclude.** È la
+  metà della storia dei due mount point che non era scritta da nessuna parte, ed è quella che
+  serve a chi riscrive. Le due strutture non sono speculari:
+
+      mobile   wm-map-details (map.page.html:8-92) contiene wm-home-layer direttamente;
+               <wm-home> vive in un'altra pagina (home.page.html:2) — sottoalberi disgiunti
+      webapp   <wm-home> sta DENTRO .details-container (map.page.html:47, dentro 10-53)
+               quindi `.details-container X` e `wm-home X` agganciano lo stesso elemento
+
+  Per una regola che **dà uno stile** la traduzione è corretta: sulla webapp il mount point è uno
+  solo ed è l'equivalente funzionale del pannello. Per una regola che **esclude una copia fra due**
+  la traduzione ne rovescia il senso, perché colpisce proprio la copia della home — l'unica che
+  esiste lì, e quella che la regola vuole tenere. È il caso di
+  `camminiditalia/1.css:15` (`wm-map-details wm-status-filter { display: none }`): tradurla
+  additiva toglierebbe alla webapp il suo unico «Torna alla home». Prima di aggiungere un ramo
+  `.details-container`, chiedersi se la regola stilizza o se sceglie fra duplicati. Le regole che dipendono dalla forma della card (`> ion-card`, `wm-map-details::after`,
   i quattro `ion-card-content:has(...)`) restano solo mobile: il dettaglio della webapp è un `div`
   senza `ion-card` e senza tab bar.
 
