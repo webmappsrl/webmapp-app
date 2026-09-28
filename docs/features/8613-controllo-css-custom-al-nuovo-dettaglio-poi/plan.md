@@ -29,6 +29,14 @@ le regole e non si cambiano i valori di `order`.
 
 Comando (da rieseguire dopo ogni refactor che rinomina elementi del dettaglio):
 
+> **Attenzione, 28/09/2026** — il comando qui sotto è lasciato com'era per fedeltà al lavoro
+> svolto, ma **non è più eseguibile così**: da oc:8613 i temi non stanno più in
+> `core/src/theme/`, quindi quella glob non trova nessun `.css`, il comando restituisce zero e si
+> legge «nessun orfano». È così che due regole dell'intestazione del tema 75 sono sfuggite
+> all'audit. La versione corrente, col percorso in `wm-core`, sta in
+> [docs/knowledge/temi-e-varianti-di-shard.md](../../knowledge/temi-e-varianti-di-shard.md).
+
+
 ```bash
 grep -rhoE "selector: *'[^']+'" core/src/app --include="*.ts" | sed "s/selector: *'//;s/'$//" \
   | tr ',' '\n' | sed 's/^ *//;s/ *$//' | grep -E "^(wm|webmapp)-" | sort -u > /tmp/sel.txt
