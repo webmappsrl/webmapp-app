@@ -35,7 +35,20 @@ Il perché di questi file sta in
 - **Le regole prefissate `.details-container` sono il ramo della webapp** e su mobile sono inerte
   per costruzione: quel contenitore non è prodotto da nessun template di questo prodotto. Vanno
   aggiunte **accanto** al ramo `wm-map-details`, mai al suo posto, così la resa su mobile non può
-  cambiare. Le regole che dipendono dalla forma della card (`> ion-card`, `wm-map-details::after`,
+  cambiare.
+
+- **La forma additiva garantisce che mobile non cambi, non che i due prodotti si allineino.** Sono
+  due affermazioni diverse e la seconda è falsa: `.details-container` è una **classe**,
+  `wm-map-details` un **elemento**, quindi ogni ramo webapp ha una classe in più e vince contesti
+  che il ramo mobile perde. Caso misurato — la copertina della scheda del layer nel tema 75:
+
+      .details-container wm-home-layer wm-img img   (0,1,3)  vince sul componente
+      wm-img .wm-img-image                          (0,1,1)  img.component.scss:17
+      wm-map-details wm-home-layer wm-img img       (0,0,4)  perde
+
+  Sulla webapp la copertina è davvero `display: none`; su mobile resta `block` e non si vede solo
+  perché il contenitore è alto 0. Un tema che volesse vincere anche qui deve prendere di mira la
+  **classe**, come fa già `forestasuat/1.css` con `.wm-img-image`. Le regole che dipendono dalla forma della card (`> ion-card`, `wm-map-details::after`,
   i quattro `ion-card-content:has(...)`) restano solo mobile: il dettaglio della webapp è un `div`
   senza `ion-card` e senza tab bar.
 

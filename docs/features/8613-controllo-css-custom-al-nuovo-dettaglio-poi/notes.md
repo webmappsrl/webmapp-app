@@ -191,6 +191,41 @@ selettore, e la quinta è
 Restano inerti e **restano in attesa della decisione del dev**: le due baseline — il codice prima di
 oc:8406 e la produzione — divergono, e non è una cosa che la misura possa decidere.
 
+## Rettifica alla forma additiva — 28/09/2026
+
+Nel commit `492c4ea`, nel commento dentro il tema e qui sopra avevo scritto che la forma additiva
+lascia la resa invariata «per costruzione». **Vale solo per metà, ed è la metà meno interessante.**
+
+- Il ramo mobile è identico al byte, quindi **su mobile non cambia niente**: questo resta vero.
+- I due rami **non sono equivalenti fra loro**: `.details-container` è una classe,
+  `wm-map-details` un elemento, quindi ogni ramo webapp ha una classe in più e vince contesti che
+  il ramo mobile perde. La riscrittura non avvicina i due prodotti quanto la frase suggeriva.
+
+Il caso che lo dimostra, trovato durante il controllo visivo dall'agente della webapp e
+riverificato qui — la copertina della scheda del layer:
+
+    .details-container wm-home-layer wm-img img   (0,1,3)  vince sul componente
+    wm-img .wm-img-image                          (0,1,1)  img.component.scss:17
+    wm-map-details wm-home-layer wm-img img       (0,0,4)  perde
+
+Sulla webapp la copertina è ora davvero `display: none`; qui resta `block` e non si vede soltanto
+perché il contenitore è alto 0. Non è un difetto — sulla webapp il tema ottiene ciò che dichiara —
+ma è una divergenza **introdotta dalla nostra riscrittura**, perché prima quel ramo non esisteva.
+
+Non si corregge: vale la regola che una regola inerte non è un difetto da riparare, e la baseline
+è lo stato attuale. Se un giorno si decide di riallinearla, il modo è prendere di mira la classe,
+come fa già `forestasuat/1.css` con `.wm-img-image` alle righe 273 e 336.
+
+## Due numeri dell'audit da correggere — 28/09/2026
+
+`.sketchfab-embed-wrapper` e `.sketchfab-embed-wrapper iframe` erano classificati fra i cinque
+«componenti che non compaiono mai». Il POI 42323 ha un embed 3D, le due regole agganciano e
+applicano (`height: 480px`, `iframe` con un bersaglio). **I non raggiungibili sono 30, non 32.**
+
+La morale conta più del numero: quei cinque erano stati classificati percorrendo **16 stati**
+dell'interfaccia, ma nessuno di quegli stati aveva il dato giusto. Percorrere gli stati non basta
+se il contenuto non li popola — e «non l'ho mai visto» non è «non esiste».
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che
