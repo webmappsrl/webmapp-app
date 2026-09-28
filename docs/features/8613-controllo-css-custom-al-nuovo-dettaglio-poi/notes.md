@@ -306,6 +306,46 @@ vivi ed è stato corretto lì. Il conteggio «168 selettori vivi» nella trappol
 volte** — categoria e denominatore — ed è ora «170 con bersaglio su 209, limite superiore»: quella
 è l'unica copia che si carica davvero quando qualcuno tocca i temi.
 
+## Tre rinomine del piano sono state annullate — 28/09/2026
+
+**Il `plan.md` di questo cantiere descrive un lavoro che non è più quello fatto**, e va letto con
+questa rettifica davanti: chi lo seguisse alla lettera **rimetterebbe le regole e riporterebbe il
+difetto**.
+
+`plan.md:50`, `:51`, `:59` marcano `[x]` tre rinomine che `wm-core` ha poi annullato con `4f1ce25`
+e `a18eb9a`:
+
+    wm-excerpt    → .wm-excerpt                          (order: 7)    annullata
+    wm-tab-audio  → wm-track-audio                       (order: 10)   annullata
+    wm-track-properties wm-tab-audio → wm-track-audio    (order: 13)   annullata
+
+Il motivo è lo stesso per tutte e tre, ed è l'errore che questo ticket ha imparato a riconoscere:
+**il nome vecchio non agganciava niente nemmeno prima**. `wm-excerpt` e `wm-tab-audio` sono nomi di
+elementi che non esistono e non sono mai esistiti — verificato su tutta la storia di `wm-core` e
+sui due prodotti. Quelle regole erano quindi inerti da sempre, e rinominarle non le ha *riparate*:
+le ha **accese per la prima volta**, spostando blocchi sulla scheda di Ville rispetto a com'è in
+produzione.
+
+Delle quattro rinomine del piano ne resta **una sola** vera:
+`wm-feature-useful-urls` → `.wm-poi-properties-contacts`, perché quell'elemento esisteva davvero
+ed è tuttora un componente vivo, usato in `ugc-track-properties` e `draw-ugc`.
+
+Cade con loro anche la riga `plan.md:70`, «audit rieseguito: **zero orfani** sui tre temi»: quello
+zero è stato ottenuto contando come riagganciati anche i tre selettori che non avrebbero dovuto
+esserlo. E cade la formulazione di `notes.md:18`, «quattro selettori scollegati dal refactor di
+oc:8406»: **uno solo** lo era.
+
+Il criterio, che è la parte riusabile: prima di rinominare un selettore in un tema, chiedersi **se
+il nome vecchio agganciava qualcosa**. Se no, non è una rinomina — è una regola nuova travestita da
+manutenzione dalla somiglianza col nome di prima.
+
+## Gli spec Cypress toccati qui — 28/09/2026
+
+`d6689525` ha aggiornato due file che appartengono al perimetro di oc:8406 ma sono stati corretti
+sotto questo ticket: `core/cypress/e2e/app_52/releted-poi.cy.ts` e
+`core/cypress/e2e/app_52/ec-poi-details.cy.ts`. Cercavano markup rimosso dalla Fase B, e
+`deploy_prod.yml` è gated sulla e2e.
+
 ## Follow-up
 
 - **La regola di wm-core che ha causato il secondo difetto resta invariata**: presuppone che

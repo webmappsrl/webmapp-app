@@ -132,3 +132,24 @@ riguarda l'app.
   PR, non prima: un pin che punta a un commit non mergiato rende il pannello di dettaglio
   vuoto per chiunque faccia checkout.
 - Ordine di merge: wm-types → wm-core → webmapp-app. Poi la fase C su wm-webapp.
+
+## Rettifiche — 28/09/2026
+
+Aggiunte a posteriori dalla review dei due ticket. Il testo sopra resta com'era.
+
+**Gli e2e sono rimasti rotti, e hanno tenuto il deploy gated.** Il `plan.md:101` prevedeva lo step
+di aggiornamento degli assert Cypress su `wm-phone`; non è stato eseguito, e `notes.md` non lo
+registrava fra le deviazioni. Tre spec dell'app 52 cercavano markup rimosso dalla Fase B —
+`.webmapp-pagepoi-info-header-title`, il wrapper `wm-feature-useful-urls`, e l'indirizzo nei
+Dettagli tecnici che `omitAddress()` toglie. Poiché `deploy_prod.yml` ha `needs: [e2e-tests]`, la
+e2e rossa ha bloccato il deploy per tutto l'intervallo. Recuperati sotto oc:8613 con `d6689525`.
+
+**Due modifiche a codice condiviso non erano registrate**, e la loro portata è più larga del
+dettaglio POI:
+
+- `0080a0b` cambia il comportamento dell'«indietro» **anche su questa app**, non solo sulla webapp;
+- `98e08d7` corregge in `email.component.ts` un `color:` sintatticamente invalido, che perciò non
+  si applicava. È quindi un cambio di resa **ovunque compaia `wm-email`**, non soltanto nel
+  dettaglio POI.
+
+Chi stima il raggio di impatto di oc:8406 dalle sole note di questo cantiere non le vedrebbe.

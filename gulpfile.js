@@ -986,6 +986,35 @@ function checkInstanceThemes(instanceName) {
   }
 }
 
+/**
+ * Verifica che i temi **gia' buildati** dentro `www/` siano quelli attesi (oc:8613).
+ *
+ * `checkInstanceThemes()` guarda i sorgenti nel submodule, non l'output: quando si riusa una
+ * `www/` esistente invece di ribuildare, quei sorgenti possono essere a posto e la `www/` essere
+ * comunque vecchia. E' il caso reale di `instances/caiparma`, la cui `www/theme` contiene tre temi
+ * sui nove attesi, quelli che questo prodotto aveva prima dello spostamento in wm-core.
+ */
+function checkBuiltThemes(instanceName) {
+  const dir = instancesDir + instanceName;
+  const manifest = dir + '/theme-manifest.json';
+  if (!fs.existsSync(manifest)) return; // gia' segnalato da checkInstanceThemes()
+  const attesi = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  const mancanti = attesi.filter(tema => !fs.existsSync(dir + '/www/theme/' + tema));
+  if (mancanti.length > 0) {
+    throw new Error(
+      'Build interrotta: la `www/` di ' +
+        instanceName +
+        ' e\' vecchia — mancano ' +
+        mancanti.length +
+        ' temi su ' +
+        attesi.length +
+        ' (' +
+        mancanti.join(', ') +
+        '). Cancellala per farla ribuildare.',
+    );
+  }
+}
+
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
   checkInstanceThemes(instanceName);
@@ -1005,11 +1034,15 @@ function addAndroidPlatform(instanceName, force) {
         cwd: instancesDir + instanceName,
       });
     }
-    // `runIonicBuild` porta con se' il controllo sui temi, ma qui viene saltato quando esiste
-    // gia' una `www/`: una copia stantia passerebbe agli store senza i CSS dei clienti.
-    // Il gate va quindi eseguito comunque (oc:8613).
-    if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
-    else checkInstanceThemes(instanceName);
+    // Quando la `www/` esiste gia' il build non gira, e con lui nemmeno il gate: una copia
+    // stantia passerebbe agli store senza i CSS dei clienti. Servono entrambi i controlli,
+    // perche' guardano cose diverse — i sorgenti nel submodule e l'output in `www/` (oc:8613).
+    if (!fs.existsSync(instancesDir + instanceName + '/www')) {
+      runIonicBuild(instanceName);
+    } else {
+      checkInstanceThemes(instanceName);
+      checkBuiltThemes(instanceName);
+    }
     if (!fs.existsSync(instancesDir + instanceName + '/android')) {
       if (verbose) debug('Adding android platform');
       const result = sh.exec('npx cap add android' + outputRedirect, {
@@ -1706,9 +1739,13 @@ function addIosPlatform(instanceName, force) {
       cwd: instancesDir + instanceName,
     });
   }
-  // Stesso motivo del ramo android: con una `www/` gia' presente il gate verrebbe saltato.
-  if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
-  else checkInstanceThemes(instanceName);
+  // Stesso motivo del ramo android, e stessa coppia di controlli.
+  if (!fs.existsSync(instancesDir + instanceName + '/www')) {
+    runIonicBuild(instanceName);
+  } else {
+    checkInstanceThemes(instanceName);
+    checkBuiltThemes(instanceName);
+  }
   if (!fs.existsSync(instancesDir + instanceName + '/ios')) {
     if (verbose) debug('Adding ios platform');
     sh.exec('npx cap add ios' + outputRedirect, {
