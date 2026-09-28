@@ -98,8 +98,10 @@ icone dichiara **due** nomi, `'webmapp'` e l'alias `'wm'` usato dalla webapp
 (`core/src/assets/icons/webmapp-icons/style.css`): una `font-family` sconosciuta non è un errore,
 il browser ricade sulla font di sistema e il glifo sparisce in silenzio.
 
-**Il controllo che ferma la build è invocato da dodici punti**, non da uno, e tutti passano da
-`npm run check-themes`, definito una volta in `core/package.json`. I fogli sono pubblicati
+**Il controllo che ferma la build è invocato da dodici punti**, non da uno. Undici passano da
+`npm run check-themes`, definito una volta in `core/package.json`; il dodicesimo è
+`checkInstanceThemes()` nel `gulpfile`, che lancia `node` sullo script per la ragione spiegata più
+sotto. I fogli sono pubblicati
 da una glob di `assets` in `core/angular.json` e nessuno li referenzia a compile-time: se il
 submodule è a un commit che li precede, la build **riesce** e l'app esce senza le
 personalizzazioni. Il controllo è `scripts/check-themes.js` in `wm-core`, condiviso con la webapp,
@@ -113,19 +115,30 @@ e va chiamato ovunque si builda:
 - il passo prima di `Build` in `.github/workflows/preview.yml`;
 - `runIonicBuild()` nel `gulpfile.js`.
 
+**Le build native hanno un secondo controllo**, `checkBuiltThemes()` nel `gulpfile`, che
+`check-themes.js` non può fare: confronta il manifest con i file dentro `www/theme/`, cioè con
+l'**output** di una build e non con i sorgenti del submodule. Serve quando si riusa una `www/`
+esistente invece di ribuildare — `addAndroidPlatform` e `addIosPlatform` lo fanno — perché una
+`www/` vecchia può avere temi vecchi con i sorgenti a posto. Se ferma la build, la cura è
+**cancellare la `www/` dell'istanza** per farla ribuildare. Non è ipotetico:
+`instances/caiparma` ha oggi tre temi su nove nella sua `www/`.
+
 **Il percorso dello script resta scritto per esteso in due soli punti**, `preview.yml` e
 `checkInstanceThemes()` nel `gulpfile`, e per lo stesso motivo: entrambi devono distinguere «lo
 script non c'è» — submodule a un commit che precede oc:8613 — da «i temi non ci sono», e quella
 distinzione richiede di guardare il file prima di lanciarlo.
 
-**Aggiungere o togliere un cliente tocca tre posti**: il file del tema in `wm-core`, l'elenco
-atteso nella CI di `wm-core`, e il `theme-manifest.json` di **ciascun** prodotto — qui
-`core/theme-manifest.json`. Nessuno dei tre avvisa che ne stai dimenticando un altro **nel momento
-in cui lo modifichi**: te ne accorgi dopo, quando il gate si ferma perché non coincidono. È il suo
-scopo, ma è una rete a valle, non un controllo a monte.
+**Aggiungere o togliere un cliente tocca quattro posti**: la cartella `assets/theme/` di
+`wm-core`, l'elenco atteso nel workflow di `wm-core`, e il `theme-manifest.json` di **ciascuno dei
+due prodotti** — qui `core/theme-manifest.json`, e quello di `wm-webapp`. Nessuno dei quattro
+avvisa che ne stai dimenticando un altro **nel momento in cui lo modifichi**: te ne accorgi dopo,
+quando una build si ferma perché non coincidono. È il suo scopo, ma è una rete a valle, non un
+controllo a monte.
 
-E **togliere un tema dal repo non lo toglie dalla produzione**: gli script di deploy usano `rsync`
-senza `--delete`, quindi il file resta sul server. Disattivare un cliente sono due operazioni —
+E **togliere un tema dal repo non lo toglie dalla produzione**: nessuno dei deploy cancella —
+`deploy-to-web-default.js` e `-camminiditalia.js` usano `rsync` senza `--delete`, gli altri tre
+(`deploy-cai-to-web`, `deploy-to-web-verbose`, `deploy-to-web-assets`) copiano con `scp -r`, che
+non cancella per costruzione. Il file resta quindi sul server. Disattivare un cliente sono due operazioni —
 vedi [build-e-deploy-web](build-e-deploy-web.md).
 
 **Il gulpfile è il punto che pesa di più, e non esiste nella webapp**: da lì si arriva ai binari

@@ -153,3 +153,17 @@ dettaglio POI:
   dettaglio POI.
 
 Chi stima il raggio di impatto di oc:8406 dalle sole note di questo cantiere non le vedrebbe.
+
+### Scope mescolati — commit di 8406 fatti sotto oc:8613
+
+Registrati, non riscritti: la storia resta com'è, ma chi cerca il lavoro di questo ticket nel
+`git log` filtrando per `oc:8406` non li troverebbe.
+
+| commit | scope portato | perché appartiene a 8406 |
+|---|---|---|
+| `9348a1e6` | `fix(oc:8613)` | aggiunge in `app.module.ts` il provider `WM_IMAGE_DETAIL_PRESENTATION: 'inline'`, controparte sulla mobile di `66d2e98` in `wm-core`, che è lavoro di 8406. Anche il commento nel file porta `(oc:8613)`. |
+| `d6689525` | `fix(oc:8613)` | aggiorna i tre assert Cypress che il `plan.md:101` di 8406 prevedeva e che non erano stati eseguiti |
+
+Entrambi sono stati fatti durante il controllo di 8613 su segnalazione della review, ed è per
+questo che portano quello scope. Non è un errore da correggere riscrivendo la storia — sarebbe
+peggio del problema — ma è una cosa da sapere leggendo il `git log`.

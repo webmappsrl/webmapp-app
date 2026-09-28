@@ -25,9 +25,15 @@ Sul branch RDO è poi emerso un errore in più (`ion-segment`/`SegmentValue` in 
 
 ## Il deploy aggiunge e sovrascrive, non cancella
 
-`RSYNC_ARGS` è `['-av', '--exclude', 'assets']` in entrambi gli script di deploy: **non c'è
-`--delete`**. Un file tolto dal repo resta quindi sul server finché qualcuno non lo cancella a
-mano.
+**Nessuno dei cinque percorsi di deploy cancella**, ma per due meccanismi diversi:
+
+| deploy | come copia |
+|---|---|
+| `deploy-to-web-default.js`, `deploy-to-web-camminiditalia.js` | `rsync` con `RSYNC_ARGS = ['-av', '--exclude', 'assets']`, **senza `--delete`** |
+| `deploy-cai-to-web`, `deploy-to-web-verbose`, `deploy-to-web-assets` | `scp -r`, che non cancella per costruzione |
+
+Un file tolto dal repo resta quindi sul server finché qualcuno non lo cancella a mano, qualunque
+script si usi.
 
 Riguarda soprattutto i fogli per app, perché sono serviti come file statici e caricati a runtime:
 **cancellare un tema dal repo non lo toglie dalla produzione.** Disattivare un cliente è due
