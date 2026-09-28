@@ -1,22 +1,25 @@
 # Temi e varianti di shard
 
-> Il meccanismo dei file gemelli e il criterio per estrarre una classe base sono dominio della
-> libreria: `core/src/app/shared/wm-core/docs/knowledge/varianti-per-shard.md`. Qui c'è come li usa
-> questo prodotto, e la procedura sta in
+> **Il dominio sta nella libreria.** Come funziona il foglio per app — il `<link>` costruito a
+> runtime, il 404 silenzioso quando manca, perché rinominare un componente scollega i selettori,
+> la forma additiva per le regole che valgono su entrambi i prodotti, cosa non si traduce, e la
+> regola che una regola inerte non è un difetto da correggere — vive in
+> [`wm-core/docs/knowledge/varianti-per-shard.md`](../../core/src/app/shared/wm-core/docs/knowledge/varianti-per-shard.md),
+> insieme al meccanismo dei file gemelli e al criterio per estrarre una classe base. I file stessi
+> hanno un [README accanto](../../core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/README.md).
+>
+> Qui c'è **soltanto ciò che vale per questo prodotto**. La procedura sta in
 > [docs/howto/personalizzazioni-per-shard.md](../howto/personalizzazioni-per-shard.md).
 
 ## Come funziona oggi
 
 Le personalizzazioni per singolo shard hanno **due strade**, e la scelta non è libera.
 
-**CSS, quando basta lo stile**: un foglio per app, caricato a runtime da `MetaComponent`
-(`wm-core`) solo per quello shard. **Da oc:8613 questi file non stanno più qui**: vivono in
-`core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/<shard>/<appId>.css`, dentro il
-submodule, così la stessa app si vede uguale sull'app e sulla webapp — prima i due prodotti ne
-tenevano insiemi disgiunti. `core/src/theme/` esiste ancora ma contiene **solo** gli SCSS di
-shard (`default/`, `stelvio/`) usati a compile-time da `stylePreprocessorOptions`: è un'altra
-cosa. Il meccanismo è documentato in
-[`assets/theme/README.md`](../../core/src/app/shared/wm-core/projects/wm-core/src/assets/theme/README.md).
+**CSS, quando basta lo stile**: un foglio per app, servito da `wm-core` e caricato a runtime.
+Da oc:8613 questi file **non stanno più in questo repo** — vedi il rimando qui sopra.
+`core/src/theme/` esiste ancora ma contiene **solo** gli SCSS di shard (`default/`, `stelvio/`)
+usati a compile-time da `stylePreprocessorOptions`: è un'altra cosa, e non va confusa con i fogli
+per app.
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Oggi lo
@@ -61,20 +64,10 @@ inerte una personalizzazione di `stelvio` (`top:20%`), corretta con l'approvazio
 developer pur essendo fuori dallo scope del ticket — **le personalizzazioni per-shard devono
 restare funzionanti anche quando cambia la tecnica di base del componente condiviso**.
 
-Lo stesso schema si è ripetuto due volte con oc:8406, su `geohub/75.css` — l'unico tema che
-riordina il dettaglio di un POI, con `order:` su `.wm-poi-properties-body`:
-
-- **Rinominare un elemento scollega i selettori che lo prendono di mira** (oc:8406 → oc:8613):
-  promuovendo il componente in `wm-core`, `wm-feature-useful-urls` è diventato
-  `.wm-poi-properties-contacts`, e l'`excerpt` e l'audio hanno cambiato nome. In flexbox un
-  figlio **senza** `order` vale 0, e lo 0 viene **prima** di qualunque valore positivo: il blocco
-  dei contatti, che doveva stare al nono posto, è salito sotto il titolo — e aveva perso anche
-  i propri stili, perché altre quattro regole puntavano allo stesso wrapper.
-- **Spostare una spaziatura dal padding al margine la cancella, se un tema azzera quel margine**
-  (oc:8406 → oc:8613): `75.css` dichiara `--wm-feature-details-margin: 0px !important`, perché
-  lì lo spazio lo dà il `padding` di ciascun blocco. Quando `wm-core` ha tolto il padding proprio
-  all'HTML incorporato spostando lo spazio su quel margine, su questa app il padding è sparito
-  senza nulla a sostituirlo, e il riquadro si è attaccato alla linea di separazione.
+Lo stesso schema si è ripetuto due volte con oc:8406 su `geohub/75.css`, l'unico tema di questo
+prodotto che riordina il dettaglio di un POI: una rinomina che ha scollegato i selettori, e una
+spaziatura spostata sul margine che quel tema azzera. Il meccanismo di entrambi sta nella pagina
+di `wm-core`; qui resta cosa farne.
 
 **Niente segnala nessuno dei due casi**: un selettore che non corrisponde a nulla non è un errore
 per build, test o lint, e un `var()` che risolve a `0px` è un valore legittimo. Dopo un refactor
@@ -94,6 +87,36 @@ l'estrazione dei selettori restituisce zero, quindi **tutto** risulta orfano —
 scala vuol dire strumento rotto, non codice rotto. E un `!important` può servire davvero: la
 regola del tema e quella del componente hanno spesso la **stessa** specificità, e il CSS del
 componente Angular è iniettato dopo il foglio statico, quindi a parità vince lui.
+
+## Cosa è di questo prodotto
+
+**Tre dei nove fogli sono nati qui**: `camminiditalia/1.css`, `camminiditaliadev/1.css` e
+`geohub/75.css`. Gli altri sei vengono dalla webapp e, da oc:8613, arrivano anche a noi — quindi
+una regola scritta per quel prodotto può ora colpire l'app. Per lo stesso motivo la font delle
+icone dichiara **due** nomi, `'webmapp'` e l'alias `'wm'` usato dalla webapp
+(`core/src/assets/icons/webmapp-icons/style.css`): una `font-family` sconosciuta non è un errore,
+il browser ricade sulla font di sistema e il glifo sparisce in silenzio.
+
+**Il controllo che ferma la build è invocato da dieci punti**, non da uno. I fogli sono pubblicati
+da una glob di `assets` in `core/angular.json` e nessuno li referenzia a compile-time: se il
+submodule è a un commit che li precede, la build **riesce** e l'app esce senza le
+personalizzazioni. Il controllo è `scripts/check-themes.js` in `wm-core`, condiviso con la webapp,
+e va chiamato ovunque si builda:
+
+- `prebuild` in `core/package.json`, che copre `npm run build`;
+- i **sette** script che invocano `ionic build` direttamente — `deploy-cai-to-web`,
+  `deploy-to-web-verbose`, `deploy-to-web-assets` e i quattro `surge-*` — perché `ionic build` non
+  passa da `npm run build` e il `prebuild` non scatterebbe;
+- `deploy-to-web-default.js` e `deploy-to-web-camminiditalia.js`, che lo invocano via `run()`;
+- il passo prima di `Build` in `.github/workflows/preview.yml`;
+- `runIonicBuild()` nel `gulpfile.js`.
+
+**Il gulpfile è il punto che pesa di più, e non esiste nella webapp**: da lì si arriva ai binari
+nativi e agli store, dove un tema mancante non si corregge con un redeploy. Il controllo gira con
+`cwd` **dentro la copia dell'istanza**, che è ciò che viene davvero buildato — farlo in `core/`
+passerebbe anche se la copia perdesse gli asset del submodule. La condizione usa `throw`, come le
+validazioni di `icon.png` e `splash.png`: `abort()` in quel file **logga soltanto e non
+interrompe**.
 
 ## Debito noto
 
