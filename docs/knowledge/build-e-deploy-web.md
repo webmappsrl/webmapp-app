@@ -23,6 +23,30 @@ Il fix per la collisione è stato un `overrides` scoped in `core/package.json`, 
 
 Sul branch RDO è poi emerso un errore in più (`ion-segment`/`SegmentValue` in `favourites.page.html`), mai visto prima perché nessuna build production era mai stata tentata lì.
 
+## Il deploy aggiunge e sovrascrive, non cancella
+
+**Nessuno dei cinque percorsi di deploy cancella**, ma per due meccanismi diversi:
+
+| deploy | come copia |
+|---|---|
+| `deploy-to-web-default.js`, `deploy-to-web-camminiditalia.js` | `rsync` con `RSYNC_ARGS = ['-av', '--exclude', 'assets']`, **senza `--delete`** |
+| `deploy-cai-to-web`, `deploy-to-web-verbose`, `deploy-to-web-assets` | `scp -r`, che non cancella per costruzione |
+
+Un file tolto dal repo resta quindi sul server finché qualcuno non lo cancella a mano, qualunque
+script si usi.
+
+Riguarda soprattutto i fogli per app, perché sono serviti come file statici e caricati a runtime:
+**cancellare un tema dal repo non lo toglie dalla produzione.** Disattivare un cliente è due
+operazioni, il repo e il server, e farne una sola lascia il CSS vivo per chi ha ancora quell'URL.
+
+Il flag non è stato aggiunto di proposito (oc:8613): su un percorso sbagliato `--delete` cancella
+quello che trova, quindi va introdotto e provato per conto suo, non di passaggio.
+
+**La conclusione vale anche per `wm-webapp`, ma il meccanismo è diverso**: lì solo
+`deploy-camminiditalia.js` usa `rsync` con gli stessi `RSYNC_ARGS`, mentre `deploy-default.js`
+copia con `scp -r`. Nessuno dei due cancella, quindi l'esito è identico — ma non è «la stessa
+riga», e chi ci andasse a cercare `RSYNC_ARGS` non lo troverebbe.
+
 ## Trappole e debito
 
 - **`pages/poi/utils.ts` non era dead code** (oc:8382) pur vivendo in quella cartella: lo importava `map.page.ts`, che è viva. È stato spostato in `pages/map/utils.ts`. L'obbligo che ne discende — controllare gli import relativi e non solo il nome della cartella — sta in [.claude/rules/download-offline.md](../../.claude/rules/download-offline.md).

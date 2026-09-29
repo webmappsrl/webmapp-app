@@ -678,6 +678,24 @@ export const environment: Environment = {
 `;
     
     fs.writeFileSync(instancesDir + instanceName + '/src/environments/environment.ts', finalEnvContent);
+
+    // ionic build --configuration=production sostituisce environment.ts con environment.prod.ts
+    // (vedi angular.json). Senza questo file allineato all'id CLI, il bundle nativo resta
+    // con l'appId hardcoded del template core (52).
+    const finalProdEnvContent = `import {Environment, shards, redirects} from '@wm-types/environment';
+
+export const environment: Environment = {
+  production: true,
+  appId: ${envJson.appId},
+  shardName: '${envJson.shardName}',
+  shards,
+  redirects,
+};
+`;
+    fs.writeFileSync(
+      instancesDir + instanceName + '/src/environments/environment.prod.ts',
+      finalProdEnvContent,
+    );
   });
 }
 
@@ -938,8 +956,80 @@ function resolveBuildConfiguration(instanceName) {
   return shardConfiguration ? 'production,' + shardConfiguration : 'production';
 }
 
+/**
+ * Ferma la lavorazione di un'istanza se i CSS per istanza non ci sono (oc:8613).
+ *
+ * Quei fogli vivono in wm-core e nessuno li referenzia a compile-time: se mancano, la glob di
+ * `assets` non trova nulla e la build riesce comunque, producendo un binario nativo senza le
+ * personalizzazioni dei clienti. Qui il controllo pesa piu' che altrove, perche' da qui si va
+ * agli store, dove un tema mancante non si corregge con un redeploy.
+ *
+ * Gira con `cwd` nella **copia dell'istanza**, che e' cio' che viene davvero buildato: farlo in
+ * `core/` passerebbe anche se la copia avesse perso gli asset del submodule.
+ */
+function checkInstanceThemes(instanceName) {
+  // Uno dei due soli punti in cui il percorso dello script resta scritto per esteso — l'altro e'
+  // `preview.yml` — e per lo stesso motivo: qui serve distinguere «lo script non c'e'» da «i temi
+  // non ci sono», e quella distinzione richiede di guardare il file. Altrove si usa
+  // `npm run check-themes`, definito una volta in `core/package.json`.
+  const script = 'src/app/shared/wm-core/scripts/check-themes.js';
+  // Due guasti diversi che il solo exit code confonderebbe: lo script assente vuol dire istanza
+  // creata prima di oc:8613 e mai rigenerata, e si risolve rigenerandola, non cercando i temi.
+  if (!fs.existsSync(instancesDir + instanceName + '/' + script)) {
+    throw new Error(
+      'Build interrotta: in ' +
+        instanceName +
+        ' manca ' +
+        script +
+        ". L'istanza e' stata creata prima di oc:8613: rigenerala invece di cercare i temi.",
+    );
+  }
+  const check = sh.exec('node ' + script, {cwd: instancesDir + instanceName});
+  if (check.code !== 0) {
+    throw new Error('Build interrotta: temi per istanza mancanti in ' + instanceName);
+  }
+}
+
+/**
+ * Verifica che i temi **gia' buildati** dentro `www/` siano quelli attesi (oc:8613).
+ *
+ * `checkInstanceThemes()` guarda i sorgenti nel submodule, non l'output: quando si riusa una
+ * `www/` esistente invece di ribuildare, quei sorgenti possono essere a posto e la `www/` essere
+ * comunque vecchia. E' il caso reale di `instances/caiparma`, la cui `www/theme` contiene tre temi
+ * sui nove attesi, quelli che questo prodotto aveva prima dello spostamento in wm-core.
+ */
+function checkBuiltThemes(instanceName) {
+  const dir = instancesDir + instanceName;
+  const manifest = dir + '/theme-manifest.json';
+  if (!fs.existsSync(manifest)) return; // gia' segnalato da checkInstanceThemes()
+  let expected;
+  try {
+    expected = JSON.parse(fs.readFileSync(manifest, 'utf8'));
+  } catch (err) {
+    throw new Error('Build interrotta: ' + manifest + ' non e\' JSON valido — ' + err.message);
+  }
+  if (!Array.isArray(expected)) {
+    throw new Error('Build interrotta: ' + manifest + ' deve contenere un array di temi.');
+  }
+  const missing = expected.filter(theme => !fs.existsSync(dir + '/www/theme/' + theme));
+  if (missing.length > 0) {
+    throw new Error(
+      'Build interrotta: la `www/` di ' +
+        instanceName +
+        ' e\' vecchia — mancano ' +
+        missing.length +
+        ' temi su ' +
+        expected.length +
+        ' (' +
+        missing.join(', ') +
+        '). Cancellala per farla ribuildare.',
+    );
+  }
+}
+
 function runIonicBuild(instanceName) {
   if (verbose) debug('Running ionic build');
+  checkInstanceThemes(instanceName);
   const configuration = resolveBuildConfiguration(instanceName);
   if (verbose) debug('Using build configuration: ' + configuration);
   sh.exec('ionic build --configuration=' + configuration + outputRedirect, {
@@ -956,7 +1046,15 @@ function addAndroidPlatform(instanceName, force) {
         cwd: instancesDir + instanceName,
       });
     }
-    if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
+    // Quando la `www/` esiste gia' il build non gira, e con lui nemmeno il gate: una copia
+    // stantia passerebbe agli store senza i CSS dei clienti. Servono entrambi i controlli,
+    // perche' guardano cose diverse — i sorgenti nel submodule e l'output in `www/` (oc:8613).
+    if (!fs.existsSync(instancesDir + instanceName + '/www')) {
+      runIonicBuild(instanceName);
+    } else {
+      checkInstanceThemes(instanceName);
+      checkBuiltThemes(instanceName);
+    }
     if (!fs.existsSync(instancesDir + instanceName + '/android')) {
       if (verbose) debug('Adding android platform');
       const result = sh.exec('npx cap add android' + outputRedirect, {
@@ -1653,7 +1751,13 @@ function addIosPlatform(instanceName, force) {
       cwd: instancesDir + instanceName,
     });
   }
-  if (!fs.existsSync(instancesDir + instanceName + '/www')) runIonicBuild(instanceName);
+  // Stesso motivo del ramo android, e stessa coppia di controlli.
+  if (!fs.existsSync(instancesDir + instanceName + '/www')) {
+    runIonicBuild(instanceName);
+  } else {
+    checkInstanceThemes(instanceName);
+    checkBuiltThemes(instanceName);
+  }
   if (!fs.existsSync(instancesDir + instanceName + '/ios')) {
     if (verbose) debug('Adding ios platform');
     sh.exec('npx cap add ios' + outputRedirect, {

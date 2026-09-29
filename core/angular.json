@@ -22,7 +22,6 @@
               "includePaths": ["src/theme/default"]
             },
             "assets": [
-              "src/theme",
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -32,6 +31,11 @@
                 "glob": "**/*",
                 "input": "src/app/shared/map-core/src/assets",
                 "output": "map-core/assets"
+              },
+              {
+                "glob": "**/*.css",
+                "input": "src/app/shared/wm-core/projects/wm-core/src/assets/theme",
+                "output": "theme"
               },
               {
                 "glob": "**/*.svg",

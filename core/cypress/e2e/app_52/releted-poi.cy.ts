@@ -21,7 +21,9 @@ describe('Track releted poi [oc:4735] [https://orchestrator.maphub.it/resources/
     cy.get('wm-track-related-poi').click();
 
     cy.get('wm-map-details').within(() => {
-      cy.get('.webmapp-pagepoi-info-header-title')
+      // oc:8406 ha spostato l'intestazione del POI EC dentro `wm-poi-properties`: la vecchia
+      // `.webmapp-pagepoi-info-header-title` non esiste piu' in nessun template.
+      cy.get('.wm-poi-properties-title')
         .contains(data.tracks.exampleTwoRelatedPoi)
         .should('exist');
 
@@ -33,7 +35,7 @@ describe('Track releted poi [oc:4735] [https://orchestrator.maphub.it/resources/
     cy.get('wm-map-details').within(() => {
       cy.get('ion-fab-button.wm-close-btn').click();
       cy.get('[e2e-map-details-title]').contains(data.tracks.exampleTwo).should('exist');
-      cy.get('.webmapp-pagepoi-info-header-title').should('not.exist');
+      cy.get('.wm-poi-properties-title').should('not.exist');
     });
   });
 });

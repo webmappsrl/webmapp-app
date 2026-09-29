@@ -9,27 +9,6 @@
       <ng-container *ngIf="showMapDetailsContent$|async">
         <div header *ngIf="(currentEcImageGalleryIndex$|async) == null">
           <div class="webmapp-info-header-container">
-            <ng-container *ngIf="currentPoiProperties$|async as properties">
-              <div class="webmapp-pagepoi-info-header">
-                <ng-container *ngIf="properties?.taxonom?.poi_types as poiTypes;else poiTypeTemplate">
-                  <ng-container *ngFor="let poiType of poiTypes">
-                    <div class="webmapp-pagepoi-info-header-pre-title">{{ poiType.name|wmtrans}}</div>
-                  </ng-container>
-                </ng-container>
-                <ng-template #poiTypeTemplate>
-                  <div
-                    class="webmapp-pagepoi-info-header-pre-title"
-                    *ngIf="properties?.taxonomy?.poi_type as poiType"
-                  >
-                    {{ poiType.name|wmtrans}}
-                  </div>
-                </ng-template>
-                <div class="webmapp-pagepoi-info-header-title" *ngIf="properties?.name as name">
-                  <div>{{name|wmtrans}}</div>
-                  <wm-related-pois-navigator></wm-related-pois-navigator>
-                </div>
-              </div>
-            </ng-container>
             <ng-container
               *ngIf="(currentUgcPoiProperties$|async) as ugcPoiProperties;else titleTrack"
             >

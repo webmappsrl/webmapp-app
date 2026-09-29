@@ -30,6 +30,7 @@ import {appPR} from 'src/assets/i18n/pr';
 import {appSQ} from 'src/assets/i18n/sq';
 import {WmTranslations} from '@wm-types/language';
 import {MetaComponent} from '@wm-core/meta/meta.component';
+import {WM_IMAGE_DETAIL_PRESENTATION} from '@wm-core/image-detail/image-detail-presentation';
 import posthogConfig from '../../../posthog.json';
 registerLocaleData(localeIt);
 export const langs: WmTranslations = {
@@ -71,6 +72,12 @@ export const langs: WmTranslations = {
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'it'},
+    // Ridondante **oggi**, e apposta: il default di `WM_IMAGE_DETAIL_PRESENTATION` in wm-core è
+    // già `inline`. Ma quel default vive in un altro repo, e questo prodotto monta la vista
+    // inline in `map.page.html`: senza la dichiarazione esplicita, un cambio del default
+    // rimetterebbe qui i due visori sovrapposti — modale *più* inline — senza un solo diff in
+    // questo repo, e chi indagasse non avrebbe niente da cercare (oc:8613).
+    {provide: WM_IMAGE_DETAIL_PRESENTATION, useValue: 'inline'},
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
     ...WmCoreModule.forRoot({
       appVersion: packageJson.version,
