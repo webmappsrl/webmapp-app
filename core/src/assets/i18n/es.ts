@@ -552,12 +552,6 @@ export const appES = {
           'newTrackRecord': 'Grabación en proceso'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Compartir con tus amigos',
-      'text': 'Aquí hay una ruta interesante de webmapp',
-      'title': '¿Has visto esta ruta?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {

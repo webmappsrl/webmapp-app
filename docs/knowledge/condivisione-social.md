@@ -2,7 +2,13 @@
 
 ## Come funziona oggi
 
-`ShareService.shareTrackToStories(track)` è **l'unico punto di orchestrazione**: lo chiamano sia il pannello proprietà traccia in `wm-core` sia la schermata di successo post-registrazione. Manda al backend solo l'`uuid` — statistiche, mappa e compositing sono lato server — scarica l'immagine e chiama `Share.share()` generico. Nessun plugin nativo custom.
+`ShareService.shareTrackToStories(track)` è **l'unico punto di orchestrazione**: lo chiamano sia il pannello proprietà traccia in `wm-core` sia la schermata di successo post-registrazione. Manda al backend solo l'`uuid` — statistiche, mappa e compositing sono lato server — la condivisione usa il `Share.share()` generico. Nessun plugin nativo custom.
+
+Il download dell'immagine e il foglio di condivisione li fa `WmShareImageService` di `wm-core`
+(`shareNative()`, da oc:8702); guardia sulle richieste in corso, gating sull'`uuid`, messaggi
+d'errore ed evento PostHog restano qui, fissati dallo spec di caratterizzazione
+`core/src/app/services/share.service.spec.ts`. La condivisione della tappa del passaporto non passa
+da qui: vive in `wm-core` (`docs/knowledge/condivisione-tappa-passaporto.md`).
 
 Entrambi i pulsanti restano **disabilitati finché la traccia non ha un `properties.id`** dal backend.
 
@@ -14,3 +20,6 @@ Entrambi i pulsanti restano **disabilitati finché la traccia non ha un `propert
 - **Alert esplicativo se il tap arriva comunque** (oc:8183), guardia sincrona oltre al `[disabled]`: evita di mostrare all'utente un 404 grezzo.
 - **I messaggi nativi di `@capacitor/share` sono tradotti** (oc:8183): `NATIVE_SHARE_ERROR_TRANSLATIONS` mappa stringhe come `'Share canceled'`, verificate nel sorgente installato del plugin — iOS e Android sono identici.
 - **Nessun feedback di successo dedicato** (oc:8183): la chiusura del native share sheet è già un segnale. Solo l'errore ha un trattamento esplicito.
+- **La parte comune è in `wm-core`** (oc:8702): la condivisione della tappa vive nella modale del
+  passaporto, aperta da `wm-core`, dove un `@Output` non raggiunge l'app; e la logica non aveva nulla
+  di specifico dell'app.

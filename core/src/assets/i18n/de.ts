@@ -552,12 +552,6 @@ export const appDE = {
           'newTrackRecord': 'Aufnahme läuft'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Mit Ihren Freunden teilen',
-      'text': 'Hier ist eine interessante Strecke von Webmapp',
-      'title': 'Haben Sie diese Strecke gesehen?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
