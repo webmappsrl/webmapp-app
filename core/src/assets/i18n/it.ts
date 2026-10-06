@@ -572,12 +572,6 @@ export const appIT = {
         },
       },
     },
-    'share': {
-      'dialogTitle': 'Condividi con i tuoi amici',
-      'text': 'Ecco un percorso interessante di webmapp',
-      'title': 'Hai visto questo percorso?',
-      'url': 'www.webmapp.it',
-    },
   },
   'tabs': {
     'favourites': 'preferiti',

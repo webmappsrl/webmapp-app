@@ -557,12 +557,6 @@ export const appPR = {
           'newTrackRecord': 'Gravação em andamento'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Compartilhar com seus amigos',
-      'text': 'Aqui está uma rota interessante do webmapp',
-      'title': 'Você viu esta rota?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {

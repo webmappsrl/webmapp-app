@@ -83,7 +83,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 |---|---|---|---|
 | Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava | oc:8382 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | CI, preview e deploy | I workflow, i submodule testati dalla loro directory, il fork guard | oc:8023 | [docs/knowledge/ci-e-pipeline.md](docs/knowledge/ci-e-pipeline.md) |
-| Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione | oc:8183 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
+| Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
 | Deep link | Listener nativo `appUrlOpen`, navigazione Home→Map, apertura del pannello al mount | oc:8470, oc:7980 | [docs/knowledge/deep-link.md](docs/knowledge/deep-link.md) |
 | Download offline e `hitMapUrl` | Il flusso per lo shard carg, l'invariante con `map-core` | oc:8190 | [docs/knowledge/download-offline-carg.md](docs/knowledge/download-offline-carg.md) |
 | Gulp, risorse native e permessi | Validazione delle dimensioni, permessi Android, immagini di profilo, posthog | oc:8246, oc:7294, oc:7480, oc:8105, oc:8277 | [docs/knowledge/gulp-e-build-native.md](docs/knowledge/gulp-e-build-native.md) |

@@ -552,12 +552,6 @@ export const appSQ = {
           'newTrackRecord': 'Regjistrimi në proces'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Ndaj me miqtë e tu',
-      'text': 'Ja një rrugë interesante nga webmapp',
-      'title': 'E ke parë këtë rrugë?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {

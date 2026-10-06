@@ -555,12 +555,6 @@ export const appEN = {
           'newTrackRecord': 'Registration in progress'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Share with your friends',
-      'text': 'Here is an interesting webmapp path',
-      'title': 'Have you seen this path?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {

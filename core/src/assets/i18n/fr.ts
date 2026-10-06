@@ -555,12 +555,6 @@ export const appFR = {
           'newTrackRecord': 'Inscription en cours'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Partage avec tes amis',
-      'text': 'Voici un itinéraire Webmapp intéressant',
-      'title': 'Avez-vous vu ce parcours ?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
