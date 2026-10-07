@@ -1,0 +1,38 @@
+<ion-tabs #tabs>
+  <ion-tab-bar slot="bottom" [class.ion-hide]="enableRecorderPanel$|async">
+    <ion-tab-button tab="home" (click)="setCurrentTab('home')">
+      <i class="icon-outline-home webmapp-tabs-icon"></i>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.home' | wmtrans}} </ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="map" (click)="setCurrentTab('map')">
+      <i class="icon-outline-map-outline webmapp-tabs-icon"></i>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.map' | wmtrans}} </ion-label>
+    </ion-tab-button>
+    <ion-tab-button
+      tab="favourites"
+      (click)="setCurrentTab('favourites')"
+      *ngIf="(authEnable$ | async) && (isLogged$ | async)"
+    >
+      <i class="icon-outline-heart webmapp-tabs-icon"></i>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.favourites' | wmtrans}} </ion-label>
+    </ion-tab-button>
+    <!-- voce Passaporto, solo camminiditalia (oc:8703): stessa condizione di Preferiti -->
+    <ion-tab-button
+      tab="passport"
+      (click)="setCurrentTab('passport')"
+      *ngIf="(authEnable$ | async) && (isLogged$ | async)"
+    >
+      <!-- icona dedicata (oc:8703): libretto con timbro; il font dell'app non ha un passaporto -->
+      <ion-icon
+        class="webmapp-tabs-icon"
+        src="assets/icons/passport-stamp.svg"
+        aria-hidden="true"
+      ></ion-icon>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.passport' | wmtrans}} </ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="profile" (click)="setCurrentTab('profile')">
+      <i class="icon-outline-user webmapp-tabs-icon"></i>
+      <ion-label class="webmapp-tabs-label"> {{'tabs.profile' | wmtrans}} </ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

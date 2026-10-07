@@ -1,0 +1,5 @@
+// Variante camminiditalia della tab bar (oc:8703): l'icona del Passaporto è un SVG in `ion-icon`,
+// che si dimensiona con il font-size come le icone del font delle altre voci.
+ion-icon.webmapp-tabs-icon {
+  font-size: var(--wm-font-tabicon);
+}

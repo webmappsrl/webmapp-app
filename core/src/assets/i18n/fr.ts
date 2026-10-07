@@ -561,6 +561,7 @@ export const appFR = {
     'favourites': 'favoris',
     'home': 'home',
     'map': 'carte',
+    'passport': 'passeport',
     'profile': 'profil'
   },
   'Percorribilità': 'Viabilité',

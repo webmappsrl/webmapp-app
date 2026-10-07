@@ -577,6 +577,7 @@ export const appIT = {
     'favourites': 'preferiti',
     'home': 'home',
     'map': 'mappa',
+    'passport': 'passaporto',
     'profile': 'profilo',
   },
   'no-tracks': 'Non hai ancora scaricato nessuna traccia',
