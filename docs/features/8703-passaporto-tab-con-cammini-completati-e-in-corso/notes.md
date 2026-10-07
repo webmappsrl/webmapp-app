@@ -51,7 +51,9 @@ lo stesso slug.
   del backend; backend in produzione prima della build per gli store e di
   `deploy-to-web-camminiditalia`.
 - Pulizie lasciate per scelta del dev: fuso orario dell'app (dispositivo) diverso dal server
-  (Europe/Rome); test md5 byte-identico dell'immagine della tappa da verificare in CI; nessuna
-  foreign key sulla tappa in `passport_shares`; i due `compose()` delle immagini separati.
+  (Europe/Rome); nessuna foreign key sulla tappa in `passport_shares`; i due `compose()` delle
+  immagini separati.
 - Pubblicare il wireframe aggiornato su `gh-pages` come `index.html` a ticket approvato.
 - Verificare sulla config di produzione che ogni layer di camminiditalia sia un cammino.
+- Il test md5 dell'immagine della tappa è stato tolto dalla suite del backend dopo il primo giro di
+  CI: l'md5 dipende da GD, FreeType e zlib e non coincide fra CI e Docker locale.
