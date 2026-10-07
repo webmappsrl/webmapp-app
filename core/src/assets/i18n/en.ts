@@ -561,6 +561,7 @@ export const appEN = {
     'favourites': 'favorites',
     'home': 'home',
     'map': 'map',
+    'passport': 'passport',
     'profile': 'profile'
   },
   'Percorribilità': 'Viability',

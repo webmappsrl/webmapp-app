@@ -13,8 +13,11 @@ Le personalizzazioni per singolo shard hanno **due strade**, e la scelta non è 
 `MetaComponent` (`wm-core`) solo per quello shard.
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
-`core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Oggi lo
-usano `home-layer.component.ts` e `search-bar.component.ts`, entrambi in `wm-core`.
+`core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Per
+camminiditalia lo usano, nell'app, `profile.page.ts`, `tabs.page.ts` e `tabs-routing.module.ts`
+(voce e rotta del tab Passaporto, oc:8703), e in `wm-core` `home-layer`, `search-bar`, `layer-box`
+e `search-box`. Una variante può avere anche uno stile tutto suo, aggiungendo un `.scss` ai
+`styleUrls` del gemello, come la tab bar per l'icona SVG del Passaporto.
 
 La configuration si sceglie da sé: `core/scripts/serve.js` (via `npm start`) e `runIonicBuild()`
 nel `gulpfile.js` leggono `shardName` dall'`environment.ts` e cercano una configuration con match

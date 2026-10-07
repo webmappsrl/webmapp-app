@@ -558,6 +558,7 @@ export const appDE = {
     'favourites': 'Favoriten',
     'home': 'Home',
     'map': 'Karte',
+    'passport': 'Pass',
     'profile': 'Profil'
   },
   'no-tracks': 'Sie haben noch keine Strecke heruntergeladen',

@@ -563,6 +563,7 @@ export const appPR = {
     'favourites': 'favoritos',
     'home': 'home',
     'map': 'mapa',
+    'passport': 'passaporte',
     'profile': 'perfil'
   },
   'no-tracks': 'Você ainda não baixou nenhuma rota',

@@ -91,7 +91,8 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi | oc:8313, oc:8458, oc:8427, oc:8181 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
 | Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato | oc:8284 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
-| Temi e varianti di shard | CSS o `fileReplacements`, la searchbar camminiditalia, gli override che si rompono | oc:8305, oc:8391, oc:8414 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
+| Tab Passaporto | Voce e rotta solo camminiditalia, guardia che aspetta il login ripristinato, ascolto del logout a pagina visibile | oc:8703 | [docs/knowledge/tab-passaporto.md](docs/knowledge/tab-passaporto.md) |
+| Temi e varianti di shard | CSS o `fileReplacements`, la searchbar camminiditalia, gli override che si rompono | oc:8305, oc:8391, oc:8414, oc:8703 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
 ## Trappole
 

@@ -558,6 +558,7 @@ export const appSQ = {
     'favourites': 'të preferuarat',
     'home': 'kryefaqja',
     'map': 'harta',
+    'passport': 'pasaporta',
     'profile': 'profili'
   },
   'no-tracks': 'Nuk ke shkarkuar ende asnjë gjurmë',

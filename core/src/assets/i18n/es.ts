@@ -558,6 +558,7 @@ export const appES = {
     'favourites': 'favoritos',
     'home': 'home',
     'map': 'mapa',
+    'passport': 'pasaporte',
     'profile': 'perfil'
   },
   'no-tracks': 'Aún no has descargado ninguna ruta',
