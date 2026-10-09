@@ -93,7 +93,7 @@
     </div>
     <div class="wm-recorder-infopanel-bottom-data">
       <ng-container *ngIf="averageSpeed != null; else averageSpeedUnavailable">
-        {{averageSpeed | number:'1.0-0'}}<span>km/h</span>
+        {{averageSpeed | number:'1.1-1'}}<span>km/h</span>
       </ng-container>
       <ng-template #averageSpeedUnavailable>—</ng-template>
     </div>
@@ -102,7 +102,10 @@
     <div class="wm-recorder-infopanel-bottom-title">
       {{'pages.register.odo' | wmtrans}}
     </div>
-    <div class="wm-recorder-infopanel-bottom-data">{{length | number:'1.2-2'}}</div>
+    <div class="wm-recorder-infopanel-bottom-data">
+      <ng-container *ngIf="length != null; else lengthUnavailable">{{length | number:'1.2-2'}}</ng-container>
+      <ng-template #lengthUnavailable>—</ng-template>
+    </div>
   </div>
 </ion-card>
 

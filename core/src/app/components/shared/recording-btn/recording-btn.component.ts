@@ -1,5 +1,5 @@
 import {Component, OnInit, EventEmitter, Output} from '@angular/core';
-import {GeoutilsService} from 'src/app/services/geoutils.service';
+import {GeoutilsService} from '@wm-core/services/geoutils.service';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 
 @Component({

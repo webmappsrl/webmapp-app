@@ -8,12 +8,16 @@ I badge compaiono solo se c'è una traccia selezionata in quel momento. Nessuna 
 
 `recordStart()` dispaccia `setMapDetailsStatus({status: 'onlyTitle'})`: all'avvio della registrazione un pannello aperto si riduce al titolo invece di restare espanso sopra la mappa, **senza** azzerare `currentEcTrack` — quindi le distanze restano disponibili.
 
+Distanza e velocità media della plancia, e distanza, tempo e dislivello del riepilogo dopo il salvataggio (`modal-success`), vengono da `wm-core` (`computeUgcTrackLocalStats`, `UgcTrackStatsService`) e sono calcolati sui soli punti tenuti dalla pulizia GPS, la stessa del server: l'app non ha più un calcolo suo. La velocità attuale resta quella del GPS grezzo, e il timer è il cronometro, che esclude le pause. Il dettaglio sta in `wm-core`, `docs/knowledge/8743-app-dettagli-tecnici-e-mappa-delle-tracce-ugc-dai-dati-del-server-calcolo-al-volo-con-la-stessa-pulizia-gps-se-non-sincronizzate.md`.
+
 ## Perché così
 
 - **I due badge non sono «km percorsi»** (oc:8284), ed è la confusione da evitare: misurano la posizione GPS corrente proiettata sulla traccia ufficiale, non quanto è stato camminato in questa sessione. `length`, la riga già esistente, è il dato della registrazione reale.
 - **Il layout è una «flex sandwich»** (oc:8284): due colonne laterali `flex:1` **sempre presenti** nel markup, che restano vuote quando il valore è `null`. Avendo lo stesso `flex`, il blocco centrale resta centrato sia con i badge sia senza — identico a com'era nel caso più comune. Preferita a due varianti di markup con `*ngIf/else`, che sarebbero due cose da tenere sincronizzate.
 - **`showSuffix` è un `@Input()` nuovo sul badge condiviso** (oc:8284, `wm-core`): a `false` il badge mostra solo la distanza, senza «da te», ridondante qui dove l'etichetta dice già PARTENZA o ARRIVO. Il default resta `true` per non toccare l'uso esistente.
 - **Nessuna nuova scala tipografica né nuove chiavi i18n** (oc:8284): le etichette riusano `from`/`to`, già introdotte da oc:8177.
+
+- **Plancia e riepilogo leggono i valori da `wm-core`** (oc:8743): con la copia di `GeoutilsService` dell'app, che usava tutti i punti, la stessa traccia poteva mostrare numeri diversi in plancia, riepilogo e pannello. La copia è stata eliminata.
 
 ## Cosa è stato provato e ritirato
 
