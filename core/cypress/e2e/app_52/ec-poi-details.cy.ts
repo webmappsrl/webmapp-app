@@ -88,7 +88,9 @@ describe('Show correct ec_poi details', () => {
   it('should show the ec_poi address and ele in details', () => {
     const address = ec_poi.properties.address;
     const ele = ec_poi.properties.ele;
-    cy.get('wm-tab-detail ion-note').should('contain', address);
+    // oc:8406: `omitAddress()` toglie l'indirizzo dai Dettagli tecnici e il componente lo rende
+    // in `wm-address`, sotto «Informazioni». L'elevazione resta dov'era.
+    cy.get('.wm-poi-properties-contacts wm-address').should('contain', address);
     cy.get('wm-tab-detail ion-note').should('contain', ele);
   });
 
@@ -102,8 +104,13 @@ describe('Show correct ec_poi details', () => {
     const email = ec_poi.properties.contact_email;
     const relatedUrl = ec_poi.properties.related_url;
 
-    cy.get('wm-feature-useful-urls wm-phone').should('contain', phone);
-    cy.get('wm-feature-useful-urls wm-email').should('contain', email);
-    cy.get('wm-feature-useful-urls wm-related-urls').should('contain', Object.keys(relatedUrl)[0]);
+    // oc:8406: il wrapper `wm-feature-useful-urls` non esiste piu'. I tre componenti vivono
+    // nella `ion-list` del blocco «Informazioni» di `wm-poi-properties`.
+    cy.get('.wm-poi-properties-contacts wm-phone').should('contain', phone);
+    cy.get('.wm-poi-properties-contacts wm-email').should('contain', email);
+    cy.get('.wm-poi-properties-contacts wm-related-urls').should(
+      'contain',
+      Object.keys(relatedUrl)[0],
+    );
   });
 });

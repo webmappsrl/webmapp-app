@@ -9,6 +9,35 @@
   font-style: normal;
   font-display: block;
 }
+
+/*
+ * Alias della stessa font sotto il nome usato dall'altro prodotto (oc:8613).
+ *
+ * I due prodotti hanno sempre chiamato la propria font delle icone in modo diverso — qui
+ * `'webmapp'`, nella webapp `'wm'` — e finché i CSS per istanza stavano in cartelle separate la
+ * differenza non emergeva. Ora quei file sono condivisi da `wm-core`, quindi un tema scritto per
+ * la webapp può chiedere `font-family: 'wm'` e arrivare fin qui, dove quel nome non esiste.
+ *
+ * Il guasto sarebbe muto: una `font-family` sconosciuta non è un errore, il browser ricade sulla
+ * font di sistema e il glifo diventa un quadratino o niente. È già successo nel verso opposto —
+ * `geohub/75.css` chiede `'webmapp'` e sulla webapp le frecce delle schede dei layer sparivano.
+ *
+ * Nessuno dei nove temi chiede `'wm'` oggi: questa dichiarazione non cambia nulla adesso, serve
+ * perché la prima regola che lo userà funzioni invece di fallire in silenzio. I glifi coincidono
+ * (`\e985`, `.icon-fill-arrow-right`, presente in entrambi i font), quindi l'alias punta agli
+ * stessi file senza differenze visibili.
+ */
+@font-face {
+  font-family: 'wm';
+  src:  url('fonts/webmapp.eot?lawp0b');
+  src:  url('fonts/webmapp.eot?lawp0b#iefix') format('embedded-opentype'),
+    url('fonts/webmapp.ttf?lawp0b') format('truetype'),
+    url('fonts/webmapp.woff?lawp0b') format('woff'),
+    url('fonts/webmapp.svg?lawp0b#webmapp') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
 .ol-popup {
   max-height: 400px;
   min-width: 300px;
