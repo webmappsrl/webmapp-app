@@ -26,8 +26,9 @@ import {
   setMapDetailsStatus,
   setOnRecord,
 } from '@wm-core/store/user-activity/user-activity.action';
-import {WmFeature} from '@wm-types/feature';
-import {LineString} from 'geojson';
+import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
+import {UgcTrackStatsParams} from '@wm-core/types/config';
+import {computeUgcTrackLocalStats} from '@wm-core/utils/ugc-track-stats';
 
 @Component({
   standalone: false,
@@ -40,12 +41,11 @@ import {LineString} from 'geojson';
 export class TrackRecorderComponent implements OnInit, OnDestroy {
   //TODO: Gestire il flusso della registrazione dallo store creando action, effect, selector e reducer necessari
   actualSpeed: number = 0;
-  // null quando non calcolabile (es. tempo trascorso troppo breve) — il template mostra "—"
-  // invece del valore grezzo, che altrimenti può risultare Infinity/NaN (bug preesistente in
-  // GeoutilsService.getAverageSpeed, non risolto qui: solo la visualizzazione viene messa in sicurezza).
-  averageSpeed: number | null = 0;
+  // Distanza e velocità media vengono dai soli punti tenuti dalla pulizia GPS, con le stesse
+  // funzioni del pannello dei dettagli (oc:8743); null quando non calcolabile, il template mostra "—"
+  averageSpeed: number | null = null;
   isPaused = false;
-  length: number = 0;
+  length: number | null = null;
   opacity: number = 0;
   time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
@@ -60,6 +60,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   // OPTIONS.showTrackRemainingDistance.
   trackLiveDistanceVm$: Observable<TrackLiveDistanceVm> = this._store.select(trackLiveDistanceVm);
 
+  private _statsParams: UgcTrackStatsParams | null = null;
   private _timerInterval: any;
   private readonly _destroy$ = new Subject<void>();
 
@@ -70,9 +71,13 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     private _geoutilsSvc: GeoutilsService,
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
+    private _ugcTrackStatsSvc: UgcTrackStatsService,
   ) {}
 
   ngOnInit() {
+    this._ugcTrackStatsSvc.params$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(params => (this._statsParams = params));
     this._geolocationSvc.onLocationChange$.pipe(takeUntil(this._destroy$)).subscribe(() => {
       this.updateMap();
     });
@@ -120,13 +125,21 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
 
   updateMap(): void {
     this.onRecord$.pipe(take(1)).subscribe(onRecord => {
-      if (onRecord && this._geolocationSvc.recordedFeature) {
-        this.length = this._geoutilsSvc.getLength(this._geolocationSvc.recordedFeature);
+      // Il getter ricostruisce la feature a ogni lettura: una sola per aggiornamento
+      const recordedFeature = this._geolocationSvc.recordedFeature;
+      if (onRecord && recordedFeature) {
+        const stats = this._statsParams
+          ? computeUgcTrackLocalStats(
+              this._geolocationSvc.recordedKeptLocations$.value,
+              this._statsParams,
+            )
+          : null;
+        this.length = stats?.distance ?? null;
+        // La velocità attuale resta quella del GPS grezzo
         this.actualSpeed =
           this._geolocationSvc.location.speed ??
-          this._geoutilsSvc.getCurrentSpeed(this._geolocationSvc.recordedFeature);
-        const avgSpeed = this._geoutilsSvc.getAverageSpeed(this._geolocationSvc.recordedFeature);
-        this.averageSpeed = Number.isFinite(avgSpeed) ? avgSpeed : null;
+          this._geoutilsSvc.getCurrentSpeed(recordedFeature);
+        this.averageSpeed = stats?.avg_speed ?? null;
       }
     });
   }
@@ -139,8 +152,8 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     this.opacity = 0;
     this.time = {hours: 0, minutes: 0, seconds: 0};
     this.actualSpeed = 0;
-    this.averageSpeed = 0;
-    this.length = 0;
+    this.averageSpeed = null;
+    this.length = null;
     this._store.dispatch(setOnRecord({onRecord: false}));
     this._store.dispatch(setEnableTrackRecorderPanel({enable: false}));
     this.focusPosition$.next(false);

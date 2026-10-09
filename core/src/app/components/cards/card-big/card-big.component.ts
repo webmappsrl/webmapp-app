@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, Input, OnInit, ViewEncapsulation} fr
 import {NavController} from '@ionic/angular';
 import {BehaviorSubject} from 'rxjs';
 import {GeohubService} from 'src/app/services/geohub.service';
-import {GeoutilsService} from 'src/app/services/geoutils.service';
 import {StatusService} from 'src/app/services/status.service';
 import {iLocalString} from 'src/app/types/model';
 import {Feature, LineString} from 'geojson';
@@ -48,7 +47,6 @@ export class CardBigComponent implements OnInit {
     private navCtrl: NavController,
     private _statusService: StatusService,
     private _geoHubService: GeohubService,
-    private geolocationUtils: GeoutilsService,
   ) {}
 
   public async ngOnInit() {}
