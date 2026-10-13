@@ -95,7 +95,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
 | Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato, i valori della plancia e del riepilogo letti da wm-core | oc:8284, oc:8743 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
 | Tab Passaporto | Voce e rotta solo camminiditalia, guardia che aspetta il login ripristinato, ascolto del logout a pagina visibile | oc:8703 | [docs/knowledge/tab-passaporto.md](docs/knowledge/tab-passaporto.md) |
-| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile; la searchbar camminiditalia | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613, oc:8703 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
+| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile; la searchbar camminiditalia | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613, oc:8703, oc:8764 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
 ## Trappole
 

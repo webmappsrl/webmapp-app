@@ -127,6 +127,10 @@
                 {
                   "replace": "src/app/shared/wm-core/projects/wm-core/src/box/search-box/search-box.component.ts",
                   "with": "src/app/shared/wm-core/projects/wm-core/src/box/search-box/search-box.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.camminiditalia.ts"
                 }
               ]
             },
