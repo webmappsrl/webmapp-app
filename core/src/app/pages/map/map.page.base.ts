@@ -1,0 +1,448 @@
+import {ChangeDetectorRef, Directive, ViewChild} from '@angular/core';
+import {Browser} from '@capacitor/browser';
+import {IonFab, Platform} from '@ionic/angular';
+import {Store} from '@ngrx/store';
+import {Feature} from 'ol';
+import Geometry from 'ol/geom/Geometry';
+import {BehaviorSubject, Observable, from, of, timer} from 'rxjs';
+import {distinctUntilChanged, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {GeohubService} from 'src/app/services/geohub.service';
+import {ShareService} from 'src/app/services/share.service';
+import {UgcTrackShareResult} from '@wm-core/ugc-track-properties/ugc-track-properties.component';
+import {IGeojsonFeature} from 'src/app/shared/map-core/src/types/model';
+import {fromHEXToColor} from 'src/app/shared/map-core/src/utils';
+import {beforeInit, setTransition, setTranslate} from './utils';
+import {MapDetailsComponent} from 'src/app/pages/map/map-details/map-details.component';
+import {LangService} from '@wm-core/localization/lang.service';
+import {LineString, MultiPolygon, Point} from 'geojson';
+import {
+  confAPP,
+  confAUTHEnable,
+  confGeohubId,
+  confJIDOUPDATETIME,
+  confMAP,
+  confOPTIONS,
+  confOPTIONSShowDownloadTiles,
+  confPOIS,
+  confPOISFilter,
+  confRecordTrackShow,
+} from '@wm-core/store/conf/conf.selector';
+import {ISlopeChartHoverElements} from '@wm-core/types/slope-chart';
+import {HomePage} from '../home/home.page';
+import {APP} from '@wm-types/config';
+import {isLogged} from '@wm-core/store/auth/auth.selectors';
+import {
+  hitMapFeatureCollection,
+  hitMapGeometry,
+} from 'src/app/shared/map-core/src/store/map-core.selector';
+import {DeviceService} from '@wm-core/services/device.service';
+import {GeolocationService} from '@wm-core/services/geolocation.service';
+import {
+  ecLayer,
+  enablePoiRecorderPanel,
+  enableRecorderPanel,
+  enableTrackRecorderPanel,
+  hasFeatureInViewport,
+  inputTyped,
+  mapDetailsStatus,
+  ugcOpened,
+  enableTilesDownload,
+  wmMapTilesBoundingBox,
+  disableTilesDownloadButton,
+} from '@wm-core/store/user-activity/user-activity.selector';
+import {WmFeature} from '@wm-types/feature';
+import {featureOpened, poi, track} from '@wm-core/store/features/features.selector';
+import {UrlHandlerService} from '@wm-core/services/url-handler.service';
+import {
+  currentEcImageGalleryIndex,
+  currentEcPoiId,
+  currentEcTrackProperties,
+  currentPoiProperties,
+} from '@wm-core/store/features/ec/ec.selector';
+import {currentUgcPoiProperties, currentUgcTrack} from '@wm-core/store/features/ugc/ugc.selector';
+import {WmGeoboxMapComponent} from '@wm-core/geobox-map/geobox-map.component';
+import {online} from '@wm-core/store/network/network.selector';
+import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
+import {
+  backOfMapDetails,
+  setEnableTilesDownload,
+  setMapDetailsStatus,
+} from '@wm-core/store/user-activity/user-activity.action';
+import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
+import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
+export interface IDATALAYER {
+  high: string;
+  low: string;
+}
+
+/**
+ * Logica comune della pagina mappa (oc:8762). Non è mai soggetta a `fileReplacements`: la
+ * estendono `map.page.ts` (default) e `map.page.camminiditalia.ts`, che definiscono solo il
+ * `@Component` e differiscono per il template. Nessuno dei due figli importa l'altro, perché
+ * `fileReplacements` reindirizzerebbe l'import su se stesso (`TS2506`).
+ */
+@Directive()
+export abstract class MapPageBase {
+  private scrollPositions: {[key: string]: number} = {};
+
+  readonly trackColor$: BehaviorSubject<string> = new BehaviorSubject<string>('#caaf15');
+  /**
+   * Origine dei tile carg per il download offline, letta da entrambi i template della mappa.
+   * Deve puntare alla stessa origine della base URL in `map-core` (`hit-map.directive.ts`).
+   */
+  readonly overlayXYZ = 'https://carg.geosciences-ir.it/storage/cargmap/';
+  /**
+   * Mostra il bottone «Inizia il tuo cammino» e, al posto del fab che raggruppa traccia e POI, il
+   * solo fab del POI. Lo accende la variante camminiditalia (oc:8762); il template è uno solo.
+   */
+  readonly showStartWalk: boolean = false;
+
+  @ViewChild('fab1') fab1: IonFab;
+  @ViewChild('fab2') fab2: IonFab;
+  @ViewChild('fab3') fab3: IonFab;
+  @ViewChild(WmGeoboxMapComponent) geoboxMap: WmGeoboxMapComponent;
+  @ViewChild(HomePage) homeCmp: HomePage;
+  @ViewChild('details') mapDetailsCmp: MapDetailsComponent;
+
+  apiSearchInputTyped$: Observable<string> = this._store.select(inputTyped);
+  authEnable$: Observable<boolean> = this._store.select(confAUTHEnable);
+  centerPositionEvt$: BehaviorSubject<boolean> = new BehaviorSubject<boolean | null>(null);
+  confAPP$: Observable<APP> = this._store.select(confAPP);
+  confJIDOUPDATETIME$: Observable<any> = this._store.select(confJIDOUPDATETIME);
+  confMap$: Observable<any> = this._store.select(confMAP);
+  confOPTIONS$: Observable<any> = this._store.select(confOPTIONS);
+  confPOIS$: Observable<any> = this._store.select(confPOIS);
+  confPOISFilter$: Observable<any> = this._store.select(confPOISFilter).pipe(
+    map(p => {
+      if (p.poi_type != null) {
+        let poi_type = p.poi_type.map(p => {
+          if (p.icon != null && p.color != null) {
+            const namedPoiColor = fromHEXToColor[p.color] || 'darkorange';
+            return {
+              ...p,
+              ...{icon: p.icon.replaceAll('darkorange', namedPoiColor)},
+            };
+          }
+          return p;
+        });
+        return {where: p.where, poi_type};
+      }
+      return p;
+    }),
+  );
+  currentEcImageGalleryIndex$ = this._store.select(currentEcImageGalleryIndex);
+  currentEcPoiId$ = this._store.select(currentEcPoiId);
+  currentEcTrackProperties$ = this._store.select(currentEcTrackProperties).pipe(
+    tap(trackProperties => {
+      if (trackProperties?.id) {
+        from(this._geohubSvc.isFavouriteTrack(trackProperties?.id))
+          .pipe(take(1))
+          .subscribe(isFav => this.isFavourite$.next(isFav));
+      }
+    }),
+  );
+  currentLayer$ = this._store.select(ecLayer);
+  currentPoi$: Observable<WmFeature<Point>> = this._store.select(poi);
+  currentPoiID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiNextID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiPrevID$: BehaviorSubject<number> = new BehaviorSubject<number>(-1);
+  currentPoiProperties$ = this._store.select(currentPoiProperties);
+  currentPosition$: Observable<any>;
+  currentRelatedPoi$: BehaviorSubject<IGeojsonFeature> =
+    new BehaviorSubject<IGeojsonFeature | null>(null);
+  currentTrack$: Observable<WmFeature<LineString>> = this._store.select(track);
+  currentUgcPoiProperties$ = this._store.select(currentUgcPoiProperties);
+  dataLayerUrls$: Observable<IDATALAYER>;
+  detailsIsOpen$: Observable<boolean>;
+  disableTilesDownloadButton$: Observable<boolean> = this._store.select(disableTilesDownloadButton);
+  enableTilesDownload$: Observable<boolean> = this._store.select(enableTilesDownload);
+  enableTrackRecorderPanel$: Observable<boolean> = this._store.select(enableTrackRecorderPanel);
+  enableRecorderPanel$: Observable<boolean> = this._store.select(enableRecorderPanel);
+  enablePoiRecorderPanel$: Observable<boolean> = this._store.select(enablePoiRecorderPanel);
+  featureOpened$: Observable<boolean> = this._store.select(featureOpened);
+  flowPopoverText$: BehaviorSubject<string | null> = new BehaviorSubject<null>(null);
+  geohubId$ = this._store.select(confGeohubId);
+  hasFeatureInViewport$: Observable<boolean> = this._store.select(hasFeatureInViewport);
+  imagePoiToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isFavourite$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLogged$: Observable<boolean> = this._store.select(isLogged);
+  isTrackRecordingEnable$: Observable<boolean> = this._store.select(confRecordTrackShow);
+  lang = localStorage.getItem('wm-lang') || 'it';
+  layerOpacity$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  mapDetailsStatus$: Observable<mapDetailsStatusType> = this._store.select(mapDetailsStatus);
+  modeFullMap = false;
+  nearestPoi$: BehaviorSubject<Feature<Geometry> | null> =
+    new BehaviorSubject<Feature<Geometry> | null>(null);
+  onLine$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  online$: Observable<boolean> = this._storeNetwork.select(online).pipe(
+    tap(() => {
+      this._cdr.detectChanges();
+    }),
+  );
+  hitMapGeometry$ = this._store.select(hitMapGeometry);
+  poiIDs$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+  pois: any[];
+  popup$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  previewTrack$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  resetEvt$: BehaviorSubject<number> = new BehaviorSubject<number>(1);
+  resetSelectedPoi$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  resetSelectedPopup$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  showDownload$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  showDownloadTiles$: Observable<boolean> = this._store.select(confOPTIONSShowDownloadTiles);
+  slideOptions = {
+    on: {
+      beforeInit,
+      setTranslate,
+      setTransition,
+    },
+  };
+  public sliderOptions: any;
+  startRecording$: BehaviorSubject<string> = new BehaviorSubject<string | null>(null);
+  toggleLayerDirective$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  togglePoisDirective$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  trackElevationChartHoverElements$: BehaviorSubject<ISlopeChartHoverElements | null> =
+    new BehaviorSubject<ISlopeChartHoverElements | null>(null);
+  translationCallback: (any) => string = value => {
+    if (value == null) return '';
+    return this._langSvc.instant(value);
+  };
+  ugcOpened$: Observable<boolean> = this._store.select(ugcOpened);
+  ugcTrack$: Observable<WmFeature<LineString> | null> = this._store.select(currentUgcTrack);
+  /**
+   * Result fed back into `<wm-ugc-track-properties>`'s `[shareResult]` input (oc:8183). `null` is
+   * the documented no-op initial value for that Input (see `UgcTrackShareResult` contract notes
+   * in wm-core) — it must NOT be reset to `null` before/during a retry, only ever pushed a real
+   * `{success, errorMessage?}` once `onShareTrack()` settles, so the component's own `GENERATING`
+   * state (driven locally by its `triggerShare()`) is never second-guessed from here.
+   */
+  shareResult$: BehaviorSubject<UgcTrackShareResult | null> =
+    new BehaviorSubject<UgcTrackShareResult | null>(null);
+  wmMapFeatureCollectionOverlay$: BehaviorSubject<any | null> = new BehaviorSubject<any | null>(
+    null,
+  );
+  wmMapHitMapUrl$: Observable<string | null> = this.confMap$.pipe(map(conf => conf?.hitMapUrl));
+  wmMapPositionfocus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  wmMapTilesBoundingBox$: Observable<WmFeature<MultiPolygon> | null> =
+    this._store.select(wmMapTilesBoundingBox);
+  overlayFeatureCollections$ = this._store.select(hitMapFeatureCollection);
+  showMapDetailsContent$: Observable<boolean> = this._store.select(mapDetailsStatus).pipe(
+    map(status => status != 'background'),
+    distinctUntilChanged(),
+    switchMap(show => (show ? timer(DETAILS_ANIMATION_DURATION).pipe(map(() => true)) : of(false))),
+  );
+
+  constructor(
+    private _store: Store,
+    private _storeNetwork: Store<INetworkRootState>,
+    private _cdr: ChangeDetectorRef,
+    private _deviceSvc: DeviceService,
+    private _geohubSvc: GeohubService,
+    private _shareSvc: ShareService,
+    private _geolocationSvc: GeolocationService,
+    private _langSvc: LangService,
+    private _urlHandlerSvc: UrlHandlerService,
+    _platform: Platform,
+  ) {
+    this._geolocationSvc.startNavigation();
+    this.currentPoiProperties$.subscribe(p => {
+      if (p == null) {
+        this.getPosition();
+      }
+    });
+    this.dataLayerUrls$ = this.geohubId$.pipe(
+      filter(g => g != null),
+      map(geohubId => {
+        return {
+          low: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
+          high: `https://wmpbf.s3.eu-central-1.amazonaws.com/${geohubId}/{z}/{x}/{y}.pbf`,
+        } as IDATALAYER;
+      }),
+    );
+
+    this.sliderOptions = {
+      initialSlide: 0,
+      speed: 400,
+      spaceBetween: 10,
+      slidesOffsetAfter: 15,
+      slidesOffsetBefore: 15,
+      slidesPerView: this._deviceSvc.width / 235,
+    };
+    this.currentPosition$ = this._geolocationSvc.onLocationChange$;
+  }
+
+  close(): void {
+    this.showDownload$.next(false);
+    this.wmMapPositionfocus$.next(false);
+    this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
+    this.popup$.next(null);
+  }
+
+  closeDownload(): void {
+    this.showDownload$.next(false);
+    this.currentTrack$.pipe(take(1)).subscribe(track => {
+      if (track != null || this.popup$.value != null) {
+        this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+      }
+    });
+  }
+
+  async favourite(trackID): Promise<void> {
+    const isFav = await this._geohubSvc.setFavouriteTrack(trackID, !this.isFavourite$.value);
+    this.isFavourite$.next(isFav);
+  }
+
+  getPosition(): void {
+    const pos = this.scrollPositions['track'];
+    setTimeout(() => {
+      document.getElementsByTagName('ion-card-content')[0].scrollTo(0, pos);
+    }, 0);
+  }
+
+  goToPage(page: string): void {
+    this.close();
+    this._urlHandlerSvc.changeURL(page, {});
+  }
+
+  ionViewWillEnter(): void {
+    this.scrollPositions = {};
+    this._geolocationSvc.startNavigation();
+  }
+
+  ionViewWillLeave(): void {
+    this._poiReset();
+    this.resetEvt$.next(this.resetEvt$.value + 1);
+    this.resetSelectedPopup$.next(!this.resetSelectedPopup$.value);
+    this.showDownload$.next(false);
+  }
+
+  navigation(): void {
+    this._geolocationSvc.startNavigation();
+    const isFocused = !this.wmMapPositionfocus$.value;
+    this.wmMapPositionfocus$.next(isFocused);
+    const isOpen = this.mapDetailsCmp.isOpen$.value;
+    this.previewTrack$.next(false);
+    if (isFocused && isOpen) {
+      this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
+    }
+  }
+
+  openPoiShare(poiId: number): void {
+    this._shareSvc.sharePoiByID(poiId);
+  }
+
+  openPopup(popup): void {
+    this.popup$.next(popup);
+    if (popup != null && popup != '') {
+      this._store.dispatch(setMapDetailsStatus({status: 'open'}));
+    } else {
+      this._store.dispatch(backOfMapDetails());
+    }
+  }
+
+  openTrackDownload(): void {
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
+  downloadOverlay(): void {
+    // DEBUG: console.log('downloadOverlay');
+    this._store.dispatch(setMapDetailsStatus({status: 'background'}));
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
+  downloadTiles(): void {
+    setTimeout(() => {
+      this.showDownload$.next(true);
+    }, 300);
+  }
+
+  openTrackShare(trackId: number): void {
+    this._shareSvc.shareTrackByID(trackId);
+  }
+
+  /**
+   * @description
+   * Handles `(share-track)` from `<wm-ugc-track-properties>` (oc:8183) — both the initial tap and
+   * every "Riprova" retry re-emit this same event with the same track, so this handler is called
+   * fresh each time with no special-casing needed for retries: `ShareService.shareTrackToStories`
+   * itself guarantees a clean run per call. The whole orchestration (screenshot, stats, backend
+   * compositing call, native share) lives in `ShareService`; this method only wires the result
+   * back into `shareResult$`, which `[shareResult]` in the template is bound to.
+   *
+   * @param track The recorded track to share, as emitted by `(share-track)`.
+   * @returns void
+   */
+  onShareTrack(track: WmFeature<LineString>): void {
+    this._shareSvc.shareTrackToStories(track).then(result => {
+      this.shareResult$.next(result);
+    });
+  }
+
+  closeDetails(): void {
+    this._store.dispatch(backOfMapDetails());
+  }
+
+  savePosition(key = 'track'): void {
+    const currentScrollPosition = document.getElementsByTagName('ion-card-content')[0].scrollTop;
+    this.scrollPositions[key] = currentScrollPosition;
+  }
+
+  setCurrentRelatedPoi(feature: number | WmFeature<Point> | null): void {
+    if (feature == null) {
+      return;
+    } else if (typeof feature === 'number') {
+      this._urlHandlerSvc.updateURL({ec_related_poi: feature});
+    } else if (feature.properties != null && feature.properties.id != null) {
+      const id = feature.properties.id;
+      this._urlHandlerSvc.updateURL({ec_related_poi: id});
+    }
+  }
+
+  toggleDirective(data: {type: 'layers' | 'pois'; toggle: boolean}): void {
+    switch (data.type) {
+      case 'layers':
+        this.toggleLayerDirective$.next(data.toggle);
+        break;
+      case 'pois':
+        this.togglePoisDirective$.next(data.toggle);
+        break;
+    }
+  }
+
+  togglePreviewTrack(): void {
+    this.previewTrack$.next(!this.previewTrack$.value);
+    this._cdr.detectChanges();
+  }
+
+  toogleFullMap(): void {
+    this.modeFullMap = !this.mapDetailsCmp.toggle();
+  }
+
+  updateEcTrack(track = undefined): void {
+    const params = {ugc_track: undefined, track};
+    if (track == null) {
+      params['ec_related_poi'] = undefined;
+    }
+
+    this._urlHandlerSvc.updateURL(params);
+  }
+
+  toggleTilesDownload(): void {
+    this.enableTilesDownload$.pipe(take(1)).subscribe(enable => {
+      this._store.dispatch(setEnableTilesDownload({enableTilesDownload: !enable}));
+    });
+  }
+
+  async url(url) {
+    await Browser.open({url});
+  }
+
+  private _poiReset(): void {
+    this.currentRelatedPoi$.next(null);
+    this.resetSelectedPoi$.next(!this.resetSelectedPoi$.value);
+  }
+}
