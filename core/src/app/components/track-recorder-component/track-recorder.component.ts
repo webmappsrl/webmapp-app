@@ -23,9 +23,9 @@ import {Subject} from 'rxjs';
 import {
   setEnablePoiRecorderPanel,
   setEnableTrackRecorderPanel,
-  setMapDetailsStatus,
   setOnRecord,
 } from '@wm-core/store/user-activity/user-activity.action';
+import {minimizeOpenMapDetails} from 'src/app/functions/minimize-open-map-details';
 import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
 import {UgcTrackStatsParams} from '@wm-core/types/config';
 import {computeUgcTrackLocalStats} from '@wm-core/utils/ugc-track-stats';
@@ -103,7 +103,8 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     // registrazione, così la mappa resta visibile durante il movimento — non azzera
     // currentEcTrack (a differenza della chiusura esplicita del pannello), quindi le
     // distanze inizio/fine restano disponibili nel box (vedi trackLiveDistanceVm$).
-    this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
+    // Un pannello chiuso resta chiuso (oc:8762).
+    minimizeOpenMapDetails(this._store);
     this.checkRecording();
   }
 
@@ -174,7 +175,7 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     // Stesso motivo di recordStart(): se durante la pausa l'utente ha riaperto un pannello di
     // dettaglio (map-details.component.ts lo forza sempre a 'open' all'apertura di una
     // feature), riprendere la registrazione deve tornare a liberare la mappa.
-    this._store.dispatch(setMapDetailsStatus({status: 'onlyTitle'}));
+    minimizeOpenMapDetails(this._store);
   }
 
   async stop(): Promise<void> {

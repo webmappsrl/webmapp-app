@@ -1,0 +1,65 @@
+// Stili della sola variante camminiditalia della mappa (oc:8762): il bottone «Inizia il tuo
+// cammino». Il foglio è negli `styleUrls` di `map.page.camminiditalia.ts`, quindi gli altri shard
+// non lo caricano.
+
+// Allinea il centro del bottone (36px) a quello dell'ultimo fab della colonna di destra, il fab del
+// POI: misurato in Chrome a 390×844, centro del fab a 87px dal fondo.
+$start-walk-bottom: 69px;
+// Larghezza lasciata libera ai lati per la colonna dei fab.
+$start-walk-side-gutter: 60px;
+// Stessi offset di `.wm-recorder-btnrec-container` in `map.page.scss` per gli stati del pannello.
+$details-only-title-offset: 110px;
+$details-open-offset: 357px;
+// `DETAILS_ANIMATION_DURATION` in `src/app/constants/map.ts` (250ms).
+$details-animation-duration: 0.25s;
+// Stesso spostamento di `.move-bottom .bottom-right` in `map.page.scss`: con la striscia delle card
+// `wm-features-in-viewport` in basso, i fab e il bottone salgono insieme.
+$features-in-viewport-shift: 116px;
+
+webmapp-map-page {
+  .wm-btn-start-walk-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    bottom: $start-walk-bottom;
+    left: 0;
+    right: 0;
+    padding: 0 $start-walk-side-gutter;
+    z-index: 1000;
+    pointer-events: none;
+    // Ricompare solo a fine animazione del pannello: uscendo da `full` non si vede sopra il pannello
+    // che si abbassa.
+    transition:
+      bottom 0.4s ease-in-out,
+      transform 0.3s ease-in-out,
+      opacity 0.2s ease-in-out $details-animation-duration,
+      visibility 0s linear $details-animation-duration;
+
+    webmapp-btn-start-walk {
+      pointer-events: auto;
+      max-width: 100%;
+    }
+  }
+
+  // La striscia delle card compare solo a pannello chiuso (`background`).
+  .move-bottom.background .wm-btn-start-walk-container {
+    transform: translateY(-$features-in-viewport-shift);
+  }
+
+  .onlyTitle .wm-btn-start-walk-container {
+    bottom: $details-only-title-offset;
+  }
+
+  .open .wm-btn-start-walk-container {
+    bottom: $details-open-offset;
+  }
+
+  // Sparisce subito e resta all'altezza di `open`: con una dissolvenza si vedrebbe sopra il pannello
+  // mentre si alza.
+  .full .wm-btn-start-walk-container {
+    bottom: $details-open-offset;
+    opacity: 0;
+    visibility: hidden;
+    transition: none;
+  }
+}

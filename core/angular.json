@@ -105,6 +105,10 @@
                   "with": "src/app/pages/profile/profile.page.camminiditalia.ts"
                 },
                 {
+                  "replace": "src/app/pages/map/map.page.ts",
+                  "with": "src/app/pages/map/map.page.camminiditalia.ts"
+                },
+                {
                   "replace": "src/app/pages/tabs/tabs.page.ts",
                   "with": "src/app/pages/tabs/tabs.page.camminiditalia.ts"
                 },
@@ -173,6 +177,10 @@
             "karmaConfig": "karma.conf.js",
             "include": [
               "src/app/services",
+              "src/app/components/shared/buttons/btn-start-walk",
+              "src/app/components/shared/buttons/btn-add-poi",
+              "src/app/components/shared/buttons/btn-track-recording",
+              "src/app/functions",
               "src/app/pages/favourites",
               "src/app/pages/home",
               "src/app/pages/map/map-details",
