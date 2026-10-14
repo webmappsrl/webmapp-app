@@ -13,6 +13,10 @@
   ],
   "include": [
     "src/app/services/**/*.spec.ts",
+    "src/app/components/shared/buttons/btn-start-walk/**/*.spec.ts",
+    "src/app/components/shared/buttons/btn-add-poi/**/*.spec.ts",
+    "src/app/components/shared/buttons/btn-track-recording/**/*.spec.ts",
+    "src/app/functions/**/*.spec.ts",
     "src/app/pages/favourites/**/*.spec.ts",
     "src/app/pages/home/**/*.spec.ts",
     "src/app/pages/map/map-details/**/*.spec.ts",

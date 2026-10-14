@@ -4,7 +4,7 @@
 
 Il flusso è: `wm-download` (in `map.page.html`) → `wm-download-panel` → la funzione `downloadOverlay()` definita in `map-core` (`src/utils/localForage.ts`) e importata da `@map-core/utils`, invocata dentro `start()`.
 
-Per lo shard carg l'`overlayXYZ` è **hardcoded** nel template (`https://carg.geosciences-ir.it/storage/cargmap/`), e sovrascrive il default `https://api.webmapp.it/tiles` del componente.
+Per lo shard carg l'`overlayXYZ` è **hardcoded** nella costante `overlayXYZ` di `MapPageBase` (`map.page.base.ts`, `https://carg.geosciences-ir.it/storage/cargmap/`), letta sia da `map.page.html` sia dalla variante camminiditalia (oc:8762), e sovrascrive il default `https://api.webmapp.it/tiles` del componente.
 
 `IMAP.hitMapUrl` vive in `wm-core` (`types/config.ts`), **non in `wm-types`** come si potrebbe assumere. È letto dal `config.json` di qualsiasi backend tramite il selettore `confMAPHitMapUrl`, ma oggi lo valorizza solo carg.
 
@@ -21,7 +21,7 @@ toccando il template della mappa.
 
 ## Trappole
 
-- **Esistono due `downloadOverlay` omonimi**, ed è il motivo per cui leggere il nome non basta: quello in `map.page.ts` è uno stub inerte, uno dei tre trigger di `showDownload$`; il download vero è la funzione in `map-core`, gated su `overlayUrls`/`overlayGeometry` non nulli — condizione vera solo per carg.
+- **Esistono due `downloadOverlay` omonimi**, ed è il motivo per cui leggere il nome non basta: quello in `map.page.base.ts` (prima in `map.page.ts`, oc:8762) è uno stub inerte, uno dei tre trigger di `showDownload$`; il download vero è la funzione in `map-core`, gated su `overlayUrls`/`overlayGeometry` non nulli — condizione vera solo per carg.
 - **`hitMapUrl` ha un effetto collaterale sulla home**: oltre al download, controlla la visibilità della searchbar in `wm-core` (`home.component.html`, condizione `hitMapUrl == null`).
 
 ## Debito noto

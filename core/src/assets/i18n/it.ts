@@ -653,4 +653,5 @@ export const appIT = {
       },
     },
   },
+  'Inizia il cammino': 'Inizia il cammino',
 };

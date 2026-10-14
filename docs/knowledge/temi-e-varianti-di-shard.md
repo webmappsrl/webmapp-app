@@ -25,7 +25,8 @@ non va confusa con i fogli per app.
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Per
 camminiditalia lo usano, nell'app, `profile.page.ts`, `tabs.page.ts` e `tabs-routing.module.ts`
-(voce e rotta del tab Passaporto, oc:8703), e in `wm-core` `home-layer`, `search-bar`, `layer-box`,
+(voce e rotta del tab Passaporto, oc:8703), `map.page.ts` (bottone «Inizia il cammino» e fab del solo POI,
+oc:8762), e in `wm-core` `home-layer`, `search-bar`, `layer-box`,
 `search-box` e `ugc-box` (senza il bottone di import da file, oc:8764). Una variante può avere
 anche uno stile tutto suo, aggiungendo un `.scss` ai
 `styleUrls` del gemello, come la tab bar per l'icona SVG del Passaporto.
@@ -51,14 +52,28 @@ ricordare.
   di `wm-home-layer` — preesistente e comune a tutti gli shard — non aveva senso mantenere una
   «versione generica» di una feature interamente nuova. Il pannello è quindi entrato nella variante
   camminiditalia della searchbar.
-- **`SearchBarBaseComponent` è una deviazione motivata** dalla regola «non estrarre una classe
-  base» (oc:8414): non è l'intero componente duplicato con lo stile diverso, è un sottoinsieme di
-  logica di ricerca condiviso al 100%, e la variante **aggiunge** funzionalità invece di
-  duplicarla. Il criterio completo sta nella pagina di `wm-core`.
+- **La classe base si estrae quando la variante non duplica logica** (oc:8762): `MapPageBase`
+  tiene tutta la logica della pagina mappa, e la variante camminiditalia è un `@Component` che
+  accende il flag `showStartWalk` e aggiunge un foglio di stile, con lo stesso template del
+  default. Duplicare la pagina centrale dell'app per un bottone avrebbe lasciato due copie da tenere
+  allineate; un primo giro con un template camminiditalia separato è stato ritirato in review per lo
+  stesso motivo. La logica nuova sta in componenti standalone a parte (`webmapp-btn-start-walk`,
+  `webmapp-btn-add-poi`), perché Karma compila con la configuration di default e non vedrebbe mai
+  la variante. Il criterio coincide con quello già applicato in `wm-core` (home-layer, search-bar,
+  layer-box, search-box, ugc-box), descritto nella sua pagina.
 - **Un'altezza hardcoded è stata rimossa invece che sincronizzata** (oc:8305):
   `favourites-layers.component.scss` non ripete più l'altezza di `.wm-box`, che ora ce l'ha propria
   in `wm-core` — elimina alla radice il rischio di disallineamento cross-repo che un numero copiato
   avrebbe lasciato aperto.
+
+## Come ci siamo arrivati
+
+- **«Non estrarre una classe base in un terzo file»** (superata da oc:8762): era la regola del
+  repo dopo due tentativi scartati dal developer, su `home.component.ts` e `profile.page.ts`, dove
+  la variante divergeva dal default in più punti e la base non toglieva duplicazione. Con il tempo
+  le eccezioni erano diventate la norma — `SearchBarBaseComponent` (oc:8414) e
+  `UgcBoxBaseComponent` (oc:8764) — e un divieto smentito dal codice non diceva più cosa fare. È
+  stata sostituita dal criterio sopra, che spiega sia le eccezioni sia i due casi scartati.
 
 ## La trappola degli override di tema
 
