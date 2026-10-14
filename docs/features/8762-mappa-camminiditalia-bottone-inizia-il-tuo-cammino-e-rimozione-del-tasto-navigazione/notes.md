@@ -117,6 +117,13 @@ Esito della `wm-review-ticket`: DA CORREGGERE, con tutti i punti corretti nello 
 - **Node 22 per la build**: la Angular CLI del repo richiede Node ≥ 20.19; con il Node 18 attivo di
   default `ng build` si ferma subito.
 - Tag Orchestrator saltati su richiesta del dev.
+- **Call del 14/10**: il testo diventa «Inizia il cammino», senza «tuo» («il tuo è sottinteso» e
+  si guadagna spazio); l'icona resta, decisa a voto.
+- **Traduzioni spostate da wm-core all'app**: il piano le metteva in
+  `wm-core/localization/i18n/`, ma il bottone esiste solo nell'app, e le traduzioni vanno nel repo
+  dove sta il codice che le usa. Ora la chiave `'Inizia il cammino'` sta in fondo ai 7 file di
+  `core/src/assets/i18n/`, come la voce «Passaporto» di oc:8703; in wm-core il commit `585f2a19`
+  va annullato.
 
 ## Follow-up
 

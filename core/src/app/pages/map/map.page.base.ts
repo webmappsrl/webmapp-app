@@ -92,7 +92,7 @@ export abstract class MapPageBase {
    */
   readonly overlayXYZ = 'https://carg.geosciences-ir.it/storage/cargmap/';
   /**
-   * Mostra il bottone «Inizia il tuo cammino» e, al posto del fab che raggruppa traccia e POI, il
+   * Mostra il bottone «Inizia il cammino» e, al posto del fab che raggruppa traccia e POI, il
    * solo fab del POI. Lo accende la variante camminiditalia (oc:8762); il template è uno solo.
    */
   readonly showStartWalk: boolean = false;

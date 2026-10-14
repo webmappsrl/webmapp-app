@@ -614,5 +614,6 @@ export const appDE = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Beginne den Weg',
 };

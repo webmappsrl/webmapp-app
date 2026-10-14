@@ -8,7 +8,7 @@ import {minimizeOpenMapDetails} from 'src/app/functions/minimize-open-map-detail
 import {loginIfNeeded} from 'src/app/functions/login-if-needed';
 
 /**
- * Bottone «Inizia il tuo cammino» della mappa camminiditalia (oc:8762): avvia subito la
+ * Bottone «Inizia il cammino» della mappa camminiditalia (oc:8762): avvia subito la
  * registrazione della traccia, senza lo «scorri per registrare» del recorder. Se l'utente non è
  * loggato apre prima il login e, se il login riesce, avvia la registrazione senza un secondo tocco.
  */

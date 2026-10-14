@@ -6,7 +6,7 @@ import {loginIfNeeded} from 'src/app/functions/login-if-needed';
 
 /**
  * Fab della mappa camminiditalia che apre la creazione di un POI (oc:8762), al posto del fab che
- * raggruppava traccia e POI: la traccia ora parte dal bottone «Inizia il tuo cammino». Se l'utente
+ * raggruppava traccia e POI: la traccia ora parte dal bottone «Inizia il cammino». Se l'utente
  * non è loggato apre prima il login e, se il login riesce, apre il pannello senza un secondo tocco.
  */
 @Component({

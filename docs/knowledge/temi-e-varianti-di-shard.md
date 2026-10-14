@@ -25,7 +25,7 @@ non va confusa con i fogli per app.
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Per
 camminiditalia lo usano, nell'app, `profile.page.ts`, `tabs.page.ts` e `tabs-routing.module.ts`
-(voce e rotta del tab Passaporto, oc:8703), `map.page.ts` (bottone «Inizia il tuo cammino» e fab del solo POI,
+(voce e rotta del tab Passaporto, oc:8703), `map.page.ts` (bottone «Inizia il cammino» e fab del solo POI,
 oc:8762), e in `wm-core` `home-layer`, `search-bar`, `layer-box`,
 `search-box` e `ugc-box` (senza il bottone di import da file, oc:8764). Una variante può avere
 anche uno stile tutto suo, aggiungendo un `.scss` ai

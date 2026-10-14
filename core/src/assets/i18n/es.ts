@@ -614,5 +614,6 @@ export const appES = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Empieza el camino',
 };
