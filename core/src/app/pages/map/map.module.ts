@@ -14,6 +14,8 @@ import {MapDetailsComponent} from './map-details/map-details.component';
 import {MapPage} from './map.page';
 import {BtnStartWalkComponent} from 'src/app/components/shared/buttons/btn-start-walk/btn-start-walk.component';
 import {BtnAddPoiComponent} from 'src/app/components/shared/buttons/btn-add-poi/btn-add-poi.component';
+import {GpsAlertComponent} from 'src/app/components/shared/gps-alert/gps-alert.component';
+import {GpsBadgeComponent} from 'src/app/components/shared/gps-alert/gps-badge.component';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 import {WmCoreModule} from '@wm-core/wm-core.module';
 import {WmTransPipe} from '@wm-core/pipes/wmtrans.pipe';
@@ -35,6 +37,8 @@ import {PoiRecorderModule} from 'src/app/components/poi-recorder-component/poi-r
     WmCoreModule,
     BtnStartWalkComponent,
     BtnAddPoiComponent,
+    GpsAlertComponent,
+    GpsBadgeComponent,
   ],
   declarations: [
     MapPage,

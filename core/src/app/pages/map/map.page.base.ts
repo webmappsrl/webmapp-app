@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Directive, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Directive, ViewChild, inject} from '@angular/core';
 import {Browser} from '@capacitor/browser';
 import {IonFab, Platform} from '@ionic/angular';
 import {Store} from '@ngrx/store';
@@ -70,6 +70,8 @@ import {
 } from '@wm-core/store/user-activity/user-activity.action';
 import {mapDetailsStatus as mapDetailsStatusType} from '@wm-core/store/user-activity/user-activity.reducer';
 import {DETAILS_ANIMATION_DURATION} from 'src/app/constants/map';
+import {GpsAlertService} from 'src/app/services/gps-alert.service';
+
 export interface IDATALAYER {
   high: string;
   low: string;
@@ -96,6 +98,11 @@ export abstract class MapPageBase {
    * solo fab del POI. Lo accende la variante camminiditalia (oc:8762); il template è uno solo.
    */
   readonly showStartWalk: boolean = false;
+  /**
+   * Avvisi e badge sullo stato del GPS (oc:8766). Con `inject()` e non nel costruttore, per non
+   * toccare la firma che le varianti di shard ereditano.
+   */
+  readonly gpsAlertSvc = inject(GpsAlertService);
 
   @ViewChild('fab1') fab1: IonFab;
   @ViewChild('fab2') fab2: IonFab;

@@ -85,6 +85,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 
 | Argomento | Cosa copre | Ticket | Pagina |
 |---|---|---|---|
+| Avvisi sullo stato del GPS | Avviso animato che diventa badge sul bottone della posizione, regole per episodio e per avvio; il dominio è in wm-core | oc:8766 | [docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md](docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md) |
 | Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava | oc:8382 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | CI, preview e deploy | I workflow, i submodule testati dalla loro directory, il fork guard | oc:8023 | [docs/knowledge/ci-e-pipeline.md](docs/knowledge/ci-e-pipeline.md) |
 | Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
@@ -106,5 +107,7 @@ la classe base e il flag della variante della mappa, più il deploy web multi-te
 `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per tipo, la chiave
 dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
 `downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
-su `<wm-map>`) e `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
-mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire).
+su `<wm-map>`), `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
+mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire) e
+`avvisi-gps` (lo slot `fixed` di `ion-content` che rende largo zero un figlio `fixed`, dove montare
+il badge, le animazioni Web Animations che prevalgono sugli stili inline).

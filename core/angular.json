@@ -180,6 +180,7 @@
               "src/app/components/shared/buttons/btn-start-walk",
               "src/app/components/shared/buttons/btn-add-poi",
               "src/app/components/shared/buttons/btn-track-recording",
+              "src/app/components/shared/gps-alert",
               "src/app/functions",
               "src/app/pages/favourites",
               "src/app/pages/home",
