@@ -630,4 +630,15 @@ export const appFR = {
     }
   },
   'Inizia il cammino': 'Commence le chemin',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'Recherche du signal GPS…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'C\'est plus rapide en plein air et loin des bâtiments',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Signal GPS faible : votre position peut être imprécise',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Si cela arrive souvent, vérifiez que « Position exacte » est activée dans les réglages de l\'app',
+  'La posizione non è disponibile': 'Votre position n\'est pas disponible',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Vérifiez que la localisation est activée et que l\'app a l\'autorisation',
+  'Attiva la localizzazione del telefono': 'Activez la localisation de votre téléphone',
+  'Serve per vedere la tua posizione sulla mappa': 'Elle est nécessaire pour voir votre position sur la carte',
+  'Segnale GPS debole': 'Signal GPS faible',
+  'Segnale GPS tornato buono': 'Le signal GPS est de nouveau bon',
 };

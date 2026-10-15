@@ -136,9 +136,11 @@
         horizontal="start"
         (click)="fab1?.close();fab3?.close()"
       >
-        <ion-fab-button>
+        <ion-fab-button [class.webmapp-gps-searching]="gpsAlertSvc.pulse$|async">
           <ion-icon name="locate-outline"></ion-icon>
         </ion-fab-button>
+        <!-- oc:8766: stato del GPS sul bottone della posizione, punto d'arrivo dell'avviso animato -->
+        <webmapp-gps-badge #gpsBadge [kind]="gpsAlertSvc.badge$|async"></webmapp-gps-badge>
         <ion-fab-list side="start">
           <wm-btn-orientation
             class="webmapp-map-fab"
@@ -219,4 +221,5 @@
       >
     </div>
   </wm-geobox-map>
+  <webmapp-gps-alert slot="fixed" [anchor]="gpsBadge.el"></webmapp-gps-alert>
 </ion-content>

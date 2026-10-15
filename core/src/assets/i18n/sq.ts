@@ -616,4 +616,15 @@ export const appSQ = {
     }
   },
   'Inizia il cammino': 'Fillo rrugën',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'Duke kërkuar sinjalin GPS…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'Jashtë dhe larg ndërtesave është më shpejt',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Sinjal GPS i dobët: pozicioni juaj mund të jetë i pasaktë',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Nëse ndodh shpesh, kontrolloni që "Vendndodhja e saktë" të jetë aktive në cilësimet e aplikacionit',
+  'La posizione non è disponibile': 'Vendndodhja juaj nuk është e disponueshme',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Kontrolloni që vendndodhja të jetë aktive dhe që aplikacioni të ketë leje',
+  'Attiva la localizzazione del telefono': 'Aktivizoni vendndodhjen e telefonit',
+  'Serve per vedere la tua posizione sulla mappa': 'Ju nevojitet për të parë pozicionin tuaj në hartë',
+  'Segnale GPS debole': 'Sinjal GPS i dobët',
+  'Segnale GPS tornato buono': 'Sinjali GPS është sërish i mirë',
 };

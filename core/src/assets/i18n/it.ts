@@ -654,4 +654,15 @@ export const appIT = {
     },
   },
   'Inizia il cammino': 'Inizia il cammino',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'Ricerca del segnale GPS…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'All\'aperto e lontano dagli edifici è più rapido',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Segnale GPS debole: la posizione potrebbe essere imprecisa',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app',
+  'La posizione non è disponibile': 'La posizione non è disponibile',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso',
+  'Attiva la localizzazione del telefono': 'Attiva la localizzazione del telefono',
+  'Serve per vedere la tua posizione sulla mappa': 'Serve per vedere la tua posizione sulla mappa',
+  'Segnale GPS debole': 'Segnale GPS debole',
+  'Segnale GPS tornato buono': 'Segnale GPS tornato buono',
 };
