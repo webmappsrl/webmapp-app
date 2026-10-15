@@ -646,5 +646,6 @@ export const appEN = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Start the walk',
 };

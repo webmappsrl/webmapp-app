@@ -619,5 +619,6 @@ export const appPR = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Começa o caminho',
 };

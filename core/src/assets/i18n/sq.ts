@@ -614,5 +614,6 @@ export const appSQ = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Fillo rrugën',
 };

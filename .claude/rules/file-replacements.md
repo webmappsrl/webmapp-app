@@ -22,11 +22,17 @@ perché delle scelte in
   circolare e punta a se stesso: errore `TS2506`, verificato. Una base condivisa richiederebbe un
   terzo file mai soggetto a `fileReplacements`.
 
-- **Non estrarre una classe base in un terzo file**, in questo repo. È stato provato due volte, su
-  `home.component.ts` e su `profile.page.ts`, e scartato entrambe le volte dal developer dopo
-  revisione: preferenza confermata, non provvisoria. La variante duplica per intero la logica del
-  file originale — la duplicazione è il costo accettato perché il file condiviso resti identico a
-  prima per tutti gli altri shard, senza dipendenze nuove che si troverebbero comunque nel bundle.
+- **Classe base in un terzo file solo se la variante non duplica logica**: cambia solo il template,
+  oppure sovrascrive un campo o un metodo e aggiunge il resto (`map.page`, e in `wm-core`
+  home-layer, search-bar, layer-box, search-box, ugc-box). Se la logica diverge in più punti, la variante duplica il file intero
+  (`home`, `profile`). La base porta `@Directive()` astratta e non è mai soggetta a
+  `fileReplacements` (oc:8762).
+
+- **La variante della mappa non ha un template suo**: `map.page.camminiditalia.ts` accende il flag
+  `showStartWalk` di `MapPageBase` e aggiunge `map.page.camminiditalia.scss`; i blocchi del bottone
+  «Inizia il tuo cammino» e del fab del solo POI stanno in `map.page.html` sotto quel flag. Una
+  differenza di camminiditalia sulla mappa si aggiunge allo stesso modo, con un flag, non con un
+  secondo template: la CI builda solo il default e una copia divergerebbe in silenzio (oc:8762).
 
 - **Una configuration va dichiarata due volte**, sotto `architect.build.configurations` e sotto
   `architect.serve.configurations`: dimenticare la seconda fa fallire `ng serve --configuration=X`.

@@ -160,16 +160,25 @@
         vertical="top"
         horizontal="start"
         #fab3
-        *ngIf="(isTrackRecordingEnable$|async) && !(enableTilesDownload$|async)"
+        *ngIf="!showStartWalk && (isTrackRecordingEnable$|async) && !(enableTilesDownload$|async)"
         (click)="fab2?.close();fab1?.close()"
       >
         <ion-fab-button size="small" class="wm-btn-register-fab">
           <i class="icon-outline-recording"></i>
         </ion-fab-button>
         <wm-btn-track-recording
-          [isLogged]="isLogged$|async"
           (start-recording)="startRecording$.next($event)"
         ></wm-btn-track-recording>
+      </ion-fab>
+      <!-- oc:8762: con «Inizia il cammino» la traccia parte dal bottone, qui resta solo il POI -->
+      <ion-fab
+        slot="fixed"
+        vertical="top"
+        horizontal="start"
+        *ngIf="showStartWalk && (isTrackRecordingEnable$|async) && !(enableTilesDownload$|async)"
+        (click)="fab2?.close()"
+      >
+        <webmapp-btn-add-poi></webmapp-btn-add-poi>
       </ion-fab>
       <ion-fab
         slot="fixed"
@@ -187,7 +196,7 @@
       *ngIf="showDownload$|async"
       [track]="currentTrack$|async"
       [overlayUrls]="overlayFeatureCollections$|async"
-      [overlayXYZ]="'https://carg.geosciences-ir.it/storage/cargmap/'"
+      [overlayXYZ]="overlayXYZ"
       [overlayGeometry]="hitMapGeometry$|async"
       [boundingBox]="wmMapTilesBoundingBox$|async"
       (closeEvt)="closeDownload()"
@@ -196,6 +205,13 @@
 
     <wm-track-recorder *ngIf="enableTrackRecorderPanel$|async"></wm-track-recorder>
     <wm-poi-recorder *ngIf="enablePoiRecorderPanel$|async"></wm-poi-recorder>
+
+    <div
+      class="wm-btn-start-walk-container"
+      *ngIf="showStartWalk && (isTrackRecordingEnable$|async) && !(enableRecorderPanel$|async) && !(showDownload$|async) && !(enableTilesDownload$|async)"
+    >
+      <webmapp-btn-start-walk></webmapp-btn-start-walk>
+    </div>
 
     <div class="wm-map-tiles-download-button" *ngIf="enableTilesDownload$|async">
       <ion-button (click)="downloadTiles()" [disabled]="disableTilesDownloadButton$|async"

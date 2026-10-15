@@ -628,5 +628,6 @@ export const appFR = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Commence le chemin',
 };
