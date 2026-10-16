@@ -19,7 +19,6 @@
     Inject shardName:'geohub' explicitly (the last known-good pairing
     with appId 52), decoupling the CI test target from whatever shard
     developers set as their local default.
-* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>:** triage console log per policy niente log in produzione ([#215](https://github.com/webmappsrl/webmapp-app/issues/215)) ([24d2fa9](https://github.com/webmappsrl/webmapp-app/commit/24d2fa9718f3c2d530c57d1e8aac7f8995ada617))
 <!-- COMMIT_DESC -->
     
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): triage console log per policy niente log in produzione
@@ -71,11 +70,9 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
-* **map-core:** changelog for bump to 2339f9b ([0a58554](https://github.com/webmappsrl/webmapp-app/commit/0a585547468e8a8c12ca2a607fc008686ad3b4d9))
 <!-- COMMIT_DESC -->
     
     - RDO Cammini d'Italia 2026 — map-core (#65)
@@ -200,7 +197,6 @@
     31/08/2026). Capacitor resta invariato a 7.4.5, minSdkVersion invariato
     a 28. Nessun fix difensivo per i nuovi behavior Android 16 in questo
     ciclo (vedi docs/features/8277-android-target-sdk-36/).
-* **wm-core:** changelog for bump to 92011de ([f7798a6](https://github.com/webmappsrl/webmapp-app/commit/f7798a623bd193521cd28a1b7bf49065bacaff7a))
 <!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8174" target="_blank" rel="noopener noreferrer">OC[8174]</a>): add foreground version check on app resume
@@ -230,7 +226,6 @@
     (asseriti da test unitari).
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-
 ## [3.1.16](https://github.com/webmappsrl/webmapp-app/compare/v3.1.15...v3.1.16) (2026-07-09)
 
 
@@ -240,13 +235,11 @@
 <!-- COMMIT_DESC -->
     
     Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
-
 * enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
 <!-- COMMIT_DESC -->
     
     - fix: CARG tile URL alignment with overlayXYZ
     Align CARG tile layer URL with `overlayXYZ` to ensure consistent tile display and downloads across offline scenarios.
-<!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): fallback locale offline per confini fogli CARG e icone controlli mappa (#61)
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): fallback locale offline per confini fogli CARG e icone controlli mappa
@@ -325,7 +318,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
@@ -400,7 +392,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 ## [3.1.13](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.1.13) (2026-06-19)
 
 
@@ -496,7 +487,6 @@
         - Added a try-catch block to the `init` method for better error handling when initializing the swiper element.
         - Reformatted the styles array in the component decorator for improved readability.
         - Simplified the `ngOnChanges` condition by removing unnecessary line breaks.
-
         refactor(localization): ♻️ streamline imports and add null check in translation service
 
         - Removed unused imports from `@ngx-translate/core` to improve code clarity and maintainability.
@@ -694,7 +684,6 @@
         - chore(home): enhance tab selection logic <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Replaces logic to determine which tab to show based on available data,
         prioritizing user preference and results availability.
-
         Removes redundant effects from user activity management, simplifying
         code and reducing unnecessary updates.
 
