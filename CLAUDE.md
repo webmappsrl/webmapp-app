@@ -29,9 +29,10 @@ proprio `CLAUDE.md`, la conoscenza in `docs/knowledge/` e le trappole in `.claud
   sceglie lo shard a runtime dall'hostname, quindi il bundle su `mobile.webmapp.it` è **uno solo,
   condiviso da tutti i clienti**: quella build pubblicherebbe il template di un cliente a tutti gli
   altri. Si usano gli script di deploy dedicati.
-- **Se cambi l'`overlayXYZ` dei tile, aggiorna anche `hit-map.directive.ts` in `map-core`**, e
-  viceversa: visualizzazione e download offline sono percorsi separati che devono puntare alla
-  stessa origine, e niente in CI se ne accorge.
+- **Se cambi l'`overlayXYZ` dei tile (la costante in `core/src/app/pages/map/map.page.base.ts`),
+  aggiorna anche `hit-map.directive.ts` in `map-core`**, e viceversa: visualizzazione e download
+  offline sono percorsi separati che devono puntare alla stessa origine, e niente in CI se ne
+  accorge.
 - **`core/scripts/lib/run.js` e `core/scripts/serve.js` sono copie identiche degli omonimi in
   `wm-webapp`.** Non esiste un'astrazione condivisa fra i due prodotti: chi tocca uno dei due
   controlla l'altro, perché nessuno strumento segnala il drift. La stessa regola sta nel
@@ -84,24 +85,31 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 
 | Argomento | Cosa copre | Ticket | Pagina |
 |---|---|---|---|
+| Avvisi sullo stato del GPS | Avviso animato che diventa badge sul bottone della posizione, regole per episodio e per avvio, posizione sotto la plancia di registrazione; il dominio è in wm-core | oc:8766, plancia-registrazione-riducibile | [docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md](docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md) |
 | Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava | oc:8382 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | CI, preview e deploy | I workflow, i submodule testati dalla loro directory, il fork guard | oc:8023 | [docs/knowledge/ci-e-pipeline.md](docs/knowledge/ci-e-pipeline.md) |
-| Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione | oc:8183 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
+| Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
 | Deep link | Listener nativo `appUrlOpen`, navigazione Home→Map, apertura del pannello al mount | oc:8470, oc:7980 | [docs/knowledge/deep-link.md](docs/knowledge/deep-link.md) |
 | Download offline e `hitMapUrl` | Il flusso per lo shard carg, l'invariante con `map-core` | oc:8190 | [docs/knowledge/download-offline-carg.md](docs/knowledge/download-offline-carg.md) |
 | Gulp, risorse native e permessi | Validazione delle dimensioni, permessi Android, immagini di profilo, posthog | oc:8246, oc:7294, oc:7480, oc:8105, oc:8277 | [docs/knowledge/gulp-e-build-native.md](docs/knowledge/gulp-e-build-native.md) |
 | Log in produzione | Il criterio di triage a due assi, cosa resta e perché | oc:8369 | [docs/knowledge/log-in-produzione.md](docs/knowledge/log-in-produzione.md) |
 | Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi; dettaglio POI in wm-core | oc:8313, oc:8458, oc:8427, oc:8181, oc:8406 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
-| Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato | oc:8284 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
-| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
+| Registrazione di una traccia | La plancia con la barra di avanzamento partenza/arrivo, la riduzione a linguetta con l'informazione a scelta, cosa è stato provato e ritirato, i valori della plancia e del riepilogo letti da wm-core, l'avvio senza slider da «Inizia il tuo cammino» | oc:8284, oc:8743, oc:8762, plancia-registrazione-riducibile | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
+| Tab Passaporto | Voce e rotta solo camminiditalia, guardia che aspetta il login ripristinato, ascolto del logout a pagina visibile | oc:8703 | [docs/knowledge/tab-passaporto.md](docs/knowledge/tab-passaporto.md) |
+| Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile; la searchbar camminiditalia; quando estrarre una classe base (`MapPageBase`) | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613, oc:8703, oc:8764, oc:8762 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
 ## Trappole
 
 Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` che le carica quando
-si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, più il deploy web
-multi-tenant), `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per
-tipo, la chiave dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
+si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, il criterio per
+la classe base e il flag della variante della mappa, più il deploy web multi-tenant),
+`gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per tipo, la chiave
+dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
 `downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
-su `<wm-map>`) e `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
-mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire).
+su `<wm-map>`), `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
+mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire),
+`avvisi-gps` (lo slot `fixed` di `ion-content` che rende largo zero un figlio `fixed`, dove montare
+il badge, le animazioni Web Animations che prevalgono sugli stili inline) e `test-unitari` (i due
+elenchi di cartelle da aggiornare per uno spec nuovo, l'host di TestBed che è un `div`, Node 22 e i
+timeout di Karma in locale, le animazioni infinite).

@@ -1,9 +1,10 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AlertController, ModalController, NavController} from '@ionic/angular';
-import {GeoutilsService} from 'src/app/services/geoutils.service';
+import {GeoutilsService} from '@wm-core/services/geoutils.service';
+import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
 import {ESuccessType} from '../../types/esuccess.enum';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {map, take, takeUntil} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {confMAP, confOPTIONS} from '@wm-core/store/conf/conf.selector';
 import {ugcTracksFeatures} from '@wm-core/store/features/ugc/ugc.selector';
@@ -62,16 +63,15 @@ export class ModalSuccessComponent implements OnInit, OnDestroy {
   };
   today = new Date();
   topValues = [];
-  trackAvgSpeed: number = 0;
   trackDate;
-  trackSlope: number = 0;
-  trackTime = {hours: 0, minutes: 0, seconds: 0};
-  trackTopSpeed: number = 0;
-  trackodo: number = 0;
+  // Stessi valori del pannello dei dettagli tecnici (oc:8743); null quando non calcolabili
+  trackSlope: number | null = null;
+  trackTime: {hours: number; minutes: number; seconds: number} | null = null;
+  trackodo: number | null = null;
 
   constructor(
     private _modalController: ModalController,
-    private _geoUtils: GeoutilsService,
+    private _ugcTrackStatsSvc: UgcTrackStatsService,
     private _navController: NavController,
     private _store: Store,
     private _urlHandlerSvc: UrlHandlerService,
@@ -83,12 +83,16 @@ export class ModalSuccessComponent implements OnInit, OnDestroy {
   ngOnInit() {
     switch (this.type) {
       case ESuccessType.TRACK:
-        this.trackDate = this._geoUtils.getDate(this.track);
-        this.trackodo = this._geoUtils.getLength(this.track);
-        this.trackSlope = this._geoUtils.getSlope(this.track);
-        this.trackAvgSpeed = this._geoUtils.getAverageSpeed(this.track);
-        this.trackTopSpeed = this._geoUtils.getTopSpeed(this.track);
-        this.trackTime = GeoutilsService.formatTime(this._geoUtils.getTime(this.track));
+        this.trackDate = new Date();
+        this._ugcTrackStatsSvc
+          .details$(this.track)
+          .pipe(take(1))
+          .subscribe(details => {
+            this.trackodo = details.distance;
+            this.trackSlope = details.ascent;
+            this.trackTime =
+              details.duration != null ? GeoutilsService.formatTime(details.duration * 60) : null;
+          });
         this.isTrack = true;
         this._watchTrackSyncStatus();
         break;

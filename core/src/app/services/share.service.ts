@@ -1,15 +1,16 @@
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Inject, Injectable, Optional} from '@angular/core';
-import {Directory, Filesystem} from '@capacitor/filesystem';
 import {Share} from '@capacitor/share';
 import {LangService} from '@wm-core/localization/lang.service';
 import {EnvironmentService} from '@wm-core/services/environment.service';
+import {WmShareImageResponse, WmShareImageService} from '@wm-core/services/share-image.service';
 import {POSTHOG_CLIENT} from '@wm-core/store/conf/conf.token';
 import {UgcTrackShareResult} from '@wm-core/ugc-track-properties/ugc-track-properties.component';
 import {WmFeature} from '@wm-types/feature';
 import {WmPosthogClient} from '@wm-types/posthog';
 import {Feature, LineString} from 'geojson';
-import {firstValueFrom} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 export interface ShareObject {
   dialogTitle?: string;
@@ -17,20 +18,6 @@ export interface ShareObject {
   text?: string;
   title?: string;
   url?: string;
-}
-
-/**
- * @description
- * Response shape of `POST /api/share-story-image` (oc:8183, simplified third revision) —
- * confirmed against the real `wm-package` implementation (`ShareStoryImageController`): plain
- * JSON with two URLs, not a base64 image. `image_url` points to the composited image persisted
- * by the backend (Spatie media, needed for the public share page to serve it later);
- * `share_url` is the public `GET /share/ugc-track/{uuid}` page (Open Graph tags) to hand to
- * `Share.share({url: ...})` for channels that unfurl links (WhatsApp, Messenger, etc.).
- */
-interface ShareStoryImageResponse {
-  image_url: string;
-  share_url: string;
 }
 
 @Injectable({
@@ -58,16 +45,17 @@ export class ShareService {
     private _translate: LangService,
     private _environmentSvc: EnvironmentService,
     private _http: HttpClient,
+    private _shareImageSvc: WmShareImageService,
     @Optional() @Inject(POSTHOG_CLIENT) private _posthogClient?: WmPosthogClient,
   ) {
     this._baseLink = this._environmentSvc.shareLink;
 
+    // `url` non è un testo da tradurre: resta il default `www.webmapp.it` (oc:8702).
     this._translate
-      .get(['services.share.title', 'services.share.url', 'services.share.dialogTitle'])
+      .get(['Hai visto questo percorso?', 'Condividi con i tuoi amici'])
       .subscribe(t => {
-        this.defaultShareObj.title = t['services.share.title'];
-        this.defaultShareObj.url = t['services.share.url'];
-        this.defaultShareObj.dialogTitle = t['services.share.dialogTitle'];
+        this.defaultShareObj.title = t['Hai visto questo percorso?'];
+        this.defaultShareObj.dialogTitle = t['Condividi con i tuoi amici'];
       });
   }
 
@@ -113,22 +101,25 @@ export class ShareService {
 
   /**
    * @description
-   * Shares a recorded UGC track "as a Story" (oc:8183, simplified third revision): the backend
-   * does all the work (stats, map rendering, compositing, persistence for the public page) from
-   * just the track's `uuid` — no screenshot, no client-side stats, no `app_id`. This method:
-   * 1. calls `POST /api/share-story-image` with `{uuid}`;
-   * 2. downloads the returned `image_url` to a local cache file (`@capacitor/filesystem`);
-   * 3. hands that file + the returned public `share_url` to the generic `Share.share()`
-   *    (`@capacitor/share`) — no native Instagram/Facebook plugin involved anymore.
+   * Condivide una traccia UGC registrata «come storia» (oc:8183, terza revisione semplificata): il
+   * backend fa tutto il lavoro (statistiche, mappa, composizione, salvataggio per la pagina
+   * pubblica) a partire dal solo `uuid` della traccia — niente screenshot, niente statistiche lato
+   * client, niente `app_id`. Questo metodo tiene la guardia «in corso», il controllo sull'`uuid`,
+   * PostHog e i messaggi d'errore, e delega la condivisione vera e propria a
+   * `WmShareImageService.shareNative()` di wm-core (oc:8702), che:
+   * 1. esegue la richiesta `POST /api/share-story-image` costruita qui con `{uuid}`;
+   * 2. scarica l'`image_url` restituito in un file della cache (`@capacitor/filesystem`);
+   * 3. passa quel file e lo `share_url` pubblico restituito al generico `Share.share()`
+   *    (`@capacitor/share`) — nessun plugin nativo Instagram/Facebook.
    *
-   * Never throws — always resolves a `UgcTrackShareResult`, which the caller (`map.page.ts`) feeds
-   * back into `<wm-ugc-track-properties>`'s `[shareResult]` input. No automatic retry: on failure
-   * the user retries explicitly via the "Riprova" button already handled by wm-core, which simply
-   * re-emits the same `share-track` event and calls this method again from scratch.
+   * Non lancia mai: risolve sempre un `UgcTrackShareResult`, che il chiamante (`map.page.ts`)
+   * restituisce all'input `[shareResult]` di `<wm-ugc-track-properties>`. Nessun retry
+   * automatico: in caso di errore l'utente riprova con il pulsante «Riprova» già gestito da
+   * wm-core, che riemette lo stesso evento `share-track` e richiama questo metodo da capo.
    *
-   * @param track The full recorded UGC track feature, as emitted by `(share-track)`. Only
-   * `track.properties.uuid` is used.
-   * @returns The outcome to feed back via `[shareResult]`.
+   * @param track La feature completa della traccia UGC registrata, come emessa da
+   * `(share-track)`. Si usa solo `track.properties.uuid`.
+   * @returns L'esito da restituire tramite `[shareResult]`.
    */
   public async shareTrackToStories(track: WmFeature<LineString>): Promise<UgcTrackShareResult> {
     if (this._shareStoryInFlight) {
@@ -148,16 +139,15 @@ export class ShareService {
         };
       }
 
-      const {image_url, share_url} = await this._requestShareImage(uuid);
-      const fileUri = await this._downloadImageToCache(image_url);
-
-      await Share.share({
-        url: share_url,
-        files: [fileUri],
-        text: this.defaultShareObj.text,
-        title: this.defaultShareObj.title,
-        dialogTitle: this.defaultShareObj.dialogTitle,
-      });
+      await this._shareImageSvc.shareNative(
+        this._requestShareImage(uuid),
+        {
+          text: this.defaultShareObj.text,
+          title: this.defaultShareObj.title,
+          dialogTitle: this.defaultShareObj.dialogTitle,
+        },
+        `webmapp-story-${Date.now()}.png`,
+      );
 
       this._posthogClient?.capture('contentShared', {
         content_type: 'track-story',
@@ -175,45 +165,19 @@ export class ShareService {
 
   /**
    * @description
-   * Calls `POST /api/share-story-image` with only `{uuid}` and returns the parsed JSON response.
+   * Costruisce la richiesta `POST /api/share-story-image` con il solo `{uuid}`. La richiesta è
+   * fredda: la esegue `WmShareImageService.shareNative()`. Gli errori HTTP si traducono qui in un
+   * `Error` con un messaggio leggibile, come prima dello spostamento in wm-core.
    *
-   * @param uuid `track.properties.uuid` of the UGC track being shared.
-   * @returns The composited image URL and public share URL returned by the backend.
+   * @param uuid `track.properties.uuid` della traccia UGC da condividere.
+   * @returns La richiesta che emette l'URL dell'immagine composta e quello della pagina pubblica.
    */
-  private async _requestShareImage(uuid: string): Promise<ShareStoryImageResponse> {
-    try {
-      return await firstValueFrom(
-        this._http.post<ShareStoryImageResponse>(
-          `${this._environmentSvc.origin}/api/share-story-image`,
-          {uuid},
-        ),
+  private _requestShareImage(uuid: string): Observable<WmShareImageResponse> {
+    return this._http
+      .post<WmShareImageResponse>(`${this._environmentSvc.origin}/api/share-story-image`, {uuid})
+      .pipe(
+        catchError(error => throwError(() => new Error(this._extractBackendErrorMessage(error)))),
       );
-    } catch (error) {
-      throw new Error(this._extractBackendErrorMessage(error));
-    }
-  }
-
-  /**
-   * @description
-   * Downloads the composited image from the backend's `image_url` straight to a local cache
-   * file via `Filesystem.downloadFile()` (native download, no manual base64 round-trip), so it
-   * can be passed to `Share.share({files: [...]})`. `downloadFile()` returns a `path`, not a
-   * ready-to-use `uri` — `Filesystem.getUri()` resolves the same `path`+`directory` pair to the
-   * full `file://`-style URI `Share.share()` expects (same two-call pattern Capacitor's own docs
-   * use for this).
-   *
-   * @param imageUrl The `image_url` returned by `POST /api/share-story-image`.
-   * @returns The local file `uri` to hand to `Share.share()`.
-   */
-  private async _downloadImageToCache(imageUrl: string): Promise<string> {
-    const fileName = `webmapp-story-${Date.now()}.png`;
-    await Filesystem.downloadFile({
-      url: imageUrl,
-      path: fileName,
-      directory: Directory.Cache,
-    });
-    const {uri} = await Filesystem.getUri({path: fileName, directory: Directory.Cache});
-    return uri;
   }
 
   /**
@@ -238,14 +202,15 @@ export class ShareService {
 
   /**
    * @description
-   * Best-effort, human-readable (Italian) error message for `UgcTrackShareResult.errorMessage`.
-   * Hardcoded strings, not translation keys — consistent with this same file's pre-existing
-   * `defaultShareObj` (`'See cool stuff'`, `'Share with buddies'`), which are likewise plain
-   * literals rather than i18n lookups. Falls back to `undefined` for unrecognized errors, letting
-   * wm-core's own generic translated fallback message (`'Condivisione non riuscita'`) take over.
+   * Messaggio d'errore leggibile, in italiano, per `UgcTrackShareResult.errorMessage`, ricavato
+   * al meglio dall'errore ricevuto. Sono stringhe scritte nel codice, non chiavi di traduzione:
+   * a differenza di `title` e `dialogTitle` di `defaultShareObj`, che da oc:8702 si traducono con
+   * le chiavi italiane di wm-core. Per un errore senza messaggio restituisce `undefined`, e vale il
+   * messaggio generico tradotto di wm-core (`'Condivisione non riuscita'`).
    *
-   * @param error Whatever was thrown/rejected along the flow.
-   * @returns A message to show the user, or `undefined` to use wm-core's generic fallback.
+   * @param error Quanto è stato lanciato o rifiutato lungo il flusso.
+   * @returns Il messaggio da mostrare all'utente, o `undefined` per usare quello generico di
+   * wm-core.
    */
   private _resolveErrorMessage(error: unknown): string | undefined {
     if (error instanceof Error && error.message) {

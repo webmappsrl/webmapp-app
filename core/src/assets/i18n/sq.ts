@@ -552,18 +552,13 @@ export const appSQ = {
           'newTrackRecord': 'Regjistrimi në proces'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Ndaj me miqtë e tu',
-      'text': 'Ja një rrugë interesante nga webmapp',
-      'title': 'E ke parë këtë rrugë?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
     'favourites': 'të preferuarat',
     'home': 'kryefaqja',
     'map': 'harta',
+    'passport': 'pasaporta',
     'profile': 'profili'
   },
   'no-tracks': 'Nuk ke shkarkuar ende asnjë gjurmë',
@@ -593,6 +588,9 @@ export const appSQ = {
   'Link utili': 'Lidhje të dobishme',
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Për të regjistruar gjurmë dhe për t'i shfaqur ato saktë, aktivizo lejen e vendndodhjes në cilësime",
   'Apri impostazioni App': 'Hap cilësimet e aplikacionit',
+  'Riduci la plancia di registrazione': 'Zvogëlo panelin e regjistrimit',
+  'Apri la plancia di registrazione': 'Hap panelin e regjistrimit',
+  'In pausa': 'Në pauzë',
   'Ti trovi qui': 'Je këtu',
   'Salva Waypoint': 'Ruaj pikën e rrugës',
   'Salva Traccia': 'Ruaj gjurmën',
@@ -619,5 +617,17 @@ export const appSQ = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Fillo rrugën',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'Duke kërkuar sinjalin GPS…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'Jashtë dhe larg ndërtesave është më shpejt',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Sinjal GPS i dobët: pozicioni juaj mund të jetë i pasaktë',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Nëse ndodh shpesh, kontrolloni që "Vendndodhja e saktë" të jetë aktive në cilësimet e aplikacionit',
+  'La posizione non è disponibile': 'Vendndodhja juaj nuk është e disponueshme',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Kontrolloni që vendndodhja të jetë aktive dhe që aplikacioni të ketë leje',
+  'Attiva la localizzazione del telefono': 'Aktivizoni vendndodhjen e telefonit',
+  'Serve per vedere la tua posizione sulla mappa': 'Ju nevojitet për të parë pozicionin tuaj në hartë',
+  'Segnale GPS debole': 'Sinjal GPS i dobët',
+  'Segnale GPS tornato buono': 'Sinjali GPS është sërish i mirë',
 };

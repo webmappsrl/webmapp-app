@@ -552,18 +552,13 @@ export const appDE = {
           'newTrackRecord': 'Aufnahme läuft'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Mit Ihren Freunden teilen',
-      'text': 'Hier ist eine interessante Strecke von Webmapp',
-      'title': 'Haben Sie diese Strecke gesehen?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
     'favourites': 'Favoriten',
     'home': 'Home',
     'map': 'Karte',
+    'passport': 'Pass',
     'profile': 'Profil'
   },
   'no-tracks': 'Sie haben noch keine Strecke heruntergeladen',
@@ -593,6 +588,9 @@ export const appDE = {
   'Link utili': 'Nützliche Links',
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": "Um Strecken korrekt aufzuzeichnen und anzuzeigen, aktivieren Sie die Standortberechtigung in den Einstellungen",
   'Apri impostazioni App': 'App-Einstellungen öffnen',
+  'Riduci la plancia di registrazione': 'Aufzeichnungsfeld minimieren',
+  'Apri la plancia di registrazione': 'Aufzeichnungsfeld öffnen',
+  'In pausa': 'Pausiert',
   'Ti trovi qui': 'Sie sind hier',
   'Salva Waypoint': 'Wegpunkt speichern',
   'Salva Traccia': 'Strecke speichern',
@@ -619,5 +617,17 @@ export const appDE = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Beginne den Weg',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'GPS-Signal wird gesucht…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'Im Freien und abseits von Gebäuden geht es schneller',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Schwaches GPS-Signal: Deine Position ist möglicherweise ungenau',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Wenn das öfter passiert, prüfe, ob „Genauer Standort“ in den App-Einstellungen aktiviert ist',
+  'La posizione non è disponibile': 'Dein Standort ist nicht verfügbar',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Prüfe, ob der Standort aktiviert ist und die App die Berechtigung hat',
+  'Attiva la localizzazione del telefono': 'Aktiviere den Standort deines Telefons',
+  'Serve per vedere la tua posizione sulla mappa': 'Er wird benötigt, um deine Position auf der Karte zu sehen',
+  'Segnale GPS debole': 'Schwaches GPS-Signal',
+  'Segnale GPS tornato buono': 'GPS-Signal ist wieder gut',
 };

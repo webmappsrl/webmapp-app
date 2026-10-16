@@ -188,3 +188,24 @@ webmapp-map-page {
     }
   }
 }
+
+// oc:8766: pulsazione del bottone della posizione mentre si cerca il GPS
+ion-fab-button.webmapp-gps-searching {
+  animation: webmapp-gps-pulse 1.6s ease-out infinite;
+}
+
+@keyframes webmapp-gps-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(var(--wm-color-primary-rgb), 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 14px rgba(var(--wm-color-primary-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ion-fab-button.webmapp-gps-searching {
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(var(--wm-color-primary-rgb), 0.5);
+  }
+}

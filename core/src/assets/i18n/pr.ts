@@ -557,18 +557,13 @@ export const appPR = {
           'newTrackRecord': 'Gravação em andamento'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Compartilhar com seus amigos',
-      'text': 'Aqui está uma rota interessante do webmapp',
-      'title': 'Você viu esta rota?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
     'favourites': 'favoritos',
     'home': 'home',
     'map': 'mapa',
+    'passport': 'passaporte',
     'profile': 'perfil'
   },
   'no-tracks': 'Você ainda não baixou nenhuma rota',
@@ -598,6 +593,9 @@ export const appPR = {
   'Link utili': 'Links úteis',
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": 'Para registrar rotas e exibi-las corretamente, ative a permissão de localização nas configurações',
   'Apri impostazioni App': 'Abrir configurações do aplicativo',
+  'Riduci la plancia di registrazione': 'Reduzir o painel de gravação',
+  'Apri la plancia di registrazione': 'Abrir o painel de gravação',
+  'In pausa': 'Em pausa',
   'Ti trovi qui': 'Você está aqui',
   'Salva Waypoint': 'Salvar ponto de referência',
   'Salva Traccia': 'Salvar rota',
@@ -624,5 +622,17 @@ export const appPR = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Começa o caminho',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'A procurar sinal GPS…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'Ao ar livre e longe de edifícios é mais rápido',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Sinal GPS fraco: a sua posição pode estar imprecisa',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'Se acontecer com frequência, verifique se "Localização exata" está ativada nas definições da app',
+  'La posizione non è disponibile': 'A sua localização não está disponível',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Verifique se a localização está ativada e se a app tem permissão',
+  'Attiva la localizzazione del telefono': 'Ative a localização do telemóvel',
+  'Serve per vedere la tua posizione sulla mappa': 'É necessária para ver a sua posição no mapa',
+  'Segnale GPS debole': 'Sinal GPS fraco',
+  'Segnale GPS tornato buono': 'O sinal GPS voltou a estar bom',
 };

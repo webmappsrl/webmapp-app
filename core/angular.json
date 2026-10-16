@@ -105,12 +105,36 @@
                   "with": "src/app/pages/profile/profile.page.camminiditalia.ts"
                 },
                 {
+                  "replace": "src/app/pages/map/map.page.ts",
+                  "with": "src/app/pages/map/map.page.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/pages/tabs/tabs.page.ts",
+                  "with": "src/app/pages/tabs/tabs.page.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/pages/tabs/tabs-routing.module.ts",
+                  "with": "src/app/pages/tabs/tabs-routing.module.camminiditalia.ts"
+                },
+                {
                   "replace": "src/app/shared/wm-core/projects/wm-core/src/home/home-layer/home-layer.component.ts",
                   "with": "src/app/shared/wm-core/projects/wm-core/src/home/home-layer/home-layer.component.camminiditalia.ts"
                 },
                 {
                   "replace": "src/app/shared/wm-core/projects/wm-core/src/search-bar/search-bar.component.ts",
                   "with": "src/app/shared/wm-core/projects/wm-core/src/search-bar/search-bar.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/box/layer-box/layer-box.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/box/layer-box/layer-box.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/box/search-box/search-box.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/box/search-box/search-box.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.camminiditalia.ts"
                 }
               ]
             },
@@ -153,9 +177,16 @@
             "karmaConfig": "karma.conf.js",
             "include": [
               "src/app/services",
+              "src/app/components/shared/buttons/btn-start-walk",
+              "src/app/components/shared/buttons/btn-add-poi",
+              "src/app/components/shared/buttons/btn-track-recording",
+              "src/app/components/shared/gps-alert",
+              "src/app/components/track-recorder-component",
+              "src/app/functions",
               "src/app/pages/favourites",
               "src/app/pages/home",
-              "src/app/pages/map/map-details"
+              "src/app/pages/map/map-details",
+              "src/app/pages/passport"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/theme/default"]

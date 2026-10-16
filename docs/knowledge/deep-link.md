@@ -21,6 +21,16 @@ ha un `merge()` che naviga su `map` quando uno fra `currentEcLayer`, `currentEcT
 `MapDetailsComponent.ngAfterViewInit()` (`pages/map/map-details/map-details.component.ts:76`)
 sottoscrive `featureOpened$` **senza** `skip(1)`, e un commento sul posto spiega perché.
 
+**Prima ancora del listener nativo, il sistema operativo deve verificare il dominio.** Un
+Universal Link (iOS) o App Link (Android) apre l'app solo se il dominio del link è associato
+all'app tramite `/.well-known/apple-app-site-association` e `/.well-known/assetlinks.json`,
+serviti in `HTTPS`, con `200` e senza redirect, **sul dominio stesso** da cui parte il link (es.
+`1.camminiditalia.webmapp.it`). Se quella verifica fallisce, il sistema operativo apre il browser:
+l'app non riceve mai l'URL, e il listener `appUrlOpen` non si attiva — nessun bug lato Angular da
+cercare. I file di riferimento vivono in un **registry condiviso fra tutte le app Webmapp**, sul
+server, in `/var/www/html/app.geohub.webmapp.it/.well-known/` (servito anche da `app.webmapp.it`,
+che punta lì come `DocumentRoot`/`VirtualDocumentRoot`).
+
 ## Perché così
 
 - **`skip(1)` scartava l'unica emissione utile** (oc:8470): con un query param iniziale,
@@ -41,16 +51,33 @@ sottoscrive `featureOpened$` **senza** `skip(1)`, e un commento sul posto spiega
   `_currentQueryParams$.next(params)` viene prima di ogni `dispatch()`, altrimenti una
   `changeURL('map')` scatenata sincronamente legge query param vecchi e li perde dall'URL finale.
   Fonte di verità: `docs/knowledge/deep-link.md` di `wm-core`.
+- **`Alias` diretto al registry condiviso, non file duplicati né redirect** (oc:8580): Apple e
+  Google richiedono che `apple-app-site-association`/`assetlinks.json` rispondano `200` con il
+  contenuto vero **senza alcun redirect** — un redirect invalida la verifica, e duplicare i file nel
+  `DocumentRoot` di ogni shard ne avrebbe moltiplicato le fonti di verità. La direttiva Apache
+  `Alias` mappa l'URL al file fisico del registry condiviso descritto sopra **prima** che la
+  richiesta entri nel `<Directory>` della SPA: bypassa il catch-all senza doverlo toccare, ed è
+  quindi copiabile paro paro in qualunque vhost che condivida lo stesso schema.
 
 ## Prima di cercare nel codice Angular
 
-oc:8470 nasceva come «il link da sito non funziona su cellulare», ma la prima causa era **fuori da
-ogni repo git**: due bug di configurazione Apache corrompevano il redirect per user-agent mobile
-verso l'infrastruttura condivisa, facendo crashare Angular (`NG04002`) prima ancora che l'app
-vedesse l'URL. Corretti in produzione via SSH — proxy spostato fuori dal blocco `<Directory>`,
-dove `mod_dir` generava una subrequest `index.html` anch'essa proxata, e `[L]` → `[END]` nel
-fallback SPA. Quando un link non funziona **solo** da mobile, conviene escludere l'infrastruttura
-prima del codice.
+Due famiglie di bug, entrambe **fuori da ogni repo git**, hanno preceduto il codice Angular come
+causa reale — quando un deep link non funziona solo per certi utenti/build, conviene escludere
+l'infrastruttura del server prima del codice:
+
+- **oc:8470 — redirect mobile rotto.** «Il link da sito non funziona su cellulare»: due bug di
+  configurazione Apache corrompevano il redirect per user-agent mobile verso l'infrastruttura
+  condivisa, facendo crashare Angular (`NG04002`) prima ancora che l'app vedesse l'URL. Corretti in
+  produzione via SSH — proxy spostato fuori dal blocco `<Directory>`, dove `mod_dir` generava una
+  subrequest `index.html` anch'essa proxata, e `[L]` → `[END]` nel fallback SPA.
+- **oc:8580 — verifica dominio↔app native non raggiunge il registry.** «Il QR code non apre
+  l'app, solo il browser, solo dalle build store»: la vhost di uno shard con lo stesso schema di
+  catch-all SPA di `app.webmapp.it` (`RewriteRule ^ /index.html [L]` su tutto ciò che non è un file
+  reale) non ha i file `.well-known` fisicamente nel proprio `DocumentRoot`, quindi ci cade dentro
+  e restituisce l'HTML della SPA invece del JSON atteso da iOS/Android.
+
+**Procedura per un futuro shard/app che attiva questa verifica:**
+[docs/howto/verifica-dominio-app-link.md](../howto/verifica-dominio-app-link.md).
 
 ## Debito noto
 

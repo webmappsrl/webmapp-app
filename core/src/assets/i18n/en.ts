@@ -555,18 +555,13 @@ export const appEN = {
           'newTrackRecord': 'Registration in progress'
         }
       }
-    },
-    'share': {
-      'dialogTitle': 'Share with your friends',
-      'text': 'Here is an interesting webmapp path',
-      'title': 'Have you seen this path?',
-      'url': 'www.webmapp.it'
     }
   },
   'tabs': {
     'favourites': 'favorites',
     'home': 'home',
     'map': 'map',
+    'passport': 'passport',
     'profile': 'profile'
   },
   'Percorribilità': 'Viability',
@@ -613,6 +608,9 @@ export const appEN = {
   'Link utili': 'Useful links',
   "Per registrare tracce e poi correttamente, abilita l'autorizzazione alla posizione nelle impostazioni": 'To record tracks and display them correctly, enable the location permission in the settings',
   'Apri impostazioni App': 'Open app settings',
+  'Riduci la plancia di registrazione': 'Minimize the recording panel',
+  'Apri la plancia di registrazione': 'Open the recording panel',
+  'In pausa': 'Paused',
   'Ti trovi qui': 'You are here',
   'Salva Waypoint': 'Save Waypoint',
   'Salva Traccia': 'Save track',
@@ -651,5 +649,17 @@ export const appEN = {
         'ok': 'OK'
       }
     }
-  }
+  },
+  'Inizia il cammino': 'Start the walk',
+  // oc:8766: avvisi sullo stato del GPS
+  'Ricerca del segnale GPS…': 'Searching for GPS signal…',
+  'All\'aperto e lontano dagli edifici è più rapido': 'It\'s faster outdoors and away from buildings',
+  'Segnale GPS debole: la posizione potrebbe essere imprecisa': 'Weak GPS signal: your position may be inaccurate',
+  'Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell\'app': 'If this happens often, check that "Precise location" is turned on in the app settings',
+  'La posizione non è disponibile': 'Your location is not available',
+  'Controlla che la localizzazione sia attiva e che l\'app abbia il permesso': 'Check that location is turned on and that the app has permission',
+  'Attiva la localizzazione del telefono': 'Turn on your phone\'s location',
+  'Serve per vedere la tua posizione sulla mappa': 'You need it to see your position on the map',
+  'Segnale GPS debole': 'Weak GPS signal',
+  'Segnale GPS tornato buono': 'GPS signal is good again',
 };

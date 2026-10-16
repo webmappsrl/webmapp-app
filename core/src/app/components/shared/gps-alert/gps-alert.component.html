@@ -1,0 +1,36 @@
+<div
+  #card
+  *ngIf="kind"
+  class="webmapp-gps-alert"
+  [attr.data-kind]="kind"
+  role="alert"
+  aria-live="assertive"
+>
+  <div #icon class="webmapp-gps-alert-icon" aria-hidden="true">
+    <ng-container [ngSwitch]="kind">
+      <svg *ngSwitchCase="'searching'" class="webmapp-gps-alert-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M12 3a9 9 0 019 9" />
+      </svg>
+      <webmapp-gps-signal-icon *ngSwitchCase="'poor'"></webmapp-gps-signal-icon>
+      <svg *ngSwitchDefault viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <path d="M12 21s-6-6.2-6-11a6 6 0 0112 0c0 4.8-6 11-6 11z" />
+        <path d="M4 4l16 16" />
+      </svg>
+    </ng-container>
+  </div>
+  <div #text class="webmapp-gps-alert-text">
+    <strong>{{ title | wmtrans }}</strong>
+    <small>{{ subtitle | wmtrans }}</small>
+  </div>
+  <div class="webmapp-gps-alert-actions" *ngIf="kind !== 'poor'">
+    <button type="button" (click)="dismiss()">{{ 'Chiudi' | wmtrans }}</button>
+    <button
+      type="button"
+      class="webmapp-gps-alert-primary"
+      *ngIf="kind === 'denied' && canOpenSettings"
+      (click)="openSettings()"
+    >
+      {{ 'Apri impostazioni App' | wmtrans }}
+    </button>
+  </div>
+</div>

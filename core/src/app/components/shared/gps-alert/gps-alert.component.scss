@@ -1,0 +1,120 @@
+// Avviso sullo stato del GPS, in alto sulla mappa (oc:8766). L'host sta nello slot `fixed` di
+// ion-content, che gli dà un `transform`: un figlio `position: fixed` resterebbe largo zero.
+// Per questo l'host copre la mappa senza intercettare i tocchi e la scheda è assoluta al suo interno.
+webmapp-gps-alert {
+  position: absolute;
+  inset: 0;
+  z-index: 1000;
+  display: block;
+  pointer-events: none;
+}
+
+.webmapp-gps-alert {
+  position: absolute;
+  pointer-events: auto;
+  left: 50%;
+  // sotto la plancia di registrazione se c'è (variabile scritta dal componente), mai più in alto di così
+  top: max(calc(env(safe-area-inset-top, 0px) + 72px), var(--wm-gps-alert-top, 0px));
+  width: calc(100% - 32px);
+  max-width: 340px;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 12px;
+  padding: 12px 14px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--wm-color-light);
+  color: var(--wm-color-dark);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.16);
+  font-size: 14px;
+  line-height: 1.35;
+
+  .webmapp-gps-alert-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &[data-kind='searching'] .webmapp-gps-alert-icon {
+    background: rgba(var(--wm-color-primary-rgb), 0.14);
+    color: var(--wm-color-primary);
+  }
+  &[data-kind='poor'] .webmapp-gps-alert-icon {
+    background: var(--wm-color-warning);
+    color: var(--wm-color-dark);
+  }
+  &[data-kind='denied'] .webmapp-gps-alert-icon,
+  &[data-kind='disabled'] .webmapp-gps-alert-icon {
+    background: var(--wm-color-danger);
+    color: var(--wm-color-light);
+  }
+
+  .webmapp-gps-alert-text {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+
+    strong {
+      font-weight: 500;
+    }
+    small {
+      font-size: 12.5px;
+      opacity: 0.75;
+    }
+  }
+
+  .webmapp-gps-alert-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    button {
+      font: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 8px 10px;
+      border: 0;
+      border-radius: 8px;
+      background: none;
+      color: var(--wm-color-primary);
+      cursor: pointer;
+
+      &:focus-visible {
+        outline: 2px solid var(--wm-color-primary);
+        outline-offset: 2px;
+      }
+    }
+
+    .webmapp-gps-alert-primary {
+      background: var(--wm-color-primary);
+      color: var(--wm-color-light);
+    }
+  }
+
+  .webmapp-gps-alert-spin {
+    animation: webmapp-gps-spin 1.2s linear infinite;
+  }
+}
+
+@keyframes webmapp-gps-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .webmapp-gps-alert .webmapp-gps-alert-spin {
+    animation: none;
+  }
+}

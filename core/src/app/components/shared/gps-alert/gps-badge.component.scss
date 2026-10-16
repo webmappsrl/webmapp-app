@@ -1,0 +1,48 @@
+// Badge dello stato del GPS, nell'angolo del bottone della posizione (oc:8766)
+.webmapp-gps-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--wm-color-light);
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  transform: scale(0);
+
+  &.webmapp-gps-badge-on {
+    transform: scale(1);
+  }
+
+  .webmapp-gps-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &[data-kind='poor'] {
+    background: var(--wm-color-warning);
+    color: var(--wm-color-dark);
+  }
+  &[data-kind='good'] {
+    background: var(--wm-color-success);
+    color: var(--wm-color-dark);
+  }
+  &[data-kind='denied'],
+  &[data-kind='disabled'] {
+    background: var(--wm-color-danger);
+    color: var(--wm-color-light);
+  }
+}
