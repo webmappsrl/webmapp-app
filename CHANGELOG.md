@@ -6,21 +6,1054 @@
 ### Bug Fixes
 
 * **map-core:** zoom sulla posizione con «Inizia il cammino» ([c55082d](https://github.com/webmappsrl/webmapp-app/commit/c55082dd5cd02fd234d95a16f761165902d47a68))
+<!-- COMMIT_DESC -->
+    
+    Aggiorna map-core a 903c29c. Con «Inizia il cammino» la registrazione
+    accendeva l'inseguimento della posizione nello stesso momento in cui
+    l'apertura del pannello faceva partire lo zoom animato sulla posizione, e
+    il primo interrompeva il secondo: la mappa restava quasi dov'era. Ora
+    l'inseguimento parte a zoom finito, come nel percorso con lo slider.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
-* enrich changelog with commit descriptions ([9f04d6d](https://github.com/webmappsrl/webmapp-app/commit/9f04d6da5aea08b88cad92c465423d91db34993e))
 * **map-core:** changelog for bump to 79ffe78 ([e87a636](https://github.com/webmappsrl/webmapp-app/commit/e87a636a9a24ec1a464aa95fa8cbbd439a01a82c))
-* **map-core:** changelog for bump to 86ebcec ([7f4510a](https://github.com/webmappsrl/webmapp-app/commit/7f4510acb0711673acb71523f07ac12e79945679))
+<!-- COMMIT_DESC -->
+    
+    - fix: apply Home layer filters to map rendering and fix stale tile styling
+    The Home layer filters were only ever read by the sidebar list/grid,
+    never by the OpenLayers vector tile style function, so applying a
+    filter reduced the list but left every track visible on the map.
+    
+    - styleFn now hides tracks whose layers are excluded by the filtered
+      set (routeFilteredLayerIds, passed in via the existing filters
+      payload), skipping this check when a specific layer is already open
+      so its own tracks/tappe stay visible regardless of the outer filter.
+    - _updateMap() now calls layer.changed() on all map layers before
+      rendering, not just map.changed() — without it, already-rendered
+      vector tiles kept their stale style until a pan/zoom forced new
+      tiles to load.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 * **map-core:** changelog for bump to 90fe075 ([d94677b](https://github.com/webmappsrl/webmapp-app/commit/d94677b3daafe468cfc933efc9b3a4ffeb6d0f3f))
-* **wm-core:** changelog for bump to 0007580 ([df4cc3b](https://github.com/webmappsrl/webmapp-app/commit/df4cc3b1457415715a75d4c55ce4ea16425e055b))
+<!-- COMMIT_DESC -->
+    
+    - Passaporto: passaporto del camminatore e funzioni collegate (#67)
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
+    
+    ngOnChanges saltava la chiamata di pulizia quando trackElevationChartElements
+    tornava null, lasciando pallino e segmento evidenziato visibili sulla mappa
+    indefinitamente dopo il tocco sul grafico altimetrico.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): fix crash ol_key in WmMapLayerDirective (#64)
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
+    
+    ngOnChanges saltava la chiamata di pulizia quando trackElevationChartElements
+    tornava null, lasciando pallino e segmento evidenziato visibili sulla mappa
+    indefinitamente dopo il tocco sul grafico altimetrico.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): guard against undefined listener and leak in WmMapLayerDirective
+    
+    _removeMoveEndListenerIfExists() called map.un('moveend', listener) even
+    when the listener had never been assigned, throwing "Cannot read
+    properties of undefined (reading 'ol_key')" inside OpenLayers. Guard the
+    call with a _moveEndListenerRegistered flag.
+    
+    Also fixes a listener/subscription leak: wmMapLayerEnableFeaturesInViewport
+    re-created the moveend listener and RxJS subscription on every activation
+    without tearing down the previous ones, orphaning listeners on the map
+    across NgRx re-emits (e.g. network reconnect). The listener closure only
+    ever closes over a stable field, so it's now created once and never
+    recreated, avoiding both the leak and a re-registration gap.
+    
+    Also switches the WmMapBaseDirective import from the '@map-core/directives'
+    barrel to a direct path, since the barrel also re-exports
+    custom-tracks.draw.directive -> graphhopper-js-api-client, whose UMD build
+    breaks Karma test execution for any file importing the barrel.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): add wm-plan artifacts and update CLAUDE.md
+    
+    Adds overview.md, plan.md, notes.md under docs/features/ for this fix,
+    and updates CLAUDE.md's "Feature disponibili" table and "Decisioni
+    architetturali" section with the root cause, the design decision behind
+    the single-listener fix, and technical debt discovered along the way
+    (5 pre-existing spec files already broken by the same barrel/graphhopper
+    issue, map.component.spec.ts broken by a missing ActivatedRoute provider,
+    and the enable=false-not-sticky pre-existing behavior).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8399" target="_blank" rel="noopener noreferrer">OC[8399]</a>): record manual verification result in notes.md
+    
+    Confirmed on localhost:4200/map: 5 real zoom changes with the feature
+    in its default (disabled) config produce no ol_key warning and no
+    other console errors, with the fix applied.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): linea live della registrazione con i soli punti tenuti (#66)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): la linea live della registrazione riceve l'elenco completo dei punti tenuti
+    
+    `WmMapTrackRecordLocations` riceve sempre l'elenco intero dei punti già decisi dalla pulizia GPS
+    di wm-core e fa `setCoordinates`: niente più buffer e timeout punto per punto, e alla ripresa
+    dopo un crash la linea riparte con i punti già registrati.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * perf(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): la linea live aggiunge solo i punti nuovi, un solo re-render per emissione
+    
+    Se l'elenco ricevuto prolunga quello già disegnato (stessi oggetti nelle stesse posizioni) si
+    proiettano solo i punti nuovi e si aggiungono alle coordinate della linea con un solo `changed()`;
+    altrimenti (ripresa dopo un crash, pulizia rifatta, nuova registrazione) `setCoordinates` su
+    tutto. Non si usa `appendCoordinate`, che in OpenLayers 7 notifica a ogni punto.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(map): pinch e trascinamento fluidi sulla WebView di Android
+    
+    Il contenitore di OpenLayers aveva `touch-action: auto`: la WebView di Android
+    prendeva ogni gesto come scroll o zoom nativo e mandava `pointercancel`, così
+    pinch e trascinamento andavano a scatti. Misurato su Pixel 9 Pro XL: 16 gesti,
+    16 `pointercancel` e 59 movimenti prima, 0 `pointercancel` e 734 movimenti con
+    `touch-action: none` sull'`.ol-viewport`.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    - docs: l'accoppiamento dei tile CARG diventa una regola, non una nota
+    Il vincolo — la base URL dei tile in hit-map.directive.ts e l'overlayXYZ che
+    il consumer passa a downloadOverlay() devono puntare alla stessa origine, o
+    l'utente vede un tileset e ne scarica un altro — viveva solo come paragrafo
+    descrittivo in una pagina di conoscenza, mentre webmapp-app lo dichiara come
+    regola del proprio repo. Mancava quindi il lato simmetrico.
+    
+    Ora sta fra le regole in cima e in una rule scopata su hit-map.directive.ts,
+    così si carica per chi tocca quel file e non solo per chi studia la cache
+    offline. Stesso trattamento per sizes['108x137'], che va tenuto allineato in
+    due punti.
+    
+    Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_016yeiLkv4wsvQonvFbJhGTh
 * **wm-core:** changelog for bump to 5795458 ([aa3bde2](https://github.com/webmappsrl/webmapp-app/commit/aa3bde2cf6fb0ee8c767209d48367a3fd6566173))
-* **wm-core:** changelog for bump to 8ffa03c ([8e61a0f](https://github.com/webmappsrl/webmapp-app/commit/8e61a0fceaa55073cbd6703ddb953271da077111))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8493" target="_blank" rel="noopener noreferrer">OC[8493]</a>): etichetta generica dislivello su percorsi ad anello (#195)
+    Su un anello (roundtrip) il dislivello positivo è pari al negativo,
+    quindi mostrare "Dislivello positivo" da solo lasciava intendere che
+    mancasse il negativo. Aggiunta chiave i18n `slope` (generica) usata
+    al posto di `ascent` quando properties.roundtrip è true.
+    docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8493" target="_blank" rel="noopener noreferrer">OC[8493]</a>): aggiorna CLAUDE.md con feature e decisioni etichetta dislivello anello
 * **wm-core:** changelog for bump to e8fe186 ([6bcdf59](https://github.com/webmappsrl/webmapp-app/commit/6bcdf59ffb11180b7eab2217c4783c5fc0429abb))
-* **wm-types:** changelog for bump to 99c4a71 ([4d9f254](https://github.com/webmappsrl/webmapp-app/commit/4d9f2540267b26c5d3bfb38cb167276c54babb6c))
+<!-- COMMIT_DESC -->
+    
+    - Passaporto: passaporto del camminatore e funzioni collegate (#217)
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/7980" target="_blank" rel="noopener noreferrer">OC[7980]</a>): QR code deep link per poi, tappa e cammino (#175)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/7980" target="_blank" rel="noopener noreferrer">OC[7980]</a>): add handleDeepLink to UrlHandlerService
+    
+    Estende UrlHandlerService con un metodo per gestire i deep link nativi
+    (Universal Links iOS / App Links Android) ricevuti da appUrlOpen nel
+    repo principale. Inoltra path e query param generici al router
+    (qualunque route, non solo /map), escludendo sempre ugc_track/ugc_poi.
+    Emette un evento PostHog deepLinkOpened per osservabilità in produzione.
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/7980" target="_blank" rel="noopener noreferrer">OC[7980]</a>): add overview, plan and notes for QR code deep link
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): distanza rimanente e posizione nel profilo altimetrico (#176)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): add remaining distance and live position on elevation profile
+    
+    Durante la visualizzazione di una traccia, mostra in tempo reale la distanza
+    rimanente a fine tappa e l'avanzamento percentuale, calcolati client-side
+    proiettando la posizione GPS sulla geometria della traccia.
+    
+    - GeoutilsService.getRemainingDistance/prepareRemainingDistanceContext:
+      proiezione punto-traccia con ricerca locale vincolata (anti-oscillazione
+      su tracce ad anello), fallback a ricerca globale su salti implausibili
+    - Store user-activity: nuovo stato/selettore/effect che combina la
+      posizione GPS live con la traccia corrente, con reset atomico al cambio
+      traccia e calcolo immediato se una posizione è già disponibile
+    - Nuovo componente wm-track-remaining-distance, dietro il flag
+      OPTIONS.showTrackRemainingDistance (wm-types), default temporaneo true
+    - i18n in tutte le lingue supportate
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): show GPS position marker and slope on elevation chart
+    
+    WmSlopeChartComponent riceve un nuovo @Input() trackProgress e disegna un
+    marker di posizione (stessa icona della mappa) sul profilo altimetrico,
+    con etichetta di dislivello e aggiornamento della barra "Pendenza"
+    esistente (pallino blu se il valore viene dal GPS, nero se dal tocco).
+    
+    Corregge inoltre un bug preesistente: il tooltip di Chart.js restava
+    "bloccato attivo" dopo un tocco perché options.events non include
+    touchend/mouseout — reso visibile dalla nuova logica che nasconde il
+    marker durante l'interazione. Fix: timer di dismissal agganciato a
+    onHover (non a beforeTooltipDraw, che si rifà anche sugli update
+    programmatici del GPS) e disattivazione dell'evidenziazione nativa del
+    punto (pointHoverRadius a 0), sostituita dagli indicatori custom già
+    disegnati.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * test(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): add unit tests for GeoutilsService remaining-distance logic
+    
+    Copertura per getHaversineTrackLength, prepareRemainingDistanceContext e
+    getRemainingDistance: traccia rettilinea semplice, traccia degenere (<2
+    punti), soglia di 100m dalla traccia, e anti-oscillazione su tracce che
+    si autointersecano (ricerca locale vincolata a lastKnownProgress vs
+    ricerca globale).
+    
+    163/163 test passati (154 preesistenti + 9 nuovi).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): integra distanza live in Partenza/Arrivo invece della card standalone
+    
+    Rimuove il componente wm-track-remaining-distance e mostra la distanza dalla
+    posizione GPS corrente sia alla partenza che all'arrivo direttamente nelle
+    righe di tab-detail (il sentiero può essere percorso in entrambe le
+    direzioni). Nuovo componente condiviso wm-track-live-distance-badge per
+    evitare la duplicazione del badge tra le due righe.
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): logo cammino in backoffice e app (frontend) (#177)
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): add logo_image field to IGeojsonProperties
+    
+    logo_image is always a plain URL string or absent/null, unlike
+    feature_image which is a WmImage object.
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): add hasLogo pipe to check logo_image presence
+    
+    Handles missing key, null, and empty/whitespace string as "no logo" -
+    needed because some shards/backends don't have this field yet.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): add display:block to wm-img inner image
+    
+    Without it the <img> stays inline by default, leaving a phantom
+    whitespace gap below the image (baseline of the inline formatting
+    context) - the host wm-img ends up taller than the visible photo.
+    Pre-existing bug, surfaced while positioning an absolute overlay
+    against the image's real bounds.
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): show logo overlay in layer-box list card
+    
+    Nested inside the feature-image wm-img via content projection (same
+    pattern as .wm-box-title) so the badge positions against the real
+    image bounds, not the outer .wm-box container.
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): show logo overlay in home-layer detail screen
+    
+    Nested inside the feature-image wm-img via content projection - the
+    outer wrapper approach misaligned the badge because wm-img has its
+    own margin:10px in this component.
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8164" target="_blank" rel="noopener noreferrer">OC[8164]</a>): add feature docs and update CLAUDE.md
+    
+    overview.md, plan.md, notes.md for the logo cammino frontend feature.
+    CLAUDE.md updated with the new feature entry and architectural
+    decisions (content-projection positioning pattern, wm-img min-width
+    gotcha, wm-img display:block fix).
+    
+    ---------
+    
+    Co-authored-by: peppedeka <peppedeka@gmail.com>
+    
+    * chore(config): ✨ add optional logo_image property to ILAYER interface
+    
+    - Introduced an optional 'logo_image' property to the ILAYER interface to allow for additional branding or imagery associated with a layer.
+    - This change provides more flexibility in how layers can be represented and customized within the application.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8183" target="_blank" rel="noopener noreferrer">OC[8183]</a>): condivisione percorso registrato sui social — pulsante e UI (#178)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8183" target="_blank" rel="noopener noreferrer">OC[8183]</a>): pulsante condivisione percorso registrato + redesign UI
+    
+    Bottone "Condividi" gated dal flag ugcTrackShareEnabled, stati idle/
+    generating/success/error (@Output share-track, @Input shareResult).
+    Redesign visivo: sezione separata da Edit/Delete, icona, fill="clear",
+    chip di successo con tinte semantiche del tema; errore mostrato con
+    alert nativo (AlertController) invece di un banner in-template.
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8183" target="_blank" rel="noopener noreferrer">OC[8183]</a>): rimuovi il feedback di successo della condivisione
+    
+    Non serve un banner dedicato: la chiusura dello share sheet nativo e'
+    gia' un segnale sufficiente. Rimossa anche la chiave i18n diventata
+    dead code in tutte le lingue.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): distanza rimanente durante la registrazione traccia UGC (#179)
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): add overview distanza rimanente registrazione UGC
+    
+    Overview per la review del CTO prima dell'implementazione.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): alza soglia velocità plausibile a 8 m/s per registrazione in bici
+    
+    Il fallback a ricerca globale in GeoutilsService.getRemainingDistance
+    scattava troppo spesso durante registrazioni in bici/e-bike, dove lo
+    spostamento tra due fix GPS supera facilmente i 3 m/s tarati sul
+    camminatore.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): aggiungi showSuffix a wm-track-live-distance-badge
+    
+    A false omette il suffisso "da te" dal badge, mostrando solo la
+    distanza — usato nel box di registrazione dove il contesto è già dato
+    dall'etichetta Partenza/Arrivo. Default true, nessun impatto su
+    tab-detail.component.html (<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>).
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): aggiorna overview e aggiungi plan
+    
+    Overview aggiornata con le decisioni della review CTO e le iterazioni
+    di redesign del box di registrazione (repo principale); aggiunto
+    plan.md con il task di implementazione lato wm-core.
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): estrai trackLiveDistanceVm in un selettore condiviso
+    
+    La logica di combinazione trackDistanceCovered/trackRemainingDistance/
+    trackPositionStale + gate su confOPTIONSShowTrackRemainingDistance era
+    duplicata identica tra tab-detail.component.ts (<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>) e
+    track-recorder.component.ts (<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>, repo principale). Estratta in un
+    unico selettore in user-activity.selector.ts, riusato da entrambi.
+    
+    Trovato in review formale (wm-review-ticket).
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8284" target="_blank" rel="noopener noreferrer">OC[8284]</a>): aggiorna overview con i fix della review formale
+    
+    Documenta l'estrazione del selettore condiviso trackLiveDistanceVm e
+    corregge l'affermazione "nessuna nuova logica in wm-core" (era vera
+    per il calcolo, non per la composizione dei selettori).
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): add favorite heart on layers (#180)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): add favorite heart on layers
+    
+    Adds LayerFavoriteService (optimistic in-memory cache with staleness
+    guards for concurrent toggles/fetches) and a favorite-heart control on
+    wm-layer-box (read-only by default, interactive behind
+    favoriteInteractive) and wm-home-layer (always interactive).
+    toggleWithFeedback() centralizes the toggle/toast/analytics logic
+    shared by both components. Adds confOPTIONSShowFavorites and a
+    UrlHandlerService.setLayer() helper for opening a layer on the map
+    from outside the Home page.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): enable favorite heart interaction in home, track on remove too
+    
+    Sets favoriteInteractive=true on wm-layer-box in home-landing and
+    home-result (previously read-only there). toggleWithFeedback() now
+    fires layerFavorited on both add and remove, distinguished by a new
+    favorite prop (was previously only on add).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): badge pill background, size, and full-pill tap target
+    
+    - The pill background/shadow/radius now always apply on
+      .wm-layer-box-badge-combo, not only when the heart is shown —
+      previously anonymous users (no heart) saw the count with no
+      background at all.
+    - The interactive heart no longer upsizes to 32px (was inflating the
+      whole pill's height via align-items:center, making the badge look
+      shrunk by contrast); it now matches the read-only 22px size.
+    - The whole pill (badge + divider + heart) is now the tap target for
+      the favorite toggle when interactive, not just the small heart icon.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8183" target="_blank" rel="noopener noreferrer">OC[8183]</a>): disabilita condivisione finche' la traccia non e' sincronizzata (#181)
+    
+    Il pannello puo' aprirsi anche per una traccia appena registrata (es.
+    tappando la card nella schermata di successo prima che il sync sia
+    completato). Il pulsante resta disabilitato (nativo Ionic, sicuro qui:
+    nessuna card sovrapposta) finche' ugcTracksFeatures non conferma un id
+    dal backend per quell'uuid. Rimosso anche un riferimento residuo al
+    vecchio plugin nativo/mini-map map-core in CLAUDE.md (approccio scartato
+    da tempo). 17/17 test verdi (13 preesistenti + 4 nuovi).
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8305" target="_blank" rel="noopener noreferrer">OC[8305]</a>): sovrapposizione badge/titolo su wm-layer-box, riposizionamento logo (#182)
+    
+    Elimina la sovrapposizione tra .wm-box-title e .wm-layer-box-badge-combo su
+    wm-layer-box passando da position:absolute a un CSS Grid a cella condivisa
+    (ogni overlay su grid-row:1;grid-column:1, posizionato con align-self/
+    justify-self+margin) con altezza fissa 180px, uguale in tutti i contesti.
+    Il titolo è limitato a 3 righe (-webkit-line-clamp:3 + ellipsis) in deroga
+    esplicita al requisito cliente "titolo sempre completamente leggibile",
+    decisa dallo sviluppatore dopo test visivo e non riverificata col cliente
+    (vedi docs/features/8305-.../notes.md). Logo del cammino spostato da
+    basso-destra ad alto-sinistra, per tutte le istanze.
+    
+    Estratto il mixin overlay-chip-background (theme/mixins.scss) per il
+    pattern sfondo/ombra duplicato tra layer-box e home-layer.
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8163" target="_blank" rel="noopener noreferrer">OC[8163]</a>): profilo utente - nome, cognome e avatar (#183)
+    
+    Aggiunge il modale di modifica profilo (nome, cognome, foto), il
+    fallback iniziali quando manca l'avatar, il metodo dedicato per lo
+    scatto/selezione della foto profilo e le nuove action/effect NgRx per
+    l'aggiornamento del profilo.
+    feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8163" target="_blank" rel="noopener noreferrer">OC[8163]</a>): cognome obbligatorio in fase di registrazione
+    
+    Aggiunge il campo cognome al form di registrazione (obbligatorio,
+    inviato a POST /api/auth/signup) e le relative traduzioni in tutte le
+    lingue supportate.
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8305" target="_blank" rel="noopener noreferrer">OC[8305]</a>): remove overlay-chip-background mixin from wm-layer-box and wm-home-layer styles
+    
+    This change eliminates the use of the overlay-chip-background mixin from both wm-layer-box and wm-home-layer components, streamlining the SCSS files and ensuring consistent styling across components.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8181" target="_blank" rel="noopener noreferrer">OC[8181]</a>): add wm-config-detail and wire Layer/EcTrack (#186)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8181" target="_blank" rel="noopener noreferrer">OC[8181]</a>): add wm-config-detail and wire Layer/EcTrack
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8181" target="_blank" rel="noopener noreferrer">OC[8181]</a>): consume ConfigDetail types from wm-types
+    
+    Shared config_detail types live in @wm-types/config without the I
+    prefix; wm-core only extends ILAYER and updates wm-config-detail.
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+    
+    ---------
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8159" target="_blank" rel="noopener noreferrer">OC[8159]</a>): populate user_id in PosthogContextService from auth store (#184)
+    
+    Adds the auth `user` selector to the existing combineLatest so every
+    captured PostHog event carries the authenticated user's id when
+    logged in (omitted for anonymous users). No identify() call yet
+    (TODO left in place), no privacy gate, no per-shard flag — decisions
+    made explicitly during planning.
+    
+    Also fixes a pre-existing TestBed isolation issue (unrelated to this
+    feature's logic) that made the new spec fail only when run inside the
+    full wm-core suite, by defensively resetting the testing module in
+    beforeEach.
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8391" target="_blank" rel="noopener noreferrer">OC[8391]</a>): estrai WmHomeLayerBaseComponent e aggiungi variante camminiditalia (#188)
+    
+    Sposta la logica di wm-home-layer (preferiti, subscription lingua) in una
+    Base condivisa tra il componente di default e una nuova variante
+    .camminiditalia (stesso nome classe/selettore, instradata da
+    fileReplacements nel repo principale). @Injectable() sulla Base è
+    necessario per la DI ereditata dalle sottoclassi (altrimenti NG0202 a
+    runtime, non rilevato dagli spec che bypassano Angular DI).
+    
+    Regole scss/spec comuni tra le varianti estratte in file condivisi
+    (home-layer-shared.scss, home-layer-favorite.spec-support.ts) invece di
+    essere duplicate; la variante riusa il template HTML del default (solo
+    il .ts deve essere gemello per fileReplacements).
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8391" target="_blank" rel="noopener noreferrer">OC[8391]</a>): aggiorna Feature disponibili — fileReplacements wired
+    
+    Rimossa la nota "solo la metà wm-core, in attesa del bump submodule": il
+    wiring fileReplacements in core/angular.json (repo principale) è stato
+    completato e verificato con build reale (webmappsrl/webmapp-app#216).
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8414" target="_blank" rel="noopener noreferrer">OC[8414]</a>): filtri sui cammini in Home (camminiditalia) (#190)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8414" target="_blank" rel="noopener noreferrer">OC[8414]</a>): pannello filtri sui cammini in Home (camminiditalia)
+    
+    Aggiunge il pannello filtri (Lunghezza/Tappe/Tipologia/Portata/Regioni/Temi/
+    Stagioni) come parte della variante camminiditalia di wm-searchbar, con
+    SearchBarBaseComponent estratta per la logica di ricerca condivisa col
+    default. I filtri attivi (anche senza testo digitato) attivano la vista
+    risultati a tab già usata dalla ricerca testuale, forzata sulla sola tab
+    Layers.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8414" target="_blank" rel="noopener noreferrer">OC[8414]</a>): azzera i filtri di route e il relativo indicatore tornando alla Home
+    
+    goToHome$ ora dispatcha anche routeFiltersChanged({filters: {}}) insieme
+    agli altri reset. Il pallino "filtri attivi" restava però visibile finché
+    l'utente non riapriva il pannello: WmSearchBarComponent (camminiditalia)
+    è OnPush e la subscription a routeFilters è manuale, quindi non marcava
+    la vista da ridisegnare. Aggiunto ChangeDetectorRef.markForCheck().
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8427" target="_blank" rel="noopener noreferrer">OC[8427]</a>): scroll condizionato e coordinamento assestamento in wm-config-detail (#191)
+    
+    - wm-config-detail dispaccia un CustomEvent nativo `configDetailSettled`
+      (bubbles, composed) dal proprio host invece di un @Output() Angular,
+      cosi' i consumer proiettati (home-layer, track-properties,
+      poi-properties) non devono fare pass-through
+    - Il dispatch avviene solo dopo che il layout si e' assestato (debounce
+      su transitionend filtrato su propertyName+target, con fallback a
+      timeout per transizioni interrotte)
+    - WmHomeComponent.onConfigDetailSettled scrolla l'header aperto solo se
+      non gia' interamente visibile (_isFullyInView), mai in chiusura
+    - showLess()/setter groups annullano un toggle in attesa di assestamento
+      ancora pendente, per non dispacciare un evento su stato non piu' valido
+    
+    Vedi docs/features/8427-.../notes.md per le deviazioni dal piano
+    originale (evento nativo invece di @Output(), naming) e per i cleanup
+    applicati in review (filtro su target, guardie showLess/groups).
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8414" target="_blank" rel="noopener noreferrer">OC[8414]</a>): pannello filtri camminiditalia non si apre su iOS/Safari
+    
+    Il toggle non apriva il pannello filtri solo su iOS/Safari (nativo e
+    browser) — root cause verificata su dispositivo reale: lo stato del
+    componente e la classe CSS --open si aggiornavano correttamente (confermato
+    in Web Inspector), ma l'animazione CSS Grid grid-template-rows: 0fr → 1fr
+    non anima su WebKit, lasciando il pannello visivamente collassato. Funziona
+    su Chrome/Blink (desktop e Android), motivo per cui il bug non era emerso
+    prima.
+    
+    Sostituita con un'altezza max-height misurata via scrollHeight e applicata
+    come inline style (invece di un valore CSS fisso, che avrebbe reso la
+    transizione impercettibile data la distanza tra il valore e l'altezza reale
+    del contenuto) — ricalcolata sia all'apertura del pannello sia quando una
+    riga filtro si espande/collassa a pannello già aperto, per evitare che il
+    contenuto rivelato venga tagliato.
+    
+    Verificato con build reale (ng build --configuration=camminiditalia) e su
+    iPhone fisico.
+    
+    Nota: la stessa tecnica grid-template-rows 0fr→1fr è usata anche in
+    wm-config-detail (<a href="https://orchestrator.maphub.it/resources/customer-stories/8181" target="_blank" rel="noopener noreferrer">OC[8181]</a>) — non verificato se ha lo stesso problema su
+    iOS, da controllare separatamente.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8458" target="_blank" rel="noopener noreferrer">OC[8458]</a>): apertura multipla per wm-config-detail, rimozione scrollIntoView (#192)
+    
+    ConfigDetailComponent passa da apertura esclusiva (_openItem singolo) a
+    apertura multipla illimitata (_openItems: Set), rimuovendo interamente il
+    meccanismo di assestamento (transitionend/debounce/fallback) e l'evento
+    configDetailSettled introdotti in <a href="https://orchestrator.maphub.it/resources/customer-stories/8427" target="_blank" rel="noopener noreferrer">OC[8427]</a> — il loro unico scopo (scroll
+    automatico) viene eliminato in questo stesso ciclo. showLess(groupIndex)
+    chiude ora solo gli item nascosti del proprio gruppo, non più tutti gli
+    item aperti. Aggiunto aria-multiselectable sul contenitore.
+    
+    home.component.ts/.html perde l'handler onConfigDetailSettled()/
+    _isFullyInView() e il relativo binding.
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * fix(search-bar): update ion-icon color in camminiditalia search bar component
+    
+    * fix(filtri-cammini-home): icone SVG invisibili e chevron blu su iOS/Safari
+    
+    Le icone dei filtri (wm-home-route-filter-row) dipendevano da una regola
+    `::ng-deep svg { width: 100%; height: 100% }` per il dimensionamento. Nel
+    CSS compilato il selettore `::ng-deep` non viene riscritto/rimosso come
+    dovrebbe: Chrome/Blink lo tollera come alias deprecato dello Shadow DOM v0
+    e applica comunque la regola, Safari/WebKit lo considera un pseudo-elemento
+    sconosciuto e scarta l'intera regola, lasciando le icone a 0x0. Sostituito
+    con attributi width/height diretti sui tag <svg> proiettati, indipendenti
+    da qualunque scoping CSS.
+    
+    Aggiunto anche un colore esplicito su .wm-home-route-filter-row-chevron:
+    senza reset, il <button> su WKWebView (iOS nativo) eredita il tint blu di
+    sistema al posto del nero, mentre Chrome/Safari desktop già mostravano il
+    default corretto.
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8523" target="_blank" rel="noopener noreferrer">OC[8523]</a>): forza selezione singola foto profilo da galleria (#196)
+    
+    Il ramo "Dalla libreria" di CameraService.addProfilePhoto() usava
+    Camera.pickImages() (multi-selezione) e prendeva sempre photos[0]:
+    se l'utente selezionava più foto per errore, l'app mostrava la
+    prima invece dell'ultima toccata.
+    
+    Sostituito con Camera.getPhoto({source: CameraSource.Photos, ...}),
+    lo stesso metodo già usato da shotPhoto() per la fotocamera, che
+    restituisce sempre e solo una singola foto su ogni piattaforma
+    (Android, iOS, Web/PWA) — a differenza di limit:1 su pickImages(),
+    non supportato su Android <13 né sul web.
+    
+    addPhotos() (flusso UGC multi-foto) resta invariato.
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): passaporto del camminatore, richiesta di certificazione cartacea (#201)
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): limite reale del picker e opzioni di acquisizione della fotocamera
+    
+    WmImagePickerComponent con la selezione multipla leggeva la lista prima
+    degli await: le foto si sovrascrivevano e ne entrava una sola, e
+    takePhoto() non controllava il massimo. Ora il limite conta anche le foto
+    sincronizzate, pickImages riceve un limit, e endAddPhotos parte anche se
+    l'utente annulla la galleria. CameraService.shotPhoto() accetta qualità,
+    avvio del GPS e salvataggio in galleria, con i default di prima.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): LangService.instant passa i parametri di interpolazione
+    
+    Per le chiavi stringa i parametri venivano scartati, quindi
+    '…'|wmtrans:{…} mostrava i segnaposto. Senza parametri il comportamento
+    non cambia.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): passaporto del camminatore, richiesta di certificazione cartacea
+    
+    Nella variante camminiditalia della home del layer: badge di avanzamento
+    e anello attorno al logo. Il badge apre una modale con ion-nav: dettaglio
+    del cammino con le tappe e, se il cammino non è completato, il form di
+    richiesta con 1-6 foto della credenziale, campo libero opzionale e
+    disclaimer segnaposto; dopo l'invio lo stato "In revisione". UI dal
+    wireframe V0b-V3. Backend non ancora disponibile: PassportService è un
+    mock con il contratto in @wm-types/passport.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): cantiere, pagina di conoscenza e trappole del passaporto
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): logo del layer nell'anello del dettaglio
+    
+    Il logo passava da un background-image senza virgolette nell'url(), che
+    si rompe con spazi o parentesi nell'URL: ora usa wm-img come la home del
+    layer. Dentro l'anello wm-img ha i minimi globali di 100px azzerati e
+    object-fit contain, altrimenti il logo usciva dal cerchio e veniva
+    tagliato. Virgolette anche nell'url() dell'immagine di sfondo.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): nel form solo il numero seriale, inviato come serial_number
+    
+    Label «Numero seriale» come nel wireframe, sempre opzionale, con sotto
+    «Inserisci il numero seriale se richiesto dal cammino» e senza riga di
+    separazione. Il campo libero per altre informazioni è tolto.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * style(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): badge del passaporto a tutta larghezza, senza margini
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): stato e invio della certificazione sulle API del backend camminiditalia
+    
+    PassportService usa GET e POST /api/layer/{layer}/certification al posto
+    del mock in localStorage: submitted_at diventa submittedAt, le foto
+    vanno in images[] con il nome dal tipo del file, un 409 (richiesta già
+    in attesa) rilegge lo stato. Il progresso delle tappe resta mock perché
+    il backend non ha ancora la rotta. Tolti resetMock, simulateSubmitError
+    e wmPassportMock.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8671" target="_blank" rel="noopener noreferrer">OC[8671]</a>): esito della richiesta di certificazione nel passaporto (#202)
+    
+    Il dettaglio mostra approvata e non accettata con data, nota del gestore
+    troncabile e bottone di nuovo invio; rilegge lo stato al resume di
+    @capacitor/app senza bloccarsi sugli errori del GET; il POST manda
+    Accept-Language con la lingua dell'app per la mail di esito. Le chiavi di
+    traduzione del passaporto passano al testo italiano.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8676" target="_blank" rel="noopener noreferrer">OC[8676]</a>): tappe validate reali nel passaporto e pagina della tappa (#204)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8676" target="_blank" rel="noopener noreferrer">OC[8676]</a>): tappe validate reali nel passaporto e pagina della tappa
+    
+    Il progresso del passaporto arriva da GET /api/layer/{layer}/progress del
+    backend camminiditalia al posto del mock. Badge e anello condividono uno
+    stream per layer, riletto al resume, alla chiusura della modale e a ogni
+    rilettura del dettaglio, con l'ultimo valore della sessione come riserva
+    (svuotato al logout). Il dettaglio ordina le tappe per nome, mostra un
+    errore con «Riprova» e apre la pagina nuova della tappa. Testi in 7 lingue.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8676" target="_blank" rel="noopener noreferrer">OC[8676]</a>): aggiorna la conoscenza del passaporto con le tappe validate
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8701" target="_blank" rel="noopener noreferrer">OC[8701]</a>): stato del passaporto sulle card dei cammini e delle tappe in camminiditalia (#206)
+    
+    - PassportService: stream condiviso di GET /api/passport e indice delle
+      tappe validate dalle /progress dei soli cammini iniziati; refreshProgress
+      rilegge anche /api/passport
+    - passportStageChip: stato del chip, mai «non ancora percorsa» senza dati
+    - varianti camminiditalia di layer-box (anello sul logo) e search-box
+      (chip della tappa), con classi base comuni LayerBoxBaseComponent e
+      SearchBoxBaseComponent
+    - mixin passport-logo-ring condiviso con home-layer, colori nel tema
+    - documentazione: cantiere, pagine di conoscenza, regola sulle classi base
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8702" target="_blank" rel="noopener noreferrer">OC[8702]</a>): condivisione della tappa del passaporto con anteprima (#207)
+    
+    - WmShareImageService: parte comune della condivisione di un'immagine,
+      nativo e browser, usata anche dalla condivisione UGC dell'app
+    - wm-passport-share-preview: anteprima dell'immagine con Condividi, e nel
+      browser Scarica o Apri immagine
+    - pagina della tappa con foto, lunghezza e dislivelli
+    - evento PostHog contentShared con content_type passport-stage e share_method
+    - testi nuovi in tutte le lingue
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8703" target="_blank" rel="noopener noreferrer">OC[8703]</a>): passaporto a timbri e traguardo del cammino completato (#208)
+    
+    - wm-passport-stamps: tutti i cammini della config come timbri, in corso →
+      completati → non iniziati in grigio, con caricamento, errore e «Riprova»;
+      griglia auto-fill (3 per riga sui telefoni, più colonne sui tablet).
+    - PassportService: passportRoutesState$() (logged-out, loading, error, ready),
+      passportRoutes$() derivato con la stessa richiesta, refreshPassport(),
+      reloadProgress(), requestLayerShareImage().
+    - PassportModalService: apertura unica del dettaglio per badge e timbri.
+    - Dettaglio nello stato completato (vista 6): celebrazione, «Completato il»,
+      km/tappe/uscite, «Condividi il traguardo», lista delle tappe apribile; niente
+      esito della certificazione a cammino completato.
+    - Anteprima di condivisione estesa al cammino (kind: 'route').
+    - wmTranslate() estratta dalla pipe wmtrans; colore primario dell'app per
+      pulsanti e badge; 17 testi nuovi in 7 lingue.
+    
+    Claude-Session: https://claude.ai/code/session_01N55sY6J969i9TPrarhaL11
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8741" target="_blank" rel="noopener noreferrer">OC[8741]</a>): togli dal telefono le UGC che il server non restituisce più (#209)
+    
+    Dopo ogni scaricamento riuscito, il sync riconcilia la memoria
+    `synchronized` con l'index del server: le tracce e i POI il cui id il
+    server non restituisce più vengono tolti, insieme alle immagini locali
+    che nessuna UGC rimasta usa. Un fetch fallito non tocca nulla, la coda
+    `device` non viene mai toccata, e due UGC con lo stesso uuid restano
+    entrambe: il telefono rispecchia il server.
+    
+    Se la UGC aperta viene tolta, l'effect `closeRemovedCurrentUgc$` chiude
+    il pannello, perché `getUgcTrack()`/`getUgcPoi()` ripiegherebbero
+    sull'ultima UGC sincronizzata.
+    
+    `removeSynchronizedUgcTrack/Poi` restituiscono ora un boolean, e le nuove
+    `getSynchronizedUgc*OrNull` distinguono una lettura fallita da un elenco
+    vuoto. `getUgcMediaUrls` è il criterio unico per le immagini, usato anche
+    dal salvataggio.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): dati tecnici e pulizia GPS delle tracce UGC con la regola del backend (#210)
+    
+    - `utils/ugc-track-stats.ts`: pulizia GPS (completa e incrementale) e calcolo dei dati tecnici,
+      traduzione della specifica di wm-package con le sue fixture condivise; `UgcTrackStatsService`
+      legge i parametri da `GEOLOCATION.record.stats`.
+    - Pannello «Dettagli tecnici»: `stats` del server quando c'è, altrimenti calcolo al volo; righe
+      Durata, Tempo in movimento, distanza, dislivello positivo e negativo, quota minima e massima,
+      velocità media e massima, «—» se un valore manca.
+    - Registrazione: la linea live e la geometria salvata usano solo i punti tenuti,
+      `properties.locations` resta grezzo; con meno di 2 punti tenuti la geometria usa i punti grezzi.
+    - `wm-detail-row`: riga condivisa fra il pannello dell'ecTrack e quello UGC, con le dimensioni
+      delle sezioni Form e Dove; icone primary nella Form in sola lettura.
+    - Tolti da `GeoutilsService` i metodi di calcolo delle tracce, ora senza chiamanti.
+    - Traduzioni «Durata» e «Tempo in movimento»; corretta «Velocità massima» in inglese.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * refactor(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): classi di wm-detail-row con il prefisso wm-
+    
+    `webmapp-pageroute-tabdetail-icon|label|value` diventano `wm-detail-row-icon|label|value`, come
+    chiede la regola sul prefisso `wm-` delle classi nuove. In `wm-tab-detail` le classi vecchie
+    restano solo per partenza/arrivo e indirizzo. Nessun tema le sovrascriveva.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8703" target="_blank" rel="noopener noreferrer">OC[8703]</a>): iniziali del cammino nei timbri del passaporto senza logo
+    
+    Come nelle viste 5b e 5c del wireframe, il timbro di un cammino senza
+    logo mostra le iniziali del nome invece di un cerchio vuoto. Si saltano
+    «Cammino», articoli e preposizioni: «Cammino dei Tre Villaggi» → «TV».
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): testo del consenso al trattamento dei dati nel form del passaporto
+    
+    Sostituito il testo segnaposto con un consenso al trattamento di nome, cognome e foto della
+    credenziale, limitato alla verifica del cammino e con il riferimento al GDPR, nelle 7 lingue.
+    Provvisorio finché il cliente non fornisce il testo legale definitivo.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8763" target="_blank" rel="noopener noreferrer">OC[8763]</a>): passaporto solo sui cammini accesi (#211)
+    
+    - tab, badge, anelli e chip derivano da /api/passport: niente /progress fuori dal dettaglio
+    - chip delle tappe solo sui cammini accesi, con la data da validated_tracks
+    - stato vuoto illustrato del tab Passaporto, testi nei 7 file i18n
+    - visibleProgress rinominato visibleRoute; docs del ticket e conoscenza aggiornate
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8764" target="_blank" rel="noopener noreferrer">OC[8764]</a>): oggetto import nelle UGC importate e box UGC senza import su camminiditalia (#212)
+    
+    - utils/ugc-import-info.ts: buildUgcImportInfo calcola properties.import (formato, nome,
+      dimensione e data del file, creator GPX, punti, geometrie del file, orari, quota)
+    - modal-ugc-uploader: scrive import al salvataggio, sopra quello eventuale del file; se il
+      calcolo fallisce la UGC si salva comunque, con un console.warn
+    - box UGC: logica in UgcBoxBaseComponent, la variante camminiditalia spegne solo il bottone
+      di import (showUgcUploaderButton$ = of(false)) e usa il template di default
+    - spec della funzione, del box di default, della variante e guardia su ɵfac
+    - conoscenza (ugc, varianti-per-shard), regola varianti-e-classi-base, docs del cantiere
+    
+    Claude-Session: https://claude.ai/code/session_017BGhe9dopjGvdnGUM1Arix
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8765" target="_blank" rel="noopener noreferrer">OC[8765]</a>): messaggio di stato vuoto in home-result quando i filtri non danno cammini (#215)
+    
+    Con i filtri Home di camminiditalia attivi e nessun cammino corrispondente
+    il pannello dei risultati restava bianco. Ora una funzione pura sceglie fra
+    il messaggio sui filtri («Spiacenti, non ci sono cammini inerenti alla
+    ricerca», come sul sito del cliente) e quello generico, nasconde la barra
+    dei tab vuota e mostra un blocco con illustrazione e testo in una regione
+    role="status" sempre presente. Traduzioni nelle 7 lingue, spec della
+    funzione pura, pagina di conoscenza e trappola sulle variabili CSS.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8761" target="_blank" rel="noopener noreferrer">OC[8761]</a>): date di percorrenza obbligatorie nel form del passaporto (#214)
+    
+    - «Periodo del cammino» con i campi Dal/Al e un ion-datetime in un
+      foglio dal basso: la data si applica solo con «Conferma»; la fine
+      non precede l'inizio e nessuna data va oltre l'oggi del dispositivo
+    - start_date/end_date nel multipart, messaggio dedicato sul 422 delle date
+    - il back hardware della modale chiude prima il calendario (closeOverlay
+      del guard), con la trappola nella rule modali-e-ion-nav
+    - canLeave chiede conferma anche con le sole date; numero seriale nel
+      colore primary
+    - traduzioni nelle 7 lingue, spec di form, modale, service e utils
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8766" target="_blank" rel="noopener noreferrer">OC[8766]</a>): stato del GPS in GeolocationService (#216)
+    
+    GeolocationService espone gpsStatus$ (searching, ok, poor, denied,
+    disabled, off), calcolato dalla funzione pura reduceGpsStatus con
+    isteresi 50/30 m, due fix di fila e uscita dopo 15 s. Gli errori del
+    watcher non vengono più scartati: diventano stato, con un comportamento
+    per piattaforma (iOS stacca il watcher su denied, Android lo tiene vivo
+    perché con la sola posizione approssimativa consegna comunque fix).
+    Le callback di un watcher già staccato si ignorano.
+    
+    Watcher web: uno solo alla volta, alta precisione anche in navigazione,
+    riaperto da startNavigation dopo un errore di permesso o di posizione.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    Co-authored-by: Webmapp s.r.l. <35734764+webmappsrl@users.noreply.github.com>
+    Co-authored-by: peppedeka <peppedeka@gmail.com>
+    Co-authored-by: Rubens <122286591+RubensGarofalo@users.noreply.github.com>
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8689" target="_blank" rel="noopener noreferrer">OC[8689]</a>): tradotta l'etichetta «Modalità di percorrenza» del travel mode (#205)
+    L'etichetta del selettore a piedi / in bici nella scheda percorso era scritta in
+    italiano nel template: ora passa da wmtrans, e la chiave è nei sette file di
+    lingua (it, en, de, fr, es, pr, sq). Aggiunti overview, plan e notes del lavoro e
+    la riga nel CLAUDE.md.
+    
+    Claude-Session: https://claude.ai/code/session_01Mq7Az1cQfuA64G7vQT9S5s
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
 * **wm-types:** changelog for bump to cc301d2 ([6303adb](https://github.com/webmappsrl/webmapp-app/commit/6303adb969e4045b2b37f05b438c8598928a0bc1))
-
+<!-- COMMIT_DESC -->
+    
+    - Passaporto: passaporto del camminatore e funzioni collegate (#34)
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): add showTrackRemainingDistance option to OPTIONS (#17)
+    
+    Nuovo campo opzionale usato da wm-core per attivare/disattivare il
+    componente di distanza rimanente nella schermata traccia.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8183" target="_blank" rel="noopener noreferrer">OC[8183]</a>): aggiungi OPTIONS.ugcTrackShareEnabled
+    
+    Nuovo campo opzionale per il gating del pulsante di condivisione
+    percorso registrato in ugc-track-properties (wm-core). Nessun default
+    client-side: resta undefined finche' un backend non lo valorizza
+    esplicitamente via config.json.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): add showFavorites to OPTIONS interface (#18)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): add showFavorites to OPTIONS interface
+    
+    Extends the shared OPTIONS config type with an optional showFavorites
+    flag, used to gate the favorite-heart feature on layers in wm-core.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8176" target="_blank" rel="noopener noreferrer">OC[8176]</a>): add favorite prop to WmPosthogProps
+    
+    Adds an optional favorite boolean to the shared PostHog props type, so
+    the layerFavorited event (wm-core) can distinguish add from remove.
+    
+    Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8181" target="_blank" rel="noopener noreferrer">OC[8181]</a>): add ConfigDetailBox types to shared config (#20)
+    
+    Move config_detail shared types out of wm-core into wm-types without
+    the I prefix, using Partial<Record<Language, string>> for title/content.
+    
+    Co-authored-by: Cursor <cursoragent@cursor.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8159" target="_blank" rel="noopener noreferrer">OC[8159]</a>): add optional user_id to WmPosthogProps (#19)
+    
+    Extends the shared PostHog props type with an optional numeric
+    user_id, so PosthogContextService (wm-core) can associate captured
+    events with the authenticated backend user when logged in.
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8414" target="_blank" rel="noopener noreferrer">OC[8414]</a>): tipi condivisi per filtri sui cammini in Home (#21)
+    
+    Aggiunge ROUTE_SHAPES/WALKING_NETWORKS/SEASONS (allineati agli enum PHP
+    backend), LayerAttributeValue/LayerAttributes, FilterOption, NumericBucket,
+    RouteFilterState/RouteFilterKey in src/config.ts, consumati dalla variante
+    camminiditalia della searchbar (wm-core).
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8427" target="_blank" rel="noopener noreferrer">OC[8427]</a>): tipo condiviso ConfigDetailToggleEvent per il fix scroll/animazione doppia (#22)
+    
+    Payload del CustomEvent nativo configDetailSettled dispacciato da
+    wm-config-detail (wm-core), invece del payload di un @Output() Angular
+    come da piano iniziale — vedi docs/features/8427-.../notes.md per il
+    dettaglio della deviazione.
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8458" target="_blank" rel="noopener noreferrer">OC[8458]</a>): remove unused ConfigDetailToggleEvent type (#23)
+    
+    No consumer references it anymore after wm-core stops dispatching
+    configDetailSettled and webmapp-app stops listening for it (wm-config-detail
+    now supports multi-open, automatic scroll removed).
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): tipi del contratto API del passaporto (#26)
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): tipi del contratto API del passaporto
+    
+    Progresso del cammino e richiesta di certificazione della credenziale
+    cartacea, ipotizzati dal frontend in attesa del backend camminiditalia.
+    Solo gli stati usati in questo ciclo (none, pending).
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8166" target="_blank" rel="noopener noreferrer">OC[8166]</a>): il campo della richiesta diventa serialNumber
+    
+    Nel multipart il campo è serial_number al posto di notes: resta solo il
+    numero seriale, opzionale.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8671" target="_blank" rel="noopener noreferrer">OC[8671]</a>): stati approvata e rifiutata della certificazione (#27)
+    
+    PassportCertificationStatus ammette approved e rejected; PassportCertification
+    porta la data della decisione e la nota del gestore.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8676" target="_blank" rel="noopener noreferrer">OC[8676]</a>): allinea PassportStage al contratto delle tappe validate (#28)
+    
+    PassportStage.name diventa l'oggetto di traduzioni della tappa, si
+    aggiungono distance e source, e PassportProgress porta completed,
+    calcolato dal backend camminiditalia (GET /api/layer/{layer}/progress).
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8701" target="_blank" rel="noopener noreferrer">OC[8701]</a>): tipi del passaporto per lo stato sulle card (#29)
+    
+    PassportRoute per la risposta di GET /api/passport, PassportStageIndex
+    e PassportStageChip per il chip dello stato delle tappe.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8702" target="_blank" rel="noopener noreferrer">OC[8702]</a>): dati della tappa e share_method per la condivisione del passaporto (#30)
+    
+    PassportStage acquista ref, from, to, ascent, descent, image e shareable,
+    opzionali. WmPosthogProps acquista share_method (WmShareMethod).
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8743" target="_blank" rel="noopener noreferrer">OC[8743]</a>): tipo UgcTrackStats per i dati tecnici calcolati dal server (#31)
+    
+    `properties.stats` delle tracce UGC: distanza, durate, velocità e chiavi DEM, come le scrive
+    wm-package.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8763" target="_blank" rel="noopener noreferrer">OC[8763]</a>): tipi del passaporto per i cammini accesi (#32)
+    
+    - PassportRoute.validatedTracks (id tappa -> data ISO)
+    - PassportStageIndex: pendingLayers sostituito da enabledLayers
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8761" target="_blank" rel="noopener noreferrer">OC[8761]</a>): date di percorrenza nella richiesta di certificazione (#33)
+    
+    PassportCertificationRequest riceve startDate ed endDate obbligatori
+    (AAAA-MM-GG, start_date/end_date nel multipart).
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    Co-authored-by: Rubens <122286591+RubensGarofalo@users.noreply.github.com>
+    Co-authored-by: Cursor <cursoragent@cursor.com>
 ## [3.1.17](https://github.com/webmappsrl/webmapp-app/compare/v3.1.16...v3.1.17) (2026-09-08)
 
 
@@ -40,7 +1073,6 @@
     Inject shardName:'geohub' explicitly (the last known-good pairing
     with appId 52), decoupling the CI test target from whatever shard
     developers set as their local default.
-<!-- COMMIT_DESC -->
     
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): triage console log per policy niente log in produzione
     
@@ -91,7 +1123,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-### Miscellaneous
 
 * enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
 <!-- COMMIT_DESC -->
@@ -210,7 +1241,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8277" target="_blank" rel="noopener noreferrer">OC[8277]</a>:** bump target/compile SDK Android a 36 ([3d6ed92](https://github.com/webmappsrl/webmapp-app/commit/3d6ed92146968b12026844f17cc884e1430c759d))
 <!-- COMMIT_DESC -->
     
     Aggiorna compileSdkVersion e targetSdkVersion da 35 a 36 in gulpfile.js
@@ -247,7 +1277,6 @@
     (asseriti da test unitari).
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-## [3.1.16](https://github.com/webmappsrl/webmapp-app/compare/v3.1.15...v3.1.16) (2026-07-09)
 
 
 ### Bug Fixes
@@ -256,7 +1285,6 @@
 <!-- COMMIT_DESC -->
     
     Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
-* enrich changelog with commit descriptions ([cfffef5](https://github.com/webmappsrl/webmapp-app/commit/cfffef534c30df4279d890eb0656b62574b121c4))
 <!-- COMMIT_DESC -->
     
     - fix: CARG tile URL alignment with overlayXYZ
@@ -339,7 +1367,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-### Miscellaneous
 
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
 <!-- COMMIT_DESC -->
@@ -413,7 +1440,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-## [3.1.13](https://github.com/webmappsrl/webmapp-app/compare/webmapp-app-v3.1.12...webmapp-app-v3.1.13) (2026-06-19)
 
 
 ### Bug Fixes
@@ -509,7 +1535,6 @@
         - Reformatted the styles array in the component decorator for improved readability.
         - Simplified the `ngOnChanges` condition by removing unnecessary line breaks.
         refactor(localization): ♻️ streamline imports and add null check in translation service
-
         - Removed unused imports from `@ngx-translate/core` to improve code clarity and maintainability.
         - Added a null check for the key parameter in the `instant` method to prevent potential errors and return an empty string when the key is null.
 
@@ -707,7 +1732,6 @@
         prioritizing user preference and results availability.
         Removes redundant effects from user activity management, simplifying
         code and reducing unnecessary updates.
-
         - chore(localization): 🌐 enhance language handling in LangService
         Updated the LangService to utilize the device's language code as the default language if available. Integrated the DeviceService to fetch the device language and combined it with the existing language configuration. This improves user experience by ensuring the app defaults to the user's preferred language when available.
 
