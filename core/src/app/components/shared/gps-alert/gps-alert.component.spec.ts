@@ -102,11 +102,22 @@ describe('GpsAlertComponent', () => {
     let host: HTMLElement;
     let hostTop: number;
 
+    let spacer: HTMLElement;
+
     beforeEach(() => {
+      // in CI sopra la fixture resta altro contenuto: l'host non sta in cima alla pagina
+      spacer = document.createElement('div');
+      spacer.style.height = '66px';
+      document.body.prepend(spacer);
       layout = TestBed.inject(RecorderPanelLayoutService);
       host = fixture.nativeElement as HTMLElement;
+      // l'host di TestBed è un div: gli si danno gli stili di `webmapp-gps-alert` nell'app, un livello
+      // assoluto a tutto schermo, perché la scheda e le misure del volo hanno lo stesso riferimento
+      Object.assign(host.style, {position: 'absolute', inset: '0'});
       hostTop = host.getBoundingClientRect().top;
     });
+
+    afterEach(() => spacer.remove());
 
     /**
      * `top` calcolato della scheda visibile.
