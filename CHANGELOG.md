@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.18](https://github.com/webmappsrl/webmapp-app/compare/v3.1.17...v3.1.18) (2026-10-16)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
+* enrich changelog with commit descriptions ([9f04d6d](https://github.com/webmappsrl/webmapp-app/commit/9f04d6da5aea08b88cad92c465423d91db34993e))
+* **map-core:** changelog for bump to 79ffe78 ([e87a636](https://github.com/webmappsrl/webmapp-app/commit/e87a636a9a24ec1a464aa95fa8cbbd439a01a82c))
+* **map-core:** changelog for bump to 86ebcec ([7f4510a](https://github.com/webmappsrl/webmapp-app/commit/7f4510acb0711673acb71523f07ac12e79945679))
+* **map-core:** changelog for bump to 90fe075 ([d94677b](https://github.com/webmappsrl/webmapp-app/commit/d94677b3daafe468cfc933efc9b3a4ffeb6d0f3f))
+* **wm-core:** changelog for bump to 0007580 ([df4cc3b](https://github.com/webmappsrl/webmapp-app/commit/df4cc3b1457415715a75d4c55ce4ea16425e055b))
+* **wm-core:** changelog for bump to 5795458 ([aa3bde2](https://github.com/webmappsrl/webmapp-app/commit/aa3bde2cf6fb0ee8c767209d48367a3fd6566173))
+* **wm-core:** changelog for bump to 8ffa03c ([8e61a0f](https://github.com/webmappsrl/webmapp-app/commit/8e61a0fceaa55073cbd6703ddb953271da077111))
+* **wm-core:** changelog for bump to e8fe186 ([6bcdf59](https://github.com/webmappsrl/webmapp-app/commit/6bcdf59ffb11180b7eab2217c4783c5fc0429abb))
+* **wm-types:** changelog for bump to 99c4a71 ([4d9f254](https://github.com/webmappsrl/webmapp-app/commit/4d9f2540267b26c5d3bfb38cb167276c54babb6c))
+* **wm-types:** changelog for bump to cc301d2 ([6303adb](https://github.com/webmappsrl/webmapp-app/commit/6303adb969e4045b2b37f05b438c8598928a0bc1))
+
 ## [3.1.17](https://github.com/webmappsrl/webmapp-app/compare/v3.1.16...v3.1.17) (2026-09-08)
 
 
