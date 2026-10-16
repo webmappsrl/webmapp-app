@@ -155,6 +155,42 @@
   .wf-tabbar .item.wf-tab-new { position:relative; }
   .wf-tabbar .item.wf-tab-new::after { content:""; position:absolute; top:-3px; right:6px; width:6px; height:6px; border-radius:50%; background:#2F9E44; }
   .wf-tabbar .ic.wf-ic-pass { border:2px solid #ccc; border-radius:4px; box-sizing:border-box; background:repeating-linear-gradient(#fff 0 3px,#ccc 3px 4px); }
+  /* oc:8766 e plancia riducibile: componenti reali dell'app sulla mappa, tema camminiditalia, in scala 300/390 */
+  .wf-map { position:relative; flex:1; min-height:0; overflow:hidden; background:#e8ecdf; font-family:Roboto,system-ui,sans-serif; }
+  .wf-map svg.bg { position:absolute; inset:0; }
+  .wf-map-fab { position:absolute; right:10px; bottom:14px; width:34px; height:34px; border-radius:50%; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; }
+  .wf-map-badge { position:absolute; top:-5px; right:-5px; width:15px; height:15px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .wf-map-zoom { position:absolute; left:10px; top:230px; width:27px; border-radius:14px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.25); display:flex; flex-direction:column; align-items:center; font-size:17px; color:#555; line-height:27px; }
+  .wf-rec { position:absolute; left:8px; right:8px; top:6px; background:#fff; border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,.18); padding:9px 11px; display:flex; flex-direction:column; gap:8px; color:#000; }
+  .wf-rec-head { display:flex; align-items:center; gap:8px; }
+  .wf-rec-dot { width:7px; height:7px; border-radius:50%; background:#e0312b; opacity:.5; flex-shrink:0; }
+  .wf-rec-time { font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.4px; }
+  .wf-rec-speeds { margin-left:auto; display:flex; flex-direction:column; align-items:flex-end; gap:1px; }
+  .wf-rec-speed { font-size:11.5px; font-weight:700; } .wf-rec-speed small { font-size:9px; font-weight:400; }
+  .wf-rec-avg { font-size:9px; color:#989898; }
+  .wf-rec-bar { position:relative; height:6px; border-radius:3px; background:#f5f3f6; }
+  .wf-rec-fill { position:absolute; left:0; top:0; bottom:0; border-radius:3px; background:#ef7821; }
+  .wf-rec-marker { position:absolute; top:-3px; width:12px; height:12px; margin-left:-6px; box-sizing:border-box; border-radius:50%; background:#fff; border:2.5px solid #ef7821; }
+  .wf-rec-labels { display:flex; justify-content:space-between; font-size:10px; } .wf-rec-labels span { display:flex; align-items:center; gap:3px; }
+  .wf-badge { display:inline-flex; align-items:center; gap:3px; background:rgba(66,133,244,.1); color:#4285f4; font-weight:700; font-size:8.5px; padding:2px 6px 2px 4px; border-radius:15px; white-space:nowrap; }
+  .wf-badge i { width:9px; height:9px; border-radius:50%; background:#4285f4; box-shadow:inset 0 0 0 2.4px #4285f4, inset 0 0 0 4.5px #fff; display:inline-block; }
+  .wf-rec-actions { display:flex; align-items:center; gap:8px; padding-top:8px; border-top:1px solid #f5f3f6; }
+  .wf-rec-btn { width:31px; height:31px; border-radius:50%; border:1.2px solid #dcdad6; box-sizing:border-box; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:#fff; }
+  .wf-rec-odo { flex:1; text-align:right; font-size:10px; color:#989898; white-space:nowrap; } .wf-rec-odo b { font-size:11.5px; color:#000; }
+  .wf-rec-tab { position:absolute; right:0; top:6px; background:#fff; border-radius:12px 0 0 12px; box-shadow:-2px 2px 6px rgba(0,0,0,.2); padding:8px 11px 8px 14px; display:flex; flex-direction:column; gap:4px; color:#000; }
+  .wf-rec-tab-time { font-size:12.5px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .wf-rec-choice { display:flex; align-items:center; gap:8px; padding-top:4px; border-top:1px solid #ebe9e6; }
+  .wf-rec-choice-lbl { font-size:8px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:#989898; }
+  .wf-rec-choice-val { display:flex; align-items:center; gap:4px; font-size:11.5px; font-weight:700; }
+  .wf-rec-steps { display:flex; flex-direction:column; gap:1.5px; align-items:center; } .wf-rec-steps span { width:2.5px; height:2.5px; border-radius:2px; background:#bdbab5; } .wf-rec-steps span.on { height:5.5px; background:#000; }
+  .wf-gps { position:absolute; left:50%; transform:translateX(-50%); width:calc(100% - 25px); max-width:262px; box-sizing:border-box; background:#fff; border-radius:11px; box-shadow:0 5px 22px rgba(0,0,0,.16); padding:9px 11px; display:grid; grid-template-columns:auto 1fr; gap:8px 9px; color:#000; font-size:11px; line-height:1.35; }
+  .wf-gps-ic { width:25px; height:25px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  .wf-gps-t { font-weight:500; } .wf-gps-s { font-size:9.6px; opacity:.75; margin-top:2px; }
+  .wf-gps-actions { grid-column:1 / -1; display:flex; justify-content:flex-end; gap:6px; }
+  .wf-gps-actions span { font-size:10px; font-weight:500; text-transform:uppercase; letter-spacing:.03em; padding:6px 8px; border-radius:6px; color:#ef7821; }
+  .wf-map-fab.searching { box-shadow:0 1px 4px rgba(0,0,0,.3), 0 0 0 4px rgba(239,120,33,.35), 0 0 0 10px rgba(239,120,33,.12); }
+  .wf-start-walk { position:absolute; left:50%; bottom:16px; transform:translateX(-50%); height:28px; padding:0 15px; border-radius:999px; background:#ef7821; color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.25); display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600; white-space:nowrap; }
+  .wf-gps-actions span.primary { background:#ef7821; color:#fff; }
   .wf-tabbar .item.active .ic.wf-ic-pass { border-color:#2F9E44; background:repeating-linear-gradient(#fff 0 3px,#2F9E44 3px 4px); }
 </style>
 
@@ -712,7 +748,7 @@
   </div>
 
   <div class="wf-unit">
-    <p class="wf-cap">V2 · Form richiesta certificazione — upload foto + seriale (nuovo, oc:8166)</p>
+    <p class="wf-cap">V2 · Form richiesta certificazione — foto, periodo del cammino, seriale (nuovo, oc:8166; periodo oc:8761)</p>
     <div class="wf-phone" id="phone-8">
       <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Richiedi certificazione</div></div>
       <div class="wf-scroll">
@@ -731,9 +767,25 @@
           </div>
         </div>
         <div style="margin:6px 12px 0; font-size:8px;color:#999;">Scatta foto o scegli dalla galleria — massimo 6 foto</div>
-        <div style="margin:16px 12px 4px; font-size:9px;font-weight:700;color:#999;text-transform:uppercase;">Numero seriale <span style="color:#c0392b;font-weight:800;">*</span></div>
+        <!-- oc:8761: periodo del cammino obbligatorio, due campi «Dal» / «Al»; il calendario si apre dal basso (V2b) -->
+        <div style="margin:14px 12px 6px; font-size:9px;font-weight:700;color:#999;text-transform:uppercase;">Periodo del cammino <span style="color:#c0392b;font-weight:800;">*</span></div>
+        <div style="margin:0 12px; display:grid; grid-template-columns:1fr 1fr; gap:9px;">
+          <div class="wf-tappable" onclick="wfGoTo('phone-8b')" style="min-height:42px; box-sizing:border-box; border:1px solid #92949c; border-radius:6px; padding:6px 9px; display:flex; flex-direction:column; justify-content:center; gap:2px;">
+            <div style="font-size:9px;color:#92949c;">Dal</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="flex:1;font-size:11px;color:#333;">4 ott 2026</span><span style="font-size:11px;color:#92949c;">▦</span></div>
+          </div>
+          <div class="wf-tappable" onclick="wfGoTo('phone-8b')" style="min-height:42px; box-sizing:border-box; border:1px solid #92949c; border-radius:6px; padding:6px 9px; display:flex; flex-direction:column; justify-content:center; gap:2px;">
+            <div style="font-size:9px;color:#92949c;">Al</div>
+            <div style="display:flex;align-items:center;gap:6px;"><span style="flex:1;font-size:11px;color:#92949c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Seleziona la data</span><span style="font-size:11px;color:#92949c;">▦</span></div>
+          </div>
+        </div>
+        <div style="margin:16px 12px 4px; font-size:9px;font-weight:700;color:#999;text-transform:uppercase;">Numero seriale</div>
         <div style="margin:0 12px; height:34px; border:1.5px solid #ccc; border-radius:8px; display:flex; align-items:center; padding:0 10px; font-size:10px; color:#999;">es. CG-2026-00341</div>
-        <div style="margin:4px 12px 0; font-size:8px;color:#999;">Obbligatorio solo per le credenziali dei nuovi cammini</div>
+        <div style="margin:4px 12px 0; font-size:8px;color:#999;">Inserisci il numero seriale se richiesto dal cammino</div>
+        <div style="margin:12px 12px 0; display:flex; gap:8px; align-items:flex-start;">
+          <div style="width:12px;height:12px;border:1.5px solid #92949c;border-radius:2px;flex-shrink:0;margin-top:1px;"></div>
+          <div style="font-size:8.5px;color:#333;line-height:1.35;">Acconsento al trattamento di nome, cognome e foto della credenziale al solo fine di verificare il cammino percorso, nel rispetto del Regolamento UE 2016/679 (GDPR).</div>
+        </div>
       </div>
       <div class="wf-actions">
         <div class="wf-btn filled wf-tappable" onclick="wfGoTo('phone-9')">Invia richiesta</div>
@@ -747,6 +799,23 @@
         <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
       </div>
 
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">V2b · Calendario nel foglio dal basso — la data vale solo con «Conferma» (nuovo, oc:8761)</p>
+    <div class="wf-phone" id="phone-8b" style="position:relative;">
+      <div class="wf-block wf-header-back"><span class="back">←</span><div style="font-size:12px;font-weight:700;color:#333">Richiedi certificazione</div></div>
+      <div class="wf-scroll"></div>
+      <div style="position:absolute; inset:0; background:rgba(0,0,0,.32);"></div>
+      <div style="position:absolute; left:0; right:0; bottom:0; border-radius:12px 12px 0 0; background:#fff; box-shadow:0 -3px 12px rgba(0,0,0,.12); padding:6px 0 12px;">
+        <div style="width:28px;height:4px;border-radius:2px;background:#c8c8c8;margin:0 auto;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 10px 0 12px;"><div style="font-size:13.5px;font-weight:700;color:#333;">Data di inizio</div><div style="font-size:14px;color:#666;">✕</div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px 6px;font-size:11px;font-weight:500;color:#333;"><span>ottobre 2026 ›</span><span style="color:#666;letter-spacing:10px;">‹›</span></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);padding:0 8px;font-size:8.5px;color:#666;text-align:center;line-height:18px;"><div>L</div><div>M</div><div>M</div><div>G</div><div>V</div><div>S</div><div>D</div></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);row-gap:2px;padding:0 8px;"><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;"></div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;"></div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;"></div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">1</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">2</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">3</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;background:#2F9E44;color:#fff;">4</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">5</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">6</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">7</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">8</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">9</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">10</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">11</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">12</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">13</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">14</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#333;">15</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#2F9E44;box-shadow:inset 0 0 0 1px #2F9E44;">16</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">17</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">18</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">19</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">20</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">21</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">22</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">23</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">24</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">25</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">26</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">27</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">28</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">29</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">30</div><div style="font-size:10px;text-align:center;line-height:24px;width:24px;height:24px;margin:0 auto;border-radius:50%;color:#c8c8c8;">31</div></div>
+        <div class="wf-btn filled wf-tappable" onclick="wfGoTo('phone-8')" style="margin:12px 12px 0;">Conferma</div>
+      </div>
     </div>
   </div>
 
@@ -953,6 +1022,169 @@
     <tr><td>Non accettata</td><td>Chip ✕ + data della decisione, nota se c'è, altrimenti rimando all'email (E3, E4)</td><td>«Invia una nuova richiesta», stesso bottone</td></tr>
   </table></div>
   <p style="margin:8px 0 0;">Ogni stato ha icona <em>e</em> testo, non solo il colore. La nota oltre le 3 righe si tronca con «Leggi tutto» (E5). <strong>Limite noto:</strong> l'app non sa quali tappe sono state riconosciute, quindi anello e lista non cambiano dopo l'approvazione, finché il backend non espone le tappe validate.</p>
+</div>
+
+<h3 style="color:#1a1a1a;margin:24px 0 4px;">Flusso Registrazione della traccia e avvisi GPS (oc:8766)</h3>
+<div class="wf-grid">
+
+  <div class="wf-unit">
+    <p class="wf-cap">R1 · Avvio senza posizione — il bottone della posizione pulsa, nessun avviso nei primi 8 s (oc:8766)</p>
+    <div class="wf-phone" id="phone-r0a">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g></svg>
+        <div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab searching" style="bottom:56px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg></div><div class="wf-start-walk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"></path></svg>Inizia il cammino</div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">R2 · Dopo 8 s senza posizione — «Ricerca del segnale GPS…», una volta per avvio (oc:8766)</p>
+    <div class="wf-phone" id="phone-r0b">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g></svg>
+        <div class="wf-gps" style="top:56px;"><span class="wf-gps-ic" style="background:rgba(239,120,33,.14);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 3a9 9 0 019 9"></path></svg></span><div><div class="wf-gps-t">Ricerca del segnale GPS…</div><div class="wf-gps-s">All'aperto e lontano dagli edifici è più rapido</div></div><div class="wf-gps-actions"><span>Chiudi</span></div></div><div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab searching" style="bottom:56px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg></div><div class="wf-start-walk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"></path></svg>Inizia il cammino</div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">R3 · Registrazione con una traccia — plancia aperta, avviso GPS subito sotto (nuovo)</p>
+    <div class="wf-phone" id="phone-r1">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g><path d="M162 330 l7 16 -7 -4 -7 4z" fill="#4285f4"></path></svg>
+        <div class="wf-rec">
+          <div class="wf-rec-head"><span class="wf-rec-dot"></span><span class="wf-rec-time">00:34:46</span><span class="wf-rec-speeds"><span class="wf-rec-speed">0 <small>km/h</small></span><span class="wf-rec-avg">Velocità media 2,3 km/h</span></span></div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div class="wf-rec-bar"><div class="wf-rec-fill" style="width:24%;"></div><span class="wf-rec-marker" style="left:24%;"></span></div>
+            <div class="wf-rec-labels"><span>Partenza <span class="wf-badge"><i></i>6,8 km</span></span><span>Arrivo <span class="wf-badge"><i></i>21,9 km</span></span></div>
+          </div>
+          <div class="wf-rec-actions">
+            <span class="wf-rec-btn" style="background:#000;border:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 4v5h7V4"></path><circle cx="12" cy="15" r="2"></circle></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="3"></circle><path d="M12 9v12"></path></svg></span>
+            <span class="wf-rec-odo"><b>0,03</b> Km percorsi</span>
+            <span class="wf-rec-btn wf-tappable" onclick="wfGoTo('phone-r2')" style="background:#f5f3f6;border:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></span>
+          </div>
+        </div><div class="wf-gps" style="top:150px;"><span class="wf-gps-ic" style="background:#ffce00;"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="4" height="7" fill="#000"></rect><rect x="10" y="9" width="4" height="12" fill="#000"></rect><rect x="17" y="4" width="4" height="17" fill="#000" opacity=".3"></rect></svg></span><div><div class="wf-gps-t">Segnale GPS debole: la posizione potrebbe essere imprecisa</div><div class="wf-gps-s">Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell'app</div></div></div><div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">R4 · Plancia ridotta a linguetta — informazione scelta scorrendo su e giù, un tocco la riapre (nuovo)</p>
+    <div class="wf-phone" id="phone-r2">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g><path d="M162 330 l7 16 -7 -4 -7 4z" fill="#4285f4"></path></svg>
+        <div class="wf-rec-tab wf-tappable" onclick="wfGoTo('phone-r1')">
+          <div style="display:flex;align-items:center;gap:6px;"><span class="wf-rec-dot"></span><span class="wf-rec-tab-time">00:34:46</span></div>
+          <div class="wf-rec-choice">
+            <div><div class="wf-rec-choice-lbl">Arrivo</div><div class="wf-rec-choice-val"><span style="font-size:10px;">⚑</span><span class="wf-badge"><i></i>21,9 km</span></div></div>
+            <div class="wf-rec-steps"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div><div class="wf-gps" style="top:74px;"><span class="wf-gps-ic" style="background:#ffce00;"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="4" height="7" fill="#000"></rect><rect x="10" y="9" width="4" height="12" fill="#000"></rect><rect x="17" y="4" width="4" height="17" fill="#000" opacity=".3"></rect></svg></span><div><div class="wf-gps-t">Segnale GPS debole: la posizione potrebbe essere imprecisa</div><div class="wf-gps-s">Se succede spesso, controlla che "Posizione esatta" sia attiva nelle impostazioni dell'app</div></div></div><div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">R5 · Dopo 4 s l'avviso di segnale debole vola sul bottone della posizione e resta il badge giallo (oc:8766)</p>
+    <div class="wf-phone" id="phone-r3">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g><path d="M162 330 l7 16 -7 -4 -7 4z" fill="#4285f4"></path></svg>
+        <div class="wf-rec">
+          <div class="wf-rec-head"><span class="wf-rec-dot"></span><span class="wf-rec-time">00:34:46</span><span class="wf-rec-speeds"><span class="wf-rec-speed">0 <small>km/h</small></span><span class="wf-rec-avg">Velocità media 2,3 km/h</span></span></div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div class="wf-rec-bar"><div class="wf-rec-fill" style="width:24%;"></div><span class="wf-rec-marker" style="left:24%;"></span></div>
+            <div class="wf-rec-labels"><span>Partenza <span class="wf-badge"><i></i>6,8 km</span></span><span>Arrivo <span class="wf-badge"><i></i>21,9 km</span></span></div>
+          </div>
+          <div class="wf-rec-actions">
+            <span class="wf-rec-btn" style="background:#000;border:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 4v5h7V4"></path><circle cx="12" cy="15" r="2"></circle></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="3"></circle><path d="M12 9v12"></path></svg></span>
+            <span class="wf-rec-odo"><b>0,03</b> Km percorsi</span>
+            <span class="wf-rec-btn wf-tappable" onclick="wfGoTo('phone-r2')" style="background:#f5f3f6;border:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></span>
+          </div>
+        </div><div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg><span class="wf-map-badge" style="background:#ffce00;"><svg width="8" height="8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="4" height="7" fill="#000"></rect><rect x="10" y="9" width="4" height="12" fill="#000"></rect><rect x="17" y="4" width="4" height="17" fill="#000" opacity=".3"></rect></svg></span></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wf-unit">
+    <p class="wf-cap">R6 · Permesso negato — avviso che resta finché non si chiude, badge rosso (oc:8766)</p>
+    <div class="wf-phone" id="phone-r4">
+      <div class="wf-map"><svg class="bg" width="300" height="600" viewBox="0 0 300 600" aria-hidden="true"><path d="M215 0 C 250 150 200 300 300 430 L300 0Z" fill="#aad3df"></path><g fill="none" stroke="#e00" stroke-width="2" stroke-linejoin="round"><path d="M18 140 L65 190 L52 262 L105 322 L96 404 L150 470 L140 560"></path><path d="M52 262 L135 248 L192 300 L206 392 L250 456"></path></g><path d="M162 330 l7 16 -7 -4 -7 4z" fill="#4285f4"></path></svg>
+        <div class="wf-rec">
+          <div class="wf-rec-head"><span class="wf-rec-dot"></span><span class="wf-rec-time">00:34:46</span><span class="wf-rec-speeds"><span class="wf-rec-speed">0 <small>km/h</small></span><span class="wf-rec-avg">Velocità media 2,3 km/h</span></span></div>
+          <div style="display:flex;flex-direction:column;gap:5px;">
+            <div class="wf-rec-bar"><div class="wf-rec-fill" style="width:24%;"></div><span class="wf-rec-marker" style="left:24%;"></span></div>
+            <div class="wf-rec-labels"><span>Partenza <span class="wf-badge"><i></i>6,8 km</span></span><span>Arrivo <span class="wf-badge"><i></i>21,9 km</span></span></div>
+          </div>
+          <div class="wf-rec-actions">
+            <span class="wf-rec-btn" style="background:#000;border:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"></path><path d="M8 4v5h7V4"></path><circle cx="12" cy="15" r="2"></circle></svg></span>
+            <span class="wf-rec-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="6" r="3"></circle><path d="M12 9v12"></path></svg></span>
+            <span class="wf-rec-odo"><b>0,03</b> Km percorsi</span>
+            <span class="wf-rec-btn wf-tappable" onclick="wfGoTo('phone-r2')" style="background:#f5f3f6;border:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg></span>
+          </div>
+        </div><div class="wf-gps" style="top:150px;"><span class="wf-gps-ic" style="background:#f04141;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 21s-6-6.2-6-11a6 6 0 0112 0c0 4.8-6 11-6 11z"></path><path d="M4 4l16 16"></path></svg></span><div><div class="wf-gps-t">La posizione non è disponibile</div><div class="wf-gps-s">Controlla che la localizzazione sia attiva e che l'app abbia il permesso</div></div><div class="wf-gps-actions"><span>Chiudi</span><span class="primary">Apri impostazioni App</span></div></div><div class="wf-map-zoom"><span>+</span><span>−</span></div><div class="wf-map-fab"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef7821" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="6"></circle><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path></svg><span class="wf-map-badge" style="background:#f04141;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 21s-6-6.2-6-11a6 6 0 0112 0c0 4.8-6 11-6 11z"></path><path d="M4 4l16 16"></path></svg></span></div>
+      </div>
+      <div class="wf-tabbar">
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:3px"></div>Home</div>
+        <div class="item active"><div class="ic" style="background:#2F9E44;border-radius:3px"></div>Mappa</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Preferiti</div>
+        <div class="item wf-tab-new wf-tappable" onclick="wfGoTo('phone-3')"><div class="ic wf-ic-pass"></div>Passaporto</div>
+        <div class="item"><div class="ic" style="background:#ccc;border-radius:50%"></div>Profilo</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="wf-rules">
+  <p style="margin:0 0 8px;"><strong>Avviso GPS e plancia di registrazione.</strong> L'avviso compare 8 px sotto l'elemento visibile, ma mai più in alto della barra di stato + 72 px.</p>
+  <div class="wf-rules-wrap"><table>
+    <tr><th>Situazione</th><th>Dove compare l'avviso</th></tr>
+    <tr><td>Senza registrazione</td><td>Barra di stato + 72 px, come prima</td></tr>
+    <tr><td>Registrazione, plancia aperta</td><td>Subito sotto la plancia, che cambia altezza con la traccia selezionata e la pausa (R3)</td></tr>
+    <tr><td>Registrazione, plancia ridotta</td><td>Sotto la linguetta: di solito resta dov'è, scende solo con i caratteri ingranditi (R4)</td></tr>
+  </table></div>
+  <div class="wf-rules-wrap" style="margin-top:10px;"><table>
+    <tr><th>Stato del GPS</th><th>Cosa si vede</th></tr>
+    <tr><td>Ricerca, all'avvio senza posizione</td><td>Il bottone della posizione pulsa (R1); se dopo 8 s la posizione non arriva, «Ricerca del segnale GPS…» con «Chiudi», al massimo una volta per avvio dell'app (R2)</td></tr>
+    <tr><td>Segnale debole</td><td>Avviso per 4 s, poi diventa il badge giallo (R5); uscendo dal segnale debole il badge è verde per 5 s</td></tr>
+    <tr><td>Permesso negato</td><td>Avviso con «Chiudi» e «Apri impostazioni App» (solo sul telefono), badge rosso (R6)</td></tr>
+    <tr><td>Localizzazione spenta</td><td>«Attiva la localizzazione del telefono», solo «Chiudi», badge rosso</td></tr>
+  </table></div>
+  <p style="margin:8px 0 0;">Linguetta: con una traccia Arrivo (predefinita), Partenza, Km percorsi, Velocità, Media; senza traccia Km percorsi, Velocità, Media; in pausa «In pausa». Con il dettaglio della traccia aperto la plancia parte più a destra e lascia libero il suo bottone «indietro». Colori del tema camminiditalia.</p>
 </div>
 
 <div style="background:#fff;border-radius:10px;padding:14px 16px;margin-top:10px;max-width:600px">
