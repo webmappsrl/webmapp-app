@@ -13,7 +13,8 @@ webmapp-gps-alert {
   position: absolute;
   pointer-events: auto;
   left: 50%;
-  top: calc(env(safe-area-inset-top, 0px) + 72px);
+  // sotto la plancia di registrazione se c'è (variabile scritta dal componente), mai più in alto di così
+  top: max(calc(env(safe-area-inset-top, 0px) + 72px), var(--wm-gps-alert-top, 0px));
   width: calc(100% - 32px);
   max-width: 340px;
   transform: translateX(-50%);

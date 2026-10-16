@@ -15,9 +15,12 @@ import {Subscription} from 'rxjs';
 import {WmPipeModule} from '@wm-core/pipes/pipe.module';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GpsAlertKind, GpsAlertService} from 'src/app/services/gps-alert.service';
+import {RecorderPanelLayoutService} from 'src/app/services/recorder-panel-layout.service';
 import {prefersReducedMotion} from 'src/app/functions/prefers-reduced-motion';
 import {GpsSignalIconComponent} from './gps-signal-icon.component';
 
+/** Distanza fra il bordo inferiore della plancia di registrazione e la scheda (px). */
+export const GPS_ALERT_PANEL_GAP = 8;
 /** Tempo di lettura dell'avviso di segnale debole prima della trasformazione in badge. */
 export const GPS_POOR_ALERT_READ_MS = 4000;
 /** Durata dell'ingresso dell'avviso (ms). */
@@ -88,6 +91,8 @@ export class GpsAlertComponent implements AfterViewInit, OnDestroy {
 
   private _cdr = inject(ChangeDetectorRef);
   private _host: HTMLElement = inject(ElementRef).nativeElement;
+  private _panelLayoutSvc = inject(RecorderPanelLayoutService);
+  private _panelSub?: Subscription;
   private _readTimer: ReturnType<typeof setTimeout> | null = null;
   private _animations: Animation[] = [];
   private _sub?: Subscription;
@@ -95,6 +100,7 @@ export class GpsAlertComponent implements AfterViewInit, OnDestroy {
   /** Si iscrive agli avvisi dopo la vista, perché `_onAlert` ha bisogno di `card` per animare. */
   ngAfterViewInit(): void {
     this._sub = this.gpsAlertSvc.alert$.subscribe(kind => this._onAlert(kind));
+    this._panelSub = this._panelLayoutSvc.panelBottom$.subscribe(bottom => this._belowPanel(bottom));
   }
 
   /** Chiude l'avviso (ricerca, permesso negato o localizzazione spenta). */
@@ -110,7 +116,23 @@ export class GpsAlertComponent implements AfterViewInit, OnDestroy {
   /** Chiude la sottoscrizione e annulla timer e animazioni. */
   ngOnDestroy(): void {
     this._sub?.unsubscribe();
+    this._panelSub?.unsubscribe();
     this._stop();
+  }
+
+  /**
+   * Porta la scheda sotto la plancia di registrazione. La variabile va sull'host e non sulla
+   * scheda: `_stop()` cancella lo stile della scheda, e le animazioni non toccano l'host. Lo SCSS
+   * prende il massimo fra questa posizione e quella di sempre.
+   * @param bottom bordo inferiore della plancia nel viewport, `null` senza registrazione
+   */
+  private _belowPanel(bottom: number | null): void {
+    if (bottom == null) {
+      this._host.style.removeProperty('--wm-gps-alert-top');
+      return;
+    }
+    const top = bottom - this._host.getBoundingClientRect().top + GPS_ALERT_PANEL_GAP;
+    this._host.style.setProperty('--wm-gps-alert-top', `${top}px`);
   }
 
   /**
