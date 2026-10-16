@@ -1,9 +1,13 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
+  Input,
   OnDestroy,
   OnInit,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
@@ -29,6 +33,30 @@ import {minimizeOpenMapDetails} from 'src/app/functions/minimize-open-map-detail
 import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
 import {UgcTrackStatsParams} from '@wm-core/types/config';
 import {computeUgcTrackLocalStats} from '@wm-core/utils/ugc-track-stats';
+import {RecorderPanelLayoutService} from 'src/app/services/recorder-panel-layout.service';
+import {prefersReducedMotion} from 'src/app/functions/prefers-reduced-motion';
+
+/** Informazione mostrata sulla seconda riga della linguetta, scelta scorrendo. */
+export type RecorderMiniInfo = 'to' | 'from' | 'odo' | 'speed' | 'average';
+
+/** Riduzione della plancia alla linguetta (ms). */
+const MINIMIZE_MS = 250;
+/** Riapertura: un po' più lenta, perché l'occhio deve seguire un elemento che entra (ms). */
+const EXPAND_MS = 300;
+/** Comparsa del contenuto a fine trasformazione (ms). */
+const CONTENT_FADE_MS = 160;
+/** Dissolvenza al posto del movimento con «riduci movimento» (ms). */
+const REDUCED_FADE_MS = 140;
+/** Stessa curva del restringimento dell'avviso GPS. */
+const TOGGLE_EASING = 'cubic-bezier(.4,0,.2,1)';
+/** Informazioni della linguetta con una traccia selezionata: la prima è la predefinita. */
+const MINI_INFOS_TRACK: RecorderMiniInfo[] = ['to', 'from', 'odo', 'speed', 'average'];
+/** Informazioni della linguetta senza traccia: la prima è la predefinita. */
+const MINI_INFOS_FREE: RecorderMiniInfo[] = ['odo', 'speed', 'average'];
+/** Spostamento verticale che cambia l'informazione (px). */
+const MINI_SWIPE_PX = 16;
+/** Sotto questo spostamento il gesto è un tocco, che riapre la plancia (px). */
+const MINI_TAP_PX = 8;
 
 @Component({
   standalone: false,
@@ -38,7 +66,19 @@ import {computeUgcTrackLocalStats} from '@wm-core/utils/ugc-track-stats';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrackRecorderComponent implements OnInit, OnDestroy {
+export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('panel', {read: ElementRef}) panel?: ElementRef<HTMLElement>;
+
+  /** La linguetta è sotto `*ngIf`: si osserva quando compare. */
+  @ViewChild('mini', {read: ElementRef}) set mini(ref: ElementRef<HTMLElement> | undefined) {
+    if (this._mini) this._resizeObserver?.unobserve(this._mini);
+    this._mini = ref?.nativeElement;
+    if (this._mini) this._resizeObserver?.observe(this._mini);
+  }
+
+  /** Dettaglio della mappa aperto: la plancia lascia libero il suo bottone indietro in alto a sinistra. */
+  @Input() detailsOpen: boolean | null = false;
+
   //TODO: Gestire il flusso della registrazione dallo store creando action, effect, selector e reducer necessari
   actualSpeed: number = 0;
   // Distanza e velocità media vengono dai soli punti tenuti dalla pulizia GPS, con le stesse
@@ -46,6 +86,10 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   averageSpeed: number | null = null;
   isPaused = false;
   length: number | null = null;
+  /** Informazione scelta per la linguetta; vale per la registrazione in corso. */
+  miniInfo: RecorderMiniInfo = 'odo';
+  /** Plancia ridotta alla linguetta sul bordo destro; vale per la registrazione in corso. */
+  minimized = false;
   opacity: number = 0;
   time: {hours: number; minutes: number; seconds: number} = {
     hours: 0,
@@ -60,8 +104,19 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
   // OPTIONS.showTrackRemainingDistance.
   trackLiveDistanceVm$: Observable<TrackLiveDistanceVm> = this._store.select(trackLiveDistanceVm);
 
+  private _hasTrack = false;
+  private _mini?: HTMLElement;
+  /** Inizio del gesto sulla linguetta. */
+  private _pointerStart: {x: number; y: number} | null = null;
+  /** L'ultimo gesto è stato uno scorrimento: il click che segue non riapre la plancia. */
+  private _swiped = false;
+  private _onRecord = false;
+  private _resizeObserver: ResizeObserver | null = null;
   private _statsParams: UgcTrackStatsParams | null = null;
   private _timerInterval: any;
+  private _transition: Animation[] = [];
+  /** Trasformazione in corso: finché c'è, l'avviso GPS non si sposta. */
+  private _shape: Animation | null = null;
   private readonly _destroy$ = new Subject<void>();
 
   constructor(
@@ -72,9 +127,15 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     private _modalCtrl: ModalController,
     private _navCtrl: NavController,
     private _ugcTrackStatsSvc: UgcTrackStatsService,
+    private _panelLayoutSvc: RecorderPanelLayoutService,
   ) {}
 
   ngOnInit() {
+    this.onRecord$.pipe(takeUntil(this._destroy$)).subscribe(onRecord => {
+      this._onRecord = onRecord;
+      this._publishPanelBottom();
+    });
+    this.trackLiveDistanceVm$.pipe(takeUntil(this._destroy$)).subscribe(vm => this._onTrackChange(vm));
     this._ugcTrackStatsSvc.params$
       .pipe(takeUntil(this._destroy$))
       .subscribe(params => (this._statsParams = params));
@@ -84,10 +145,21 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     this.checkRecording();
   }
 
+  /** Osserva l'altezza della plancia, che cambia con i badge, la pausa e la riduzione. */
+  ngAfterViewInit(): void {
+    if (typeof ResizeObserver === 'undefined') return;
+    this._resizeObserver = new ResizeObserver(() => this._onResize());
+    if (this.panel) this._resizeObserver.observe(this.panel.nativeElement);
+    if (this._mini) this._resizeObserver.observe(this._mini);
+  }
+
   ngOnDestroy(): void {
     try {
       clearInterval(this._timerInterval);
     } catch (e) {}
+    this._cancelTransition();
+    this._resizeObserver?.disconnect();
+    this._panelLayoutSvc.setPanelBottom(null);
     this._destroy$.next();
     this._destroy$.complete();
   }
@@ -149,6 +221,21 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     this.reset();
   }
 
+  /**
+   * Riduce la plancia alla linguetta sul bordo destro: la linguetta parte dalla forma della plancia
+   * e si stringe verso l'angolo. L'avviso GPS si sposta a transizione finita.
+   */
+  async minimize(): Promise<void> {
+    if (this.minimized) return;
+    await this._toggle(true, MINIMIZE_MS);
+  }
+
+  /** Riapre la plancia dalla linguetta, con il percorso inverso. */
+  async expand(): Promise<void> {
+    if (!this.minimized) return;
+    await this._toggle(false, EXPAND_MS);
+  }
+
   reset(): void {
     this.opacity = 0;
     this.time = {hours: 0, minutes: 0, seconds: 0};
@@ -159,7 +246,11 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     this._store.dispatch(setEnableTrackRecorderPanel({enable: false}));
     this.focusPosition$.next(false);
 
+    this._cancelTransition();
     this.isPaused = false;
+    this.minimized = false;
+    this.miniInfo = this.miniInfos(this._hasTrack)[0];
+    this._panelLayoutSvc.setPanelBottom(null);
     this._geolocationSvc.stopRecording();
   }
 
@@ -210,7 +301,164 @@ export class TrackRecorderComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Informazioni che la linguetta può mostrare.
+   * @param hasTrack c'è una traccia selezionata
+   * @returns l'elenco nell'ordine dello scorrimento, la predefinita per prima
+   */
+  miniInfos(hasTrack: boolean): RecorderMiniInfo[] {
+    return hasTrack ? MINI_INFOS_TRACK : MINI_INFOS_FREE;
+  }
+
+  /**
+   * Posizione dell'informazione scelta nell'elenco, per lo scorrimento e i puntini.
+   * @param hasTrack c'è una traccia selezionata
+   * @returns indice in `miniInfos(hasTrack)`
+   */
+  miniIndex(hasTrack: boolean): number {
+    return Math.max(0, this.miniInfos(hasTrack).indexOf(this.miniInfo));
+  }
+
+  /**
+   * Inizio del gesto sulla linguetta.
+   * @param event pointerdown
+   */
+  onMiniPointerDown(event: PointerEvent): void {
+    this._pointerStart = {x: event.clientX, y: event.clientY};
+    this._swiped = false;
+  }
+
+  /**
+   * Fine del gesto: uno scorrimento verticale cambia informazione, verso l'alto la successiva.
+   * In pausa la riga mostra «In pausa» e lo scorrimento non cambia nulla.
+   * @param event pointerup
+   */
+  onMiniPointerUp(event: PointerEvent): void {
+    if (!this._pointerStart) return;
+    const dx = event.clientX - this._pointerStart.x;
+    const dy = event.clientY - this._pointerStart.y;
+    this._pointerStart = null;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) >= MINI_TAP_PX) this._swiped = true;
+    if (this.isPaused || Math.abs(dy) < MINI_SWIPE_PX) return;
+    const infos = this.miniInfos(this._hasTrack);
+    const next = this.miniIndex(this._hasTrack) + (dy < 0 ? 1 : -1);
+    this.miniInfo = infos[Math.max(0, Math.min(infos.length - 1, next))];
+    this._cdr.markForCheck();
+  }
+
+  /** Gesto annullato dal sistema. */
+  onMiniPointerCancel(): void {
+    this._pointerStart = null;
+  }
+
+  /** Il tocco sulla linguetta la riapre; il click che chiude uno scorrimento no. */
+  onMiniClick(): void {
+    if (this._swiped) {
+      this._swiped = false;
+      return;
+    }
+    this.expand();
+  }
+
+  /**
+   * Avanzamento sulla traccia selezionata, per la barra della plancia.
+   * @param vm distanze dalla partenza e dall'arrivo
+   * @returns percentuale da 0 a 100
+   */
+  progressPercent(vm: TrackLiveDistanceVm): number {
+    const covered = vm.distanceCovered ?? 0;
+    const total = covered + (vm.remainingDistance ?? 0);
+    return total > 0 ? (covered / total) * 100 : 0;
+  }
+
   waypoint(): void {
     this._store.dispatch(setEnablePoiRecorderPanel({enable: true}));
+  }
+
+  /**
+   * Passa fra plancia e linguetta animando l'elemento che compare dalla forma di quello che sparisce.
+   * Le animazioni non usano `fill: 'forwards'`: a fine corsa l'elemento torna ai suoi stili.
+   * @param minimized stato d'arrivo
+   * @param duration durata della trasformazione (ms)
+   */
+  private async _toggle(minimized: boolean, duration: number): Promise<void> {
+    this._cancelTransition();
+    const from = (minimized ? this.panel?.nativeElement : this._mini)?.getBoundingClientRect();
+    this.minimized = minimized;
+    this._cdr.detectChanges();
+    const el = minimized ? this._mini : this.panel?.nativeElement;
+    if (!el || !from || typeof el.animate !== 'function') {
+      this._publishPanelBottom();
+      return;
+    }
+    if (prefersReducedMotion()) {
+      // solo una dissolvenza breve, senza movimento; non si aspetta
+      this._transition.push(el.animate([{opacity: 0}, {opacity: 1}], {duration: REDUCED_FADE_MS}));
+      this._publishPanelBottom();
+      return;
+    }
+    const to = el.getBoundingClientRect();
+    const shape = el.animate(
+      [
+        {
+          transformOrigin: 'top left',
+          transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`,
+        },
+        {transformOrigin: 'top left', transform: 'none'},
+      ],
+      {duration, easing: TOGGLE_EASING},
+    );
+    this._transition.push(shape);
+    this._shape = shape;
+    // il contenuto compare quando la forma è quasi arrivata, così non si vede deformato
+    Array.from(el.children).forEach(child =>
+      this._transition.push(
+        child.animate([{opacity: 0}, {opacity: 1}], {duration: CONTENT_FADE_MS, delay: duration - CONTENT_FADE_MS / 2, fill: 'backwards'}),
+      ),
+    );
+    try {
+      await shape.finished;
+    } catch {
+      return; // annullata da un'altra transizione o dalla fine della registrazione
+    } finally {
+      if (this._shape === shape) this._shape = null;
+    }
+    this._publishPanelBottom();
+  }
+
+  /**
+   * Traccia selezionata o tolta: con una traccia nuova la linguetta passa ad Arrivo; senza traccia
+   * Arrivo e Partenza non esistono più e si passa ai km percorsi; le altre scelte restano.
+   * @param vm distanze sulla traccia selezionata
+   */
+  private _onTrackChange(vm: TrackLiveDistanceVm): void {
+    const hasTrack = vm?.remainingDistance != null;
+    if (hasTrack === this._hasTrack && this.miniInfos(hasTrack).includes(this.miniInfo)) return;
+    if (hasTrack && !this._hasTrack) this.miniInfo = 'to';
+    else if (!this.miniInfos(hasTrack).includes(this.miniInfo)) this.miniInfo = this.miniInfos(hasTrack)[0];
+    this._hasTrack = hasTrack;
+    this._cdr.markForCheck();
+  }
+
+  /** Ridimensionamento di plancia o linguetta: l'avviso si sposta solo a transizione finita. */
+  private _onResize(): void {
+    if (!this._shape) this._publishPanelBottom();
+  }
+
+  /** Annulla la transizione in corso. */
+  private _cancelTransition(): void {
+    this._transition.forEach(a => a.cancel());
+    this._transition = [];
+    this._shape = null;
+  }
+
+  /**
+   * Pubblica dove finisce l'elemento visibile — linguetta se ridotta, altrimenti la plancia —
+   * perché l'avviso GPS compaia sotto. Prima dello slider la plancia è montata ma trasparente:
+   * senza registrazione attiva non conta.
+   */
+  private _publishPanelBottom(): void {
+    const el = this.minimized ? this._mini : this.panel?.nativeElement;
+    this._panelLayoutSvc.setPanelBottom(this._onRecord && el ? el.getBoundingClientRect().bottom : null);
   }
 }

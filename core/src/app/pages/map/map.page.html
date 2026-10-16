@@ -205,7 +205,10 @@
       (goToEvt)="goToPage($event)"
     ></wm-download>
 
-    <wm-track-recorder *ngIf="enableTrackRecorderPanel$|async"></wm-track-recorder>
+    <wm-track-recorder
+      *ngIf="enableTrackRecorderPanel$|async"
+      [detailsOpen]="details.isOpen$|async"
+    ></wm-track-recorder>
     <wm-poi-recorder *ngIf="enablePoiRecorderPanel$|async"></wm-poi-recorder>
 
     <div
