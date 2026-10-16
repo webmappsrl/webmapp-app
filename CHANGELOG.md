@@ -15,11 +15,9 @@
     l'inseguimento parte a zoom finito, come nel percorso con lo slider.
     
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
-* **map-core:** changelog for bump to 79ffe78 ([e87a636](https://github.com/webmappsrl/webmapp-app/commit/e87a636a9a24ec1a464aa95fa8cbbd439a01a82c))
 <!-- COMMIT_DESC -->
     
     - fix: apply Home layer filters to map rendering and fix stale tile styling
@@ -150,7 +148,6 @@
     
     Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
     Claude-Session: https://claude.ai/code/session_016yeiLkv4wsvQonvFbJhGTh
-* **wm-core:** changelog for bump to 5795458 ([aa3bde2](https://github.com/webmappsrl/webmapp-app/commit/aa3bde2cf6fb0ee8c767209d48367a3fd6566173))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8493" target="_blank" rel="noopener noreferrer">OC[8493]</a>): etichetta generica dislivello su percorsi ad anello (#195)
@@ -903,7 +900,6 @@
     Claude-Session: https://claude.ai/code/session_01Mq7Az1cQfuA64G7vQT9S5s
     
     Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
-* **wm-types:** changelog for bump to cc301d2 ([6303adb](https://github.com/webmappsrl/webmapp-app/commit/6303adb969e4045b2b37f05b438c8598928a0bc1))
 <!-- COMMIT_DESC -->
     
     - Passaporto: passaporto del camminatore e funzioni collegate (#34)
@@ -1096,7 +1092,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>:** naviga su map e apri il pannello dettaglio per link con track/poi ([#220](https://github.com/webmappsrl/webmapp-app/issues/220)) ([610f490](https://github.com/webmappsrl/webmapp-app/commit/610f4907f33ba5880be445d38e389502c101a3f3))
 <!-- COMMIT_DESC -->
     
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>): naviga su map anche per track/poi da Home (non solo layer)
@@ -1241,7 +1236,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     Aggiorna compileSdkVersion e targetSdkVersion da 35 a 36 in gulpfile.js
     per soddisfare il requisito Google Play (targetSdk >= API 36 dal
@@ -1278,14 +1272,12 @@
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 
-
 ### Bug Fixes
 
 * align overlayXYZ URL to CARG origin ([bbb20b4](https://github.com/webmappsrl/webmapp-app/commit/bbb20b4325245de85c6b01dd13d656f545ebc5af))
 <!-- COMMIT_DESC -->
     
     Updated the hardcoded overlayXYZ URL in `map.page.html` to match the same tile origin used by the geological basemap, ensuring both display and offline download share the same source. Adjusted environment settings to align with shard carg.
-<!-- COMMIT_DESC -->
     
     - fix: CARG tile URL alignment with overlayXYZ
     Align CARG tile layer URL with `overlayXYZ` to ensure consistent tile display and downloads across offline scenarios.
@@ -1367,7 +1359,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-
 * enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
 <!-- COMMIT_DESC -->
     
@@ -1440,7 +1431,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 
 ### Bug Fixes
 
@@ -1537,7 +1527,6 @@
         refactor(localization): ♻️ streamline imports and add null check in translation service
         - Removed unused imports from `@ngx-translate/core` to improve code clarity and maintainability.
         - Added a null check for the key parameter in the `instant` method to prevent potential errors and return an empty string when the key is null.
-
         feat(analytics): ✨ add PostHog integration with capacitor support
 
         - Implement `PosthogCapacitorClient` for capturing analytics events using PostHog with Capacitor support for native platforms.
@@ -1734,7 +1723,6 @@
         code and reducing unnecessary updates.
         - chore(localization): 🌐 enhance language handling in LangService
         Updated the LangService to utilize the device's language code as the default language if available. Integrated the DeviceService to fetch the device language and combined it with the existing language configuration. This improves user experience by ensuring the app defaults to the user's preferred language when available.
-
         - refactor: rename and update type definitions <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Renames module for improved clarity and updates type definitions
         to allow null values, enhancing flexibility in data handling.
