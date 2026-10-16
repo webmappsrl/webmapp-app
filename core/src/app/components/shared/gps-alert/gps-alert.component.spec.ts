@@ -4,7 +4,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject} from 'rxjs';
 import {DeviceService} from '@wm-core/services/device.service';
 import {GpsAlertKind, GpsAlertService} from 'src/app/services/gps-alert.service';
-import {GpsAlertComponent} from './gps-alert.component';
+import {RecorderPanelLayoutService} from 'src/app/services/recorder-panel-layout.service';
+import {GPS_ALERT_PANEL_GAP, GpsAlertComponent} from './gps-alert.component';
 
 /** Sostituto di `wmtrans`: il pipe vero richiede le traduzioni in DI. */
 @Pipe({name: 'wmtrans', standalone: true})
@@ -94,6 +95,63 @@ describe('GpsAlertComponent', () => {
     alert$.next(null);
     await done;
     expect(svc.collapse).not.toHaveBeenCalled();
+  });
+
+  describe('sotto la plancia di registrazione', () => {
+    let layout: RecorderPanelLayoutService;
+    let host: HTMLElement;
+    let hostTop: number;
+
+    beforeEach(() => {
+      layout = TestBed.inject(RecorderPanelLayoutService);
+      host = fixture.nativeElement as HTMLElement;
+      hostTop = host.getBoundingClientRect().top;
+    });
+
+    /**
+     * `top` calcolato della scheda visibile.
+     * @returns il valore in px
+     */
+    function cardTop(): number {
+      const card = fixture.nativeElement.querySelector('.webmapp-gps-alert') as HTMLElement;
+      return parseFloat(getComputedStyle(card).top);
+    }
+
+    it('senza plancia resta in alto', () => {
+      alert$.next('searching');
+      expect(host.style.getPropertyValue('--wm-gps-alert-top')).toBe('');
+      expect(cardTop()).toBe(72);
+    });
+
+    it('con la plancia aperta scende sotto', () => {
+      layout.setPanelBottom(180);
+      expect(host.style.getPropertyValue('--wm-gps-alert-top')).toBe(`${180 - hostTop + GPS_ALERT_PANEL_GAP}px`);
+    });
+
+    it('con la linguetta resta alla posizione di oggi', () => {
+      alert$.next('searching');
+      layout.setPanelBottom(hostTop + 115);
+      expect(cardTop()).toBe(123);
+      layout.setPanelBottom(hostTop + 40);
+      expect(cardTop()).toBe(72);
+    });
+
+    it('si sposta quando cambia la plancia', () => {
+      alert$.next('searching');
+      layout.setPanelBottom(hostTop + 180);
+      expect(cardTop()).toBe(188);
+      layout.setPanelBottom(null);
+      expect(host.style.getPropertyValue('--wm-gps-alert-top')).toBe('');
+      expect(cardTop()).toBe(72);
+      expect(cmp.kind).toBe('searching');
+    });
+
+    it('il volo parte dalla scheda sotto la plancia', () => {
+      layout.setPanelBottom(hostTop + 180);
+      const card = showPoor();
+      (cmp as any)._toBadge();
+      expect(parseFloat(card.style.top)).toBeCloseTo(188, 0);
+    });
   });
 
   it("l'avviso di ricerca si può chiudere", () => {

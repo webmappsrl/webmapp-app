@@ -23,6 +23,11 @@ dell'app.
   localizzazione. Un avviso chiuso non ricompare fino al prossimo avvio. Da desktop la
   localizzazione spenta non si mostra.
 - **`prefers-reduced-motion`:** niente volo né pulsazione, solo dissolvenza.
+- **Con la registrazione attiva** (plancia-registrazione-riducibile): la scheda compare 8px sotto la
+  plancia di registrazione aperta, o sotto la linguetta se è ridotta, ma mai più in alto di
+  safe-area + 72px. La posizione arriva da `RecorderPanelLayoutService` come variabile CSS
+  `--wm-gps-alert-top` sull'host, e lo SCSS usa `top: max(…)`. Il volo verso il badge parte dalla
+  posizione corrente della scheda.
 - **PostHog:** `gpsAlertShown` con `kind` (e `accuracy` per il segnale debole) parte dal servizio
   dell'app, non da wm-core, così la webapp non manda eventi.
 
@@ -37,6 +42,9 @@ I vincoli di montaggio di avviso e badge (slot `fixed` di `ion-content`, badge f
   segnale scarso rivedeva l'avviso a ogni sblocco del telefono.
 - **Il verde solo uscendo da `poor`** (oc:8766): un riavvio del watcher non prova che il segnale
   sia tornato buono.
+- **Un servizio dell'app fra plancia e avviso** (plancia-registrazione-riducibile): in
+  `map.page.html` i due componenti non sono imparentati, e l'altezza della plancia cambia con la
+  traccia selezionata, la pausa e la riduzione; un secondo valore fisso si sarebbe disallineato.
 - **Con la sola posizione approssimativa e un solo fix nessun avviso** (oc:8766): limite accettato;
   il pallino mostra comunque un cerchio di precisione molto ampio.
 

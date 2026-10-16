@@ -17,6 +17,7 @@
     "src/app/components/shared/buttons/btn-add-poi/**/*.spec.ts",
     "src/app/components/shared/buttons/btn-track-recording/**/*.spec.ts",
     "src/app/components/shared/gps-alert/**/*.spec.ts",
+    "src/app/components/track-recorder-component/**/*.spec.ts",
     "src/app/functions/**/*.spec.ts",
     "src/app/pages/favourites/**/*.spec.ts",
     "src/app/pages/home/**/*.spec.ts",

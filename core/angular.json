@@ -181,6 +181,7 @@
               "src/app/components/shared/buttons/btn-add-poi",
               "src/app/components/shared/buttons/btn-track-recording",
               "src/app/components/shared/gps-alert",
+              "src/app/components/track-recorder-component",
               "src/app/functions",
               "src/app/pages/favourites",
               "src/app/pages/home",

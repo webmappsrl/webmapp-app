@@ -9,116 +9,400 @@ wm-track-recorder {
     z-index: 1000;
   }
 
+  // Variante 3 dello studio di design: compatta, larga quasi tutto lo schermo, pochi colori
+  // (verde primario per l'avanzamento, rosso per la registrazione, giallo per la pausa)
   ion-card {
     position: absolute;
-    left: calc(50px + env(safe-area-inset-left, 30px));
-    right: calc(50px + env(safe-area-inset-right, 30px));
+    left: calc(12px + env(safe-area-inset-left, 0px));
+    right: calc(12px + env(safe-area-inset-right, 0px));
     top: calc(6px + env(safe-area-inset-top, 30px));
-    border-radius: 15px;
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: var(--wm-color-light);
+    color: var(--wm-color-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-    .wm-recorder-infopanel-buttons {
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      border-bottom: 1px solid var(--wm-color-lightgray);
-      padding: 6px 4px;
-
-      // Ripristinato al trattamento neutro originale (nessun colore per-azione) su richiesta
-      // dello sviluppatore dopo la seconda verifica su device reale — mantenuta solo la forma
-      // circolare 38x38 (non era parte del feedback da annullare).
-      .wm-recorder-action-btn {
-        --background: var(--wm-color-light);
-        --color: var(--wm-color-dark);
-        --border-radius: 50%;
-        --box-shadow: none;
-        --padding-start: 0;
-        --padding-end: 0;
-        width: 38px;
-        height: 38px;
-        margin: 0;
-        font-size: 18px;
-      }
-    }
-
-    .wm-recorder-infopanel-top {
+    .wm-recorder-head {
       display: flex;
       align-items: center;
-      border-bottom: 1px solid var(--wm-color-lightgray);
-      text-align: center;
-      padding: 10px;
-
-      .wm-recorder-infopanel-top-side {
-        flex: 1;
-        // Permette al contenuto di restringersi sotto la propria larghezza intrinseca invece
-        // di forzare il contenitore a espandersi/traboccare (default flex min-width:auto) —
-        // garanzia anti-troncamento su schermi piccoli, non solo affidata allo spazio disponibile.
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 2px;
-
-        .wm-recorder-infopanel-top-side-title {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          text-transform: uppercase;
-          color: var(--wm-color-darkgrey);
-          font-weight: var(--wm-font-weight-normal);
-          font-size: var(--wm-font-xsm);
-        }
-      }
-
-      .wm-recorder-infopanel-top-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        .wm-recorder-infopanel-top-data {
-          color: var(--wm-color-dark);
-          font-weight: var(--wm-font-weight-xbold);
-          // Ridotto da --wm-font-xxlg (23px): con le due colonne laterali affiancate il timer
-          // risultava troppo dominante rispetto al resto del box (richiesta esplicita a valle
-          // della verifica su device reale).
-          font-size: var(--wm-font-xlg);
-          font-variant-numeric: tabular-nums;
-          padding: 4px;
-        }
-      }
+      gap: 12px;
     }
 
-    .wm-recorder-infopanel-bottom {
-      width: 33%;
-      display: inline-block;
-      text-align: center;
-      padding: 10px 5px;
+    .wm-recorder-paused-chip {
+      font-size: 12px;
+      font-weight: 700;
+      background: #f5b800;
+      color: var(--wm-color-dark);
+      border-radius: 10px;
+      padding: 2px 10px;
+    }
 
-      &.wm-recorder-infopanel-bottom-middle {
-        border-left: 1px solid var(--wm-color-lightgray);
-        border-right: 1px solid var(--wm-color-lightgray);
-      }
+    .wm-recorder-time {
+      // più piccolo sugli schermi stretti (iPhone SE), non sotto i 20px
+      font-size: clamp(20px, 6.5vw, 26px);
+      flex-shrink: 0;
+      white-space: nowrap;
+      font-weight: var(--wm-font-weight-xbold);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.5px;
 
-      .wm-recorder-infopanel-bottom-title {
-        text-transform: uppercase;
+      &.wm-recorder-time-paused {
         color: var(--wm-color-darkgrey);
-        font-weight: var(--wm-font-weight-normal);
-        font-size: var(--wm-font-xsm);
+      }
+    }
+
+    .wm-recorder-speeds {
+      margin-left: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 2px;
+      font-variant-numeric: tabular-nums;
+      min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
+
+      > span {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+
+    .wm-recorder-speed {
+      font-size: 15px;
+      font-weight: 700;
+
+      small {
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
+
+    .wm-recorder-average {
+      font-size: 12px;
+      color: var(--wm-color-darkgrey);
+      white-space: nowrap;
+    }
+
+    .wm-recorder-progress {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .wm-recorder-progress-bar {
+      position: relative;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--wm-color-lightgray);
+    }
+
+    .wm-recorder-progress-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 4px;
+      background: var(--wm-color-primary);
+    }
+
+    .wm-recorder-progress-marker {
+      position: absolute;
+      top: -4px;
+      width: 16px;
+      height: 16px;
+      margin-left: -8px;
+      box-sizing: border-box;
+      border-radius: 50%;
+      background: var(--wm-color-light);
+      border: 3px solid var(--wm-color-primary);
+    }
+
+    .wm-recorder-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+
+    .wm-recorder-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--wm-color-lightgray);
+    }
+
+    .wm-recorder-action-btn {
+      --background: var(--wm-color-light);
+      --color: var(--wm-color-dark);
+      --border-radius: 50%;
+      --border-width: 1.5px;
+      --border-style: solid;
+      --border-color: #dcdad6;
+      --box-shadow: none;
+      --padding-start: 0;
+      --padding-end: 0;
+      position: relative;
+      width: 40px;
+      height: 40px;
+      margin: 0;
+      font-size: 17px;
+
+      // il cerchio è da 40px, l'area di tocco resta da 44px (uso con i guanti)
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
       }
 
-      .wm-recorder-infopanel-bottom-data {
+      &.wm-recorder-pause-btn {
+        --background: var(--wm-color-dark);
+        --color: var(--wm-color-light);
+        --border-width: 0;
+      }
+
+      &.wm-recorder-resume-btn {
+        --background: #e0312b;
+        --color: var(--wm-color-light);
+        --border-width: 0;
+      }
+
+      &.wm-recorder-minimize-btn {
+        --background: var(--wm-color-lightgray);
+        --border-width: 0;
+      }
+
+      .wm-recorder-minimize-icon {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+
+    .wm-recorder-odo {
+      flex: 1;
+      text-align: right;
+      font-size: 13px;
+      color: var(--wm-color-darkgrey);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      strong {
+        font-size: 15px;
         color: var(--wm-color-dark);
-        font-weight: var(--wm-font-weight-xbold);
-        font-size: var(--wm-font-md);
         font-variant-numeric: tabular-nums;
-        padding: 4px;
-
-        span {
-          font-size: var(--wm-font-sm);
-          font-weight: var(--wm-font-weight-light);
-        }
       }
+    }
+  }
+
+  // Dettaglio della mappa aperto: lascia libero il bottone indietro di map-details
+  // (16px dal bordo, fab small da 40px, più 8px di spazio)
+  ion-card.wm-recorder-card-inset {
+    left: calc(64px + env(safe-area-inset-left, 0px));
+  }
+
+  ion-card.wm-recorder-card-hidden {
+    display: none;
+  }
+
+  // Linguetta della plancia ridotta, attaccata al bordo destro
+  .wm-recorder-mini {
+    position: absolute;
+    top: calc(6px + env(safe-area-inset-top, 30px));
+    right: 0;
+    z-index: 1000;
+    min-height: 48px;
+    max-width: 60vw;
+    padding: 10px calc(14px + env(safe-area-inset-right, 0px)) 10px 18px;
+    border: 0;
+    border-radius: 16px 0 0 16px;
+    background: var(--wm-color-light);
+    color: var(--wm-color-dark);
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    font-family: inherit;
+    overflow: hidden;
+    // lo scorrimento sulla linguetta cambia l'informazione, non sposta la mappa
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  // Seconda riga a scelta (variante D): etichetta sopra, valore sotto, puntini a lato.
+  // La finestra mostra una voce alla volta; la colonna scorre con transform.
+  .wm-recorder-mini-choice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+    min-width: 0;
+    padding-top: 5px;
+    border-top: 1px solid #ebe9e6;
+  }
+
+  .wm-recorder-mini-window {
+    position: relative;
+    height: 34px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .wm-recorder-mini-list {
+    display: flex;
+    flex-direction: column;
+    transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .wm-recorder-mini-item {
+    height: 34px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .wm-recorder-mini-item .wm-recorder-mini-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--wm-color-darkgrey);
+  }
+
+  .wm-recorder-mini-value {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+
+    ion-icon,
+    i {
+      flex-shrink: 0;
+      font-size: 13px;
+    }
+  }
+
+  .wm-recorder-mini-steps {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .wm-recorder-mini-dot-step {
+    width: 3px;
+    height: 3px;
+    border-radius: 2px;
+    background: #bdbab5;
+    transition: height 180ms ease, background-color 180ms ease;
+
+    &.wm-recorder-mini-dot-step-on {
+      height: 7px;
+      background: var(--wm-color-dark);
+    }
+  }
+
+  .wm-recorder-mini-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    max-width: 100%;
+
+    > * {
+      flex-shrink: 0;
+    }
+
+    .wm-recorder-mini-label {
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .wm-recorder-mini-time {
+    font-size: 16px;
+    font-weight: var(--wm-font-weight-xbold);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .wm-recorder-mini-detail {
+    font-size: 14px;
+    font-weight: 600;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+
+  .wm-recorder-mini-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #e0312b;
+    animation: wm-recorder-mini-pulse 1.6s ease-in-out infinite;
+  }
+
+  // In pausa: fondo scuro e giallo, lo stesso dell'avviso GPS, per non aggiungere colori
+  .wm-recorder-mini.wm-recorder-mini-paused {
+    background: var(--wm-color-dark);
+    color: var(--wm-color-light);
+
+    .wm-recorder-mini-time {
+      opacity: 0.7;
+    }
+
+
+    .wm-recorder-mini-pause-icon,
+    .wm-recorder-mini-detail {
+      color: #f5b800;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wm-recorder-mini-dot {
+      animation: none;
+    }
+
+    .wm-recorder-mini-list,
+    .wm-recorder-mini-dot-step {
+      transition: none;
+    }
+  }
+
+  @keyframes wm-recorder-mini-pulse {
+    50% {
+      opacity: 0.35;
     }
   }
 

@@ -1,4 +1,9 @@
+<!--
+  Fuori dal DOM durante la registrazione: a opacità 0 restava cliccabile e chiudeva la
+  registrazione senza la modale di salvataggio.
+-->
 <ion-fab-button
+  *ngIf="!(onRecord$|async)"
   (click)="backToMap()"
   color="light"
   size="small"
@@ -11,13 +16,64 @@
 </ion-fab-button>
 
 <ion-card
+  #panel
+  [class.wm-recorder-card-hidden]="minimized"
+  [class.wm-recorder-card-inset]="detailsOpen"
   [ngStyle]="{
       'opacity': opacity
     }"
 >
-  <div class="wm-recorder-infopanel-buttons">
+  <!-- Variante 3 dello studio di design: tempo e velocità, avanzamento sulla traccia, comandi -->
+  <div class="wm-recorder-head">
+    <span *ngIf="isPaused; else recordingHeadDot" class="wm-recorder-paused-chip">{{'In pausa' | wmtrans}}</span>
+    <ng-template #recordingHeadDot><span class="wm-recorder-mini-dot"></span></ng-template>
+    <span class="wm-recorder-time" [class.wm-recorder-time-paused]="isPaused">
+      {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
+        number : '2.0-0'}}
+    </span>
+    <div class="wm-recorder-speeds">
+      <span class="wm-recorder-speed">{{actualSpeed | number:'1.0-0'}} <small>km/h</small></span>
+      <span class="wm-recorder-average">
+        {{'pages.register.averagespeed' | wmtrans}}
+        <ng-container *ngIf="averageSpeed != null; else averageSpeedUnavailable">{{averageSpeed | number:'1.1-1'}} km/h</ng-container>
+        <ng-template #averageSpeedUnavailable>—</ng-template>
+      </span>
+    </div>
+  </div>
+  <!--
+    Partenza e arrivo vengono da trackLiveDistanceVm, condiviso con tab-detail (oc:8177): misurano
+    la posizione sulla traccia selezionata, non i km camminati. Le etichette "from"/"to" sono le
+    stesse chiavi globali del dettaglio.
+  -->
+  <ng-container *ngIf="trackLiveDistanceVm$|async as liveDistance">
+    <div class="wm-recorder-progress" *ngIf="liveDistance.distanceCovered != null || liveDistance.remainingDistance != null">
+      <div class="wm-recorder-progress-bar" *ngIf="liveDistance.distanceCovered != null && liveDistance.remainingDistance != null">
+        <div class="wm-recorder-progress-fill" [style.width.%]="progressPercent(liveDistance)"></div>
+        <span class="wm-recorder-progress-marker" [style.left.%]="progressPercent(liveDistance)"></span>
+      </div>
+      <div class="wm-recorder-progress-labels">
+        <span *ngIf="liveDistance.distanceCovered != null">
+          {{'from' | wmtrans}}
+          <wm-track-live-distance-badge
+            [distanceMeters]="liveDistance.distanceCovered"
+            [stale]="liveDistance.stale"
+            [showSuffix]="false"
+          ></wm-track-live-distance-badge>
+        </span>
+        <span *ngIf="liveDistance.remainingDistance != null">
+          {{'to' | wmtrans}}
+          <wm-track-live-distance-badge
+            [distanceMeters]="liveDistance.remainingDistance"
+            [stale]="liveDistance.stale"
+            [showSuffix]="false"
+          ></wm-track-live-distance-badge>
+        </span>
+      </div>
+    </div>
+  </ng-container>
+  <div class="wm-recorder-actions">
     <ion-button
-      class="wm-recorder-action-btn"
+      class="wm-recorder-action-btn wm-recorder-resume-btn"
       (click)="resume()"
       *ngIf="isPaused; else pauseButton"
       e2e-recorder-resume-btn
@@ -25,8 +81,8 @@
       <ion-icon name="ellipse"></ion-icon>
     </ion-button>
     <ng-template #pauseButton>
-      <ion-button class="wm-recorder-action-btn" (click)="pause()" e2e-recorder-pause-btn>
-        <ion-icon name="pause-outline"></ion-icon>
+      <ion-button class="wm-recorder-action-btn wm-recorder-pause-btn" (click)="pause()" e2e-recorder-pause-btn>
+        <ion-icon name="pause"></ion-icon>
       </ion-button>
     </ng-template>
     <ion-button class="wm-recorder-action-btn" (click)="stop()" e2e-recorder-stop-btn>
@@ -35,79 +91,124 @@
     <ion-button class="wm-recorder-action-btn" (click)="waypoint()" e2e-recorder-waypoint-btn>
       <ion-icon name="pin-outline"></ion-icon>
     </ion-button>
+    <span class="wm-recorder-odo">
+      <strong>
+        <ng-container *ngIf="length != null; else lengthUnavailable">{{length | number:'1.2-2'}}</ng-container>
+        <ng-template #lengthUnavailable>—</ng-template>
+      </strong>
+      {{'pages.register.odo' | wmtrans}}
+    </span>
+    <ion-button
+      class="wm-recorder-action-btn wm-recorder-minimize-btn"
+      (click)="minimize()"
+      [attr.aria-label]="'Riduci la plancia di registrazione' | wmtrans"
+      e2e-recorder-minimize-btn
+    >
+      <!-- freccia verso l'angolo in alto a destra, dove compare la linguetta -->
+      <svg class="wm-recorder-minimize-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"></path></svg>
+    </ion-button>
   </div>
-  <div class="wm-recorder-infopanel-top">
-    <!--
-      Le etichette "from"/"to" sono chiavi i18n globali (non "pages.register.*" come il resto
-      del box) perché condivise deliberatamente con tab-detail.component.html (oc:8177) tramite
-      trackLiveDistanceVm — stessa traduzione "Partenza"/"Arrivo" in entrambe le schermate.
-      Introdurre chiavi scoped duplicherebbe la traduzione invece di riusarla.
-    -->
+</ion-card>
+
+<!--
+  Linguetta sul bordo destro: la plancia ridotta. Etichetta statica, il cronometro non è annunciato.
+  Il tocco la riapre; lo scorrimento su e giù cambia l'informazione della seconda riga.
+-->
+<button
+  #mini
+  type="button"
+  class="wm-recorder-mini"
+  *ngIf="minimized && (onRecord$|async)"
+  (pointerdown)="onMiniPointerDown($event)"
+  (pointerup)="onMiniPointerUp($event)"
+  (pointercancel)="onMiniPointerCancel()"
+  (click)="onMiniClick()"
+  [attr.aria-label]="'Apri la plancia di registrazione' | wmtrans"
+  [class.wm-recorder-mini-paused]="isPaused"
+  e2e-recorder-expand-btn
+>
+  <span class="wm-recorder-mini-row">
+    <ion-icon *ngIf="isPaused; else recordingDot" name="pause" class="wm-recorder-mini-pause-icon" aria-hidden="true"></ion-icon>
+    <ng-template #recordingDot><span class="wm-recorder-mini-dot"></span></ng-template>
+    <span class="wm-recorder-mini-time">
+      {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
+        number : '2.0-0'}}
+    </span>
+  </span>
+  <!-- In pausa la scritta prende il posto dell'informazione: chiudere la modale di salvataggio senza scegliere lascia la registrazione in pausa -->
+  <span *ngIf="isPaused; else choice" class="wm-recorder-mini-row wm-recorder-mini-detail">
+    {{'In pausa' | wmtrans}}
+  </span>
+  <ng-template #choice>
     <ng-container *ngIf="trackLiveDistanceVm$|async as liveDistance">
-      <div class="wm-recorder-infopanel-top-side">
-        <ng-container *ngIf="liveDistance.distanceCovered != null">
-          <div class="wm-recorder-infopanel-top-side-title">{{'from' | wmtrans}}</div>
-          <wm-track-live-distance-badge
-            [distanceMeters]="liveDistance.distanceCovered"
-            [stale]="liveDistance.stale"
-            [showSuffix]="false"
-          ></wm-track-live-distance-badge>
-        </ng-container>
-      </div>
+      <span class="wm-recorder-mini-choice">
+        <ng-container
+          *ngTemplateOutlet="infoList; context: {$implicit: liveDistance.remainingDistance != null, liveDistance: liveDistance}"
+        ></ng-container>
+      </span>
     </ng-container>
-    <div class="wm-recorder-infopanel-top-center">
-      <div class="wm-recorder-infopanel-top-data">
-        {{time?.hours | number : '2.0-0'}}:{{time?.minutes| number : '2.0-0'}}:{{time?.seconds|
-          number : '2.0-0'}}
-      </div>
-    </div>
-    <ng-container *ngIf="trackLiveDistanceVm$|async as liveDistance">
-      <div class="wm-recorder-infopanel-top-side">
-        <ng-container *ngIf="liveDistance.remainingDistance != null">
-          <div class="wm-recorder-infopanel-top-side-title">{{'to' | wmtrans}}</div>
+  </ng-template>
+</button>
+
+<!-- Elenco che scorre nella finestra della linguetta, con i puntini a lato -->
+<ng-template #infoList let-hasTrack let-liveDistance="liveDistance">
+  <span class="wm-recorder-mini-window">
+    <span
+      class="wm-recorder-mini-list"
+      [style.transform]="'translateY(-' + (miniIndex(hasTrack) * 100 / miniInfos(hasTrack).length) + '%)'"
+    >
+      <span
+        *ngFor="let info of miniInfos(hasTrack)"
+        class="wm-recorder-mini-item wm-recorder-mini-{{info}}"
+        [attr.aria-hidden]="info !== miniInfo"
+        [ngSwitch]="info"
+      >
+        <span class="wm-recorder-mini-label" *ngSwitchCase="'to'">{{'to' | wmtrans}}</span>
+        <span class="wm-recorder-mini-label" *ngSwitchCase="'from'">{{'from' | wmtrans}}</span>
+        <span class="wm-recorder-mini-label" *ngSwitchCase="'odo'">{{'pages.register.odo' | wmtrans}}</span>
+        <span class="wm-recorder-mini-label" *ngSwitchCase="'speed'">{{'pages.register.currentspeed' | wmtrans}}</span>
+        <span class="wm-recorder-mini-label" *ngSwitchCase="'average'">{{'pages.register.averagespeed' | wmtrans}}</span>
+        <span class="wm-recorder-mini-value" *ngSwitchCase="'to'">
+          <!-- stesse icone del dettaglio tecnico della traccia (tab-detail di wm-core) -->
+          <i class="icon-outline-flag" aria-hidden="true"></i>
           <wm-track-live-distance-badge
             [distanceMeters]="liveDistance.remainingDistance"
             [stale]="liveDistance.stale"
             [showSuffix]="false"
           ></wm-track-live-distance-badge>
-        </ng-container>
-      </div>
-    </ng-container>
-  </div>
-  <div class="wm-recorder-infopanel-bottom">
-    <div class="wm-recorder-infopanel-bottom-title">
-      {{'pages.register.currentspeed' | wmtrans}}
-    </div>
-    <div class="wm-recorder-infopanel-bottom-data">
-      {{actualSpeed | number:'1.0-0'}}<span>km/h</span>
-    </div>
-  </div>
-  <div
-    class="
-        wm-recorder-infopanel-bottom
-        wm-recorder-infopanel-bottom-middle
-      "
-  >
-    <div class="wm-recorder-infopanel-bottom-title">
-      {{'pages.register.averagespeed' | wmtrans}}
-    </div>
-    <div class="wm-recorder-infopanel-bottom-data">
-      <ng-container *ngIf="averageSpeed != null; else averageSpeedUnavailable">
-        {{averageSpeed | number:'1.1-1'}}<span>km/h</span>
-      </ng-container>
-      <ng-template #averageSpeedUnavailable>—</ng-template>
-    </div>
-  </div>
-  <div class="wm-recorder-infopanel-bottom">
-    <div class="wm-recorder-infopanel-bottom-title">
-      {{'pages.register.odo' | wmtrans}}
-    </div>
-    <div class="wm-recorder-infopanel-bottom-data">
-      <ng-container *ngIf="length != null; else lengthUnavailable">{{length | number:'1.2-2'}}</ng-container>
-      <ng-template #lengthUnavailable>—</ng-template>
-    </div>
-  </div>
-</ion-card>
+        </span>
+        <span class="wm-recorder-mini-value" *ngSwitchCase="'from'">
+          <i class="icon-outline-pin" aria-hidden="true"></i>
+          <wm-track-live-distance-badge
+            [distanceMeters]="liveDistance.distanceCovered"
+            [stale]="liveDistance.stale"
+            [showSuffix]="false"
+          ></wm-track-live-distance-badge>
+        </span>
+        <span class="wm-recorder-mini-value" *ngSwitchCase="'odo'">
+          <ion-icon name="trending-up-outline" aria-hidden="true"></ion-icon>
+          <ng-container *ngIf="length != null; else missing">{{length | number:'1.2-2'}} km</ng-container>
+        </span>
+        <span class="wm-recorder-mini-value" *ngSwitchCase="'speed'">
+          <ion-icon name="speedometer-outline" aria-hidden="true"></ion-icon>
+          {{actualSpeed | number:'1.0-0'}} km/h
+        </span>
+        <span class="wm-recorder-mini-value" *ngSwitchCase="'average'">
+          <ion-icon name="stats-chart-outline" aria-hidden="true"></ion-icon>
+          <ng-container *ngIf="averageSpeed != null; else missing">{{averageSpeed | number:'1.1-1'}} km/h</ng-container>
+        </span>
+      </span>
+    </span>
+  </span>
+  <span class="wm-recorder-mini-steps" aria-hidden="true">
+    <span
+      *ngFor="let info of miniInfos(hasTrack)"
+      class="wm-recorder-mini-dot-step"
+      [class.wm-recorder-mini-dot-step-on]="info === miniInfo"
+    ></span>
+  </span>
+</ng-template>
+<ng-template #missing>—</ng-template>
 
 <div class="wm-recorder-btnrec-container" *ngIf="!(onRecord$|async)">
   <wm-btn-rec (move)="recordMove($event)" (unlocked)="recordStart($event)"> </wm-btn-rec>
