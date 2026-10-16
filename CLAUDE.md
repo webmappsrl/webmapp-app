@@ -85,7 +85,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 
 | Argomento | Cosa copre | Ticket | Pagina |
 |---|---|---|---|
-| Avvisi sullo stato del GPS | Avviso animato che diventa badge sul bottone della posizione, regole per episodio e per avvio; il dominio è in wm-core | oc:8766 | [docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md](docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md) |
+| Avvisi sullo stato del GPS | Avviso animato che diventa badge sul bottone della posizione, regole per episodio e per avvio, posizione sotto la plancia di registrazione; il dominio è in wm-core | oc:8766, plancia-registrazione-riducibile | [docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md](docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md) |
 | Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava | oc:8382 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | CI, preview e deploy | I workflow, i submodule testati dalla loro directory, il fork guard | oc:8023 | [docs/knowledge/ci-e-pipeline.md](docs/knowledge/ci-e-pipeline.md) |
 | Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
@@ -95,7 +95,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Log in produzione | Il criterio di triage a due assi, cosa resta e perché | oc:8369 | [docs/knowledge/log-in-produzione.md](docs/knowledge/log-in-produzione.md) |
 | Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi; dettaglio POI in wm-core | oc:8313, oc:8458, oc:8427, oc:8181, oc:8406 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
-| Registrazione di una traccia | I badge partenza/arrivo, la «flex sandwich», cosa è stato provato e ritirato, i valori della plancia e del riepilogo letti da wm-core, l'avvio senza slider da «Inizia il tuo cammino» | oc:8284, oc:8743, oc:8762 | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
+| Registrazione di una traccia | La plancia con la barra di avanzamento partenza/arrivo, la riduzione a linguetta con l'informazione a scelta, cosa è stato provato e ritirato, i valori della plancia e del riepilogo letti da wm-core, l'avvio senza slider da «Inizia il tuo cammino» | oc:8284, oc:8743, oc:8762, plancia-registrazione-riducibile | [docs/knowledge/registrazione-traccia.md](docs/knowledge/registrazione-traccia.md) |
 | Tab Passaporto | Voce e rotta solo camminiditalia, guardia che aspetta il login ripristinato, ascolto del logout a pagina visibile | oc:8703 | [docs/knowledge/tab-passaporto.md](docs/knowledge/tab-passaporto.md) |
 | Temi e varianti di shard | Come questo prodotto usa `fileReplacements` e i fogli per app — che stanno in `wm-core`, e lì è documentato il dominio; qui i tre temi nati qui, i dodici punti che invocano il controllo sui temi, il gulpfile; la searchbar camminiditalia; quando estrarre una classe base (`MapPageBase`) | oc:8305, oc:8391, oc:8414, oc:8406, oc:8613, oc:8703, oc:8764, oc:8762 | [docs/knowledge/temi-e-varianti-di-shard.md](docs/knowledge/temi-e-varianti-di-shard.md) |
 
@@ -108,6 +108,8 @@ la classe base e il flag della variante della mappa, più il deploy web multi-te
 dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
 `downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
 su `<wm-map>`), `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
-mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire) e
+mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire),
 `avvisi-gps` (lo slot `fixed` di `ion-content` che rende largo zero un figlio `fixed`, dove montare
-il badge, le animazioni Web Animations che prevalgono sugli stili inline).
+il badge, le animazioni Web Animations che prevalgono sugli stili inline) e `test-unitari` (i due
+elenchi di cartelle da aggiornare per uno spec nuovo, l'host di TestBed che è un `div`, Node 22 e i
+timeout di Karma in locale, le animazioni infinite).
