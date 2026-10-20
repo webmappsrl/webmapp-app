@@ -27,7 +27,9 @@ non va confusa con i fogli per app.
 camminiditalia lo usano, nell'app, `profile.page.ts`, `tabs.page.ts` e `tabs-routing.module.ts`
 (voce e rotta del tab Passaporto, oc:8703), `map.page.ts` (bottone «Inizia il cammino» e fab del solo POI,
 oc:8762), e in `wm-core` `home-layer`, `search-bar`, `layer-box`,
-`search-box` e `ugc-box` (senza il bottone di import da file, oc:8764). Una variante può avere
+`search-box`, `ugc-box` (senza il bottone di import da file, oc:8764), `track-properties` e
+`ugc-track-properties` (accendono il flag `showExperiences` della classe base, che monta la
+sezione delle esperienze, oc:8169; il dominio è documentato in `wm-core`). Una variante può avere
 anche uno stile tutto suo, aggiungendo un `.scss` ai
 `styleUrls` del gemello, come la tab bar per l'icona SVG del Passaporto.
 
@@ -60,7 +62,8 @@ ricordare.
   stesso motivo. La logica nuova sta in componenti standalone a parte (`webmapp-btn-start-walk`,
   `webmapp-btn-add-poi`), perché Karma compila con la configuration di default e non vedrebbe mai
   la variante. Il criterio coincide con quello già applicato in `wm-core` (home-layer, search-bar,
-  layer-box, search-box, ugc-box), descritto nella sua pagina.
+  layer-box, search-box, ugc-box, track-properties, ugc-track-properties), descritto nella sua
+  pagina.
 - **Un'altezza hardcoded è stata rimossa invece che sincronizzata** (oc:8305):
   `favourites-layers.component.scss` non ripete più l'altezza di `.wm-box`, che ora ce l'ha propria
   in `wm-core` — elimina alla radice il rischio di disallineamento cross-repo che un numero copiato

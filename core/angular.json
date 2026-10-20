@@ -135,6 +135,14 @@
                 {
                   "replace": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.ts",
                   "with": "src/app/shared/wm-core/projects/wm-core/src/box/ugc-box/ugc-box.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/track-properties/track-properties.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/track-properties/track-properties.component.camminiditalia.ts"
+                },
+                {
+                  "replace": "src/app/shared/wm-core/projects/wm-core/src/ugc-track-properties/ugc-track-properties.component.ts",
+                  "with": "src/app/shared/wm-core/projects/wm-core/src/ugc-track-properties/ugc-track-properties.component.camminiditalia.ts"
                 }
               ]
             },
@@ -186,7 +194,11 @@
               "src/app/pages/favourites",
               "src/app/pages/home",
               "src/app/pages/map/map-details",
-              "src/app/pages/passport"
+              "src/app/pages/passport",
+              "src/app/shared/wm-core/projects/wm-core/src/experiences",
+              "src/app/shared/wm-core/projects/wm-core/src/image-picker",
+              "src/app/shared/wm-core/projects/wm-core/src/track-properties",
+              "src/app/shared/wm-core/projects/wm-core/src/ugc-track-properties"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["src/theme/default"]
