@@ -24,7 +24,8 @@ perché delle scelte in
 
 - **Classe base in un terzo file solo se la variante non duplica logica**: cambia solo il template,
   oppure sovrascrive un campo o un metodo e aggiunge il resto (`map.page`, e in `wm-core`
-  home-layer, search-bar, layer-box, search-box, ugc-box). Se la logica diverge in più punti, la variante duplica il file intero
+  home-layer, search-bar, layer-box, search-box, ugc-box, track-properties, ugc-track-properties).
+  Se la logica diverge in più punti, la variante duplica il file intero
   (`home`, `profile`). La base porta `@Directive()` astratta e non è mai soggetta a
   `fileReplacements` (oc:8762).
 
