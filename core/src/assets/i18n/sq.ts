@@ -330,7 +330,7 @@ export const appSQ = {
       'modalexit': {
         'cancel': 'Anulo',
         'confirm': 'Fshi',
-        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga Webmapp. Operacioni nuk mund të anulohet.',
+        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga serverat tanë. Operacioni nuk mund të anulohet.',
         'title': 'Fshi përgjithmonë?'
       },
       'modalphotos': {

@@ -330,7 +330,7 @@ export const appES = {
       'modalexit': {
         'cancel': 'Cancelar',
         'confirm': 'Eliminar',
-        'text': 'Al finalizar la acción, la ruta se eliminará de tu perfil y de Webmapp. La operación no se puede deshacer.',
+        'text': 'Al finalizar la acción, la ruta se eliminará de tu perfil y de nuestros servidores. La operación no se puede deshacer.',
         'title': '¿Eliminar permanentemente?'
       },
       'modalphotos': {

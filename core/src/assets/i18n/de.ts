@@ -330,7 +330,7 @@ export const appDE = {
       'modalexit': {
         'cancel': 'Abbrechen',
         'confirm': 'Löschen',
-        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von Webmapp gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
+        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von unseren Servern gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
         'title': 'Dauerhaft löschen?'
       },
       'modalphotos': {

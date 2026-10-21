@@ -333,7 +333,7 @@ export const appEN = {
       'modalexit': {
         'cancel': 'Cancel',
         'confirm': 'Delete',
-        'text': 'By completing the action, the track will be deleted from your profile and from Webmapp. The operation cannot be canceled.',
+        'text': 'By completing the action, the track will be deleted from your profile and from our servers. The operation cannot be canceled.',
         'title': 'Delete forever?'
       },
       'modalphotos': {
