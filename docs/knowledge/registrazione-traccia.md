@@ -20,6 +20,8 @@ Su camminiditalia (oc:8762) la registrazione parte dal bottone «Inizia il cammi
 
 Distanza e velocità media della plancia, e distanza, tempo e dislivello del riepilogo dopo il salvataggio (`modal-success`), vengono da `wm-core` (`computeUgcTrackLocalStats`, `UgcTrackStatsService`) e sono calcolati sui soli punti tenuti dalla pulizia GPS, la stessa del server: l'app non ha più un calcolo suo. La velocità attuale resta quella del GPS grezzo, e il timer è il cronometro, che esclude le pause. Il dettaglio sta in `wm-core`, `docs/knowledge/8743-app-dettagli-tecnici-e-mappa-delle-tracce-ugc-dai-dati-del-server-calcolo-al-volo-con-la-stessa-pulizia-gps-se-non-sincronizzate.md`.
 
+Scartare una registrazione appena conclusa — «ESCI SENZA SALVARE» o «Elimina registrazione» nella modale di salvataggio (`ModalSaveComponent`) — chiede conferma con l'alert «Elimina per sempre?» (`pages.register.modalexit.*`, nei file i18n dell'app), poi cancella solo i punti in locale (`removeCurrentUgcTrackLocations()`): la traccia non è mai arrivata al server. Per i POI (`isWaypoint`) l'alert non compare. L'eliminazione di una traccia già salvata è un altro flusso, in `wm-core` (`ugc-track-properties-base.component.ts`), con un testo suo.
+
 ## Perché così
 
 - **I due badge non sono «km percorsi»** (oc:8284), ed è la confusione da evitare: misurano la posizione GPS corrente proiettata sulla traccia ufficiale, non quanto è stato camminato in questa sessione. `length`, la riga già esistente, è il dato della registrazione reale.
@@ -30,6 +32,7 @@ Distanza e velocità media della plancia, e distanza, tempo e dislivello del rie
 - **Lo scorrimento della linguetta è verticale** (plancia-registrazione-riducibile): su Android, con la navigazione a gesti, trascinare dal bordo destro è il gesto «indietro» del sistema, e la linguetta sta proprio lì.
 - **La velocità media della linguetta non usa `analytics-outline`** (plancia-registrazione-riducibile): è l'icona della registrazione.
 - **Plancia e riepilogo leggono i valori da `wm-core`** (oc:8743): con la copia di `GeoutilsService` dell'app, che usava tutti i punti, la stessa traccia poteva mostrare numeri diversi in plancia, riepilogo e pannello. La copia è stata eliminata.
+- **«dai nostri server» nella conferma di scarto, non il nome di un brand** (oc:8808): la stringa di default è comune a tutte le istanze. Il testo non descrive alla lettera l'operazione (la traccia è solo sul dispositivo): è stato proposto «la registrazione verrà eliminata» ed è stato scelto di restare su questa formulazione. Un cliente che volesse un testo suo può averlo con l'override `TRANSLATIONS` della config, senza toccare il default.
 
 ## Cosa è stato provato e ritirato
 

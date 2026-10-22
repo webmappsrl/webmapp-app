@@ -330,7 +330,7 @@ export const appPR = {
       'modalexit': {
         'cancel': 'Cancelar',
         'confirm': 'Excluir',
-        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e do Webmapp. A operação não pode ser desfeita.',
+        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e dos nossos servidores. A operação não pode ser desfeita.',
         'title': 'Excluir permanentemente?'
       },
       'modalphotos': {

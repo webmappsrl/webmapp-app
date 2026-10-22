@@ -333,7 +333,7 @@ export const appFR = {
       'modalexit': {
         'cancel': 'Annuler',
         'confirm': 'Effacer',
-        'text': 'En complétant l\'action, la piste sera supprimée de votre profil et de Webmapp. L\'opération ne peut pas être annulée.',
+        'text': 'En complétant l\'action, la piste sera supprimée de votre profil et de nos serveurs. L\'opération ne peut pas être annulée.',
         'title': 'Supprimer pour toujours?'
       },
       'modalphotos': {

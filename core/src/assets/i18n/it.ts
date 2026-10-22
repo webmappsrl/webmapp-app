@@ -336,7 +336,7 @@ export const appIT = {
         'cancel': 'Annulla',
         'confirm': 'Elimina',
         'text':
-          'Completando l’azione la traccia verrà eliminata dal tuo profilo e da Webmapp. L’operazione non può essere annullata.',
+          'Completando l’azione la traccia verrà eliminata dal tuo profilo e dai nostri server. L’operazione non può essere annullata.',
         'title': 'Elimina per sempre?',
       },
       'modalphotos': {
