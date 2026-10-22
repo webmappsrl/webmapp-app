@@ -3,12 +3,14 @@ import {CommonModule} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ModalController, NavController} from '@ionic/angular';
 import {MockStore, provideMockStore} from '@ngrx/store/testing';
-import {of, ReplaySubject} from 'rxjs';
+import {BehaviorSubject, of, ReplaySubject} from 'rxjs';
+import {Location} from '@wm-types/feature';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {GeoutilsService} from '@wm-core/services/geoutils.service';
 import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
 import {confTRACKFORMS} from '@wm-core/store/conf/conf.selector';
 import {
+  mapDetailsStatus,
   onRecord,
   trackLiveDistanceVm,
   TrackLiveDistanceVm,
@@ -37,17 +39,29 @@ describe('TrackRecorderComponent', () => {
   let cmp: TrackRecorderComponent;
   let store: MockStore;
   let geolocation: jasmine.SpyObj<GeolocationService>;
+  let kept$: BehaviorSubject<Location[]>;
 
   /**
    * Crea il componente con lo stato di registrazione indicato.
    * @param recording valore del selettore `onRecord`
    * @param distance valore del selettore `trackLiveDistanceVm`
+   * @param initialKept punti tenuti già presenti all'iscrizione
    */
-  async function setup(recording: boolean, distance: TrackLiveDistanceVm = NO_DISTANCE): Promise<void> {
+  async function setup(
+    recording: boolean,
+    distance: TrackLiveDistanceVm = NO_DISTANCE,
+    initialKept: Location[] = [],
+  ): Promise<void> {
+    kept$ = new BehaviorSubject<Location[]>(initialKept);
     geolocation = jasmine.createSpyObj<GeolocationService>(
       'GeolocationService',
       ['startRecording', 'stopRecording', 'pauseRecording', 'resumeRecording'],
-      {onLocationChange$: new ReplaySubject<any>(1), paused: false, recordedFeature: null},
+      {
+        onLocationChange$: new ReplaySubject<any>(1),
+        paused: false,
+        recordedFeature: null,
+        recordedKeptLocations$: kept$,
+      },
     );
     await TestBed.configureTestingModule({
       declarations: [TrackRecorderComponent, FakeTransPipe],
@@ -59,6 +73,7 @@ describe('TrackRecorderComponent', () => {
             {selector: onRecord, value: recording},
             {selector: trackLiveDistanceVm, value: distance},
             {selector: confTRACKFORMS, value: []},
+            {selector: mapDetailsStatus, value: 'background'},
           ],
         }),
         {provide: GeolocationService, useValue: geolocation},
@@ -603,6 +618,212 @@ describe('TrackRecorderComponent', () => {
       await setup(true);
       expect(query('.wm-recorder-progress')).toBeNull();
       expect(query('ion-card wm-track-live-distance-badge')).toBeNull();
+    });
+  });
+
+  describe('riduzione automatica', () => {
+    const T0 = new Date(2026, 9, 22, 10, 0, 0);
+    let minimize: jasmine.Spy;
+    let pts: Location[];
+
+    /**
+     * Punto a una certa distanza verso nord da un'origine fissa.
+     * @param metersNorth metri a nord dell'origine
+     * @param time ora del punto, usata per riconoscere un punto nuovo
+     * @param accuracy accuratezza dichiarata (m)
+     * @returns il punto
+     */
+    function point(metersNorth: number, time: number, accuracy = 5): Location {
+      return {latitude: 43.7 + metersNorth / 111195, longitude: 10.4, accuracy, time};
+    }
+
+    /**
+     * Aggiunge un punto tenuto ed emette l'elenco, come fa la pulizia GPS.
+     * @param p il punto
+     */
+    function keep(p: Location): void {
+      pts = [...pts, p];
+      kept$.next(pts);
+    }
+
+    /**
+     * Crea il componente con l'orologio finto e la riduzione spiata.
+     * @param recording registrazione attiva
+     * @param initialKept punti già presenti all'iscrizione
+     */
+    async function start(recording = true, initialKept: Location[] = []): Promise<void> {
+      pts = [...initialKept];
+      await setup(recording, NO_DISTANCE, initialKept);
+      minimize = spyOn(cmp, 'minimize').and.resolveTo();
+    }
+
+    beforeEach(() => {
+      jasmine.clock().install();
+      jasmine.clock().mockDate(T0);
+    });
+
+    afterEach(() => jasmine.clock().uninstall());
+
+    it('riduce dopo 15 s e 20 m', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      keep(point(21, 2));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it('non riduce prima di 15 s', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(14000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('non riduce sotto i 20 m', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      keep(point(19, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it("non riduce entro l'accuratezza del punto", async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      keep(point(25, 2, 30));
+      expect(minimize).not.toHaveBeenCalled();
+      keep(point(35, 3, 30));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it("non riduce entro l'accuratezza del punto di partenza", async () => {
+      await start();
+      keep(point(0, 1, 35));
+      jasmine.clock().tick(15000);
+      keep(point(30, 2, 5));
+      expect(minimize).not.toHaveBeenCalled();
+      keep(point(40, 3, 5));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it("il valore iniziale fissa solo la partenza", async () => {
+      await start(true, [point(0, 1), point(500, 2)]);
+      jasmine.clock().tick(60000);
+      expect(minimize).not.toHaveBeenCalled();
+      keep(point(510, 3));
+      expect(minimize).not.toHaveBeenCalled();
+      keep(point(521, 4));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it('ignora la riemissione dello stesso ultimo punto', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      cmp.minimized = true;
+      keep(point(21, 2));
+      cmp.minimized = false;
+      kept$.next([...pts]);
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it("ignora l'elenco vuoto", async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      expect(() => kept$.next([])).not.toThrow();
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('non riduce se già ridotta', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      cmp.minimized = true;
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('un tocco sulla plancia fa ripartire il conteggio', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(10000);
+      cmp.panel!.nativeElement.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+      jasmine.clock().tick(10000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+      jasmine.clock().tick(5000);
+      keep(point(42, 3));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it('un tocco su un bottone della plancia fa ripartire il conteggio', async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(10000);
+      const btn = query('[e2e-recorder-waypoint-btn]') as HTMLElement;
+      btn.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+      jasmine.clock().tick(10000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('dopo la riapertura riparte e riduce di nuovo', async () => {
+      await start();
+      keep(point(0, 1));
+      cmp.minimized = true;
+      jasmine.clock().tick(60000);
+      await cmp.expand();
+      jasmine.clock().tick(10000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+      jasmine.clock().tick(5000);
+      keep(point(42, 3));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it('in pausa non riduce', async () => {
+      await start();
+      keep(point(0, 1));
+      await cmp.pause();
+      jasmine.clock().tick(15000);
+      keep(point(50, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('alla ripresa riparte da zero', async () => {
+      await start();
+      keep(point(0, 1));
+      await cmp.pause();
+      jasmine.clock().tick(60000);
+      keep(point(100, 2));
+      await cmp.resume();
+      jasmine.clock().tick(10000);
+      keep(point(121, 3));
+      expect(minimize).not.toHaveBeenCalled();
+      jasmine.clock().tick(5000);
+      keep(point(142, 4));
+      expect(minimize).toHaveBeenCalledTimes(1);
+    });
+
+    it("all'avvio riparte da zero", async () => {
+      await start();
+      keep(point(0, 1));
+      jasmine.clock().tick(60000);
+      cmp.recordStart(true);
+      jasmine.clock().tick(10000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
+    });
+
+    it('non riduce senza registrazione', async () => {
+      await start(false);
+      keep(point(0, 1));
+      jasmine.clock().tick(15000);
+      keep(point(21, 2));
+      expect(minimize).not.toHaveBeenCalled();
     });
   });
 

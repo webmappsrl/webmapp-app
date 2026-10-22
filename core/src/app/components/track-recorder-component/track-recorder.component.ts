@@ -32,7 +32,8 @@ import {
 import {minimizeOpenMapDetails} from 'src/app/functions/minimize-open-map-details';
 import {UgcTrackStatsService} from '@wm-core/services/ugc-track-stats.service';
 import {UgcTrackStatsParams} from '@wm-core/types/config';
-import {computeUgcTrackLocalStats} from '@wm-core/utils/ugc-track-stats';
+import {computeUgcTrackLocalStats, haversineMeters} from '@wm-core/utils/ugc-track-stats';
+import {Location} from '@wm-types/feature';
 import {RecorderPanelLayoutService} from 'src/app/services/recorder-panel-layout.service';
 import {prefersReducedMotion} from 'src/app/functions/prefers-reduced-motion';
 
@@ -57,6 +58,10 @@ const MINI_INFOS_FREE: RecorderMiniInfo[] = ['odo', 'speed', 'average'];
 const MINI_SWIPE_PX = 16;
 /** Sotto questo spostamento il gesto è un tocco, che riapre la plancia (px). */
 const MINI_TAP_PX = 8;
+/** Tempo minimo dal punto di partenza prima della riduzione automatica (ms). */
+const AUTO_MINIMIZE_MS = 15000;
+/** Spostamento netto minimo dal punto di partenza per la riduzione automatica (m). */
+const AUTO_MINIMIZE_M = 20;
 
 @Component({
   standalone: false,
@@ -104,7 +109,14 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
   // OPTIONS.showTrackRemainingDistance.
   trackLiveDistanceVm$: Observable<TrackLiveDistanceVm> = this._store.select(trackLiveDistanceVm);
 
+  /**
+   * Punto di partenza della riduzione automatica: istante e posizione da cui si contano tempo e
+   * spostamento. Si rifissa all'avvio, alla riapertura, alla ripresa e a ogni tocco sulla plancia.
+   */
+  private _autoAnchor: {time: number; location: Location | null} = {time: 0, location: null};
   private _hasTrack = false;
+  /** Ora dell'ultimo punto tenuto già visto: una riemissione dello stesso punto non conta. */
+  private _lastKeptTime: number | null = null;
   private _mini?: HTMLElement;
   /** Inizio del gesto sulla linguetta. */
   private _pointerStart: {x: number; y: number} | null = null;
@@ -142,6 +154,13 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
     this._geolocationSvc.onLocationChange$.pipe(takeUntil(this._destroy$)).subscribe(() => {
       this.updateMap();
     });
+    // Il valore già presente (BehaviorSubject, anche dopo una ripresa all'avvio) fissa solo il
+    // punto di partenza: la sua replica all'iscrizione ha la stessa ora e viene ignorata
+    this._resetAutoMinimize();
+    this._lastKeptTime = this._autoAnchor.location?.time ?? null;
+    this._geolocationSvc.recordedKeptLocations$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe(kept => this._onKeptLocations(kept));
     this.checkRecording();
   }
 
@@ -177,6 +196,7 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
     // distanze inizio/fine restano disponibili nel box (vedi trackLiveDistanceVm$).
     // Un pannello chiuso resta chiuso (oc:8762).
     minimizeOpenMapDetails(this._store);
+    this._resetAutoMinimize();
     this.checkRecording();
   }
 
@@ -233,7 +253,14 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
   /** Riapre la plancia dalla linguetta, con il percorso inverso. */
   async expand(): Promise<void> {
     if (!this.minimized) return;
+    // Dopo la riapertura il conteggio riparte: camminando, la plancia si riduce di nuovo
+    this._resetAutoMinimize();
     await this._toggle(false, EXPAND_MS);
+  }
+
+  /** Un tocco sulla plancia aperta, bottoni compresi, fa ripartire il conteggio della riduzione automatica. */
+  onPanelPointerDown(): void {
+    this._resetAutoMinimize();
   }
 
   reset(): void {
@@ -263,6 +290,7 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
     await this._geolocationSvc.resumeRecording();
     this.focusPosition$.next(true);
     this.isPaused = false;
+    this._resetAutoMinimize();
     // Stesso motivo di recordStart(): se durante la pausa l'utente ha riaperto un pannello di
     // dettaglio (map-details.component.ts lo forza sempre a 'open' all'apertura di una
     // feature), riprendere la registrazione deve tornare a liberare la mappa.
@@ -438,6 +466,45 @@ export class TrackRecorderComponent implements OnInit, AfterViewInit, OnDestroy 
     else if (!this.miniInfos(hasTrack).includes(this.miniInfo)) this.miniInfo = this.miniInfos(hasTrack)[0];
     this._hasTrack = hasTrack;
     this._cdr.markForCheck();
+  }
+
+  /**
+   * Rifissa il punto di partenza della riduzione automatica: adesso, dall'ultimo punto tenuto.
+   */
+  private _resetAutoMinimize(): void {
+    const kept = this._geolocationSvc.recordedKeptLocations$.value;
+    this._autoAnchor = {time: Date.now(), location: kept.length ? kept[kept.length - 1] : null};
+  }
+
+  /**
+   * Nuovo elenco di punti tenuti dalla pulizia GPS: se l'utente cammina da abbastanza tempo e si è
+   * spostato abbastanza dal punto di partenza, la plancia si riduce. L'ultimo punto dell'elenco è
+   * sempre un punto buono; contano solo i punti nuovi, non le riemissioni dopo un ricalcolo.
+   * In pausa i punti continuano ad arrivare: il controllo su `isPaused` deve restare qui.
+   * @param kept i punti tenuti, in ordine
+   */
+  private _onKeptLocations(kept: Location[]): void {
+    if (!kept?.length) return;
+    const last = kept[kept.length - 1];
+    if (last.time === this._lastKeptTime) return;
+    this._lastKeptTime = last.time ?? null;
+    if (!this._autoAnchor.location) {
+      this._autoAnchor.location = last;
+      return;
+    }
+    if (!this._onRecord || this.isPaused || this.minimized) return;
+    const meters = haversineMeters(this._autoAnchor.location, last);
+    // Lo spostamento deve superare l'errore peggiore fra partenza e ultimo punto: da fermi, sul
+    // web, arriva un punto al secondo e l'oscillazione supera facilmente i 20 m; all'avvio il
+    // primo punto, che fa da partenza, è spesso il meno preciso
+    const accuracy = Math.max(last.accuracy ?? 0, this._autoAnchor.location.accuracy ?? 0);
+    if (
+      Date.now() - this._autoAnchor.time >= AUTO_MINIMIZE_MS &&
+      meters >= AUTO_MINIMIZE_M &&
+      meters > accuracy
+    ) {
+      this.minimize();
+    }
   }
 
   /** Ridimensionamento di plancia o linguetta: l'avviso si sposta solo a transizione finita. */
