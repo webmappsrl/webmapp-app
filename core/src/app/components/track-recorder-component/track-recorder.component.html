@@ -19,6 +19,7 @@
   #panel
   [class.wm-recorder-card-hidden]="minimized"
   [class.wm-recorder-card-inset]="detailsOpen"
+  (pointerdown)="onPanelPointerDown()"
   [ngStyle]="{
       'opacity': opacity
     }"
