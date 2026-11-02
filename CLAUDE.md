@@ -53,8 +53,9 @@ Tutti dalla directory `core/`, salvo dove indicato.
 | Build | `npm run build` (`ng build`), oppure `ionic build` (output in `www/`) |
 | Deploy web generico | `npm run deploy-to-web` — include già la build |
 | Deploy web camminiditalia | `npm run deploy-to-web-camminiditalia` — output in `www-camminiditalia/` |
-| Build native | `gulp build-android-apk` / `build-android-bundle` / `build-ios` — **`gulp build-android` non compila**, prepara soltanto |
+| Build native | `gulp build-android` (prepara, R8 compreso; `--skip-r8` solo in emergenza), poi compilazione e firma da Android Studio; `gulp build-ios` — `build-android-apk`/`-bundle` funzionano solo per lo shard geohub |
 | Test unitari | `npm run test` (Karma + Jasmine) |
+| Test delle funzioni del gulpfile | `npm run test:gulp` dalla root |
 | Test E2E | `npx cypress open` (interattivo) o `npx cypress run` (headless) |
 | Lint | `npm run lint` |
 
@@ -91,7 +92,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
 | Deep link | Listener nativo `appUrlOpen`, navigazione Home→Map, apertura del pannello al mount | oc:8470, oc:7980 | [docs/knowledge/deep-link.md](docs/knowledge/deep-link.md) |
 | Download offline e `hitMapUrl` | Il flusso per lo shard carg, l'invariante con `map-core` | oc:8190 | [docs/knowledge/download-offline-carg.md](docs/knowledge/download-offline-carg.md) |
-| Gulp, risorse native e permessi | Validazione delle dimensioni, permessi Android, immagini di profilo, posthog | oc:8246, oc:7294, oc:7480, oc:8105, oc:8277 | [docs/knowledge/gulp-e-build-native.md](docs/knowledge/gulp-e-build-native.md) |
+| Gulp, risorse native e permessi | Validazione delle dimensioni, permessi Android, immagini di profilo, posthog, R8 nella release | oc:8246, oc:7294, oc:7480, oc:8105, oc:8277, oc:8892 | [docs/knowledge/gulp-e-build-native.md](docs/knowledge/gulp-e-build-native.md) |
 | Log in produzione | Il criterio di triage a due assi, cosa resta e perché | oc:8369 | [docs/knowledge/log-in-produzione.md](docs/knowledge/log-in-produzione.md) |
 | Pannello di dettaglio sulla mappa | Altezza dinamica col `ResizeObserver`, scroll automatico rimosso, box informativi; dettaglio POI in wm-core | oc:8313, oc:8458, oc:8427, oc:8181, oc:8406 | [docs/knowledge/pannello-dettaglio-mappa.md](docs/knowledge/pannello-dettaglio-mappa.md) |
 | Preferiti | I due tab, il default reattivo e il guard sulla scelta manuale | oc:8176, oc:8465 | [docs/knowledge/preferiti.md](docs/knowledge/preferiti.md) |
@@ -105,7 +106,7 @@ Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` ch
 si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, il criterio per
 la classe base e il flag della variante della mappa, più il deploy web multi-tenant),
 `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per tipo, la chiave
-dei permessi UGC), `download-offline` (l'invariante con `map-core`, i due
+dei permessi UGC, le regole R8 da modificare in `resources/android/`), `download-offline` (l'invariante con `map-core`, i due
 `downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
 su `<wm-map>`), `temi-css-per-app` (perché `querySelectorAll` non misura gli pseudo-elementi, i due
 mount point di `wm-home-layer`, il ramo `.details-container` da aggiungere e non sostituire),
