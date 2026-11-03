@@ -20,6 +20,8 @@ import {isLogged} from '@wm-core/store/auth/auth.selectors';
 import {loadSignOuts} from '@wm-core/store/auth/auth.actions';
 import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 
+import {DiaryOutboxService} from '@wm-core/diaries/diary-outbox.service';
+
 @Component({
   standalone: false,
   selector: 'wm-settings',
@@ -52,6 +54,7 @@ export class SettingsComponent {
     private _langSvc: LangService,
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
+    private _diaryOutbox: DiaryOutboxService,
     @Inject(APP_VERSION) public APP_VERSION: string,
   ) {}
 
@@ -145,12 +148,22 @@ export class SettingsComponent {
     this._modalCtrl.dismiss('webmapp-login-modal');
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
+    // con diari in coda (oc:8169) l'avviso dice che partiranno al prossimo accesso
+    const queued = await this._diaryOutbox.pendingCountForCurrentUser().catch(() => 0);
+    const base = this._langSvc.instant('modals.settings.alert.logout');
+    const message =
+      queued > 0
+        ? `${base} ${this._langSvc.instant(
+            'Hai {{n}} diari in attesa di invio: se esci, partiranno al tuo prossimo accesso',
+            {n: queued},
+          )}`
+        : base;
     this._alertCtrl
       .create({
         mode: 'ios',
         header: this._langSvc.instant('generic.warning'),
-        message: this._langSvc.instant('modals.settings.alert.logout'),
+        message,
         buttons: [
           {
             text: this._langSvc.instant('generic.cancel'),

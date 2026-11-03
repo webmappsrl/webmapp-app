@@ -12,6 +12,8 @@ import {
   wmMapHitMapChangeFeatureById,
 } from '@wm-core/store/user-activity/user-activity.action';
 import {online} from '@wm-core/store/network/network.selector';
+import {DiaryOutboxService} from '@wm-core/diaries/diary-outbox.service';
+import {ActiveRouteService} from '@wm-core/diaries/active-route.service';
 import {INetworkRootState} from '@wm-core/store/network/netwotk.reducer';
 import {enableRecorderPanel} from '@wm-core/store/user-activity/user-activity.selector';
 
@@ -39,7 +41,14 @@ export class TabsPage {
     private _store: Store<any>,
     private _storeNetwork: Store<INetworkRootState>,
     private _urlHandlerSvc: UrlHandlerService,
-  ) {}
+    private _diaryOutbox: DiaryOutboxService,
+    private _activeRoute: ActiveRouteService,
+  ) {
+    // coda dei diari scritti senza rete (oc:8169): parte solo in camminiditalia, vive con i tab
+    void this._diaryOutbox.start();
+    // pulsante del diario solo vicino al cammino (oc:8169): ascolto della posizione, solo camminiditalia
+    void this._activeRoute.start();
+  }
 
   isBarHidden(): boolean {
     return this._statusService.isSelectedMapTrack;
