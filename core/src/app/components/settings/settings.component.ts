@@ -1,5 +1,5 @@
 import {KeyValue} from '@angular/common';
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -17,10 +17,9 @@ import {
 } from '@wm-core/store/conf/conf.selector';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {loadSignOuts} from '@wm-core/store/auth/auth.actions';
 import {APP_VERSION} from '@wm-core/store/conf/conf.token';
 
-import {DiaryOutboxService} from '@wm-core/diaries/diary-outbox.service';
+import {LogoutService} from 'src/app/services/logout.service';
 
 @Component({
   standalone: false,
@@ -47,6 +46,8 @@ export class SettingsComponent {
       localStorage.getItem('wm-keep-awake') != null) ||
     false;
   langs$ = this._store.select(confLANGUAGES);
+  /** Mostra «Esci»: nel profilo camminiditalia l'uscita sta nella tab «Account» (oc:8169). */
+  @Input() showLogout = true;
 
   constructor(
     private _alertCtrl: AlertController,
@@ -54,7 +55,7 @@ export class SettingsComponent {
     private _langSvc: LangService,
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
-    private _diaryOutbox: DiaryOutboxService,
+    private _logoutSvc: LogoutService,
     @Inject(APP_VERSION) public APP_VERSION: string,
   ) {}
 
@@ -148,43 +149,9 @@ export class SettingsComponent {
     this._modalCtrl.dismiss('webmapp-login-modal');
   }
 
+  /** Esce dopo la conferma (con l'avviso dei diari in coda) e chiude le impostazioni. */
   async logout(): Promise<void> {
-    // con diari in coda (oc:8169) l'avviso dice che partiranno al prossimo accesso
-    const queued = await this._diaryOutbox.pendingCountForCurrentUser().catch(() => 0);
-    const base = this._langSvc.instant('modals.settings.alert.logout');
-    const message =
-      queued > 0
-        ? `${base} ${this._langSvc.instant(
-            'Hai {{n}} diari in attesa di invio: se esci, partiranno al tuo prossimo accesso',
-            {n: queued},
-          )}`
-        : base;
-    this._alertCtrl
-      .create({
-        mode: 'ios',
-        header: this._langSvc.instant('generic.warning'),
-        message,
-        buttons: [
-          {
-            text: this._langSvc.instant('generic.cancel'),
-          },
-          {
-            text: this._langSvc.instant('generic.confirm'),
-            handler: () => {
-              this._store.dispatch(loadSignOuts());
-              this.dismiss();
-            },
-          },
-        ],
-      })
-      .then(
-        alert => {
-          alert.present();
-        },
-        alertError => {
-          console.warn(alertError);
-        },
-      );
+    if (await this._logoutSvc.confirmLogout()) this.dismiss();
   }
 
   openAppSettings(): void {
