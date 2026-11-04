@@ -24,12 +24,25 @@ non va confusa con i fogli per app.
 
 **`fileReplacements`, quando la UI è strutturalmente diversa**: una configuration in
 `core/angular.json` sostituisce il `.ts` di un componente con un gemello `.<shard>.ts`. Per
-camminiditalia lo usano, nell'app, `profile.page.ts`, `tabs.page.ts` e `tabs-routing.module.ts`
+camminiditalia lo usano, nell'app, `profile.page.ts` e `profile-routing.module.ts` (tab «Il mio
+diario» e «Account», oc:8169), `tabs.page.ts` e `tabs-routing.module.ts`
 (voce e rotta del tab Passaporto, oc:8703), `map.page.ts` (bottone «Inizia il cammino» e fab del solo POI,
 oc:8762), e in `wm-core` `home-layer`, `search-bar`, `layer-box`,
-`search-box` e `ugc-box` (senza il bottone di import da file, oc:8764). Una variante può avere
+`search-box`, `ugc-box` (senza il bottone di import da file, oc:8764), `track-properties` e
+`ugc-track-properties` (accendono il flag `showExperiences` della classe base, che monta la
+sezione delle esperienze, oc:8169; il dominio è documentato in `wm-core`). Una variante può avere
 anche uno stile tutto suo, aggiungendo un `.scss` ai
 `styleUrls` del gemello, come la tab bar per l'icona SVG del Passaporto.
+
+**Il profilo camminiditalia** (oc:8169) ha la tab «Il mio diario», la prima da loggato, e la tab
+«Account» con download, consenso dati, «Esci» ed «Elimina account» come voci di elenco nel flusso
+della pagina. Le rotte sono nel gemello `profile-routing.module.camminiditalia.ts`; `profile-data`
+reindirizza ad `account` per i link già in giro. I componenti delle due tab **non sono
+standalone**: sono dichiarati in un modulo ciascuno, importato solo da quel routing, perché un file
+che importa `WmCoreModule` sotto Karma si blocca su `GraphHopperRouting`. «Esci» esce
+dall'ingranaggio solo qui, con l'input `showLogout` di `SettingsComponent` (vero di default, quindi
+gli altri shard non cambiano); la conferma di uscita è in `LogoutService`, usato da entrambi i
+punti.
 
 La configuration si sceglie da sé: `core/scripts/serve.js` (via `npm start`) e `runIonicBuild()`
 nel `gulpfile.js` leggono `shardName` dall'`environment.ts` e cercano una configuration con match
@@ -60,7 +73,8 @@ ricordare.
   stesso motivo. La logica nuova sta in componenti standalone a parte (`webmapp-btn-start-walk`,
   `webmapp-btn-add-poi`), perché Karma compila con la configuration di default e non vedrebbe mai
   la variante. Il criterio coincide con quello già applicato in `wm-core` (home-layer, search-bar,
-  layer-box, search-box, ugc-box), descritto nella sua pagina.
+  layer-box, search-box, ugc-box, track-properties, ugc-track-properties), descritto nella sua
+  pagina.
 - **Un'altezza hardcoded è stata rimossa invece che sincronizzata** (oc:8305):
   `favourites-layers.component.scss` non ripete più l'altezza di `.wm-box`, che ora ce l'ha propria
   in `wm-core` — elimina alla radice il rischio di disallineamento cross-repo che un numero copiato

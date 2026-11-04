@@ -1,0 +1,14 @@
+<ion-content>
+  <div class="webmapp-profile-diary-tab" *ngIf="vm$ | async as vm">
+    <wm-diaries-section
+      *ngFor="let group of vm.groups; trackBy: trackByLayer"
+      [layerId]="group.layerId"
+      [title]="group.title"
+      layout="list"
+      [showCreate]="false"
+    ></wm-diaries-section>
+    <p class="webmapp-profile-diary-tab-empty" *ngIf="vm.empty">
+      {{ 'Non hai ancora scritto nessun diario' | wmtrans }}
+    </p>
+  </div>
+</ion-content>

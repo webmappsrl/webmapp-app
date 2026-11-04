@@ -1,0 +1,60 @@
+// Tab «Account» del profilo camminiditalia (oc:8169): sezioni nel flusso, voci di elenco con la
+// freccia, come la variante A del profilo.
+.webmapp-profile-account {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+.webmapp-profile-account-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  // il titolo della sezione sostituisce quello interno di `wm-profile-data`
+  .wm-profile-data-title {
+    display: none;
+  }
+
+  // stesso riquadro per l'elenco di `wm-profile-data` e per i nostri
+  wm-profile-data ion-list,
+  .webmapp-profile-account-list {
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--ion-color-light-shade, #e5e7ea);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  ion-item {
+    --background: transparent;
+    --border-width: 0;
+    --inner-border-width: 0;
+    --padding-start: 14px;
+    --inner-padding-end: 10px;
+    --min-height: 48px;
+    font-size: 15px;
+  }
+
+  ion-item + ion-item {
+    border-top: 1px solid var(--ion-color-light-shade, #e5e7ea);
+  }
+
+  // rosso sul solo testo e sulla freccia (l'attributo `color` colorerebbe tutta la riga)
+  ion-item.webmapp-profile-account-delete {
+    --background: transparent;
+    --color: var(--ion-color-danger);
+    --detail-icon-color: var(--ion-color-danger);
+    --detail-icon-opacity: 0.6;
+  }
+}
+
+.webmapp-profile-account-section-title {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+}
