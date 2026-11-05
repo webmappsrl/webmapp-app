@@ -1,5 +1,32 @@
 # Changelog
 
+## [3.1.19](https://github.com/webmappsrl/webmapp-app/compare/v3.1.18...v3.1.19) (2026-11-05)
+
+
+### Features
+
+* **oc:8169:** esperienze utente su cammino e tappa ([#241](https://github.com/webmappsrl/webmapp-app/issues/241)) ([7e8d614](https://github.com/webmappsrl/webmapp-app/commit/7e8d61432b936774c60dd1f33d0dc11398cf2d82))
+* **oc:8798:** riduzione automatica della plancia di registrazione quando l'utente cammina ([#243](https://github.com/webmappsrl/webmapp-app/issues/243)) ([6bc28be](https://github.com/webmappsrl/webmapp-app/commit/6bc28bedc64d262268bfa0ab0384996537052ac7))
+
+
+### Bug Fixes
+
+* **oc:8808:** testo neutro nella conferma di eliminazione registrazione ([#242](https://github.com/webmappsrl/webmapp-app/issues/242)) ([f9280a8](https://github.com/webmappsrl/webmapp-app/commit/f9280a8f15e3f85a627a1383bc6391ce090772f0))
+* **oc:8892:** attiva R8 nella build Android di release ([#244](https://github.com/webmappsrl/webmapp-app/issues/244)) ([f374603](https://github.com/webmappsrl/webmapp-app/commit/f3746035e14d9f553b9b96c3a2676b623f926e7b))
+* **oc:8918:** variante camminiditalia del badge delle tappe e bump wm-core ([#245](https://github.com/webmappsrl/webmapp-app/issues/245)) ([7fd0ee5](https://github.com/webmappsrl/webmapp-app/commit/7fd0ee5e127e2b7fc43f3511480f18002c23cebb))
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([dfb051c](https://github.com/webmappsrl/webmapp-app/commit/dfb051cee5a92a67efd744929655c8b70511782a))
+* enrich changelog with commit descriptions ([b817ed7](https://github.com/webmappsrl/webmapp-app/commit/b817ed7d1cf934a6eb50b2aa9231fb12537bc5f5))
+* enrich changelog with commit descriptions ([c14897f](https://github.com/webmappsrl/webmapp-app/commit/c14897f2010bc00e4699cad274b6241cee5b3683))
+* release-as 3.1.19 temporaneo per la release ([079a37e](https://github.com/webmappsrl/webmapp-app/commit/079a37eab0f71bd9be108227097f053b1cfdcf1b))
+* **wm-core:** changelog for bump to 743c63f ([9f1cb3d](https://github.com/webmappsrl/webmapp-app/commit/9f1cb3d737fbe176a856caecc5e5052a476813c8))
+* **wm-core:** changelog for bump to 93f508a ([2352538](https://github.com/webmappsrl/webmapp-app/commit/2352538b2d2e819387d6bec280440c4ec3c9fc2f))
+* **wm-core:** changelog for bump to d945956 ([349d4eb](https://github.com/webmappsrl/webmapp-app/commit/349d4ebeb9f1a92fe75a53de8d7d0a69a690470b))
+* **wm-core:** changelog for bump to f5e2b7c ([e26f4f0](https://github.com/webmappsrl/webmapp-app/commit/e26f4f03e00f9438c62bb5d527dc0d3d30a172e6))
+
 ## [3.1.18](https://github.com/webmappsrl/webmapp-app/compare/v3.1.17...v3.1.18) (2026-10-16)
 
 
