@@ -56,7 +56,6 @@
     
     Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
 
-
 ### Bug Fixes
 
 * **<a href="https://orchestrator.maphub.it/resources/customer-stories/8808" target="_blank" rel="noopener noreferrer">OC[8808]</a>:** testo neutro nella conferma di eliminazione registrazione ([#242](https://github.com/webmappsrl/webmapp-app/issues/242)) ([f9280a8](https://github.com/webmappsrl/webmapp-app/commit/f9280a8f15e3f85a627a1383bc6391ce090772f0))
@@ -67,7 +66,6 @@
     lingue: la stringa è comune a tutte le istanze, quindi niente nome di brand.
     
     Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
-* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8918" target="_blank" rel="noopener noreferrer">OC[8918]</a>:** variante camminiditalia del badge delle tappe e bump wm-core ([#245](https://github.com/webmappsrl/webmapp-app/issues/245)) ([7fd0ee5](https://github.com/webmappsrl/webmapp-app/commit/7fd0ee5e127e2b7fc43f3511480f18002c23cebb))
 <!-- COMMIT_DESC -->
     
     - fileReplacements della variante camminiditalia di
@@ -86,7 +84,6 @@
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([dfb051c](https://github.com/webmappsrl/webmapp-app/commit/dfb051cee5a92a67efd744929655c8b70511782a))
-* enrich changelog with commit descriptions ([c14897f](https://github.com/webmappsrl/webmapp-app/commit/c14897f2010bc00e4699cad274b6241cee5b3683))
 * **wm-core:** changelog for bump to 743c63f ([9f1cb3d](https://github.com/webmappsrl/webmapp-app/commit/9f1cb3d737fbe176a856caecc5e5052a476813c8))
 <!-- COMMIT_DESC -->
     
@@ -100,7 +97,6 @@
     
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
     Claude-Session: https://claude.ai/code/session_01TthDLjLX4gBpCDLX65Zr3n
-* **wm-core:** changelog for bump to d945956 ([349d4eb](https://github.com/webmappsrl/webmapp-app/commit/349d4ebeb9f1a92fe75a53de8d7d0a69a690470b))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): pulsante del diario solo dopo il confronto con le tappe, scheda del percorso su cammino iniziato
@@ -182,7 +178,6 @@
     l'inseguimento parte a zoom finito, come nel percorso con lo slider.
     
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-* enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
 <!-- COMMIT_DESC -->
     
     - fix: apply Home layer filters to map rendering and fix stale tile styling
@@ -1213,7 +1208,6 @@
     Co-authored-by: Rubens <122286591+RubensGarofalo@users.noreply.github.com>
     Co-authored-by: Cursor <cursoragent@cursor.com>
 
-
 ### Bug Fixes
 
 * inject shardName alongside appId for E2E CI environment ([#214](https://github.com/webmappsrl/webmapp-app/issues/214)) ([a1eba3d](https://github.com/webmappsrl/webmapp-app/commit/a1eba3d62b39f7c8b58f3c2e9a8e2511740b30d7))
@@ -1278,7 +1272,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-* enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
 <!-- COMMIT_DESC -->
     
     - RDO Cammini d'Italia 2026 — map-core (#65)
@@ -1476,7 +1469,6 @@
     
     overview.md, notes.md documenting the wmMapPadding binding added to
     modal-ugc-uploader as part of the map-core padding fix.
-## [3.1.15](https://github.com/webmappsrl/webmapp-app/compare/v3.1.14...v3.1.15) (2026-06-29)
 
 
 ### Miscellaneous
@@ -1583,7 +1575,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 4.6 <noreply@anthropic.com>
-
 ### Bug Fixes
 
 * trigger release 3.1.13 ([d9e5a6a](https://github.com/webmappsrl/webmapp-app/commit/d9e5a6a3d6ef88894a3934f9ea146dc7b0080e88))
@@ -1685,7 +1676,6 @@
         - Introduce error handling and validation for event properties to ensure robustness.
         - Update `conf.token.ts` to include new injection tokens `POSTHOG_CLIENT` and `POSTHOG_CONFIG` for PostHog integration configuration.
         refactor(slider-filter, form): ♻️ improve slider filter and form component functionality
-
         - Updated the slider filter component to handle null values more gracefully and emit the correct filter values based on user input.
         - Refactored the form component to change the event from `ionChange` to `ionInput` for better input handling and added an attribute for end-to-end testing.
         - Enhanced the select all title text functionality to ensure proper selection of input text on the first click.
@@ -1880,7 +1870,6 @@
         - chore: add new types for home result tab <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Introduces new TypeScript types for home result tab and filter.
         Exports the new types for external use.
-
         Relates to oc_6780
 
         Enhanced the URL query parameters for the 'home' tab by including the 'search' parameter. This ensures that the search state is preserved and properly handled when navigating to the home tab.
