@@ -42,6 +42,17 @@ circa 17 MB, e il mapping incluso nell'AAB in
   `geohub.webmapp.it` e si ferma con «Missing app id». Il task `build-android` invece passa lo
   shard. Sono task non usati per le release.
 
+- **Crash a ogni pausa dell'app nella release con R8** (trovato nel test su device, corretto).
+  Un deep link con l'app aperta, o il tasto Home, mandava in crash la release
+  («Unable to pause activity»): retrace col `mapping.txt` → `BackgroundGeolocation.handleOnPause`
+  → `Plugin.getPermissionState("location")` → `Bridge.getPermissionStates` (`Bridge.java:1220`),
+  dove `getPluginAnnotation()` era `null`. La build debug, con lo stesso deep link, non crasha;
+  nel dex della release l'annotazione `@CapacitorPlugin` c'è (rinominata). Le regole di
+  `@capacitor/android` proteggono i plugin ma non il nucleo `com.getcapacitor`, che legge
+  l'annotazione a runtime. Corretto con `-keep class com.getcapacitor.** { *; }` e
+  `-keep @interface com.getcapacitor.annotation.** { *; }` in
+  `resources/android/proguard-rules.pro`: release rifatta, deep link e Home senza crash.
+
 ## Decisioni
 
 - Nessun tag Orchestrator associato al ticket, su scelta del dev.
