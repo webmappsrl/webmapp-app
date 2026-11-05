@@ -65,5 +65,11 @@ circa 17 MB, e il mapping incluso nell'AAB in
 
 ## Follow-up
 
-- Test su device della release di camminiditalia, a cura del dev prima della pubblicazione (Task 4
-  del piano), e rilascio graduale su Play.
+- ~~Test su device della release di camminiditalia (Task 4 del piano)~~ — fatto il 05/11/2026 su
+  Pixel 9 Pro XL, release 13.1.18 compilata con R8 e firmata con la chiave di debug, dopo la
+  correzione `-keep` del nucleo di Capacitor (vedi «Bug trovati»): registrazione in background,
+  login, home e mappa, download offline in modalità aereo, condivisione, PostHog (eventi arrivati
+  in dashboard), controllo aggiornamenti di Play Core, deep link e pausa dell'app: tutto
+  funzionante, nessun crash né errore di classi rimosse in logcat. **Notifiche non provate**: il
+  permesso era negato sul dispositivo.
+- Rilascio graduale su Play e controllo dei crash in Android vitals.
