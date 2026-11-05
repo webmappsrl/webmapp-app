@@ -15,7 +15,6 @@
     l'inseguimento parte a zoom finito, come nel percorso con lo slider.
     
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-### Miscellaneous
 
 * enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
 <!-- COMMIT_DESC -->
@@ -35,7 +34,6 @@
       tiles to load.
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-* **map-core:** changelog for bump to 90fe075 ([d94677b](https://github.com/webmappsrl/webmapp-app/commit/d94677b3daafe468cfc933efc9b3a4ffeb6d0f3f))
 <!-- COMMIT_DESC -->
     
     - Passaporto: passaporto del camminatore e funzioni collegate (#67)
@@ -900,7 +898,6 @@
     Claude-Session: https://claude.ai/code/session_01Mq7Az1cQfuA64G7vQT9S5s
     
     Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     - Passaporto: passaporto del camminatore e funzioni collegate (#34)
     * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): add showTrackRemainingDistance option to OPTIONS (#17)
@@ -1092,7 +1089,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8470" target="_blank" rel="noopener noreferrer">OC[8470]</a>): naviga su map anche per track/poi da Home (non solo layer)
     
@@ -1242,7 +1238,6 @@
     31/08/2026). Capacitor resta invariato a 7.4.5, minSdkVersion invariato
     a 28. Nessun fix difensivo per i nuovi behavior Android 16 in questo
     ciclo (vedi docs/features/8277-android-target-sdk-36/).
-<!-- COMMIT_DESC -->
     
     - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8174" target="_blank" rel="noopener noreferrer">OC[8174]</a>): add foreground version check on app resume
     Registers App.addListener('appStateChange') in UpdateService.startForegroundWatcher.
@@ -1271,7 +1266,6 @@
     (asseriti da test unitari).
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-
 ### Bug Fixes
 
 * align overlayXYZ URL to CARG origin ([bbb20b4](https://github.com/webmappsrl/webmapp-app/commit/bbb20b4325245de85c6b01dd13d656f545ebc5af))
@@ -1308,7 +1302,6 @@
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): overview, piano e note wm-plan per il fix offline CARG
     
     * docs(<a href="https://orchestrator.maphub.it/resources/customer-stories/8219" target="_blank" rel="noopener noreferrer">OC[8219]</a>): aggiorna CLAUDE.md con feature e decisioni architetturali
-<!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map (#173)
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/4783" target="_blank" rel="noopener noreferrer">OC[4783]</a>): add wmMapPadding to ugc uploader preview map
@@ -1359,7 +1352,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-* enrich changelog with commit descriptions ([70653ad](https://github.com/webmappsrl/webmapp-app/commit/70653adab4f2903f8c166febb668da8b5b3db81c))
 <!-- COMMIT_DESC -->
     
     - Merge remote-tracking branch 'origin/develop'
@@ -1528,7 +1520,6 @@
         - Removed unused imports from `@ngx-translate/core` to improve code clarity and maintainability.
         - Added a null check for the key parameter in the `instant` method to prevent potential errors and return an empty string when the key is null.
         feat(analytics): ✨ add PostHog integration with capacitor support
-
         - Implement `PosthogCapacitorClient` for capturing analytics events using PostHog with Capacitor support for native platforms.
         - Add lazy initialization and session recording management to optimize performance and ensure accurate session tracking.
         - Introduce error handling and validation for event properties to ensure robustness.
@@ -1726,7 +1717,6 @@
         - refactor: rename and update type definitions <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Renames module for improved clarity and updates type definitions
         to allow null values, enhancing flexibility in data handling.
-
         Relates to oc_6780
 
         - chore: add new types for home result tab <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
