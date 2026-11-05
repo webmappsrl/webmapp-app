@@ -5,27 +5,167 @@
 
 ### Features
 
-* **oc:8169:** esperienze utente su cammino e tappa ([#241](https://github.com/webmappsrl/webmapp-app/issues/241)) ([7e8d614](https://github.com/webmappsrl/webmapp-app/commit/7e8d61432b936774c60dd1f33d0dc11398cf2d82))
-* **oc:8798:** riduzione automatica della plancia di registrazione quando l'utente cammina ([#243](https://github.com/webmappsrl/webmapp-app/issues/243)) ([6bc28be](https://github.com/webmappsrl/webmapp-app/commit/6bc28bedc64d262268bfa0ab0384996537052ac7))
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>:** esperienze utente su cammino e tappa ([#241](https://github.com/webmappsrl/webmapp-app/issues/241)) ([7e8d614](https://github.com/webmappsrl/webmapp-app/commit/7e8d61432b936774c60dd1f33d0dc11398cf2d82))
+<!-- COMMIT_DESC -->
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): esperienze utente su cammino e tappa
+    
+    - wm-core aggiornato al blocco delle esperienze.
+    - angular.json: fileReplacements camminiditalia per track-properties e
+      ugc-track-properties (flag `showExperiences`) e cartelle dei nuovi spec,
+      anche in tsconfig.spec.json.
+    - Docs: varianti di shard e trappola dei fileReplacements aggiornate.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * chore(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): wm-core con carosello wm-swiper e popup del Passaporto
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): avvio di coda dei diari e cammino attivo in camminiditalia, avviso al logout
+    
+    - tabs.page.camminiditalia avvia DiaryOutboxService e ActiveRouteService: partono solo in
+      camminiditalia, tramite fileReplacements
+    - logout dalle impostazioni: l'avviso dice quanti diari sono ancora in attesa di invio
+    - elenchi degli spec: cartella diaries/ al posto di experiences/ e spec del dettaglio Passaporto
+    - puntatore di wm-core al diario del ciclo 2
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgPM8qv74BZATUaodK
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): diari nel profilo, valutazioni, scheda del percorso e avviso di cammino completato
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): editor del racconto, pacchetti Tiptap e puntatore wm-core
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    * feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): date di percorrenza nel diario, spec del calendario e della richiesta cartacea
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): puntatore wm-core con le correzioni della review
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    ---------
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
 
 
 ### Bug Fixes
 
-* **oc:8808:** testo neutro nella conferma di eliminazione registrazione ([#242](https://github.com/webmappsrl/webmapp-app/issues/242)) ([f9280a8](https://github.com/webmappsrl/webmapp-app/commit/f9280a8f15e3f85a627a1383bc6391ce090772f0))
-* **oc:8892:** attiva R8 nella build Android di release ([#244](https://github.com/webmappsrl/webmapp-app/issues/244)) ([f374603](https://github.com/webmappsrl/webmapp-app/commit/f3746035e14d9f553b9b96c3a2676b623f926e7b))
-* **oc:8918:** variante camminiditalia del badge delle tappe e bump wm-core ([#245](https://github.com/webmappsrl/webmapp-app/issues/245)) ([7fd0ee5](https://github.com/webmappsrl/webmapp-app/commit/7fd0ee5e127e2b7fc43f3511480f18002c23cebb))
-
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8808" target="_blank" rel="noopener noreferrer">OC[8808]</a>:** testo neutro nella conferma di eliminazione registrazione ([#242](https://github.com/webmappsrl/webmapp-app/issues/242)) ([f9280a8](https://github.com/webmappsrl/webmapp-app/commit/f9280a8f15e3f85a627a1383bc6391ce090772f0))
+<!-- COMMIT_DESC -->
+    
+    Nell'alert «Elimina per sempre?» che compare scartando una registrazione
+    appena conclusa, «da Webmapp» diventa «dai nostri server» in tutte e 7 le
+    lingue: la stringa è comune a tutte le istanze, quindi niente nome di brand.
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
+* **<a href="https://orchestrator.maphub.it/resources/customer-stories/8918" target="_blank" rel="noopener noreferrer">OC[8918]</a>:** variante camminiditalia del badge delle tappe e bump wm-core ([#245](https://github.com/webmappsrl/webmapp-app/issues/245)) ([7fd0ee5](https://github.com/webmappsrl/webmapp-app/commit/7fd0ee5e127e2b7fc43f3511480f18002c23cebb))
+<!-- COMMIT_DESC -->
+    
+    - fileReplacements della variante camminiditalia di
+      wm-layer-features-counter-badge nella configuration camminiditalia
+    - spec del badge nei due elenchi della suite (tsconfig.spec.json,
+      angular.json)
+    - bump di wm-core: card e passaporto senza varianti nel conteggio
+    - cantiere docs/features/8918-varianti-tappe-segnalazione e
+      documentazione delle varianti di shard
+    
+    
+    Claude-Session: https://claude.ai/code/session_01TthDLjLX4gBpCDLX65Zr3n
+    
+    Co-authored-by: Claude Opus 5.5 <noreply@anthropic.com>
 
 ### Miscellaneous
 
 * enrich changelog with commit descriptions ([dfb051c](https://github.com/webmappsrl/webmapp-app/commit/dfb051cee5a92a67efd744929655c8b70511782a))
-* enrich changelog with commit descriptions ([b817ed7](https://github.com/webmappsrl/webmapp-app/commit/b817ed7d1cf934a6eb50b2aa9231fb12537bc5f5))
 * enrich changelog with commit descriptions ([c14897f](https://github.com/webmappsrl/webmapp-app/commit/c14897f2010bc00e4699cad274b6241cee5b3683))
-* release-as 3.1.19 temporaneo per la release ([079a37e](https://github.com/webmappsrl/webmapp-app/commit/079a37eab0f71bd9be108227097f053b1cfdcf1b))
 * **wm-core:** changelog for bump to 743c63f ([9f1cb3d](https://github.com/webmappsrl/webmapp-app/commit/9f1cb3d737fbe176a856caecc5e5052a476813c8))
-* **wm-core:** changelog for bump to 93f508a ([2352538](https://github.com/webmappsrl/webmapp-app/commit/2352538b2d2e819387d6bec280440c4ec3c9fc2f))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8918" target="_blank" rel="noopener noreferrer">OC[8918]</a>): tappe e km senza varianti nella card e nel passaporto camminiditalia
+    - variante camminiditalia di wm-layer-features-counter-badge (classe base
+      con stageCount$, null nel default): mostra attributes.stage_count del
+      layer, calcolato dal backend senza varianti, al posto del conteggio
+      delle tracce di Elastic
+    - km e uscite GPS del traguardo del passaporto contano le sole tappe
+      percorse (walkedDistanceKm e completedStages, condivisi col diario)
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLjLX4gBpCDLX65Zr3n
 * **wm-core:** changelog for bump to d945956 ([349d4eb](https://github.com/webmappsrl/webmapp-app/commit/349d4ebeb9f1a92fe75a53de8d7d0a69a690470b))
-* **wm-core:** changelog for bump to f5e2b7c ([e26f4f0](https://github.com/webmappsrl/webmapp-app/commit/e26f4f03e00f9438c62bb5d527dc0d3d30a172e6))
+<!-- COMMIT_DESC -->
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): pulsante del diario solo dopo il confronto con le tappe, scheda del percorso su cammino iniziato
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): date di percorrenza nel diario e calendario a intervallo
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): editor del racconto con formattazione
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): diari nel profilo, valutazioni, scheda del percorso e avviso di cammino completato
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgBMKR6wwRPg1KQPse
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): il mio diario - rinomino, consenso, bozza, coda offline, pulsante vicino al cammino
+    Secondo ciclo del diario del camminatore, dopo la call con Cammini d'Italia del 3 novembre 2026.
+    
+    - rinomino completo da experience a diary (cartella diaries/, DiaryService, wm-diaries-section,
+      showDiaries, /api/diaries) e testi «Il mio diario» nelle 7 lingue
+    - spunta facoltativa del consenso alla ripubblicazione, mostrato nel dettaglio
+    - bozza del form salvata sul telefono (DiaryDraftStore) e coda di invio offline dei diari nuovi
+      (DiaryOutboxService), avviata solo dalla variante camminiditalia dell'app
+    - pulsante solo vicino al cammino (ActiveRouteService): posizioni salvate in sottofondo,
+      confronto con le tappe all'apertura del dettaglio
+    - diario del cammino nel Passaporto da cammino iniziato
+    - dettaglio con azioni in ion-footer e chiusura visibile; schede basse nel carosello
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_01TthDLgPM8qv74BZATUaodK
+    
+    - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): carosello con wm-swiper e popup del Passaporto che scorre
+    - Carosello delle esperienze e galleria del dettaglio con wm-swiper (Swiper
+      già in uso nel progetto): trascinamento col mouse sulla webapp, margini
+      laterali con slidesOffsetBefore/After (16px nel Passaporto, `carouselInset`).
+    - Passaporto, cammino completato: il dettaglio scorre invece di tagliare il
+      fondo nella modale desktop, e le esperienze restano visibili anche con le
+      tappe aperte; la lista va sotto con la sua altezza.
+    - Spec di ExperienceService: i test aspettano la condizione invece di attese
+      fisse, e a fine test si svuota la coda della copia offline, che altrimenti
+      partiva dopo, sul localForage vero, togliendo il marcatore al test
+      successivo.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+    
+    - feat(<a href="https://orchestrator.maphub.it/resources/customer-stories/8169" target="_blank" rel="noopener noreferrer">OC[8169]</a>): esperienze utente su cammino e tappa
+    Blocco «esperienze» (testo e fino a 6 foto) sul cammino, sulla tappa, nel
+    dettaglio di una registrazione e nel Passaporto (viste 3 e 6), con form di
+    creazione e modifica, dettaglio ed eliminazione.
+    
+    - ExperienceService: stato con RxJS, `off` solo per il 404 dell'API,
+      `offline` ed `error` con al massimo 3 tentativi; copia offline delle sole
+      proprie esperienze in localForage, svuotata al logout.
+    - Attivazione con le varianti camminiditalia: classi base di track-properties
+      e ugc-track-properties con il flag `showExperiences`, blocco del cammino
+      solo nella variante di home-layer; nessun controllo sullo shard.
+    - image-picker: rimozione delle foto già salvate solo dal form (removeMode).
+    - Dettaglio: righe «Registrazioni collegate» che aprono la registrazione
+      sulla mappa.
+    - Errori 422 mostrati in base al campo rifiutato; testi nelle 7 lingue.
+    - Docs: cantiere, pagina di conoscenza, varianti per shard.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 
 ## [3.1.18](https://github.com/webmappsrl/webmapp-app/compare/v3.1.17...v3.1.18) (2026-10-16)
 
@@ -42,7 +182,6 @@
     l'inseguimento parte a zoom finito, come nel percorso con lo slider.
     
     Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
-
 * enrich changelog with commit descriptions ([0664228](https://github.com/webmappsrl/webmapp-app/commit/066422809d20ff032bec335a71e390d2f0ac1488))
 <!-- COMMIT_DESC -->
     
@@ -61,7 +200,6 @@
       tiles to load.
     
     Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-<!-- COMMIT_DESC -->
     
     - Passaporto: passaporto del camminatore e funzioni collegate (#67)
     * fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8177" target="_blank" rel="noopener noreferrer">OC[8177]</a>): clear map hover marker/segment when chart hover ends (#62)
@@ -1074,7 +1212,6 @@
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
     Co-authored-by: Rubens <122286591+RubensGarofalo@users.noreply.github.com>
     Co-authored-by: Cursor <cursoragent@cursor.com>
-## [3.1.17](https://github.com/webmappsrl/webmapp-app/compare/v3.1.16...v3.1.17) (2026-09-08)
 
 
 ### Bug Fixes
@@ -1141,7 +1278,6 @@
     ---------
     
     Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
-
 * enrich changelog with commit descriptions ([4c4b8ee](https://github.com/webmappsrl/webmapp-app/commit/4c4b8ee109996a70b28a68711f609295e4bf1000))
 <!-- COMMIT_DESC -->
     
@@ -1272,7 +1408,6 @@
     _isUpdateInProgress flag prevents concurrent double-invocation on rapid foreground events.
     
     Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-* **wm-core:** changelog for bump to f804d24 ([48c1ba6](https://github.com/webmappsrl/webmapp-app/commit/48c1ba6c719278296ed709a20d4001085133db47))
 <!-- COMMIT_DESC -->
     
     - fix(<a href="https://orchestrator.maphub.it/resources/customer-stories/8369" target="_blank" rel="noopener noreferrer">OC[8369]</a>): pulizia post-review di 2 log a valore diagnostico nullo
@@ -1341,7 +1476,6 @@
     
     overview.md, notes.md documenting the wmMapPadding binding added to
     modal-ugc-uploader as part of the map-core padding fix.
-
 ## [3.1.15](https://github.com/webmappsrl/webmapp-app/compare/v3.1.14...v3.1.15) (2026-06-29)
 
 
@@ -1379,7 +1513,6 @@
     - fix: update Karma configuration and improve PosthogCapacitorClient tests
     - Updated ChromeHeadlessNoSandbox launcher in karma.conf.js to include '--disable-dev-shm-usage' flag for better CI compatibility.
     - Modified PosthogCapacitorClient tests to cast event properties to 'any' type, ensuring compatibility with TypeScript's strict type checking.
-<!-- COMMIT_DESC -->
     
     - Merge remote-tracking branch 'origin/develop'
     
@@ -1551,7 +1684,6 @@
         - Add lazy initialization and session recording management to optimize performance and ensure accurate session tracking.
         - Introduce error handling and validation for event properties to ensure robustness.
         - Update `conf.token.ts` to include new injection tokens `POSTHOG_CLIENT` and `POSTHOG_CONFIG` for PostHog integration configuration.
-
         refactor(slider-filter, form): ♻️ improve slider filter and form component functionality
 
         - Updated the slider filter component to handle null values more gracefully and emit the correct filter values based on user input.
@@ -1745,7 +1877,6 @@
         Renames module for improved clarity and updates type definitions
         to allow null values, enhancing flexibility in data handling.
         Relates to oc_6780
-
         - chore: add new types for home result tab <a href="https://orchestrator.maphub.it/resources/customer-stories/6780" target="_blank" rel="noopener noreferrer">OC[6780]</a>
         Introduces new TypeScript types for home result tab and filter.
         Exports the new types for external use.
