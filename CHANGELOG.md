@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.20](https://github.com/webmappsrl/webmapp-app/compare/v3.1.19...v3.1.20) (2026-11-05)
+
+
+### Miscellaneous
+
+* enrich changelog with commit descriptions ([0514c99](https://github.com/webmappsrl/webmapp-app/commit/0514c993efbe04c930e63a2a1b01d49324038c17))
+* enrich changelog with commit descriptions ([a71512b](https://github.com/webmappsrl/webmapp-app/commit/a71512b6ec454988ab4935322b0941f8dc224cf9))
+* tolto release-as dopo la release 3.1.19 ([3c4904b](https://github.com/webmappsrl/webmapp-app/commit/3c4904b0b6f16502325cc4cb07c7025667c6a6c7))
+
 ## [3.1.19](https://github.com/webmappsrl/webmapp-app/compare/v3.1.18...v3.1.19) (2026-11-05)
 
 
