@@ -336,7 +336,7 @@ export const appIT = {
         'cancel': 'Annulla',
         'confirm': 'Elimina',
         'text':
-          'Completando l’azione la traccia verrà eliminata dal tuo profilo e da Webmapp. L’operazione non può essere annullata.',
+          'Completando l’azione la traccia verrà eliminata dal tuo profilo e dai nostri server. L’operazione non può essere annullata.',
         'title': 'Elimina per sempre?',
       },
       'modalphotos': {
@@ -594,6 +594,13 @@ export const appIT = {
   'poi_type': 'punti di interesse',
   'where': 'luoghi',
   'I tuoi dati': 'I tuoi dati',
+  'I miei dati': 'I miei dati',
+  'Il mio diario': 'Il mio diario',
+  'Non hai ancora scritto nessun diario': 'Non hai ancora scritto nessun diario',
+  'Account': 'Account',
+  'Download': 'Download',
+  'Privacy': 'Privacy',
+  'Sessione': 'Sessione',
   'Scarica il tracciato GPX': 'Scarica il tracciato GPX',
   'Scarica il tracciato KML': 'Scarica il tracciato KML',
   'Scarica il tracciato GEOJSON': 'Scarica il tracciato GEOJSON',

@@ -330,7 +330,7 @@ export const appPR = {
       'modalexit': {
         'cancel': 'Cancelar',
         'confirm': 'Excluir',
-        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e do Webmapp. A operação não pode ser desfeita.',
+        'text': 'Ao finalizar a ação, a rota será excluída do seu perfil e dos nossos servidores. A operação não pode ser desfeita.',
         'title': 'Excluir permanentemente?'
       },
       'modalphotos': {
@@ -580,6 +580,13 @@ export const appPR = {
   'poi_type': 'ponto de interesse',
   'where': 'lugares',
   'I tuoi dati': 'Seus dados',
+  'I miei dati': 'Meus dados',
+  'Il mio diario': 'Meu diário',
+  'Non hai ancora scritto nessun diario': 'Você ainda não escreveu nenhum diário',
+  'Account': 'Conta',
+  'Download': 'Downloads',
+  'Privacy': 'Privacidade',
+  'Sessione': 'Sessão',
   'Scarica il tracciato GPX': 'Baixar a rota GPX',
   'Scarica il tracciato KML': 'Baixar a rota KML',
   'Scarica il tracciato GEOJSON': 'Baixar a rota GEOJSON',

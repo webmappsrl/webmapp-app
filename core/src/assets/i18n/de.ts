@@ -330,7 +330,7 @@ export const appDE = {
       'modalexit': {
         'cancel': 'Abbrechen',
         'confirm': 'Löschen',
-        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von Webmapp gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
+        'text': 'Durch das Beenden der Aktion wird die Strecke aus Ihrem Profil und von unseren Servern gelöscht. Der Vorgang kann nicht rückgängig gemacht werden.',
         'title': 'Dauerhaft löschen?'
       },
       'modalphotos': {
@@ -575,6 +575,13 @@ export const appDE = {
   'poi_type': 'Interessenspunkt',
   'where': 'Orte',
   'I tuoi dati': 'Ihre Daten',
+  'I miei dati': 'Meine Daten',
+  'Il mio diario': 'Mein Tagebuch',
+  'Non hai ancora scritto nessun diario': 'Du hast noch kein Tagebuch geschrieben',
+  'Account': 'Konto',
+  'Download': 'Downloads',
+  'Privacy': 'Datenschutz',
+  'Sessione': 'Sitzung',
   'Scarica il tracciato GPX': 'GPX-Strecke herunterladen',
   'Scarica il tracciato KML': 'KML-Strecke herunterladen',
   'Scarica il tracciato GEOJSON': 'GEOJSON-Strecke herunterladen',

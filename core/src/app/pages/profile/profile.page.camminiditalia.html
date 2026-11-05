@@ -51,11 +51,20 @@
     >
       <ion-tab-bar slot="top" class="webmapp-profile-tabs-tab-bar">
         <ion-tab-button
-          (click)="tabClick($event, '/profile/profile-data')"
-          tab="profile-data"
+          *ngIf="isLogged$|async"
+          (click)="tabClick($event, '/profile/diary')"
+          tab="diary"
           class="webmapp-profile-tabs-tab-button"
         >
-          <ion-label class="webmapp-profile-tabs-tab-label"> {{'I tuoi dati'|wmtrans}} </ion-label>
+          <ion-label class="webmapp-profile-tabs-tab-label"> {{'Il mio diario'|wmtrans}} </ion-label>
+          <div class="webmapp-profile-tabs-tab-button-border"></div>
+        </ion-tab-button>
+        <ion-tab-button
+          (click)="tabClick($event, '/profile/account')"
+          tab="account"
+          class="webmapp-profile-tabs-tab-button"
+        >
+          <ion-label class="webmapp-profile-tabs-tab-label"> {{'Account'|wmtrans}} </ion-label>
           <div class="webmapp-profile-tabs-tab-button-border"></div>
         </ion-tab-button>
       </ion-tab-bar>
@@ -70,8 +79,4 @@
   </ng-container>
 </ion-content>
 
-<wm-privacy-agree-button class="wm-profile-privacy-button">
-  {{'Modifica consenso dati'|wmtrans}}
-</wm-privacy-agree-button>
-
-<wm-profile-delete-button *ngIf="isLogged$|async"></wm-profile-delete-button>
+<!-- consenso dati, esci ed elimina account stanno nella tab «Account» (oc:8169): qui non più fissi in fondo -->

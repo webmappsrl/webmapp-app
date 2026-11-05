@@ -1,0 +1,12 @@
+.webmapp-profile-diary-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px 16px calc(24px + env(safe-area-inset-bottom));
+}
+
+.webmapp-profile-diary-tab-empty {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--ion-color-medium);
+}

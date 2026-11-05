@@ -333,7 +333,7 @@ export const appEN = {
       'modalexit': {
         'cancel': 'Cancel',
         'confirm': 'Delete',
-        'text': 'By completing the action, the track will be deleted from your profile and from Webmapp. The operation cannot be canceled.',
+        'text': 'By completing the action, the track will be deleted from your profile and from our servers. The operation cannot be canceled.',
         'title': 'Delete forever?'
       },
       'modalphotos': {
@@ -567,6 +567,13 @@ export const appEN = {
   'Percorribilità': 'Viability',
   'no-tracks': "You haven't downloaded any tracks yet",
   'I tuoi dati': 'Your data',
+  'I miei dati': 'My data',
+  'Il mio diario': 'My diary',
+  'Non hai ancora scritto nessun diario': "You haven't written any diary yet",
+  'Account': 'Account',
+  'Download': 'Downloads',
+  'Privacy': 'Privacy',
+  'Sessione': 'Session',
   'Le tue registrazioni': 'your recordings',
   'Descrizione Audio': 'Audio Description',
   'Punto di interesse nelle vicinanze': 'Point of interest nearby',

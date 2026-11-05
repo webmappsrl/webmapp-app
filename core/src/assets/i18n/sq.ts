@@ -330,7 +330,7 @@ export const appSQ = {
       'modalexit': {
         'cancel': 'Anulo',
         'confirm': 'Fshi',
-        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga Webmapp. Operacioni nuk mund të anulohet.',
+        'text': 'Duke përfunduar veprimin gjurma do të fshihet nga profili yt dhe nga serverat tanë. Operacioni nuk mund të anulohet.',
         'title': 'Fshi përgjithmonë?'
       },
       'modalphotos': {
@@ -575,6 +575,13 @@ export const appSQ = {
   'poi_type': 'pika interesi',
   'where': 'vende',
   'I tuoi dati': 'Të dhënat e tua',
+  'I miei dati': 'Të dhënat e mia',
+  'Il mio diario': 'Ditari im',
+  'Non hai ancora scritto nessun diario': 'Nuk ke shkruar ende asnjë ditar',
+  'Account': 'Llogaria',
+  'Download': 'Shkarkimet',
+  'Privacy': 'Privatësia',
+  'Sessione': 'Sesioni',
   'Scarica il tracciato GPX': 'Shkarko gjurmën GPX',
   'Scarica il tracciato KML': 'Shkarko gjurmën KML',
   'Scarica il tracciato GEOJSON': 'Shkarko gjurmën GEOJSON',

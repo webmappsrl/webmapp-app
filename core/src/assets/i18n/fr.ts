@@ -333,7 +333,7 @@ export const appFR = {
       'modalexit': {
         'cancel': 'Annuler',
         'confirm': 'Effacer',
-        'text': 'En complétant l\'action, la piste sera supprimée de votre profil et de Webmapp. L\'opération ne peut pas être annulée.',
+        'text': 'En complétant l\'action, la piste sera supprimée de votre profil et de nos serveurs. L\'opération ne peut pas être annulée.',
         'title': 'Supprimer pour toujours?'
       },
       'modalphotos': {
@@ -567,6 +567,13 @@ export const appFR = {
   'Percorribilità': 'Viabilité',
   'no-tracks': 'Vous n\'avez pas encore téléchargé de trace',
   'I tuoi dati': 'Vos données',
+  'I miei dati': 'Mes données',
+  'Il mio diario': 'Mon journal',
+  'Non hai ancora scritto nessun diario': "Tu n'as encore écrit aucun journal",
+  'Account': 'Compte',
+  'Download': 'Téléchargements',
+  'Privacy': 'Confidentialité',
+  'Sessione': 'Session',
   'Le tue registrazioni': 'vos enregistrements',
   'Descrizione Audio': 'Audiodescription',
   'Punto di interesse nelle vicinanze': 'Point d\'intérêt à proximité',

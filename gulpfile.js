@@ -11,7 +11,8 @@ const gulp = require('gulp'),
   yargs = require('yargs/yargs'),
   {hideBin} = require('yargs/helpers'),
   dotenv = require('dotenv'),
-  packageNPM = require('./package.json');
+  packageNPM = require('./package.json'),
+  {applyR8ToBuildGradle, ensureR8CompatMode} = require('./scripts/android-r8');
 let version = {
   version: packageNPM.version,
   code: versionToBundleCode(packageNPM.version),
@@ -178,6 +179,12 @@ const argv = yargs(hideBin(process.argv))
       default: false,
       describe:
         'Bypassa la validazione dimensioni di icone e splash screen (usare solo in emergenza)',
+      type: 'boolean',
+    },
+    skipR8: {
+      demandOption: false,
+      default: false,
+      describe: 'Compila la release Android senza R8 (minify/offuscamento). Solo in emergenza',
       type: 'boolean',
     },
   }).argv;
@@ -1136,6 +1143,16 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
           resolve();
           return;
         }
+        // R8 nella release (oc:8892): fatto prima della pipeline gulp, in modo sincrono, così un
+        // template inatteso ferma la build con un errore invece di perdersi nello stream.
+        try {
+          const buildGradle = fs.readFileSync(buildGradlePath, 'utf8');
+          fs.writeFileSync(buildGradlePath, applyR8ToBuildGradle(buildGradle, !argv.skipR8));
+          if (argv.skipR8) warn('R8 disattivato per questa build (--skip-r8)');
+        } catch (err) {
+          reject(err.message);
+          return;
+        }
         gulp
           .src(buildGradlePath)
           .pipe(replace(/versionCode ([0-9]*)/g, 'versionCode ' + versionCode))
@@ -1146,6 +1163,40 @@ function _updateAndroidFiles(instanceName, appId, appName, resolve, reject) {
             resolve();
           })
           .on('error', reject);
+      }),
+    );
+
+    // gradle.properties: R8 in modalità compatibile (oc:8892)
+    promises.push(
+      new Promise((resolve, reject) => {
+        const gradlePropertiesPath = instancesDir + instanceName + '/android/gradle.properties';
+        if (!fs.existsSync(gradlePropertiesPath)) {
+          if (verbose) debug('gradle.properties not found, skipping R8 compat mode');
+          resolve();
+          return;
+        }
+        try {
+          const gradleProperties = fs.readFileSync(gradlePropertiesPath, 'utf8');
+          fs.writeFileSync(gradlePropertiesPath, ensureR8CompatMode(gradleProperties));
+          resolve();
+        } catch (err) {
+          reject(`Error updating gradle.properties: ${err}`);
+        }
+      }),
+    );
+
+    // proguard-rules.pro: regole R8 versionate in resources/android (oc:8892)
+    promises.push(
+      new Promise((resolve, reject) => {
+        try {
+          fs.copyFileSync(
+            'resources/android/proguard-rules.pro',
+            instancesDir + instanceName + '/android/app/proguard-rules.pro',
+          );
+          resolve();
+        } catch (err) {
+          reject(`Error copying proguard-rules.pro: ${err}`);
+        }
       }),
     );
 

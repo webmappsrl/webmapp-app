@@ -1,5 +1,5 @@
 import {KeyValue} from '@angular/common';
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
 import {AlertController, ModalController} from '@ionic/angular';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -17,8 +17,9 @@ import {
 } from '@wm-core/store/conf/conf.selector';
 import {GeolocationService} from '@wm-core/services/geolocation.service';
 import {isLogged} from '@wm-core/store/auth/auth.selectors';
-import {loadSignOuts} from '@wm-core/store/auth/auth.actions';
 import {APP_VERSION} from '@wm-core/store/conf/conf.token';
+
+import {LogoutService} from 'src/app/services/logout.service';
 
 @Component({
   standalone: false,
@@ -45,6 +46,8 @@ export class SettingsComponent {
       localStorage.getItem('wm-keep-awake') != null) ||
     false;
   langs$ = this._store.select(confLANGUAGES);
+  /** Mostra «Esci»: nel profilo camminiditalia l'uscita sta nella tab «Account» (oc:8169). */
+  @Input() showLogout = true;
 
   constructor(
     private _alertCtrl: AlertController,
@@ -52,6 +55,7 @@ export class SettingsComponent {
     private _langSvc: LangService,
     private _store: Store<any>,
     private _geolocationSvc: GeolocationService,
+    private _logoutSvc: LogoutService,
     @Inject(APP_VERSION) public APP_VERSION: string,
   ) {}
 
@@ -145,33 +149,9 @@ export class SettingsComponent {
     this._modalCtrl.dismiss('webmapp-login-modal');
   }
 
-  logout(): void {
-    this._alertCtrl
-      .create({
-        mode: 'ios',
-        header: this._langSvc.instant('generic.warning'),
-        message: this._langSvc.instant('modals.settings.alert.logout'),
-        buttons: [
-          {
-            text: this._langSvc.instant('generic.cancel'),
-          },
-          {
-            text: this._langSvc.instant('generic.confirm'),
-            handler: () => {
-              this._store.dispatch(loadSignOuts());
-              this.dismiss();
-            },
-          },
-        ],
-      })
-      .then(
-        alert => {
-          alert.present();
-        },
-        alertError => {
-          console.warn(alertError);
-        },
-      );
+  /** Esce dopo la conferma (con l'avviso dei diari in coda) e chiude le impostazioni. */
+  async logout(): Promise<void> {
+    if (await this._logoutSvc.confirmLogout()) this.dismiss();
   }
 
   openAppSettings(): void {

@@ -3,3 +3,42 @@
 ion-icon.webmapp-tabs-icon {
   font-size: var(--wm-font-tabicon);
 }
+
+// Avviso di cammino completato (oc:8169, ciclo 2): scheda in alto, più curata di un toast
+// standard. Il servizio sta in wm-core (`RouteCompletedNoticeService`), lo stile qui perché il
+// toast è un overlay globale e questo foglio è caricato solo in camminiditalia.
+ion-toast.wm-route-completed-toast {
+  --background: #ffffff;
+  --color: #1f2328;
+  --border-radius: 16px;
+  --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  --button-color: var(--ion-color-primary);
+  --start: 12px;
+  --end: 12px;
+
+  &::part(container) {
+    border-left: 6px solid var(--ion-color-primary);
+    border-radius: 16px;
+    padding: 6px 4px;
+  }
+
+  &::part(header) {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &::part(message) {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #4a5056;
+  }
+
+  &::part(button) {
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  &::part(button cancel) {
+    color: #6b7177;
+  }
+}

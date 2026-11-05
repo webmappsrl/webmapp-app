@@ -1,0 +1,34 @@
+<ion-content>
+  <div class="webmapp-profile-account">
+    <section class="webmapp-profile-account-section">
+      <h2 class="webmapp-profile-account-section-title">{{ 'Download' | wmtrans }}</h2>
+      <wm-profile-data></wm-profile-data>
+    </section>
+
+    <ng-container *ngIf="isLogged$ | async">
+      <section class="webmapp-profile-account-section">
+        <h2 class="webmapp-profile-account-section-title">{{ 'Privacy' | wmtrans }}</h2>
+        <ion-list class="webmapp-profile-account-list">
+          <ion-item class="webmapp-profile-account-privacy" button detail (click)="editPrivacy()">
+            {{ 'Modifica consenso dati' | wmtrans }}
+          </ion-item>
+        </ion-list>
+      </section>
+
+      <section class="webmapp-profile-account-section">
+        <h2 class="webmapp-profile-account-section-title">{{ 'Sessione' | wmtrans }}</h2>
+        <ion-list class="webmapp-profile-account-list">
+          <ion-item class="webmapp-profile-account-logout" button detail (click)="logout()">
+            {{ 'Esci' | wmtrans }}
+          </ion-item>
+          <ion-item class="webmapp-profile-account-delete" button detail (click)="deleteAccount()">
+            {{ 'Elimina account' | wmtrans }}
+          </ion-item>
+        </ion-list>
+        <!-- l'alert di eliminazione (con la conferma «delete account») resta quello di wm-core:
+             il componente non si vede, la riga sopra ne chiama il metodo -->
+        <wm-profile-delete-button hidden></wm-profile-delete-button>
+      </section>
+    </ng-container>
+  </div>
+</ion-content>

@@ -330,7 +330,7 @@ export const appES = {
       'modalexit': {
         'cancel': 'Cancelar',
         'confirm': 'Eliminar',
-        'text': 'Al finalizar la acción, la ruta se eliminará de tu perfil y de Webmapp. La operación no se puede deshacer.',
+        'text': 'Al finalizar la acción, la ruta se eliminará de tu perfil y de nuestros servidores. La operación no se puede deshacer.',
         'title': '¿Eliminar permanentemente?'
       },
       'modalphotos': {
@@ -575,6 +575,13 @@ export const appES = {
   'poi_type': 'punto de interés',
   'where': 'lugares',
   'I tuoi dati': 'Tus datos',
+  'I miei dati': 'Mis datos',
+  'Il mio diario': 'Mi diario',
+  'Non hai ancora scritto nessun diario': 'Todavía no has escrito ningún diario',
+  'Account': 'Cuenta',
+  'Download': 'Descargas',
+  'Privacy': 'Privacidad',
+  'Sessione': 'Sesión',
   'Scarica il tracciato GPX': 'Descargar la ruta GPX',
   'Scarica il tracciato KML': 'Descargar la ruta KML',
   'Scarica il tracciato GEOJSON': 'Descargar la ruta GEOJSON',
