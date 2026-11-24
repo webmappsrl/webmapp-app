@@ -29,9 +29,10 @@ import {UrlHandlerService} from '@wm-core/services/url-handler.service';
 import {downloadOverlay, downloadTilesByBoundingBox} from '@map-core/utils';
 import {currentHitmapFeature} from '@wm-core/store/user-activity/user-activity.selector';
 import {take} from 'rxjs/operators';
-import {from} from 'rxjs';
+import {combineLatest, from} from 'rxjs';
 import {loadBoundingBoxes} from '@map-core/store/map-core.actions';
 import {confMAP} from '@wm-core/store/conf/conf.selector';
+import {icons} from '@wm-core/store/icons/icons.selector';
 @Component({
   standalone: false,
   selector: 'wm-download-panel',
@@ -104,10 +105,11 @@ export class WmDownloadPanelComponent implements OnChanges {
     this.isDownloaded = false;
     this.status = {finish: false, map: 0, media: 0};
 
-    this._store
-      .select(confMAP)
+    // Le icone dello store vanno nella copia: gli SVG inline di GeoHub, tolti dalla traccia v1,
+    // offline non arrivano da nessun'altra parte (oc:8998)
+    combineLatest([this._store.select(confMAP), this._store.select(icons)])
       .pipe(take(1))
-      .subscribe(map => {
+      .subscribe(([map, storeIcons]) => {
         const firstEntry = map?.tiles?.[0];
         const firstEntryKey = firstEntry ? Object.keys(firstEntry)[0] : null;
         // TODO: dovrà essere gestito per scaricare le tiles del tipo selezionato o eventualmente di poter scegliere quale scaricare
@@ -133,6 +135,7 @@ export class WmDownloadPanelComponent implements OnChanges {
               this.track,
               this.updateStatus.bind(this),
               tileUrlTemplate,
+              storeIcons,
             );
           }
         }
