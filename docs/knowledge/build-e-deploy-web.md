@@ -4,6 +4,16 @@
 
 Ci sono **due deploy web separati**: `deploy-to-web-default.js` e `deploy-to-web-camminiditalia.js`, quest'ultimo con output in `www-camminiditalia/` per non sovrascrivere `www/`. Entrambi usano `--configuration=production` — il secondo combinato con `camminiditalia`.
 
+Ognuno dei due ha due modi (oc:9042). Senza argomenti esclude ogni cartella `assets`, ed è quello
+di `npm run deploy-to-web` e della CI; con `--full` (`npm run deploy-to-web-default-full`,
+`npm run deploy-to-web-camminiditalia-full`) pubblica tutta la build e si lancia a mano, quando
+cambia un asset o su un server nuovo. Il 25/11, 14 file su 91 di `assets/` su `mobile.webmapp.it`
+erano diversi dal repo (font delle icone `webmapp.*` con il suo `style.css`, `i18n/*.ts`,
+`direction.svg`, `icons/passport-stamp.svg`): il primo `deploy-to-web-default-full` li cambia per
+tutte le istanze insieme. La build camminiditalia finisce nella docroot
+`mobile.camminiditalia.webmapp.it/`, servita da `1.camminiditalia.mobile.webmapp.it`, l'host della
+health check della CI.
+
 Gli script includono già la build: `npm run deploy-to-web` chiama `ionic build` internamente, quindi in CI non serve uno step di build separato.
 
 ## Perché il deploy dedicato esiste
@@ -29,7 +39,7 @@ Sul branch RDO è poi emerso un errore in più (`ion-segment`/`SegmentValue` in 
 
 | deploy | come copia |
 |---|---|
-| `deploy-to-web-default.js`, `deploy-to-web-camminiditalia.js` | `rsync` con `RSYNC_ARGS = ['-av', '--exclude', 'assets']`, **senza `--delete`** |
+| `deploy-to-web-default.js`, `deploy-to-web-camminiditalia.js` | `rsync`, con o senza `--exclude assets`, **senza `--delete`** |
 | `deploy-cai-to-web`, `deploy-to-web-verbose`, `deploy-to-web-assets` | `scp -r`, che non cancella per costruzione |
 
 Un file tolto dal repo resta quindi sul server finché qualcuno non lo cancella a mano, qualunque
@@ -43,11 +53,16 @@ Il flag non è stato aggiunto di proposito (oc:8613): su un percorso sbagliato `
 quello che trova, quindi va introdotto e provato per conto suo, non di passaggio.
 
 **La conclusione vale anche per `wm-webapp`, ma il meccanismo è diverso**: lì solo
-`deploy-camminiditalia.js` usa `rsync` con gli stessi `RSYNC_ARGS`, mentre `deploy-default.js`
+`deploy-camminiditalia.js` usa `rsync`, con la stessa logica `--exclude assets` / `--full`
+(`npm run deploy-camminiditalia-full`), mentre `deploy-default.js`
 copia con `scp -r`. Nessuno dei due cancella, quindi l'esito è identico — ma non è «la stessa
 riga», e chi ci andasse a cercare `RSYNC_ARGS` non lo troverebbe.
 
 ## Trappole e debito
 
+- **Un asset mancante non fa fallire la health check** (oc:9042): fa solo `curl -f` sulla root, e
+  fino al 25/11 `1.camminiditalia.mobile.webmapp.it` rispondeva `500` sull'icona delle frecce delle
+  track senza che la CI se ne accorgesse. Accettato, nessun controllo aggiunto. La trappola del
+  pattern rsync sta in [.claude/rules/file-replacements.md](../../.claude/rules/file-replacements.md).
 - **`pages/poi/utils.ts` non era dead code** (oc:8382) pur vivendo in quella cartella: lo importava `map.page.ts`, che è viva. È stato spostato in `pages/map/utils.ts`. L'obbligo che ne discende — controllare gli import relativi e non solo il nome della cartella — sta in [.claude/rules/download-offline.md](../../.claude/rules/download-offline.md).
 - **`SharedModule` importa `WmCoreModule` ma non lo ri-esporta** (oc:8382): un futuro consumer di `wm-image-gallery`, `wm-related-urls` o `wm-track-audio` fuori da `WmCoreModule` diretto incapperà nello stesso errore di build incontrato con `PoiPage`.
