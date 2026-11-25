@@ -16,6 +16,8 @@
     "deploy-to-web": "node scripts/deploy-to-web.js",
     "deploy-to-web-default": "node scripts/deploy-to-web-default.js",
     "deploy-to-web-camminiditalia": "node scripts/deploy-to-web-camminiditalia.js",
+    "deploy-to-web-default-full": "node scripts/deploy-to-web-default.js --full",
+    "deploy-to-web-camminiditalia-full": "node scripts/deploy-to-web-camminiditalia.js --full",
     "deploy-cai-to-web": "npm run check-themes && ionic build --configuration production && scp -r ./www/* cai.osm2cai:/var/www/html/mobile/",
     "deploy-to-web-verbose": "npm run check-themes && ionic build --configuration production && scp -r ./www/* server:/var/www/html/mobile.webmapp.it/",
     "deploy-to-web-assets": "npm run check-themes && ionic build --configuration production &&  scp -r ./www/assets/* server:/var/www/html/mobile.webmapp.it/assets/",
