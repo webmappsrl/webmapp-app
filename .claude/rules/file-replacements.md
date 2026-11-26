@@ -79,3 +79,8 @@ perché delle scelte in
   stato davvero sostituito è che qualcosa **dopo** cambi. Qui la prova è il conteggio della
   variante compilata descritto sopra — la seconda volta è stato quello, e solo quello, ad
   accorgersi che il server vecchio non era mai morto.
+
+- **`--exclude assets` in rsync esclude ogni cartella `assets` a qualunque profondità**, anche
+  `map-core/assets/`: il deploy web veloce non pubblica l'icona delle frecce delle track e la mappa
+  mostra dischi bianchi. Per pubblicare gli asset si lanciano i deploy `-full`; per escludere solo
+  la radice il pattern è `/assets` (oc:9042).

@@ -53,6 +53,7 @@ Tutti dalla directory `core/`, salvo dove indicato.
 | Build | `npm run build` (`ng build`), oppure `ionic build` (output in `www/`) |
 | Deploy web generico | `npm run deploy-to-web` — include già la build |
 | Deploy web camminiditalia | `npm run deploy-to-web-camminiditalia` — output in `www-camminiditalia/` |
+| Deploy web completo, assets compresi | `npm run deploy-to-web-default-full` / `npm run deploy-to-web-camminiditalia-full` — a mano, quando cambia un asset o su un server nuovo; cosa cambia al primo lancio è in [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | Build native | `gulp build-android` (prepara, R8 compreso; `--skip-r8` solo in emergenza), poi compilazione e firma da Android Studio; `gulp build-ios` — `build-android-apk`/`-bundle` funzionano solo per lo shard geohub |
 | Test unitari | `npm run test` (Karma + Jasmine) |
 | Test delle funzioni del gulpfile | `npm run test:gulp` dalla root |
@@ -87,7 +88,7 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 | Argomento | Cosa copre | Ticket | Pagina |
 |---|---|---|---|
 | Avvisi sullo stato del GPS | Avviso animato che diventa badge sul bottone della posizione, regole per episodio e per avvio, posizione sotto la plancia di registrazione; il dominio è in wm-core | oc:8766, plancia-registrazione-riducibile | [docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md](docs/knowledge/8766-mappa-indicazione-di-segnale-gps-scarso-posizione-non-disponibile-o-poco-affidabile.md) |
-| Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava | oc:8382 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
+| Build di produzione e deploy web | Perché esistono due deploy, il vincolo multi-tenant, perché `--prod` non funzionava, deploy veloce e completo | oc:8382, oc:9042 | [docs/knowledge/build-e-deploy-web.md](docs/knowledge/build-e-deploy-web.md) |
 | CI, preview e deploy | I workflow, i submodule testati dalla loro directory, il fork guard | oc:8023 | [docs/knowledge/ci-e-pipeline.md](docs/knowledge/ci-e-pipeline.md) |
 | Condivisione sui social | `ShareService` come unico punto di orchestrazione, il gating sulla sincronizzazione, la parte comune spostata in `wm-core` | oc:8183, oc:8702 | [docs/knowledge/condivisione-social.md](docs/knowledge/condivisione-social.md) |
 | Deep link | Listener nativo `appUrlOpen`, navigazione Home→Map, apertura del pannello al mount | oc:8470, oc:7980 | [docs/knowledge/deep-link.md](docs/knowledge/deep-link.md) |
@@ -104,7 +105,8 @@ effects, selettori) e `types/`. I tre submodule stanno sotto `core/src/app/share
 
 Stanno in `.claude/rules/`, un file per soggetto, con il frontmatter `paths:` che le carica quando
 si toccano i file corrispondenti: `file-replacements` (i tre vincoli del pattern, il criterio per
-la classe base e il flag della variante della mappa, più il deploy web multi-tenant),
+la classe base e il flag della variante della mappa, più il deploy web multi-tenant e il pattern
+`--exclude assets` di rsync),
 `gulp-e-risorse` (`build-android` che non compila, `cordova-res` da invocare per tipo, la chiave
 dei permessi UGC, le regole R8 da modificare in `resources/android/`), `download-offline` (l'invariante con `map-core`, i due
 `downloadOverlay` omonimi, gli import di `pages/poi/`), `template-wm-map` (l'ordine degli attributi
